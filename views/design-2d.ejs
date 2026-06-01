@@ -1,0 +1,244 @@
+<%- include('partials/header') %>
+
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-title"><%= t('design2d.pageTitle') %></h1>
+    <p class="page-subtitle"><%= t('design2d.pageSubtitle') %></p>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <!-- Filters -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <button class="filter-btn active" data-filter="all"><%= t('design2d.filterAll') %></button>
+        <button class="filter-btn" data-filter="tops"><%= t('design2d.filterTops') %></button>
+        <button class="filter-btn" data-filter="bottoms"><%= t('design2d.filterBottoms') %></button>
+        <button class="filter-btn" data-filter="dresses"><%= t('design2d.filterDresses') %></button>
+        <button class="filter-btn" data-filter="outerwear"><%= t('design2d.filterOuterwear') %></button>
+        <button class="filter-btn" data-filter="accessories"><%= t('design2d.filterAccessories') %></button>
+      </div>
+      <div class="sort-group">
+        <select class="sort-select">
+          <option value="popular"><%= t('design2d.sortPopular') %></option>
+          <option value="newest"><%= t('design2d.sortNewest') %></option>
+          <option value="name"><%= t('design2d.sortName') %></option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 2D Templates Grid -->
+    <div class="models-grid">
+      <!-- T-Shirt -->
+      <div class="model-card" data-category="tops">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="40" y="40" width="120" height="120" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M40 70H160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M70 40V160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="110" text-anchor="middle" fill="#999" font-size="12">T-Shirt</text>
+              <text x="100" y="125" text-anchor="middle" fill="#bbb" font-size="10">Front View</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/t-shirt" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.tShirt') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hoodie -->
+      <div class="model-card" data-category="tops">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="40" y="30" width="120" height="140" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M40 60H160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M70 30V170" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Hoodie</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Flat Lay</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/hoodie" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.hoodie') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dress -->
+      <div class="model-card" data-category="dresses">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="50" y="30" width="100" height="140" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M50 60H150" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M80 30V170" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Dress</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Technical</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/dress" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.dress') %></h3>
+          <p class="model-meta">Front & Side • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jeans -->
+      <div class="model-card" data-category="bottoms">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="45" y="30" width="110" height="140" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M45 70H155" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M85 30V170" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Jeans</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Flat Lay</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/jeans" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.jeans') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jacket -->
+      <div class="model-card" data-category="outerwear">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="40" y="30" width="120" height="140" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M40 60H160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M75 30V170" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Jacket</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Technical</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/jacket" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.jacket') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skirt -->
+      <div class="model-card" data-category="bottoms">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="55" y="40" width="90" height="120" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M55 70H145" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M85 40V160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Skirt</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Flat Lay</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/skirt" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.skirt') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blazer -->
+      <div class="model-card" data-category="outerwear">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="40" y="30" width="120" height="140" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M40 60H160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M75 30V170" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Blazer</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Technical</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/blazer" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.blazer') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tank Top -->
+      <div class="model-card" data-category="tops">
+        <div class="model-preview-3d">
+          <div class="model-thumbnail">
+            <svg viewBox="0 0 200 200" class="model-svg">
+              <rect x="50" y="40" width="100" height="120" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+              <path d="M50 70H150" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <path d="M85 40V160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">Tank Top</text>
+              <text x="100" y="120" text-anchor="middle" fill="#bbb" font-size="10">Front View</text>
+            </svg>
+          </div>
+          <div class="model-actions-overlay">
+            <a href="/designer/2d/tank-top" class="btn btn-primary btn-small"><%= t('design2d.designNow') %></a>
+          </div>
+        </div>
+        <div class="model-info">
+          <h3 class="model-name"><%= t('design2d.tankTop') %></h3>
+          <p class="model-meta">Front & Back • AI Vector</p>
+          <div class="model-tags">
+            <span class="tag">Free</span>
+            <span class="tag">SVG</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

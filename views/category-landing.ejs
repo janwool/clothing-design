@@ -1,0 +1,289 @@
+<%- include('partials/header') %>
+
+<% if (resourceType === '3d-models') { %>
+  <section class="page-header category-page-header">
+    <div class="container">
+      <div class="category-breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/design-3d"><%= resourceTypeLabel %></a>
+        <span>/</span>
+        <span><%= category.name %></span>
+      </div>
+      <h1 class="page-title"><%= category.meta_title || category.name %></h1>
+      <% if (category.description) { %>
+        <p class="page-subtitle category-seo-copy"><%= category.description %></p>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="content-section">
+    <div class="container">
+      <div class="filters-bar">
+        <div class="filter-group">
+          <a href="/design-3d" class="filter-btn"><%= t('design3d.filterAll') %></a>
+          <% (categories || []).forEach(function(cat) { %>
+            <a href="/3d-models/<%= cat.slug %>" class="filter-btn <%= cat.slug === category.slug ? 'active' : '' %>"><%= cat.name %></a>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="models-grid">
+        <% if (items && items.length > 0) { %>
+          <% items.forEach(function(model) { %>
+            <a href="/3d-models/<%= model.category_slug || category.slug %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || category.slug %>">
+              <div class="model-preview-3d">
+                <% if (model.image_url) { %>
+                  <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
+                <% } else { %>
+                  <div class="model-placeholder">
+                    <span><%= model.name.charAt(0) %></span>
+                  </div>
+                <% } %>
+              </div>
+              <div class="model-info">
+                <h3 class="model-name"><%= model.name %></h3>
+                <div class="model-tags">
+                  <% if (model.is_free) { %>
+                    <span class="tag tag-free">Free</span>
+                  <% } else { %>
+                    <span class="tag tag-pro">Pro</span>
+                  <% } %>
+                </div>
+              </div>
+            </a>
+          <% }); %>
+        <% } else { %>
+          <div class="empty-state model-empty-state">
+            <svg class="empty-state-illustration" width="120" height="96" viewBox="0 0 120 96" fill="none" aria-hidden="true">
+              <rect x="24" y="18" width="72" height="58" rx="6" fill="#f5f5f5" stroke="#d4d4d4" stroke-width="2"/>
+              <path d="M43 18c2.8 9.2 31.2 9.2 34 0" stroke="#d4d4d4" stroke-width="2" stroke-linecap="round"/>
+              <path d="M24 31 13 43l13 13M96 31l11 12-11 13" stroke="#d4d4d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M43 52h34M49 62h22" stroke="#b8b8b8" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="91" cy="74" r="12" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+              <path d="m99 82 8 8" stroke="#111111" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            <h3>No <%= category.name %> models yet</h3>
+            <p>There are no active 3D models in this category right now.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </section>
+  <%- include('partials/generator-sections', { landingContent, categories, models }) %>
+<% } else { %>
+  <section class="category-hero">
+    <div class="container">
+      <div class="category-breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/<%= resourceType %>"><%= resourceTypeLabel %></a>
+        <span>/</span>
+        <span><%= category.name %></span>
+      </div>
+      <h1 class="category-title"><%= category.name %></h1>
+      <% if (category.description) { %>
+        <p class="category-description"><%= category.description %></p>
+      <% } %>
+    </div>
+  </section>
+
+  <section class="category-content">
+    <div class="container">
+      <% if (items && items.length > 0) { %>
+        <div class="resource-grid">
+          <% items.forEach(item => { %>
+            <div class="resource-card">
+              <div class="resource-image">
+                <% if (item.image_url) { %>
+                  <img src="<%= item.image_url %>" alt="<%= item.name || item.title %>">
+                <% } else { %>
+                  <div class="resource-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="3" width="18" height="18" rx="2"/>
+                      <circle cx="8.5" cy="8.5" r="1.5"/>
+                      <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                  </div>
+                <% } %>
+              </div>
+              <div class="resource-info">
+                <h3 class="resource-name"><%= item.name || item.title %></h3>
+                <% if (item.description) { %>
+                  <p class="resource-desc"><%= item.description %></p>
+                <% } %>
+                <% if (item.tags) { %>
+                  <div class="resource-tags">
+                    <% item.tags.split(',').forEach(tag => { %>
+                      <span class="tag"><%= tag.trim() %></span>
+                    <% }) %>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <h3>No items yet</h3>
+          <p>Check back soon for new <%= category.name.toLowerCase() %>.</p>
+        </div>
+      <% } %>
+    </div>
+  </section>
+<% } %>
+
+<style>
+.category-page-header .category-breadcrumbs {
+  justify-content: flex-start;
+}
+
+.category-seo-copy {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.model-empty-state {
+  grid-column: 1 / -1;
+  width: min(520px, 100%);
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-white);
+}
+
+.empty-state-illustration {
+  margin-bottom: var(--spacing-lg);
+}
+
+.model-empty-state h3 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.model-empty-state p {
+  color: var(--color-secondary);
+  font-size: 14px;
+}
+
+.category-hero {
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  padding: 3rem 0 2rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.category-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.75rem;
+}
+
+.category-description {
+  font-size: 1.125rem;
+  color: var(--gray-600);
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.category-content {
+  padding: 3rem 0;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-card {
+  background: var(--white);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.resource-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transform: translateY(-2px);
+}
+
+.resource-image {
+  aspect-ratio: 4/3;
+  background: var(--gray-100);
+  overflow: hidden;
+}
+
+.resource-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.resource-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray-400);
+}
+
+.resource-info {
+  padding: 1.25rem;
+}
+
+.resource-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--gray-900);
+  margin-bottom: 0.5rem;
+}
+
+.resource-desc {
+  font-size: 0.875rem;
+  color: var(--gray-600);
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+}
+
+.resource-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.625rem;
+  background: var(--gray-100);
+  color: var(--gray-600);
+  border-radius: 9999px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-400);
+}
+
+.empty-state h3 {
+  color: var(--gray-600);
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: var(--gray-500);
+}
+</style>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,308 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 class="admin-title">Categories</h1>
+      <div class="admin-actions">
+        <button class="btn btn-primary" onclick="openModal()">+ Add Category</button>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-header">
+        <h2 class="data-title">All Categories</h2>
+        <div class="data-search">
+          <input type="text" class="search-input" placeholder="Search categories..." id="searchInput">
+        </div>
+      </div>
+
+      <% if (items && items.length > 0) { %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Slug</th>
+              <th>Resource Type</th>
+              <th>Sort</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr data-id="<%= item.id %>">
+                <td>#<%= item.id %></td>
+                <td><%= item.name %></td>
+                <td><code>/<%= item.resource_type %>/<%= item.slug %></code></td>
+                <td><%= item.resource_type %></td>
+                <td><%= item.sort_order %></td>
+                <td>
+                  <span class="status-badge status-<%= item.status %>"><%= item.status %></span>
+                </td>
+                <td><%= new Date(item.created_at).toLocaleDateString() %></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn btn-ghost btn-small" data-action="edit" data-id="<%= item.id %>">Edit</button>
+                    <button class="btn btn-ghost btn-small btn-delete" data-action="delete" data-id="<%= item.id %>">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+            <line x1="7" y1="7" x2="7.01" y2="7"/>
+          </svg>
+          <h3>No categories yet</h3>
+          <p>Add your first category to get started.</p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display: none;">
+  <div class="modal-content" style="max-width: 640px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Add Category</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="categoryForm">
+        <input type="hidden" id="categoryId">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-input" id="categoryName" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slug</label>
+            <input type="text" class="form-input" id="categorySlug" required placeholder="e.g. t-shirts">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Resource Type</label>
+            <select class="form-select" id="categoryResourceType" required>
+              <option value="3d-models">3D Models</option>
+              <option value="2d-templates">2D Templates</option>
+              <option value="patterns">Sew Patterns</option>
+              <option value="gallery">Gallery</option>
+              <option value="tools">Tools</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sort Order</label>
+            <input type="number" class="form-input" id="categorySortOrder" value="0" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="categoryStatus">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="categoryDescription" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meta Title (SEO)</label>
+          <input type="text" class="form-input" id="categoryMetaTitle" placeholder="Page title for search engines">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Meta Description (SEO)</label>
+          <textarea class="form-textarea" id="categoryMetaDescription" rows="2" placeholder="Page description for search engines"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Landing Content JSON</label>
+          <textarea class="form-textarea" id="categoryLandingContent" rows="10" placeholder='{"workflow":{"title":"..."},"faq":{"items":[{"question":"...","answer":"..."}]}}'></textarea>
+          <small style="display:block;margin-top:6px;color:var(--gray-500);line-height:1.5;">
+            Optional. Controls the Workflow, Popular categories, Built for apparel output, Library, FAQ, and CTA sections on category pages.
+          </small>
+          <button type="button" class="btn btn-ghost btn-small" style="margin-top:8px;" onclick="insertLandingContentTemplate()">Insert template</button>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCategory()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const categoryForm = document.getElementById('categoryForm');
+const categoriesData = <%- JSON.stringify(items || []).replace(/</g, '\\u003c') %>;
+const landingContentTemplate = {
+  workflow: {
+    eyebrow: 'Workflow',
+    title: 'From blank model to finished apparel mockup',
+    description: 'Use the same browser-based flow to select a garment, place your artwork, preview the result, and prepare visuals for review.',
+    steps: [
+      { title: 'Select a garment', body: 'Choose the 3D clothing model that matches the silhouette you want to present.' },
+      { title: 'Add your design', body: 'Apply colors, artwork, logos, and surface directions to the selected model.' },
+      { title: 'Preview the mockup', body: 'Rotate the model and check artwork scale, placement, and color balance.' },
+      { title: 'Export visuals', body: 'Save presentation-ready mockups for stores, launch decks, and approvals.' }
+    ]
+  },
+  output: {
+    eyebrow: 'Built for apparel output',
+    title: 'Use 3D clothing models across every apparel workflow',
+    cards: [
+      { title: 'Online product pages', body: 'Create consistent visuals for ecommerce listings and product detail pages.' },
+      { title: 'Campaign and launch decks', body: 'Show garment concepts in context before samples or photoshoots are ready.' },
+      { title: 'Client and team approvals', body: 'Review color, placement, and scale with a more realistic apparel preview.' }
+    ]
+  },
+  faq: {
+    eyebrow: 'FAQ',
+    title: '3D clothing model questions',
+    items: [
+      { question: 'Can I use these 3D models for apparel mockups?', answer: 'Yes. Choose a model, open the designer, and use it to preview graphics, colorways, and garment presentation angles.' }
+    ]
+  }
+};
+
+function insertLandingContentTemplate() {
+  document.getElementById('categoryLandingContent').value = JSON.stringify(landingContentTemplate, null, 2);
+}
+
+function openModal() {
+  modalTitle.textContent = 'Add Category';
+  categoryForm.reset();
+  document.getElementById('categoryId').value = '';
+  document.getElementById('categoryLandingContent').value = '';
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+function editCategory(id) {
+  const row = document.querySelector('tr[data-id="' + id + '"]');
+  const category = categoriesData.find(item => String(item.id) === String(id));
+  if (!row || !category) return;
+
+  const cells = row.querySelectorAll('td');
+  document.getElementById('categoryId').value = id;
+  document.getElementById('categoryName').value = category.name || '';
+  document.getElementById('categorySlug').value = category.slug || '';
+  document.getElementById('categoryResourceType').value = category.resource_type || '3d-models';
+  document.getElementById('categorySortOrder').value = category.sort_order || 0;
+  document.getElementById('categoryStatus').value = category.status || 'active';
+  document.getElementById('categoryDescription').value = category.description || '';
+  document.getElementById('categoryMetaTitle').value = category.meta_title || '';
+  document.getElementById('categoryMetaDescription').value = category.meta_description || '';
+  document.getElementById('categoryLandingContent').value = category.landing_content || '';
+
+  modalTitle.textContent = 'Edit Category';
+  modal.style.display = 'flex';
+}
+
+async function saveCategory() {
+  const id = document.getElementById('categoryId').value;
+  const landingContent = document.getElementById('categoryLandingContent').value.trim();
+  if (landingContent) {
+    try {
+      JSON.parse(landingContent);
+    } catch (err) {
+      alert('Landing Content JSON is invalid.');
+      return;
+    }
+  }
+  const data = {
+    name: document.getElementById('categoryName').value,
+    slug: document.getElementById('categorySlug').value,
+    resource_type: document.getElementById('categoryResourceType').value,
+    description: document.getElementById('categoryDescription').value,
+    meta_title: document.getElementById('categoryMetaTitle').value,
+    meta_description: document.getElementById('categoryMetaDescription').value,
+    landing_content: landingContent,
+    sort_order: document.getElementById('categorySortOrder').value,
+    status: document.getElementById('categoryStatus').value
+  };
+
+  const url = id ? '/admin/categories/' + id : '/admin/categories';
+  const method = id ? 'PUT' : 'POST';
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error saving category');
+  }
+}
+
+async function deleteCategory(id) {
+  if (!confirm('Are you sure you want to delete this category?')) return;
+
+  try {
+    const response = await fetch('/admin/categories/' + id, { method: 'DELETE' });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error deleting category');
+  }
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll('.data-table tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(term) ? '' : 'none';
+  });
+});
+
+// Close modal on overlay click
+modal.addEventListener('click', function(e) {
+  if (e.target === modal) closeModal();
+});
+
+// Event delegation for edit/delete buttons
+document.querySelector('.data-table tbody')?.addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (action === 'edit') {
+    editCategory(id);
+  } else if (action === 'delete') {
+    deleteCategory(id);
+  }
+});
+</script>
+
+<%- include('partials/footer') %>

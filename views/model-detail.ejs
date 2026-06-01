@@ -1,0 +1,2019 @@
+<%- include('partials/header') %>
+
+<section class="model-detail-hero">
+  <div class="container">
+    <div class="model-detail-grid">
+      <!-- Left: 3D Viewer -->
+      <div class="model-viewer-section">
+        <div class="model-3d-viewer" id="model3dViewer">
+          <% if (model.file_url) { %>
+            <model-viewer 
+              class="model-viewer-natural"
+              src="<%= model.file_url %>" 
+              alt="<%= model.name %>"
+              camera-controls 
+              auto-rotate
+              shadow-intensity="1.2"
+              shadow-softness="0.82"
+              exposure="1"
+              environment-image="neutral"
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          <% } else { %>
+            <div class="model-viewer-placeholder">
+              <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-preview-img">
+            </div>
+          <% } %>
+        </div>
+        <div class="model-viewer-controls">
+          <button class="viewer-btn" id="rotateBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
+              <path d="M21 3v5h-5"/>
+            </svg>
+            Auto Rotate
+          </button>
+          <button class="viewer-btn" id="fullscreenBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
+            </svg>
+            Fullscreen
+          </button>
+        </div>
+      </div>
+
+      <!-- Right: Model Info -->
+      <div class="model-info-section">
+        <div class="model-breadcrumb">
+          <a href="/design-3d">3D Models</a>
+          <span>/</span>
+          <a href="/3d-models/<%= model.category_slug || model.category %>"><%= model.category %></a>
+          <span>/</span>
+          <span><%= model.name %></span>
+        </div>
+        
+        <h1 class="model-detail-title"><%= model.name %></h1>
+        
+        <div class="model-detail-meta">
+          <% if (model.is_free) { %>
+            <span class="tag tag-free">Free</span>
+          <% } else { %>
+            <span class="tag tag-pro">Pro</span>
+          <% } %>
+          <% if (model.poly_count) { %>
+            <span class="meta-item"><%= model.poly_count %></span>
+          <% } %>
+        </div>
+
+        <div class="model-description">
+          <h3>Description</h3>
+          <p><%= model.description || 'No description available.' %></p>
+        </div>
+
+        <div class="model-specs">
+          <h3>Specifications</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Format</span>
+              <span class="spec-value">GLB / GLTF</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Category</span>
+              <span class="spec-value"><%= model.category %></span>
+            </div>
+            <% if (model.file_size) { %>
+              <div class="spec-item">
+                <span class="spec-label">File Size</span>
+                <span class="spec-value"><%= model.file_size %></span>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="model-actions">
+          <button class="btn btn-primary btn-large" id="designNowBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Design Now
+          </button>
+          <% if (model.file_url) { %>
+            <a href="<%= model.file_url %>" download class="btn btn-secondary btn-large">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              Download Model
+            </a>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene Showcase -->
+<section class="model-showcase-section">
+  <div class="container">
+    <h2 class="section-title">Scene Showcase</h2>
+    <p class="section-subtitle">See how this model looks in different environments</p>
+    
+    <div class="showcase-grid">
+      <div class="showcase-item">
+        <div class="showcase-image">
+          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Studio Lighting">
+        </div>
+        <span class="showcase-label">Studio</span>
+      </div>
+      <div class="showcase-item">
+        <div class="showcase-image">
+          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Outdoor Scene">
+        </div>
+        <span class="showcase-label">Outdoor</span>
+      </div>
+      <div class="showcase-item">
+        <div class="showcase-image">
+          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Runway">
+        </div>
+        <span class="showcase-label">Runway</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Related Models -->
+<% if (related && related.length > 0) { %>
+<section class="related-models-section">
+  <div class="container">
+    <h2 class="section-title">Related Models</h2>
+    
+    <div class="models-grid">
+      <% related.forEach(function(item) { %>
+        <a href="/3d-models/<%= item.category_slug || item.category %>/<%= item.slug %>" class="model-card">
+          <div class="model-preview-3d">
+            <% if (item.image_url) { %>
+              <img src="<%= item.image_url %>" alt="<%= item.name %>" class="model-img">
+            <% } else { %>
+              <div class="model-placeholder">
+                <span><%= item.name.charAt(0) %></span>
+              </div>
+            <% } %>
+          </div>
+          <div class="model-info">
+            <h3 class="model-name"><%= item.name %></h3>
+            <div class="model-tags">
+              <% if (item.is_free) { %>
+                <span class="tag tag-free">Free</span>
+              <% } else { %>
+                <span class="tag tag-pro">Pro</span>
+              <% } %>
+            </div>
+          </div>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<!-- Design Modal -->
+<div class="design-modal" id="designModal">
+  <div class="design-modal-overlay" id="designModalOverlay"></div>
+    <div class="design-modal-content">
+      <div class="design-modal-header">
+        <h2>Design Studio - <%= model.name %></h2>
+      <button class="btn btn-primary btn-small" id="saveDesignModal">
+        Save
+      </button>
+    </div>
+    <div class="design-modal-body">
+      <div class="texture-designer">
+        <!-- 3D Preview (Top Left) -->
+        <div class="preview-3d-panel">
+          <% if (model.file_url) { %>
+            <model-viewer 
+              class="model-viewer-natural"
+              id="designerViewer"
+              src="<%= model.file_url %>" 
+              alt="<%= model.name %>"
+              camera-controls
+              auto-rotate
+              shadow-intensity="1.2"
+              shadow-softness="0.82"
+              exposure="1"
+              environment-image="neutral"
+              style="width: 100%; height: 100%;"
+            ></model-viewer>
+          <% } else { %>
+            <div class="designer-placeholder">
+              <img src="<%= model.image_url %>" alt="<%= model.name %>">
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Main Texture Design Area (Center) -->
+        <div class="texture-canvas-area">
+          <svg id="textureSvg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="patternStriped" patternUnits="userSpaceOnUse" width="20" height="20">
+                <rect width="20" height="10" fill="currentColor" opacity="0.3"/>
+              </pattern>
+              <pattern id="patternCheckered" patternUnits="userSpaceOnUse" width="20" height="20">
+                <rect width="10" height="10" fill="currentColor" opacity="0.3"/>
+                <rect x="10" y="10" width="10" height="10" fill="currentColor" opacity="0.3"/>
+              </pattern>
+              <pattern id="patternDots" patternUnits="userSpaceOnUse" width="20" height="20">
+                <circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.3"/>
+              </pattern>
+            </defs>
+            <rect id="textureWhiteBase" fill="#ffffff"/>
+            <!-- Model SVG Texture Background -->
+            <% if (model.texture_url) { %>
+              <image id="textureBg" href="<%= model.texture_url %>" preserveAspectRatio="none"/>
+              <g id="textureTemplateLayer"></g>
+            <% } else { %>
+              <rect id="textureBg" fill="#ffffff"/>
+              <text id="textureBgText" text-anchor="middle" fill="#adb5bd" font-size="18" font-family="Arial, sans-serif">No texture available for this model</text>
+            <% } %>
+            <rect id="texturePattern" fill="none"/>
+            <g id="textureElements"></g>
+            <g id="selectionLayer" class="editor-ui"></g>
+          </svg>
+        </div>
+
+        <!-- Bottom Global Toolbar -->
+        <div class="designer-toolbar">
+          <div class="toolbar-group">
+            <button class="toolbar-btn active" id="toolSelect" title="Select">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolPan" title="Pan">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolDraw" title="Draw">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+            </button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="toolbar-group">
+            <button class="toolbar-btn" id="toolText" title="Add Text">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolImage" title="Add Image">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolShape" title="Add Shape">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              </svg>
+            </button>
+          </div>
+          <div class="toolbar-divider"></div>
+          <div class="toolbar-group">
+            <button class="toolbar-btn" id="toolUndo" title="Undo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 7v6h6"/>
+                <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolRedo" title="Redo">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 7v6h-6"/>
+                <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13"/>
+              </svg>
+            </button>
+            <button class="toolbar-btn" id="toolDelete" title="Delete">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M8 6V4h8v2"/>
+                <path d="M19 6l-1 14H6L5 6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<script>
+// Viewer controls
+const rotateBtn = document.getElementById('rotateBtn');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const viewer = document.querySelector('#model3dViewer model-viewer');
+
+if (rotateBtn && viewer) {
+  rotateBtn.addEventListener('click', () => {
+    viewer.autoRotate = !viewer.autoRotate;
+    rotateBtn.classList.toggle('active');
+  });
+}
+
+if (fullscreenBtn && viewer) {
+  fullscreenBtn.addEventListener('click', () => {
+    if (viewer.requestFullscreen) {
+      viewer.requestFullscreen();
+    }
+  });
+}
+
+// Demo color picker
+const colorBtns = document.querySelectorAll('.color-btn');
+colorBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    colorBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Demo pattern picker
+const patternBtns = document.querySelectorAll('.pattern-btn');
+patternBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    patternBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+// Design Modal
+document.addEventListener('DOMContentLoaded', () => {
+  const designNowBtn = document.getElementById('designNowBtn');
+  const designModal = document.getElementById('designModal');
+  const designModalOverlay = document.getElementById('designModalOverlay');
+  const saveDesignModal = document.getElementById('saveDesignModal');
+  const designerViewer = document.getElementById('designerViewer');
+  const detailViewer = document.querySelector('#model3dViewer model-viewer');
+  const textureCanvasArea = document.querySelector('.texture-canvas-area');
+  const textureSvg = document.getElementById('textureSvg');
+  const textureElements = document.getElementById('textureElements');
+  const texturePattern = document.getElementById('texturePattern');
+  const selectionLayer = document.getElementById('selectionLayer');
+  const elementToolbar = document.createElement('div');
+  elementToolbar.className = 'element-toolbar';
+  elementToolbar.dataset.editorToolbar = 'true';
+  textureCanvasArea.appendChild(elementToolbar);
+  const colorPopover = document.createElement('div');
+  colorPopover.className = 'color-popover';
+  colorPopover.dataset.editorToolbar = 'true';
+  textureCanvasArea.appendChild(colorPopover);
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const defaultTextContent = <%- JSON.stringify(t('designStudio.defaultText')) %>;
+  const minSize = 12;
+  const state = {
+    tool: 'select',
+    selected: null,
+    selectedTemplatePath: null,
+    active: null,
+    elementCounter: 0,
+    history: [],
+    historyIndex: -1,
+    svgWidth: 800,
+    svgHeight: 600,
+    textureUpdateTimer: null,
+    textureUpdateId: 0,
+    lastTextClick: { element: null, time: 0 },
+    textEditor: null,
+    colorPicker: null,
+    appliedTextureUrl: null
+  };
+
+  const toolButtons = {
+    select: document.getElementById('toolSelect'),
+    pan: document.getElementById('toolPan'),
+    draw: document.getElementById('toolDraw'),
+    text: document.getElementById('toolText'),
+    image: document.getElementById('toolImage'),
+    shape: document.getElementById('toolShape'),
+    arrow: null
+  };
+
+  function openModal() {
+    designModal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    loadTextureDimensions();
+    renderSelection();
+    scheduleTexturePreviewUpdate();
+  }
+
+  function parseSvgLength(value) {
+    if (!value) return NaN;
+    const match = value.trim().match(/^([\d.]+)\s*(px|mm|cm|in|pt|pc|em|ex|%)?$/i);
+    if (!match) return NaN;
+    const num = parseFloat(match[1]);
+    if (isNaN(num)) return NaN;
+    const unit = (match[2] || 'px').toLowerCase();
+    switch (unit) {
+      case 'mm': return num * 3.779527559;
+      case 'cm': return num * 37.79527559;
+      case 'in': return num * 96;
+      case 'pt': return num * 1.333333333;
+      case 'pc': return num * 16;
+      case '%': return NaN;
+      default: return num;
+    }
+  }
+
+  // Load SVG texture dimensions dynamically
+  function loadTextureDimensions() {
+    const textureUrl = '<%= model.texture_url %>';
+    if (!textureUrl) {
+      setSvgDimensions(800, 600);
+      return;
+    }
+    const svgFetchUrl = `/api/texture-svg?url=${encodeURIComponent(textureUrl)}`;
+
+    // Method 1: Try to get dimensions from SVG text content directly
+    fetch(svgFetchUrl)
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to load texture SVG');
+        return response.text();
+      })
+      .then(svgText => {
+        // Extract width and height from SVG tag using regex
+        const widthMatch = svgText.match(/<svg[^>]*\swidth=["']([^"']+)["']/i);
+        const heightMatch = svgText.match(/<svg[^>]*\sheight=["']([^"']+)["']/i);
+        const viewBoxMatch = svgText.match(/<svg[^>]*\sviewBox=["']([^"']+)["']/i);
+
+        let width = parseSvgLength(widthMatch ? widthMatch[1] : null);
+        let height = parseSvgLength(heightMatch ? heightMatch[1] : null);
+
+        // Fallback to viewBox if width/height not available
+        if ((isNaN(width) || isNaN(height)) && viewBoxMatch) {
+          const parts = viewBoxMatch[1].split(/\s+/).map(parseFloat);
+          if (parts.length >= 4) {
+            if (isNaN(width)) width = parts[2];
+            if (isNaN(height)) height = parts[3];
+          }
+        }
+
+        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
+          width = 800;
+          height = 600;
+        }
+
+        setSvgDimensions(Math.round(width), Math.round(height));
+        inlineTextureTemplate(svgText);
+      })
+      .catch(() => {
+        // Method 2: Fallback to Image object if fetch fails (CORS)
+        const img = new Image();
+        img.onload = function() {
+          setSvgDimensions(this.naturalWidth || 800, this.naturalHeight || 600);
+        };
+        img.onerror = function() {
+          setSvgDimensions(800, 600);
+        };
+        img.src = textureUrl;
+      });
+  }
+
+  function setSvgDimensions(width, height) {
+    state.svgWidth = width;
+    state.svgHeight = height;
+    textureSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    textureSvg.style.width = width + 'px';
+    textureSvg.style.height = height + 'px';
+
+    const textureBg = document.getElementById('textureBg');
+    const textureWhiteBase = document.getElementById('textureWhiteBase');
+    const textureBgText = document.getElementById('textureBgText');
+
+    if (textureWhiteBase) {
+      textureWhiteBase.setAttribute('width', width);
+      textureWhiteBase.setAttribute('height', height);
+    }
+
+    if (textureBg) {
+      if (textureBg.tagName === 'image') {
+        textureBg.setAttribute('width', width);
+        textureBg.setAttribute('height', height);
+      } else if (textureBg.tagName === 'rect') {
+        textureBg.setAttribute('width', width);
+        textureBg.setAttribute('height', height);
+      }
+    }
+
+    if (texturePattern) {
+      texturePattern.setAttribute('width', width);
+      texturePattern.setAttribute('height', height);
+    }
+
+    const textureTemplateLayer = document.getElementById('textureTemplateLayer');
+    if (textureTemplateLayer && textureTemplateLayer.dataset.viewBox) {
+      applyTemplateLayerTransform(textureTemplateLayer);
+    }
+    if (textureBgText) {
+      textureBgText.setAttribute('x', width / 2);
+      textureBgText.setAttribute('y', height / 2);
+    }
+    renderSelection();
+    scheduleTexturePreviewUpdate();
+  }
+
+  function parseSvgViewBox(sourceSvg) {
+    const viewBox = sourceSvg.getAttribute('viewBox');
+    if (viewBox) {
+      const parts = viewBox.trim().split(/[\s,]+/).map(parseFloat);
+      if (parts.length >= 4 && parts.every(Number.isFinite) && parts[2] > 0 && parts[3] > 0) {
+        return { x: parts[0], y: parts[1], width: parts[2], height: parts[3] };
+      }
+    }
+    const width = parseSvgLength(sourceSvg.getAttribute('width'));
+    const height = parseSvgLength(sourceSvg.getAttribute('height'));
+    if (Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0) {
+      return { x: 0, y: 0, width, height };
+    }
+    return { x: 0, y: 0, width: state.svgWidth || 800, height: state.svgHeight || 600 };
+  }
+
+  function applyTemplateLayerTransform(layer) {
+    const parts = layer.dataset.viewBox.split(' ').map(parseFloat);
+    if (parts.length < 4 || parts.some(value => !Number.isFinite(value))) return;
+    const [x, y, width, height] = parts;
+    if (width <= 0 || height <= 0) return;
+    const scaleX = state.svgWidth / width;
+    const scaleY = state.svgHeight / height;
+    layer.setAttribute('transform', `matrix(${scaleX} 0 0 ${scaleY} ${-x * scaleX} ${-y * scaleY})`);
+  }
+
+  function restoreTemplatePathPreview(path) {
+    if (!path || path.dataset.color) return;
+    getTemplateFillPath(path, false, false)?.remove();
+    path.classList.remove('hover-template-path', 'selected-template-path');
+  }
+
+  function getTemplateFillPath(path, create = false, persistent = false) {
+    if (!path?.dataset?.templatePathId) return null;
+    const selector = `.texture-template-fill[data-template-path-id="${path.dataset.templatePathId}"]${persistent ? '[data-persistent="true"]' : ':not([data-persistent="true"])'}`;
+    let fillPath = path.parentNode?.querySelector(selector);
+    if (!fillPath && create) {
+      fillPath = document.importNode(path, true);
+      fillPath.removeAttribute('id');
+      fillPath.classList.remove('texture-template-path', 'hover-template-path', 'selected-template-path');
+      fillPath.classList.add('texture-template-fill');
+      fillPath.dataset.templatePathId = path.dataset.templatePathId;
+      fillPath.style.pointerEvents = 'none';
+      fillPath.setAttribute('stroke', 'transparent');
+      fillPath.setAttribute('stroke-width', '0');
+      fillPath.removeAttribute('filter');
+      if (persistent) fillPath.dataset.persistent = 'true';
+      path.parentNode.insertBefore(fillPath, path);
+    }
+    return fillPath;
+  }
+
+  function setTemplatePathPreview(path, mode) {
+    if (!path || path.dataset.color) return;
+    const fillPath = getTemplateFillPath(path, true, false);
+    fillPath.setAttribute('fill', mode === 'selected' ? 'rgba(0,102,255,0.42)' : 'rgba(0,102,255,0.24)');
+    fillPath.setAttribute('fill-opacity', '1');
+    path.classList.toggle('hover-template-path', mode === 'hover');
+    path.classList.toggle('selected-template-path', mode === 'selected');
+  }
+
+  function inlineTextureTemplate(svgText) {
+    const layer = document.getElementById('textureTemplateLayer');
+    if (!layer || !svgText) return;
+    const parsed = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+    const sourceSvg = parsed.documentElement;
+    if (!sourceSvg || sourceSvg.nodeName === 'parsererror' || parsed.querySelector('parsererror')) return;
+    const sourceViewBox = parseSvgViewBox(sourceSvg);
+    layer.innerHTML = '';
+    layer.dataset.viewBox = `${sourceViewBox.x} ${sourceViewBox.y} ${sourceViewBox.width} ${sourceViewBox.height}`;
+    applyTemplateLayerTransform(layer);
+    ['fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'fill-rule', 'clip-rule', 'style', 'class'].forEach((attr) => {
+      const value = sourceSvg.getAttribute(attr);
+      if (value) layer.setAttribute(attr, value);
+    });
+    [...sourceSvg.childNodes].forEach((node) => {
+      if (node.nodeType === Node.ELEMENT_NODE && node.tagName.toLowerCase() !== 'script') {
+        layer.appendChild(document.importNode(node, true));
+      }
+    });
+    layer.querySelectorAll('path, polygon, rect, circle, ellipse').forEach((node, index) => {
+      if (node.closest('defs, clipPath, mask, pattern')) return;
+      node.classList.add('texture-template-path');
+      node.dataset.templatePathId = `template-path-${index + 1}`;
+      if (!node.id) node.id = node.dataset.templatePathId;
+      node.style.cursor = 'pointer';
+      const initialFill = node.getAttribute('fill') || '';
+      const initialStroke = node.getAttribute('stroke') || '';
+      node.dataset.originalFill = initialFill;
+      node.dataset.originalStroke = initialStroke;
+      if (!initialFill || initialFill === 'none') {
+        node.dataset.areaEmpty = 'true';
+      }
+      if (!initialStroke && layer.getAttribute('stroke')) {
+        node.setAttribute('stroke', layer.getAttribute('stroke'));
+      }
+      if (!node.getAttribute('stroke-width') && layer.getAttribute('stroke-width')) {
+        node.setAttribute('stroke-width', layer.getAttribute('stroke-width'));
+      }
+    });
+    scheduleTexturePreviewUpdate();
+  }
+
+  function closeModal() {
+    designModal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  designNowBtn?.addEventListener('click', openModal);
+  designModalOverlay?.addEventListener('click', closeModal);
+
+  function setTool(tool) {
+    state.tool = tool;
+    Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
+    if (toolButtons[tool]) toolButtons[tool].classList.add('active');
+    textureSvg.classList.toggle('is-drawing', tool === 'draw');
+    textureSvg.style.cursor = tool === 'pan' ? 'grab' : tool === 'draw' ? 'crosshair' : 'default';
+  }
+
+  Object.entries(toolButtons).forEach(([tool, btn]) => {
+    btn?.addEventListener('click', () => setTool(tool));
+  });
+
+  function getCanvasCenter() {
+    const viewBox = textureSvg.getAttribute('viewBox');
+    if (viewBox) {
+      const parts = viewBox.split(/\s+/).map(parseFloat);
+      if (parts.length >= 4) {
+        return { cx: parts[0] + parts[2] / 2, cy: parts[1] + parts[3] / 2 };
+      }
+    }
+    return { cx: 400, cy: 300 };
+  }
+
+  function svgPoint(event) {
+    const pt = textureSvg.createSVGPoint();
+    pt.x = event.clientX;
+    pt.y = event.clientY;
+    return pt.matrixTransform(textureSvg.getScreenCTM().inverse());
+  }
+
+  function createSvg(tag, attrs = {}) {
+    const node = document.createElementNS(SVG_NS, tag);
+    Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+    return node;
+  }
+
+  function getTextureSvgDataUrl(options = {}) {
+    const includeSelectionHighlight = options.includeSelectionHighlight !== false;
+    const exportSvg = textureSvg.cloneNode(true);
+    exportSvg.querySelector('#selectionLayer')?.remove();
+    exportSvg.querySelectorAll('.texture-element.selected').forEach((element) => {
+      element.classList.remove('selected');
+    });
+    if (!includeSelectionHighlight) {
+      exportSvg.querySelectorAll('.texture-template-path.selected-template-path').forEach((element) => {
+        element.classList.remove('selected-template-path');
+      });
+      exportSvg.querySelectorAll('.texture-template-path.hover-template-path').forEach((element) => {
+        element.classList.remove('hover-template-path');
+      });
+      exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
+        element.remove();
+      });
+      exportSvg.querySelectorAll('.texture-template-path[data-area-empty="true"]').forEach((element) => {
+        if (element.dataset.color) return;
+        if (element.dataset.originalFill) {
+          element.setAttribute('fill', element.dataset.originalFill);
+        } else {
+          element.removeAttribute('fill');
+        }
+        element.removeAttribute('fill-opacity');
+      });
+    }
+    exportSvg.querySelectorAll('[contenteditable]').forEach((element) => {
+      element.removeAttribute('contenteditable');
+      element.classList.remove('is-editing');
+    });
+    const svgData = new XMLSerializer().serializeToString(exportSvg);
+    return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+  }
+
+  function getTextureSize() {
+    const viewBox = textureSvg.getAttribute('viewBox');
+    if (viewBox) {
+      const parts = viewBox.split(/\s+/).map(parseFloat);
+      if (parts.length >= 4) return { width: parts[2], height: parts[3] };
+    }
+    return { width: state.svgWidth || 800, height: state.svgHeight || 600 };
+  }
+
+  function rasterizeTexture(options = {}) {
+    return new Promise((resolve, reject) => {
+      const { width, height } = getTextureSize();
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(width));
+      canvas.height = Math.max(1, Math.round(height));
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = getTextureSvgDataUrl(options);
+    });
+  }
+
+  async function applyTextureToViewer(viewerElement, textureUrl) {
+    if (!viewerElement || !textureUrl) return;
+    try {
+      await viewerElement.updateComplete;
+      if (typeof viewerElement.createTexture !== 'function') return;
+      const model = viewerElement.model;
+      const materials = model?.materials || [];
+      if (!materials.length) return;
+      const texture = await viewerElement.createTexture(textureUrl);
+      materials.forEach((material) => {
+        const pbr = material.pbrMetallicRoughness;
+        if (pbr?.setBaseColorFactor) {
+          pbr.setBaseColorFactor([1, 1, 1, 1]);
+        }
+        if (pbr?.baseColorTexture?.setTexture) {
+          pbr.baseColorTexture.setTexture(texture);
+        } else if (pbr?.setBaseColorTexture) {
+          pbr.setBaseColorTexture(texture);
+        }
+      });
+      state.appliedTextureUrl = textureUrl;
+    } catch (error) {
+      console.warn('Failed to update 3D texture preview:', error);
+    }
+  }
+
+  function applyTextureToModel(textureUrl) {
+    return applyTextureToViewer(designerViewer, textureUrl);
+  }
+
+  function scheduleTexturePreviewUpdate() {
+    clearTimeout(state.textureUpdateTimer);
+    state.textureUpdateTimer = setTimeout(async () => {
+      const updateId = ++state.textureUpdateId;
+      const textureUrl = await rasterizeTexture();
+      if (updateId === state.textureUpdateId) {
+        applyTextureToModel(textureUrl);
+      }
+    }, 120);
+  }
+
+  async function saveDesignAndClose() {
+    state.textEditor?.commit();
+    const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
+    await Promise.all([
+      applyTextureToViewer(designerViewer, textureUrl),
+      applyTextureToViewer(detailViewer, textureUrl)
+    ]);
+    closeModal();
+  }
+
+  function getCleanElementsHtml() {
+    const clone = textureElements.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach((element) => {
+      element.removeAttribute('contenteditable');
+      element.classList.remove('is-editing');
+    });
+    clone.querySelectorAll('.texture-element.selected').forEach((element) => {
+      element.classList.remove('selected');
+    });
+    return clone.innerHTML;
+  }
+
+  function getData(group) {
+    if (group.classList?.contains('texture-template-path')) {
+      const bbox = group.getBBox();
+      return {
+        x: bbox.x,
+        y: bbox.y,
+        width: Math.max(minSize, bbox.width),
+        height: Math.max(minSize, bbox.height),
+        baseWidth: Math.max(minSize, bbox.width),
+        baseHeight: Math.max(minSize, bbox.height),
+        fontSize: 24,
+        rotate: 0
+      };
+    }
+    return {
+      x: parseFloat(group.dataset.x || 0),
+      y: parseFloat(group.dataset.y || 0),
+      width: parseFloat(group.dataset.width || 1),
+      height: parseFloat(group.dataset.height || 1),
+      baseWidth: parseFloat(group.dataset.baseWidth || group.dataset.width || 1),
+      baseHeight: parseFloat(group.dataset.baseHeight || group.dataset.height || 1),
+      fontSize: parseFloat(group.dataset.fontSize || 24),
+      rotate: parseFloat(group.dataset.rotate || 0)
+    };
+  }
+
+  function setData(group, patch) {
+    const data = { ...getData(group), ...patch };
+    data.width = Math.max(minSize, data.width);
+    data.height = Math.max(minSize, data.height);
+    group.dataset.x = data.x;
+    group.dataset.y = data.y;
+    group.dataset.width = data.width;
+    group.dataset.height = data.height;
+    group.dataset.baseWidth = data.baseWidth || data.width;
+    group.dataset.baseHeight = data.baseHeight || data.height;
+    group.dataset.fontSize = data.fontSize || parseFloat(group.dataset.fontSize || 24);
+    group.dataset.rotate = data.rotate;
+    group.setAttribute('transform', `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`);
+    renderElementContent(group);
+  }
+
+  function renderElementContent(group) {
+    const data = getData(group);
+    const content = group.querySelector('.texture-content');
+    if (!content) return;
+    const type = group.dataset.type;
+
+    if (type === 'text') {
+      content.setAttribute('width', data.width);
+      content.setAttribute('height', data.height);
+      const textBox = group.querySelector('.texture-text-box');
+      if (textBox) {
+        textBox.style.fontSize = `${Math.max(12, data.fontSize)}px`;
+        textBox.style.color = textBox.dataset.color || '#111827';
+      }
+    } else if (type === 'rect' || type === 'image') {
+      content.setAttribute('width', data.width);
+      content.setAttribute('height', data.height);
+    } else if (type === 'arrow') {
+      const line = group.querySelector('line.texture-content');
+      const head = group.querySelector('polygon');
+      const mid = data.height / 2;
+      const headSize = Math.min(data.height * 0.8, Math.max(10, data.width * 0.22));
+      line.setAttribute('x1', 0);
+      line.setAttribute('y1', mid);
+      line.setAttribute('x2', Math.max(0, data.width - headSize * 0.55));
+      line.setAttribute('y2', mid);
+      line.setAttribute('stroke-width', group.dataset.strokeWidth || Math.max(2, data.height * 0.16));
+      head.setAttribute('points', `${data.width},${mid} ${data.width - headSize},${mid - headSize / 2} ${data.width - headSize},${mid + headSize / 2}`);
+    } else if (type === 'path') {
+      const scaleX = data.width / Math.max(1, data.baseWidth);
+      const scaleY = data.height / Math.max(1, data.baseHeight);
+      content.setAttribute('transform', `scale(${scaleX} ${scaleY})`);
+    }
+  }
+
+  function autoFitTextHeight(group) {
+    if (!group || group.dataset.type !== 'text') return false;
+    const textBox = group.querySelector('.texture-text-box');
+    if (!textBox) return false;
+    const data = getData(group);
+    const previousHeight = textBox.style.height;
+    textBox.style.height = 'auto';
+    const nextHeight = Math.max(minSize, Math.ceil(textBox.scrollHeight));
+    textBox.style.height = previousHeight || '100%';
+    if (Math.abs(nextHeight - data.height) <= 1) return false;
+    setData(group, { height: nextHeight });
+    return true;
+  }
+
+  function setElementColor(group, color) {
+    if (!group) return;
+    if (group.classList?.contains('texture-template-path')) {
+      group.dataset.color = color;
+      const fillPath = getTemplateFillPath(group, true, true);
+      fillPath.setAttribute('fill', getSvgPaint(group, color, 'fill'));
+      fillPath.setAttribute('fill-opacity', '1');
+      group.dataset.areaEmpty = 'false';
+      return;
+    }
+    const type = group.dataset.type;
+    group.dataset.color = color;
+    if (type === 'text') {
+      const textBox = group.querySelector('.texture-text-box');
+      textBox.dataset.color = color;
+      if (String(color).includes('linear-gradient')) {
+        textBox.style.backgroundImage = color;
+        textBox.style.webkitBackgroundClip = 'text';
+        textBox.style.backgroundClip = 'text';
+        textBox.style.color = 'transparent';
+      } else {
+        textBox.style.backgroundImage = '';
+        textBox.style.webkitBackgroundClip = '';
+        textBox.style.backgroundClip = '';
+        textBox.style.color = color;
+      }
+    } else if (type === 'rect') {
+      group.querySelector('rect.texture-content')?.setAttribute('fill', getSvgPaint(group, color, 'fill'));
+    } else if (type === 'arrow') {
+      const paint = getSvgPaint(group, color, 'stroke');
+      group.querySelector('line.texture-content')?.setAttribute('stroke', paint);
+      group.querySelector('polygon')?.setAttribute('fill', paint);
+    } else if (type === 'path') {
+      group.querySelector('path.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
+    }
+  }
+
+  function colorToCss(value) {
+    return value || '#111827';
+  }
+
+  function getSvgPaint(group, value, prop) {
+    if (!String(value || '').includes('linear-gradient')) return value;
+    const parsed = parseColorState(value);
+    const id = `${group.id}-${prop}-gradient`;
+    let gradient = document.getElementById(id);
+    if (!gradient) {
+      gradient = createSvg('linearGradient', { id, x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
+      textureSvg.querySelector('defs')?.appendChild(gradient);
+    }
+    gradient.innerHTML = '';
+    gradient.appendChild(createSvg('stop', { offset: '0%', 'stop-color': rgbaFrom(parsed.start, parsed.alpha) }));
+    gradient.appendChild(createSvg('stop', { offset: '100%', 'stop-color': rgbaFrom(parsed.end, parsed.alpha) }));
+    return `url(#${id})`;
+  }
+
+  function getColorValue(group, prop) {
+    if (!group) return '#111827';
+    if (group.classList?.contains('texture-template-path')) {
+      return group.dataset.color || (group.dataset.areaEmpty === 'true' ? '#ffffff' : group.style.fill || group.getAttribute('fill')) || '#ffffff';
+    }
+    const type = group.dataset.type;
+    if (prop === 'strokeColor') {
+      if (group.dataset.strokeColor) return group.dataset.strokeColor;
+      return group.querySelector('rect.texture-content')?.getAttribute('stroke') || '#1e3a8a';
+    }
+    if (group.dataset.color) return group.dataset.color;
+    if (type === 'text') return group.querySelector('.texture-text-box')?.dataset.color || '#111827';
+    if (type === 'rect') return group.querySelector('rect.texture-content')?.getAttribute('fill') || '#3b82f6';
+    return group.querySelector('.texture-content')?.getAttribute('stroke') || '#111827';
+  }
+
+  function hexToRgb(hex) {
+    const clean = (hex || '#111827').replace('#', '');
+    const value = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean;
+    return {
+      r: parseInt(value.slice(0, 2), 16) || 0,
+      g: parseInt(value.slice(2, 4), 16) || 0,
+      b: parseInt(value.slice(4, 6), 16) || 0
+    };
+  }
+
+  function rgbToHex(r, g, b) {
+    return `#${[r, g, b].map((value) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, '0')).join('')}`;
+  }
+
+  function rgbToHsv(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const d = max - min;
+    let h = 0;
+    if (d !== 0) {
+      if (max === r) h = ((g - b) / d) % 6;
+      else if (max === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h *= 60;
+      if (h < 0) h += 360;
+    }
+    return { h, s: max === 0 ? 0 : d / max, v: max };
+  }
+
+  function hsvToRgb(h, s, v) {
+    const c = v * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = v - c;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) [r, g, b] = [c, x, 0];
+    else if (h < 120) [r, g, b] = [x, c, 0];
+    else if (h < 180) [r, g, b] = [0, c, x];
+    else if (h < 240) [r, g, b] = [0, x, c];
+    else if (h < 300) [r, g, b] = [x, 0, c];
+    else [r, g, b] = [c, 0, x];
+    return {
+      r: (r + m) * 255,
+      g: (g + m) * 255,
+      b: (b + m) * 255
+    };
+  }
+
+  function hsvToHex(h, s, v) {
+    const rgb = hsvToRgb(h, s, v);
+    return rgbToHex(rgb.r, rgb.g, rgb.b);
+  }
+
+  function normalizeHex(value) {
+    const match = String(value || '').match(/#?[0-9a-fA-F]{6}/);
+    return match ? `#${match[0].replace('#', '')}` : '#111827';
+  }
+
+  function rgbaFrom(hex, alpha) {
+    const rgb = hexToRgb(hex);
+    const a = Math.max(0, Math.min(100, parseFloat(alpha) || 100)) / 100;
+    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;
+  }
+
+  function gradientFrom(start, end, alpha) {
+    return `linear-gradient(90deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;
+  }
+
+  function parseColorState(value) {
+    const colors = [...String(value || '').matchAll(/#[0-9a-fA-F]{6}/g)].map((match) => match[0]);
+    const rgbaMatch = String(value || '').match(/rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/);
+    const rgbaHex = rgbaMatch ? rgbToHex(parseFloat(rgbaMatch[1]), parseFloat(rgbaMatch[2]), parseFloat(rgbaMatch[3])) : null;
+    const start = colors[0] || rgbaHex || normalizeHex(value);
+    const hsv = rgbToHsv(...Object.values(hexToRgb(start)));
+    return {
+      mode: String(value || '').includes('linear-gradient') ? 'gradient' : 'solid',
+      activeStop: 'start',
+      start,
+      end: colors[1] || '#ffffff',
+      h: hsv.h,
+      s: hsv.s,
+      v: hsv.v,
+      alpha: rgbaMatch && rgbaMatch[4] !== undefined ? Math.round(parseFloat(rgbaMatch[4]) * 100) : 100
+    };
+  }
+
+  function setElementStrokeColor(group, color) {
+    if (!group) return;
+    if (group.dataset.type === 'rect') {
+      group.dataset.strokeColor = color;
+      group.querySelector('rect.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
+    }
+  }
+
+  function setElementOpacity(group, value) {
+    if (!group) return;
+    group.setAttribute('opacity', String(Math.max(0, Math.min(100, parseFloat(value) || 100)) / 100));
+  }
+
+  function setElementLineWidth(group, value) {
+    if (!group) return;
+    const width = Math.max(1, parseFloat(value) || 1);
+    if (group.dataset.type === 'path') {
+      group.querySelector('path.texture-content')?.setAttribute('stroke-width', width);
+    } else if (group.dataset.type === 'arrow') {
+      group.dataset.strokeWidth = width;
+      group.querySelector('line.texture-content')?.setAttribute('stroke-width', width);
+    } else if (group.dataset.type === 'rect') {
+      group.querySelector('rect.texture-content')?.setAttribute('stroke-width', width);
+    }
+  }
+
+  function updateSelectedElement(patch, options = {}) {
+    const group = state.selected;
+    if (!group) return;
+    if (group.classList?.contains('texture-template-path')) {
+      if (patch.color) setElementColor(group, patch.color);
+      renderSelection();
+      scheduleTexturePreviewUpdate();
+      return;
+    }
+    if (patch.fontSize !== undefined && group.dataset.type === 'text') {
+      setData(group, { fontSize: parseFloat(patch.fontSize) || 24 });
+      autoFitTextHeight(group);
+    }
+    if (patch.color) setElementColor(group, patch.color);
+    if (patch.strokeColor) setElementStrokeColor(group, patch.strokeColor);
+    if (patch.opacity !== undefined) setElementOpacity(group, patch.opacity);
+    if (patch.lineWidth !== undefined) setElementLineWidth(group, patch.lineWidth);
+    if (options.commit) {
+      renderSelection();
+      saveHistory();
+    } else {
+      renderSelection();
+      scheduleTexturePreviewUpdate();
+    }
+  }
+
+  function createElement(type, options = {}) {
+    const center = getCanvasCenter();
+    const width = options.width || 120;
+    const height = options.height || 80;
+    const group = createSvg('g');
+    group.id = `element-${++state.elementCounter}`;
+    group.classList.add('texture-element');
+    group.dataset.type = type;
+    group.dataset.x = options.x ?? center.cx - width / 2;
+    group.dataset.y = options.y ?? center.cy - height / 2;
+    group.dataset.width = width;
+    group.dataset.height = height;
+    group.dataset.baseWidth = options.baseWidth || width;
+    group.dataset.baseHeight = options.baseHeight || height;
+    group.dataset.fontSize = options.fontSize || 24;
+    group.dataset.rotate = options.rotate || 0;
+
+    let content;
+    if (type === 'text') {
+      content = createSvg('foreignObject', {
+        class: 'texture-content',
+        x: 0,
+        y: 0,
+        width,
+        height
+      });
+      const textBox = document.createElement('div');
+      textBox.className = 'texture-text-box';
+      textBox.dataset.color = options.color || '#111827';
+      textBox.textContent = options.text || defaultTextContent;
+      content.appendChild(textBox);
+    } else if (type === 'rect') {
+      content = createSvg('rect', {
+        class: 'texture-content',
+        x: 0,
+        y: 0,
+        rx: 8,
+        fill: '#3b82f6',
+        stroke: '#1e3a8a',
+        'stroke-width': 2
+      });
+    } else if (type === 'image') {
+      content = createSvg('image', {
+        class: 'texture-content',
+        x: 0,
+        y: 0,
+        href: options.src,
+        preserveAspectRatio: 'xMidYMid meet'
+      });
+    } else if (type === 'arrow') {
+      const line = createSvg('line', {
+        class: 'texture-content',
+        stroke: '#111827',
+        'stroke-linecap': 'round'
+      });
+      const head = createSvg('polygon', { fill: '#111827' });
+      group.append(line, head);
+    } else if (type === 'path') {
+      content = createSvg('path', {
+        class: 'texture-content',
+        d: options.d,
+        fill: 'none',
+        stroke: '#111827',
+        'stroke-width': 6,
+        'stroke-linecap': 'round',
+        'stroke-linejoin': 'round'
+      });
+    }
+
+    if (content) group.appendChild(content);
+    textureElements.appendChild(group);
+    setData(group, {});
+    autoFitTextHeight(group);
+    selectElement(group);
+    saveHistory();
+    setTool('select');
+    return group;
+  }
+
+  function selectElement(element) {
+    state.selected?.classList.remove('selected');
+    restoreTemplatePathPreview(state.selectedTemplatePath);
+    state.selectedTemplatePath?.classList.remove('selected-template-path');
+    state.selectedTemplatePath = null;
+    state.selected = element || null;
+    if (state.selected?.classList?.contains('texture-template-path')) {
+      state.selectedTemplatePath = state.selected;
+      setTemplatePathPreview(state.selectedTemplatePath, 'selected');
+      state.selectedTemplatePath.classList.add('selected-template-path');
+    } else {
+      state.selected?.classList.add('selected');
+    }
+    renderSelection();
+  }
+
+  function clearSelection() {
+    selectElement(null);
+  }
+
+  function editTextElement(group) {
+    if (!group || group.dataset.type !== 'text') return;
+    const textBox = group.querySelector('.texture-text-box');
+    if (!textBox) return;
+    selectElement(group);
+
+    if (state.textEditor) {
+      state.textEditor.commit();
+    }
+
+    textBox.setAttribute('contenteditable', 'true');
+    textBox.classList.add('is-editing');
+    textBox.style.height = 'auto';
+    const originalText = textBox.innerText;
+    const originalData = getData(group);
+    let isDone = false;
+    const syncTextHeight = () => {
+      if (isDone) return;
+      if (autoFitTextHeight(group)) {
+        renderSelection();
+        scheduleTexturePreviewUpdate();
+      }
+    };
+    const closeEditor = (commit) => {
+      if (isDone) return;
+      syncTextHeight();
+      isDone = true;
+      if (commit) {
+        textBox.textContent = textBox.innerText.trim() || defaultTextContent;
+        textBox.style.height = '100%';
+        autoFitTextHeight(group);
+        saveHistory();
+      } else {
+        textBox.textContent = originalText;
+        textBox.style.height = '100%';
+        setData(group, originalData);
+        renderSelection();
+      }
+      textBox.removeAttribute('contenteditable');
+      textBox.classList.remove('is-editing');
+      state.textEditor = null;
+      scheduleTexturePreviewUpdate();
+    };
+
+    const handleKeydown = (event) => {
+      event.stopPropagation();
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') closeEditor(true);
+      if (event.key === 'Escape') closeEditor(false);
+      requestAnimationFrame(syncTextHeight);
+    };
+    const handleInput = () => syncTextHeight();
+    const handlePointerDown = (event) => event.stopPropagation();
+    const handleBlur = () => closeEditor(true);
+    textBox.addEventListener('keydown', handleKeydown);
+    textBox.addEventListener('input', handleInput);
+    textBox.addEventListener('pointerdown', handlePointerDown);
+    textBox.addEventListener('blur', handleBlur);
+    state.textEditor = {
+      commit: () => closeEditor(true),
+      cancel: () => closeEditor(false)
+    };
+    requestAnimationFrame(() => {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      textBox.focus();
+      range.selectNodeContents(textBox);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      syncTextHeight();
+    });
+  }
+
+  function isTextDoubleClick(target) {
+    if (!target || target.dataset.type !== 'text') return false;
+    const now = Date.now();
+    const isDouble = state.lastTextClick.element === target && now - state.lastTextClick.time < 420;
+    state.lastTextClick = { element: target, time: now };
+    return isDouble;
+  }
+
+  function buildElementToolbar(group) {
+    if (group.classList?.contains('texture-template-path')) {
+      elementToolbar.innerHTML = '';
+      const control = document.createElement('label');
+      control.className = 'element-toolbar-control';
+      control.textContent = 'Area';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'color-chip';
+      button.dataset.colorProp = 'color';
+      const value = getColorValue(group, 'color');
+      button.dataset.colorValue = value;
+      button.style.background = colorToCss(value);
+      button.setAttribute('aria-label', 'Area color');
+      control.appendChild(button);
+      elementToolbar.appendChild(control);
+      positionElementToolbar(group);
+      return;
+    }
+    const type = group.dataset.type;
+    const data = getData(group);
+    elementToolbar.innerHTML = '';
+
+    const addColor = (label, value, name) => {
+      const control = document.createElement('label');
+      control.className = 'element-toolbar-control';
+      control.textContent = label;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'color-chip';
+      button.dataset.colorProp = name;
+      button.dataset.colorValue = value;
+      button.style.background = colorToCss(value);
+      button.setAttribute('aria-label', label);
+      control.appendChild(button);
+      elementToolbar.appendChild(control);
+    };
+    const addNumber = (label, value, name, min, max) => {
+      const control = document.createElement('label');
+      control.className = 'element-toolbar-control';
+      control.textContent = label;
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.value = value;
+      input.min = min;
+      input.max = max;
+      input.dataset.prop = name;
+      control.appendChild(input);
+      elementToolbar.appendChild(control);
+    };
+
+    if (type === 'text') {
+      const textBox = group.querySelector('.texture-text-box');
+      addNumber('Size', Math.round(data.fontSize), 'fontSize', 8, 160);
+      addColor('Color', textBox?.dataset.color || '#111827', 'color');
+      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
+    } else if (type === 'rect') {
+      const rect = group.querySelector('rect.texture-content');
+      addColor('Fill', rect?.getAttribute('fill') || '#3b82f6', 'color');
+      addColor('Stroke', rect?.getAttribute('stroke') || '#1e3a8a', 'strokeColor');
+      addNumber('W', rect?.getAttribute('stroke-width') || 2, 'lineWidth', 0, 40);
+    } else if (type === 'image') {
+      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
+    } else {
+      const content = group.querySelector('.texture-content');
+      addColor('Color', content?.getAttribute('stroke') || '#111827', 'color');
+      addNumber('W', content?.getAttribute('stroke-width') || group.dataset.strokeWidth || 6, 'lineWidth', 1, 80);
+      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
+    }
+
+    positionElementToolbar(group);
+  }
+
+  function positionElementToolbar(group = state.selected) {
+    if (!group) {
+      elementToolbar.classList.remove('visible');
+      return;
+    }
+    const svgRect = textureSvg.getBoundingClientRect();
+    const areaRect = textureCanvasArea.getBoundingClientRect();
+    const data = getData(group);
+    const scaleX = svgRect.width / state.svgWidth;
+    const scaleY = svgRect.height / state.svgHeight;
+    elementToolbar.classList.add('visible');
+    const toolbarWidth = elementToolbar.offsetWidth || 320;
+    const toolbarHeight = elementToolbar.offsetHeight || 44;
+    const left = svgRect.left - areaRect.left + (data.x + data.width / 2) * scaleX - toolbarWidth / 2;
+    const top = svgRect.top - areaRect.top + data.y * scaleY - toolbarHeight - 12;
+    elementToolbar.style.left = `${Math.max(8, Math.min(areaRect.width - toolbarWidth - 8, left))}px`;
+    elementToolbar.style.top = `${Math.max(8, top)}px`;
+  }
+
+  function closeColorPopover() {
+    colorPopover.classList.remove('visible');
+    colorPopover.innerHTML = '';
+    state.colorPicker = null;
+  }
+
+  function openColorPopover(button) {
+    const prop = button.dataset.colorProp;
+    const group = state.selected;
+    if (!group || !prop) return;
+    const current = parseColorState(getColorValue(group, prop));
+    const startHsv = rgbToHsv(...Object.values(hexToRgb(current.start)));
+    const endHsv = rgbToHsv(...Object.values(hexToRgb(current.end)));
+    state.colorPicker = {
+      prop,
+      mode: current.mode,
+      activeStop: current.activeStop,
+      start: current.start,
+      end: current.end,
+      stopHsv: {
+        start: startHsv,
+        end: endHsv
+      },
+      h: current.h,
+      s: current.s,
+      v: current.v,
+      alpha: current.alpha
+    };
+
+    const buttonRect = button.getBoundingClientRect();
+    const areaRect = textureCanvasArea.getBoundingClientRect();
+    colorPopover.innerHTML = `
+      <div class="color-mode" role="group">
+        <button type="button" data-mode="solid" class="${current.mode === 'solid' ? 'active' : ''}">Solid</button>
+        <button type="button" data-mode="gradient" class="${current.mode === 'gradient' ? 'active' : ''}">Gradient</button>
+      </div>
+      <div class="gradient-stops">
+        <button type="button" data-stop="start" class="active"><span style="background:${current.start}"></span> A</button>
+        <button type="button" data-stop="end"><span style="background:${current.end}"></span> B</button>
+      </div>
+      <div class="color-area" data-color-area><span class="color-area-cursor"></span></div>
+      <div class="hue-row">
+        <span>Hue</span>
+        <div class="hue-field" data-hue-field><span class="hue-field-cursor"></span></div>
+      </div>
+      <div class="slider-row">
+        <span>Alpha</span>
+        <input class="alpha-slider" type="range" min="0" max="100" value="${current.alpha}" data-color-field="alpha">
+      </div>
+      <label class="color-field">HEX <input data-color-field="hex" value="${current.start}" maxlength="7"></label>
+      <div class="color-preview"></div>
+    `;
+    colorPopover.style.left = `${Math.max(8, buttonRect.left - areaRect.left)}px`;
+    colorPopover.style.top = `${Math.max(8, buttonRect.bottom - areaRect.top + 8)}px`;
+    colorPopover.classList.add('visible');
+    renderColorPopover();
+  }
+
+  function getPickerCss() {
+    if (!state.colorPicker) return '#111827';
+    return state.colorPicker.mode === 'gradient'
+      ? gradientFrom(state.colorPicker.start, state.colorPicker.end, state.colorPicker.alpha)
+      : rgbaFrom(state.colorPicker.start, state.colorPicker.alpha);
+  }
+
+  function renderColorPopover() {
+    if (!state.colorPicker) return;
+    colorPopover.querySelectorAll('[data-mode]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.mode === state.colorPicker.mode);
+    });
+    const stops = colorPopover.querySelector('.gradient-stops');
+    if (stops) stops.style.display = state.colorPicker.mode === 'gradient' ? 'grid' : 'none';
+    colorPopover.querySelectorAll('[data-stop]').forEach((button) => {
+      button.classList.toggle('active', button.dataset.stop === state.colorPicker.activeStop);
+      const swatch = button.querySelector('span');
+      if (swatch) swatch.style.background = state.colorPicker[button.dataset.stop];
+    });
+    const hue = hsvToHex(state.colorPicker.h, 1, 1);
+    const area = colorPopover.querySelector('.color-area');
+    if (area) area.style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;
+    const cursor = colorPopover.querySelector('.color-area-cursor');
+    if (cursor) {
+      cursor.style.left = `${state.colorPicker.s * 100}%`;
+      cursor.style.top = `${(1 - state.colorPicker.v) * 100}%`;
+    }
+    const hexInput = colorPopover.querySelector('[data-color-field="hex"]');
+    if (hexInput) hexInput.value = state.colorPicker[state.colorPicker.activeStop];
+    const hueCursor = colorPopover.querySelector('.hue-field-cursor');
+    if (hueCursor) hueCursor.style.left = `${(state.colorPicker.h / 360) * 100}%`;
+    const alphaInput = colorPopover.querySelector('[data-color-field="alpha"]');
+    if (alphaInput) alphaInput.value = state.colorPicker.alpha;
+    const preview = colorPopover.querySelector('.color-preview');
+    if (preview) preview.style.background = getPickerCss();
+  }
+
+  function applyColorPicker(commit = false) {
+    if (!state.colorPicker) return;
+    const value = getPickerCss();
+    updateSelectedElement({ [state.colorPicker.prop]: value }, { commit });
+    elementToolbar.querySelectorAll(`[data-color-prop="${state.colorPicker.prop}"]`).forEach((button) => {
+      button.dataset.colorValue = value;
+      button.style.background = value;
+    });
+  }
+
+  function setActiveColorFromHex(hex) {
+    if (!state.colorPicker) return;
+    const normalized = normalizeHex(hex);
+    state.colorPicker[state.colorPicker.activeStop] = normalized;
+    const rgb = hexToRgb(normalized);
+    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
+    state.colorPicker.stopHsv[state.colorPicker.activeStop] = hsv;
+    state.colorPicker.h = hsv.h;
+    state.colorPicker.s = hsv.s;
+    state.colorPicker.v = hsv.v;
+  }
+
+  function setActiveStop(stop) {
+    if (!state.colorPicker) return;
+    state.colorPicker.activeStop = stop;
+    const hsv = state.colorPicker.stopHsv[stop] || rgbToHsv(...Object.values(hexToRgb(state.colorPicker[stop])));
+    state.colorPicker.h = hsv.h;
+    state.colorPicker.s = hsv.s;
+    state.colorPicker.v = hsv.v;
+  }
+
+  function setPickerHue(event) {
+    if (!state.colorPicker) return;
+    const field = colorPopover.querySelector('[data-hue-field]');
+    if (!field) return;
+    const rect = field.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    state.colorPicker.h = ratio * 360;
+    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v);
+    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {
+      h: state.colorPicker.h,
+      s: state.colorPicker.s,
+      v: state.colorPicker.v
+    };
+    renderColorPopover();
+    applyColorPicker(false);
+  }
+
+  function updatePickerFromArea(event) {
+    if (!state.colorPicker) return;
+    const area = colorPopover.querySelector('[data-color-area]');
+    if (!area) return;
+    const rect = area.getBoundingClientRect();
+    const s = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const v = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+    state.colorPicker.s = s;
+    state.colorPicker.v = v;
+    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, s, v);
+    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {
+      h: state.colorPicker.h,
+      s,
+      v
+    };
+    renderColorPopover();
+    applyColorPicker(false);
+  }
+
+  function renderSelection() {
+    selectionLayer.innerHTML = '';
+    if (!state.selected) {
+      positionElementToolbar(null);
+      return;
+    }
+    const data = getData(state.selected);
+    const box = createSvg('g', {
+      class: 'selection-box',
+      transform: `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`
+    });
+    box.appendChild(createSvg('rect', {
+      class: 'selection-outline',
+      x: 0,
+      y: 0,
+      width: data.width,
+      height: data.height
+    }));
+
+    if (!state.selected.classList?.contains('texture-template-path')) {
+      [
+        ['nw', 0, 0], ['n', data.width / 2, 0], ['ne', data.width, 0],
+        ['e', data.width, data.height / 2], ['se', data.width, data.height],
+        ['s', data.width / 2, data.height], ['sw', 0, data.height], ['w', 0, data.height / 2]
+      ].forEach(([handle, x, y]) => {
+        box.appendChild(createSvg('rect', {
+          class: 'selection-handle',
+          'data-action': 'resize',
+          'data-handle': handle,
+          x: x - 5,
+          y: y - 5,
+          width: 10,
+          height: 10,
+          rx: 2
+        }));
+      });
+
+      box.appendChild(createSvg('line', {
+        class: 'selection-rotate-line',
+        x1: data.width / 2,
+        y1: -30,
+        x2: data.width / 2,
+        y2: 0
+      }));
+      box.appendChild(createSvg('circle', {
+        class: 'selection-rotate-handle',
+        'data-action': 'rotate',
+        cx: data.width / 2,
+        cy: -38,
+        r: 8
+      }));
+    }
+    selectionLayer.appendChild(box);
+    buildElementToolbar(state.selected);
+  }
+
+  toolButtons.text?.addEventListener('click', () => {
+    createElement('text', { text: defaultTextContent, width: 190, height: 54 });
+  });
+
+  toolButtons.shape?.addEventListener('click', () => createElement('rect', { width: 120, height: 120 }));
+  toolButtons.arrow?.addEventListener('click', () => createElement('arrow', { width: 150, height: 38 }));
+  toolButtons.image?.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          createElement('image', { src: event.target.result, width: 160, height: 120 });
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    input.click();
+  });
+
+  function localVector(dx, dy, angle) {
+    const rad = -angle * Math.PI / 180;
+    return {
+      x: dx * Math.cos(rad) - dy * Math.sin(rad),
+      y: dx * Math.sin(rad) + dy * Math.cos(rad)
+    };
+  }
+
+  function startDraw(event) {
+    const point = svgPoint(event);
+    const path = createSvg('path', {
+      d: `M ${point.x} ${point.y}`,
+      fill: 'none',
+      stroke: '#111827',
+      'stroke-width': 6,
+      'stroke-linecap': 'round',
+      'stroke-linejoin': 'round'
+    });
+    textureElements.appendChild(path);
+    state.active = { mode: 'draw', path, points: [point] };
+  }
+
+  function finishDraw() {
+    if (!state.active || state.active.mode !== 'draw') return;
+    const { path, points } = state.active;
+    state.active = null;
+    if (points.length < 2) {
+      path.remove();
+      return;
+    }
+    const bbox = path.getBBox();
+    const d = points.map((point, index) => {
+      const cmd = index === 0 ? 'M' : 'L';
+      return `${cmd} ${point.x - bbox.x} ${point.y - bbox.y}`;
+    }).join(' ');
+    path.remove();
+    createElement('path', {
+      x: bbox.x,
+      y: bbox.y,
+      width: Math.max(minSize, bbox.width),
+      height: Math.max(minSize, bbox.height),
+      baseWidth: Math.max(minSize, bbox.width),
+      baseHeight: Math.max(minSize, bbox.height),
+      d
+    });
+  }
+
+  textureSvg.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    if (event.target.closest('[data-editor-toolbar]')) {
+      event.stopPropagation();
+      return;
+    }
+    if (event.target.closest('.texture-text-box.is-editing')) {
+      event.stopPropagation();
+      return;
+    }
+    if (state.tool === 'pan') {
+      textureSvg.setPointerCapture(event.pointerId);
+      state.active = {
+        mode: 'pan',
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        startScrollLeft: textureCanvasArea.scrollLeft,
+        startScrollTop: textureCanvasArea.scrollTop
+      };
+      textureSvg.style.cursor = 'grabbing';
+      return;
+    }
+
+    if (state.tool === 'draw') {
+      event.preventDefault();
+      textureSvg.setPointerCapture(event.pointerId);
+      startDraw(event);
+      return;
+    }
+
+    const actionTarget = event.target.closest('[data-action]');
+    if (actionTarget && state.selected) {
+      event.preventDefault();
+      textureSvg.setPointerCapture(event.pointerId);
+      state.active = {
+        mode: actionTarget.dataset.action,
+        handle: actionTarget.dataset.handle,
+        startPoint: svgPoint(event),
+        startData: getData(state.selected)
+      };
+      return;
+    }
+
+    const target = event.target.closest('.texture-element');
+    const templatePath = event.target.closest('.texture-template-path');
+    if (templatePath) {
+      event.preventDefault();
+      selectElement(templatePath);
+      scheduleTexturePreviewUpdate();
+      return;
+    }
+    if (target) {
+      event.preventDefault();
+      if (isTextDoubleClick(target)) {
+        state.active = null;
+        selectElement(target);
+        editTextElement(target);
+        return;
+      }
+      textureSvg.setPointerCapture(event.pointerId);
+      selectElement(target);
+      state.active = {
+        mode: 'move',
+        startPoint: svgPoint(event),
+        startData: getData(target)
+      };
+    } else {
+      clearSelection();
+    }
+  });
+
+  textureSvg.addEventListener('pointerover', (event) => {
+    const templatePath = event.target.closest('.texture-template-path');
+    if (!templatePath || templatePath === state.selectedTemplatePath) return;
+    setTemplatePathPreview(templatePath, 'hover');
+  });
+
+  textureSvg.addEventListener('pointerout', (event) => {
+    const templatePath = event.target.closest('.texture-template-path');
+    if (!templatePath || templatePath === state.selectedTemplatePath) return;
+    restoreTemplatePathPreview(templatePath);
+  });
+
+  textureSvg.addEventListener('dblclick', (event) => {
+    const target = event.target.closest('.texture-element');
+    if (!target || target.dataset.type !== 'text') return;
+    event.preventDefault();
+    event.stopPropagation();
+    editTextElement(target);
+  });
+
+  textureSvg.addEventListener('pointermove', (event) => {
+    if (!state.active) return;
+    const point = svgPoint(event);
+
+    if (state.active.mode === 'pan') {
+      textureCanvasArea.scrollLeft = state.active.startScrollLeft - (event.clientX - state.active.startClientX);
+      textureCanvasArea.scrollTop = state.active.startScrollTop - (event.clientY - state.active.startClientY);
+      return;
+    }
+
+    if (state.active.mode === 'draw') {
+      state.active.points.push(point);
+      state.active.path.setAttribute('d', `${state.active.path.getAttribute('d')} L ${point.x} ${point.y}`);
+      return;
+    }
+
+    if (!state.selected) return;
+    const start = state.active.startPoint;
+    const data = state.active.startData;
+    const dx = point.x - start.x;
+    const dy = point.y - start.y;
+
+    if (state.active.mode === 'move') {
+      setData(state.selected, { x: data.x + dx, y: data.y + dy });
+    } else if (state.active.mode === 'resize') {
+      const local = localVector(dx, dy, data.rotate);
+      const isText = state.selected.dataset.type === 'text';
+      let x = data.x;
+      let y = data.y;
+      let width = data.width;
+      let height = data.height;
+      const handle = state.active.handle;
+
+      if (handle.includes('e')) width = data.width + local.x;
+      if (handle.includes('s')) height = data.height + local.y;
+      if (handle.includes('w')) {
+        width = data.width - local.x;
+        x = data.x + dx;
+      }
+      if (handle.includes('n')) {
+        height = data.height - local.y;
+        y = data.y + dy;
+      }
+      if (event.shiftKey || (isText && handle.length === 2)) {
+        const aspect = data.width / data.height;
+        if (Math.abs(local.x) > Math.abs(local.y)) height = width / aspect;
+        else width = height * aspect;
+      }
+      const patch = { x, y, width, height };
+      if (isText) {
+        const widthScale = width / Math.max(minSize, data.width);
+        const heightScale = height / Math.max(minSize, data.height);
+        const scale = handle.length === 2
+          ? Math.max(widthScale, heightScale)
+          : handle.includes('e') || handle.includes('w')
+            ? widthScale
+            : heightScale;
+        patch.fontSize = Math.max(8, data.fontSize * scale);
+      }
+      setData(state.selected, patch);
+      if (isText && !state.active.handle.includes('n') && !state.active.handle.includes('s')) {
+        autoFitTextHeight(state.selected);
+      }
+    } else if (state.active.mode === 'rotate') {
+      const cx = data.x + data.width / 2;
+      const cy = data.y + data.height / 2;
+      const startAngle = Math.atan2(start.y - cy, start.x - cx);
+      const currentAngle = Math.atan2(point.y - cy, point.x - cx);
+      setData(state.selected, { rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI });
+    }
+    renderSelection();
+    scheduleTexturePreviewUpdate();
+  });
+
+  function endInteraction(event) {
+    if (!state.active) return;
+    const mode = state.active.mode;
+    if (mode === 'draw') {
+      finishDraw();
+    } else if (mode !== 'pan') {
+      saveHistory();
+    }
+    state.active = null;
+    if (state.tool === 'pan') {
+      textureSvg.style.cursor = 'grab';
+    }
+    if (event.pointerId !== undefined && textureSvg.hasPointerCapture(event.pointerId)) {
+      textureSvg.releasePointerCapture(event.pointerId);
+    }
+  }
+
+  textureSvg.addEventListener('pointerup', endInteraction);
+  textureSvg.addEventListener('pointercancel', endInteraction);
+
+  elementToolbar.addEventListener('input', (event) => {
+    const input = event.target.closest('[data-prop]');
+    if (!input) return;
+    event.stopPropagation();
+    updateSelectedElement({ [input.dataset.prop]: input.value });
+  });
+
+  elementToolbar.addEventListener('change', (event) => {
+    const input = event.target.closest('[data-prop]');
+    if (!input) return;
+    event.stopPropagation();
+    updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });
+  });
+
+  elementToolbar.addEventListener('keydown', (event) => {
+    const input = event.target.closest('[data-prop]');
+    if (!input) return;
+    event.stopPropagation();
+    if (event.key === 'Enter') {
+      updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });
+      input.blur();
+    }
+  });
+
+  elementToolbar.addEventListener('pointerdown', (event) => {
+    if (event.target.closest('[data-editor-toolbar]')) {
+      event.stopPropagation();
+    }
+  });
+
+  elementToolbar.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-color-prop]');
+    if (!button) return;
+    event.preventDefault();
+    event.stopPropagation();
+    openColorPopover(button);
+  });
+
+  colorPopover.addEventListener('pointerdown', (event) => event.stopPropagation());
+  colorPopover.addEventListener('click', (event) => {
+    const modeButton = event.target.closest('[data-mode]');
+    const stopButton = event.target.closest('[data-stop]');
+    if (!state.colorPicker) return;
+    if (modeButton) {
+      state.colorPicker.mode = modeButton.dataset.mode;
+    } else if (stopButton) {
+      setActiveStop(stopButton.dataset.stop);
+    } else {
+      return;
+    }
+    renderColorPopover();
+    applyColorPicker(false);
+  });
+  colorPopover.addEventListener('input', (event) => {
+    const field = event.target.closest('[data-color-field]');
+    if (!field || !state.colorPicker) return;
+    const key = field.dataset.colorField;
+    if (key === 'alpha') {
+      state.colorPicker[key] = field.value;
+    } else {
+      if (!/^#?[0-9a-fA-F]{6}$/.test(field.value)) return;
+      setActiveColorFromHex(field.value);
+    }
+    renderColorPopover();
+    applyColorPicker(false);
+  });
+  colorPopover.addEventListener('change', () => applyColorPicker(true));
+  colorPopover.addEventListener('pointerdown', (event) => {
+    if (!event.target.closest('[data-color-area]')) return;
+    event.preventDefault();
+    updatePickerFromArea(event);
+    const handleMove = (moveEvent) => updatePickerFromArea(moveEvent);
+    const handleUp = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+      applyColorPicker(true);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+  });
+  colorPopover.addEventListener('pointerdown', (event) => {
+    if (!event.target.closest('[data-hue-field]')) return;
+    event.preventDefault();
+    setPickerHue(event);
+    const handleMove = (moveEvent) => setPickerHue(moveEvent);
+    const handleUp = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+      applyColorPicker(true);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+  });
+
+  document.addEventListener('pointerdown', (event) => {
+    if (!colorPopover.classList.contains('visible')) return;
+    if (event.target.closest('[data-editor-toolbar]')) return;
+    closeColorPopover();
+  });
+
+  textureCanvasArea.addEventListener('scroll', () => positionElementToolbar());
+  window.addEventListener('resize', () => positionElementToolbar());
+
+  function saveHistory() {
+    const snapshot = getCleanElementsHtml();
+    if (state.history[state.historyIndex] === snapshot) return;
+    state.history = state.history.slice(0, state.historyIndex + 1);
+    state.history.push(snapshot);
+    state.historyIndex++;
+    scheduleTexturePreviewUpdate();
+  }
+
+  function restoreHistory(index) {
+    textureElements.innerHTML = state.history[index] || '';
+    selectElement(null);
+    const ids = [...textureElements.querySelectorAll('.texture-element')]
+      .map(element => parseInt((element.id || '').replace('element-', ''), 10))
+      .filter(Number.isFinite);
+    state.elementCounter = Math.max(state.elementCounter, 0, ...ids);
+    scheduleTexturePreviewUpdate();
+  }
+
+  function undo() {
+    state.textEditor?.commit();
+    if (state.historyIndex > 0) {
+      state.historyIndex--;
+      restoreHistory(state.historyIndex);
+    }
+  }
+
+  function redo() {
+    state.textEditor?.commit();
+    if (state.historyIndex < state.history.length - 1) {
+      state.historyIndex++;
+      restoreHistory(state.historyIndex);
+    }
+  }
+
+  function deleteSelected() {
+    state.textEditor?.cancel();
+    if (!state.selected) return;
+    state.selected.remove();
+    clearSelection();
+    saveHistory();
+  }
+
+  document.getElementById('toolUndo')?.addEventListener('click', undo);
+  document.getElementById('toolRedo')?.addEventListener('click', redo);
+  document.getElementById('toolDelete')?.addEventListener('click', deleteSelected);
+
+  document.addEventListener('keydown', (event) => {
+    if (!designModal.classList.contains('active')) return;
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+      event.preventDefault();
+      event.shiftKey ? redo() : undo();
+    } else if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {
+      event.preventDefault();
+      deleteSelected();
+    }
+  });
+
+  designerViewer?.addEventListener('load', () => {
+    scheduleTexturePreviewUpdate();
+  });
+  saveDesignModal?.addEventListener('click', saveDesignAndClose);
+
+  // Initialize history
+  saveHistory();
+});
+</script>
+
+<%- include('partials/footer') %>

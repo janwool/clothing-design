@@ -1,0 +1,138 @@
+<%- include('partials/header') %>
+
+<section class="page-header">
+  <div class="container">
+    <h1 class="page-title"><%= t('tools.pageTitle') %></h1>
+    <p class="page-subtitle"><%= t('tools.pageSubtitle') %></p>
+  </div>
+</section>
+
+<section class="content-section">
+  <div class="container">
+    <!-- Tools Grid -->
+    <div class="tools-grid">
+      <!-- Design Tools -->
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
+            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
+            <path d="M2 2l7.586 7.586"/>
+            <circle cx="11" cy="11" r="2"/>
+          </svg>
+        </div>
+        <h3><%= t('tools.designTools') %></h3>
+        <ul>
+          <li><a href="/tools/t-shirt-designer"><%= t('tools.tShirtDesigner') %></a></li>
+          <li><a href="/tools/hoodie-designer"><%= t('tools.hoodieDesigner') %></a></li>
+          <li><a href="/tools/dress-designer"><%= t('tools.dressDesigner') %></a></li>
+        </ul>
+      </div>
+
+      <!-- Mockup Generators -->
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+        <h3><%= t('tools.mockupGenerators') %></h3>
+        <ul>
+          <li><a href="/tools/3d-mockup"><%= t('tools.mockup3d') %></a></li>
+          <li><a href="/tools/2d-mockup"><%= t('tools.mockup2d') %></a></li>
+        </ul>
+      </div>
+
+      <!-- Free Downloads -->
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+        </div>
+        <h3><%= t('tools.freeDownloads') %></h3>
+        <ul>
+          <li><a href="/tools/free-patterns"><%= t('tools.freePatterns') %></a></li>
+          <li><a href="/tools/free-templates"><%= t('tools.freeTemplates') %></a></li>
+        </ul>
+      </div>
+
+      <!-- Learn -->
+      <div class="tool-card">
+        <div class="tool-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </div>
+        <h3><%= t('tools.learn') %></h3>
+        <ul>
+          <li><a href="/tools/clo3d-guide"><%= t('tools.clo3dGuide') %></a></li>
+          <li><a href="/tools/md-guide"><%= t('tools.mdGuide') %></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Popular Tools Section -->
+    <div class="popular-tools">
+      <h2 class="section-title"><%= t('tools.popularTools') %></h2>
+      <div class="popular-grid">
+        <a href="/tools/t-shirt-designer" class="popular-card">
+          <div class="popular-image">
+            <svg viewBox="0 0 200 200" class="popular-svg">
+              <path d="M70 40 L130 40 L150 70 L140 80 L130 70 L130 160 L70 160 L70 70 L60 80 L50 70 Z" fill="#e5e5e5" stroke="#999" stroke-width="1"/>
+              <text x="100" y="110" text-anchor="middle" fill="#999" font-size="12">T-Shirt</text>
+            </svg>
+          </div>
+          <div class="popular-info">
+            <h4><%= t('tools.tShirtDesigner') %></h4>
+            <p>Design custom t-shirts online</p>
+          </div>
+        </a>
+        <a href="/tools/3d-mockup" class="popular-card">
+          <div class="popular-image">
+            <svg viewBox="0 0 200 200" class="popular-svg">
+              <rect x="40" y="40" width="120" height="120" rx="4" fill="#e5e5e5" stroke="#999" stroke-width="1"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">3D Mockup</text>
+            </svg>
+          </div>
+          <div class="popular-info">
+            <h4><%= t('tools.mockup3d') %></h4>
+            <p>Create realistic 3D previews</p>
+          </div>
+        </a>
+        <a href="/tools/free-patterns" class="popular-card">
+          <div class="popular-image">
+            <svg viewBox="0 0 200 200" class="popular-svg">
+              <rect x="40" y="40" width="120" height="120" rx="4" fill="#e5e5e5" stroke="#999" stroke-width="1"/>
+              <circle cx="100" cy="100" r="30" fill="none" stroke="#999" stroke-width="1"/>
+              <text x="100" y="140" text-anchor="middle" fill="#999" font-size="12">Patterns</text>
+            </svg>
+          </div>
+          <div class="popular-info">
+            <h4><%= t('tools.freePatterns') %></h4>
+            <p>Download free sewing patterns</p>
+          </div>
+        </a>
+        <a href="/tools/clo3d-guide" class="popular-card">
+          <div class="popular-image">
+            <svg viewBox="0 0 200 200" class="popular-svg">
+              <path d="M60 40 L140 40 L140 160 L60 160 Z" fill="#e5e5e5" stroke="#999" stroke-width="1"/>
+              <text x="100" y="105" text-anchor="middle" fill="#999" font-size="12">CLO3D</text>
+            </svg>
+          </div>
+          <div class="popular-info">
+            <h4><%= t('tools.clo3dGuide') %></h4>
+            <p>Learn 3D fashion design</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

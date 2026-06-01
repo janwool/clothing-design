@@ -1,0 +1,33 @@
+<%- include('../partials/header') %>
+
+<section class="auth-section">
+  <div class="auth-container">
+    <div class="auth-card">
+      <h1 class="auth-title"><%= t('auth.login') %></h1>
+      
+      <% if (typeof error !== 'undefined') { %>
+        <div class="auth-error"><%= error %></div>
+      <% } %>
+
+      <form action="/auth/login" method="POST" class="auth-form">
+        <div class="form-group">
+          <label for="email" class="form-label"><%= t('auth.email') %></label>
+          <input type="email" id="email" name="email" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label"><%= t('auth.password') %></label>
+          <input type="password" id="password" name="password" class="form-input" required>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-large btn-full"><%= t('auth.login') %></button>
+      </form>
+
+      <div class="auth-footer">
+        <p><%= t('auth.noAccount') %> <a href="/auth/register"><%= t('auth.signUpNow') %></a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('../partials/footer') %>

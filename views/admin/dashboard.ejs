@@ -1,0 +1,62 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+  
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 class="admin-title">Dashboard</h1>
+      <button class="sidebar-toggle">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">3D Models</div>
+        <div class="stat-value"><%= counts.models3d %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">2D Templates</div>
+        <div class="stat-value"><%= counts.models2d %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Sew Patterns</div>
+        <div class="stat-value"><%= counts.patterns %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Gallery Items</div>
+        <div class="stat-value"><%= counts.gallery %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Tools</div>
+        <div class="stat-value"><%= counts.tools %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Users</div>
+        <div class="stat-value"><%= counts.users %></div>
+      </div>
+    </div>
+    
+    <!-- Quick Links -->
+    <div class="data-card">
+      <div class="data-header">
+        <h2 class="data-title">Quick Actions</h2>
+      </div>
+      <div style="padding: var(--spacing-xl);">
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);">
+          <a href="/admin/models-3d" class="btn btn-primary" style="justify-content: center;">Manage 3D Models</a>
+          <a href="/admin/models-2d" class="btn btn-primary" style="justify-content: center;">Manage 2D Templates</a>
+          <a href="/admin/patterns" class="btn btn-primary" style="justify-content: center;">Manage Patterns</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<%- include('partials/footer') %>

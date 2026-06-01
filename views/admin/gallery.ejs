@@ -1,0 +1,239 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 class="admin-title">Gallery</h1>
+      <div class="admin-actions">
+        <button class="btn btn-primary" onclick="openModal()">+ Add Item</button>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-header">
+        <h2 class="data-title">All Items</h2>
+        <div class="data-search">
+          <input type="text" class="search-input" placeholder="Search gallery..." id="searchInput">
+        </div>
+      </div>
+
+      <% if (items && items.length > 0) { %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Category</th>
+              <th>Tags</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr data-id="<%= item.id %>">
+                <td>#<%= item.id %></td>
+                <td><%= item.title %></td>
+                <td><%= item.author || '-' %></td>
+                <td><%= item.category || '-' %></td>
+                <td><%= item.tags || '-' %></td>
+                <td>
+                  <span class="status-badge status-<%= item.status %>"><%= item.status %></span>
+                </td>
+                <td><%= new Date(item.created_at).toLocaleDateString() %></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn btn-ghost btn-small" data-action="edit" data-id="<%= item.id %>">Edit</button>
+                    <button class="btn btn-ghost btn-small btn-delete" data-action="delete" data-id="<%= item.id %>">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+          <h3>No gallery items yet</h3>
+          <p>Add your first gallery item to get started.</p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Add Gallery Item</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="galleryForm">
+        <input type="hidden" id="galleryId">
+        <div class="form-group">
+          <label class="form-label">Title</label>
+          <input type="text" class="form-input" id="galleryTitle" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-input" id="galleryAuthor">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="galleryCategory">
+              <option value="">Select...</option>
+              <% if (categories && categories.length > 0) { %>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.name %>"><%= cat.name %></option>
+                <% }) %>
+              <% } %>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="galleryStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tags</label>
+          <input type="text" class="form-input" id="galleryTags" placeholder="e.g. Casual, Street">
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveGalleryItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const galleryForm = document.getElementById('galleryForm');
+
+function openModal() {
+  modalTitle.textContent = 'Add Gallery Item';
+  galleryForm.reset();
+  document.getElementById('galleryId').value = '';
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+function editGalleryItem(id) {
+  const row = document.querySelector('tr[data-id="' + id + '"]');
+  if (!row) return;
+
+  const cells = row.querySelectorAll('td');
+  document.getElementById('galleryId').value = id;
+  document.getElementById('galleryTitle').value = cells[1].textContent;
+  document.getElementById('galleryAuthor').value = cells[2].textContent === '-' ? '' : cells[2].textContent;
+  document.getElementById('galleryCategory').value = cells[3].textContent === '-' ? '' : cells[3].textContent;
+  document.getElementById('galleryTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;
+
+  const statusBadge = cells[5].querySelector('.status-badge');
+  document.getElementById('galleryStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';
+
+  modalTitle.textContent = 'Edit Gallery Item';
+  modal.style.display = 'flex';
+}
+
+async function saveGalleryItem() {
+  const id = document.getElementById('galleryId').value;
+  const data = {
+    title: document.getElementById('galleryTitle').value,
+    author: document.getElementById('galleryAuthor').value,
+    category: document.getElementById('galleryCategory').value,
+    status: document.getElementById('galleryStatus').value,
+    tags: document.getElementById('galleryTags').value
+  };
+
+  const url = id ? '/admin/gallery/' + id : '/admin/gallery';
+  const method = id ? 'PUT' : 'POST';
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error saving gallery item');
+  }
+}
+
+async function deleteGalleryItem(id) {
+  if (!confirm('Are you sure you want to delete this item?')) return;
+
+  try {
+    const response = await fetch('/admin/gallery/' + id, { method: 'DELETE' });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error deleting gallery item');
+  }
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll('.data-table tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(term) ? '' : 'none';
+  });
+});
+
+// Close modal on overlay click
+modal.addEventListener('click', function(e) {
+  if (e.target === modal) closeModal();
+});
+
+// Event delegation for edit/delete buttons
+document.querySelector('.data-table tbody').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (action === 'edit') {
+    editGalleryItem(id);
+  } else if (action === 'delete') {
+    deleteGalleryItem(id);
+  }
+});
+</script>
+
+<%- include('partials/footer') %>

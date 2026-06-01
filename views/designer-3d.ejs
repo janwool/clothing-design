@@ -1,0 +1,241 @@
+<%- include('partials/header') %>
+
+<section class="designer-page">
+  <div class="designer-toolbar">
+    <div class="designer-toolbar-left">
+      <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="btn btn-ghost btn-small">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back
+      </a>
+      <h1 class="designer-title"><%= model.name %></h1>
+    </div>
+    <div class="designer-toolbar-right">
+      <button class="btn btn-secondary btn-small" id="resetBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        Reset
+      </button>
+      <button class="btn btn-primary btn-small" id="downloadBtn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+        </svg>
+        Download Render
+      </button>
+    </div>
+  </div>
+
+  <div class="designer-workspace">
+    <!-- 3D Canvas -->
+    <div class="designer-canvas" id="designerCanvas">
+      <% if (model.file_url) { %>
+        <model-viewer 
+          class="model-viewer-natural"
+          id="designerViewer"
+          src="<%= model.file_url %>" 
+          alt="<%= model.name %>"
+          camera-controls
+          auto-rotate
+          shadow-intensity="1.2"
+          shadow-softness="0.82"
+          exposure="1"
+          environment-image="neutral"
+          style="width: 100%; height: 100%;"
+        ></model-viewer>
+      <% } else { %>
+        <div class="designer-placeholder">
+          <img src="<%= model.image_url %>" alt="<%= model.name %>">
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Sidebar Controls -->
+    <div class="designer-sidebar">
+      <div class="designer-panel">
+        <h3 class="panel-title">Colors</h3>
+        <div class="panel-content">
+          <div class="control-group">
+            <label>Base Color</label>
+            <div class="color-options">
+              <button class="color-btn active" style="background: #ffffff;" data-color="#ffffff" data-target="base"></button>
+              <button class="color-btn" style="background: #1a1a1a;" data-color="#1a1a1a" data-target="base"></button>
+              <button class="color-btn" style="background: #c41e3a;" data-color="#c41e3a" data-target="base"></button>
+              <button class="color-btn" style="background: #1e3a8a;" data-color="#1e3a8a" data-target="base"></button>
+              <button class="color-btn" style="background: #059669;" data-color="#059669" data-target="base"></button>
+              <button class="color-btn" style="background: #d97706;" data-color="#d97706" data-target="base"></button>
+              <button class="color-btn" style="background: #7c3aed;" data-color="#7c3aed" data-target="base"></button>
+              <button class="color-btn" style="background: #db2777;" data-color="#db2777" data-target="base"></button>
+            </div>
+          </div>
+          
+          <div class="control-group">
+            <label>Accent Color</label>
+            <div class="color-options">
+              <button class="color-btn active" style="background: #ffffff;" data-color="#ffffff" data-target="accent"></button>
+              <button class="color-btn" style="background: #1a1a1a;" data-color="#1a1a1a" data-target="accent"></button>
+              <button class="color-btn" style="background: #c41e3a;" data-color="#c41e3a" data-target="accent"></button>
+              <button class="color-btn" style="background: #1e3a8a;" data-color="#1e3a8a" data-target="accent"></button>
+              <button class="color-btn" style="background: #059669;" data-color="#059669" data-target="accent"></button>
+              <button class="color-btn" style="background: #d97706;" data-color="#d97706" data-target="accent"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="designer-panel">
+        <h3 class="panel-title">Patterns</h3>
+        <div class="panel-content">
+          <div class="control-group">
+            <label>Pattern Style</label>
+            <div class="pattern-options">
+              <button class="pattern-btn active" data-pattern="none">None</button>
+              <button class="pattern-btn" data-pattern="striped">Striped</button>
+              <button class="pattern-btn" data-pattern="checkered">Checkered</button>
+              <button class="pattern-btn" data-pattern="dots">Dots</button>
+              <button class="pattern-btn" data-pattern="camo">Camo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="designer-panel">
+        <h3 class="panel-title">Material</h3>
+        <div class="panel-content">
+          <div class="control-group">
+            <label>Roughness</label>
+            <input type="range" class="range-slider" id="roughnessSlider" min="0" max="1" step="0.1" value="0.5">
+          </div>
+          <div class="control-group">
+            <label>Metalness</label>
+            <input type="range" class="range-slider" id="metalnessSlider" min="0" max="1" step="0.1" value="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="designer-panel">
+        <h3 class="panel-title">View</h3>
+        <div class="panel-content">
+          <div class="control-group">
+            <label>Environment</label>
+            <div class="pattern-options">
+              <button class="pattern-btn active" data-env="neutral">Neutral</button>
+              <button class="pattern-btn" data-env="studio">Studio</button>
+              <button class="pattern-btn" data-env="outdoor">Outdoor</button>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="autoRotateCheck" checked>
+              <span>Auto Rotate</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<script>
+// Designer functionality
+const viewer = document.getElementById('designerViewer');
+const resetBtn = document.getElementById('resetBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+// Color picker
+const colorBtns = document.querySelectorAll('.color-btn');
+colorBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = btn.dataset.target;
+    document.querySelectorAll(`.color-btn[data-target="${target}"]`).forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // Apply color to model (if material is accessible)
+    if (viewer && viewer.model) {
+      const color = btn.dataset.color;
+      // Note: Actual material manipulation requires model materials to be exposed
+      console.log('Apply color:', color, 'to', target);
+    }
+  });
+});
+
+// Pattern picker
+const patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');
+patternBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    console.log('Apply pattern:', btn.dataset.pattern);
+  });
+});
+
+// Environment picker
+const envBtns = document.querySelectorAll('.pattern-btn[data-env]');
+envBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    if (viewer) {
+      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';
+    }
+  });
+});
+
+// Auto rotate toggle
+const autoRotateCheck = document.getElementById('autoRotateCheck');
+if (autoRotateCheck && viewer) {
+  autoRotateCheck.addEventListener('change', () => {
+    viewer.autoRotate = autoRotateCheck.checked;
+  });
+}
+
+// Reset button
+if (resetBtn) {
+  resetBtn.addEventListener('click', () => {
+    // Reset colors
+    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.color-btn[data-color="#ffffff"]').forEach(b => b.classList.add('active'));
+    
+    // Reset patterns
+    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));
+    document.querySelector('.pattern-btn[data-pattern="none"]').classList.add('active');
+    
+    // Reset environment
+    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));
+    document.querySelector('.pattern-btn[data-env="neutral"]').classList.add('active');
+    
+    // Reset sliders
+    document.getElementById('roughnessSlider').value = 0.5;
+    document.getElementById('metalnessSlider').value = 0;
+    
+    // Reset viewer
+    if (viewer) {
+      viewer.environmentImage = 'neutral';
+      viewer.autoRotate = true;
+      viewer.cameraOrbit = '0deg 75deg 105%';
+      viewer.shadowIntensity = 1.2;
+      viewer.exposure = 1;
+    }
+  });
+}
+
+// Download render
+if (downloadBtn) {
+  downloadBtn.addEventListener('click', () => {
+    if (viewer && viewer.toDataURL) {
+      const link = document.createElement('a');
+      link.download = '<%= model.slug %>-design.png';
+      link.href = viewer.toDataURL('image/png');
+      link.click();
+    } else {
+      alert('Render download is not available for this model.');
+    }
+  });
+}
+</script>
+
+<%- include('partials/footer') %>

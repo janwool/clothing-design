@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="<%= i18next && i18next.language ? i18next.language : 'en' %>">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- Logo -->
+      <a href="/" class="navbar-logo">
+        <span class="logo-text">ClothingDesign</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="navbar-menu">
+        <a href="/design-3d" class="nav-link <%= typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' %>">
+          <%= t('nav.design3d') %>
+        </a>
+        <a href="/design-2d" class="nav-link <%= typeof page !== 'undefined' && page === 'design-2d' ? 'active' : '' %>">
+          <%= t('nav.design2d') %>
+        </a>
+        <a href="/patterns" class="nav-link <%= typeof page !== 'undefined' && page === 'patterns' ? 'active' : '' %>">
+          <%= t('nav.patterns') %>
+        </a>
+        <a href="/gallery" class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>">
+          <%= t('nav.gallery') %>
+        </a>
+        
+        <!-- Tools Dropdown -->
+        <div class="nav-dropdown">
+          <button class="nav-link dropdown-toggle <%= typeof page !== 'undefined' && page === 'tools' ? 'active' : '' %>">
+            <%= t('nav.tools') %>
+            <svg class="dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-section">
+              <span class="dropdown-label"><%= t('tools.designTools') %></span>
+              <a href="/tools/t-shirt-designer" class="dropdown-item"><%= t('tools.tShirtDesigner') %></a>
+              <a href="/tools/hoodie-designer" class="dropdown-item"><%= t('tools.hoodieDesigner') %></a>
+              <a href="/tools/dress-designer" class="dropdown-item"><%= t('tools.dressDesigner') %></a>
+            </div>
+            <div class="dropdown-section">
+              <span class="dropdown-label"><%= t('tools.mockupGenerators') %></span>
+              <a href="/tools/3d-mockup" class="dropdown-item"><%= t('tools.mockup3d') %></a>
+              <a href="/tools/2d-mockup" class="dropdown-item"><%= t('tools.mockup2d') %></a>
+            </div>
+            <div class="dropdown-section">
+              <span class="dropdown-label"><%= t('tools.freeDownloads') %></span>
+              <a href="/tools/free-patterns" class="dropdown-item"><%= t('tools.freePatterns') %></a>
+              <a href="/tools/free-templates" class="dropdown-item"><%= t('tools.freeTemplates') %></a>
+            </div>
+            <div class="dropdown-section">
+              <span class="dropdown-label"><%= t('tools.learn') %></span>
+              <a href="/tools/clo3d-guide" class="dropdown-item"><%= t('tools.clo3dGuide') %></a>
+              <a href="/tools/md-guide" class="dropdown-item"><%= t('tools.mdGuide') %></a>
+            </div>
+          </div>
+        </div>
+
+        <a href="/pricing" class="nav-link <%= typeof page !== 'undefined' && page === 'pricing' ? 'active' : '' %>">
+          <%= t('nav.pricing') %>
+        </a>
+      </div>
+
+      <!-- Right Side -->
+      <div class="navbar-actions">
+        <!-- Language Switcher -->
+        <div class="language-switcher">
+          <button class="lang-toggle">
+            <span>🌐</span>
+            <span class="lang-code"><%= i18next && i18next.language ? i18next.language.toUpperCase() : 'EN' %></span>
+          </button>
+          <div class="lang-menu">
+            <a href="?lng=en" class="lang-item <%= i18next && i18next.language === 'en' ? 'active' : '' %>">English</a>
+            <a href="?lng=zh" class="lang-item <%= i18next && i18next.language === 'zh' ? 'active' : '' %>">中文</a>
+            <a href="?lng=es" class="lang-item <%= i18next && i18next.language === 'es' ? 'active' : '' %>">Español</a>
+            <a href="?lng=fr" class="lang-item <%= i18next && i18next.language === 'fr' ? 'active' : '' %>">Français</a>
+            <a href="?lng=de" class="lang-item <%= i18next && i18next.language === 'de' ? 'active' : '' %>">Deutsch</a>
+            <a href="?lng=ja" class="lang-item <%= i18next && i18next.language === 'ja' ? 'active' : '' %>">日本語</a>
+            <a href="?lng=ko" class="lang-item <%= i18next && i18next.language === 'ko' ? 'active' : '' %>">한국어</a>
+            <a href="?lng=ar" class="lang-item <%= i18next && i18next.language === 'ar' ? 'active' : '' %>">العربية</a>
+          </div>
+        </div>
+
+        <!-- Search -->
+        <button class="search-btn" aria-label="<%= t('nav.search') %>">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <% if (user) { %>
+          <!-- User Menu -->
+          <div class="user-dropdown">
+            <button class="user-toggle">
+              <div class="user-avatar">
+                <%= user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() %>
+              </div>
+            </button>
+            <div class="user-menu">
+              <a href="/dashboard/designs" class="user-item"><%= t('nav.myDesigns') %></a>
+              <a href="/dashboard/assets" class="user-item"><%= t('nav.myAssets') %></a>
+              <a href="/dashboard/settings" class="user-item"><%= t('nav.settings') %></a>
+              <div class="user-divider"></div>
+              <a href="/auth/logout" class="user-item"><%= t('nav.signOut') %></a>
+            </div>
+          </div>
+        <% } else { %>
+          <!-- Auth Buttons -->
+          <a href="/auth/login" class="btn btn-ghost"><%= t('nav.signIn') %></a>
+          <a href="/auth/register" class="btn btn-primary"><%= t('nav.startFree') %></a>
+        <% } %>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-toggle" aria-label="Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu">
+      <a href="/design-3d" class="mobile-link"><%= t('nav.design3d') %></a>
+      <a href="/design-2d" class="mobile-link"><%= t('nav.design2d') %></a>
+      <a href="/patterns" class="mobile-link"><%= t('nav.patterns') %></a>
+      <a href="/gallery" class="mobile-link"><%= t('nav.gallery') %></a>
+      <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
+      <a href="/pricing" class="mobile-link"><%= t('nav.pricing') %></a>
+      <div class="mobile-divider"></div>
+      <% if (user) { %>
+        <a href="/dashboard/designs" class="mobile-link"><%= t('nav.myDesigns') %></a>
+        <a href="/dashboard/assets" class="mobile-link"><%= t('nav.myAssets') %></a>
+        <a href="/dashboard/settings" class="mobile-link"><%= t('nav.settings') %></a>
+        <a href="/auth/logout" class="mobile-link"><%= t('nav.signOut') %></a>
+      <% } else { %>
+        <a href="/auth/login" class="mobile-link"><%= t('nav.signIn') %></a>
+        <a href="/auth/register" class="mobile-link btn btn-primary"><%= t('nav.startFree') %></a>
+      <% } %>
+    </div>
+  </nav>
+
+  <main>

@@ -1,0 +1,249 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1 class="admin-title">Sew Patterns</h1>
+      <div class="admin-actions">
+        <button class="btn btn-primary" onclick="openModal()">+ Add Pattern</button>
+      </div>
+    </div>
+
+    <div class="data-card">
+      <div class="data-header">
+        <h2 class="data-title">All Patterns</h2>
+        <div class="data-search">
+          <input type="text" class="search-input" placeholder="Search patterns..." id="searchInput">
+        </div>
+      </div>
+
+      <% if (items && items.length > 0) { %>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Format</th>
+              <th>Tags</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr data-id="<%= item.id %>">
+                <td>#<%= item.id %></td>
+                <td><%= item.name %></td>
+                <td><%= item.category %></td>
+                <td><%= item.format || 'zprj' %></td>
+                <td><%= item.tags || '-' %></td>
+                <td>
+                  <span class="status-badge status-<%= item.status %>"><%= item.status %></span>
+                </td>
+                <td><%= new Date(item.created_at).toLocaleDateString() %></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn btn-ghost btn-small" data-action="edit" data-id="<%= item.id %>">Edit</button>
+                    <button class="btn btn-ghost btn-small btn-delete" data-action="delete" data-id="<%= item.id %>">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      <% } else { %>
+        <div class="empty-state">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          <h3>No patterns yet</h3>
+          <p>Add your first sewing pattern to get started.</p>
+        </div>
+      <% } %>
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="modalTitle">Add Sew Pattern</h3>
+      <button class="modal-close" onclick="closeModal()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="patternForm">
+        <input type="hidden" id="patternId">
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" id="patternName" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="patternCategory" required>
+              <% if (categories && categories.length > 0) { %>
+                <% categories.forEach(cat => { %>
+                  <option value="<%= cat.name %>"><%= cat.name %></option>
+                <% }) %>
+              <% } else { %>
+                <option value="">No categories available</option>
+              <% } %>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Format</label>
+            <select class="form-select" id="patternFormat">
+              <option value="zprj">.zprj</option>
+              <option value="obj">.obj</option>
+              <option value="fbx">.fbx</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-select" id="patternStatus">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tags</label>
+          <input type="text" class="form-input" id="patternTags" placeholder="e.g. Free, CLO3D">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="patternDescription" rows="3"></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="savePattern()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const modal = document.getElementById('modal');
+const modalTitle = document.getElementById('modalTitle');
+const patternForm = document.getElementById('patternForm');
+
+function openModal() {
+  modalTitle.textContent = 'Add Sew Pattern';
+  patternForm.reset();
+  document.getElementById('patternId').value = '';
+  modal.style.display = 'flex';
+}
+
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+function editPattern(id) {
+  const row = document.querySelector('tr[data-id="' + id + '"]');
+  if (!row) return;
+
+  const cells = row.querySelectorAll('td');
+  document.getElementById('patternId').value = id;
+  document.getElementById('patternName').value = cells[1].textContent;
+  document.getElementById('patternCategory').value = cells[2].textContent;
+  document.getElementById('patternFormat').value = cells[3].textContent;
+  document.getElementById('patternTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;
+
+  const statusBadge = cells[5].querySelector('.status-badge');
+  document.getElementById('patternStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';
+
+  modalTitle.textContent = 'Edit Sew Pattern';
+  modal.style.display = 'flex';
+}
+
+async function savePattern() {
+  const id = document.getElementById('patternId').value;
+  const data = {
+    name: document.getElementById('patternName').value,
+    category: document.getElementById('patternCategory').value,
+    format: document.getElementById('patternFormat').value,
+    status: document.getElementById('patternStatus').value,
+    tags: document.getElementById('patternTags').value,
+    description: document.getElementById('patternDescription').value
+  };
+
+  const url = id ? '/admin/patterns/' + id : '/admin/patterns';
+  const method = id ? 'PUT' : 'POST';
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error saving pattern');
+  }
+}
+
+async function deletePattern(id) {
+  if (!confirm('Are you sure you want to delete this pattern?')) return;
+
+  try {
+    const response = await fetch('/admin/patterns/' + id, { method: 'DELETE' });
+    const result = await response.json();
+    if (result.success) {
+      window.location.reload();
+    } else {
+      alert('Error: ' + result.error);
+    }
+  } catch (err) {
+    alert('Error deleting pattern');
+  }
+}
+
+// Search functionality
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  const term = e.target.value.toLowerCase();
+  document.querySelectorAll('.data-table tbody tr').forEach(row => {
+    const text = row.textContent.toLowerCase();
+    row.style.display = text.includes(term) ? '' : 'none';
+  });
+});
+
+// Close modal on overlay click
+modal.addEventListener('click', function(e) {
+  if (e.target === modal) closeModal();
+});
+
+// Event delegation for edit/delete buttons
+document.querySelector('.data-table tbody').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-action]');
+  if (!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (action === 'edit') {
+    editPattern(id);
+  } else if (action === 'delete') {
+    deletePattern(id);
+  }
+});
+</script>
+
+<%- include('partials/footer') %>
