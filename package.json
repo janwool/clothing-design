@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "node -e \"console.log('No frontend build required')\"",
+    "build": "node scripts/generate-worker-assets.js",
+    "deploy": "npm run build && wrangler deploy",
+    "worker:dev": "npm run build && wrangler dev",
     "watch": "webpack --mode development --watch"
   },
   "keywords": [

@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const multer = require('multer');
 const path = require('path');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
-const fs = require('fs');
 const db = require('../lib/db');
 
 // Cloudflare R2 Configuration
@@ -30,72 +28,6 @@ console.log('R2 Config:', {
   secretKey: R2_SECRET_ACCESS_KEY ? 'set' : 'missing',
   bucket: R2_BUCKET_NAME,
   publicUrl: R2_PUBLIC_URL,
-});
-
-// Upload file to R2
-async function uploadToR2(file, folder) {
-  const fileContent = fs.readFileSync(file.path);
-  const key = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(file.originalname)}`;
-
-  const command = new PutObjectCommand({
-    Bucket: R2_BUCKET_NAME,
-    Key: key,
-    Body: fileContent,
-    ContentType: file.mimetype,
-  });
-
-  await s3Client.send(command);
-
-  // Clean up temp file
-  fs.unlinkSync(file.path);
-
-  // Return public URL: https://<bucket>.<accountid>.r2.cloudflarestorage.com/<key>
-  if (R2_PUBLIC_URL) {
-    return `${R2_PUBLIC_URL}/${key}`;
-  }
-  return `https://${R2_BUCKET_NAME}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
-}
-
-// Multer storage (temporary local storage before uploading to R2)
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'tmp/');
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-// File filter
-const fileFilter = (req, file, cb) => {
-  if (file.fieldname === 'glbFile') {
-    if (file.mimetype === 'model/gltf-binary' || file.originalname.endsWith('.glb')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only GLB files are allowed'), false);
-    }
-  } else if (file.fieldname === 'previewImage') {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only image files are allowed'), false);
-    }
-  } else if (file.fieldname === 'textureSvg') {
-    if (file.mimetype === 'image/svg+xml' || file.originalname.endsWith('.svg')) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only SVG files are allowed'), false);
-    }
-  } else {
-    cb(null, true);
-  }
-};
-
-const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB max
 });
 
 // Initialize database tables for admin

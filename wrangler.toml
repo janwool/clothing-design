@@ -1,2 +1,7 @@
 name = "clothing-design"
-pages_build_output_dir = "public"
+main = "src/worker.mjs"
+compatibility_date = "2026-06-02"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "public"
