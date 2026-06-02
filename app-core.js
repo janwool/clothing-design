@@ -8,7 +8,8 @@ const db = require('./lib/db');
 
 const app = express();
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
-const viewsDir = path.join(__dirname, 'views');
+const appRootDir = typeof __dirname === 'string' ? __dirname : '';
+const viewsDir = path.join(appRootDir, 'views');
 const SESSION_COOKIE_NAME = 'cd_session';
 
 function requireLocalOnly(moduleName) {
@@ -112,7 +113,7 @@ function configureI18n() {
         lng: 'en',
         fallbackLng: 'en',
         backend: {
-          loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json')
+          loadPath: path.join(appRootDir, 'locales/{{lng}}/{{ns}}.json')
         },
         detection: {
           order: ['querystring', 'cookie', 'header'],
@@ -330,7 +331,7 @@ app.use((req, res, next) => {
 });
 
 if (!isWorkerRuntime) {
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(appRootDir, 'public')));
 }
 
 if (isWorkerRuntime) {
