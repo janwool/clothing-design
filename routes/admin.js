@@ -1,34 +1,49 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const db = require('../lib/db');
 
 // Cloudflare R2 Configuration
-const R2_ACCOUNT_ID = process.env.R2_ACCOUNT_ID || '';
-const R2_ACCESS_KEY_ID = process.env.R2_ACCESS_KEY_ID || '';
-const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY || '';
 const R2_BUCKET_NAME = 'clothing-design';
-const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL || '';
+let r2HelpersPromise;
 
-const s3Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: R2_ACCESS_KEY_ID,
-    secretAccessKey: R2_SECRET_ACCESS_KEY,
-  },
-});
+function getEnvValue(key) {
+  return process.env[key] || (globalThis.__WORKER_ENV__ && globalThis.__WORKER_ENV__[key]) || '';
+}
 
-// Debug: log R2 config (remove in production)
-console.log('R2 Config:', {
-  accountId: R2_ACCOUNT_ID ? 'set' : 'missing',
-  accessKey: R2_ACCESS_KEY_ID ? 'set' : 'missing',
-  secretKey: R2_SECRET_ACCESS_KEY ? 'set' : 'missing',
-  bucket: R2_BUCKET_NAME,
-  publicUrl: R2_PUBLIC_URL,
-});
+function getR2Config() {
+  return {
+    accountId: getEnvValue('R2_ACCOUNT_ID'),
+    accessKeyId: getEnvValue('R2_ACCESS_KEY_ID'),
+    secretAccessKey: getEnvValue('R2_SECRET_ACCESS_KEY'),
+    publicUrl: getEnvValue('R2_PUBLIC_URL')
+  };
+}
+
+async function getR2Helpers() {
+  if (!r2HelpersPromise) {
+    r2HelpersPromise = Promise.all([
+      import('@aws-sdk/client-s3'),
+      import('@aws-sdk/s3-request-presigner')
+    ]).then(([clientS3, presigner]) => {
+      const config = getR2Config();
+      const s3Client = new clientS3.S3Client({
+        region: 'auto',
+        endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
+        credentials: {
+          accessKeyId: config.accessKeyId,
+          secretAccessKey: config.secretAccessKey,
+        },
+      });
+      return {
+        PutObjectCommand: clientS3.PutObjectCommand,
+        getSignedUrl: presigner.getSignedUrl,
+        s3Client
+      };
+    });
+  }
+  return r2HelpersPromise;
+}
 
 // Initialize database tables for admin
 async function initAdminTables() {
@@ -543,6 +558,8 @@ router.post('/upload-token', requireAuth, async (req, res) => {
     }
 
     const key = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(filename)}`;
+    const r2Config = getR2Config();
+    const { PutObjectCommand, getSignedUrl, s3Client } = await getR2Helpers();
 
     const command = new PutObjectCommand({
       Bucket: R2_BUCKET_NAME,
@@ -553,9 +570,9 @@ router.post('/upload-token', requireAuth, async (req, res) => {
     const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 }); // 5 minutes
 
     // R2 public URL format: https://<bucket>.<accountid>.r2.cloudflarestorage.com/<key>
-    const publicUrl = R2_PUBLIC_URL
-      ? `${R2_PUBLIC_URL}/${key}`
-      : `https://${R2_BUCKET_NAME}.${R2_ACCOUNT_ID}.r2.cloudflarestorage.com/${key}`;
+    const publicUrl = r2Config.publicUrl
+      ? `${r2Config.publicUrl}/${key}`
+      : `https://${R2_BUCKET_NAME}.${r2Config.accountId}.r2.cloudflarestorage.com/${key}`;
 
     res.json({
       success: true,

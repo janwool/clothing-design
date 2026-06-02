@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
-const session = require('express-session');
+const { Buffer } = require('node:buffer');
+const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
 const ejs = require('ejs');
@@ -9,6 +10,7 @@ const db = require('./lib/db');
 const app = express();
 const isWorkerRuntime = process.env.CF_WORKER === 'true';
 const viewsDir = path.join(__dirname, 'views');
+const SESSION_COOKIE_NAME = 'cd_session';
 
 async function initAppTables() {
   try {
@@ -122,6 +124,111 @@ function configureI18n() {
   return i18n;
 }
 
+function parseCookies(cookieHeader) {
+  return String(cookieHeader || '')
+    .split(';')
+    .map(part => part.trim())
+    .filter(Boolean)
+    .reduce((cookies, part) => {
+      const eq = part.indexOf('=');
+      if (eq === -1) return cookies;
+      try {
+        cookies[part.slice(0, eq)] = decodeURIComponent(part.slice(eq + 1));
+      } catch (err) {
+        cookies[part.slice(0, eq)] = part.slice(eq + 1);
+      }
+      return cookies;
+    }, {});
+}
+
+function getSessionSecret() {
+  return process.env.SESSION_SECRET || 'clothing-design-secret-key';
+}
+
+function signSessionPayload(payload) {
+  return createHmac('sha256', getSessionSecret()).update(payload).digest('base64url');
+}
+
+function isValidSignature(payload, signature) {
+  const expected = signSessionPayload(payload);
+  const expectedBuffer = Buffer.from(expected);
+  const actualBuffer = Buffer.from(signature || '');
+  return expectedBuffer.length === actualBuffer.length && timingSafeEqual(expectedBuffer, actualBuffer);
+}
+
+function encodeSession(sessionData) {
+  const payload = Buffer.from(JSON.stringify(sessionData)).toString('base64url');
+  return `${payload}.${signSessionPayload(payload)}`;
+}
+
+function decodeSession(rawValue) {
+  if (!rawValue) return {};
+  const [payload, signature] = rawValue.split('.');
+  if (!payload || !signature || !isValidSignature(payload, signature)) return {};
+  try {
+    return JSON.parse(Buffer.from(payload, 'base64url').toString('utf8')) || {};
+  } catch (err) {
+    return {};
+  }
+}
+
+function appendSetCookie(res, cookie) {
+  const existing = res.getHeader('Set-Cookie');
+  if (!existing) {
+    res.setHeader('Set-Cookie', cookie);
+  } else if (Array.isArray(existing)) {
+    res.setHeader('Set-Cookie', [...existing, cookie]);
+  } else {
+    res.setHeader('Set-Cookie', [existing, cookie]);
+  }
+}
+
+function getSessionCookieOptions(maxAge) {
+  const options = [
+    'Path=/',
+    'HttpOnly',
+    'SameSite=Lax',
+    `Max-Age=${maxAge}`
+  ];
+  if (isWorkerRuntime) {
+    options.push('Secure');
+  }
+  return options.join('; ');
+}
+
+function workerSessionMiddleware(req, res, next) {
+  const cookies = parseCookies(req.headers.cookie);
+  req.session = decodeSession(cookies[SESSION_COOKIE_NAME]);
+  const originalSession = JSON.stringify(req.session);
+  let destroyed = false;
+
+  Object.defineProperty(req.session, 'destroy', {
+    enumerable: false,
+    value(callback) {
+      destroyed = true;
+      Object.keys(req.session).forEach(key => delete req.session[key]);
+      if (typeof callback === 'function') callback();
+    }
+  });
+
+  const originalEnd = res.end;
+  res.end = function patchedEnd(...args) {
+    if (!res.headersSent) {
+      if (destroyed) {
+        appendSetCookie(res, `${SESSION_COOKIE_NAME}=; ${getSessionCookieOptions(0)}`);
+      } else {
+        const nextSession = JSON.stringify(req.session);
+        if (nextSession !== originalSession) {
+          appendSetCookie(res, `${SESSION_COOKIE_NAME}=${encodeURIComponent(encodeSession(req.session))}; ${getSessionCookieOptions(60 * 60 * 24 * 30)}`);
+        }
+      }
+    }
+    return originalEnd.apply(this, args);
+  };
+
+  next();
+}
+
 if (!isWorkerRuntime) {
   initAppTables();
 }
@@ -131,12 +238,17 @@ const i18n = configureI18n();
 app.use(middleware.handle(i18n));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'clothing-design-secret-key',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false }
-}));
+if (isWorkerRuntime) {
+  app.use(workerSessionMiddleware);
+} else {
+  const session = require('express-session');
+  app.use(session({
+    secret: getSessionSecret(),
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+  }));
+}
 
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
