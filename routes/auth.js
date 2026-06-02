@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../lib/db');
+const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 
 // Initialize database
 async function initAuthTables() {
@@ -17,7 +18,7 @@ async function initAuthTables() {
     console.error('Failed to init auth tables:', err.message);
   }
 }
-if (process.env.CF_WORKER !== 'true') {
+if (!isWorkerRuntime) {
   initAuthTables();
 }
 

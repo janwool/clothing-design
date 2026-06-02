@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const db = require('../lib/db');
+const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 
 // Cloudflare R2 Configuration
 const R2_BUCKET_NAME = 'clothing-design';
@@ -142,7 +143,7 @@ async function initAdminTables() {
   }
 }
 
-if (process.env.CF_WORKER !== 'true') {
+if (!isWorkerRuntime) {
   initAdminTables();
 }
 
@@ -206,7 +207,7 @@ router.get('/models-3d', requireAuth, async (req, res) => {
   }
 });
 
-router.post('/models-3d', requireAuth, express.json(), async (req, res) => {
+router.post('/models-3d', requireAuth, async (req, res) => {
   try {
     const { name, category, description, tags, status, file_url, image_url, texture_url } = req.body;
 
@@ -220,7 +221,7 @@ router.post('/models-3d', requireAuth, express.json(), async (req, res) => {
   }
 });
 
-router.put('/models-3d/:id', requireAuth, express.json(), async (req, res) => {
+router.put('/models-3d/:id', requireAuth, async (req, res) => {
   try {
     const { name, category, description, tags, status, file_url, image_url, texture_url } = req.body;
     const updates = [];

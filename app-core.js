@@ -8,9 +8,14 @@ const ejs = require('ejs');
 const db = require('./lib/db');
 
 const app = express();
-const isWorkerRuntime = process.env.CF_WORKER === 'true';
+const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 const viewsDir = path.join(__dirname, 'views');
 const SESSION_COOKIE_NAME = 'cd_session';
+
+function requireLocalOnly(moduleName) {
+  const nodeRequire = eval('require');
+  return nodeRequire(moduleName);
+}
 
 async function initAppTables() {
   try {
@@ -63,24 +68,34 @@ function configureWorkerViewEngine() {
     throw new Error(`Worker template not found: ${originalPath || filePath}`);
   }
 
+  function getCompileOptions(filename) {
+    return {
+      filename,
+      cache: true,
+      includer: (originalPath, parsedPath) => {
+        const included = resolveTemplate(parsedPath, filename, originalPath);
+        return {
+          filename: included.filename,
+          template: included.template
+        };
+      }
+    };
+  }
+
+  for (const [rel, template] of Object.entries(workerAssets.views)) {
+    const filename = path.join(viewsDir, rel);
+    ejs.cache.set(filename, ejs.compile(template, getCompileOptions(filename)));
+  }
+
   app.engine('ejs', (filePath, options, callback) => {
     try {
       const resolved = resolveTemplate(filePath);
-      const html = ejs.render(
-        resolved.template,
-        options,
-        {
-          ...options,
-          filename: resolved.filename,
-          includer: (originalPath, parsedPath) => {
-            const included = resolveTemplate(parsedPath, resolved.filename, originalPath);
-            return {
-              filename: included.filename,
-              template: included.template
-            };
-          }
-        }
-      );
+      let renderTemplate = ejs.cache.get(resolved.filename);
+      if (!renderTemplate) {
+        renderTemplate = ejs.compile(resolved.template, getCompileOptions(resolved.filename));
+        ejs.cache.set(resolved.filename, renderTemplate);
+      }
+      const html = renderTemplate(options);
       callback(null, html);
     } catch (err) {
       callback(err);
@@ -105,7 +120,7 @@ function configureI18n() {
         }
       });
   } else {
-    const Backend = require('i18next-fs-backend');
+    const Backend = requireLocalOnly('i18next-fs-backend');
     i18n
       .use(Backend)
       .use(middleware.LanguageDetector)
@@ -229,6 +244,76 @@ function workerSessionMiddleware(req, res, next) {
   next();
 }
 
+function parseUrlEncodedBody(text) {
+  const body = {};
+  const params = new URLSearchParams(text);
+  for (const [key, value] of params.entries()) {
+    if (body[key] === undefined) {
+      body[key] = value;
+    } else if (Array.isArray(body[key])) {
+      body[key].push(value);
+    } else {
+      body[key] = [body[key], value];
+    }
+  }
+  return body;
+}
+
+function readRequestBody(req, limitBytes = 1024 * 1024) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+
+    req.on('data', chunk => {
+      const buffer = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      size += buffer.length;
+      if (size > limitBytes) {
+        const err = new Error('Request body too large');
+        err.status = 413;
+        reject(err);
+        return;
+      }
+      chunks.push(buffer);
+    });
+
+    req.on('end', () => {
+      resolve(Buffer.concat(chunks).toString('utf8'));
+    });
+
+    req.on('error', reject);
+  });
+}
+
+function workerBodyParser(req, res, next) {
+  const method = String(req.method || '').toUpperCase();
+  if (!['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) || req.body !== undefined) {
+    req.body = req.body || {};
+    next();
+    return;
+  }
+
+  const contentType = String(req.headers['content-type'] || '').split(';')[0].trim().toLowerCase();
+  if (contentType !== 'application/json' && contentType !== 'application/x-www-form-urlencoded') {
+    req.body = {};
+    next();
+    return;
+  }
+
+  readRequestBody(req)
+    .then(text => {
+      if (contentType === 'application/json') {
+        req.body = text.trim() ? JSON.parse(text) : {};
+      } else {
+        req.body = parseUrlEncodedBody(text);
+      }
+      next();
+    })
+    .catch(err => {
+      err.status = err.status || 400;
+      next(err);
+    });
+}
+
 if (!isWorkerRuntime) {
   initAppTables();
 }
@@ -236,12 +321,16 @@ if (!isWorkerRuntime) {
 const i18n = configureI18n();
 
 app.use(middleware.handle(i18n));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+if (isWorkerRuntime) {
+  app.use(workerBodyParser);
+} else {
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+}
 if (isWorkerRuntime) {
   app.use(workerSessionMiddleware);
 } else {
-  const session = require('express-session');
+  const session = requireLocalOnly('express-session');
   app.use(session({
     secret: getSessionSecret(),
     resave: false,
@@ -276,7 +365,7 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(500).render('error', { title: 'Error', page: '' });
+  res.status(err.status || 500).render('error', { title: 'Error', page: '' });
 });
 
 module.exports = app;

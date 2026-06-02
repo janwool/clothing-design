@@ -1,7 +1,7 @@
 name = "clothing-design"
-main = "src/worker.mjs"
+main = "dist/worker.mjs"
 compatibility_date = "2026-06-02"
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = ["nodejs_compat", "allow_eval_during_startup"]
 
 [assets]
 directory = "public"

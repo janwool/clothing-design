@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "node scripts/generate-worker-assets.js",
+    "build": "node scripts/build-worker.js",
     "deploy": "npm run build && wrangler deploy",
     "worker:dev": "npm run build && wrangler dev",
     "watch": "webpack --mode development --watch"
@@ -42,6 +42,7 @@
     "@babel/preset-react": "^7.27.1",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
+    "esbuild": "^0.25.12",
     "nodemon": "^3.1.10",
     "style-loader": "^4.0.0",
     "webpack": "^5.99.7",
