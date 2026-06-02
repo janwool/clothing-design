@@ -122,7 +122,9 @@ function configureI18n() {
   return i18n;
 }
 
-initAppTables();
+if (!isWorkerRuntime) {
+  initAppTables();
+}
 
 const i18n = configureI18n();
 

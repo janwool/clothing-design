@@ -17,7 +17,9 @@ async function initAuthTables() {
     console.error('Failed to init auth tables:', err.message);
   }
 }
-initAuthTables();
+if (process.env.CF_WORKER !== 'true') {
+  initAuthTables();
+}
 
 // Login page
 router.get('/login', (req, res) => {

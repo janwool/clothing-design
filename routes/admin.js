@@ -127,7 +127,9 @@ async function initAdminTables() {
   }
 }
 
-initAdminTables();
+if (process.env.CF_WORKER !== 'true') {
+  initAdminTables();
+}
 
 // Middleware to check if user is logged in (for future admin role check)
 function requireAuth(req, res, next) {

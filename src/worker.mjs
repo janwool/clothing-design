@@ -1,11 +1,10 @@
 import { httpServerHandler } from 'cloudflare:node';
+import { env } from 'cloudflare:workers';
 
-let handlerPromise;
-
-function applyEnvironment(env) {
-  globalThis.__WORKER_ENV__ = env;
+function applyEnvironment(workerEnv) {
+  globalThis.__WORKER_ENV__ = workerEnv;
   process.env.CF_WORKER = 'true';
-  process.env.DB_TYPE = env.DB_TYPE || 'd1';
+  process.env.DB_TYPE = workerEnv.DB_TYPE || 'd1';
 
   const keys = [
     'D1_DATABASE_ID',
@@ -19,32 +18,17 @@ function applyEnvironment(env) {
   ];
 
   for (const key of keys) {
-    if (env[key]) {
-      process.env[key] = env[key];
+    if (workerEnv[key]) {
+      process.env[key] = workerEnv[key];
     }
   }
 }
 
-async function getHandler(env) {
-  applyEnvironment(env);
+applyEnvironment(env);
 
-  if (!handlerPromise) {
-    handlerPromise = import('../app-core.js').then(mod => {
-      const app = mod.default || mod;
-      app.listen(3000);
-      return httpServerHandler({ port: 3000 });
-    });
-  }
+const mod = await import('../app-core.js');
+const app = mod.default || mod;
 
-  return handlerPromise;
-}
+app.listen(3000);
 
-export default {
-  async fetch(request, env, ctx) {
-    const handler = await getHandler(env);
-    if (typeof handler.fetch === 'function') {
-      return handler.fetch(request, env, ctx);
-    }
-    return handler(request, env, ctx);
-  }
-};
+export default httpServerHandler({ port: 3000 });
