@@ -6,24 +6,21 @@ This project is an Express/EJS server app. Deploy it as a Cloudflare Worker, not
 
 - Build command: `npm run build`
 - Deploy command: `npm run deploy`
-- Worker entry: configured in `wrangler.toml` as `src/worker.mjs`
+- Worker entry: configured in `wrangler.toml` as `dist/worker.mjs`
 - Static assets: configured in `wrangler.toml` as `public`
+- D1 database: configured in `wrangler.toml` as binding `DB`
 
 ## Required environment variables
 
 Set these in Cloudflare Workers settings:
 
-- `DB_TYPE=d1`
-- `D1_DATABASE_ID`
-- `CF_ACCOUNT_ID`
-- `CF_API_TOKEN`
 - `R2_ACCOUNT_ID`
 - `R2_ACCESS_KEY_ID`
 - `R2_SECRET_ACCESS_KEY`
 - `R2_PUBLIC_URL`
 - `SESSION_SECRET`
 
-Alternatively, bind a D1 database as `DB`. The database layer will prefer the `DB` binding when it is available, and fall back to the D1 REST variables above.
+The database layer uses the D1 binding named `DB`. Do not rely on the D1 REST API variables for production Workers.
 
 ## Local development
 

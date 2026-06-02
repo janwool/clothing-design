@@ -3,5 +3,13 @@ main = "dist/worker.mjs"
 compatibility_date = "2026-06-02"
 compatibility_flags = ["nodejs_compat"]
 
+[vars]
+DB_TYPE = "d1"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "clothing-design"
+database_id = "fcbfbc5c-58d5-46dd-a8c6-43c91c3d730c"
+
 [assets]
 directory = "public"
