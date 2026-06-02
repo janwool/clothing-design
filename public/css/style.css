@@ -823,11 +823,18 @@ img {
 }
 
 .model-card {
+  position: relative;
   display: block;
   background-color: var(--color-white);
   border-radius: var(--radius-md);
   overflow: hidden;
   transition: transform var(--transition-fast);
+}
+
+.pattern-card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
 .model-card:hover {
@@ -850,6 +857,15 @@ img {
 
 .model-card:hover .model-img {
   transform: scale(1.03);
+}
+
+.model-actions-overlay {
+  padding: 0 var(--spacing-md) var(--spacing-md);
+}
+
+.model-actions-overlay .btn {
+  width: 100%;
+  justify-content: center;
 }
 
 .model-placeholder {
@@ -881,6 +897,38 @@ img {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.model-card-description {
+  margin-top: var(--spacing-xs);
+  color: var(--color-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pattern-detail-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-light);
+}
+
+.pattern-detail-preview::after {
+  display: none;
+}
+
+.pattern-detail-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pattern-detail-placeholder {
+  width: min(420px, 80%);
 }
 
 .model-tags {

@@ -177,11 +177,64 @@ router.get('/design-2d', (req, res) => {
 });
 
 // Sew Patterns
-router.get('/patterns', (req, res) => {
-  res.render('patterns', { 
-    title: req.t('patterns.title'),
-    page: 'patterns'
-  });
+router.get('/patterns', async (req, res) => {
+  try {
+    const patterns = await db.all('SELECT * FROM patterns WHERE status = ? ORDER BY created_at DESC', ['active']);
+    const categories = await db.all(
+      'SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC',
+      ['patterns', 'active']
+    );
+
+    res.render('patterns', {
+      title: req.t('patterns.title'),
+      page: 'patterns',
+      patterns: patterns || [],
+      categories: categories || []
+    });
+  } catch (err) {
+    console.error('Error loading patterns:', err);
+    res.render('patterns', {
+      title: req.t('patterns.title'),
+      page: 'patterns',
+      patterns: [],
+      categories: []
+    });
+  }
+});
+
+// Sew Pattern Detail Page
+router.get('/patterns/item/:id', async (req, res) => {
+  try {
+    const pattern = await db.get(`
+      SELECT p.*, c.slug as category_slug
+      FROM patterns p
+      LEFT JOIN categories c ON p.category = c.name AND c.resource_type = 'patterns'
+      WHERE p.id = ? AND p.status = ?
+    `, [req.params.id, 'active']);
+
+    if (!pattern) {
+      return res.status(404).render('404', { title: 'Not Found', page: '' });
+    }
+
+    const related = await db.all(`
+      SELECT p.*, c.slug as category_slug
+      FROM patterns p
+      LEFT JOIN categories c ON p.category = c.name AND c.resource_type = 'patterns'
+      WHERE p.category = ? AND p.id != ? AND p.status = ?
+      ORDER BY p.created_at DESC
+      LIMIT 4
+    `, [pattern.category, pattern.id, 'active']);
+
+    res.render('pattern-detail', {
+      title: pattern.name,
+      page: 'patterns',
+      pattern,
+      related: related || []
+    });
+  } catch (err) {
+    console.error('Error loading pattern detail:', err);
+    res.status(500).render('404', { title: 'Error', page: '' });
+  }
 });
 
 // Get Inspired (Gallery)

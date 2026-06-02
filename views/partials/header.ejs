@@ -28,9 +28,6 @@
         <a href="/patterns" class="nav-link <%= typeof page !== 'undefined' && page === 'patterns' ? 'active' : '' %>">
           <%= t('nav.patterns') %>
         </a>
-        <a href="/gallery" class="nav-link <%= typeof page !== 'undefined' && page === 'gallery' ? 'active' : '' %>">
-          <%= t('nav.gallery') %>
-        </a>
         
         <!-- Tools Dropdown -->
         <div class="nav-dropdown">
@@ -90,13 +87,6 @@
           </div>
         </div>
 
-        <!-- Search -->
-        <button class="search-btn" aria-label="<%= t('nav.search') %>">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-
         <% if (user) { %>
           <!-- User Menu -->
           <div class="user-dropdown">
@@ -133,7 +123,6 @@
       <a href="/design-3d" class="mobile-link"><%= t('nav.design3d') %></a>
       <a href="/design-2d" class="mobile-link"><%= t('nav.design2d') %></a>
       <a href="/patterns" class="mobile-link"><%= t('nav.patterns') %></a>
-      <a href="/gallery" class="mobile-link"><%= t('nav.gallery') %></a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <a href="/pricing" class="mobile-link"><%= t('nav.pricing') %></a>
       <div class="mobile-divider"></div>

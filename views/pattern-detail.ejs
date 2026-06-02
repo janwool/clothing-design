@@ -1,0 +1,149 @@
+<%- include('partials/header') %>
+
+<section class="model-detail-hero">
+  <div class="container">
+    <div class="model-detail-grid">
+      <div class="model-viewer-section">
+        <div class="model-3d-viewer pattern-detail-preview">
+          <% if (pattern.image_url) { %>
+            <img src="<%= pattern.image_url %>" alt="<%= pattern.name %>" class="pattern-detail-img">
+          <% } else { %>
+            <div class="model-viewer-placeholder pattern-detail-placeholder">
+              <svg viewBox="0 0 200 200" class="model-svg" aria-hidden="true">
+                <rect x="40" y="40" width="120" height="120" rx="4" fill="#f5f5f5" stroke="#999" stroke-width="1"/>
+                <path d="M40 70H160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+                <path d="M70 40V160" stroke="#999" stroke-width="1" stroke-dasharray="4"/>
+                <circle cx="100" cy="100" r="20" fill="none" stroke="#999" stroke-width="1"/>
+                <text x="100" y="140" text-anchor="middle" fill="#999" font-size="12"><%= pattern.format || 'zprj' %></text>
+              </svg>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
+      <div class="model-info-section">
+        <div class="model-breadcrumb">
+          <a href="/patterns">Sew Patterns</a>
+          <span>/</span>
+          <% if (pattern.category_slug) { %>
+            <a href="/patterns/<%= pattern.category_slug %>"><%= pattern.category %></a>
+          <% } else { %>
+            <span><%= pattern.category %></span>
+          <% } %>
+          <span>/</span>
+          <span><%= pattern.name %></span>
+        </div>
+
+        <h1 class="model-detail-title"><%= pattern.name %></h1>
+
+        <div class="model-detail-meta">
+          <span class="tag">.<%= pattern.format || 'zprj' %></span>
+          <% if (pattern.tags) { %>
+            <% pattern.tags.split(',').forEach(function(tag) { %>
+              <% if (tag.trim()) { %>
+                <span class="tag"><%= tag.trim() %></span>
+              <% } %>
+            <% }); %>
+          <% } %>
+        </div>
+
+        <div class="model-description">
+          <h3>Description</h3>
+          <p><%= pattern.description || 'No description available.' %></p>
+        </div>
+
+        <div class="model-specs">
+          <h3>Specifications</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Format</span>
+              <span class="spec-value">.<%= pattern.format || 'zprj' %></span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Category</span>
+              <span class="spec-value"><%= pattern.category %></span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Resource</span>
+              <span class="spec-value">Sew Pattern</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-actions">
+          <% if (pattern.file_url) { %>
+            <a href="<%= pattern.file_url %>" download class="btn btn-primary btn-large">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              Download Pattern
+            </a>
+          <% } %>
+          <a href="/patterns" class="btn btn-secondary btn-large">
+            Browse Patterns
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="model-showcase-section">
+  <div class="container">
+    <h2 class="section-title">Pattern Preview</h2>
+    <p class="section-subtitle">Review the uploaded sewing pattern preview before downloading the source file.</p>
+
+    <div class="showcase-grid">
+      <div class="showcase-item">
+        <div class="showcase-image">
+          <% if (pattern.image_url) { %>
+            <img src="<%= pattern.image_url %>" alt="<%= pattern.name %> preview">
+          <% } else { %>
+            <div class="resource-placeholder">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <path d="M21 15l-5-5L5 21"/>
+              </svg>
+            </div>
+          <% } %>
+        </div>
+        <span class="showcase-label">Preview</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if (related && related.length > 0) { %>
+<section class="related-models-section">
+  <div class="container">
+    <h2 class="section-title">Related Patterns</h2>
+
+    <div class="models-grid">
+      <% related.forEach(function(item) { %>
+        <div class="model-card">
+          <a href="/patterns/item/<%= item.id %>" class="pattern-card-link">
+            <div class="model-preview-3d">
+              <% if (item.image_url) { %>
+                <img src="<%= item.image_url %>" alt="<%= item.name %>" class="model-img">
+              <% } else { %>
+                <div class="model-placeholder">
+                  <span><%= item.name.charAt(0) %></span>
+                </div>
+              <% } %>
+            </div>
+            <div class="model-info">
+              <h3 class="model-name"><%= item.name %></h3>
+              <div class="model-tags">
+                <span class="tag">.<%= item.format || 'zprj' %></span>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<%- include('partials/footer') %>

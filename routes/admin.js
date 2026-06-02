@@ -376,10 +376,14 @@ router.get('/patterns', requireAuth, async (req, res) => {
 
 router.post('/patterns', requireAuth, async (req, res) => {
   try {
-    const { name, category, description, tags, format, status } = req.body;
+    const { name, category, description, tags, format, status, file_url, image_url } = req.body;
+    if (!file_url) {
+      return res.json({ success: false, error: 'Pattern file is required' });
+    }
+
     const result = await db.run(
-      'INSERT INTO patterns (name, category, description, tags, format, status) VALUES (?, ?, ?, ?, ?, ?)',
-      [name, category, description, tags, format || 'zprj', status || 'active']
+      'INSERT INTO patterns (name, category, description, tags, file_url, image_url, format, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, category, description, tags, file_url, image_url, format || 'zprj', status || 'active']
     );
     res.json({ success: true, id: result.lastID });
   } catch (err) {
@@ -389,10 +393,31 @@ router.post('/patterns', requireAuth, async (req, res) => {
 
 router.put('/patterns/:id', requireAuth, async (req, res) => {
   try {
-    const { name, category, description, tags, format, status } = req.body;
+    const { name, category, description, tags, format, status, file_url, image_url } = req.body;
+    const updates = [
+      'name = ?',
+      'category = ?',
+      'description = ?',
+      'tags = ?',
+      'format = ?',
+      'status = ?',
+    ];
+    const params = [name, category, description, tags, format || 'zprj', status || 'active'];
+
+    if (file_url !== undefined && file_url !== '') {
+      updates.push('file_url = ?');
+      params.push(file_url);
+    }
+    if (image_url !== undefined && image_url !== '') {
+      updates.push('image_url = ?');
+      params.push(image_url);
+    }
+
+    params.push(req.params.id);
+
     await db.run(
-      'UPDATE patterns SET name = ?, category = ?, description = ?, tags = ?, format = ?, status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      [name, category, description, tags, format, status, req.params.id]
+      'UPDATE patterns SET ' + updates.join(', ') + ', updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      params
     );
     res.json({ success: true });
   } catch (err) {
@@ -574,9 +599,13 @@ router.post('/upload-token', requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, error: 'filename and folder are required' });
     }
 
-    const validFolders = ['d3', 'd2', 'image'];
+    const validFolders = ['d3', 'd2', 'image', 'patterns'];
     if (!validFolders.includes(folder)) {
       return res.status(400).json({ success: false, error: 'Invalid folder' });
+    }
+
+    if (folder === 'patterns' && path.extname(filename).toLowerCase() !== '.zprj') {
+      return res.status(400).json({ success: false, error: 'Only .zprj pattern files are allowed' });
     }
 
     const key = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(filename)}`;

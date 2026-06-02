@@ -27,6 +27,8 @@
               <th>Name</th>
               <th>Category</th>
               <th>Format</th>
+              <th>File</th>
+              <th>Preview</th>
               <th>Tags</th>
               <th>Status</th>
               <th>Created</th>
@@ -40,6 +42,20 @@
                 <td><%= item.name %></td>
                 <td><%= item.category %></td>
                 <td><%= item.format || 'zprj' %></td>
+                <td>
+                  <% if (item.file_url) { %>
+                    <a href="<%= item.file_url %>" target="_blank" rel="noopener">Download</a>
+                  <% } else { %>
+                    -
+                  <% } %>
+                </td>
+                <td>
+                  <% if (item.image_url) { %>
+                    <a href="<%= item.image_url %>" target="_blank" rel="noopener">View</a>
+                  <% } else { %>
+                    -
+                  <% } %>
+                </td>
                 <td><%= item.tags || '-' %></td>
                 <td>
                   <span class="status-badge status-<%= item.status %>"><%= item.status %></span>
@@ -121,6 +137,16 @@
           </div>
         </div>
         <div class="form-group">
+          <label class="form-label">Pattern File (.zprj)</label>
+          <input type="file" class="form-input" id="patternFile" accept=".zprj">
+          <small class="form-help" id="patternFileCurrent"></small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Preview Image</label>
+          <input type="file" class="form-input" id="patternImage" accept="image/*">
+          <small class="form-help" id="patternImageCurrent"></small>
+        </div>
+        <div class="form-group">
           <label class="form-label">Tags</label>
           <input type="text" class="form-input" id="patternTags" placeholder="e.g. Free, CLO3D">
         </div>
@@ -141,11 +167,15 @@
 const modal = document.getElementById('modal');
 const modalTitle = document.getElementById('modalTitle');
 const patternForm = document.getElementById('patternForm');
+const patternsData = <%- JSON.stringify(items || []).replace(/</g, '\\u003c') %>;
+const patternsById = new Map(patternsData.map(item => [String(item.id), item]));
 
 function openModal() {
   modalTitle.textContent = 'Add Sew Pattern';
   patternForm.reset();
   document.getElementById('patternId').value = '';
+  document.getElementById('patternFileCurrent').innerHTML = '';
+  document.getElementById('patternImageCurrent').innerHTML = '';
   modal.style.display = 'flex';
 }
 
@@ -154,25 +184,118 @@ function closeModal() {
 }
 
 function editPattern(id) {
-  const row = document.querySelector('tr[data-id="' + id + '"]');
-  if (!row) return;
+  const item = patternsById.get(String(id));
+  if (!item) return;
 
-  const cells = row.querySelectorAll('td');
   document.getElementById('patternId').value = id;
-  document.getElementById('patternName').value = cells[1].textContent;
-  document.getElementById('patternCategory').value = cells[2].textContent;
-  document.getElementById('patternFormat').value = cells[3].textContent;
-  document.getElementById('patternTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;
-
-  const statusBadge = cells[5].querySelector('.status-badge');
-  document.getElementById('patternStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';
+  document.getElementById('patternName').value = item.name || '';
+  document.getElementById('patternCategory').value = item.category || '';
+  document.getElementById('patternFormat').value = item.format || 'zprj';
+  document.getElementById('patternTags').value = item.tags || '';
+  document.getElementById('patternDescription').value = item.description || '';
+  document.getElementById('patternStatus').value = item.status || 'active';
+  document.getElementById('patternFile').value = '';
+  document.getElementById('patternImage').value = '';
+  const fileCurrent = document.getElementById('patternFileCurrent');
+  fileCurrent.textContent = '';
+  if (item.file_url) {
+    fileCurrent.append('Current file: ');
+    const fileLink = document.createElement('a');
+    fileLink.href = item.file_url;
+    fileLink.target = '_blank';
+    fileLink.rel = 'noopener';
+    fileLink.textContent = 'Download';
+    fileCurrent.append(fileLink);
+  } else {
+    fileCurrent.textContent = 'No file uploaded yet.';
+  }
+  const imageCurrent = document.getElementById('patternImageCurrent');
+  imageCurrent.textContent = '';
+  if (item.image_url) {
+    imageCurrent.append('Current image: ');
+    const imageLink = document.createElement('a');
+    imageLink.href = item.image_url;
+    imageLink.target = '_blank';
+    imageLink.rel = 'noopener';
+    imageLink.textContent = 'View';
+    imageCurrent.append(imageLink);
+  } else {
+    imageCurrent.textContent = 'No preview image uploaded yet.';
+  }
 
   modalTitle.textContent = 'Edit Sew Pattern';
   modal.style.display = 'flex';
 }
 
+async function getUploadToken(filename, contentType, folder) {
+  const response = await fetch('/admin/upload-token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ filename, contentType, folder })
+  });
+  const result = await response.json();
+  if (!result.success) {
+    throw new Error(result.error || 'Failed to get upload token');
+  }
+  return result;
+}
+
+async function uploadFileToR2(file, folder) {
+  const token = await getUploadToken(file.name, file.type || 'application/octet-stream', folder);
+
+  const response = await fetch(token.signedUrl, {
+    method: 'PUT',
+    headers: { 'Content-Type': file.type || 'application/octet-stream' },
+    body: file
+  });
+
+  if (!response.ok) {
+    throw new Error('Upload failed: ' + response.statusText);
+  }
+
+  return token.publicUrl;
+}
+
 async function savePattern() {
   const id = document.getElementById('patternId').value;
+  const patternFile = document.getElementById('patternFile').files[0];
+  const patternImage = document.getElementById('patternImage').files[0];
+
+  if (!id && !patternFile) {
+    alert('Please upload a .zprj pattern file.');
+    return;
+  }
+
+  let fileUrl;
+  let imageUrl;
+  if (patternFile) {
+    const fileName = patternFile.name.toLowerCase();
+    if (!fileName.endsWith('.zprj')) {
+      alert('Only .zprj pattern files are allowed.');
+      return;
+    }
+
+    try {
+      fileUrl = await uploadFileToR2(patternFile, 'patterns');
+    } catch (err) {
+      alert('Upload error: ' + err.message);
+      return;
+    }
+  }
+  if (patternImage) {
+    if (!patternImage.type.startsWith('image/')) {
+      alert('Only image files are allowed for the preview.');
+      return;
+    }
+
+    try {
+      imageUrl = await uploadFileToR2(patternImage, 'image');
+    } catch (err) {
+      alert('Preview upload error: ' + err.message);
+      return;
+    }
+  }
+
   const data = {
     name: document.getElementById('patternName').value,
     category: document.getElementById('patternCategory').value,
@@ -181,6 +304,13 @@ async function savePattern() {
     tags: document.getElementById('patternTags').value,
     description: document.getElementById('patternDescription').value
   };
+
+  if (fileUrl) {
+    data.file_url = fileUrl;
+  }
+  if (imageUrl) {
+    data.image_url = imageUrl;
+  }
 
   const url = id ? '/admin/patterns/' + id : '/admin/patterns';
   const method = id ? 'PUT' : 'POST';
@@ -233,7 +363,7 @@ modal.addEventListener('click', function(e) {
 });
 
 // Event delegation for edit/delete buttons
-document.querySelector('.data-table tbody').addEventListener('click', function(e) {
+document.querySelector('.data-table tbody')?.addEventListener('click', function(e) {
   const btn = e.target.closest('[data-action]');
   if (!btn) return;
   const id = btn.getAttribute('data-id');
