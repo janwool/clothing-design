@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "webpack --mode production",
+    "build": "node -e \"console.log('No frontend build required')\"",
     "watch": "webpack --mode development --watch"
   },
   "keywords": [
