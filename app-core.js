@@ -31,6 +31,11 @@ async function initAppTables() {
 }
 
 function normalizeViewPath(filePath) {
+  if (!path.isAbsolute(filePath)) {
+    const relPath = filePath.split(/[\\/]/).filter(Boolean).join('/');
+    return relPath.endsWith('.ejs') ? relPath : `${relPath}.ejs`;
+  }
+
   let rel = path.relative(viewsDir, path.resolve(filePath));
   if (rel.startsWith('..')) {
     const marker = `${path.sep}views${path.sep}`;
@@ -46,20 +51,36 @@ function normalizeViewPath(filePath) {
 function configureWorkerViewEngine() {
   const workerTemplates = require('./src/worker-templates.cjs');
 
+  function renderWorkerTemplate(view, options, callback) {
+    const renderOptions = {
+      ...(options._locals || {}),
+      ...options
+    };
+    if (typeof renderOptions.t !== 'function') {
+      renderOptions.t = key => key;
+    }
+    if (!renderOptions.i18next) {
+      renderOptions.i18next = { language: 'en' };
+    }
+    const html = workerTemplates.render(normalizeViewPath(view), renderOptions);
+    callback(null, html);
+  }
+
+  app.render = function render(name, options, callback) {
+    let renderOptions = options;
+    let renderCallback = callback;
+
+    if (typeof renderOptions === 'function') {
+      renderCallback = renderOptions;
+      renderOptions = {};
+    }
+
+    renderWorkerTemplate(name, renderOptions || {}, renderCallback);
+  };
+
   app.engine('ejs', (filePath, options, callback) => {
     try {
-      const renderOptions = {
-        ...(options._locals || {}),
-        ...options
-      };
-      if (typeof renderOptions.t !== 'function') {
-        renderOptions.t = key => key;
-      }
-      if (!renderOptions.i18next) {
-        renderOptions.i18next = { language: 'en' };
-      }
-      const html = workerTemplates.render(normalizeViewPath(filePath), renderOptions);
-      callback(null, html);
+      renderWorkerTemplate(filePath, options, callback);
     } catch (err) {
       callback(err);
     }

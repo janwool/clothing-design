@@ -6,7 +6,7 @@ const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WOR
 
 // Cloudflare R2 Configuration
 const R2_BUCKET_NAME = 'clothing-design';
-let r2HelpersPromise;
+const textEncoder = new TextEncoder();
 
 function getEnvValue(key) {
   return process.env[key] || (globalThis.__WORKER_ENV__ && globalThis.__WORKER_ENV__[key]) || '';
@@ -21,29 +21,88 @@ function getR2Config() {
   };
 }
 
-async function getR2Helpers() {
-  if (!r2HelpersPromise) {
-    r2HelpersPromise = Promise.all([
-      import('@aws-sdk/client-s3'),
-      import('@aws-sdk/s3-request-presigner')
-    ]).then(([clientS3, presigner]) => {
-      const config = getR2Config();
-      const s3Client = new clientS3.S3Client({
-        region: 'auto',
-        endpoint: `https://${config.accountId}.r2.cloudflarestorage.com`,
-        credentials: {
-          accessKeyId: config.accessKeyId,
-          secretAccessKey: config.secretAccessKey,
-        },
-      });
-      return {
-        PutObjectCommand: clientS3.PutObjectCommand,
-        getSignedUrl: presigner.getSignedUrl,
-        s3Client
-      };
-    });
+function awsEncode(value) {
+  return encodeURIComponent(value).replace(/[!'()*]/g, char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
+}
+
+function toAmzDate(date) {
+  return date.toISOString().replace(/[:-]|\.\d{3}/g, '');
+}
+
+function toDateStamp(date) {
+  return toAmzDate(date).slice(0, 8);
+}
+
+function toHex(bytes) {
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function hmacSha256(key, value) {
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    typeof key === 'string' ? textEncoder.encode(key) : key,
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  return new Uint8Array(await crypto.subtle.sign('HMAC', cryptoKey, textEncoder.encode(value)));
+}
+
+async function sha256Hex(value) {
+  return toHex(new Uint8Array(await crypto.subtle.digest('SHA-256', textEncoder.encode(value))));
+}
+
+async function getSigningKey(secretAccessKey, dateStamp) {
+  const kDate = await hmacSha256(`AWS4${secretAccessKey}`, dateStamp);
+  const kRegion = await hmacSha256(kDate, 'auto');
+  const kService = await hmacSha256(kRegion, 's3');
+  return hmacSha256(kService, 'aws4_request');
+}
+
+async function createR2PresignedPutUrl({ key, contentType, expiresIn = 300 }) {
+  const config = getR2Config();
+  if (!config.accountId || !config.accessKeyId || !config.secretAccessKey) {
+    throw new Error('R2 credentials are not configured');
   }
-  return r2HelpersPromise;
+
+  const now = new Date();
+  const amzDate = toAmzDate(now);
+  const dateStamp = toDateStamp(now);
+  const host = `${config.accountId}.r2.cloudflarestorage.com`;
+  const credentialScope = `${dateStamp}/auto/s3/aws4_request`;
+  const canonicalUri = `/${R2_BUCKET_NAME}/${key.split('/').map(awsEncode).join('/')}`;
+  const signedHeaders = 'content-type;host';
+  const queryParams = [
+    ['X-Amz-Algorithm', 'AWS4-HMAC-SHA256'],
+    ['X-Amz-Content-Sha256', 'UNSIGNED-PAYLOAD'],
+    ['X-Amz-Credential', `${config.accessKeyId}/${credentialScope}`],
+    ['X-Amz-Date', amzDate],
+    ['X-Amz-Expires', String(expiresIn)],
+    ['X-Amz-SignedHeaders', signedHeaders]
+  ];
+  const canonicalQuery = queryParams
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([name, value]) => `${awsEncode(name)}=${awsEncode(value)}`)
+    .join('&');
+  const canonicalHeaders = `content-type:${contentType}\nhost:${host}\n`;
+  const canonicalRequest = [
+    'PUT',
+    canonicalUri,
+    canonicalQuery,
+    canonicalHeaders,
+    signedHeaders,
+    'UNSIGNED-PAYLOAD'
+  ].join('\n');
+  const stringToSign = [
+    'AWS4-HMAC-SHA256',
+    amzDate,
+    credentialScope,
+    await sha256Hex(canonicalRequest)
+  ].join('\n');
+  const signingKey = await getSigningKey(config.secretAccessKey, dateStamp);
+  const signature = toHex(await hmacSha256(signingKey, stringToSign));
+
+  return `https://${host}${canonicalUri}?${canonicalQuery}&X-Amz-Signature=${signature}`;
 }
 
 // Initialize database tables for admin
@@ -560,15 +619,12 @@ router.post('/upload-token', requireAuth, async (req, res) => {
 
     const key = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(filename)}`;
     const r2Config = getR2Config();
-    const { PutObjectCommand, getSignedUrl, s3Client } = await getR2Helpers();
-
-    const command = new PutObjectCommand({
-      Bucket: R2_BUCKET_NAME,
-      Key: key,
-      ContentType: contentType || 'application/octet-stream',
+    const uploadContentType = contentType || 'application/octet-stream';
+    const signedUrl = await createR2PresignedPutUrl({
+      key,
+      contentType: uploadContentType,
+      expiresIn: 300
     });
-
-    const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 300 }); // 5 minutes
 
     // R2 public URL format: https://<bucket>.<accountid>.r2.cloudflarestorage.com/<key>
     const publicUrl = r2Config.publicUrl

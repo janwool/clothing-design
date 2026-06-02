@@ -425,12 +425,13 @@ async function getUploadToken(filename, contentType, folder) {
 }
 
 async function uploadFileToR2(file, folder) {
-  const token = await getUploadToken(file.name, file.type, folder);
+  const uploadContentType = file.type || 'application/octet-stream';
+  const token = await getUploadToken(file.name, uploadContentType, folder);
 
   const response = await fetch(token.signedUrl, {
     method: 'PUT',
     headers: {
-      'Content-Type': file.type,
+      'Content-Type': uploadContentType,
     },
     body: file
   });
