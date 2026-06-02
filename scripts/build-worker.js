@@ -1,10 +1,12 @@
 const path = require('path');
+const fs = require('fs');
 const esbuild = require('esbuild');
 
 require('./generate-worker-assets');
+require('./generate-worker-templates');
 
 const rootDir = path.join(__dirname, '..');
-const outputFile = path.join(rootDir, 'dist', 'worker.mjs');
+const outputDir = path.join(rootDir, 'dist');
 const iconvLiteShim = path.join(rootDir, 'src', 'shims', 'iconv-lite-node-extension.cjs');
 
 const iconvLiteNodeExtensionShim = {
@@ -21,19 +23,25 @@ const iconvLiteNodeExtensionShim = {
 };
 
 async function buildWorker() {
+  fs.rmSync(outputDir, { recursive: true, force: true });
+
   await esbuild.build({
     entryPoints: [path.join(rootDir, 'src', 'worker.mjs')],
-    outfile: outputFile,
+    outdir: outputDir,
     bundle: true,
     format: 'esm',
     platform: 'node',
     target: 'es2022',
+    splitting: true,
+    entryNames: 'worker',
+    chunkNames: 'chunks/[name]-[hash]',
+    outExtension: { '.js': '.mjs' },
     external: ['cloudflare:node', 'cloudflare:workers'],
     plugins: [iconvLiteNodeExtensionShim],
     logLevel: 'info'
   });
 
-  console.log(`Generated ${path.relative(rootDir, outputFile)}`);
+  console.log(`Generated ${path.relative(rootDir, path.join(outputDir, 'worker.mjs'))}`);
 }
 
 buildWorker().catch(err => {

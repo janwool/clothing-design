@@ -4,7 +4,6 @@ const { Buffer } = require('node:buffer');
 const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
-const ejs = require('ejs');
 const db = require('./lib/db');
 
 const app = express();
@@ -45,57 +44,21 @@ function normalizeViewPath(filePath) {
 }
 
 function configureWorkerViewEngine() {
-  const workerAssets = require('./src/worker-assets.cjs');
-
-  function resolveTemplate(filePath, fromFile, originalPath) {
-    const candidates = [];
-    if (filePath) candidates.push(filePath);
-    if (fromFile && originalPath) {
-      candidates.push(path.resolve(path.dirname(fromFile), originalPath));
-      candidates.push(path.resolve(path.dirname(fromFile), `${originalPath}.ejs`));
-    }
-
-    for (const candidate of candidates) {
-      const rel = normalizeViewPath(candidate);
-      if (workerAssets.views[rel]) {
-        return {
-          filename: path.join(viewsDir, rel),
-          template: workerAssets.views[rel]
-        };
-      }
-    }
-
-    throw new Error(`Worker template not found: ${originalPath || filePath}`);
-  }
-
-  function getCompileOptions(filename) {
-    return {
-      filename,
-      cache: true,
-      includer: (originalPath, parsedPath) => {
-        const included = resolveTemplate(parsedPath, filename, originalPath);
-        return {
-          filename: included.filename,
-          template: included.template
-        };
-      }
-    };
-  }
-
-  for (const [rel, template] of Object.entries(workerAssets.views)) {
-    const filename = path.join(viewsDir, rel);
-    ejs.cache.set(filename, ejs.compile(template, getCompileOptions(filename)));
-  }
+  const workerTemplates = require('./src/worker-templates.cjs');
 
   app.engine('ejs', (filePath, options, callback) => {
     try {
-      const resolved = resolveTemplate(filePath);
-      let renderTemplate = ejs.cache.get(resolved.filename);
-      if (!renderTemplate) {
-        renderTemplate = ejs.compile(resolved.template, getCompileOptions(resolved.filename));
-        ejs.cache.set(resolved.filename, renderTemplate);
+      const renderOptions = {
+        ...(options._locals || {}),
+        ...options
+      };
+      if (typeof renderOptions.t !== 'function') {
+        renderOptions.t = key => key;
       }
-      const html = renderTemplate(options);
+      if (!renderOptions.i18next) {
+        renderOptions.i18next = { language: 'en' };
+      }
+      const html = workerTemplates.render(normalizeViewPath(filePath), renderOptions);
       callback(null, html);
     } catch (err) {
       callback(err);
