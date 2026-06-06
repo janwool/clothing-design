@@ -410,6 +410,33 @@ function removeFile(inputId, previewId) {
   document.getElementById(inputId).closest('.file-upload').classList.remove('has-file');
 }
 
+function getFileNameFromUrl(url, fallback) {
+  try {
+    const pathname = new URL(url).pathname;
+    return decodeURIComponent(pathname.split('/').pop()) || fallback;
+  } catch (err) {
+    return fallback;
+  }
+}
+
+function showExistingFile(inputId, previewId, url, fallback) {
+  if (!url) return;
+  const input = document.getElementById(inputId);
+  const preview = document.getElementById(previewId);
+  const uploadBox = input.closest('.file-upload');
+  uploadBox.classList.add('has-file');
+  preview.style.display = 'flex';
+
+  const previewImage = preview.querySelector('.file-preview-img');
+  const fileName = preview.querySelector('.file-name');
+  if (previewImage) {
+    previewImage.src = url;
+  }
+  if (fileName) {
+    fileName.textContent = getFileNameFromUrl(url, fallback);
+  }
+}
+
 function editModel(id) {
   const row = document.querySelector('tr[data-id="' + id + '"]');
   if (!row) return;
@@ -433,6 +460,9 @@ function editModel(id) {
   syncSlugFromName();
 
   resetFilePreviews();
+  showExistingFile('glbFile', 'glbPreview', item.file_url, 'Current GLB file');
+  showExistingFile('previewImage', 'previewPreview', item.image_url, 'Current preview image');
+  showExistingFile('textureSvg', 'texturePreview', item.texture_url, 'Current texture SVG');
   modalTitle.textContent = 'Edit 3D Model';
   modal.style.display = 'flex';
 }
@@ -476,36 +506,29 @@ async function saveModel() {
   const previewImage = document.getElementById('previewImage').files[0];
   const textureSvg = document.getElementById('textureSvg').files[0];
 
-  let file_url = null;
-  let image_url = null;
-  let texture_url = null;
-
-  try {
-    if (glbFile) {
-      file_url = await uploadFileToR2(glbFile, 'd3');
-    }
-    if (previewImage) {
-      image_url = await uploadFileToR2(previewImage, 'image');
-    }
-    if (textureSvg) {
-      texture_url = await uploadFileToR2(textureSvg, 'd2');
-    }
-  } catch (err) {
-    alert('Upload error: ' + err.message);
-    return;
-  }
-
   const data = {
     name: document.getElementById('modelName').value,
     slug: slugify(document.getElementById('modelSlug').value),
     category: document.getElementById('modelCategory').value,
     tags: document.getElementById('modelTags').value,
     description: document.getElementById('modelDescription').value,
-    status: document.getElementById('modelStatus').value,
-    file_url,
-    image_url,
-    texture_url
+    status: document.getElementById('modelStatus').value
   };
+
+  try {
+    if (glbFile) {
+      data.file_url = await uploadFileToR2(glbFile, 'd3');
+    }
+    if (previewImage) {
+      data.image_url = await uploadFileToR2(previewImage, 'image');
+    }
+    if (textureSvg) {
+      data.texture_url = await uploadFileToR2(textureSvg, 'd2');
+    }
+  } catch (err) {
+    alert('Upload error: ' + err.message);
+    return;
+  }
 
   const url = id ? '/admin/models-3d/' + id : '/admin/models-3d';
   const method = id ? 'PUT' : 'POST';

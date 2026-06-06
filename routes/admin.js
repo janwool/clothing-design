@@ -22,6 +22,10 @@ function getR2Config() {
   };
 }
 
+function hasUploadValue(value) {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
 function awsEncode(value) {
   return encodeURIComponent(value).replace(/[!'()*]/g, char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
 }
@@ -296,15 +300,15 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
     updates.push('tags = ?'); params.push(tags);
     updates.push('status = ?'); params.push(status);
 
-    if (file_url !== undefined) {
+    if (hasUploadValue(file_url)) {
       updates.push('file_url = ?');
       params.push(file_url);
     }
-    if (image_url !== undefined) {
+    if (hasUploadValue(image_url)) {
       updates.push('image_url = ?');
       params.push(image_url);
     }
-    if (texture_url !== undefined) {
+    if (hasUploadValue(texture_url)) {
       updates.push('texture_url = ?');
       params.push(texture_url);
     }
