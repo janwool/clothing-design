@@ -270,12 +270,12 @@ router.get('/models-3d', requireAuth, async (req, res) => {
 
 router.post('/models-3d', requireAuth, async (req, res) => {
   try {
-    const { name, category, description, tags, status, file_url, image_url, texture_url } = req.body;
-    const slug = generateSlug(name, `model-${Date.now()}`);
+    const { name, slug, category, description, tags, status, file_url, image_url, texture_url } = req.body;
+    const modelSlug = generateSlug(slug || name, `model-${Date.now()}`);
 
     const result = await db.run(
       'INSERT INTO models_3d (name, slug, category, description, tags, file_url, image_url, texture_url, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [name, slug, category, description, tags, file_url, image_url, texture_url, status || 'active']
+      [name, modelSlug, category, description, tags, file_url, image_url, texture_url, status || 'active']
     );
     res.json({ success: true, id: result.lastID });
   } catch (err) {
@@ -285,12 +285,12 @@ router.post('/models-3d', requireAuth, async (req, res) => {
 
 router.put('/models-3d/:id', requireAuth, async (req, res) => {
   try {
-    const { name, category, description, tags, status, file_url, image_url, texture_url } = req.body;
+    const { name, slug, category, description, tags, status, file_url, image_url, texture_url } = req.body;
     const updates = [];
     const params = [];
 
     updates.push('name = ?'); params.push(name);
-    updates.push('slug = ?'); params.push(generateSlug(name, `model-${req.params.id}`));
+    updates.push('slug = ?'); params.push(generateSlug(slug || name, `model-${req.params.id}`));
     updates.push('category = ?'); params.push(category);
     updates.push('description = ?'); params.push(description);
     updates.push('tags = ?'); params.push(tags);
