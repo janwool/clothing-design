@@ -674,6 +674,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function getTextureSvgDataUrl(options = {}) {
     const includeSelectionHighlight = options.includeSelectionHighlight !== false;
+    const includeTemplateGuides = options.includeTemplateGuides === true;
     const exportSvg = textureSvg.cloneNode(true);
     exportSvg.querySelector('#selectionLayer')?.remove();
     exportSvg.querySelectorAll('.texture-element.selected').forEach((element) => {
@@ -689,14 +690,28 @@ document.addEventListener('DOMContentLoaded', () => {
       exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
         element.remove();
       });
-      exportSvg.querySelectorAll('.texture-template-path[data-area-empty="true"]').forEach((element) => {
-        if (element.dataset.color) return;
-        if (element.dataset.originalFill) {
-          element.setAttribute('fill', element.dataset.originalFill);
-        } else {
-          element.removeAttribute('fill');
-        }
-        element.removeAttribute('fill-opacity');
+      if (includeTemplateGuides) {
+        exportSvg.querySelectorAll('.texture-template-path[data-area-empty="true"]').forEach((element) => {
+          if (element.dataset.color) return;
+          if (element.dataset.originalFill) {
+            element.setAttribute('fill', element.dataset.originalFill);
+          } else {
+            element.removeAttribute('fill');
+          }
+          element.removeAttribute('fill-opacity');
+        });
+      }
+    }
+    if (!includeTemplateGuides) {
+      const exportTextureBg = exportSvg.querySelector('#textureBg');
+      if (exportTextureBg?.tagName?.toLowerCase() === 'image') {
+        exportTextureBg.remove();
+      }
+      exportSvg.querySelectorAll('.texture-template-path').forEach((element) => {
+        element.remove();
+      });
+      exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
+        element.remove();
       });
     }
     exportSvg.querySelectorAll('[contenteditable]').forEach((element) => {
