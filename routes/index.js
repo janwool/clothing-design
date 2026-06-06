@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../lib/db');
+const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
 
 function getDefaultLandingContent(name = '3D clothing models') {
   return {
@@ -106,6 +107,29 @@ function isAllowedTextureUrl(rawUrl) {
   }
 }
 
+async function findActive3dModelBySlug(slug) {
+  const model = await db.get(`
+    SELECT m.*, c.slug as category_slug
+    FROM models_3d m
+    LEFT JOIN categories c ON m.category = c.name AND c.resource_type = '3d-models'
+    WHERE m.slug = ? AND m.status = ?
+  `, [slug, 'active']);
+
+  if (model) {
+    return normalize3dModel(model);
+  }
+
+  const legacyModels = await db.all(`
+    SELECT m.*, c.slug as category_slug
+    FROM models_3d m
+    LEFT JOIN categories c ON m.category = c.name AND c.resource_type = '3d-models'
+    WHERE (m.slug IS NULL OR m.slug = '') AND m.status = ?
+  `, ['active']);
+
+  const legacyModel = (legacyModels || []).find(item => getModelSlug(item) === slug);
+  return legacyModel ? normalize3dModel(legacyModel) : null;
+}
+
 router.get('/api/texture-svg', async (req, res) => {
   const textureUrl = req.query.url;
   if (!textureUrl || !isAllowedTextureUrl(textureUrl)) {
@@ -152,7 +176,7 @@ router.get('/design-3d', async (req, res) => {
     res.render('design-3d', { 
       title: req.t('design3d.title'),
       page: 'design-3d',
-      models: models || [],
+      models: normalize3dModels(models),
       categories: categories || [],
       landingContent: getLandingContent()
     });
@@ -297,9 +321,9 @@ router.get('/3d-models/:slug', async (req, res) => {
       title: category.meta_title || category.name,
       page: 'design-3d',
       category: category,
-      items: items || [],
+      items: normalize3dModels(items, category.slug),
       categories: categories || [],
-      models: allModels || [],
+      models: normalize3dModels(allModels),
       landingContent: getLandingContent(category),
       resourceType: '3d-models',
       resourceTypeLabel: '3D Models'
@@ -424,12 +448,7 @@ router.get('/tools/:slug', async (req, res) => {
 // 3D Designer Page - MUST be before /3d-models/:category/:slug
 router.get('/3d-models/:category/:slug/edit', async (req, res) => {
   try {
-    const model = await db.get(`
-      SELECT m.*, c.slug as category_slug 
-      FROM models_3d m 
-      LEFT JOIN categories c ON m.category = c.name AND c.resource_type = '3d-models'
-      WHERE m.slug = ? AND m.status = ?
-    `, [req.params.slug, 'active']);
+    const model = await findActive3dModelBySlug(req.params.slug);
     
     if (!model) {
       return res.status(404).render('404', { title: 'Not Found', page: '' });
@@ -438,7 +457,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
       page: 'designer',
-      model: model
+      model: normalize3dModel(model)
     });
   } catch (err) {
     console.error('Error loading designer:', err);
@@ -449,12 +468,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
 // 3D Model Detail Page
 router.get('/3d-models/:category/:slug', async (req, res) => {
   try {
-    const model = await db.get(`
-      SELECT m.*, c.slug as category_slug 
-      FROM models_3d m 
-      LEFT JOIN categories c ON m.category = c.name AND c.resource_type = '3d-models'
-      WHERE m.slug = ? AND m.status = ?
-    `, [req.params.slug, 'active']);
+    const model = await findActive3dModelBySlug(req.params.slug);
     
     if (!model) {
       return res.status(404).render('404', { title: 'Not Found', page: '' });
@@ -473,8 +487,8 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     res.render('model-detail', {
       title: model.name,
       page: 'design-3d',
-      model: model,
-      related: related || []
+      model: normalize3dModel(model),
+      related: normalize3dModels(related)
     });
   } catch (err) {
     console.error('Error loading model detail:', err);

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const db = require('../lib/db');
+const { generateSlug } = require('../lib/slug');
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 
 // Cloudflare R2 Configuration
@@ -140,6 +141,7 @@ async function initAdminTables() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
+    await db.run('ALTER TABLE models_3d ADD COLUMN slug TEXT').catch(() => {});
 
     // 2D Templates table
     await db.run(`CREATE TABLE IF NOT EXISTS models_2d (
@@ -269,10 +271,11 @@ router.get('/models-3d', requireAuth, async (req, res) => {
 router.post('/models-3d', requireAuth, async (req, res) => {
   try {
     const { name, category, description, tags, status, file_url, image_url, texture_url } = req.body;
+    const slug = generateSlug(name, `model-${Date.now()}`);
 
     const result = await db.run(
-      'INSERT INTO models_3d (name, category, description, tags, file_url, image_url, texture_url, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [name, category, description, tags, file_url, image_url, texture_url, status || 'active']
+      'INSERT INTO models_3d (name, slug, category, description, tags, file_url, image_url, texture_url, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [name, slug, category, description, tags, file_url, image_url, texture_url, status || 'active']
     );
     res.json({ success: true, id: result.lastID });
   } catch (err) {
@@ -287,6 +290,7 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
     const params = [];
 
     updates.push('name = ?'); params.push(name);
+    updates.push('slug = ?'); params.push(generateSlug(name, `model-${req.params.id}`));
     updates.push('category = ?'); params.push(category);
     updates.push('description = ?'); params.push(description);
     updates.push('tags = ?'); params.push(tags);

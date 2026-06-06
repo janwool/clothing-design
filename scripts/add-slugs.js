@@ -1,12 +1,6 @@
 require('dotenv').config();
 const db = require('../lib/db');
-
-function generateSlug(name) {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
+const { generateSlug } = require('../lib/slug');
 
 async function main() {
   console.log('Adding slugs to existing models...\n');
