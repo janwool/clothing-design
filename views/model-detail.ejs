@@ -1030,21 +1030,35 @@ document.addEventListener('DOMContentLoaded', () => {
     return `linear-gradient(90deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;
   }
 
+  function parseCssColorTokens(value) {
+    const source = String(value || '');
+    const colorRegex = /#[0-9a-fA-F]{6}|rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/g;
+    return [...source.matchAll(colorRegex)].map((match) => {
+      if (match[0].startsWith('#')) {
+        return { hex: normalizeHex(match[0]) };
+      }
+      return {
+        hex: rgbToHex(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3])),
+        alpha: match[4] !== undefined ? Math.round(parseFloat(match[4]) * 100) : undefined
+      };
+    });
+  }
+
   function parseColorState(value) {
-    const colors = [...String(value || '').matchAll(/#[0-9a-fA-F]{6}/g)].map((match) => match[0]);
-    const rgbaMatch = String(value || '').match(/rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/);
-    const rgbaHex = rgbaMatch ? rgbToHex(parseFloat(rgbaMatch[1]), parseFloat(rgbaMatch[2]), parseFloat(rgbaMatch[3])) : null;
-    const start = colors[0] || rgbaHex || normalizeHex(value);
+    const colorTokens = parseCssColorTokens(value);
+    const isGradient = String(value || '').includes('linear-gradient');
+    const start = colorTokens[0]?.hex || normalizeHex(value);
+    const end = colorTokens[1]?.hex || (isGradient ? start : '#ffffff');
     const hsv = rgbToHsv(...Object.values(hexToRgb(start)));
     return {
-      mode: String(value || '').includes('linear-gradient') ? 'gradient' : 'solid',
+      mode: isGradient ? 'gradient' : 'solid',
       activeStop: 'start',
       start,
-      end: colors[1] || '#ffffff',
+      end,
       h: hsv.h,
       s: hsv.s,
       v: hsv.v,
-      alpha: rgbaMatch && rgbaMatch[4] !== undefined ? Math.round(parseFloat(rgbaMatch[4]) * 100) : 100
+      alpha: colorTokens.find((token) => token.alpha !== undefined)?.alpha ?? 100
     };
   }
 
