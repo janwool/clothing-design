@@ -2,7 +2,15 @@ require('dotenv').config();
 
 const fs = require('fs/promises');
 const path = require('path');
-const crypto = require('crypto');
+const {
+  applyUniqueSeoNames,
+  buildSeoContent,
+  categoryDescription,
+  categoryMetaDescription,
+  categoryMetaTitle,
+  design3dCategories,
+  stableSlug
+} = require('../lib/design3d-seo');
 
 process.env.DB_TYPE = process.env.DB_TYPE || 'sqlite';
 
@@ -11,66 +19,9 @@ const db = require('../lib/db');
 const sourceRoot = path.join(process.env.HOME || '/Users/chengwuxue', '3D模型');
 const publicRoot = path.resolve(__dirname, '..', 'public');
 
-const categories = [
-  { name: 'T-shirt', slug: 't-shirt-mockup', sort_order: 10 },
-  { name: 'Shirt', slug: 'shirt', sort_order: 20 },
-  { name: 'Pants', slug: 'pants', sort_order: 30 },
-  { name: 'Jacket', slug: 'jacket', sort_order: 40 },
-  { name: 'Hoodie', slug: 'hoodie-mockup', sort_order: 50 },
-  { name: 'Dress', slug: 'dress', sort_order: 60 },
-  { name: 'Cloak', slug: 'cloak', sort_order: 70 },
-  { name: 'Underwear', slug: 'underwear', sort_order: 80 },
-  { name: 'Jumpsuit', slug: 'jumpsuit', sort_order: 90 },
-  { name: 'Skirt', slug: 'skirt', sort_order: 100 },
-  { name: 'Blazer', slug: 'blazer', sort_order: 110 },
-  { name: 'Coat', slug: 'coat', sort_order: 120 },
-  { name: 'Hat', slug: 'hat', sort_order: 130 },
-  { name: 'Top', slug: 'top', sort_order: 140 }
-];
-
-function titleCase(value) {
-  return String(value)
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, char => char.toUpperCase());
-}
-
-function stableSlug(category, index, relativeId) {
-  const hash = crypto.createHash('sha1').update(relativeId).digest('hex').slice(0, 8);
-  return `${category.slug}-3d-model-${String(index).padStart(2, '0')}-${hash}`;
-}
-
-function buildDescription(categoryName) {
-  return [
-    `${categoryName} 3D clothing model with a matching packed UV pattern SVG for browser-based apparel design.`,
-    'Use it for custom garment mockups, product presentation, colorway exploration, ecommerce previews, and design review workflows.',
-    'The GLB model and SVG pattern are generated from the same packed UV layout so artwork placement can align between the 2D pattern and 3D preview.'
-  ].join('\n\n');
-}
-
-function buildTags(categoryName) {
-  return [
-    categoryName,
-    'Design 3D',
-    '3D clothing model',
-    'apparel mockup',
-    'GLB model',
-    'UV pattern SVG',
-    'packed UV',
-    'custom clothing design'
-  ].join(', ');
-}
-
-function categoryDescription(categoryName) {
-  return `${categoryName} Design 3D models with GLB files and matching packed UV SVG templates for online apparel mockups.`;
-}
-
-function categoryMetaTitle(categoryName) {
-  return `${categoryName} 3D Models with UV Pattern SVGs`;
-}
-
-function categoryMetaDescription(categoryName) {
-  return `Browse ${categoryName} GLB clothing models with aligned packed UV SVG files for custom apparel design and browser-based mockups.`;
-}
+const categories = design3dCategories.filter(category => (
+  ['T-shirt', 'Shirt', 'Pants', 'Jacket', 'Hoodie', 'Dress', 'Cloak', 'Underwear', 'Jumpsuit', 'Skirt', 'Blazer', 'Coat', 'Hat', 'Top'].includes(category.name)
+));
 
 async function ensureSchema() {
   await db.run(`CREATE TABLE IF NOT EXISTS categories (
@@ -191,13 +142,13 @@ async function collectModels() {
         category,
         folderName,
         slug,
-        name: `${titleCase(category.name)} 3D Model ${String(index).padStart(2, '0')}`,
+        seo: buildSeoContent({ category, folderName, variantIndex: index - 1 }),
         glbPath,
         svgPath
       });
     }
   }
-  return models;
+  return applyUniqueSeoNames(models);
 }
 
 async function copyAsset(sourcePath, folder, filename) {
@@ -206,14 +157,14 @@ async function copyAsset(sourcePath, folder, filename) {
   return `/uploads/${folder}/${filename}`;
 }
 
-async function upsertModel(model, categoryId, glbUrl, textureUrl) {
+async function upsertModel(model, categoryIds, glbUrl, textureUrl) {
   const existing = await db.get('SELECT id, image_url FROM models_3d WHERE slug = ?', [model.slug]);
   const params = [
-    model.name,
+    model.seo.name,
     model.slug,
-    model.category.name,
-    buildDescription(model.category.name),
-    buildTags(model.category.name),
+    model.seo.category,
+    model.seo.description,
+    model.seo.tags,
     glbUrl,
     textureUrl,
     'active'
@@ -240,10 +191,12 @@ async function upsertModel(model, categoryId, glbUrl, textureUrl) {
   }
 
   await db.run('DELETE FROM model_3d_categories WHERE model_id = ?', [modelId]);
-  await db.run(
-    'INSERT INTO model_3d_categories (model_id, category_id, is_primary) VALUES (?, ?, ?)',
-    [modelId, categoryId, 1]
-  );
+  for (const [index, categoryId] of categoryIds.entries()) {
+    await db.run(
+      'INSERT INTO model_3d_categories (model_id, category_id, is_primary) VALUES (?, ?, ?)',
+      [modelId, categoryId, index === 0 ? 1 : 0]
+    );
+  }
 
   return existing ? 'updated' : 'inserted';
 }
@@ -256,17 +209,19 @@ async function main() {
   const categoryIds = new Map();
   const counts = { inserted: 0, updated: 0 };
 
-  for (const category of categories) {
-    if (models.some(model => model.category.name === category.name)) {
+  const categoriesInUse = design3dCategories.filter(category => (
+    models.some(model => model.seo.categoryNames.includes(category.name))
+  ));
+  for (const category of categoriesInUse) {
       categoryIds.set(category.name, await upsertCategory(category));
-    }
   }
 
   console.log(`Importing ${models.length} local 3D models from ${sourceRoot}`);
   for (const model of models) {
     const glbUrl = await copyAsset(model.glbPath, 'glb', `${model.slug}.glb`);
     const textureUrl = await copyAsset(model.svgPath, 'texture', `${model.slug}.svg`);
-    const result = await upsertModel(model, categoryIds.get(model.category.name), glbUrl, textureUrl);
+    const linkedCategoryIds = model.seo.categoryNames.map(name => categoryIds.get(name)).filter(Boolean);
+    const result = await upsertModel(model, linkedCategoryIds, glbUrl, textureUrl);
     counts[result] += 1;
     console.log(`${result}: ${model.category.name}/${model.folderName} -> ${model.slug}`);
   }
