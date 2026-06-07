@@ -4,6 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
+  <% if (typeof metaDescription !== 'undefined' && metaDescription) { %>
+    <meta name="description" content="<%= metaDescription %>">
+  <% } %>
+  <% if (typeof structuredData !== 'undefined' && structuredData) { %>
+    <script type="application/ld+json"><%- JSON.stringify(structuredData).replace(/</g, '\\u003c') %></script>
+  <% } %>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

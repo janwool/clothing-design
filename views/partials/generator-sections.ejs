@@ -42,7 +42,7 @@
     <div class="generator-category-grid">
       <% if (sectionCategories.length > 0) { %>
         <% sectionCategories.slice(0, 6).forEach(function(cat) { %>
-          <% const categoryCount = sectionModels.filter(function(model) { return (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; %>
+          <% const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; %>
           <a href="/3d-models/<%= cat.slug %>" class="generator-category-card">
             <small><%= categoryCount || '3D' %> models</small>
             <strong><%= cat.name %></strong>

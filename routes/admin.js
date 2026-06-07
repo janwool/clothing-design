@@ -26,6 +26,83 @@ function hasUploadValue(value) {
   return typeof value === 'string' && value.trim() !== '';
 }
 
+function normalizeCategoryIds(value, fallbackValue) {
+  const raw = Array.isArray(value)
+    ? value
+    : String(value || '')
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean);
+  const ids = raw
+    .map(item => Number(item))
+    .filter(item => Number.isInteger(item) && item > 0);
+  if (ids.length > 0) {
+    return Array.from(new Set(ids));
+  }
+  const fallback = Number(fallbackValue);
+  return Number.isInteger(fallback) && fallback > 0 ? [fallback] : [];
+}
+
+async function ensureModel3dCategoryTable() {
+  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_categories (
+    model_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    is_primary INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (model_id, category_id)
+  )`);
+}
+
+async function getCategoriesByIds(categoryIds) {
+  const categories = [];
+  for (const categoryId of categoryIds) {
+    const category = await db.get(
+      'SELECT * FROM categories WHERE id = ? AND resource_type = ? AND status = ?',
+      [categoryId, '3d-models', 'active']
+    );
+    if (category) categories.push(category);
+  }
+  return categories;
+}
+
+async function syncModel3dCategories(modelId, categoryIds) {
+  await ensureModel3dCategoryTable();
+  await db.run('DELETE FROM model_3d_categories WHERE model_id = ?', [modelId]);
+  for (const [index, categoryId] of categoryIds.entries()) {
+    await db.run(
+      'INSERT INTO model_3d_categories (model_id, category_id, is_primary) VALUES (?, ?, ?)',
+      [modelId, categoryId, index === 0 ? 1 : 0]
+    );
+  }
+}
+
+function getAdminModel3dSelect() {
+  return `
+    SELECT
+      m.*,
+      COALESCE(primary_category.name, m.category) as category,
+      COALESCE(primary_category.slug, legacy_category.slug) as category_slug,
+      GROUP_CONCAT(DISTINCT linked_category.id) as category_ids,
+      GROUP_CONCAT(DISTINCT linked_category.name) as category_names,
+      GROUP_CONCAT(DISTINCT linked_category.slug) as category_slugs
+    FROM models_3d m
+    LEFT JOIN categories legacy_category
+      ON m.category = legacy_category.name AND legacy_category.resource_type = '3d-models'
+    LEFT JOIN model_3d_categories mc
+      ON mc.model_id = m.id
+    LEFT JOIN categories linked_category
+      ON linked_category.id = mc.category_id AND linked_category.resource_type = '3d-models'
+    LEFT JOIN categories primary_category
+      ON primary_category.id = (
+        SELECT mc_primary.category_id
+        FROM model_3d_categories mc_primary
+        WHERE mc_primary.model_id = m.id
+        ORDER BY mc_primary.is_primary DESC, mc_primary.category_id ASC
+        LIMIT 1
+      )
+  `;
+}
+
 function awsEncode(value) {
   return encodeURIComponent(value).replace(/[!'()*]/g, char => `%${char.charCodeAt(0).toString(16).toUpperCase()}`);
 }
@@ -146,6 +223,7 @@ async function initAdminTables() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
     await db.run('ALTER TABLE models_3d ADD COLUMN slug TEXT').catch(() => {});
+    await ensureModel3dCategoryTable();
 
     // 2D Templates table
     await db.run(`CREATE TABLE IF NOT EXISTS models_2d (
@@ -254,7 +332,12 @@ router.get('/', requireAuth, async (req, res) => {
 // ==================== 3D Models CRUD ====================
 router.get('/models-3d', requireAuth, async (req, res) => {
   try {
-    const items = await db.all('SELECT * FROM models_3d ORDER BY created_at DESC');
+    await ensureModel3dCategoryTable();
+    const items = await db.all(`
+      ${getAdminModel3dSelect()}
+      GROUP BY m.id
+      ORDER BY m.created_at DESC
+    `);
     const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC', ['3d-models', 'active']);
     res.render('admin/models-3d', {
       title: '3D Models Management',
@@ -274,13 +357,21 @@ router.get('/models-3d', requireAuth, async (req, res) => {
 
 router.post('/models-3d', requireAuth, async (req, res) => {
   try {
-    const { name, slug, category, description, tags, status, file_url, image_url, texture_url } = req.body;
+    const { name, slug, category, category_ids, description, tags, status, file_url, image_url, texture_url } = req.body;
     const modelSlug = generateSlug(slug || name, `model-${Date.now()}`);
+    const selectedCategoryIds = normalizeCategoryIds(category_ids, category);
+    const selectedCategories = await getCategoriesByIds(selectedCategoryIds);
+    const primaryCategory = selectedCategories[0];
+
+    if (!primaryCategory) {
+      return res.json({ success: false, error: 'Please select at least one active 3D category.' });
+    }
 
     const result = await db.run(
       'INSERT INTO models_3d (name, slug, category, description, tags, file_url, image_url, texture_url, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      [name, modelSlug, category, description, tags, file_url, image_url, texture_url, status || 'active']
+      [name, modelSlug, primaryCategory.name, description, tags, file_url, image_url, texture_url, status || 'active']
     );
+    await syncModel3dCategories(result.lastID, selectedCategories.map(item => item.id));
     res.json({ success: true, id: result.lastID });
   } catch (err) {
     res.json({ success: false, error: err.message });
@@ -289,13 +380,20 @@ router.post('/models-3d', requireAuth, async (req, res) => {
 
 router.put('/models-3d/:id', requireAuth, async (req, res) => {
   try {
-    const { name, slug, category, description, tags, status, file_url, image_url, texture_url } = req.body;
+    const { name, slug, category, category_ids, description, tags, status, file_url, image_url, texture_url } = req.body;
     const updates = [];
     const params = [];
+    const selectedCategoryIds = normalizeCategoryIds(category_ids, category);
+    const selectedCategories = await getCategoriesByIds(selectedCategoryIds);
+    const primaryCategory = selectedCategories[0];
+
+    if (!primaryCategory) {
+      return res.json({ success: false, error: 'Please select at least one active 3D category.' });
+    }
 
     updates.push('name = ?'); params.push(name);
     updates.push('slug = ?'); params.push(generateSlug(slug || name, `model-${req.params.id}`));
-    updates.push('category = ?'); params.push(category);
+    updates.push('category = ?'); params.push(primaryCategory.name);
     updates.push('description = ?'); params.push(description);
     updates.push('tags = ?'); params.push(tags);
     updates.push('status = ?'); params.push(status);
@@ -319,6 +417,7 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
       'UPDATE models_3d SET ' + updates.join(', ') + ', updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       params
     );
+    await syncModel3dCategories(req.params.id, selectedCategories.map(item => item.id));
     res.json({ success: true });
   } catch (err) {
     res.json({ success: false, error: err.message });
@@ -327,6 +426,8 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
 
 router.delete('/models-3d/:id', requireAuth, async (req, res) => {
   try {
+    await ensureModel3dCategoryTable();
+    await db.run('DELETE FROM model_3d_categories WHERE model_id = ?', [req.params.id]);
     await db.run('DELETE FROM models_3d WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {

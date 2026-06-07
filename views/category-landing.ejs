@@ -31,7 +31,7 @@
       <div class="models-grid">
         <% if (items && items.length > 0) { %>
           <% items.forEach(function(model) { %>
-            <a href="/3d-models/<%= model.category_slug || category.slug %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || category.slug %>">
+            <a href="/3d-models/<%= category.slug %>/<%= model.slug %>" class="model-card" data-category="<%= category.slug %>">
               <div class="model-preview-3d">
                 <% if (model.image_url) { %>
                   <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">

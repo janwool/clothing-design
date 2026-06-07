@@ -1,4 +1,26 @@
 <%- include('partials/header') %>
+<%
+  const detailContent = typeof patternDetailContent !== 'undefined' ? patternDetailContent : {};
+  const fileExt = detailContent.fileExt || ('.' + (pattern.format || 'zprj'));
+  const categoryName = detailContent.categoryName || pattern.category || 'apparel';
+  const design3dHref = detailContent.design3dHref || '/design-3d';
+  const design3dCategoryName = detailContent.design3dCategoryName || categoryName;
+  const faqItems = detailContent.faqItems || [];
+  const cloSteps = detailContent.cloSteps || [];
+  const marvelousSteps = detailContent.marvelousSteps || [];
+  const stepIcons = ['download', 'open', 'inspect', 'simulate'];
+  const toStepCards = function(steps) {
+    return steps.map(function(step, index) {
+      return {
+        icon: stepIcons[index] || 'inspect',
+        title: 'Step ' + String(index + 1).padStart(2, '0'),
+        body: step
+      };
+    });
+  };
+  const cloStepCards = detailContent.cloStepCards || toStepCards(cloSteps);
+  const marvelousStepCards = detailContent.marvelousStepCards || toStepCards(marvelousSteps);
+%>
 
 <section class="model-detail-hero">
   <div class="container">
@@ -71,9 +93,17 @@
         </div>
 
         <div class="model-actions">
+          <a href="<%= design3dHref %>" class="btn btn-primary btn-large">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 3 3 8l9 5 9-5-9-5Z"/>
+              <path d="m3 16 9 5 9-5"/>
+              <path d="m3 12 9 5 9-5"/>
+            </svg>
+            Design in 3D
+          </a>
           <% if (pattern.file_url) { %>
-            <a href="<%= pattern.file_url %>" download class="btn btn-primary btn-large">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <a href="<%= pattern.file_url %>" download class="btn btn-secondary btn-large">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
               Download Pattern
@@ -88,28 +118,155 @@
   </div>
 </section>
 
-<section class="model-showcase-section">
+<section class="pattern-seo-section pattern-clo-section generator-section-muted">
   <div class="container">
-    <h2 class="section-title">Pattern Preview</h2>
-    <p class="section-subtitle">Review the uploaded sewing pattern preview before downloading the source file.</p>
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">CLO 3D workflow</span>
+      <h2>How to use <%= pattern.name %> in CLO 3D</h2>
+      <p>
+        <%= detailContent.cloIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside CLO 3D for ' + categoryName + ' development and simulation.') %>
+      </p>
+    </div>
 
-    <div class="showcase-grid">
-      <div class="showcase-item">
-        <div class="showcase-image">
-          <% if (pattern.image_url) { %>
-            <img src="<%= pattern.image_url %>" alt="<%= pattern.name %> preview">
-          <% } else { %>
-            <div class="resource-placeholder">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
+    <div class="pattern-step-card-grid">
+      <% cloStepCards.forEach(function(card, index) { %>
+        <article class="pattern-step-card">
+          <div class="pattern-step-media pattern-step-media-<%= card.icon || 'inspect' %>">
+            <span><%= String(index + 1).padStart(2, '0') %></span>
+            <% if (card.icon === 'download') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <rect x="16" y="14" width="52" height="56" rx="6"/>
+                <path d="M40 22v25"/>
+                <path d="m29 38 11 11 11-11"/>
+                <path d="M27 59h26"/>
               </svg>
-            </div>
-          <% } %>
-        </div>
-        <span class="showcase-label">Preview</span>
+            <% } else if (card.icon === 'open') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <rect x="12" y="18" width="56" height="44" rx="6"/>
+                <path d="M12 31h56"/>
+                <path d="M27 49h16"/>
+                <path d="M47 41l10 8-10 8"/>
+              </svg>
+            <% } else if (card.icon === 'simulate') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <path d="M19 55c8-22 20-31 37-31"/>
+                <path d="M51 19h11v11"/>
+                <circle cx="24" cy="56" r="6"/>
+                <circle cx="55" cy="25" r="6"/>
+                <path d="M35 56h22"/>
+              </svg>
+            <% } else { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <path d="M18 18h20v20H18z"/>
+                <path d="M42 18h20v20H42z"/>
+                <path d="M18 42h20v20H18z"/>
+                <path d="M42 42h20v20H42z"/>
+                <path d="M25 28h6M49 28h6M25 52h6M49 52h6"/>
+              </svg>
+            <% } %>
+          </div>
+          <div class="pattern-step-copy">
+            <h3><%= card.title %></h3>
+            <p><%= card.body %></p>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="pattern-seo-section pattern-marvelous-section">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Marvelous Designer workflow</span>
+      <h2>How to use <%= pattern.name %> in Marvelous Designer</h2>
+      <p>
+        <%= detailContent.marvelousIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside Marvelous Designer to review pattern pieces, sewing lines, materials, and fit.') %>
+      </p>
+    </div>
+
+    <div class="pattern-step-card-grid">
+      <% marvelousStepCards.forEach(function(card, index) { %>
+        <article class="pattern-step-card">
+          <div class="pattern-step-media pattern-step-media-<%= card.icon || 'inspect' %>">
+            <span><%= String(index + 1).padStart(2, '0') %></span>
+            <% if (card.icon === 'download') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <rect x="16" y="14" width="52" height="56" rx="6"/>
+                <path d="M40 22v25"/>
+                <path d="m29 38 11 11 11-11"/>
+                <path d="M27 59h26"/>
+              </svg>
+            <% } else if (card.icon === 'open') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <rect x="12" y="18" width="56" height="44" rx="6"/>
+                <path d="M12 31h56"/>
+                <path d="M27 49h16"/>
+                <path d="M47 41l10 8-10 8"/>
+              </svg>
+            <% } else if (card.icon === 'simulate') { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <path d="M19 55c8-22 20-31 37-31"/>
+                <path d="M51 19h11v11"/>
+                <circle cx="24" cy="56" r="6"/>
+                <circle cx="55" cy="25" r="6"/>
+                <path d="M35 56h22"/>
+              </svg>
+            <% } else { %>
+              <svg viewBox="0 0 80 80" aria-hidden="true">
+                <path d="M18 18h20v20H18z"/>
+                <path d="M42 18h20v20H42z"/>
+                <path d="M18 42h20v20H18z"/>
+                <path d="M42 42h20v20H42z"/>
+                <path d="M25 28h6M49 28h6M25 52h6M49 52h6"/>
+              </svg>
+            <% } %>
+          </div>
+          <div class="pattern-step-copy">
+            <h3><%= card.title %></h3>
+            <p><%= card.body %></p>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="pattern-design-cta">
+  <div class="container">
+    <div class="pattern-design-cta-inner">
+      <div>
+        <span class="generator-eyebrow">Design 3D</span>
+        <h2>Design this <%= categoryName %> pattern with matching 3D models.</h2>
+        <p>
+          Open the <%= design3dCategoryName %> Design 3D category, choose a related garment model,
+          and preview artwork, colors, and presentation angles in the browser.
+        </p>
       </div>
+      <div class="generator-final-actions">
+        <a href="<%= design3dHref %>" class="btn btn-primary">Open <%= design3dCategoryName %> Design 3D</a>
+        <% if (pattern.file_url) { %>
+          <a href="<%= pattern.file_url %>" download class="btn btn-secondary">Download <%= fileExt.toUpperCase() %></a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pattern-faq-section generator-faq-section">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">FAQ</span>
+      <h2><%= pattern.name %> pattern questions</h2>
+    </div>
+
+    <div class="generator-faq-list">
+      <% faqItems.forEach(function(item, index) { %>
+        <details class="generator-faq-item" <%= index === 0 ? 'open' : '' %>>
+          <summary><%= item.question %></summary>
+          <p><%= item.answer %></p>
+        </details>
+      <% }); %>
     </div>
   </div>
 </section>

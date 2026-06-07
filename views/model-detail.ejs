@@ -1,4 +1,9 @@
 <%- include('partials/header') %>
+<% const detailContent = modelDetailContent || {}; %>
+<% const howToSteps = detailContent.howToSteps || []; %>
+<% const applications = detailContent.applications || []; %>
+<% const faqItems = detailContent.faqItems || []; %>
+<% const detailCta = detailContent.cta || {}; %>
 
 <section class="model-detail-hero">
   <div class="container">
@@ -47,7 +52,7 @@
         <div class="model-breadcrumb">
           <a href="/design-3d">3D Models</a>
           <span>/</span>
-          <a href="/3d-models/<%= model.category_slug || model.category %>"><%= model.category %></a>
+          <a href="/3d-models/<%= model.category_slug || model.category %>"><%= model.category_label || model.category %></a>
           <span>/</span>
           <span><%= model.name %></span>
         </div>
@@ -79,7 +84,7 @@
             </div>
             <div class="spec-item">
               <span class="spec-label">Category</span>
-              <span class="spec-value"><%= model.category %></span>
+              <span class="spec-value"><%= model.category_label || model.category %></span>
             </div>
             <% if (model.file_size) { %>
               <div class="spec-item">
@@ -98,13 +103,14 @@
             Design Now
           </button>
           <% if (model.file_url) { %>
-            <a href="<%= model.file_url %>" download class="btn btn-secondary btn-large">
+            <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
-              Download Model
-            </a>
+              Download HD Render
+            </button>
           <% } %>
+          <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
         </div>
       </div>
     </div>
@@ -139,6 +145,62 @@
     </div>
   </div>
 </section>
+
+<% if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { %>
+<section class="model-seo-section">
+  <div class="container">
+    <% if (howToSteps.length) { %>
+      <div class="model-seo-block">
+        <h2>How to Design <%= model.name %></h2>
+        <div class="model-howto-grid">
+          <% howToSteps.forEach(function(step, index) { %>
+            <article class="model-howto-card">
+              <span class="model-howto-index"><%= index + 1 %></span>
+              <h3><%= step.name %></h3>
+              <p><%= step.text %></p>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (detailContent.geoSummary) { %>
+      <div class="model-seo-block model-geo-summary">
+        <h2>AI Overview</h2>
+        <p><%= detailContent.geoSummary %></p>
+      </div>
+    <% } %>
+
+    <% if (applications.length) { %>
+      <div class="model-seo-block">
+        <h2>Applications</h2>
+        <div class="model-applications-grid">
+          <% applications.forEach(function(application) { %>
+            <article class="model-application-card">
+              <h3><%= application.title %></h3>
+              <p><%= application.text %></p>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (faqItems.length) { %>
+      <div class="model-seo-block">
+        <h2>FAQ</h2>
+        <div class="model-faq-list">
+          <% faqItems.forEach(function(item) { %>
+            <details class="model-faq-item">
+              <summary><%= item.question %></summary>
+              <p><%= item.answer %></p>
+            </details>
+          <% }); %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+<% } %>
 
 <!-- Related Models -->
 <% if (related && related.length > 0) { %>
@@ -175,15 +237,38 @@
 </section>
 <% } %>
 
+<% if (detailCta.title || detailCta.text) { %>
+<section class="model-detail-cta">
+  <div class="container">
+    <div class="pattern-design-cta-inner">
+      <div>
+        <span class="generator-eyebrow">Design 3D</span>
+        <h2><%= detailCta.title || ('Customize ' + model.name) %></h2>
+        <p><%= detailCta.text || 'Open the 3D design studio, apply artwork, and export a production-ready render.' %></p>
+      </div>
+      <button class="btn btn-primary btn-large" id="designCtaBtn">Start Designing</button>
+    </div>
+  </div>
+</section>
+<% } %>
+
+
 <!-- Design Modal -->
 <div class="design-modal" id="designModal">
   <div class="design-modal-overlay" id="designModalOverlay"></div>
     <div class="design-modal-content">
       <div class="design-modal-header">
         <h2>Design Studio - <%= model.name %></h2>
-      <button class="btn btn-primary btn-small" id="saveDesignModal">
-        Save
-      </button>
+      <div class="design-modal-actions">
+        <% if (model.file_url) { %>
+          <button class="btn btn-secondary btn-small" id="downloadRenderModalBtn">
+            Download HD
+          </button>
+        <% } %>
+        <button class="btn btn-primary btn-small" id="saveDesignModal">
+          Apply
+        </button>
+      </div>
     </div>
     <div class="design-modal-body">
       <div class="texture-designer">
@@ -355,6 +440,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const designModal = document.getElementById('designModal');
   const designModalOverlay = document.getElementById('designModalOverlay');
   const saveDesignModal = document.getElementById('saveDesignModal');
+  const downloadRenderBtn = document.getElementById('downloadRenderBtn');
+  const downloadRenderModalBtn = document.getElementById('downloadRenderModalBtn');
+  const downloadRenderStatus = document.getElementById('downloadRenderStatus');
+  const designCtaBtn = document.getElementById('designCtaBtn');
   const designerViewer = document.getElementById('designerViewer');
   const detailViewer = document.querySelector('#model3dViewer model-viewer');
   const textureCanvasArea = document.querySelector('.texture-canvas-area');
@@ -389,7 +478,10 @@ document.addEventListener('DOMContentLoaded', () => {
     lastTextClick: { element: null, time: 0 },
     textEditor: null,
     colorPicker: null,
-    appliedTextureUrl: null
+    appliedTextureUrl: null,
+    finalTextureUrl: null,
+    isExportingRender: false,
+    coverCaptureHidden: []
   };
 
   const toolButtons = {
@@ -634,6 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   designNowBtn?.addEventListener('click', openModal);
+  designCtaBtn?.addEventListener('click', openModal);
   designModalOverlay?.addEventListener('click', closeModal);
 
   function setTool(tool) {
@@ -795,12 +888,324 @@ document.addEventListener('DOMContentLoaded', () => {
   async function saveDesignAndClose() {
     state.textEditor?.commit();
     const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
+    state.finalTextureUrl = textureUrl;
     await Promise.all([
       applyTextureToViewer(designerViewer, textureUrl),
       applyTextureToViewer(detailViewer, textureUrl)
     ]);
     closeModal();
   }
+
+  function setRenderStatus(message) {
+    if (downloadRenderStatus) downloadRenderStatus.textContent = message || '';
+  }
+
+  function setExportingState(isExporting) {
+    state.isExportingRender = isExporting;
+    [downloadRenderBtn, downloadRenderModalBtn].forEach((button) => {
+      if (!button) return;
+      button.disabled = isExporting;
+      button.classList.toggle('is-loading', isExporting);
+    });
+  }
+
+  function downloadDataUrl(dataUrl, filename) {
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  function hasDesignedTexture() {
+    return Boolean(
+      state.finalTextureUrl ||
+      textureElements.children.length > 0 ||
+      textureSvg.querySelector('.texture-template-fill[data-persistent="true"]')
+    );
+  }
+
+  async function waitForModelViewerReady(viewerElement) {
+    if (!viewerElement) return;
+    await customElements.whenDefined('model-viewer');
+    viewerElement.setAttribute('loading', 'eager');
+    viewerElement.setAttribute('reveal', 'auto');
+    await viewerElement.updateComplete;
+    if (typeof viewerElement.dismissPoster === 'function') {
+      viewerElement.dismissPoster();
+    }
+
+    const startedAt = Date.now();
+    while (!viewerElement.model && Date.now() - startedAt < 45000) {
+      await new Promise((resolve, reject) => {
+        const timer = setTimeout(resolve, 160);
+        const handleLoad = () => {
+          clearTimeout(timer);
+          resolve();
+        };
+        const handleError = () => {
+          clearTimeout(timer);
+          reject(new Error('3D model failed to load'));
+        };
+        viewerElement.addEventListener('load', handleLoad, { once: true });
+        viewerElement.addEventListener('error', handleError, { once: true });
+      });
+      await viewerElement.updateComplete;
+    }
+
+    if (!viewerElement.model) {
+      throw new Error('3D model render timed out');
+    }
+
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+
+  async function captureModelViewerImage(viewerElement, options = {}) {
+    await waitForModelViewerReady(viewerElement);
+    const mimeType = options.mimeType || 'image/png';
+    const quality = options.quality ?? 0.95;
+    if (typeof viewerElement.toDataURL === 'function') {
+      return viewerElement.toDataURL(mimeType, quality);
+    }
+    const canvas = viewerElement.shadowRoot?.querySelector('canvas');
+    if (canvas?.toDataURL) {
+      return canvas.toDataURL(mimeType, quality);
+    }
+    throw new Error('This browser cannot export the 3D render.');
+  }
+
+  async function createFinalRenderTexture() {
+    state.textEditor?.commit();
+    if (!hasDesignedTexture()) {
+      return null;
+    }
+    const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
+    state.finalTextureUrl = textureUrl;
+    await Promise.all([
+      applyTextureToViewer(designerViewer, textureUrl),
+      applyTextureToViewer(detailViewer, textureUrl)
+    ]);
+    return textureUrl;
+  }
+
+  function stopModelRotation() {
+    [detailViewer, designerViewer].forEach((viewerElement) => {
+      if (!viewerElement) return;
+      viewerElement.autoRotate = false;
+      viewerElement.removeAttribute('auto-rotate');
+    });
+    rotateBtn?.classList.remove('active');
+  }
+
+  async function frameCoverExportViewer(viewerElement) {
+    if (!viewerElement) return;
+    viewerElement.cameraOrbit = '0deg 75deg 138%';
+    viewerElement.cameraTarget = 'auto auto auto';
+    viewerElement.fieldOfView = '30deg';
+    if (typeof viewerElement.updateFraming === 'function') {
+      await viewerElement.updateFraming();
+    }
+    if (typeof viewerElement.jumpCameraToGoal === 'function') {
+      viewerElement.jumpCameraToGoal();
+    }
+  }
+
+  function imageHasVisibleModelPixels(dataUrl) {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth || image.width;
+        canvas.height = image.naturalHeight || image.height;
+        const context = canvas.getContext('2d', { willReadFrequently: true });
+        context.drawImage(image, 0, 0);
+        const pixels = context.getImageData(0, 0, canvas.width, canvas.height).data;
+        let nonTransparent = 0;
+        let nonBlack = 0;
+        for (let i = 0; i < pixels.length; i += 16) {
+          const alpha = pixels[i + 3];
+          if (alpha <= 8) continue;
+          nonTransparent += 1;
+          if (pixels[i] > 10 || pixels[i + 1] > 10 || pixels[i + 2] > 10) {
+            nonBlack += 1;
+          }
+        }
+        resolve(nonTransparent > 3200 && nonBlack > 250);
+      };
+      image.onerror = () => resolve(false);
+      image.src = dataUrl;
+    });
+  }
+
+  async function waitForVisibleModelRender(viewerElement) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < 12000) {
+      await viewerElement.updateComplete;
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      try {
+        const dataUrl = await captureModelViewerImage(viewerElement, { mimeType: 'image/png', quality: 0.95 });
+        if (await imageHasVisibleModelPixels(dataUrl)) return;
+      } catch (error) {
+        // Browser canvas readback can fail while CDP screenshots still work.
+      }
+      await new Promise(resolve => setTimeout(resolve, 280));
+    }
+  }
+
+  function copyViewerCamera(sourceViewer, targetViewer) {
+    if (!sourceViewer || !targetViewer) return;
+    ['cameraOrbit', 'cameraTarget', 'fieldOfView', 'minCameraOrbit', 'maxCameraOrbit'].forEach((prop) => {
+      if (sourceViewer[prop] !== undefined && sourceViewer[prop] !== null) {
+        targetViewer[prop] = sourceViewer[prop];
+      }
+    });
+  }
+
+  function createCoverExportViewer() {
+    const exportViewer = document.createElement('model-viewer');
+    exportViewer.src = <%- JSON.stringify(model.file_url || '') %>;
+    exportViewer.alt = <%- JSON.stringify(model.name || 'Designed 3D model') %>;
+    exportViewer.setAttribute('loading', 'eager');
+    exportViewer.setAttribute('reveal', 'auto');
+    exportViewer.setAttribute('interaction-prompt', 'none');
+    exportViewer.setAttribute('environment-image', 'neutral');
+    exportViewer.setAttribute('shadow-intensity', '1.7');
+    exportViewer.setAttribute('shadow-softness', '0.48');
+    exportViewer.setAttribute('exposure', '0.78');
+    exportViewer.setAttribute('tone-mapping', 'aces');
+    exportViewer.autoRotate = false;
+    exportViewer.removeAttribute('auto-rotate');
+    exportViewer.id = 'coverExportViewer';
+    exportViewer.style.setProperty('--poster-color', 'transparent');
+    exportViewer.style.position = 'absolute';
+    exportViewer.style.left = '0';
+    exportViewer.style.top = '0';
+    exportViewer.style.width = '1200px';
+    exportViewer.style.height = '1500px';
+    exportViewer.style.background = 'transparent';
+    exportViewer.style.pointerEvents = 'none';
+    exportViewer.style.cursor = 'none';
+    exportViewer.style.outline = 'none';
+    exportViewer.style.border = '0';
+    exportViewer.style.opacity = '1';
+    exportViewer.style.zIndex = '2147483647';
+    exportViewer.style.transform = 'none';
+    exportViewer.style.transformOrigin = 'top left';
+    exportViewer.style.display = 'block';
+    exportViewer.style.visibility = 'visible';
+    copyViewerCamera(designModal.classList.contains('active') ? designerViewer : detailViewer, exportViewer);
+    return exportViewer;
+  }
+
+  async function renderDesignedModelImage(textureUrl, options = {}) {
+    const exportViewer = createCoverExportViewer();
+    document.body.appendChild(exportViewer);
+
+    try {
+      await waitForModelViewerReady(exportViewer);
+      await frameCoverExportViewer(exportViewer);
+      exportViewer.autoRotate = false;
+      if (textureUrl) {
+        await applyTextureToViewer(exportViewer, textureUrl);
+      }
+      await exportViewer.updateComplete;
+      await waitForVisibleModelRender(exportViewer);
+      await new Promise(resolve => setTimeout(resolve, 360));
+      return await captureModelViewerImage(exportViewer, options);
+    } finally {
+      exportViewer.remove();
+    }
+  }
+
+  async function prepareDesignedModelCoverCapture() {
+    stopModelRotation();
+    const textureUrl = await createFinalRenderTexture();
+    cleanupDesignedModelCoverCapture();
+    state.coverCaptureHidden = [];
+    [...document.body.children].forEach((child) => {
+      state.coverCaptureHidden.push([child, child.style.visibility]);
+      child.style.visibility = 'hidden';
+    });
+    const captureStage = document.createElement('div');
+    captureStage.id = 'coverExportStage';
+    captureStage.style.position = 'fixed';
+    captureStage.style.left = '0';
+    captureStage.style.top = '0';
+    captureStage.style.width = '1200px';
+    captureStage.style.height = '1500px';
+    captureStage.style.background = 'transparent';
+    captureStage.style.zIndex = '2147483647';
+    captureStage.style.visibility = 'visible';
+    captureStage.style.pointerEvents = 'none';
+    const exportViewer = createCoverExportViewer();
+    document.documentElement.style.background = 'transparent';
+    document.body.style.background = 'transparent';
+    captureStage.appendChild(exportViewer);
+    document.body.appendChild(captureStage);
+    await waitForModelViewerReady(exportViewer);
+    await frameCoverExportViewer(exportViewer);
+    if (textureUrl) {
+      await applyTextureToViewer(exportViewer, textureUrl);
+    }
+    await exportViewer.updateComplete;
+    await new Promise(resolve => setTimeout(resolve, 1800));
+    return { x: 0, y: 0, width: 1200, height: 1500 };
+  }
+
+  function cleanupDesignedModelCoverCapture() {
+    document.getElementById('coverExportStage')?.remove();
+    document.getElementById('coverExportViewer')?.remove();
+    (state.coverCaptureHidden || []).forEach(([element, visibility]) => {
+      element.style.visibility = visibility;
+    });
+    state.coverCaptureHidden = [];
+  }
+
+  async function renderDesignedModelImageWithFallback(textureUrl, options = {}) {
+    try {
+      return await renderDesignedModelImage(textureUrl, options);
+    } catch (error) {
+      console.warn('High-resolution render failed, falling back to active viewer:', error);
+      const activeViewer = designModal.classList.contains('active') ? designerViewer : detailViewer;
+      if (textureUrl) {
+        await applyTextureToViewer(activeViewer, textureUrl);
+      }
+      return captureModelViewerImage(activeViewer, options);
+    }
+  }
+
+  async function downloadDesignedRender() {
+    if (state.isExportingRender) return;
+    if (!<%- JSON.stringify(Boolean(model.file_url)) %>) return;
+    setExportingState(true);
+    setRenderStatus('Rendering high-resolution 3D image...');
+
+    try {
+      stopModelRotation();
+      const textureUrl = await createFinalRenderTexture();
+      const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, { mimeType: 'image/png', quality: 0.95 });
+      downloadDataUrl(renderUrl, `${<%- JSON.stringify(model.slug || 'designed-3d-model') %>}-hd-render.png`);
+      setRenderStatus('HD render downloaded.');
+      window.setTimeout(() => setRenderStatus(''), 2800);
+    } catch (error) {
+      console.error('Failed to export designed 3D render:', error);
+      setRenderStatus('Render export failed. Try again after the 3D model finishes loading.');
+    } finally {
+      setExportingState(false);
+    }
+  }
+
+  window.exportDesignedModelCover = async function exportDesignedModelCover(options = {}) {
+    stopModelRotation();
+    const textureUrl = await createFinalRenderTexture();
+    return renderDesignedModelImageWithFallback(textureUrl, {
+      mimeType: options.mimeType || 'image/webp',
+      quality: options.quality ?? 0.95
+    });
+  };
+  window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;
+  window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;
 
   function getCleanElementsHtml() {
     const clone = textureElements.cloneNode(true);
@@ -2039,6 +2444,8 @@ document.addEventListener('DOMContentLoaded', () => {
     scheduleTexturePreviewUpdate();
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
+  downloadRenderBtn?.addEventListener('click', downloadDesignedRender);
+  downloadRenderModalBtn?.addEventListener('click', downloadDesignedRender);
 
   // Initialize history
   saveHistory();
