@@ -1614,88 +1614,30 @@ img {
 
 /* ===== Model Detail SEO / GEO Sections ===== */
 .model-seo-section {
+  padding: 0;
+  background-color: var(--color-white);
+}
+
+.model-seo-block {
   padding: var(--spacing-4xl) 0;
-  background-color: var(--color-white);
 }
 
-.model-howto-section {
+.model-seo-block + .model-seo-block {
+  border-top: 1px solid var(--color-border);
+}
+
+.model-howto-section,
+.model-geo-summary,
+.model-faq-section {
+  margin-left: calc(var(--spacing-xl) * -1);
+  margin-right: calc(var(--spacing-xl) * -1);
+  padding-left: var(--spacing-xl);
+  padding-right: var(--spacing-xl);
   background-color: var(--color-light);
 }
 
-.model-seo-step-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-lg);
-}
-
-.model-seo-step-card {
-  min-height: 240px;
-  padding: var(--spacing-xl);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-white);
-}
-
-.model-seo-step-card span {
-  display: inline-flex;
-  margin-bottom: var(--spacing-lg);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--color-muted);
-}
-
-.model-seo-step-card h3 {
-  margin-bottom: var(--spacing-sm);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.35;
-}
-
-.model-seo-step-card p,
-.model-seo-copy p,
-.model-seo-answer p {
-  font-size: 14px;
-  line-height: 1.7;
-  color: var(--color-secondary);
-}
-
-.model-seo-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.6fr);
-  gap: var(--spacing-xl);
-  align-items: stretch;
-  margin-bottom: var(--spacing-2xl);
-}
-
-.model-seo-copy h2 {
-  max-width: 760px;
-  margin-bottom: var(--spacing-sm);
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.18;
-}
-
-.model-seo-copy p {
-  max-width: 780px;
-}
-
-.model-seo-answer {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: var(--spacing-xl);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background-color: var(--color-light);
-}
-
-.model-seo-answer strong {
-  margin-bottom: var(--spacing-sm);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-primary);
+.model-geo-summary .generator-section-header {
+  margin-bottom: 0;
 }
 
 .model-application-grid {
@@ -2231,8 +2173,7 @@ img {
 
   .generator-steps,
   .generator-category-grid,
-  .generator-output-grid,
-  .model-seo-step-grid {
+  .generator-output-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -2251,10 +2192,6 @@ img {
   }
 
   .demo-workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .model-seo-split {
     grid-template-columns: 1fr;
   }
 
@@ -2341,8 +2278,7 @@ img {
   .generator-steps,
   .generator-category-grid,
   .generator-output-grid,
-  .pattern-step-card-grid,
-  .model-seo-step-grid {
+  .pattern-step-card-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2354,8 +2290,7 @@ img {
 
   .generator-section-header h2,
   .generator-library-cta h2,
-  .generator-final-cta h2,
-  .model-seo-copy h2 {
+  .generator-final-cta h2 {
     font-size: 26px;
   }
 

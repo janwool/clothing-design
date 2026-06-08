@@ -4,6 +4,7 @@
 <% const applications = detailContent.applications || []; %>
 <% const faqItems = detailContent.faqItems || []; %>
 <% const detailCta = detailContent.cta || {}; %>
+<% const howToIcons = ['open', 'inspect', 'simulate', 'download']; %>
 
 <section class="model-detail-hero">
   <div class="container">
@@ -147,17 +148,57 @@
 </section>
 
 <% if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { %>
-<section class="model-seo-section">
+<section class="model-seo-section generator-section">
   <div class="container">
     <% if (howToSteps.length) { %>
-      <div class="model-seo-block">
-        <h2>How to Design <%= model.name %></h2>
-        <div class="model-howto-grid">
+      <div class="model-seo-block model-howto-section">
+        <div class="generator-section-header">
+          <span class="generator-eyebrow">Design workflow</span>
+          <h2>How to design <%= model.name %></h2>
+          <p>Use the browser-based Design3D studio to customize the model, review the garment preview, and export a high-resolution render.</p>
+        </div>
+        <div class="pattern-step-card-grid">
           <% howToSteps.forEach(function(step, index) { %>
-            <article class="model-howto-card">
-              <span class="model-howto-index"><%= index + 1 %></span>
-              <h3><%= step.name %></h3>
-              <p><%= step.text %></p>
+            <% const icon = howToIcons[index] || 'inspect'; %>
+            <article class="pattern-step-card">
+              <div class="pattern-step-media pattern-step-media-<%= icon %>">
+                <span><%= String(index + 1).padStart(2, '0') %></span>
+                <% if (icon === 'download') { %>
+                  <svg viewBox="0 0 80 80" aria-hidden="true">
+                    <rect x="16" y="14" width="52" height="56" rx="6"/>
+                    <path d="M40 22v25"/>
+                    <path d="m29 38 11 11 11-11"/>
+                    <path d="M27 59h26"/>
+                  </svg>
+                <% } else if (icon === 'open') { %>
+                  <svg viewBox="0 0 80 80" aria-hidden="true">
+                    <rect x="12" y="18" width="56" height="44" rx="6"/>
+                    <path d="M12 31h56"/>
+                    <path d="M27 49h16"/>
+                    <path d="M47 41l10 8-10 8"/>
+                  </svg>
+                <% } else if (icon === 'simulate') { %>
+                  <svg viewBox="0 0 80 80" aria-hidden="true">
+                    <path d="M19 55c8-22 20-31 37-31"/>
+                    <path d="M51 19h11v11"/>
+                    <circle cx="24" cy="56" r="6"/>
+                    <circle cx="55" cy="25" r="6"/>
+                    <path d="M35 56h22"/>
+                  </svg>
+                <% } else { %>
+                  <svg viewBox="0 0 80 80" aria-hidden="true">
+                    <path d="M18 18h20v20H18z"/>
+                    <path d="M42 18h20v20H42z"/>
+                    <path d="M18 42h20v20H18z"/>
+                    <path d="M42 42h20v20H42z"/>
+                    <path d="M25 28h6M49 28h6M25 52h6M49 52h6"/>
+                  </svg>
+                <% } %>
+              </div>
+              <div class="pattern-step-copy">
+                <h3><%= step.name %></h3>
+                <p><%= step.text %></p>
+              </div>
             </article>
           <% }); %>
         </div>
@@ -166,17 +207,23 @@
 
     <% if (detailContent.geoSummary) { %>
       <div class="model-seo-block model-geo-summary">
-        <h2>AI Overview</h2>
-        <p><%= detailContent.geoSummary %></p>
+        <div class="generator-section-header">
+          <span class="generator-eyebrow">AI overview</span>
+          <h2><%= model.name %> summary</h2>
+          <p><%= detailContent.geoSummary %></p>
+        </div>
       </div>
     <% } %>
 
     <% if (applications.length) { %>
       <div class="model-seo-block">
-        <h2>Applications</h2>
-        <div class="model-applications-grid">
+        <div class="generator-section-header">
+          <span class="generator-eyebrow">Applications</span>
+          <h2>Where this model works best</h2>
+        </div>
+        <div class="generator-output-grid model-application-grid">
           <% applications.forEach(function(application) { %>
-            <article class="model-application-card">
+            <article class="generator-output-card">
               <h3><%= application.title %></h3>
               <p><%= application.text %></p>
             </article>
@@ -186,11 +233,14 @@
     <% } %>
 
     <% if (faqItems.length) { %>
-      <div class="model-seo-block">
-        <h2>FAQ</h2>
-        <div class="model-faq-list">
-          <% faqItems.forEach(function(item) { %>
-            <details class="model-faq-item">
+      <div class="model-seo-block model-faq-section generator-faq-section">
+        <div class="generator-section-header">
+          <span class="generator-eyebrow">FAQ</span>
+          <h2><%= model.name %> questions</h2>
+        </div>
+        <div class="generator-faq-list">
+          <% faqItems.forEach(function(item, index) { %>
+            <details class="generator-faq-item" <%= index === 0 ? 'open' : '' %>>
               <summary><%= item.question %></summary>
               <p><%= item.answer %></p>
             </details>

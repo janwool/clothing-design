@@ -1756,6 +1756,8 @@ title = __locals.title,
     ;  const faqItems = detailContent.faqItems || []; 
     ; __append("\n")
     ;  const detailCta = detailContent.cta || {}; 
+    ; __append("\n")
+    ;  const howToIcons = ['open', 'inspect', 'simulate', 'download']; 
     ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer\" id=\"model3dViewer\">\n          ")
     ;  if (model.file_url) { 
     ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              src=\"")
@@ -1812,33 +1814,49 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url || '/images/placeholder.jpg' ))
     ; __append("\" alt=\"Runway\">\n        </div>\n        <span class=\"showcase-label\">Runway</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { 
-    ; __append("\n<section class=\"model-seo-section\">\n  <div class=\"container\">\n    ")
+    ; __append("\n<section class=\"model-seo-section generator-section\">\n  <div class=\"container\">\n    ")
     ;  if (howToSteps.length) { 
-    ; __append("\n      <div class=\"model-seo-block\">\n        <h2>How to Design ")
+    ; __append("\n      <div class=\"model-seo-block model-howto-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Design workflow</span>\n          <h2>How to design ")
     ; __append(escapeFn( model.name ))
-    ; __append("</h2>\n        <div class=\"model-howto-grid\">\n          ")
+    ; __append("</h2>\n          <p>Use the browser-based Design3D studio to customize the model, review the garment preview, and export a high-resolution render.</p>\n        </div>\n        <div class=\"pattern-step-card-grid\">\n          ")
     ;  howToSteps.forEach(function(step, index) { 
-    ; __append("\n            <article class=\"model-howto-card\">\n              <span class=\"model-howto-index\">")
-    ; __append(escapeFn( index + 1 ))
-    ; __append("</span>\n              <h3>")
+    ; __append("\n            ")
+    ;  const icon = howToIcons[index] || 'inspect'; 
+    ; __append("\n            <article class=\"pattern-step-card\">\n              <div class=\"pattern-step-media pattern-step-media-")
+    ; __append(escapeFn( icon ))
+    ; __append("\">\n                <span>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</span>\n                ")
+    ;  if (icon === 'download') { 
+    ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                    <path d=\"M40 22v25\"/>\n                    <path d=\"m29 38 11 11 11-11\"/>\n                    <path d=\"M27 59h26\"/>\n                  </svg>\n                ")
+    ;  } else if (icon === 'open') { 
+    ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                    <path d=\"M12 31h56\"/>\n                    <path d=\"M27 49h16\"/>\n                    <path d=\"M47 41l10 8-10 8\"/>\n                  </svg>\n                ")
+    ;  } else if (icon === 'simulate') { 
+    ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M19 55c8-22 20-31 37-31\"/>\n                    <path d=\"M51 19h11v11\"/>\n                    <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                    <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                    <path d=\"M35 56h22\"/>\n                  </svg>\n                ")
+    ;  } else { 
+    ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M18 18h20v20H18z\"/>\n                    <path d=\"M42 18h20v20H42z\"/>\n                    <path d=\"M18 42h20v20H18z\"/>\n                    <path d=\"M42 42h20v20H42z\"/>\n                    <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n                  </svg>\n                ")
+    ;  } 
+    ; __append("\n              </div>\n              <div class=\"pattern-step-copy\">\n                <h3>")
     ; __append(escapeFn( step.name ))
-    ; __append("</h3>\n              <p>")
+    ; __append("</h3>\n                <p>")
     ; __append(escapeFn( step.text ))
-    ; __append("</p>\n            </article>\n          ")
+    ; __append("</p>\n              </div>\n            </article>\n          ")
     ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
     ;  } 
     ; __append("\n\n    ")
     ;  if (detailContent.geoSummary) { 
-    ; __append("\n      <div class=\"model-seo-block model-geo-summary\">\n        <h2>AI Overview</h2>\n        <p>")
+    ; __append("\n      <div class=\"model-seo-block model-geo-summary\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">AI overview</span>\n          <h2>")
+    ; __append(escapeFn( model.name ))
+    ; __append(" summary</h2>\n          <p>")
     ; __append(escapeFn( detailContent.geoSummary ))
-    ; __append("</p>\n      </div>\n    ")
+    ; __append("</p>\n        </div>\n      </div>\n    ")
     ;  } 
     ; __append("\n\n    ")
     ;  if (applications.length) { 
-    ; __append("\n      <div class=\"model-seo-block\">\n        <h2>Applications</h2>\n        <div class=\"model-applications-grid\">\n          ")
+    ; __append("\n      <div class=\"model-seo-block\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Applications</span>\n          <h2>Where this model works best</h2>\n        </div>\n        <div class=\"generator-output-grid model-application-grid\">\n          ")
     ;  applications.forEach(function(application) { 
-    ; __append("\n            <article class=\"model-application-card\">\n              <h3>")
+    ; __append("\n            <article class=\"generator-output-card\">\n              <h3>")
     ; __append(escapeFn( application.title ))
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( application.text ))
@@ -1848,9 +1866,13 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n    ")
     ;  if (faqItems.length) { 
-    ; __append("\n      <div class=\"model-seo-block\">\n        <h2>FAQ</h2>\n        <div class=\"model-faq-list\">\n          ")
-    ;  faqItems.forEach(function(item) { 
-    ; __append("\n            <details class=\"model-faq-item\">\n              <summary>")
+    ; __append("\n      <div class=\"model-seo-block model-faq-section generator-faq-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">FAQ</span>\n          <h2>")
+    ; __append(escapeFn( model.name ))
+    ; __append(" questions</h2>\n        </div>\n        <div class=\"generator-faq-list\">\n          ")
+    ;  faqItems.forEach(function(item, index) { 
+    ; __append("\n            <details class=\"generator-faq-item\" ")
+    ; __append(escapeFn( index === 0 ? 'open' : '' ))
+    ; __append(">\n              <summary>")
     ; __append(escapeFn( item.question ))
     ; __append("</summary>\n              <p>")
     ; __append(escapeFn( item.answer ))
