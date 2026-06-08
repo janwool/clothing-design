@@ -44,6 +44,11 @@ async function ensureSchema() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (model_id, category_id)
   )`);
+  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_slug_redirects (
+    old_slug TEXT PRIMARY KEY,
+    model_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
   await db.run('ALTER TABLE categories ADD COLUMN landing_content TEXT').catch(() => {});
   await db.run('ALTER TABLE models_3d ADD COLUMN slug TEXT').catch(() => {});
   await db.run('ALTER TABLE models_3d ADD COLUMN texture_url TEXT').catch(() => {});
@@ -137,12 +142,27 @@ async function syncCategories(modelId, categoryIds) {
   }
 }
 
+async function getRedirectMap() {
+  const rows = await db.all('SELECT old_slug, model_id FROM model_3d_slug_redirects');
+  return new Map((rows || []).map(row => [row.old_slug, row.model_id]));
+}
+
+function getModelForSource(sourceModel, remoteBySlug, remoteById, redirectMap) {
+  return (
+    remoteBySlug.get(sourceModel.legacySlug) ||
+    remoteBySlug.get(sourceModel.slug) ||
+    remoteById.get(redirectMap.get(sourceModel.legacySlug))
+  );
+}
+
 async function main() {
   await ensureSchema();
   const sourceModels = await collectSourceModels();
   const remoteModels = await db.all('SELECT id, slug, name, category, description, tags FROM models_3d ORDER BY id');
   const remoteBySlug = new Map(remoteModels.map(model => [model.slug, model]));
-  const matchedModels = sourceModels.filter(model => remoteBySlug.has(model.slug));
+  const remoteById = new Map(remoteModels.map(model => [model.id, model]));
+  const redirectMap = await getRedirectMap();
+  const matchedModels = sourceModels.filter(model => getModelForSource(model, remoteBySlug, remoteById, redirectMap));
   const categoriesInUse = design3dCategories.filter(category => (
     matchedModels.some(model => model.seo.categoryNames.includes(category.name))
   ));
@@ -156,9 +176,10 @@ async function main() {
   let skipped = 0;
   const preview = [];
   for (const model of matchedModels) {
-    const current = remoteBySlug.get(model.slug);
+    const current = getModelForSource(model, remoteBySlug, remoteById, redirectMap);
     const needsContentUpdate = (
       current.name !== model.seo.name ||
+      current.slug !== model.slug ||
       current.category !== model.seo.category ||
       current.description !== model.seo.description ||
       current.tags !== model.seo.tags
@@ -169,7 +190,8 @@ async function main() {
     }
     const linkedCategoryIds = model.seo.categoryNames.map(name => categoryIds.get(name)).filter(Boolean);
     preview.push({
-      slug: model.slug,
+      oldSlug: current.slug,
+      newSlug: model.slug,
       from: current.name,
       to: model.seo.name,
       category: model.seo.category,
@@ -179,16 +201,30 @@ async function main() {
     if (!dryRun) {
       await db.run(
         `UPDATE models_3d
-         SET name = ?, category = ?, description = ?, tags = ?, updated_at = CURRENT_TIMESTAMP
-         WHERE slug = ?`,
-        [model.seo.name, model.seo.category, model.seo.description, model.seo.tags, model.slug]
+         SET name = ?, slug = ?, category = ?, description = ?, tags = ?, updated_at = CURRENT_TIMESTAMP
+         WHERE id = ?`,
+        [model.seo.name, model.slug, model.seo.category, model.seo.description, model.seo.tags, current.id]
       );
+      if (current.slug !== model.slug) {
+        await db.run(
+          'INSERT OR REPLACE INTO model_3d_slug_redirects (old_slug, model_id) VALUES (?, ?)',
+          [current.slug, current.id]
+        );
+        if (model.legacySlug !== current.slug) {
+          await db.run(
+            'INSERT OR REPLACE INTO model_3d_slug_redirects (old_slug, model_id) VALUES (?, ?)',
+            [model.legacySlug, current.id]
+          );
+        }
+      }
       await syncCategories(current.id, linkedCategoryIds);
     }
     updated += 1;
   }
 
-  const unmatchedSource = sourceModels.filter(model => !remoteBySlug.has(model.slug)).map(model => model.slug);
+  const unmatchedSource = sourceModels
+    .filter(model => !getModelForSource(model, remoteBySlug, remoteById, redirectMap))
+    .map(model => model.legacySlug);
   const placeholderCount = remoteModels.filter(model => /\b3D Model \d{2}\b/.test(model.name)).length;
   console.log(JSON.stringify({
     dryRun,

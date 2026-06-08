@@ -101,6 +101,11 @@ async function ensureModelCategoryTable() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (model_id, category_id)
   )`);
+  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_slug_redirects (
+    old_slug TEXT PRIMARY KEY,
+    model_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
 }
 
 function getModelCategorySelect() {
@@ -470,6 +475,18 @@ async function findActive3dModelBySlug(slug) {
     return normalize3dModel(model);
   }
 
+  const redirectedModel = await db.get(`
+    ${getModelCategorySelect()}
+    INNER JOIN model_3d_slug_redirects sr
+      ON sr.model_id = m.id
+    WHERE sr.old_slug = ? AND m.status = ?
+    ${getModelCategoryGroupBy()}
+  `, [slug, 'active']);
+
+  if (redirectedModel) {
+    return normalize3dModel(redirectedModel);
+  }
+
   const legacyModels = await db.all(`
     ${getModelCategorySelect()}
     WHERE (m.slug IS NULL OR m.slug = '') AND m.status = ?
@@ -478,6 +495,15 @@ async function findActive3dModelBySlug(slug) {
 
   const legacyModel = (legacyModels || []).find(item => getModelSlug(item) === slug);
   return legacyModel ? normalize3dModel(legacyModel) : null;
+}
+
+function redirectToCanonical3dModel(req, res, model, editPath = false) {
+  const canonicalPath = `/3d-models/${model.category_slug || model.category}/${model.slug}${editPath ? '/edit' : ''}`;
+  if (req.path !== canonicalPath) {
+    res.redirect(301, canonicalPath);
+    return true;
+  }
+  return false;
 }
 
 router.get('/api/texture-svg', async (req, res) => {
@@ -831,6 +857,8 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     if (!model) {
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
+
+    if (redirectToCanonical3dModel(req, res, model, true)) return;
     
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
@@ -851,6 +879,8 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     if (!model) {
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
+
+    if (redirectToCanonical3dModel(req, res, model)) return;
     
     // Get related models with category slugs
     const related = await db.all(`
