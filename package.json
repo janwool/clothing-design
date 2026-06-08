@@ -7,6 +7,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "build": "node scripts/build-worker.js",
+    "sitemap": "node scripts/generate-sitemap.js",
     "deploy": "npm run build && wrangler deploy",
     "worker:dev": "npm run build && wrangler dev",
     "watch": "webpack --mode development --watch"
