@@ -7,6 +7,17 @@ const db = require('../lib/db');
 const baseUrl = (process.env.SITEMAP_BASE_URL || 'https://www.cloz-design.com').replace(/\/+$/, '');
 const outputPath = path.resolve(__dirname, '..', 'public', 'sitemap.xml');
 const robotsPath = path.resolve(__dirname, '..', 'public', 'robots.txt');
+const staticToolPaths = [
+  '/tools/t-shirt-designer',
+  '/tools/hoodie-designer',
+  '/tools/dress-designer',
+  '/tools/3d-mockup',
+  '/tools/2d-mockup',
+  '/tools/free-patterns',
+  '/tools/free-templates',
+  '/tools/clo3d-guide',
+  '/tools/md-guide'
+];
 
 function escapeXml(value) {
   return String(value || '')
@@ -132,6 +143,7 @@ async function main() {
     '/tools',
     '/pricing'
   ].forEach(pathname => addUrl(urls, seen, pathname, now));
+  staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now));
 
   const categories = await getCategories();
   categories.forEach(category => {

@@ -1,0 +1,169 @@
+<%- include('partials/header') %>
+
+<section class="tool-detail-hero">
+  <div class="container tool-detail-hero-grid">
+    <div class="tool-detail-copy">
+      <div class="category-breadcrumbs">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/tools">Tools</a>
+        <span>/</span>
+        <span><%= toolPage.title %></span>
+      </div>
+      <span class="generator-eyebrow"><%= toolPage.eyebrow %></span>
+      <h1><%= toolPage.title %></h1>
+      <p><%= toolPage.subtitle %></p>
+      <div class="hero-actions">
+        <a href="<%= toolPage.cta.href %>" class="btn btn-primary btn-large"><%= toolPage.cta.label %></a>
+        <a href="/tools" class="btn btn-secondary btn-large">Browse All Free Tools</a>
+      </div>
+    </div>
+    <div class="tool-detail-panel" aria-label="Keyword plan">
+      <small>Primary keyword</small>
+      <strong><%= toolPage.primaryKeyword %></strong>
+      <div class="tool-keyword-list">
+        <% toolPage.keywords.forEach(function(keyword) { %>
+          <span><%= keyword %></span>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section">
+  <div class="container">
+    <div class="tool-answer-grid">
+      <div>
+        <span class="generator-eyebrow">Search intent</span>
+        <h2>What this free tool page needs to answer</h2>
+      </div>
+      <p><%= toolPage.intent %></p>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section generator-section-muted">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Google result analysis</span>
+      <h2>What competing pages usually cover</h2>
+      <p>These are the patterns visible across current search results for the target keyword group.</p>
+    </div>
+    <div class="generator-output-grid">
+      <% toolPage.competitorInsights.forEach(function(insight) { %>
+        <article class="generator-output-card">
+          <h3>Content pattern</h3>
+          <p><%= insight %></p>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section">
+  <div class="container">
+    <div class="tool-answer-grid">
+      <div>
+        <span class="generator-eyebrow">Our free angle</span>
+        <h2>How ClothingDesign should win this page</h2>
+      </div>
+      <p><%= toolPage.freePositioning %></p>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section generator-section-muted">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Workflow</span>
+      <h2>How to use this free resource</h2>
+    </div>
+    <div class="generator-steps">
+      <% toolPage.steps.forEach(function(step, index) { %>
+        <article class="generator-step">
+          <span><%= String(index + 1).padStart(2, '0') %></span>
+          <h3>Step <%= index + 1 %></h3>
+          <p><%= step %></p>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Use cases</span>
+      <h2>Best uses for this free page</h2>
+    </div>
+    <div class="generator-output-grid">
+      <% toolPage.useCases.forEach(function(useCase) { %>
+        <article class="generator-output-card">
+          <h3><%= useCase %></h3>
+          <p>Use this workflow when you need a fast, free apparel design starting point without committing to paid design software.</p>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section generator-faq-section">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">FAQ</span>
+      <h2><%= toolPage.title %> questions</h2>
+    </div>
+    <div class="generator-faq-list">
+      <details class="generator-faq-item" open>
+        <summary>Is <%= toolPage.title %> free?</summary>
+        <p><%= toolPage.freePositioning %></p>
+      </details>
+      <details class="generator-faq-item">
+        <summary>Which keywords should this page target?</summary>
+        <p><%= [toolPage.primaryKeyword].concat(toolPage.keywords).join(', ') %>.</p>
+      </details>
+      <details class="generator-faq-item">
+        <summary>What should the user do next?</summary>
+        <p>Start with the primary CTA on this page, then continue into the Design3D library, sewing pattern library, or learning workflow depending on the tool.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section generator-section-muted">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Related free tools</span>
+      <h2>Continue planning the tool cluster</h2>
+    </div>
+    <div class="generator-category-grid">
+      <% toolPage.related.forEach(function(item) { %>
+        <a href="/tools/<%= item.slug %>" class="generator-category-card">
+          <small><%= item.primaryKeyword %></small>
+          <strong><%= item.title %></strong>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="pattern-design-cta">
+  <div class="container">
+    <div class="pattern-design-cta-inner">
+      <div>
+        <span class="generator-eyebrow">Free first</span>
+        <h2>Start with a free ClothingDesign workflow.</h2>
+        <p>Use the tool page as the entry point, then move into 3D models, sewing patterns, or beginner guides when you are ready.</p>
+      </div>
+      <div class="generator-final-actions">
+        <a href="<%= toolPage.cta.href %>" class="btn btn-primary"><%= toolPage.cta.label %></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

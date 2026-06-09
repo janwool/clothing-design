@@ -2861,6 +2861,122 @@ title = __locals.title,
   return __output;
 
 },
+  "tool-detail.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  pattern = __locals.pattern,
+  patterns = __locals.patterns,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts;
+    ; __append( include('partials/header') )
+    ; __append("\n\n<section class=\"tool-detail-hero\">\n  <div class=\"container tool-detail-hero-grid\">\n    <div class=\"tool-detail-copy\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/tools\">Tools</a>\n        <span>/</span>\n        <span>")
+    ; __append(escapeFn( toolPage.title ))
+    ; __append("</span>\n      </div>\n      <span class=\"generator-eyebrow\">")
+    ; __append(escapeFn( toolPage.eyebrow ))
+    ; __append("</span>\n      <h1>")
+    ; __append(escapeFn( toolPage.title ))
+    ; __append("</h1>\n      <p>")
+    ; __append(escapeFn( toolPage.subtitle ))
+    ; __append("</p>\n      <div class=\"hero-actions\">\n        <a href=\"")
+    ; __append(escapeFn( toolPage.cta.href ))
+    ; __append("\" class=\"btn btn-primary btn-large\">")
+    ; __append(escapeFn( toolPage.cta.label ))
+    ; __append("</a>\n        <a href=\"/tools\" class=\"btn btn-secondary btn-large\">Browse All Free Tools</a>\n      </div>\n    </div>\n    <div class=\"tool-detail-panel\" aria-label=\"Keyword plan\">\n      <small>Primary keyword</small>\n      <strong>")
+    ; __append(escapeFn( toolPage.primaryKeyword ))
+    ; __append("</strong>\n      <div class=\"tool-keyword-list\">\n        ")
+    ;  toolPage.keywords.forEach(function(keyword) {
+    ; __append("\n          <span>")
+    ; __append(escapeFn( keyword ))
+    ; __append("</span>\n        ")
+    ;  });
+    ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"tool-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">Search intent</span>\n        <h2>What this free tool page needs to answer</h2>\n      </div>\n      <p>")
+    ; __append(escapeFn( toolPage.intent ))
+    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Google result analysis</span>\n      <h2>What competing pages usually cover</h2>\n      <p>These are the patterns visible across current search results for the target keyword group.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
+    ;  toolPage.competitorInsights.forEach(function(insight) {
+    ; __append("\n        <article class=\"generator-output-card\">\n          <h3>Content pattern</h3>\n          <p>")
+    ; __append(escapeFn( insight ))
+    ; __append("</p>\n        </article>\n      ")
+    ;  });
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"tool-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">Our free angle</span>\n        <h2>How ClothingDesign should win this page</h2>\n      </div>\n      <p>")
+    ; __append(escapeFn( toolPage.freePositioning ))
+    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Workflow</span>\n      <h2>How to use this free resource</h2>\n    </div>\n    <div class=\"generator-steps\">\n      ")
+    ;  toolPage.steps.forEach(function(step, index) {
+    ; __append("\n        <article class=\"generator-step\">\n          <span>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</span>\n          <h3>Step ")
+    ; __append(escapeFn( index + 1 ))
+    ; __append("</h3>\n          <p>")
+    ; __append(escapeFn( step ))
+    ; __append("</p>\n        </article>\n      ")
+    ;  });
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Use cases</span>\n      <h2>Best uses for this free page</h2>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
+    ;  toolPage.useCases.forEach(function(useCase) {
+    ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
+    ; __append(escapeFn( useCase ))
+    ; __append("</h3>\n          <p>Use this workflow when you need a fast, free apparel design starting point without committing to paid design software.</p>\n        </article>\n      ")
+    ;  });
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">FAQ</span>\n      <h2>")
+    ; __append(escapeFn( toolPage.title ))
+    ; __append(" questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      <details class=\"generator-faq-item\" open>\n        <summary>Is ")
+    ; __append(escapeFn( toolPage.title ))
+    ; __append(" free?</summary>\n        <p>")
+    ; __append(escapeFn( toolPage.freePositioning ))
+    ; __append("</p>\n      </details>\n      <details class=\"generator-faq-item\">\n        <summary>Which keywords should this page target?</summary>\n        <p>")
+    ; __append(escapeFn( [toolPage.primaryKeyword].concat(toolPage.keywords).join(', ') ))
+    ; __append(".</p>\n      </details>\n      <details class=\"generator-faq-item\">\n        <summary>What should the user do next?</summary>\n        <p>Start with the primary CTA on this page, then continue into the Design3D library, sewing pattern library, or learning workflow depending on the tool.</p>\n      </details>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Related free tools</span>\n      <h2>Continue planning the tool cluster</h2>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
+    ;  toolPage.related.forEach(function(item) {
+    ; __append("\n        <a href=\"/tools/")
+    ; __append(escapeFn( item.slug ))
+    ; __append("\" class=\"generator-category-card\">\n          <small>")
+    ; __append(escapeFn( item.primaryKeyword ))
+    ; __append("</small>\n          <strong>")
+    ; __append(escapeFn( item.title ))
+    ; __append("</strong>\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M5 12h14\"/>\n            <path d=\"m12 5 7 7-7 7\"/>\n          </svg>\n        </a>\n      ")
+    ;  });
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Free first</span>\n        <h2>Start with a free ClothingDesign workflow.</h2>\n        <p>Use the tool page as the entry point, then move into 3D models, sewing patterns, or beginner guides when you are ready.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"")
+    ; __append(escapeFn( toolPage.cta.href ))
+    ; __append("\" class=\"btn btn-primary\">")
+    ; __append(escapeFn( toolPage.cta.label ))
+    ; __append("</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
   "tools.ejs": function anonymous(locals, escapeFn, include, rethrow
 ) {
 escapeFn = escapeFn || function (markup) {
