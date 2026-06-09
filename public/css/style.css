@@ -611,9 +611,9 @@ img {
   align-items: center;
   overflow: hidden;
   background:
-    radial-gradient(circle at 82% 16%, rgba(142, 171, 167, 0.38) 0, rgba(142, 171, 167, 0) 34%),
-    radial-gradient(circle at 72% 82%, rgba(202, 174, 126, 0.34) 0, rgba(202, 174, 126, 0) 32%),
-    linear-gradient(120deg, #f8f7f3 0%, #eceae5 48%, #d8ded9 100%);
+    radial-gradient(circle at 78% 18%, rgba(83, 122, 116, 0.5) 0, rgba(83, 122, 116, 0) 34%),
+    radial-gradient(circle at 76% 82%, rgba(169, 135, 83, 0.42) 0, rgba(169, 135, 83, 0) 34%),
+    linear-gradient(118deg, #f6f3eb 0%, #ded8ca 48%, #8fa19a 100%);
 }
 
 .home-hero::before {
@@ -621,9 +621,10 @@ img {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(105deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.9) 43%, rgba(255, 255, 255, 0.2) 74%, rgba(255, 255, 255, 0.06) 100%),
-    linear-gradient(18deg, rgba(255, 255, 255, 0) 45%, rgba(255, 255, 255, 0.38) 46%, rgba(255, 255, 255, 0) 58%),
-    repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.045) 0 1px, transparent 1px 96px);
+    linear-gradient(105deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.88) 40%, rgba(255, 255, 255, 0.1) 68%, rgba(255, 255, 255, 0) 100%),
+    radial-gradient(ellipse at 78% 58%, rgba(34, 45, 41, 0.22) 0, rgba(34, 45, 41, 0) 48%),
+    linear-gradient(18deg, rgba(255, 255, 255, 0) 43%, rgba(255, 255, 255, 0.24) 47%, rgba(255, 255, 255, 0) 60%),
+    repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.06) 0 1px, transparent 1px 96px);
   z-index: 1;
 }
 
@@ -2274,9 +2275,10 @@ img {
 
   .home-hero::before {
     background:
-      linear-gradient(105deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.93) 58%, rgba(255, 255, 255, 0.48) 100%),
-      linear-gradient(20deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.28) 48%, rgba(255, 255, 255, 0) 62%),
-      repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.045) 0 1px, transparent 1px 96px);
+      linear-gradient(105deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.9) 54%, rgba(255, 255, 255, 0.24) 100%),
+      radial-gradient(ellipse at 82% 58%, rgba(34, 45, 41, 0.18) 0, rgba(34, 45, 41, 0) 48%),
+      linear-gradient(20deg, rgba(255, 255, 255, 0) 42%, rgba(255, 255, 255, 0.22) 48%, rgba(255, 255, 255, 0) 62%),
+      repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.055) 0 1px, transparent 1px 96px);
   }
 
   .home-hero h1 {
@@ -2387,8 +2389,8 @@ img {
 
   .home-hero::before {
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.9) 64%, rgba(255, 255, 255, 0.66) 100%),
-      radial-gradient(circle at 84% 88%, rgba(202, 174, 126, 0.2) 0, rgba(202, 174, 126, 0) 36%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.88) 58%, rgba(255, 255, 255, 0.52) 100%),
+      radial-gradient(circle at 84% 88%, rgba(169, 135, 83, 0.28) 0, rgba(169, 135, 83, 0) 38%),
       repeating-linear-gradient(90deg, rgba(17, 17, 17, 0.04) 0 1px, transparent 1px 76px);
   }
 
