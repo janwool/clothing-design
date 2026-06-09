@@ -4,6 +4,14 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
+const {
+  DEFAULT_SITE_IMAGE_PATH,
+  toAbsoluteUrl,
+  firstImage,
+  imageObject,
+  itemList,
+  pageStructuredData
+} = require('../lib/seo');
 
 function getDefaultLandingContent(name = '3D clothing models') {
   return {
@@ -143,23 +151,6 @@ function toSlug(value) {
     .replace(/^-+|-+$/g, '');
 }
 
-function getRequestOrigin(req) {
-  const forwardedProto = (req.get('x-forwarded-proto') || '').split(',')[0].trim();
-  const protocol = forwardedProto || req.protocol || 'https';
-  const host = req.get('host');
-  return host ? `${protocol}://${host}` : '';
-}
-
-function toAbsoluteUrl(req, value) {
-  if (!value) return undefined;
-  try {
-    return new URL(value).href;
-  } catch (err) {
-    const origin = getRequestOrigin(req);
-    return origin ? new URL(value, origin).href : value;
-  }
-}
-
 function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
   const modelCount = Number(modelTotal) || models.length;
   const categoryCount = categories.length;
@@ -229,18 +220,21 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     }
   ];
   const metaDescription = 'Create apparel mockups online with Design3D clothing models. Customize garments, preview artwork in 3D, browse sewing patterns, and export high-resolution transparent renders.';
+  const primaryImage = firstImage(req, heroImages.map(image => image.src));
   const structuredData = [
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
       name: 'ClothingDesign',
-      url: pageUrl
+      url: pageUrl,
+      logo: firstImage(req)
     },
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: 'ClothingDesign',
       url: pageUrl,
+      image: primaryImage,
       potentialAction: {
         '@type': 'SearchAction',
         target: `${toAbsoluteUrl(req, '/design-3d')}?q={search_term_string}`,
@@ -253,6 +247,8 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
       name: '3D Clothing Design and Apparel Mockup Generator',
       description: metaDescription,
       url: pageUrl,
+      image: primaryImage,
+      primaryImageOfPage: imageObject(req, primaryImage),
       mainEntity: {
         '@type': 'SoftwareApplication',
         name: 'ClothingDesign Design3D',
@@ -269,7 +265,8 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
         '@type': 'ListItem',
         position: index + 1,
         name: model.name,
-        url: toAbsoluteUrl(req, `/3d-models/${model.category_slug || model.category}/${model.slug}`)
+        url: toAbsoluteUrl(req, `/3d-models/${model.category_slug || model.category}/${model.slug}`),
+        image: model.image_url ? toAbsoluteUrl(req, model.image_url) : undefined
       }))
     },
     {
@@ -297,6 +294,77 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     featuredModels,
     featuredCategories
   };
+}
+
+function buildCollectionStructuredData(req, options = {}) {
+  const items = options.items || [];
+  const image = firstImage(req, items.map(item => item.image_url));
+  return [
+    ...pageStructuredData(req, {
+      type: 'CollectionPage',
+      name: options.name,
+      description: options.description,
+      path: options.path,
+      image,
+      breadcrumbs: options.breadcrumbs,
+      mainEntity: {
+        '@type': 'ItemList',
+        name: options.itemListName || options.name,
+        numberOfItems: items.length
+      }
+    }),
+    itemList(req, options.itemListName || options.name, items, options.getUrl, item => item.image_url)
+  ];
+}
+
+function buildSimplePageStructuredData(req, options = {}) {
+  return pageStructuredData(req, {
+    type: options.type || 'WebPage',
+    name: options.name,
+    description: options.description,
+    path: options.path,
+    image: options.image || DEFAULT_SITE_IMAGE_PATH,
+    breadcrumbs: options.breadcrumbs,
+    mainEntity: options.mainEntity,
+    extra: options.extra
+  });
+}
+
+function buildCategoryStructuredData(req, category, items = [], resourceType, resourceTypeLabel) {
+  const basePath = `/${resourceType}/${category.slug}`;
+  const collectionPath = resourceType === '3d-models' ? '/design-3d' : `/${resourceType}`;
+  const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClothingDesign.`;
+  const normalizedItems = resourceType === '3d-models' ? normalize3dModels(items, category.slug) : items;
+  const image = firstImage(req, normalizedItems.map(item => item.image_url));
+
+  return [
+    ...pageStructuredData(req, {
+      type: 'CollectionPage',
+      name: category.meta_title || `${category.name} ${resourceTypeLabel}`,
+      description,
+      path: basePath,
+      image,
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: resourceTypeLabel, url: collectionPath },
+        { name: category.name, url: basePath }
+      ],
+      mainEntity: {
+        '@type': 'ItemList',
+        name: `${category.name} ${resourceTypeLabel}`,
+        numberOfItems: normalizedItems.length
+      }
+    }),
+    itemList(req, `${category.name} ${resourceTypeLabel}`, normalizedItems, item => {
+      if (resourceType === '3d-models') {
+        return `/3d-models/${category.slug}/${item.slug}`;
+      }
+      if (resourceType === 'patterns') {
+        return `/patterns/item/${item.id}`;
+      }
+      return item.url || basePath;
+    }, item => item.image_url)
+  ];
 }
 
 async function findDesign3dCategoryForPattern(pattern) {
@@ -350,7 +418,7 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
     }
   ];
   const pageUrl = toAbsoluteUrl(req, req.originalUrl);
-  const imageUrl = toAbsoluteUrl(req, pattern.image_url);
+  const imageUrl = firstImage(req, [pattern.image_url]);
   const fileUrl = toAbsoluteUrl(req, pattern.file_url);
 
   return {
@@ -419,6 +487,19 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
       }
     ],
     structuredData: [
+      ...pageStructuredData(req, {
+        type: 'WebPage',
+        name: pattern.name,
+        description,
+        path: req.originalUrl,
+        image: imageUrl,
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: 'Sewing Patterns', url: '/patterns' },
+          { name: categoryName, url: pattern.category_slug ? `/patterns/${pattern.category_slug}` : '/patterns' },
+          { name: pattern.name, url: req.originalUrl }
+        ]
+      }),
       {
         '@context': 'https://schema.org',
         '@type': 'DigitalDocument',
@@ -428,6 +509,7 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
         encodingFormat: format,
         url: pageUrl,
         image: imageUrl,
+        primaryImageOfPage: imageObject(req, imageUrl),
         associatedMedia: fileUrl,
         keywords: pattern.tags || undefined,
         isPartOf: {
@@ -455,7 +537,7 @@ function buildModelDetailContent(model, related, req) {
   const categoryName = model.category_label || model.category || 'apparel';
   const categorySlug = model.category_slug || toSlug(categoryName);
   const modelUrl = toAbsoluteUrl(req, req.originalUrl);
-  const imageUrl = toAbsoluteUrl(req, model.image_url);
+  const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
   const designHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
   const description = `${model.name} is a browser-ready Design 3D clothing model for ${categoryName} mockups. Learn how to customize it, where to use it, view FAQs, and compare related 3D apparel models.`;
@@ -526,6 +608,19 @@ function buildModelDetailContent(model, related, req) {
       secondaryHref: '/design-3d'
     },
     structuredData: [
+      ...pageStructuredData(req, {
+        type: 'WebPage',
+        name: model.name,
+        description,
+        path: req.originalUrl,
+        image: imageUrl,
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: '3D Clothing Models', url: '/design-3d' },
+          { name: categoryName, url: `/3d-models/${categorySlug}` },
+          { name: model.name, url: req.originalUrl }
+        ]
+      }),
       {
         '@context': 'https://schema.org',
         '@type': 'CreativeWork',
@@ -533,6 +628,7 @@ function buildModelDetailContent(model, related, req) {
         description,
         url: modelUrl,
         image: imageUrl,
+        primaryImageOfPage: imageObject(req, imageUrl),
         associatedMedia: fileUrl,
         genre: '3D clothing model',
         keywords: [model.name, categoryName, 'Design 3D', '3D apparel mockup', '3D clothing model'].filter(Boolean),
@@ -729,18 +825,46 @@ router.get('/design-3d', async (req, res) => {
       ORDER BY m.created_at DESC
     `, ['active']);
     const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order', ['3d-models', 'active']);
+    const normalizedModels = normalize3dModels(models);
+    const description = 'Browse Design3D clothing models for online apparel mockups, customize garment artwork, and export high-resolution transparent renders.';
     
     res.render('design-3d', { 
       title: req.t('design3d.title'),
+      metaDescription: description,
+      structuredData: buildCollectionStructuredData(req, {
+        name: '3D Clothing Models',
+        description,
+        path: '/design-3d',
+        items: normalizedModels,
+        itemListName: 'Design3D clothing model library',
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: '3D Clothing Models', url: '/design-3d' }
+        ],
+        getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
+      }),
       page: 'design-3d',
-      models: normalize3dModels(models),
+      models: normalizedModels,
       categories: categories || [],
       landingContent: getLandingContent()
     });
   } catch (err) {
     console.error('Error loading 3D models:', err);
+    const description = 'Browse Design3D clothing models for online apparel mockups, customize garment artwork, and export high-resolution transparent renders.';
     res.render('design-3d', { 
       title: req.t('design3d.title'),
+      metaDescription: description,
+      structuredData: buildCollectionStructuredData(req, {
+        name: '3D Clothing Models',
+        description,
+        path: '/design-3d',
+        items: [],
+        itemListName: 'Design3D clothing model library',
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: '3D Clothing Models', url: '/design-3d' }
+        ]
+      }),
       page: 'design-3d',
       models: [],
       categories: [],
@@ -762,17 +886,44 @@ router.get('/patterns', async (req, res) => {
       'SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC',
       ['patterns', 'active']
     );
+    const description = 'Browse downloadable CLO 3D and Marvelous Designer sewing patterns for apparel development, garment review, and 3D mockup workflows.';
 
     res.render('patterns', {
       title: req.t('patterns.title'),
+      metaDescription: description,
+      structuredData: buildCollectionStructuredData(req, {
+        name: 'Sewing Patterns',
+        description,
+        path: '/patterns',
+        items: patterns || [],
+        itemListName: 'CLO 3D and Marvelous Designer sewing patterns',
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: 'Sewing Patterns', url: '/patterns' }
+        ],
+        getUrl: pattern => `/patterns/item/${pattern.id}`
+      }),
       page: 'patterns',
       patterns: patterns || [],
       categories: categories || []
     });
   } catch (err) {
     console.error('Error loading patterns:', err);
+    const description = 'Browse downloadable CLO 3D and Marvelous Designer sewing patterns for apparel development, garment review, and 3D mockup workflows.';
     res.render('patterns', {
       title: req.t('patterns.title'),
+      metaDescription: description,
+      structuredData: buildCollectionStructuredData(req, {
+        name: 'Sewing Patterns',
+        description,
+        path: '/patterns',
+        items: [],
+        itemListName: 'CLO 3D and Marvelous Designer sewing patterns',
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: 'Sewing Patterns', url: '/patterns' }
+        ]
+      }),
       page: 'patterns',
       patterns: [],
       categories: []
@@ -824,24 +975,78 @@ router.get('/patterns/item/:id', async (req, res) => {
 
 // Get Inspired (Gallery)
 router.get('/gallery', (req, res) => {
+  const description = 'Explore apparel design inspiration, clothing mockup ideas, and garment presentation examples from ClothingDesign.';
   res.render('gallery', { 
     title: req.t('gallery.title'),
+    metaDescription: description,
+    structuredData: buildSimplePageStructuredData(req, {
+      type: 'CollectionPage',
+      name: 'Design Gallery',
+      description,
+      path: '/gallery',
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: 'Design Gallery', url: '/gallery' }
+      ]
+    }),
     page: 'gallery'
   });
 });
 
 // Tools
 router.get('/tools', (req, res) => {
+  const description = 'Use clothing design tools, apparel mockup generators, free downloads, and learning resources for 3D fashion workflows.';
   res.render('tools', { 
     title: req.t('tools.title'),
+    metaDescription: description,
+    structuredData: buildSimplePageStructuredData(req, {
+      type: 'CollectionPage',
+      name: 'Design Tools',
+      description,
+      path: '/tools',
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: 'Design Tools', url: '/tools' }
+      ],
+      mainEntity: {
+        '@type': 'ItemList',
+        name: 'ClothingDesign tools',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'T-Shirt Designer', url: toAbsoluteUrl(req, '/tools/t-shirt-designer') },
+          { '@type': 'ListItem', position: 2, name: '3D Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-mockup') },
+          { '@type': 'ListItem', position: 3, name: 'Free Sewing Patterns', url: toAbsoluteUrl(req, '/tools/free-patterns') }
+        ]
+      }
+    }),
     page: 'tools'
   });
 });
 
 // Pricing
 router.get('/pricing', (req, res) => {
+  const description = 'Compare ClothingDesign plans for 3D clothing models, apparel mockups, high-resolution exports, and team workflows.';
   res.render('pricing', { 
     title: req.t('pricing.title'),
+    metaDescription: description,
+    structuredData: buildSimplePageStructuredData(req, {
+      type: 'WebPage',
+      name: 'ClothingDesign Plans',
+      description,
+      path: '/pricing',
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: 'Plans', url: '/pricing' }
+      ],
+      mainEntity: {
+        '@type': 'OfferCatalog',
+        name: 'ClothingDesign plans',
+        itemListElement: [
+          { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro', price: '29', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Enterprise', price: '99', priceCurrency: 'USD' }
+        ]
+      }
+    }),
     page: 'pricing'
   });
 });
@@ -885,14 +1090,19 @@ router.get('/3d-models/:slug', async (req, res) => {
       ${getModelCategoryGroupBy()}
       ORDER BY m.created_at DESC
     `, ['active']);
+    const normalizedItems = normalize3dModels(items, category.slug);
+    const normalizedAllModels = normalize3dModels(allModels);
+    const description = category.meta_description || category.description || `Browse ${category.name} 3D clothing models for apparel mockups and browser-based Design3D workflows.`;
     
     res.render('category-landing', {
       title: category.meta_title || category.name,
+      metaDescription: description,
+      structuredData: buildCategoryStructuredData(req, category, normalizedItems, '3d-models', '3D Models'),
       page: 'design-3d',
       category: category,
-      items: normalize3dModels(items, category.slug),
+      items: normalizedItems,
       categories: categories || [],
-      models: normalize3dModels(allModels),
+      models: normalizedAllModels,
       landingContent: getLandingContent(category),
       resourceType: '3d-models',
       resourceTypeLabel: '3D Models'
@@ -921,9 +1131,12 @@ router.get('/patterns/:slug', async (req, res) => {
     const items = await db.all('SELECT * FROM patterns WHERE category = ? AND status = ? ORDER BY created_at DESC',
       [category.name, 'active']
     );
+    const description = category.meta_description || category.description || `Browse ${category.name} sewing patterns for CLO 3D, Marvelous Designer, and apparel development workflows.`;
     
     res.render('category-landing', {
       title: category.meta_title || category.name,
+      metaDescription: description,
+      structuredData: buildCategoryStructuredData(req, category, items || [], 'patterns', 'Sew Patterns'),
       page: 'patterns',
       category: category,
       items: items || [],
@@ -949,9 +1162,12 @@ router.get('/gallery/:slug', async (req, res) => {
     const items = await db.all('SELECT * FROM gallery_items WHERE category = ? AND status = ? ORDER BY created_at DESC',
       [category.name, 'active']
     );
+    const description = category.meta_description || category.description || `Browse ${category.name} apparel design inspiration and clothing mockup examples.`;
     
     res.render('category-landing', {
       title: category.meta_title || category.name,
+      metaDescription: description,
+      structuredData: buildCategoryStructuredData(req, category, items || [], 'gallery', 'Gallery'),
       page: 'gallery',
       category: category,
       items: items || [],
@@ -977,9 +1193,12 @@ router.get('/tools/:slug', async (req, res) => {
     const items = await db.all('SELECT * FROM tools WHERE category = ? AND status = ? ORDER BY sort_order ASC, created_at DESC',
       [category.name, 'active']
     );
+    const description = category.meta_description || category.description || `Browse ${category.name} clothing design tools and apparel workflow resources.`;
     
     res.render('category-landing', {
       title: category.meta_title || category.name,
+      metaDescription: description,
+      structuredData: buildCategoryStructuredData(req, category, items || [], 'tools', 'Tools'),
       page: 'tools',
       category: category,
       items: items || [],
@@ -1001,11 +1220,35 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     }
 
     if (redirectToCanonical3dModel(req, res, model, true)) return;
+    const normalizedModel = normalize3dModel(model);
+    const categorySlug = normalizedModel.category_slug || normalizedModel.category || req.params.category;
+    const description = `Customize ${normalizedModel.name} in the ClothingDesign browser-based 3D apparel designer and export a high-resolution clothing mockup render.`;
     
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
+      metaDescription: description,
+      structuredData: buildSimplePageStructuredData(req, {
+        type: 'WebPage',
+        name: `Design ${normalizedModel.name}`,
+        description,
+        path: `/3d-models/${categorySlug}/${normalizedModel.slug}/edit`,
+        image: normalizedModel.image_url,
+        breadcrumbs: [
+          { name: 'Home', url: '/' },
+          { name: '3D Clothing Models', url: '/design-3d' },
+          { name: normalizedModel.name, url: `/3d-models/${categorySlug}/${normalizedModel.slug}` },
+          { name: 'Designer', url: `/3d-models/${categorySlug}/${normalizedModel.slug}/edit` }
+        ],
+        mainEntity: {
+          '@type': 'SoftwareApplication',
+          name: 'ClothingDesign 3D Designer',
+          applicationCategory: 'DesignApplication',
+          operatingSystem: 'Web browser',
+          image: firstImage(req, [normalizedModel.image_url])
+        }
+      }),
       page: 'designer',
-      model: normalize3dModel(model)
+      model: normalizedModel
     });
   } catch (err) {
     console.error('Error loading designer:', err);

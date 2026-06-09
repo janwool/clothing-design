@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const router = express.Router();
 const db = require('../lib/db');
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
+const { pageStructuredData } = require('../lib/seo');
 
 // Initialize database
 async function initAuthTables() {
@@ -22,20 +23,37 @@ if (!isWorkerRuntime) {
   initAuthTables();
 }
 
+function buildAuthPageData(req, page, title) {
+  const path = page === 'register' ? '/auth/register' : '/auth/login';
+  const description = page === 'register'
+    ? 'Create a ClothingDesign account to save apparel mockups, manage 3D clothing designs, and access design resources.'
+    : 'Sign in to ClothingDesign to manage saved apparel mockups, 3D clothing designs, and account resources.';
+
+  return {
+    title,
+    page,
+    metaDescription: description,
+    structuredData: pageStructuredData(req, {
+      type: 'WebPage',
+      name: title,
+      description,
+      path,
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: title, url: path }
+      ]
+    })
+  };
+}
+
 // Login page
 router.get('/login', (req, res) => {
-  res.render('auth/login', { 
-    title: req.t('auth.login'),
-    page: 'login'
-  });
+  res.render('auth/login', buildAuthPageData(req, 'login', req.t('auth.login')));
 });
 
 // Register page
 router.get('/register', (req, res) => {
-  res.render('auth/register', { 
-    title: req.t('auth.register'),
-    page: 'register'
-  });
+  res.render('auth/register', buildAuthPageData(req, 'register', req.t('auth.register')));
 });
 
 // Login POST
@@ -47,9 +65,8 @@ router.post('/login', async (req, res) => {
     
     if (!user) {
       return res.render('auth/login', { 
+        ...buildAuthPageData(req, 'login', req.t('auth.login')),
         error: req.t('auth.invalidCredentials'),
-        title: req.t('auth.login'),
-        page: 'login'
       });
     }
     
@@ -63,17 +80,15 @@ router.post('/login', async (req, res) => {
         res.redirect('/');
       } else {
         res.render('auth/login', { 
+          ...buildAuthPageData(req, 'login', req.t('auth.login')),
           error: req.t('auth.invalidCredentials'),
-          title: req.t('auth.login'),
-          page: 'login'
         });
       }
     });
   } catch (err) {
     res.render('auth/login', { 
+      ...buildAuthPageData(req, 'login', req.t('auth.login')),
       error: req.t('auth.error'),
-      title: req.t('auth.login'),
-      page: 'login'
     });
   }
 });
@@ -86,9 +101,8 @@ router.post('/register', async (req, res) => {
     bcrypt.hash(password, 10, async (err, hash) => {
       if (err) {
         return res.render('auth/register', { 
+          ...buildAuthPageData(req, 'register', req.t('auth.register')),
           error: req.t('auth.error'),
-          title: req.t('auth.register'),
-          page: 'register'
         });
       }
       
@@ -105,17 +119,15 @@ router.post('/register', async (req, res) => {
         res.redirect('/');
       } catch (err) {
         res.render('auth/register', { 
+          ...buildAuthPageData(req, 'register', req.t('auth.register')),
           error: req.t('auth.emailExists'),
-          title: req.t('auth.register'),
-          page: 'register'
         });
       }
     });
   } catch (err) {
     res.render('auth/register', { 
+      ...buildAuthPageData(req, 'register', req.t('auth.register')),
       error: req.t('auth.error'),
-      title: req.t('auth.register'),
-      page: 'register'
     });
   }
 });
