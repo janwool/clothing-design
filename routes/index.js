@@ -162,6 +162,145 @@ function toAbsoluteUrl(req, value) {
   }
 }
 
+function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
+  const modelCount = Number(modelTotal) || models.length;
+  const categoryCount = categories.length;
+  const pageUrl = toAbsoluteUrl(req, '/');
+  const featuredModels = normalize3dModels(models.slice(0, 6));
+  const featuredCategories = categories.slice(0, 8);
+  const heroImages = featuredModels
+    .filter(model => model.image_url)
+    .slice(0, 4)
+    .map(model => ({
+      src: model.image_url,
+      alt: model.name
+    }));
+  const stats = [
+    { value: `${modelCount}+`, label: '3D garment models' },
+    { value: `${categoryCount}`, label: 'apparel categories' },
+    { value: `${patternCount}+`, label: 'sewing patterns' }
+  ];
+  const workflow = [
+    {
+      title: 'Choose a garment model',
+      text: 'Start from shirts, hoodies, dresses, coats, pants, bags, hats, and other Design3D-ready apparel models.'
+    },
+    {
+      title: 'Customize color and artwork',
+      text: 'Use the browser designer to place logos, prints, graphics, and surface directions on the garment preview.'
+    },
+    {
+      title: 'Review the 3D mockup',
+      text: 'Rotate the model, check scale and placement, and compare the design against the garment shape before production.'
+    },
+    {
+      title: 'Export a clean render',
+      text: 'Download a high-resolution transparent WebP render for ecommerce pages, launch decks, portfolios, and approvals.'
+    }
+  ];
+  const useCases = [
+    {
+      title: 'Ecommerce product pages',
+      text: 'Create consistent apparel mockup images before a photoshoot or physical sample is ready.'
+    },
+    {
+      title: 'Print-on-demand previews',
+      text: 'Preview artwork placement on realistic 3D clothing models for shirts, hoodies, tops, and accessories.'
+    },
+    {
+      title: 'Fashion design review',
+      text: 'Share clear 3D garment visuals with clients, merch teams, pattern makers, and internal stakeholders.'
+    }
+  ];
+  const faq = [
+    {
+      question: 'What is ClothingDesign?',
+      answer: 'ClothingDesign is a browser-based Design3D workspace for customizing 3D clothing models, previewing apparel artwork, and exporting high-resolution mockup renders.'
+    },
+    {
+      question: 'Do I need CLO 3D or Marvelous Designer to use the 3D models?',
+      answer: 'No. The Design3D workflow runs in the browser. CLO 3D and Marvelous Designer patterns are available as supporting resources for teams that also work in desktop garment software.'
+    },
+    {
+      question: 'Which garment models are available?',
+      answer: 'The library includes apparel and accessory categories such as T-shirts, shirts, pants, jackets, hoodies, dresses, coats, hats, bags, skirts, and more.'
+    },
+    {
+      question: 'Can I use the exported render on product pages?',
+      answer: 'Yes. The render workflow is built for ecommerce previews, product detail pages, portfolio images, client approvals, and campaign planning.'
+    }
+  ];
+  const metaDescription = 'Create apparel mockups online with Design3D clothing models. Customize garments, preview artwork in 3D, browse sewing patterns, and export high-resolution transparent renders.';
+  const structuredData = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'ClothingDesign',
+      url: pageUrl
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'ClothingDesign',
+      url: pageUrl,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${toAbsoluteUrl(req, '/design-3d')}?q={search_term_string}`,
+        'query-input': 'required name=search_term_string'
+      }
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: '3D Clothing Design and Apparel Mockup Generator',
+      description: metaDescription,
+      url: pageUrl,
+      mainEntity: {
+        '@type': 'SoftwareApplication',
+        name: 'ClothingDesign Design3D',
+        applicationCategory: 'DesignApplication',
+        operatingSystem: 'Web browser',
+        description: 'Browser-based 3D apparel mockup generator for customizing clothing models and exporting transparent product renders.'
+      }
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Featured 3D clothing models',
+      itemListElement: featuredModels.map((model, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: model.name,
+        url: toAbsoluteUrl(req, `/3d-models/${model.category_slug || model.category}/${model.slug}`)
+      }))
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map(item => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer
+        }
+      }))
+    }
+  ];
+
+  return {
+    metaDescription,
+    structuredData,
+    heroImages,
+    stats,
+    workflow,
+    useCases,
+    faq,
+    featuredModels,
+    featuredCategories
+  };
+}
+
 async function findDesign3dCategoryForPattern(pattern) {
   const categoryName = pattern?.category || '';
   const categorySlug = pattern?.category_slug || '';
@@ -543,11 +682,42 @@ router.get('/api/texture-svg', async (req, res) => {
 });
 
 // Home page
-router.get('/', (req, res) => {
-  res.render('index', { 
-    title: req.t('home.title'),
-    page: 'home'
-  });
+router.get('/', async (req, res) => {
+  try {
+    await ensureModelCategoryTable();
+    const models = await db.all(`
+      ${getModelCategorySelect()}
+      WHERE m.status = ?
+      ${getModelCategoryGroupBy()}
+      ORDER BY m.updated_at DESC, m.created_at DESC
+      LIMIT 6
+    `, ['active']);
+    const categories = await db.all(
+      'SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC',
+      ['3d-models', 'active']
+    );
+    const modelSummary = await db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']);
+    const patternSummary = await db.get('SELECT COUNT(*) as count FROM patterns WHERE status = ?', ['active']);
+    const homeContent = buildHomeContent(req, models || [], categories || [], patternSummary?.count || 0, modelSummary?.count || 0);
+
+    res.render('index', {
+      title: req.t('home.title'),
+      metaDescription: homeContent.metaDescription,
+      structuredData: homeContent.structuredData,
+      page: 'home',
+      homeContent
+    });
+  } catch (err) {
+    console.error('Error loading home page content:', err);
+    const homeContent = buildHomeContent(req);
+    res.render('index', {
+      title: req.t('home.title'),
+      metaDescription: homeContent.metaDescription,
+      structuredData: homeContent.structuredData,
+      page: 'home',
+      homeContent
+    });
+  }
 });
 
 // Design 3D
