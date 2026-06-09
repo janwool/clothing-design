@@ -36,6 +36,8 @@ for (const filePath of walk(localesDir, file => file.endsWith('.json'))) {
 const publicAssets = {};
 const publicAssetEntries = [
   { route: '/favicon.ico', file: path.join(rootDir, 'public', 'favicon.ico'), contentType: 'image/x-icon' },
+  { route: '/robots.txt', file: path.join(rootDir, 'public', 'robots.txt'), contentType: 'text/plain; charset=utf-8' },
+  { route: '/sitemap.xml', file: path.join(rootDir, 'public', 'sitemap.xml'), contentType: 'application/xml; charset=utf-8' },
   { route: '/images/icon.png', file: path.join(rootDir, 'public', 'images', 'icon.png'), contentType: 'image/png' }
 ];
 
