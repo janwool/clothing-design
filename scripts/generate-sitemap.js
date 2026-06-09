@@ -92,7 +92,6 @@ async function getPatterns() {
 function categoryPath(category) {
   const prefixes = {
     '3d-models': '/3d-models',
-    '2d-templates': '/2d-templates',
     patterns: '/patterns',
     gallery: '/gallery',
     tools: '/tools'
@@ -128,7 +127,6 @@ async function main() {
   [
     '/',
     '/design-3d',
-    '/design-2d',
     '/patterns',
     '/gallery',
     '/tools',

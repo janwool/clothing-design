@@ -581,12 +581,9 @@ router.get('/design-3d', async (req, res) => {
   }
 });
 
-// Design 2D
+// Hidden legacy Design 2D page
 router.get('/design-2d', (req, res) => {
-  res.render('design-2d', { 
-    title: req.t('design2d.title'),
-    page: 'design-2d'
-  });
+  res.status(404).render('404', { title: 'Not Found', page: '' });
 });
 
 // Sew Patterns
@@ -737,32 +734,9 @@ router.get('/3d-models/:slug', async (req, res) => {
   }
 });
 
-// 2D Templates Category Route
+// Hidden legacy 2D templates category route
 router.get('/2d-templates/:slug', async (req, res) => {
-  try {
-    const category = await db.get('SELECT * FROM categories WHERE slug = ? AND resource_type = ? AND status = ?', 
-      [req.params.slug, '2d-templates', 'active']
-    );
-    
-    if (!category) {
-      return res.status(404).render('404', { title: 'Not Found', page: '' });
-    }
-    
-    const items = await db.all('SELECT * FROM models_2d WHERE category = ? AND status = ? ORDER BY created_at DESC',
-      [category.name, 'active']
-    );
-    
-    res.render('category-landing', {
-      title: category.meta_title || category.name,
-      page: 'design-2d',
-      category: category,
-      items: items || [],
-      resourceType: '2d-templates',
-      resourceTypeLabel: '2D Templates'
-    });
-  } catch (err) {
-    res.status(500).render('404', { title: 'Error', page: '' });
-  }
+  res.status(404).render('404', { title: 'Not Found', page: '' });
 });
 
 // Patterns Category Route

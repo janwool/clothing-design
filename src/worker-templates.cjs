@@ -2009,7 +2009,7 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/design-3d\" class=\"footer-link\">3D Models</a>\n          <a href=\"/design-2d\" class=\"footer-link\">2D Templates</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/tools/free-patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/tools/free-templates\" class=\"footer-link\">Free Templates</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/design-3d\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/tools/free-patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/tools/free-templates\" class=\"footer-link\">Free Templates</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=overlay-fix-1\"></script>\n</body>\n</html>\n")
   return __output;
@@ -2254,10 +2254,6 @@ title = __locals.title,
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          ")
     ; __append(escapeFn( t('nav.design3d') ))
-    ; __append("\n        </a>\n        <a href=\"/design-2d\" class=\"nav-link ")
-    ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-2d' ? 'active' : '' ))
-    ; __append("\">\n          ")
-    ; __append(escapeFn( t('nav.design2d') ))
     ; __append("\n        </a>\n        <a href=\"/patterns\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'patterns' ? 'active' : '' ))
     ; __append("\">\n          ")
@@ -2336,8 +2332,6 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" aria-label=\"Menu\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\">\n      <a href=\"/design-3d\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.design3d') ))
-    ; __append("</a>\n      <a href=\"/design-2d\" class=\"mobile-link\">")
-    ; __append(escapeFn( t('nav.design2d') ))
     ; __append("</a>\n      <a href=\"/patterns\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.patterns') ))
     ; __append("</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
