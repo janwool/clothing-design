@@ -18,13 +18,16 @@
         <a href="/tools" class="btn btn-secondary btn-large">Browse All Free Tools</a>
       </div>
     </div>
-    <div class="tool-detail-panel" aria-label="Keyword plan">
-      <small>Primary keyword</small>
-      <strong><%= toolPage.primaryKeyword %></strong>
-      <div class="tool-keyword-list">
-        <% toolPage.keywords.forEach(function(keyword) { %>
-          <span><%= keyword %></span>
-        <% }); %>
+    <div class="tool-detail-visual">
+      <img src="<%= toolPage.image %>" alt="<%= toolPage.title %> preview image">
+      <div class="tool-detail-panel" aria-label="Keyword plan">
+        <small>Primary keyword</small>
+        <strong><%= toolPage.primaryKeyword %></strong>
+        <div class="tool-keyword-list">
+          <% toolPage.keywords.forEach(function(keyword) { %>
+            <span><%= keyword %></span>
+          <% }); %>
+        </div>
       </div>
     </div>
   </div>

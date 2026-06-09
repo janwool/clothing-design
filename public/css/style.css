@@ -2119,12 +2119,25 @@ img {
   color: var(--color-secondary);
 }
 
+.tool-detail-visual {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.tool-detail-visual img {
+  width: 100%;
+  aspect-ratio: 1200 / 630;
+  border: 1px solid rgba(17, 17, 17, 0.12);
+  border-radius: var(--radius-lg);
+  object-fit: cover;
+  box-shadow: 0 20px 60px rgba(17, 17, 17, 0.08);
+}
+
 .tool-detail-panel {
-  padding: var(--spacing-xl);
+  padding: var(--spacing-lg);
   border: 1px solid rgba(17, 17, 17, 0.12);
   border-radius: var(--radius-lg);
   background-color: rgba(255, 255, 255, 0.72);
-  box-shadow: 0 20px 60px rgba(17, 17, 17, 0.08);
 }
 
 .tool-detail-panel small {

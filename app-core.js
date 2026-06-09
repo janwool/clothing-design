@@ -332,13 +332,16 @@ app.use((req, res, next) => {
 
 if (isWorkerRuntime) {
   const workerAssets = require('./src/worker-assets.cjs');
-  app.get(['/favicon.ico', '/images/icon.png'], (req, res, next) => {
-    const asset = workerAssets.publicAssets && workerAssets.publicAssets[req.path];
-    if (!asset) return next();
-    res.set('Content-Type', asset.contentType);
-    res.set('Cache-Control', 'public, max-age=31536000, immutable');
-    res.send(Buffer.from(asset.base64, 'base64'));
-  });
+  const publicAssetRoutes = Object.keys(workerAssets.publicAssets || {});
+  if (publicAssetRoutes.length > 0) {
+    app.get(publicAssetRoutes, (req, res, next) => {
+      const asset = workerAssets.publicAssets && workerAssets.publicAssets[req.path];
+      if (!asset) return next();
+      res.set('Content-Type', asset.contentType);
+      res.set('Cache-Control', 'public, max-age=31536000, immutable');
+      res.send(Buffer.from(asset.base64, 'base64'));
+    });
+  }
 }
 
 if (!isWorkerRuntime) {

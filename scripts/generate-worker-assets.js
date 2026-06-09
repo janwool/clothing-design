@@ -34,10 +34,21 @@ for (const filePath of walk(localesDir, file => file.endsWith('.json'))) {
 }
 
 const publicAssets = {};
-[
+const publicAssetEntries = [
   { route: '/favicon.ico', file: path.join(rootDir, 'public', 'favicon.ico'), contentType: 'image/x-icon' },
   { route: '/images/icon.png', file: path.join(rootDir, 'public', 'images', 'icon.png'), contentType: 'image/png' }
-].forEach(asset => {
+];
+
+const toolImagesDir = path.join(rootDir, 'public', 'images', 'tools');
+for (const filePath of walk(toolImagesDir, file => file.endsWith('.webp'))) {
+  publicAssetEntries.push({
+    route: `/images/tools/${path.basename(filePath)}`,
+    file: filePath,
+    contentType: 'image/webp'
+  });
+}
+
+publicAssetEntries.forEach(asset => {
   if (fs.existsSync(asset.file)) {
     publicAssets[asset.route] = {
       contentType: asset.contentType,

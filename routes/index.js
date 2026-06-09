@@ -571,11 +571,12 @@ const TOOL_PAGE_CONTENT = {
 function getToolPage(slug) {
   const page = TOOL_PAGE_CONTENT[slug];
   if (!page) return null;
+  const image = `/images/tools/${slug}.webp`;
   const related = Object.entries(TOOL_PAGE_CONTENT)
     .filter(([key]) => key !== slug)
     .slice(0, 3)
     .map(([key, value]) => ({ slug: key, title: value.title, primaryKeyword: value.primaryKeyword }));
-  return { slug, ...page, related };
+  return { slug, image, ...page, related };
 }
 
 function buildToolStructuredData(req, toolPage) {
@@ -586,6 +587,7 @@ function buildToolStructuredData(req, toolPage) {
       name: toolPage.title,
       description: toolPage.subtitle,
       path,
+      image: toolPage.image,
       breadcrumbs: [
         { name: 'Home', url: '/' },
         { name: 'Tools', url: '/tools' },
@@ -600,7 +602,8 @@ function buildToolStructuredData(req, toolPage) {
           '@type': 'Offer',
           price: '0',
           priceCurrency: 'USD'
-        }
+        },
+        image: firstImage(req, [toolPage.image])
       }
     }),
     {
