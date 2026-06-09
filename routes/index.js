@@ -370,105 +370,145 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
 const TOOL_PAGE_CONTENT = {
   't-shirt-designer': {
     title: 'Free T-Shirt Designer Online',
-    eyebrow: 'Free apparel design tool',
-    subtitle: 'Create a T-shirt concept online, choose a 3D shirt model, preview artwork placement, and export a clean apparel mockup without paying for design software.',
-    intent: 'People searching this page usually want a fast custom T-shirt maker with text, graphics, preview images, and a simple download path.',
+    eyebrow: 'Free custom shirt mockup tool',
+    subtitle: 'Design custom T-shirt concepts in your browser, preview artwork on a realistic garment, and export clean visuals for product pages, print-on-demand listings, and brand approvals.',
+    intent: 'Build a polished T-shirt mockup before you order samples or open heavy design software. Start from a garment model, test logo scale and color direction, then save a product-ready preview.',
     primaryKeyword: 'free t-shirt designer online',
     keywords: ['custom t-shirt design tool', 't-shirt mockup generator', 'design your own t-shirt free', 'online shirt designer'],
     competitorInsights: [
-      'Top pages lead with a free editor, upload artwork, add text, and preview the shirt quickly.',
-      'Most competitors push print ordering or paid mockup downloads after the design step.',
-      'Search results reward pages that show examples, supported workflows, and clear export expectations.'
+      'Create front-facing shirt visuals for product validation, launch pages, and quick customer feedback.',
+      'Preview print placement and color contrast on a garment shape instead of judging artwork on a blank canvas.',
+      'Use free mockup exports when you need clean apparel images before photography or production.'
     ],
-    freePositioning: 'Our angle is a free T-shirt design workflow focused on mockup creation first: open a 3D T-shirt model, test artwork placement, and export review-ready visuals.',
+    freePositioning: 'ClothingDesign keeps the T-shirt mockup step free, so you can test designs, compare colorways, and prepare review images without paying for a mockup subscription.',
     steps: [
-      'Choose a T-shirt or shirt model from the Design3D library.',
-      'Add your graphic direction, text idea, colorway, or logo placement.',
-      'Preview the design on a realistic garment shape instead of a flat blank canvas.',
-      'Download the render for product planning, store drafts, or client approval.'
+      'Choose a T-shirt model that matches your fit and product direction.',
+      'Add your logo, print idea, text layout, or color direction.',
+      'Check placement, scale, and contrast on the garment preview.',
+      'Download the mockup render for store drafts, client review, or campaign planning.'
     ],
     useCases: ['Print-on-demand previews', 'Brand drop planning', 'Team merch concepts'],
+    useCaseDetails: [
+      'Prepare a product image before creating a print-on-demand listing.',
+      'Compare graphic directions for a capsule collection or merch drop.',
+      'Share a clean T-shirt concept with a team, client, club, or event organizer.'
+    ],
+    faq: [
+      { question: 'Can I design a T-shirt online for free?', answer: 'Yes. You can start from a T-shirt model, preview artwork placement, and export a mockup image without buying a paid design tool.' },
+      { question: 'Can I use the mockup for a product listing?', answer: 'Yes. The exported visual is useful for draft ecommerce pages, print-on-demand planning, campaign previews, and internal approvals.' },
+      { question: 'Do I need Photoshop or 3D software?', answer: 'No. The workflow is browser-based, so you can create a visual preview without editing a PSD file or setting up a desktop 3D scene.' }
+    ],
     cta: { label: 'Start with T-Shirt Models', href: '/3d-models/t-shirt-mockup' }
   },
   'hoodie-designer': {
     title: 'Free Hoodie Designer Online',
-    eyebrow: 'Free hoodie mockup workflow',
-    subtitle: 'Design hoodie concepts online with 3D garment previews, artwork placement ideas, and export-ready mockup images for ecommerce or team review.',
-    intent: 'Searchers want a hoodie maker that can preview front graphics, colorways, and brand concepts before printing.',
+    eyebrow: 'Free hoodie mockup maker',
+    subtitle: 'Create custom hoodie mockups online, test artwork placement on a structured garment, and download presentation-ready visuals for streetwear drops, team apparel, and ecommerce.',
+    intent: 'Turn a hoodie idea into a realistic preview without waiting for a sample. Use the model to judge front graphics, sleeve details, colorways, and brand presentation before production.',
     primaryKeyword: 'free hoodie designer online',
     keywords: ['custom hoodie maker', 'hoodie mockup generator', 'design your own hoodie', 'online hoodie design tool'],
     competitorInsights: [
-      'Leading hoodie pages emphasize upload, text, product colors, and print ordering.',
-      'Many tools show flat product mockups, while 3D garment context is less common.',
-      'Pages that explain print placement and product preview use cases answer the search intent better.'
+      'Build realistic hoodie previews for oversized fits, streetwear concepts, team merch, and product launches.',
+      'Review artwork scale across a bulkier garment where print size and placement are harder to judge.',
+      'Export visuals for early sales pages, social posts, buyer decks, or internal line reviews.'
     ],
-    freePositioning: 'Our page positions hoodie design as a free 3D mockup step before production, useful even if the user is not ready to order prints.',
+    freePositioning: 'Use ClothingDesign as a free hoodie mockup step before you commit to print files, product photography, or a paid mockup library.',
     steps: [
-      'Open a hoodie model or a related outerwear category.',
-      'Choose base color and decide front, back, or sleeve artwork placement.',
-      'Review proportions on a 3D garment preview.',
-      'Export a transparent mockup render for launch decks or product tests.'
+      'Open a hoodie or outerwear model from the Design3D library.',
+      'Choose the base color and plan front, back, chest, or sleeve artwork.',
+      'Review fit, print scale, and overall balance on the garment preview.',
+      'Export a clean mockup render for product tests, approvals, or launch content.'
     ],
     useCases: ['Streetwear drops', 'School and team apparel', 'Client approval mockups'],
+    useCaseDetails: [
+      'Mock up hoodie graphics before producing a streetwear sample.',
+      'Create fast visuals for school, club, company, or event merch.',
+      'Send a realistic preview to clients before final artwork lockup.'
+    ],
+    faq: [
+      { question: 'Is this hoodie designer free?', answer: 'Yes. You can use the hoodie mockup workflow to preview concepts and create review visuals for free.' },
+      { question: 'Can I preview sleeve or back artwork?', answer: 'Use the 3D garment view to plan artwork zones and check how placement works across the hoodie shape.' },
+      { question: 'Who is this best for?', answer: 'It is useful for streetwear brands, print-on-demand sellers, schools, teams, agencies, and anyone validating hoodie designs before production.' }
+    ],
     cta: { label: 'Browse Hoodie Models', href: '/3d-models/hoodie-mockup' }
   },
   'dress-designer': {
     title: 'Free Dress Design Tool Online',
-    eyebrow: 'Free fashion preview tool',
-    subtitle: 'Plan dress concepts online with garment model references, silhouette-focused mockups, and free apparel design resources for fashion presentations.',
-    intent: 'Users are looking for a simple dress design maker, dress sketch alternative, or fashion preview workflow that does not require CAD experience.',
+    eyebrow: 'Free fashion concept preview',
+    subtitle: 'Plan dress concepts online with silhouette-focused references, garment mockups, and free resources for fashion presentations, boutique planning, and digital sample review.',
+    intent: 'Move a dress idea from sketch-level planning into a visual preview. Use models and pattern resources to explore silhouette, length, fabric direction, and presentation before sample making.',
     primaryKeyword: 'free dress design tool online',
     keywords: ['dress mockup maker', 'design your own dress online', 'fashion dress design tool', 'dress template creator'],
     competitorInsights: [
-      'Search results often mix consumer dress customizers with fashion sketch tools.',
-      'Competitors highlight templates, color changes, and easy beginner workflows.',
-      'There is room for a page that connects dress design ideas to 3D apparel mockups and sewing pattern resources.'
+      'Explore dress silhouettes and presentation angles before investing in sampling.',
+      'Use visual mockups to communicate color, proportion, length, and surface detail.',
+      'Connect early concept work with sewing patterns and 3D garment previews when the design needs more structure.'
     ],
-    freePositioning: 'Our free approach helps users move from silhouette idea to 3D/apparel preview resources without forcing a paid fashion CAD workflow.',
+    freePositioning: 'ClothingDesign gives dress designers a free starting point for visual planning, especially when a flat sketch is not enough and a full CAD workflow is too much.',
     steps: [
-      'Start from dress models or dress sewing pattern resources.',
-      'Define the silhouette, length, color direction, and surface detail.',
-      'Use related 3D models or pattern downloads for visual review.',
-      'Prepare a mockup image or production reference for the next design step.'
+      'Start from a dress model, template, or sewing pattern reference.',
+      'Define silhouette, length, color, fabric direction, and key details.',
+      'Use the preview to check proportion and presentation quality.',
+      'Export a visual reference for a moodboard, line review, or sample brief.'
     ],
     useCases: ['Fashion concept boards', 'Boutique product planning', 'Pattern review'],
+    useCaseDetails: [
+      'Create visuals for a fashion concept board or early collection review.',
+      'Plan boutique product ideas before commissioning samples.',
+      'Pair dress patterns with mockup visuals to explain fit and construction direction.'
+    ],
+    faq: [
+      { question: 'Can I design a dress online without CAD?', answer: 'Yes. This page gives you a free visual planning workflow that can support dress concepts before you move into CAD, sampling, or pattern work.' },
+      { question: 'Is this for fashion designers or shoppers?', answer: 'It is built for apparel creators, boutique teams, students, and designers who need mockups and planning references.' },
+      { question: 'Can I use sewing patterns with this workflow?', answer: 'Yes. Pattern resources can help you connect a dress concept with construction references and digital garment review.' }
+    ],
     cta: { label: 'Browse Dress Models', href: '/3d-models/dress' }
   },
   '3d-mockup': {
     title: 'Free 3D Clothing Mockup Generator',
-    eyebrow: 'Free 3D apparel preview',
-    subtitle: 'Generate 3D clothing mockup previews from browser-ready garment models and export high-resolution transparent renders for apparel content.',
-    intent: 'Searchers want a free 3D mockup generator for clothing that feels faster than Photoshop and more realistic than flat PSD templates.',
+    eyebrow: 'Free 3D apparel mockups',
+    subtitle: 'Generate 3D clothing mockups from browser-ready garment models and export high-resolution transparent renders for ecommerce, launch decks, and design approvals.',
+    intent: 'Create apparel visuals that feel more realistic than flat templates and faster than building a scene from scratch. Choose a model, preview the garment, and export a clean render.',
     primaryKeyword: 'free 3D clothing mockup generator',
     keywords: ['3D apparel mockup generator', 'clothing mockup generator free', 'online 3D product mockup', 'transparent apparel render'],
     competitorInsights: [
-      'Competitors often lead with device/product mockups and include apparel as one category.',
-      'Many mockup generators hide premium exports behind accounts or subscriptions.',
-      'The strongest pages show output examples, file/export expectations, and a short workflow.'
+      'Create apparel-first mockups instead of searching through generic product mockup libraries.',
+      'Use transparent renders for product pages, landing pages, ads, pitch decks, and collection boards.',
+      'Preview garment shape and artwork placement in 3D before ordering samples or scheduling photography.'
     ],
-    freePositioning: 'Our focus is free apparel-first 3D mockups: garment models, realistic preview angles, and clean render exports for product teams.',
+    freePositioning: 'ClothingDesign focuses on free apparel-first 3D mockups, giving product teams and creators a practical way to create garment visuals without paid mockup packs.',
     steps: [
       'Pick a 3D clothing model from the library.',
       'Customize color, artwork direction, and viewing angle.',
-      'Use the model preview to check shape and placement.',
+      'Check garment shape, print scale, and visual balance.',
       'Export a transparent render for ecommerce, presentations, or approvals.'
     ],
     useCases: ['Ecommerce images', 'Product launch decks', 'Portfolio mockups'],
+    useCaseDetails: [
+      'Prepare clean product images before a photoshoot is ready.',
+      'Show a new apparel concept in a buyer deck or launch presentation.',
+      'Build a portfolio mockup that makes the garment shape easy to understand.'
+    ],
+    faq: [
+      { question: 'Can I make 3D clothing mockups for free?', answer: 'Yes. You can use Design3D garment models to create and export mockup visuals without buying a PSD mockup pack.' },
+      { question: 'What makes a 3D mockup better than a flat template?', answer: 'A 3D mockup helps you judge garment shape, artwork scale, folds, angle, and presentation more clearly than a flat front-view template.' },
+      { question: 'Can I export transparent renders?', answer: 'Yes. The workflow is designed for clean render output that can be placed on ecommerce pages, decks, and marketing layouts.' }
+    ],
     cta: { label: 'Open 3D Model Library', href: '/design-3d' }
   },
   '2d-mockup': {
     title: 'Free 2D Clothing Mockup Generator',
-    eyebrow: 'Free flat apparel preview',
-    subtitle: 'Create quick 2D clothing mockup plans using apparel templates, pattern references, and free visual resources before moving into 3D review.',
-    intent: 'Users want a fast flat clothing mockup or apparel template workflow for early design communication.',
+    eyebrow: 'Free flat apparel mockups',
+    subtitle: 'Create quick 2D clothing mockup plans with apparel templates, pattern references, and free visual resources before moving into 3D review.',
+    intent: 'Use a flat mockup workflow when you need to communicate artwork placement, garment notes, and early layout ideas quickly.',
     primaryKeyword: 'free 2D clothing mockup generator',
     keywords: ['2D apparel mockup', 'free clothing mockup template', 'flat garment mockup', 'shirt template mockup'],
     competitorInsights: [
-      'Search results commonly feature PSD, vector, and flat-lay template downloads.',
-      'Users expect fast visual output and clear download terms.',
-      'A useful page should connect flat mockups to patterns and 3D previews when the design needs more realism.'
+      'Plan front, back, sleeve, and label placement before creating a more realistic render.',
+      'Use flat views for production notes, line sheets, vendor communication, and simple approvals.',
+      'Move from 2D planning to 3D mockups when shape, drape, or product photography matters.'
     ],
-    freePositioning: 'Our page uses free resources as the starting point and points users toward patterns or Design3D when a flat mockup is not enough.',
+    freePositioning: 'ClothingDesign keeps the early flat mockup stage free and connects it to patterns and 3D models when your design needs more realism.',
     steps: [
       'Choose a garment type and collect a flat reference or pattern.',
       'Plan text, artwork, seams, and placement notes.',
@@ -476,21 +516,31 @@ const TOOL_PAGE_CONTENT = {
       'Move into 3D preview when you need realistic shape and angles.'
     ],
     useCases: ['Early artwork placement', 'Factory communication', 'Line sheet drafts'],
+    useCaseDetails: [
+      'Lay out artwork zones before preparing print files.',
+      'Share clear garment notes with factories, suppliers, or production partners.',
+      'Organize collection ideas in a simple line sheet format.'
+    ],
+    faq: [
+      { question: 'When should I use a 2D clothing mockup?', answer: 'Use 2D mockups for fast planning, artwork placement, vendor notes, and early approvals before you need a realistic product render.' },
+      { question: 'Can I move from 2D to 3D later?', answer: 'Yes. Start with flat planning, then open a Design3D model when you need garment shape, angle, and presentation quality.' },
+      { question: 'Is this useful for production communication?', answer: 'Yes. Flat mockups are often helpful for showing placement notes, basic construction ideas, and collection organization.' }
+    ],
     cta: { label: 'Browse Free Patterns', href: '/patterns' }
   },
   'free-patterns': {
     title: 'Free Sewing Patterns for CLO 3D and Marvelous Designer',
-    eyebrow: 'Free apparel pattern downloads',
-    subtitle: 'Browse free sewing pattern resources for digital garment development, CLO 3D review, Marvelous Designer workflows, and apparel mockup planning.',
-    intent: 'Searchers want downloadable sewing patterns, file format clarity, preview images, and confidence that the resources are usable.',
+    eyebrow: 'Free digital garment patterns',
+    subtitle: 'Browse free sewing pattern resources for CLO 3D, Marvelous Designer, digital garment practice, and apparel mockup planning.',
+    intent: 'Find usable pattern resources with clear next steps. Download a garment file, open it in your 3D fashion workflow, and use it for practice, fit review, or mockup creation.',
     primaryKeyword: 'free sewing patterns CLO3D Marvelous Designer',
     keywords: ['free ZPRJ pattern download', 'CLO 3D sewing patterns free', 'Marvelous Designer patterns free', 'digital garment patterns'],
     competitorInsights: [
-      'Competitor pages win when they show previews, file formats, and direct download actions.',
-      'Users care about compatibility with CLO 3D and Marvelous Designer.',
-      'Helpful pages explain how to open the file after download, not just list files.'
+      'Download patterns for garment simulation, practice projects, portfolio building, and digital sample review.',
+      'Use pattern previews and categories to choose the right garment before opening your 3D software.',
+      'Pair patterns with Design3D mockups when you need a clearer visual presentation.'
     ],
-    freePositioning: 'Our page leads with free pattern discovery and connects each download to clear CLO 3D, Marvelous Designer, and Design3D next steps.',
+    freePositioning: 'ClothingDesign makes free pattern discovery practical by connecting downloads with CLO 3D, Marvelous Designer, and apparel mockup workflows.',
     steps: [
       'Browse active sewing pattern previews.',
       'Open a pattern detail page to confirm category and file format.',
@@ -498,21 +548,31 @@ const TOOL_PAGE_CONTENT = {
       'Pair it with related Design3D models for apparel mockup visuals.'
     ],
     useCases: ['Digital garment practice', 'Pattern review', '3D apparel mockup planning'],
+    useCaseDetails: [
+      'Practice garment simulation with files you can inspect and modify.',
+      'Review pattern construction before creating a digital sample.',
+      'Use a pattern as the foundation for a more complete apparel mockup workflow.'
+    ],
+    faq: [
+      { question: 'Are these sewing patterns free?', answer: 'Yes. The pattern library is designed around free resources for digital garment practice and apparel design workflows.' },
+      { question: 'Can I use the files in CLO 3D or Marvelous Designer?', answer: 'The pattern pages clarify file format and intended workflow so you can choose resources that fit CLO 3D, Marvelous Designer, or related garment software.' },
+      { question: 'What should I do after downloading a pattern?', answer: 'Open the file in your 3D garment tool, check the 2D pattern and sewing relationships, then simulate or pair it with a Design3D model for presentation.' }
+    ],
     cta: { label: 'Browse Free Sewing Patterns', href: '/patterns' }
   },
   'free-templates': {
     title: 'Free Clothing Templates for Apparel Mockups',
-    eyebrow: 'Free template resources',
-    subtitle: 'Find free clothing template ideas for shirts, hoodies, dresses, and apparel mockups, then move into 3D previews when you need realistic presentation.',
-    intent: 'Users want free apparel templates, preferably with clear garment categories and download or mockup next steps.',
+    eyebrow: 'Free apparel template resources',
+    subtitle: 'Find free clothing template ideas for shirts, hoodies, dresses, and apparel mockups, then move into 3D previews when you need realistic product presentation.',
+    intent: 'Use templates to organize garment ideas quickly, then upgrade the strongest concepts into 3D mockups, pattern references, or product-ready visuals.',
     primaryKeyword: 'free clothing templates',
     keywords: ['free apparel templates', 'free t-shirt template', 'clothing mockup template free', 'fashion design templates'],
     competitorInsights: [
-      'Template competitors emphasize PSD/vector file types, categories, and free download terms.',
-      'Many pages are asset libraries rather than guided workflows.',
-      'A stronger page can help users choose when to use a flat template, pattern, or 3D model.'
+      'Plan apparel artwork, colorways, and collection structure before committing to production assets.',
+      'Use flat templates for fast briefs, then switch to 3D models when realistic presentation matters.',
+      'Keep templates, sewing patterns, and mockups connected in one free apparel workflow.'
     ],
-    freePositioning: 'Our free template page is a decision hub: start with templates and patterns, then continue into 3D model previews for presentation-ready output.',
+    freePositioning: 'ClothingDesign treats templates as the start of a real apparel workflow, not a dead-end download page.',
     steps: [
       'Pick the apparel category you want to mock up.',
       'Use a flat template or sewing pattern for early planning.',
@@ -520,21 +580,31 @@ const TOOL_PAGE_CONTENT = {
       'Export a final render or keep the template as a production reference.'
     ],
     useCases: ['Design briefs', 'Artwork planning', 'Merch line organization'],
+    useCaseDetails: [
+      'Create a simple visual brief for a new apparel idea.',
+      'Plan print areas, trims, colorways, and garment notes before production.',
+      'Organize multiple merch or collection concepts in a consistent format.'
+    ],
+    faq: [
+      { question: 'What are clothing templates used for?', answer: 'They help you plan garment layouts, artwork placement, colorways, construction notes, and early collection ideas before creating final product visuals.' },
+      { question: 'Are these templates free to start with?', answer: 'Yes. ClothingDesign focuses on free entry points for apparel planning, patterns, and mockups.' },
+      { question: 'Should I use a template or a 3D model?', answer: 'Use templates for quick flat planning. Use a 3D model when you need shape, drape, angle, and presentation-ready renders.' }
+    ],
     cta: { label: 'Explore Pattern Resources', href: '/patterns' }
   },
   'clo3d-guide': {
     title: 'Free CLO 3D Guide for Beginners',
-    eyebrow: 'Free learning guide',
-    subtitle: 'Learn the basic CLO 3D workflow: open garment files, review 2D patterns, simulate fabric, and create apparel visuals for design review.',
-    intent: 'Searchers want a beginner CLO 3D tutorial with practical steps, not a broad fashion theory article.',
+    eyebrow: 'Free digital fashion guide',
+    subtitle: 'Learn the beginner CLO 3D workflow: open garment files, review 2D patterns, simulate fabric, and create apparel visuals for design review.',
+    intent: 'Get a practical starting path for CLO 3D. Learn what to open first, what to inspect in the 2D and 3D windows, and how to turn a garment file into a usable preview.',
     primaryKeyword: 'CLO 3D guide for beginners',
     keywords: ['CLO3D tutorial', 'how to use CLO 3D', 'CLO 3D sewing pattern guide', 'digital fashion design guide'],
     competitorInsights: [
-      'Tutorial pages rank when they break the workflow into small beginner steps.',
-      'Users need help with opening files, pattern windows, simulation, and exporting views.',
-      'Useful guides link to downloadable practice files or garment resources.'
+      'Understand the practical sequence: open a file, inspect patterns, check sewing, simulate, and export.',
+      'Use free practice resources instead of starting from a blank garment file.',
+      'Connect CLO 3D learning with real apparel mockup and digital sample workflows.'
     ],
-    freePositioning: 'Our guide is free and resource-led: learn CLO 3D basics, then use free patterns and 3D model pages to practice.',
+    freePositioning: 'ClothingDesign keeps the CLO 3D learning path resource-led, so beginners can practice with free patterns and connect the result to apparel mockups.',
     steps: [
       'Download a compatible sewing pattern file.',
       'Open the file in CLO 3D and inspect the 2D pattern window.',
@@ -542,21 +612,31 @@ const TOOL_PAGE_CONTENT = {
       'Simulate, refine, and export preview images for review.'
     ],
     useCases: ['Beginner garment simulation', 'Pattern learning', 'Digital sample review'],
+    useCaseDetails: [
+      'Practice the core CLO 3D interface with a real garment file.',
+      'Learn how 2D pattern pieces relate to the simulated garment.',
+      'Create visual references for fit review, sample discussion, or portfolio work.'
+    ],
+    faq: [
+      { question: 'Is CLO 3D beginner friendly?', answer: 'It is learnable, but beginners do best with a focused workflow: open an existing garment, inspect patterns, check sewing, simulate, and export views.' },
+      { question: 'Do I need pattern-making experience?', answer: 'Pattern knowledge helps, but you can start by studying existing pattern files and learning how sewing relationships affect the 3D garment.' },
+      { question: 'Where should I practice?', answer: 'Start with free pattern resources, then use Design3D models and mockups to understand how digital garments become presentation visuals.' }
+    ],
     cta: { label: 'Practice with Free Patterns', href: '/patterns' }
   },
   'md-guide': {
     title: 'Free Marvelous Designer Guide for Beginners',
-    eyebrow: 'Free learning guide',
+    eyebrow: 'Free garment simulation guide',
     subtitle: 'Learn the Marvelous Designer basics for opening garment projects, checking 2D patterns, simulating fit, and preparing apparel visuals.',
-    intent: 'Searchers want a practical Marvelous Designer tutorial that explains what to do first and how to use garment project files.',
+    intent: 'Start Marvelous Designer with a practical garment workflow instead of a blank scene. Open a project, understand the 2D/3D relationship, simulate the garment, and prepare useful preview images.',
     primaryKeyword: 'Marvelous Designer guide for beginners',
     keywords: ['Marvelous Designer tutorial', 'how to use Marvelous Designer', 'Marvelous Designer sewing pattern', '3D clothing simulation guide'],
     competitorInsights: [
-      'Ranking tutorials focus on beginner workflows and common interface tasks.',
-      'Users want direct advice on opening project files, sewing, simulation, and fit review.',
-      'A good guide should include downloadable resources or next steps for practice.'
+      'Learn the core loop: pattern pieces, sewing lines, arrangement, simulation, fit review, and export.',
+      'Use downloadable garment resources so the first session produces something visible.',
+      'Turn simulation practice into mockups, portfolio visuals, and design review images.'
     ],
-    freePositioning: 'Our page keeps the learning path free: use downloadable pattern resources, practice basic simulation, and connect outputs to apparel mockups.',
+    freePositioning: 'ClothingDesign keeps Marvelous Designer practice practical and free by pointing beginners toward patterns, garment projects, and mockup next steps.',
     steps: [
       'Download a garment project or sewing pattern file.',
       'Open it in Marvelous Designer and review the 2D/3D workspace.',
@@ -564,6 +644,16 @@ const TOOL_PAGE_CONTENT = {
       'Run simulation, adjust fit, and save a clean project version.'
     ],
     useCases: ['Beginner MD practice', 'Fit and fabric simulation', 'Garment presentation prep'],
+    useCaseDetails: [
+      'Learn Marvelous Designer with an existing file instead of starting from scratch.',
+      'Practice fit and fabric simulation for digital garment review.',
+      'Prepare apparel visuals for portfolios, presentations, or production conversations.'
+    ],
+    faq: [
+      { question: 'Can beginners learn Marvelous Designer with free resources?', answer: 'Yes. Existing garment files and sewing patterns make it easier to learn the interface, simulation, and export workflow.' },
+      { question: 'What should I learn first?', answer: 'Start with the relationship between 2D pattern pieces and the 3D garment, then practice sewing, arrangement, fabric settings, simulation, and fit review.' },
+      { question: 'Can I use the results as mockups?', answer: 'Yes. Once the garment is simulated cleanly, export preview images or connect the workflow with Design3D mockups for presentation.' }
+    ],
     cta: { label: 'Download Practice Patterns', href: '/patterns' }
   }
 };
@@ -620,24 +710,14 @@ function buildToolStructuredData(req, toolPage) {
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
-      mainEntity: [
-        {
-          '@type': 'Question',
-          name: `Is ${toolPage.title} free?`,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: toolPage.freePositioning
-          }
-        },
-        {
-          '@type': 'Question',
-          name: `What keywords does this ${toolPage.eyebrow.toLowerCase()} target?`,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: [toolPage.primaryKeyword, ...toolPage.keywords].join(', ')
-          }
+      mainEntity: (toolPage.faq || []).map(item => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer
         }
-      ]
+      }))
     }
   ];
 }
