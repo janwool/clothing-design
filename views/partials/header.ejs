@@ -65,10 +65,6 @@
             </div>
           </div>
         </div>
-
-        <a href="/pricing" class="nav-link <%= typeof page !== 'undefined' && page === 'pricing' ? 'active' : '' %>">
-          <%= t('nav.pricing') %>
-        </a>
       </div>
 
       <!-- Right Side -->
@@ -127,7 +123,6 @@
       <a href="/design-3d" class="mobile-link"><%= t('nav.design3d') %></a>
       <a href="/patterns" class="mobile-link"><%= t('nav.patterns') %></a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
-      <a href="/pricing" class="mobile-link"><%= t('nav.pricing') %></a>
       <div class="mobile-divider"></div>
       <% if (user) { %>
         <a href="/dashboard/designs" class="mobile-link"><%= t('nav.myDesigns') %></a>
