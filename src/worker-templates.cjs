@@ -1770,7 +1770,7 @@ title = __locals.title,
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
     ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Start designing</span>\n        <h2>Create your next 3D apparel mockup.</h2>\n        <p>Choose a garment model, customize the surface design, and export a clean render for review or product presentation.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary\">Browse Design3D models</a>\n        <a href=\"/pricing\" class=\"btn btn-secondary\">See plans</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Start designing</span>\n        <h2>Create your next 3D apparel mockup.</h2>\n        <p>Choose a garment model, customize the surface design, and export a clean render for review or product presentation.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary\">Browse Design3D models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

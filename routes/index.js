@@ -61,9 +61,7 @@ function getDefaultLandingContent(name = '3D clothing models') {
       title: 'Open a model and create your next apparel mockup.',
       description: 'Choose a garment above and move straight into the 3D designer.',
       primaryLabel: 'Browse 3D Models',
-      primaryHref: '/design-3d',
-      secondaryLabel: 'See Plans',
-      secondaryHref: '/pricing'
+      primaryHref: '/design-3d'
     }
   };
 }
