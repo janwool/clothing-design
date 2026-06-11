@@ -7,6 +7,9 @@
   <% if (typeof metaDescription !== 'undefined' && metaDescription) { %>
     <meta name="description" content="<%= metaDescription %>">
   <% } %>
+  <% if (typeof metaRobots !== 'undefined' && metaRobots) { %>
+    <meta name="robots" content="<%= metaRobots %>">
+  <% } %>
   <% const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : ''; %>
   <% const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png'); %>
   <% if (headCanonicalUrl) { %>

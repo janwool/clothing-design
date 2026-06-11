@@ -33,6 +33,8 @@ function buildAuthPageData(req, page, title) {
     title,
     page,
     metaDescription: description,
+    metaImage: 'https://cdn.cloz-design.com/site/icon.png',
+    metaRobots: 'noindex,follow',
     structuredData: pageStructuredData(req, {
       type: 'WebPage',
       name: title,

@@ -11,6 +11,7 @@ const templateLocals = [
   'page',
   'error',
   'metaDescription',
+  'metaRobots',
   'metaImage',
   'canonicalUrl',
   'defaultMetaImage',

@@ -151,6 +151,30 @@ function toSlug(value) {
     .replace(/^-+|-+$/g, '');
 }
 
+function compactText(value, maxLength = 160) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (text.length <= maxLength) return text;
+  const clipped = text.slice(0, maxLength - 1);
+  const lastSpace = clipped.lastIndexOf(' ');
+  return `${clipped.slice(0, lastSpace > 80 ? lastSpace : maxLength - 1).trim()}.`;
+}
+
+function buildSeoTitle(base, suffix, maxLength = 68) {
+  const cleanBase = String(base || '').replace(/\s+/g, ' ').trim();
+  const cleanSuffix = String(suffix || '').replace(/\s+/g, ' ').trim();
+  const full = cleanSuffix ? `${cleanBase} | ${cleanSuffix}` : cleanBase;
+  if (full.length <= maxLength) return full;
+  const room = maxLength - cleanSuffix.length - 3;
+  if (room > 24) {
+    const clipped = cleanBase.slice(0, room);
+    const lastSpace = clipped.lastIndexOf(' ');
+    return `${clipped.slice(0, lastSpace > 18 ? lastSpace : room).trim()} | ${cleanSuffix}`;
+  }
+  const clipped = full.slice(0, maxLength);
+  const lastSpace = clipped.lastIndexOf(' ');
+  return clipped.slice(0, lastSpace > 24 ? lastSpace : maxLength).trim();
+}
+
 function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
   const modelCount = Number(modelTotal) || models.length;
   const categoryCount = categories.length;
@@ -757,7 +781,8 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
   const categoryName = pattern.category || 'apparel';
   const design3dCategoryName = design3dCategory?.name || categoryName;
   const design3dHref = design3dCategory?.slug ? `/3d-models/${design3dCategory.slug}` : '/design-3d';
-  const description = `${pattern.name} is a ${fileExt.toUpperCase()} sewing pattern for ${categoryName}. Learn how to open it in CLO 3D and Marvelous Designer, then pair it with ${design3dCategoryName} Design 3D models for apparel mockups.`;
+  const pageTitle = buildSeoTitle(pattern.name, `Free ${format.toUpperCase()} Pattern #${pattern.id}`);
+  const description = compactText(`${pattern.name} #${pattern.id} is a free ${fileExt.toUpperCase()} sewing pattern for ${categoryName}. Open it in CLO 3D or Marvelous Designer and pair it with ${design3dCategoryName} 3D apparel models.`, 158);
   const faqItems = [
     {
       question: `Can I use ${pattern.name} in CLO 3D?`,
@@ -787,7 +812,9 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
     categoryName,
     design3dCategoryName,
     design3dHref,
+    pageTitle,
     metaDescription: description,
+    primaryImage: imageUrl,
     faqItems,
     cloIntro: `Use ${pattern.name} as a CLO 3D project file for ${categoryName} development. Open the project, inspect the pattern layout, then simulate and refine the garment before creating review visuals.`,
     marvelousIntro: `Use ${pattern.name} as a Marvelous Designer project file when you need to review pattern pieces, sewing relationships, fabric behavior, and fit before exporting a production-ready iteration.`,
@@ -901,7 +928,8 @@ function buildModelDetailContent(model, related, req) {
   const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
   const designHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
-  const description = `${model.name} is a browser-ready Design 3D clothing model for ${categoryName} mockups. Learn how to customize it, where to use it, view FAQs, and compare related 3D apparel models.`;
+  const pageTitle = buildSeoTitle(model.name, 'Free 3D Clothing Model');
+  const description = compactText(`${model.name} is a free browser-ready 3D ${categoryName} model for apparel mockups. Customize artwork online and export transparent product renders.`, 158);
   const howToSteps = [
     {
       title: 'Open the 3D model',
@@ -955,6 +983,8 @@ function buildModelDetailContent(model, related, req) {
 
   return {
     metaDescription: description,
+    primaryImage: imageUrl,
+    pageTitle,
     designHref,
     howToSteps,
     applications,
@@ -1252,10 +1282,12 @@ router.get('/patterns', async (req, res) => {
       ['patterns', 'active']
     );
     const description = 'Browse downloadable CLO 3D and Marvelous Designer sewing patterns for apparel development, garment review, and 3D mockup workflows.';
+    const patternImage = firstImage(req, (patterns || []).map(pattern => pattern.image_url));
 
     res.render('patterns', {
       title: req.t('patterns.title'),
       metaDescription: description,
+      metaImage: patternImage,
       structuredData: buildCollectionStructuredData(req, {
         name: 'Sewing Patterns',
         description,
@@ -1278,6 +1310,7 @@ router.get('/patterns', async (req, res) => {
     res.render('patterns', {
       title: req.t('patterns.title'),
       metaDescription: description,
+      metaImage: firstImage(req),
       structuredData: buildCollectionStructuredData(req, {
         name: 'Sewing Patterns',
         description,
@@ -1323,8 +1356,9 @@ router.get('/patterns/item/:id', async (req, res) => {
     const patternDetailContent = buildPatternDetailContent(pattern, design3dCategory, req);
 
     res.render('pattern-detail', {
-      title: pattern.name,
+      title: patternDetailContent.pageTitle,
       metaDescription: patternDetailContent.metaDescription,
+      metaImage: patternDetailContent.primaryImage,
       structuredData: patternDetailContent.structuredData,
       page: 'patterns',
       pattern,
@@ -1344,6 +1378,7 @@ router.get('/gallery', (req, res) => {
   res.render('gallery', { 
     title: req.t('gallery.title'),
     metaDescription: description,
+    metaImage: firstImage(req),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'CollectionPage',
       name: 'Design Gallery',
@@ -1364,6 +1399,7 @@ router.get('/tools', (req, res) => {
   res.render('tools', { 
     title: req.t('tools.title'),
     metaDescription: description,
+    metaImage: firstImage(req, ['/images/tools/3d-mockup.webp']),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'CollectionPage',
       name: 'Design Tools',
@@ -1393,6 +1429,7 @@ router.get('/pricing', (req, res) => {
   res.render('pricing', { 
     title: req.t('pricing.title'),
     metaDescription: description,
+    metaImage: firstImage(req),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'WebPage',
       name: 'ClothingDesign Plans',
@@ -1458,10 +1495,12 @@ router.get('/3d-models/:slug', async (req, res) => {
     const normalizedItems = normalize3dModels(items, category.slug);
     const normalizedAllModels = normalize3dModels(allModels);
     const description = category.meta_description || category.description || `Browse ${category.name} 3D clothing models for apparel mockups and browser-based Design3D workflows.`;
+    const categoryImage = firstImage(req, normalizedItems.map(item => item.image_url));
     
     res.render('category-landing', {
-      title: category.meta_title || category.name,
+      title: buildSeoTitle(category.meta_title || `${category.name} 3D Models`, 'ClothingDesign'),
       metaDescription: description,
+      metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, normalizedItems, '3d-models', '3D Models'),
       page: 'design-3d',
       category: category,
@@ -1497,10 +1536,12 @@ router.get('/patterns/:slug', async (req, res) => {
       [category.name, 'active']
     );
     const description = category.meta_description || category.description || `Browse ${category.name} sewing patterns for CLO 3D, Marvelous Designer, and apparel development workflows.`;
+    const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
     res.render('category-landing', {
-      title: category.meta_title || category.name,
+      title: buildSeoTitle(category.meta_title || `${category.name} Sew Patterns`, 'ClothingDesign'),
       metaDescription: description,
+      metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, items || [], 'patterns', 'Sew Patterns'),
       page: 'patterns',
       category: category,
@@ -1528,10 +1569,12 @@ router.get('/gallery/:slug', async (req, res) => {
       [category.name, 'active']
     );
     const description = category.meta_description || category.description || `Browse ${category.name} apparel design inspiration and clothing mockup examples.`;
+    const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
     res.render('category-landing', {
-      title: category.meta_title || category.name,
+      title: buildSeoTitle(category.meta_title || `${category.name} Gallery`, 'ClothingDesign'),
       metaDescription: description,
+      metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, items || [], 'gallery', 'Gallery'),
       page: 'gallery',
       category: category,
@@ -1549,8 +1592,9 @@ router.get('/tools/:slug', async (req, res) => {
   const toolPage = getToolPage(req.params.slug);
   if (toolPage) {
     return res.render('tool-detail', {
-      title: `${toolPage.title} - ClothingDesign`,
-      metaDescription: toolPage.subtitle,
+      title: buildSeoTitle(toolPage.title, 'ClothingDesign'),
+      metaDescription: compactText(toolPage.subtitle, 160),
+      metaImage: firstImage(req, [toolPage.image]),
       structuredData: buildToolStructuredData(req, toolPage),
       page: 'tools',
       toolPage
@@ -1570,10 +1614,12 @@ router.get('/tools/:slug', async (req, res) => {
       [category.name, 'active']
     );
     const description = category.meta_description || category.description || `Browse ${category.name} clothing design tools and apparel workflow resources.`;
+    const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
     res.render('category-landing', {
-      title: category.meta_title || category.name,
+      title: buildSeoTitle(category.meta_title || `${category.name} Tools`, 'ClothingDesign'),
       metaDescription: description,
+      metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, items || [], 'tools', 'Tools'),
       page: 'tools',
       category: category,
@@ -1603,6 +1649,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
       metaDescription: description,
+      metaImage: firstImage(req, [normalizedModel.image_url]),
       structuredData: buildSimplePageStructuredData(req, {
         type: 'WebPage',
         name: `Design ${normalizedModel.name}`,
@@ -1670,8 +1717,9 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     const modelDetailContent = buildModelDetailContent(normalizedModel, normalizedRelated, req);
 
     res.render('model-detail', {
-      title: model.name,
+      title: modelDetailContent.pageTitle,
       metaDescription: modelDetailContent.metaDescription,
+      metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
       model: normalizedModel,
