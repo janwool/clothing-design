@@ -189,22 +189,22 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
   ];
   const useCases = [
     {
-      title: 'Ecommerce product pages',
-      text: 'Create consistent apparel mockup images before a photoshoot or physical sample is ready.'
+      title: 'Free 3D model downloads',
+      text: 'Find browser-ready clothing models for shirts, hoodies, dresses, coats, pants, accessories, and digital apparel presentations.'
     },
     {
-      title: 'Print-on-demand previews',
-      text: 'Preview artwork placement on realistic 3D clothing models for shirts, hoodies, tops, and accessories.'
+      title: 'CLO 3D and Marvelous Designer workflows',
+      text: 'Use model pages alongside downloadable sewing patterns when you need references for CLO 3D, Marvelous Designer, Blender, or apparel review.'
     },
     {
-      title: 'Fashion design review',
-      text: 'Share clear 3D garment visuals with clients, merch teams, pattern makers, and internal stakeholders.'
+      title: 'Transparent ecommerce renders',
+      text: 'Customize the garment online and export a transparent WebP render for product pages, print-on-demand previews, launch decks, and approvals.'
     }
   ];
   const faq = [
     {
-      question: 'What is ClothingDesign?',
-      answer: 'ClothingDesign is a browser-based Design3D workspace for customizing 3D clothing models, previewing apparel artwork, and exporting high-resolution mockup renders.'
+      question: 'Can I download free 3D clothing models?',
+      answer: 'Yes. ClothingDesign focuses on free Design3D garment resources that can be opened online for mockups, reviewed on detail pages, and used as starting points for apparel presentations.'
     },
     {
       question: 'Do I need CLO 3D or Marvelous Designer to use the 3D models?',
@@ -219,7 +219,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
       answer: 'Yes. The render workflow is built for ecommerce previews, product detail pages, portfolio images, client approvals, and campaign planning.'
     }
   ];
-  const metaDescription = 'Create apparel mockups online with Design3D clothing models. Customize garments, preview artwork in 3D, browse sewing patterns, and export high-resolution transparent renders.';
+  const metaDescription = 'Download free 3D clothing models and create apparel mockups online. Browse shirts, hoodies, dresses and coats, then export transparent WebP renders.';
   const primaryImage = firstImage(req, heroImages.map(image => image.src));
   const structuredData = [
     {
@@ -244,7 +244,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: '3D Clothing Design and Apparel Mockup Generator',
+      name: 'Free 3D Clothing Models and Apparel Mockup Generator',
       description: metaDescription,
       url: pageUrl,
       image: primaryImage,
@@ -254,7 +254,12 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
         name: 'ClothingDesign Design3D',
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
-        description: 'Browser-based 3D apparel mockup generator for customizing clothing models and exporting transparent product renders.'
+        description: 'Free browser-based 3D clothing model library and apparel mockup generator for customizing garment models and exporting transparent product renders.',
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD'
+        }
       }
     },
     {
@@ -286,6 +291,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
   return {
     metaDescription,
     structuredData,
+    primaryImage,
     heroImages,
     stats,
     workflow,
@@ -1152,6 +1158,7 @@ router.get('/', async (req, res) => {
     res.render('index', {
       title: req.t('home.title'),
       metaDescription: homeContent.metaDescription,
+      metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,
       page: 'home',
       homeContent
@@ -1162,6 +1169,7 @@ router.get('/', async (req, res) => {
     res.render('index', {
       title: req.t('home.title'),
       metaDescription: homeContent.metaDescription,
+      metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,
       page: 'home',
       homeContent
@@ -1181,17 +1189,19 @@ router.get('/design-3d', async (req, res) => {
     `, ['active']);
     const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order', ['3d-models', 'active']);
     const normalizedModels = normalize3dModels(models);
-    const description = 'Browse Design3D clothing models for online apparel mockups, customize garment artwork, and export high-resolution transparent renders.';
+    const description = 'Browse free 3D clothing models for apparel mockups. Customize shirts, hoodies, dresses and coats online, then export high-resolution transparent renders.';
+    const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
     
     res.render('design-3d', { 
       title: req.t('design3d.title'),
       metaDescription: description,
+      metaImage: collectionImage,
       structuredData: buildCollectionStructuredData(req, {
-        name: '3D Clothing Models',
+        name: 'Free 3D Clothing Models',
         description,
         path: '/design-3d',
         items: normalizedModels,
-        itemListName: 'Design3D clothing model library',
+        itemListName: 'Free Design3D clothing model library',
         breadcrumbs: [
           { name: 'Home', url: '/' },
           { name: '3D Clothing Models', url: '/design-3d' }
@@ -1205,7 +1215,7 @@ router.get('/design-3d', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading 3D models:', err);
-    const description = 'Browse Design3D clothing models for online apparel mockups, customize garment artwork, and export high-resolution transparent renders.';
+    const description = 'Browse free 3D clothing models for apparel mockups. Customize shirts, hoodies, dresses and coats online, then export high-resolution transparent renders.';
     res.render('design-3d', { 
       title: req.t('design3d.title'),
       metaDescription: description,

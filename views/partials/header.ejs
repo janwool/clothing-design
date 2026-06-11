@@ -7,6 +7,27 @@
   <% if (typeof metaDescription !== 'undefined' && metaDescription) { %>
     <meta name="description" content="<%= metaDescription %>">
   <% } %>
+  <% const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : ''; %>
+  <% const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png'); %>
+  <% if (headCanonicalUrl) { %>
+    <link rel="canonical" href="<%= headCanonicalUrl %>">
+  <% } %>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= title %>">
+  <% if (typeof metaDescription !== 'undefined' && metaDescription) { %>
+    <meta property="og:description" content="<%= metaDescription %>">
+  <% } %>
+  <% if (headCanonicalUrl) { %>
+    <meta property="og:url" content="<%= headCanonicalUrl %>">
+  <% } %>
+  <meta property="og:image" content="<%= headMetaImage %>">
+  <meta property="og:image:alt" content="<%= title %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= title %>">
+  <% if (typeof metaDescription !== 'undefined' && metaDescription) { %>
+    <meta name="twitter:description" content="<%= metaDescription %>">
+  <% } %>
+  <meta name="twitter:image" content="<%= headMetaImage %>">
   <% if (typeof structuredData !== 'undefined' && structuredData) { %>
     <script type="application/ld+json"><%- JSON.stringify(structuredData).replace(/</g, '\\u003c') %></script>
   <% } %>

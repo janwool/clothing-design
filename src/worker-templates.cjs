@@ -27,6 +27,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -81,6 +84,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -173,6 +179,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -241,6 +250,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -341,6 +353,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -443,6 +458,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -565,6 +583,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -616,6 +637,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -673,6 +697,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -740,6 +767,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -860,6 +890,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -962,6 +995,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1044,6 +1080,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1116,6 +1155,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1190,6 +1232,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1368,6 +1413,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1476,6 +1524,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1584,6 +1635,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1660,6 +1714,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1713,6 +1770,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1771,6 +1831,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -1816,7 +1879,7 @@ title = __locals.title,
     ; __append(escapeFn( index + 1 ))
     ; __append("\">\n    ")
     ;  });
-    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow\">Design3D apparel mockups</span>\n      <h1>3D Clothing Design and Apparel Mockup Generator</h1>\n      <p>\n        Customize web-ready 3D clothing models, preview artwork on realistic garment shapes,\n        and export high-resolution transparent renders for ecommerce, fashion reviews, and product launches.\n      </p>\n      <div class=\"hero-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary btn-large\">Browse 3D Models</a>\n        <a href=\"/patterns\" class=\"btn btn-secondary btn-large\">Browse Sewing Patterns</a>\n      </div>\n      ")
+    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow\">Free Design3D model library</span>\n      <h1>Free 3D Clothing Models and Apparel Mockup Generator</h1>\n      <p>\n        Download free 3D clothing models, customize garment colors and artwork online,\n        and export high-resolution transparent renders for ecommerce, print-on-demand, fashion reviews, and product launches.\n      </p>\n      <div class=\"hero-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary btn-large\">Browse Free 3D Models</a>\n        <a href=\"/patterns\" class=\"btn btn-secondary btn-large\">Download Sewing Patterns</a>\n      </div>\n      ")
     ;  if (stats.length) {
     ; __append("\n        <dl class=\"home-hero-stats\">\n          ")
     ;  stats.forEach(function(stat) {
@@ -1828,7 +1891,7 @@ title = __locals.title,
     ;  });
     ; __append("\n        </dl>\n      ")
     ;  }
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"home-answer-section\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">Quick answer</span>\n        <h2>What can you do with ClothingDesign?</h2>\n      </div>\n      <p>\n        ClothingDesign helps apparel teams create 3D garment mockups online. Pick a model,\n        add colors or artwork, inspect the design in the browser, and download a clean render\n        before samples, photoshoots, or final product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Workflow</span>\n      <h2>From garment model to finished apparel preview</h2>\n      <p>A focused Design3D workflow for product teams, print-on-demand stores, fashion designers, and brand presentation work.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"home-answer-section\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">Quick answer</span>\n        <h2>What is ClothingDesign?</h2>\n      </div>\n      <p>\n        ClothingDesign is a free 3D clothing model library and browser mockup workspace.\n        Pick a garment model, review its category and detail page, customize artwork in Design3D,\n        and download a clean transparent render before samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Free download workflow</span>\n      <h2>From free 3D garment model to finished apparel preview</h2>\n      <p>A focused Design3D workflow for product teams, print-on-demand stores, fashion designers, and brand presentation work.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
     ;  workflow.forEach(function(step, index) {
     ; __append("\n        <article class=\"generator-step\">\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
@@ -1840,7 +1903,7 @@ title = __locals.title,
     ;  });
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ;  if (featuredCategories.length) {
-    ; __append("\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <span class=\"generator-eyebrow\">Model categories</span>\n      <h2>Start with the right clothing silhouette</h2>\n      <p>Browse SEO-friendly Design3D categories and choose the garment base closest to your product idea.</p>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
+    ; __append("\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <span class=\"generator-eyebrow\">Free model categories</span>\n      <h2>Browse 3D clothing models by garment type</h2>\n      <p>Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models with search-friendly detail pages.</p>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
     ;  featuredCategories.forEach(function(category) {
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( category.slug ))
@@ -1852,7 +1915,7 @@ title = __locals.title,
     ;  }
     ; __append("\n\n")
     ;  if (featuredModels.length) {
-    ; __append("\n<section class=\"home-featured-models\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Featured models</span>\n      <h2>Popular 3D apparel models for mockups</h2>\n      <p>Open a model detail page to view the garment, read use cases, customize artwork, and export an HD transparent render.</p>\n    </div>\n    <div class=\"models-grid\">\n      ")
+    ; __append("\n<section class=\"home-featured-models\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Featured models</span>\n      <h2>Popular free 3D apparel models for mockups</h2>\n      <p>Open a model detail page to view the garment, read use cases, customize artwork, and export an HD transparent render.</p>\n    </div>\n    <div class=\"models-grid\">\n      ")
     ;  featuredModels.forEach(function(model) {
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
@@ -1878,7 +1941,7 @@ title = __locals.title,
     ;  });
     ; __append("\n    </div>\n  </div>\n</section>\n")
     ;  }
-    ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Use cases</span>\n      <h2>Built for apparel content that needs to be understood fast</h2>\n      <p>Clear model names, descriptive URLs, detail-page FAQs, and structured data help both search engines and AI answer systems understand every garment resource.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
+    ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Use cases</span>\n      <h2>Why searchers choose ClothingDesign instead of generic model sites</h2>\n      <p>Generic 3D marketplaces focus on broad asset downloads. ClothingDesign focuses on free apparel models, online garment mockups, transparent renders, and pages written for search engines and AI answer systems.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
     ;  useCases.forEach(function(item) {
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
     ; __append(escapeFn( item.title ))
@@ -1886,7 +1949,7 @@ title = __locals.title,
     ; __append(escapeFn( item.text ))
     ; __append("</p>\n        </article>\n      ")
     ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">FAQ</span>\n      <h2>3D clothing design questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">FAQ</span>\n      <h2>Free 3D clothing model questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
     ;  faq.forEach(function(item, index) {
     ; __append("\n        <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
@@ -1896,7 +1959,7 @@ title = __locals.title,
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
     ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Start designing</span>\n        <h2>Create your next 3D apparel mockup.</h2>\n        <p>Choose a garment model, customize the surface design, and export a clean render for review or product presentation.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary\">Browse Design3D models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Start designing</span>\n        <h2>Download a free 3D clothing model and turn it into a mockup.</h2>\n        <p>Choose a garment model, customize the surface design, and export a clean render for review or product presentation.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary\">Browse free Design3D models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -1929,6 +1992,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -2199,6 +2265,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -2252,6 +2321,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -2436,6 +2508,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -2467,6 +2542,45 @@ title = __locals.title,
     ; __append("\">\n  ")
     ;  }
     ; __append("\n  ")
+    ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : '';
+    ; __append("\n  ")
+    ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png');
+
+    ; __append("\n  ")
+    ;  if (headCanonicalUrl) {
+    ; __append("\n    <link rel=\"canonical\" href=\"")
+    ; __append(escapeFn( headCanonicalUrl ))
+    ; __append("\">\n  ")
+    ;  }
+    ; __append("\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:title\" content=\"")
+    ; __append(escapeFn( title ))
+    ; __append("\">\n  ")
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ; __append("\n    <meta property=\"og:description\" content=\"")
+    ; __append(escapeFn( metaDescription ))
+    ; __append("\">\n  ")
+    ;  }
+    ; __append("\n  ")
+    ;  if (headCanonicalUrl) {
+    ; __append("\n    <meta property=\"og:url\" content=\"")
+    ; __append(escapeFn( headCanonicalUrl ))
+    ; __append("\">\n  ")
+    ;  }
+    ; __append("\n  <meta property=\"og:image\" content=\"")
+    ; __append(escapeFn( headMetaImage ))
+    ; __append("\">\n  <meta property=\"og:image:alt\" content=\"")
+    ; __append(escapeFn( title ))
+    ; __append("\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:title\" content=\"")
+    ; __append(escapeFn( title ))
+    ; __append("\">\n  ")
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ; __append("\n    <meta name=\"twitter:description\" content=\"")
+    ; __append(escapeFn( metaDescription ))
+    ; __append("\">\n  ")
+    ;  }
+    ; __append("\n  <meta name=\"twitter:image\" content=\"")
+    ; __append(escapeFn( headMetaImage ))
+    ; __append("\">\n  ")
     ;  if (typeof structuredData !== 'undefined' && structuredData) {
     ; __append("\n    <script type=\"application/ld+json\">")
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
@@ -2603,6 +2717,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -2844,6 +2961,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -3002,6 +3122,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -3056,6 +3179,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,
@@ -3188,6 +3314,9 @@ title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   metaDescription = __locals.metaDescription,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
   structuredData = __locals.structuredData,
   user = __locals.user,
   i18next = __locals.i18next,

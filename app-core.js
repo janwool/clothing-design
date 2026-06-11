@@ -11,6 +11,7 @@ const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WOR
 const appRootDir = typeof __dirname === 'string' ? __dirname : '';
 const viewsDir = path.join(appRootDir, 'views');
 const SESSION_COOKIE_NAME = 'cd_session';
+const DEFAULT_SOCIAL_IMAGE = 'https://cdn.cloz-design.com/site/icon.png';
 
 function requireLocalOnly(moduleName) {
   const nodeRequire = eval('require');
@@ -327,6 +328,12 @@ if (isWorkerRuntime) {
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
   res.locals.user = req.session.user || null;
+  const forwardedProto = String(req.get('x-forwarded-proto') || '').split(',')[0].trim();
+  const protocol = forwardedProto || req.protocol || 'https';
+  const host = req.get('host');
+  const canonicalPath = req.path || '/';
+  res.locals.canonicalUrl = host ? `${protocol}://${host}${canonicalPath}` : canonicalPath;
+  res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;
   next();
 });
 
