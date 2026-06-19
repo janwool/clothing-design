@@ -337,6 +337,17 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  const originalEnd = res.end;
+  res.end = function patchedSeoEnd(...args) {
+    if (!res.headersSent && res.statusCode >= 400) {
+      res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
+    return originalEnd.apply(this, args);
+  };
+  next();
+});
+
 if (isWorkerRuntime) {
   const workerAssets = require('./src/worker-assets.cjs');
   const publicAssetRoutes = Object.keys(workerAssets.publicAssets || {});

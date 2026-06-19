@@ -3,6 +3,14 @@ require('dotenv').config();
 const fs = require('fs/promises');
 const path = require('path');
 const db = require('../lib/db');
+const {
+  CORE_STATIC_PATHS,
+  isPriority3dCategory,
+  modelSitemapLimit,
+  patternSitemapLimit,
+  shouldIndexModel,
+  shouldIndexPattern
+} = require('../lib/seo-priority');
 
 const baseUrl = (process.env.SITEMAP_BASE_URL || 'https://www.cloz-design.com').replace(/\/+$/, '');
 const outputPath = path.resolve(__dirname, '..', 'public', 'sitemap.xml');
@@ -46,8 +54,26 @@ function addUrl(urls, seen, pathname, lastmod) {
   seen.add(loc);
   urls.push({
     loc,
-    lastmod: toIsoDate(lastmod)
+    lastmod: toIsoDate(lastmod),
+    changefreq: getChangefreq(pathname),
+    priority: getPriority(pathname)
   });
+}
+
+function getPriority(pathname) {
+  if (pathname === '/') return '1.0';
+  if (['/design-3d', '/tools', '/patterns'].includes(pathname)) return '0.9';
+  if (pathname.startsWith('/tools/')) return '0.8';
+  if (pathname.startsWith('/3d-models/') && pathname.split('/').length === 3) return '0.8';
+  if (pathname.startsWith('/3d-models/')) return '0.7';
+  if (pathname.startsWith('/patterns/item/')) return '0.5';
+  return '0.6';
+}
+
+function getChangefreq(pathname) {
+  if (pathname === '/' || pathname === '/design-3d') return 'weekly';
+  if (pathname.startsWith('/3d-models/') || pathname.startsWith('/patterns/')) return 'monthly';
+  return 'weekly';
 }
 
 async function get3dModelUrls() {
@@ -63,6 +89,12 @@ async function get3dModelUrls() {
     SELECT
       m.id,
       m.slug,
+      m.name,
+      m.description,
+      m.tags,
+      m.image_url,
+      m.file_url,
+      m.texture_url,
       COALESCE(primary_category.slug, legacy_category.slug) as category_slug,
       m.updated_at,
       m.created_at
@@ -93,7 +125,7 @@ async function getCategories() {
 
 async function getPatterns() {
   return db.all(`
-    SELECT id, updated_at, created_at
+    SELECT id, description, tags, image_url, file_url, format, updated_at, created_at
     FROM patterns
     WHERE status = ?
     ORDER BY updated_at DESC, id DESC
@@ -117,6 +149,8 @@ function renderSitemap(urls) {
       '  <url>',
       `    <loc>${escapeXml(item.loc)}</loc>`,
       `    <lastmod>${escapeXml(item.lastmod)}</lastmod>`,
+      `    <changefreq>${escapeXml(item.changefreq)}</changefreq>`,
+      `    <priority>${escapeXml(item.priority)}</priority>`,
       '  </url>'
     ].join('\n'))
     .join('\n');
@@ -135,37 +169,38 @@ async function main() {
   const seen = new Set();
   const now = new Date().toISOString();
 
-  [
-    '/',
-    '/design-3d',
-    '/patterns',
-    '/gallery',
-    '/tools',
-    '/pricing'
-  ].forEach(pathname => addUrl(urls, seen, pathname, now));
+  CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now));
   staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now));
 
   const categories = await getCategories();
   categories.forEach(category => {
     const pathname = categoryPath(category);
-    if (pathname) addUrl(urls, seen, pathname, category.updated_at || category.created_at);
+    if (!pathname) return;
+    if (category.resource_type === '3d-models' && !isPriority3dCategory(category)) return;
+    addUrl(urls, seen, pathname, category.updated_at || category.created_at);
   });
 
   const models = await get3dModelUrls();
-  models.forEach(model => {
-    const categorySlug = model.category_slug || '3d-models';
-    addUrl(
-      urls,
-      seen,
-      `/3d-models/${categorySlug}/${model.slug}`,
-      model.updated_at || model.created_at
-    );
-  });
+  models
+    .filter(shouldIndexModel)
+    .slice(0, modelSitemapLimit())
+    .forEach(model => {
+      const categorySlug = model.category_slug || '3d-models';
+      addUrl(
+        urls,
+        seen,
+        `/3d-models/${categorySlug}/${model.slug}`,
+        model.updated_at || model.created_at
+      );
+    });
 
   const patterns = await getPatterns();
-  patterns.forEach(pattern => {
-    addUrl(urls, seen, `/patterns/item/${pattern.id}`, pattern.updated_at || pattern.created_at);
-  });
+  patterns
+    .filter(shouldIndexPattern)
+    .slice(0, patternSitemapLimit())
+    .forEach(pattern => {
+      addUrl(urls, seen, `/patterns/item/${pattern.id}`, pattern.updated_at || pattern.created_at);
+    });
 
   urls.sort((a, b) => a.loc.localeCompare(b.loc));
   await fs.mkdir(path.dirname(outputPath), { recursive: true });

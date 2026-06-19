@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
+const { shouldIndexModel, shouldIndexPattern } = require('../lib/seo-priority');
 const {
   DEFAULT_SITE_IMAGE_PATH,
   toAbsoluteUrl,
@@ -86,6 +87,11 @@ function mergeLandingContent(defaults, overrides) {
     }
   });
   return merged;
+}
+
+function shouldUseLocalModelAssets(req) {
+  const host = (req.get('host') || '').toLowerCase();
+  return (host.startsWith('localhost') || host.startsWith('127.0.0.1')) && process.env.USE_REMOTE_MODEL_ASSETS !== 'true';
 }
 
 function getLandingContent(category) {
@@ -173,6 +179,38 @@ function buildSeoTitle(base, suffix, maxLength = 68) {
   const clipped = full.slice(0, maxLength);
   const lastSpace = clipped.lastIndexOf(' ');
   return clipped.slice(0, lastSpace > 24 ? lastSpace : maxLength).trim();
+}
+
+function splitKeywordList(value) {
+  return String(value || '')
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean)
+    .slice(0, 8);
+}
+
+function modelDescriptor(model, categoryName) {
+  const text = `${model.name || ''} ${model.description || ''} ${model.tags || ''}`.toLowerCase();
+  const descriptors = [];
+  if (/hood|hoodie|sweatshirt/.test(text)) descriptors.push('hood shape and upper-body print zones');
+  if (/trench|coat|jacket|outerwear|blazer/.test(text)) descriptors.push('outerwear proportions and sleeve panels');
+  if (/shirt|t-shirt|tee|top|tank/.test(text)) descriptors.push('front, back, and shoulder artwork areas');
+  if (/dress|skirt/.test(text)) descriptors.push('longer fabric surfaces for color and textile studies');
+  if (/pants|trouser|jumpsuit/.test(text)) descriptors.push('leg panels and lower-body garment proportions');
+  if (/bag|backpack|hat|cap|glove|tie/.test(text)) descriptors.push('accessory surfaces for logo and material previews');
+  if (!descriptors.length) descriptors.push(`${String(categoryName || 'apparel').toLowerCase()} silhouette and editable garment surfaces`);
+  return descriptors.slice(0, 3);
+}
+
+function buildModelSearchIntent(model, categoryName) {
+  const category = String(categoryName || 'apparel').toLowerCase();
+  const tags = splitKeywordList(model.tags);
+  const descriptor = modelDescriptor(model, categoryName).join(', ');
+  return compactText([
+    `${model.name} is a free ${category} 3D model for online apparel mockups.`,
+    `Use the GLB preview and UV texture layout to test ${descriptor}, then export transparent product renders for ecommerce, print-on-demand, client review, or digital fashion planning.`,
+    tags.length ? `Related search terms include ${tags.slice(0, 4).join(', ')}.` : ''
+  ].filter(Boolean).join(' '), 260);
 }
 
 function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
@@ -928,44 +966,61 @@ function buildModelDetailContent(model, related, req) {
   const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
   const designHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
-  const pageTitle = buildSeoTitle(model.name, 'Free 3D Clothing Model');
-  const description = compactText(`${model.name} is a free browser-ready 3D ${categoryName} model for apparel mockups. Customize artwork online and export transparent product renders.`, 158);
+  const pageTitle = buildSeoTitle(model.name, `Free ${categoryName} 3D Model`);
+  const searchIntentSummary = buildModelSearchIntent(model, categoryName);
+  const descriptorList = modelDescriptor(model, categoryName);
+  const description = compactText(`Free ${categoryName} 3D model for apparel mockups. Customize artwork with GLB and UV assets, then export transparent WebP product renders.`, 158);
+  const tagList = splitKeywordList(model.tags);
+  const formatNotes = [
+    { label: 'Format', value: 'GLB / GLTF preview model' },
+    { label: 'Texture Layout', value: model.texture_url ? 'Packed UV SVG available' : 'Browser preview asset' },
+    { label: 'Best For', value: `${categoryName} mockups and product renders` },
+    { label: 'Output', value: 'Transparent WebP render export' }
+  ];
   const howToSteps = [
     {
       title: 'Open the 3D model',
-      body: `Start with ${model.name} and inspect the garment shape, seams, proportions, and viewing angles before applying artwork.`
+      body: `Start with ${model.name} and inspect ${descriptorList[0]} before applying artwork.`
     },
     {
-      title: 'Set the base color and material direction',
-      body: 'Choose a colorway that matches the design brief, then use the 3D preview to check how the garment reads under studio lighting.'
+      title: 'Check the UV artwork zones',
+      body: model.texture_url
+        ? 'Use the packed UV template to place logos, repeats, panel colors, or graphic notes on the mapped garment surfaces.'
+        : 'Use the garment preview to plan logo scale, color direction, and surface placement before export.'
     },
     {
-      title: 'Place graphics and surface details',
-      body: 'Add logos, prints, panels, or placement notes while checking scale across front, side, and angled views.'
+      title: 'Review fit and presentation angles',
+      body: `Rotate the model to judge ${descriptorList.slice(1).join(', ') || 'silhouette balance, scale, and presentation quality'} across product views.`
     },
     {
       title: 'Export review-ready visuals',
-      body: 'Use the finished preview for ecommerce tests, client approvals, internal line reviews, or campaign planning.'
+      body: 'Download a transparent render for ecommerce drafts, launch decks, client approvals, internal line reviews, or campaign planning.'
     }
   ];
   const applications = [
     {
       title: 'Ecommerce product previews',
-      body: `Use ${model.name} to create consistent product visuals before photography or sample production.`
+      body: `Use ${model.name} to create consistent ${String(categoryName).toLowerCase()} product visuals before photography or sample production.`
     },
     {
-      title: 'Apparel concept validation',
-      body: 'Compare colorways, print placement, and garment proportions while the design is still easy to change.'
+      title: 'Artwork and material testing',
+      body: `Compare colorways, surface graphics, material direction, and ${descriptorList[0]} while the design is still easy to change.`
     },
     {
-      title: 'Client and team approvals',
-      body: 'Share a clearer 3D clothing mockup for merch teams, factories, buyers, and creative stakeholders.'
+      title: 'Buyer and team approvals',
+      body: 'Share a clearer 3D clothing mockup with merch teams, factories, buyers, agencies, and creative stakeholders.'
     }
   ];
   const faqItems = [
     {
       question: `What is ${model.name} best used for?`,
       answer: `${model.name} is best used for ${categoryName} apparel mockups, design reviews, ecommerce previews, and early product presentation visuals.`
+    },
+    {
+      question: `Does ${model.name} include a GLB model and UV template?`,
+      answer: model.texture_url
+        ? `Yes. This page includes a browser-ready GLB preview and a packed UV texture layout for placing artwork on the ${String(categoryName).toLowerCase()} surfaces.`
+        : 'The page includes a browser-ready GLB preview for online mockup work. UV template availability depends on the model asset.'
     },
     {
       question: 'Can I customize the 3D clothing model online?',
@@ -986,6 +1041,9 @@ function buildModelDetailContent(model, related, req) {
     primaryImage: imageUrl,
     pageTitle,
     designHref,
+    searchIntentSummary,
+    formatNotes,
+    tagList,
     howToSteps,
     applications,
     faqItems,
@@ -1022,7 +1080,8 @@ function buildModelDetailContent(model, related, req) {
         primaryImageOfPage: imageObject(req, imageUrl),
         associatedMedia: fileUrl,
         genre: '3D clothing model',
-        keywords: [model.name, categoryName, 'Design 3D', '3D apparel mockup', '3D clothing model'].filter(Boolean),
+        keywords: [model.name, categoryName, ...tagList, 'Design 3D', '3D apparel mockup', '3D clothing model', 'GLB clothing model'].filter(Boolean),
+        encodingFormat: 'model/gltf-binary',
         isPartOf: {
           '@type': 'CollectionPage',
           name: `${categoryName} 3D clothing models`
@@ -1358,6 +1417,7 @@ router.get('/patterns/item/:id', async (req, res) => {
     res.render('pattern-detail', {
       title: patternDetailContent.pageTitle,
       metaDescription: patternDetailContent.metaDescription,
+      metaRobots: shouldIndexPattern(pattern) ? undefined : 'noindex,follow',
       metaImage: patternDetailContent.primaryImage,
       structuredData: patternDetailContent.structuredData,
       page: 'patterns',
@@ -1649,6 +1709,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
       metaDescription: description,
+      metaRobots: 'noindex,follow',
       metaImage: firstImage(req, [normalizedModel.image_url]),
       structuredData: buildSimplePageStructuredData(req, {
         type: 'WebPage',
@@ -1671,7 +1732,8 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
         }
       }),
       page: 'designer',
-      model: normalizedModel
+      model: normalizedModel,
+      useLocalModelAssets: shouldUseLocalModelAssets(req)
     });
   } catch (err) {
     console.error('Error loading designer:', err);
@@ -1719,12 +1781,14 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     res.render('model-detail', {
       title: modelDetailContent.pageTitle,
       metaDescription: modelDetailContent.metaDescription,
+      metaRobots: shouldIndexModel(normalizedModel) ? undefined : 'noindex,follow',
       metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
       model: normalizedModel,
       modelDetailContent,
-      related: normalizedRelated
+      related: normalizedRelated,
+      useLocalModelAssets: shouldUseLocalModelAssets(req)
     });
   } catch (err) {
     console.error('Error loading model detail:', err);

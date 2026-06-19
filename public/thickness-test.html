@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Garment Thickness Test</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #f3f3f3;
+        color: #111;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        min-height: 100vh;
+      }
+      .pane {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-width: 0;
+        border-right: 1px solid #d7d7d7;
+      }
+      .pane:last-child {
+        border-right: 0;
+      }
+      h1 {
+        margin: 0;
+        padding: 18px 22px;
+        font-size: 16px;
+        line-height: 1.25;
+      }
+      model-viewer {
+        width: 100%;
+        height: 84vh;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="grid">
+      <section class="pane">
+        <h1>Original</h1>
+        <model-viewer
+          src="/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb"
+          camera-controls
+          auto-rotate
+          shadow-intensity="1.2"
+          shadow-softness="0.55"
+          exposure="0.82"
+          camera-orbit="0deg 75deg 7m">
+        </model-viewer>
+      </section>
+      <section class="pane">
+        <h1>With Fabric Thickness</h1>
+        <model-viewer
+          src="/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d-thick.glb"
+          camera-controls
+          auto-rotate
+          shadow-intensity="1.2"
+          shadow-softness="0.55"
+          exposure="0.82"
+          camera-orbit="0deg 75deg 7m">
+        </model-viewer>
+      </section>
+    </div>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 <% const detailContent = modelDetailContent || {}; %>
+<% const previewModelFileUrl = model.file_url; %>
 <% const howToSteps = detailContent.howToSteps || []; %>
 <% const applications = detailContent.applications || []; %>
 <% const faqItems = detailContent.faqItems || []; %>
@@ -12,10 +13,10 @@
       <!-- Left: 3D Viewer -->
       <div class="model-viewer-section">
         <div class="model-3d-viewer" id="model3dViewer">
-          <% if (model.file_url) { %>
+          <% if (previewModelFileUrl) { %>
             <model-viewer 
               class="model-viewer-natural"
-              src="<%= model.file_url %>" 
+              src="<%= previewModelFileUrl %>" 
               alt="<%= model.name %>"
               camera-controls 
               auto-rotate
@@ -76,17 +77,22 @@
           <p><%= model.description || 'No description available.' %></p>
         </div>
 
+        <% if (detailContent.searchIntentSummary) { %>
+          <div class="model-description model-search-summary">
+            <h3>Mockup workflow</h3>
+            <p><%= detailContent.searchIntentSummary %></p>
+          </div>
+        <% } %>
+
         <div class="model-specs">
           <h3>Specifications</h3>
           <div class="specs-grid">
-            <div class="spec-item">
-              <span class="spec-label">Format</span>
-              <span class="spec-value">GLB / GLTF</span>
-            </div>
-            <div class="spec-item">
-              <span class="spec-label">Category</span>
-              <span class="spec-value"><%= model.category_label || model.category %></span>
-            </div>
+            <% (detailContent.formatNotes || []).forEach(function(note) { %>
+              <div class="spec-item">
+                <span class="spec-label"><%= note.label %></span>
+                <span class="spec-value"><%= note.value %></span>
+              </div>
+            <% }); %>
             <% if (model.file_size) { %>
               <div class="spec-item">
                 <span class="spec-label">File Size</span>
@@ -96,6 +102,14 @@
           </div>
         </div>
 
+        <% if (detailContent.tagList && detailContent.tagList.length) { %>
+          <div class="model-keyword-list" aria-label="Related model topics">
+            <% detailContent.tagList.forEach(function(tag) { %>
+              <span><%= tag %></span>
+            <% }); %>
+          </div>
+        <% } %>
+
         <div class="model-actions">
           <button class="btn btn-primary btn-large" id="designNowBtn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -103,7 +117,7 @@
             </svg>
             Design Now
           </button>
-          <% if (model.file_url) { %>
+          <% if (previewModelFileUrl) { %>
             <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
@@ -160,6 +174,8 @@
         <div class="pattern-step-card-grid">
           <% howToSteps.forEach(function(step, index) { %>
             <% const icon = howToIcons[index] || 'inspect'; %>
+            <% const stepTitle = step.name || step.title; %>
+            <% const stepText = step.text || step.body; %>
             <article class="pattern-step-card">
               <div class="pattern-step-media pattern-step-media-<%= icon %>">
                 <span><%= String(index + 1).padStart(2, '0') %></span>
@@ -196,8 +212,8 @@
                 <% } %>
               </div>
               <div class="pattern-step-copy">
-                <h3><%= step.name %></h3>
-                <p><%= step.text %></p>
+                <h3><%= stepTitle %></h3>
+                <p><%= stepText %></p>
               </div>
             </article>
           <% }); %>
@@ -310,7 +326,7 @@
       <div class="design-modal-header">
         <h2>Design Studio - <%= model.name %></h2>
       <div class="design-modal-actions">
-        <% if (model.file_url) { %>
+        <% if (previewModelFileUrl) { %>
           <button class="btn btn-secondary btn-small" id="downloadRenderModalBtn">
             Download HD
           </button>
@@ -324,11 +340,11 @@
       <div class="texture-designer">
         <!-- 3D Preview (Top Left) -->
         <div class="preview-3d-panel">
-          <% if (model.file_url) { %>
+          <% if (previewModelFileUrl) { %>
             <model-viewer 
               class="model-viewer-natural"
               id="designerViewer"
-              src="<%= model.file_url %>" 
+              src="<%= previewModelFileUrl %>" 
               alt="<%= model.name %>"
               camera-controls
               auto-rotate
@@ -343,6 +359,20 @@
               <img src="<%= model.image_url %>" alt="<%= model.name %>">
             </div>
           <% } %>
+          <div class="material-panel" aria-label="Material presets">
+            <div class="material-panel-header">
+              <div>
+                <span class="material-panel-kicker">Fabric</span>
+                <h3>Material Balls</h3>
+              </div>
+              <span class="material-panel-count" id="materialCount">0</span>
+            </div>
+            <div class="material-swatch-grid" id="materialSwatchGrid"></div>
+            <div class="material-readout" id="materialReadout">
+              <strong>Choose a material</strong>
+              <span>Surface response applies to the 3D garment preview.</span>
+            </div>
+          </div>
         </div>
 
         <!-- Main Texture Design Area (Center) -->
@@ -444,6 +474,7 @@
 </div>
 
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<script src="/js/design3d-materials.js"></script>
 
 <script>
 // Viewer controls
@@ -501,6 +532,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const textureElements = document.getElementById('textureElements');
   const texturePattern = document.getElementById('texturePattern');
   const selectionLayer = document.getElementById('selectionLayer');
+  const materialSwatchGrid = document.getElementById('materialSwatchGrid');
+  const materialReadout = document.getElementById('materialReadout');
+  const materialCount = document.getElementById('materialCount');
   const elementToolbar = document.createElement('div');
   elementToolbar.className = 'element-toolbar';
   elementToolbar.dataset.editorToolbar = 'true';
@@ -512,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const defaultTextContent = <%- JSON.stringify(t('designStudio.defaultText')) %>;
+  const currentModelCategory = <%- JSON.stringify(model.category || model.category_label || model.category_slug || '') %>;
   const minSize = 12;
   const state = {
     tool: 'select',
@@ -528,7 +563,9 @@ document.addEventListener('DOMContentLoaded', () => {
     lastTextClick: { element: null, time: 0 },
     textEditor: null,
     colorPicker: null,
+    selectedMaterial: null,
     appliedTextureUrl: null,
+    materialTextureCache: new WeakMap(),
     finalTextureUrl: null,
     isExportingRender: false,
     coverCaptureHidden: []
@@ -549,7 +586,156 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
     loadTextureDimensions();
     renderSelection();
+    if (state.selectedMaterial) {
+      applyMaterialToViewer(designerViewer, state.selectedMaterial);
+    }
     scheduleTexturePreviewUpdate();
+  }
+
+  function hexToRgbUnit(hex) {
+    const normalized = String(hex || '#ffffff').replace('#', '').trim();
+    const safe = /^[0-9a-fA-F]{6}$/.test(normalized) ? normalized : 'ffffff';
+    const value = parseInt(safe, 16);
+    return [
+      ((value >> 16) & 255) / 255,
+      ((value >> 8) & 255) / 255,
+      (value & 255) / 255
+    ];
+  }
+
+  function getSelectedMaterialFactor() {
+    const material = state.selectedMaterial;
+    if (!material) return [1, 1, 1, 1];
+    return [...hexToRgbUnit(material.color), 1];
+  }
+
+  function getViewerTextureCache(viewerElement) {
+    let cache = state.materialTextureCache.get(viewerElement);
+    if (!cache) {
+      cache = new Map();
+      state.materialTextureCache.set(viewerElement, cache);
+    }
+    return cache;
+  }
+
+  async function getMaterialMapTexture(viewerElement, material, mapName) {
+    const url = material?.maps?.[mapName];
+    if (!viewerElement || !url || typeof viewerElement.createTexture !== 'function') return null;
+    const cache = getViewerTextureCache(viewerElement);
+    const key = `${material.id}:${mapName}`;
+    if (cache.has(key)) return cache.get(key);
+    const texturePromise = viewerElement.createTexture(url).catch((error) => {
+      cache.delete(key);
+      console.warn(`Failed to load ${mapName} map for ${material.id}:`, error);
+      return null;
+    });
+    cache.set(key, texturePromise);
+    return texturePromise;
+  }
+
+  function setMaterialTextureSlot(slot, texture) {
+    if (!slot || !texture) return false;
+    if (typeof slot.setTexture === 'function') {
+      slot.setTexture(texture);
+      return true;
+    }
+    return false;
+  }
+
+  async function loadMaterialMaps(viewerElement, material, options = {}) {
+    const maps = {};
+    const mapNames = options.includeBaseColorMap
+      ? ['baseColor', 'normal', 'roughness']
+      : ['normal', 'roughness'];
+    await Promise.all(mapNames.map(async (mapName) => {
+      maps[mapName] = await getMaterialMapTexture(viewerElement, material, mapName);
+    }));
+    return maps;
+  }
+
+  async function applyMaterialToViewer(viewerElement, material, options = {}) {
+    if (!viewerElement || !material) return;
+    try {
+      await waitForModelViewerReady(viewerElement);
+      const materials = viewerElement.model?.materials || [];
+      const colorFactor = [...hexToRgbUnit(material.color), 1];
+      const maps = await loadMaterialMaps(viewerElement, material, {
+        includeBaseColorMap: options.includeBaseColorMap === true
+      });
+      materials.forEach((modelMaterial) => {
+        const pbr = modelMaterial.pbrMetallicRoughness;
+        pbr?.setBaseColorFactor?.(colorFactor);
+        pbr?.setMetallicFactor?.(material.metalness ?? 0);
+        pbr?.setRoughnessFactor?.(material.roughness ?? 0.8);
+        if (maps.baseColor) {
+          if (!setMaterialTextureSlot(pbr?.baseColorTexture, maps.baseColor)) {
+            pbr?.setBaseColorTexture?.(maps.baseColor);
+          }
+        }
+        setMaterialTextureSlot(modelMaterial.normalTexture, maps.normal);
+        modelMaterial.normalTexture?.setScale?.(material.normalScale ?? 0.1);
+        if (maps.roughness) {
+          setMaterialTextureSlot(pbr?.metallicRoughnessTexture, maps.roughness);
+        }
+      });
+    } catch (error) {
+      console.warn('Failed to apply material preset:', error);
+    }
+  }
+
+  async function applyMaterialPreset(material) {
+    state.selectedMaterial = material;
+    materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
+      button.classList.toggle('active', button.dataset.materialId === material.id);
+    });
+    if (materialReadout) {
+      materialReadout.innerHTML = `<strong>${material.name}</strong><span>${material.family} · ${material.weave} · roughness ${Math.round(material.roughness * 100)}%</span>`;
+    }
+    await Promise.all([
+      applyMaterialToViewer(detailViewer, material),
+      applyMaterialToViewer(designerViewer, material)
+    ]);
+    if (state.appliedTextureUrl) {
+      await Promise.all([
+        applyTextureToViewer(detailViewer, state.appliedTextureUrl),
+        applyTextureToViewer(designerViewer, state.appliedTextureUrl)
+      ]);
+    }
+  }
+
+  function renderMaterialSwatches() {
+    if (!materialSwatchGrid || !window.Design3DMaterials) return;
+    const categoryInputs = [
+      currentModelCategory,
+      <%- JSON.stringify(model.category_slug || '') %>,
+      <%- JSON.stringify(model.category_label || '') %>
+    ];
+    const materials = categoryInputs
+      .map(value => window.Design3DMaterials.getMaterialsForCategory(value))
+      .find(items => items.length > 0) || [];
+    materialSwatchGrid.innerHTML = '';
+    if (materialCount) materialCount.textContent = String(materials.length);
+    materials.forEach((material, index) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'material-swatch';
+      button.dataset.materialId = material.id;
+      button.title = `${material.name}: ${material.weave}`;
+      button.innerHTML = `
+        <span class="material-ball" aria-hidden="true"></span>
+        <span class="material-swatch-name">${material.name}</span>
+      `;
+      button.querySelector('.material-ball').style.background = material.sphere;
+      button.addEventListener('click', () => applyMaterialPreset(material));
+      materialSwatchGrid.appendChild(button);
+      if (index === 0) {
+        state.selectedMaterial = material;
+        button.classList.add('active');
+        if (materialReadout) {
+          materialReadout.innerHTML = `<strong>${material.name}</strong><span>${material.family} · ${material.weave} · roughness ${Math.round(material.roughness * 100)}%</span>`;
+        }
+      }
+    });
   }
 
   function parseSvgLength(value) {
@@ -903,15 +1089,27 @@ document.addEventListener('DOMContentLoaded', () => {
       const materials = model?.materials || [];
       if (!materials.length) return;
       const texture = await viewerElement.createTexture(textureUrl);
+      const materialMaps = state.selectedMaterial
+        ? await loadMaterialMaps(viewerElement, state.selectedMaterial)
+        : {};
       materials.forEach((material) => {
         const pbr = material.pbrMetallicRoughness;
         if (pbr?.setBaseColorFactor) {
-          pbr.setBaseColorFactor([1, 1, 1, 1]);
+          pbr.setBaseColorFactor(getSelectedMaterialFactor());
+        }
+        if (state.selectedMaterial) {
+          pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
+          pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
         }
         if (pbr?.baseColorTexture?.setTexture) {
           pbr.baseColorTexture.setTexture(texture);
         } else if (pbr?.setBaseColorTexture) {
           pbr.setBaseColorTexture(texture);
+        }
+        setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
+        material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
+        if (materialMaps.roughness) {
+          setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
         }
       });
       state.appliedTextureUrl = textureUrl;
@@ -1114,7 +1312,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function createCoverExportViewer() {
     const exportViewer = document.createElement('model-viewer');
-    exportViewer.src = <%- JSON.stringify(model.file_url || '') %>;
+    exportViewer.src = <%- JSON.stringify(previewModelFileUrl || '') %>;
     exportViewer.alt = <%- JSON.stringify(model.name || 'Designed 3D model') %>;
     exportViewer.setAttribute('loading', 'eager');
     exportViewer.setAttribute('reveal', 'auto');
@@ -1158,6 +1356,8 @@ document.addEventListener('DOMContentLoaded', () => {
       exportViewer.autoRotate = false;
       if (textureUrl) {
         await applyTextureToViewer(exportViewer, textureUrl);
+      } else if (state.selectedMaterial) {
+        await applyMaterialToViewer(exportViewer, state.selectedMaterial);
       }
       await exportViewer.updateComplete;
       await waitForVisibleModelRender(exportViewer);
@@ -1197,6 +1397,8 @@ document.addEventListener('DOMContentLoaded', () => {
     await frameCoverExportViewer(exportViewer);
     if (textureUrl) {
       await applyTextureToViewer(exportViewer, textureUrl);
+    } else if (state.selectedMaterial) {
+      await applyMaterialToViewer(exportViewer, state.selectedMaterial);
     }
     await exportViewer.updateComplete;
     await new Promise(resolve => setTimeout(resolve, 1800));
@@ -1220,6 +1422,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const activeViewer = designModal.classList.contains('active') ? designerViewer : detailViewer;
       if (textureUrl) {
         await applyTextureToViewer(activeViewer, textureUrl);
+      } else if (state.selectedMaterial) {
+        await applyMaterialToViewer(activeViewer, state.selectedMaterial);
       }
       return captureModelViewerImage(activeViewer, options);
     }
@@ -1227,7 +1431,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function downloadDesignedRender() {
     if (state.isExportingRender) return;
-    if (!<%- JSON.stringify(Boolean(model.file_url)) %>) return;
+    if (!<%- JSON.stringify(Boolean(previewModelFileUrl)) %>) return;
     setExportingState(true);
     setRenderStatus('Rendering high-resolution 3D image...');
 
@@ -2491,13 +2695,25 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   designerViewer?.addEventListener('load', () => {
+    if (state.selectedMaterial) {
+      applyMaterialToViewer(designerViewer, state.selectedMaterial);
+    }
     scheduleTexturePreviewUpdate();
+  });
+  detailViewer?.addEventListener('load', () => {
+    if (state.selectedMaterial) {
+      applyMaterialToViewer(detailViewer, state.selectedMaterial);
+    }
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
   downloadRenderBtn?.addEventListener('click', downloadDesignedRender);
   downloadRenderModalBtn?.addEventListener('click', downloadDesignedRender);
 
   // Initialize history
+  renderMaterialSwatches();
+  if (state.selectedMaterial) {
+    applyMaterialToViewer(detailViewer, state.selectedMaterial);
+  }
   saveHistory();
 });
 </script>

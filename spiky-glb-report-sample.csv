@@ -1,0 +1,6 @@
+axis_ratio,filename,largest_ratio,max_edge_ratio,status,thick_faces,thick_largest,thick_max_edge,thick_vertices,thin_faces,thin_largest,thin_max_edge,thin_vertices
+6334.1961,asymmetric-button-womens-shirt-3d-model.glb,5895.1294,486200.4178,suspicious,380660,526755.7500,556907.9344,191134,163706,89.3544,1.1454,95447
+2.8309,asymmetric-wrap-shirt-dress-3d-model.glb,2.8309,132.2819,suspicious,250780,180.2201,180.2201,125914,107981,63.6617,1.3624,62917
+29455.0902,basic-short-sleeve-tshirt-3d-model.glb,11961.4650,361950.7933,suspicious,1921500,843590.0000,702708.5056,986441,819611,70.5256,1.9414,485741
+11.8111,belted-womens-shirt-jacket-3d-model.glb,11.8111,518.4155,suspicious,361416,1082.2230,548.0826,180956,165480,91.6278,1.0572,90460
+1.0151,blazer-3d-model-01-20140479.glb,1.0038,0.9992,ok,187224,8.2351,0.1872,93960,84195,8.2039,0.1874,46729
