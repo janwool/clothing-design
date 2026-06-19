@@ -14,7 +14,68 @@ const {
   pageStructuredData
 } = require('../lib/seo');
 
-function getDefaultLandingContent(name = '3D clothing models') {
+function getDefaultLandingContent(name = '3D clothing models', resourceType = '3d-models') {
+  if (resourceType === 'patterns') {
+    return {
+      workflow: {
+        eyebrow: 'Pattern workflow',
+        title: `From ${name} pattern to simulated garment`,
+        description: 'Use each ZPRJ sewing pattern as a starting point for digital sample review, fit checks, and 3D apparel handoff.',
+        steps: [
+          { title: 'Choose a pattern', body: 'Start from a category that matches the garment type, silhouette, and production question you need to answer.' },
+          { title: 'Open the ZPRJ file', body: 'Load the project in CLO 3D or Marvelous Designer and confirm the 2D pattern pieces, sewing lines, avatar scale, and fabrics.' },
+          { title: 'Simulate and adjust', body: 'Review drape, tension, fit balance, and construction details before making colorway or material changes.' },
+          { title: 'Prepare handoff visuals', body: 'Export review images, technical references, or a revised project file for design, merchandising, or sample development.' }
+        ]
+      },
+      categories: {
+        eyebrow: 'Pattern categories',
+        title: 'Browse ZPRJ pattern categories',
+        description: 'Move between garment categories when comparing construction types, silhouettes, and simulation-ready apparel files.',
+        buttonLabel: 'Browse patterns',
+        buttonHref: '/patterns',
+        cards: [
+          { title: 'T-Shirts', meta: 'ZPRJ patterns', href: '/patterns/patterns-t-shirts' },
+          { title: 'Hoodies', meta: 'ZPRJ patterns', href: '/patterns/patterns-hoodies' },
+          { title: 'Outerwear', meta: 'ZPRJ patterns', href: '/patterns/patterns-outerwear' },
+          { title: 'Women Shirts', meta: 'ZPRJ patterns', href: '/patterns/patterns-women-shirts' }
+        ]
+      },
+      output: {
+        eyebrow: 'Built for simulation',
+        title: `${name} patterns for practical apparel development`,
+        cards: [
+          { title: 'CLO 3D and Marvelous Designer review', body: 'Open the project file to inspect pattern pieces, garment arrangement, fabric behavior, and simulation quality.' },
+          { title: 'Digital sample iteration', body: 'Test construction, proportions, and styling changes before committing to physical sampling.' },
+          { title: 'Mockup and production handoff', body: 'Create clearer references for designers, pattern makers, factories, buyers, and ecommerce teams.' }
+        ]
+      },
+      library: {
+        eyebrow: 'Pattern library',
+        title: 'Start from preview-guided ZPRJ sewing patterns instead of rebuilding a garment from zero.',
+        buttonLabel: 'Browse Sew Patterns',
+        buttonHref: '/patterns'
+      },
+      faq: {
+        eyebrow: 'FAQ',
+        title: `${name} pattern questions`,
+        items: [
+          { question: 'Can I use these patterns in CLO 3D?', answer: 'Yes. The pattern pages focus on ZPRJ project files that can be opened in CLO 3D for simulation, fit review, and digital sample work.' },
+          { question: 'Can Marvelous Designer open the files?', answer: 'Yes. Marvelous Designer supports ZPRJ project files, so you can inspect 2D pattern pieces, sewing relationships, fabric settings, and the simulated garment.' },
+          { question: 'Are the previews useful before downloading?', answer: 'Yes. Preview images help you choose a garment type and avoid opening project files that do not match your intended silhouette or workflow.' },
+          { question: 'How do I turn a pattern into a mockup?', answer: 'Open the ZPRJ file in your 3D apparel software, simulate the garment, apply materials or graphics, and export review renders or technical references.' }
+        ]
+      },
+      cta: {
+        eyebrow: 'Start reviewing',
+        title: `Choose a ${name} pattern and open it in your 3D apparel workflow.`,
+        description: 'Use the pattern grid above to select a simulation-ready project file with a visual preview.',
+        primaryLabel: 'Browse Sew Patterns',
+        primaryHref: '/patterns'
+      }
+    };
+  }
+
   return {
     workflow: {
       eyebrow: 'Workflow',
@@ -94,8 +155,9 @@ function shouldUseLocalModelAssets(req) {
   return (host.startsWith('localhost') || host.startsWith('127.0.0.1')) && process.env.USE_REMOTE_MODEL_ASSETS !== 'true';
 }
 
-function getLandingContent(category) {
-  const defaults = getDefaultLandingContent(category ? category.name : '3D clothing models');
+function getLandingContent(category, resourceType = '3d-models') {
+  const fallbackName = resourceType === 'patterns' ? 'ZPRJ sewing patterns' : '3D clothing models';
+  const defaults = getDefaultLandingContent(category ? category.name : fallbackName, resourceType);
   if (!category || !category.landing_content) return defaults;
   try {
     return mergeLandingContent(defaults, JSON.parse(category.landing_content));
@@ -813,14 +875,134 @@ async function findDesign3dCategoryForPattern(pattern) {
   `, ['3d-models', 'active', categoryName, categorySlug, generatedSlug, categoryName, categorySlug]);
 }
 
+function getPatternSeriesInfo(pattern) {
+  const name = String(pattern?.name || '');
+  const slug = String(pattern?.slug || '');
+  const source = `${name} ${slug}`;
+  const collectionNumberMatch = source.match(/\b0?(\d{1,3})\s+Collection\s+([12])\b/i);
+  const pMatch = source.match(/\bP0?(\d{1,3})\b/i);
+  const namedSampleMatch = source.match(/\b(?:Pattern|Look|Sample)\s+0?(\d{1,3})\b/i);
+  const number = collectionNumberMatch
+    ? collectionNumberMatch[1].padStart(2, '0')
+    : (pMatch ? pMatch[1].padStart(2, '0') : (namedSampleMatch ? namedSampleMatch[1].padStart(2, '0') : ''));
+  let collection = '';
+
+  if (collectionNumberMatch) {
+    collection = `Collection ${collectionNumberMatch[2]}`;
+  } else if (/vol(?:ume)?\s*2|collection\s*2/i.test(source)) {
+    collection = 'Vol 2';
+  } else if (/collection\s*1/i.test(source)) {
+    collection = 'Collection 1';
+  } else if (/6588|t-shirt zprj sewing pattern/i.test(source)) {
+    collection = 'T-shirt sample series';
+  }
+
+  return {
+    number,
+    collection,
+    label: [collection, number ? `sample ${number}` : ''].filter(Boolean).join(' ')
+  };
+}
+
+function getPatternCategoryGuide(categoryName) {
+  const normalized = String(categoryName || '').toLowerCase();
+  const guides = [
+    {
+      test: /t-?shirts?/,
+      garment: 'T-shirt',
+      intent: 'fast jersey top mockups, print placement tests, and everyday apparel fit checks',
+      construction: 'neckline shape, sleeve balance, hem level, side seam position, and graphic scale',
+      useCase: 'merch concepts, ecommerce previews, and fit comparison across T-shirt silhouettes'
+    },
+    {
+      test: /hood/,
+      garment: 'hoodie',
+      intent: 'casualwear mockups, hood construction checks, and sweatshirt colorway development',
+      construction: 'hood volume, cuff tension, pocket placement, rib trim, and shoulder drape',
+      useCase: 'streetwear sampling, brand merch decks, and warm-up garment reviews'
+    },
+    {
+      test: /outerwear|coat|jacket|blazer/,
+      garment: 'outerwear',
+      intent: 'structured layer simulation, seasonal line review, and jacket or coat presentation',
+      construction: 'collar roll, sleeve pitch, closure placement, layer clearance, and fabric weight',
+      useCase: 'outerwear sampling, buyer previews, and technical construction discussions'
+    },
+    {
+      test: /women shirts?|shirts?/,
+      garment: normalized.includes('women') ? 'women shirt' : 'shirt',
+      intent: 'shirt and blouse development, collar review, sleeve fit, and woven top simulation',
+      construction: 'collar stand, button placket, cuff shape, yoke position, and sleeve cap balance',
+      useCase: 'woven apparel prototyping, fit review, and design handoff'
+    },
+    {
+      test: /dress/,
+      garment: 'dress',
+      intent: 'one-piece silhouette review, drape testing, and digital dress sample development',
+      construction: 'bodice balance, waist placement, skirt volume, hem sweep, and fabric fall',
+      useCase: 'fashion line planning, ecommerce mockups, and fit presentation'
+    },
+    {
+      test: /skirt/,
+      garment: 'skirt',
+      intent: 'skirt silhouette exploration, hem shape review, and bottom-weight fabric simulation',
+      construction: 'waistband fit, side seam balance, flare, pleat behavior, and hem level',
+      useCase: 'range planning, drape studies, and digital sample comparison'
+    },
+    {
+      test: /pants|trouser/,
+      garment: 'pants',
+      intent: 'trouser fit checks, leg shape review, and bottom garment mockup preparation',
+      construction: 'rise, waistband, crotch curve, leg opening, pocket placement, and fabric tension',
+      useCase: 'fit sessions, technical review, and product page draft visuals'
+    },
+    {
+      test: /bags?|accessor/,
+      garment: normalized.includes('bag') ? 'bag accessory' : 'fashion accessory',
+      intent: 'accessory visualization, proportion checks, and 3D product sample presentation',
+      construction: 'strap length, body volume, seam placement, handle position, and hardware scale',
+      useCase: 'accessory mockups, product concept review, and styling presentation'
+    },
+    {
+      test: /underwear/,
+      garment: 'underwear',
+      intent: 'close-fit garment simulation, stretch material review, and intimate apparel sampling',
+      construction: 'elastic placement, seam tension, leg opening, waistband behavior, and fit pressure',
+      useCase: 'close-fit sample review, material testing, and private label development'
+    },
+    {
+      test: /sportswear/,
+      garment: 'sportswear',
+      intent: 'teamwear visualization, active apparel simulation, and movement-ready sample review',
+      construction: 'panel placement, sleeve mobility, neckline comfort, graphic zones, and fabric stretch',
+      useCase: 'team kit mockups, activewear line review, and sponsor artwork testing'
+    }
+  ];
+  const guide = guides.find(item => item.test.test(normalized));
+  return guide || {
+    garment: categoryName || 'apparel garment',
+    intent: 'digital apparel prototyping, garment simulation, fit review, and 3D sample handoff',
+    construction: 'pattern piece balance, sewing relationships, avatar scale, fabric settings, and garment drape',
+    useCase: 'CLO 3D review, Marvelous Designer simulation, and apparel production planning'
+  };
+}
+
 function buildPatternDetailContent(pattern, design3dCategory, req) {
   const format = String(pattern.format || 'zprj').replace(/^\./, '').toLowerCase();
   const fileExt = `.${format}`;
   const categoryName = pattern.category || 'apparel';
   const design3dCategoryName = design3dCategory?.name || categoryName;
   const design3dHref = design3dCategory?.slug ? `/3d-models/${design3dCategory.slug}` : '/design-3d';
+  const series = getPatternSeriesInfo(pattern);
+  const guide = getPatternCategoryGuide(categoryName);
   const pageTitle = buildSeoTitle(pattern.name, `Free ${format.toUpperCase()} Pattern #${pattern.id}`);
-  const description = compactText(`${pattern.name} #${pattern.id} is a free ${fileExt.toUpperCase()} sewing pattern for ${categoryName}. Open it in CLO 3D or Marvelous Designer and pair it with ${design3dCategoryName} 3D apparel models.`, 158);
+  const description = compactText(`${pattern.name} is a free ${fileExt.toUpperCase()} ${guide.garment} pattern for ${guide.intent}. Open it in CLO 3D or Marvelous Designer and pair it with ${design3dCategoryName} 3D apparel models.`, 158);
+  const seriesContext = series.label ? ` This page belongs to the ${series.label} group, so compare it with nearby files when reviewing silhouette options.` : '';
+  const patternHighlights = [
+    { label: 'Best for', value: guide.intent },
+    { label: 'Review focus', value: guide.construction },
+    { label: 'Workflow use', value: guide.useCase }
+  ];
   const faqItems = [
     {
       question: `Can I use ${pattern.name} in CLO 3D?`,
@@ -853,9 +1035,11 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
     pageTitle,
     metaDescription: description,
     primaryImage: imageUrl,
+    searchIntentSummary: `${pattern.name} is useful for ${guide.intent}.${seriesContext}`,
+    patternHighlights,
     faqItems,
-    cloIntro: `Use ${pattern.name} as a CLO 3D project file for ${categoryName} development. Open the project, inspect the pattern layout, then simulate and refine the garment before creating review visuals.`,
-    marvelousIntro: `Use ${pattern.name} as a Marvelous Designer project file when you need to review pattern pieces, sewing relationships, fabric behavior, and fit before exporting a production-ready iteration.`,
+    cloIntro: `Use ${pattern.name} as a CLO 3D project file for ${guide.garment} development. Open the project, inspect ${guide.construction}, then simulate and refine the garment before creating review visuals.${seriesContext}`,
+    marvelousIntro: `Use ${pattern.name} in Marvelous Designer when you need to review ${guide.construction}. It is especially useful for ${guide.useCase}.`,
     cloSteps: [
       `Download the ${fileExt} file from this page and keep the project file in an easy-to-find folder.`,
       'Open CLO 3D, then choose File > Open Project and select the downloaded file.',
@@ -875,8 +1059,8 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
       },
       {
         icon: 'inspect',
-        title: 'Check pattern and garment settings',
-        body: 'Review the 2D pattern pieces, sewing lines, arrangement, fabrics, and avatar scale before simulation.'
+        title: 'Check construction details',
+        body: `Review ${guide.construction} before simulation.`
       },
       {
         icon: 'simulate',
@@ -903,8 +1087,8 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
       },
       {
         icon: 'inspect',
-        title: 'Review 2D and 3D garment setup',
-        body: 'Check the 2D pattern pieces, sewing relationship, fabric assignment, and avatar placement.'
+        title: 'Review 2D and 3D setup',
+        body: `Check ${guide.construction}, plus fabric assignment and avatar placement.`
       },
       {
         icon: 'simulate',
@@ -1595,6 +1779,9 @@ router.get('/patterns/:slug', async (req, res) => {
     const items = await db.all('SELECT * FROM patterns WHERE category = ? AND status = ? ORDER BY created_at DESC',
       [category.name, 'active']
     );
+    const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order',
+      ['patterns', 'active']
+    );
     const description = category.meta_description || category.description || `Browse ${category.name} sewing patterns for CLO 3D, Marvelous Designer, and apparel development workflows.`;
     const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
@@ -1606,6 +1793,8 @@ router.get('/patterns/:slug', async (req, res) => {
       page: 'patterns',
       category: category,
       items: items || [],
+      categories: categories || [],
+      landingContent: getLandingContent(category, 'patterns'),
       resourceType: 'patterns',
       resourceTypeLabel: 'Sew Patterns'
     });

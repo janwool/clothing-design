@@ -1,6 +1,9 @@
 <% const content = landingContent || {}; %>
 <% const sectionCategories = categories || []; %>
-<% const sectionModels = models || items || []; %>
+<% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
+<% const categoryHrefPrefix = resourceType === 'patterns' ? '/patterns' : '/3d-models'; %>
+<% const categoryItemLabel = resourceType === 'patterns' ? 'patterns' : 'models'; %>
+<% const fallbackMeta = resourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
 
 <section class="generator-section generator-section-muted">
   <div class="container">
@@ -43,8 +46,8 @@
       <% if (sectionCategories.length > 0) { %>
         <% sectionCategories.slice(0, 6).forEach(function(cat) { %>
           <% const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; %>
-          <a href="/3d-models/<%= cat.slug %>" class="generator-category-card">
-            <small><%= categoryCount || '3D' %> models</small>
+          <a href="<%= categoryHrefPrefix %>/<%= cat.slug %>" class="generator-category-card">
+            <small><%= categoryCount || fallbackMeta %> <%= categoryCount ? categoryItemLabel : '' %></small>
             <strong><%= cat.name %></strong>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M5 12h14"/>
@@ -55,7 +58,7 @@
       <% } else { %>
         <% (content.categories.cards || []).forEach(function(card) { %>
           <a href="<%= card.href || content.categories.buttonHref || '#' %>" class="generator-category-card">
-            <small><%= card.meta || '3D models' %></small>
+            <small><%= card.meta || fallbackMeta %></small>
             <strong><%= card.title %></strong>
           </a>
         <% }); %>

@@ -135,6 +135,9 @@
       <% } %>
     </div>
   </section>
+  <% if (landingContent) { %>
+    <%- include('partials/generator-sections', { landingContent, categories, items, resourceType }) %>
+  <% } %>
 <% } %>
 
 <style>

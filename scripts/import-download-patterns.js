@@ -377,9 +377,13 @@ function catalogTitle(baseTitle, folderName, relativePath) {
 }
 
 function catalogMetadata({ category, garment, baseTitle, folderName, relativePath, visual, query }) {
+  const number = folderNumber(folderName);
+  const collection = collectionLabel(relativePath);
   return {
     category,
     garment,
+    number,
+    collection,
     title: catalogTitle(baseTitle, folderName, relativePath),
     visual,
     query
@@ -600,6 +604,8 @@ function classifyPattern(zprjPath) {
     return {
       category: 'Women Shirts',
       garment: 'women shirt',
+      number,
+      collection: 'Vol 2',
       title: `Women Shirt Vol 2 P${number} ZPRJ Sewing Pattern`,
       visual: 'a women shirt or blouse sample with a clean apparel preview for digital garment development',
       query: 'women shirt ZPRJ pattern for CLO 3D and Marvelous Designer'
@@ -611,6 +617,8 @@ function classifyPattern(zprjPath) {
     return {
       category: 'T-Shirts',
       garment: 'T-shirt',
+      number,
+      collection: 'T-shirt sample series',
       title: `T-Shirt ZPRJ Sewing Pattern ${number}`,
       visual: 'a T-shirt garment preview suitable for apparel mockups, fit testing, and virtual sampling',
       query: 'T-shirt ZPRJ sewing pattern for CLO 3D mockups'
@@ -840,11 +848,75 @@ function classifyPattern(zprjPath) {
   };
 }
 
+function patternDescriptionGuide(metadata) {
+  const category = String(metadata.category || '').toLowerCase();
+  if (/t-?shirts?/.test(category)) {
+    return {
+      focus: 'neckline shape, sleeve balance, hem level, side seam position, and print scale',
+      workflow: 'jersey top mockups, merch concepts, ecommerce previews, and fast fit comparisons'
+    };
+  }
+  if (/hood/.test(category)) {
+    return {
+      focus: 'hood volume, cuff tension, pocket placement, rib trim, and relaxed shoulder drape',
+      workflow: 'streetwear sampling, casualwear colorways, and branded sweatshirt presentations'
+    };
+  }
+  if (/outerwear|coat|jacket/.test(category)) {
+    return {
+      focus: 'collar roll, sleeve pitch, closure placement, layer clearance, and fabric weight',
+      workflow: 'seasonal outerwear sampling, buyer previews, and structured garment handoff'
+    };
+  }
+  if (/women shirts?|shirts?/.test(category)) {
+    return {
+      focus: 'collar stand, placket shape, cuff construction, yoke placement, and sleeve cap balance',
+      workflow: 'woven top development, blouse fit review, and production-ready shirt references'
+    };
+  }
+  if (/dress/.test(category)) {
+    return {
+      focus: 'bodice balance, waist placement, skirt volume, hem sweep, and fabric fall',
+      workflow: 'one-piece silhouette review, fashion line planning, and digital dress sample iteration'
+    };
+  }
+  if (/skirt/.test(category)) {
+    return {
+      focus: 'waistband fit, side seam balance, flare, pleat behavior, and hem level',
+      workflow: 'skirt silhouette studies, drape review, and range planning'
+    };
+  }
+  if (/pants/.test(category)) {
+    return {
+      focus: 'rise, waistband fit, crotch curve, leg opening, pocket placement, and fabric tension',
+      workflow: 'trouser fit checks, technical review, and product page draft visuals'
+    };
+  }
+  if (/bags?|accessor/.test(category)) {
+    return {
+      focus: 'strap length, body volume, seam placement, handle position, and hardware scale',
+      workflow: 'accessory visualization, product concept review, and styling presentation'
+    };
+  }
+  return {
+    focus: 'pattern piece balance, sewing relationships, avatar scale, fabric settings, and garment drape',
+    workflow: 'digital fashion prototyping, garment simulation, fit review, and 3D apparel handoff'
+  };
+}
+
 function buildDescription(metadata) {
+  const guide = patternDescriptionGuide(metadata);
+  const seriesNote = [metadata.collection, metadata.number ? `sample ${metadata.number}` : '']
+    .filter(Boolean)
+    .join(' ');
+  const comparisonNote = seriesNote
+    ? ` This ${seriesNote} file is useful when comparing nearby silhouettes in the same pattern group.`
+    : '';
+
   return [
-    `${metadata.title} is a preview-guided .zprj sewing pattern for CLO 3D and Marvelous Designer. The preview image shows ${metadata.visual}, making it useful for designers who need a clear visual reference before downloading the garment project file.`,
-    `Use this ${metadata.garment} pattern for digital fashion prototyping, garment simulation, fit review, ecommerce mockup preparation, and 3D apparel handoff. It supports SEO and generative-search queries such as "${metadata.query}", "download CLO 3D ZPRJ pattern", and "Marvelous Designer sewing pattern project file".`,
-    `The package is organized for a practical virtual clothing workflow: open the ZPRJ file, inspect the pattern pieces and sewing relationships, adjust fabric or colorways, simulate on the target avatar, and export renders or technical references for the next design step.`
+    `${metadata.title} is a preview-guided .zprj sewing pattern for CLO 3D and Marvelous Designer. The preview image shows ${metadata.visual}, so designers can judge the garment direction before opening the project file.${comparisonNote}`,
+    `Use this ${metadata.garment} pattern for ${guide.workflow}. During review, pay close attention to ${guide.focus}.`,
+    `The package is organized for a practical virtual clothing workflow: open the ZPRJ file, inspect the 2D pattern pieces and sewing relationships, adjust fabric or colorways, simulate on the target avatar, and export renders or technical references for the next design step. It supports search needs such as "${metadata.query}", "download CLO 3D ZPRJ pattern", and "Marvelous Designer sewing pattern project file".`
   ].join('\n\n');
 }
 

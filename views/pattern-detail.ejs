@@ -72,6 +72,19 @@
         <div class="model-description">
           <h3>Description</h3>
           <p><%= pattern.description || 'No description available.' %></p>
+          <% if (detailContent.searchIntentSummary) { %>
+            <p><%= detailContent.searchIntentSummary %></p>
+          <% } %>
+          <% if (detailContent.patternHighlights && detailContent.patternHighlights.length) { %>
+            <div class="pattern-highlight-list">
+              <% detailContent.patternHighlights.forEach(function(item) { %>
+                <div class="pattern-highlight-item">
+                  <span><%= item.label %></span>
+                  <strong><%= item.value %></strong>
+                </div>
+              <% }); %>
+            </div>
+          <% } %>
         </div>
 
         <div class="model-specs">

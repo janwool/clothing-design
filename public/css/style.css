@@ -1732,6 +1732,36 @@ img {
   color: var(--color-secondary);
 }
 
+.pattern-highlight-list {
+  display: grid;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.pattern-highlight-item {
+  display: grid;
+  gap: 4px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-gray-50);
+}
+
+.pattern-highlight-item span {
+  color: var(--color-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.pattern-highlight-item strong {
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
 .pattern-design-cta {
   width: 100%;
   background-color: var(--color-primary);
