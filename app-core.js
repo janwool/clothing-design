@@ -12,6 +12,7 @@ const appRootDir = typeof __dirname === 'string' ? __dirname : '';
 const viewsDir = path.join(appRootDir, 'views');
 const SESSION_COOKIE_NAME = 'cd_session';
 const DEFAULT_SOCIAL_IMAGE = 'https://cdn.cloz-design.com/site/icon.png';
+const CDN_BASE_URL = 'https://cdn.cloz-design.com';
 
 function requireLocalOnly(moduleName) {
   const nodeRequire = eval('require');
@@ -360,6 +361,14 @@ if (isWorkerRuntime) {
       res.send(Buffer.from(asset.base64, 'base64'));
     });
   }
+
+  app.get('/uploads/pattern-previews/:file', (req, res) => {
+    const file = path.basename(req.params.file || '');
+    if (!/\.(png|jpe?g|webp)$/i.test(file)) {
+      return res.status(404).render('404', { title: 'Not Found', page: '' });
+    }
+    res.redirect(302, `${CDN_BASE_URL}/uploads/pattern-previews/${encodeURIComponent(file)}`);
+  });
 }
 
 if (!isWorkerRuntime) {
