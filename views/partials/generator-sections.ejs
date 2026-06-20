@@ -1,9 +1,10 @@
 <% const content = landingContent || {}; %>
 <% const sectionCategories = categories || []; %>
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
-<% const categoryHrefPrefix = resourceType === 'patterns' ? '/patterns' : '/3d-models'; %>
-<% const categoryItemLabel = resourceType === 'patterns' ? 'patterns' : 'models'; %>
-<% const fallbackMeta = resourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
+<% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>
+<% const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/3d-models'; %>
+<% const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; %>
+<% const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
 
 <section class="generator-section generator-section-muted">
   <div class="container">

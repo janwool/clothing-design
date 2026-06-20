@@ -498,6 +498,371 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
 }
 
 const TOOL_PAGE_CONTENT = {
+  't-shirt-mockup-generator': {
+    title: 'Free T-Shirt Mockup Generator',
+    eyebrow: 'Free online T-shirt mockups',
+    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    heroModel: {
+      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      alt: 'Classic Crew Neck T-Shirt 3D Model'
+    },
+    subtitle: 'Preview T-shirt mockups online from ClothingDesign apparel model pages. Plan chest graphics, oversized fits, colorways, and product-page imagery before photography or sampling.',
+    intent: 'Use this page when you need a fast T-shirt product visual direction before photography or sampling. Start from an apparel-first model page, plan a logo or graphic direction, compare product angles, and prepare a cleaner mockup reference for ecommerce, print-on-demand, or brand review.',
+    primaryKeyword: 'free t-shirt mockup generator',
+    keywords: ['3D t-shirt mockup', 'online t-shirt mockup generator', 'front and back t-shirt mockup', 'oversized t-shirt mockup', 't-shirt mockup no Photoshop'],
+    competitorInsights: [
+      { title: 'Preview before samples', body: 'Use a garment-based model preview to judge artwork scale and shirt proportions before ordering samples.' },
+      { title: 'Plan product-page imagery', body: 'Build a clearer direction for white tees, black tees, oversized fits, logo tees, and graphic tee listings.' },
+      { title: 'Reduce PSD dependency', body: 'Use browser-based apparel previews when you need a quick mockup reference without opening a Photoshop template.' }
+    ],
+    freePositioning: 'ClothingDesign keeps the T-shirt mockup workflow focused on free browser-based apparel visuals, so creators can test product ideas before buying PSD packs, booking photography, or ordering samples.',
+    steps: [
+      { title: 'Choose a T-shirt model', body: 'Start from a T-shirt or top model in the ClothingDesign 3D model library.' },
+      { title: 'Place the artwork direction', body: 'Apply a logo, chest print, back graphic, color direction, or streetwear artwork concept.' },
+      { title: 'Review scale and contrast', body: 'Check artwork scale, fabric color, front-view balance, and product angle before committing.' },
+      { title: 'Prepare the product preview', body: 'Use the finished preview as a product-page, print-on-demand, or internal review reference.' }
+    ],
+    useCases: ['Print-on-demand listings', 'Streetwear drop previews', 'Front and back product mockups'],
+    useCaseDetails: [
+      'Prepare a T-shirt mockup for Shopify, Etsy, Amazon Merch, or POD catalog drafts before printing.',
+      'Compare oversized, black tee, white tee, logo tee, and graphic tee directions for a clothing brand launch.',
+      'Plan front placement, back print scale, chest logo sizing, and sleeve detail before final artwork lockup.'
+    ],
+    visualGallery: [
+      { title: 'Graphic tee preview', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Realistic T-shirt mockup with a small chest artwork placement and ecommerce-ready lighting.' },
+      { title: 'Bulk colorway direction', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'Use one artwork idea across multiple shirt colors for POD planning.' },
+      { title: 'POD listing set', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Prepare clean product listing visuals for Shopify, Etsy, and merch catalogs.' }
+    ],
+    examplesEyebrow: 'T-shirt examples',
+    examplesTitle: 'T-shirt mockup examples for product pages',
+    examplesSubtitle: 'Use T-shirt previews to plan artwork scale, color direction, and listing imagery before printing or sampling.',
+    planningEyebrow: 'Plan the tee',
+    planningTitle: 'Plan a T-shirt mockup from artwork to product preview',
+    benefitsEyebrow: 'Why use it',
+    benefitsTitle: 'Preview T-shirt artwork before printing samples',
+    benefitsSubtitle: 'Use a model-based T-shirt preview to check chest graphics, back prints, color contrast, and product-page framing before you order blanks or book photography.',
+    pickerEyebrow: 'Choose another mockup type',
+    pickerTitle: 'Move from T-shirt mockups into the next apparel workflow',
+    workflowEyebrow: 'T-shirt workflow',
+    workflowTitle: 'From blank tee to product-page mockup direction',
+    useCasesEyebrow: 'Best for',
+    useCasesTitle: 'T-shirt mockups for POD, streetwear, and product pages',
+    relatedEyebrow: 'Related mockup tools',
+    relatedTitle: 'Build the rest of your apparel mockup set',
+    relatedCardLabel: 'Mockup workflow',
+    finalCtaEyebrow: 'Start with a tee',
+    finalCtaTitle: 'Open a T-shirt model and plan the first product mockup.',
+    finalCtaSubtitle: 'Use the 3D T-shirt model to test artwork placement, garment color, and ecommerce visual direction before production.',
+    secondaryCtaLabel: 'Browse Apparel Models',
+    faqEyebrow: 'T-shirt FAQ',
+    faqTitle: 'T-shirt mockup generator questions',
+    outputHighlights: ['Product-page mockup direction', 'Artwork placement planning', 'Fast browser-based preview'],
+    keywordClusters: [
+      { title: 'Core terms', terms: ['free t-shirt mockup generator', 'tshirt mockup generator', 'online t-shirt mockup', '3D t-shirt mockup'] },
+      { title: 'Product angles', terms: ['front t-shirt mockup', 'back print mockup', 'front and back t-shirt mockup', 'oversized t-shirt mockup'] },
+      { title: 'Commerce use', terms: ['POD t-shirt mockup', 'Shopify product image', 'Etsy t-shirt mockup', 'product mockup preview'] }
+    ],
+    faq: [
+      { question: 'Can I preview a T-shirt mockup online for free?', answer: 'Yes. Use the T-shirt model library to preview artwork direction, colors, and product angles before paying for photography or mockup packs.' },
+      { question: 'Does this work for print-on-demand sellers?', answer: 'Yes. The workflow is designed for POD planning, Shopify drafts, Etsy listings, merch catalogs, and clothing brand product previews.' },
+      { question: 'Do I need Photoshop?', answer: 'No. The goal is to create browser-based T-shirt mockups from 3D model previews instead of editing a PSD template.' },
+      { question: 'Can I make oversized or streetwear mockups?', answer: 'Yes. Use oversized and relaxed T-shirt model previews, then test front graphics, back prints, chest logos, and colorways.' }
+    ],
+    relatedSlugs: ['hoodie-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'],
+    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+  },
+  'hoodie-mockup-generator': {
+    title: 'Free Hoodie Mockup Generator',
+    eyebrow: 'Free online hoodie mockups',
+    image: '/uploads/preview/hoodie-mockup-3d-model-03-dca998b8.webp?v=cover-20260607',
+    heroModel: {
+      src: '/uploads/glb/hoodie-mockup-3d-model-03-dca998b8.glb',
+      alt: 'Tailored Fleece Lined Hoodie 3D Model'
+    },
+    subtitle: 'Preview hoodie mockups online for streetwear drops, team merch, sleeve-zone ideas, back-print planning, oversized fits, and ecommerce product pages.',
+    intent: 'Use this page when a flat hoodie outline is not enough. Preview graphics on a structured garment model, compare pullover and oversized hoodie directions, and plan visuals for product listings, launch decks, and client approvals.',
+    primaryKeyword: 'hoodie mockup generator',
+    keywords: ['free hoodie mockup generator', '3D hoodie mockup', 'oversized hoodie mockup', 'front and back hoodie mockup', 'sweatshirt mockup generator'],
+    competitorInsights: [
+      { title: 'Check hoodie volume', body: 'Judge how artwork reads on a bulkier garment shape, including hood, pocket, cuff, and chest areas.' },
+      { title: 'Support streetwear planning', body: 'Compare oversized pullover directions before moving into samples, photoshoots, or final listing assets.' },
+      { title: 'Prepare approval visuals', body: 'Give teams, clubs, schools, and buyers a clearer hoodie preview before production decisions.' }
+    ],
+    freePositioning: 'ClothingDesign gives hoodie creators a free apparel-first mockup path: start from real hoodie model previews, test artwork scale, then move into product presentation.',
+    steps: [
+      { title: 'Open a hoodie model', body: 'Start from a structured hoodie model in the ClothingDesign 3D library.' },
+      { title: 'Plan the graphic zones', body: 'Choose a base color and map front print, back artwork, chest logo, or sleeve placement.' },
+      { title: 'Check hoodie proportions', body: 'Review hood volume, pocket position, cuff balance, artwork scale, and product angle.' },
+      { title: 'Use it for approval', body: 'Turn the hoodie preview into a streetwear planning, POD draft, ecommerce, or team approval visual.' }
+    ],
+    useCases: ['Streetwear hoodie drops', 'Team and school merch', 'Sweatshirt product listings'],
+    useCaseDetails: [
+      'Preview oversized pullover hoodie graphics before producing samples.',
+      'Create mockups for schools, clubs, events, creators, and company apparel.',
+      'Prepare product visuals for sweatshirts, fleece hoodies, and casualwear listings.'
+    ],
+    visualGallery: [
+      { title: 'Pullover hoodie mockup', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Realistic hoodie product mockup with chest and sleeve artwork placement.' },
+      { title: 'POD listing workflow', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Turn hoodie previews into product images for online store drafts.' },
+      { title: 'Multi-product direction', image: 'https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.png', caption: 'Keep T-shirt, hoodie, jacket, and dress mockups visually consistent.' }
+    ],
+    examplesEyebrow: 'Hoodie examples',
+    examplesTitle: 'Hoodie mockup examples for streetwear planning',
+    examplesSubtitle: 'Compare hoodie volume, chest artwork, sleeve-zone ideas, and listing direction before production.',
+    planningEyebrow: 'Plan the hoodie',
+    planningTitle: 'Turn a hoodie concept into a clearer streetwear preview',
+    benefitsEyebrow: 'Why use it',
+    benefitsTitle: 'Preview hoodie graphics on a bulkier garment shape',
+    benefitsSubtitle: 'Use a hoodie model preview to judge artwork scale across the chest, sleeves, pocket area, hood volume, and oversized product silhouettes.',
+    pickerEyebrow: 'Choose another mockup type',
+    pickerTitle: 'Compare hoodie mockups with tees, POD listings, and full apparel sets',
+    workflowEyebrow: 'Hoodie workflow',
+    workflowTitle: 'From hoodie artwork idea to streetwear product preview',
+    useCasesEyebrow: 'Best for',
+    useCasesTitle: 'Hoodie mockups for drops, merch, and sweatshirt listings',
+    relatedEyebrow: 'Related mockup tools',
+    relatedTitle: 'Extend the hoodie concept into other product visuals',
+    relatedCardLabel: 'Mockup workflow',
+    finalCtaEyebrow: 'Start with a hoodie',
+    finalCtaTitle: 'Open a hoodie model and check the graphic placement in 3D.',
+    finalCtaSubtitle: 'Use the hoodie model to preview chest artwork, sleeve ideas, color direction, and listing-ready product framing.',
+    secondaryCtaLabel: 'Browse Apparel Models',
+    faqEyebrow: 'Hoodie FAQ',
+    faqTitle: 'Hoodie mockup generator questions',
+    outputHighlights: ['Chest and sleeve-zone planning', 'Streetwear product previews', 'Listing image direction'],
+    keywordClusters: [
+      { title: 'Core terms', terms: ['hoodie mockup generator', 'free hoodie mockup', '3D hoodie mockup', 'sweatshirt mockup generator'] },
+      { title: 'Style terms', terms: ['oversized hoodie mockup', 'pullover hoodie mockup', 'streetwear hoodie mockup', 'front and back hoodie mockup'] },
+      { title: 'Artwork terms', terms: ['sleeve graphic mockup', 'back print hoodie', 'chest logo hoodie', 'hoodie product preview'] }
+    ],
+    faq: [
+      { question: 'Can I make hoodie mockups for free?', answer: 'Yes. Start from hoodie model previews and create product visuals for artwork review, ecommerce drafts, or launch planning.' },
+      { question: 'Can I preview sleeve and back artwork?', answer: 'The 3D mockup workflow helps you plan chest, sleeve, back, and pocket-zone artwork before producing a sample.' },
+      { question: 'Is this useful for streetwear brands?', answer: 'Yes. Hoodie mockups are especially useful for oversized fits, graphic drops, capsule launches, and buyer or client approvals.' },
+      { question: 'Do I need a PSD hoodie template?', answer: 'No. This workflow is designed around browser-based apparel mockups and 3D hoodie model previews.' }
+    ],
+    relatedSlugs: ['t-shirt-mockup-generator', 'print-on-demand-mockup-generator', '3d-clothing-mockup-generator'],
+    cta: { label: 'Start with Hoodie Model', href: '/3d-models/hoodie/tailored-fleece-lined-hoodie-3d-model' }
+  },
+  '3d-clothing-mockup-generator': {
+    title: 'Free 3D Clothing Mockup Generator',
+    eyebrow: '3D apparel product visuals',
+    image: '/uploads/preview/dress-3d-model-06-29e39d9a.webp?v=cover-20260607',
+    heroModel: {
+      src: '/uploads/glb/dress-3d-model-06-29e39d9a.glb',
+      alt: 'Classic One-Piece Dress 3D Model'
+    },
+    subtitle: 'Plan 3D clothing mockups for T-shirts, hoodies, jackets, dresses, and apparel product pages using ClothingDesign model previews.',
+    intent: 'Use the 3D clothing mockup workflow when you need garment shape, product angle, and apparel category variety. Build richer visuals than flat templates while keeping the process browser-based and fast.',
+    primaryKeyword: '3D clothing mockup generator',
+    keywords: ['clothing mockup generator', 'apparel mockup generator', '3D apparel mockup', 'online clothing mockup', 'realistic clothing mockup'],
+    competitorInsights: [
+      { title: 'Cover more garment types', body: 'Move from T-shirts and hoodies into jackets, dresses, bottoms, and accessories without changing content strategy.' },
+      { title: 'Show shape, not just art', body: 'Use 3D model previews to communicate garment form, product angle, and category fit better than flat templates.' },
+      { title: 'Build collection context', body: 'Prepare product-page, launch-deck, portfolio, and approval references across a full apparel range.' }
+    ],
+    freePositioning: 'ClothingDesign positions mockups around apparel categories first, so designers can choose the right model family before testing graphics, colorways, and product renders.',
+    steps: [
+      { title: 'Pick the garment category', body: 'Choose the clothing category that matches your product idea and visual planning need.' },
+      { title: 'Select a 3D model preview', body: 'Start from a T-shirt, hoodie, jacket, dress, accessory, or another apparel model.' },
+      { title: 'Apply product direction', body: 'Add design direction, artwork, colorways, materials, or product styling notes.' },
+      { title: 'Create the review reference', body: 'Use the preview for ecommerce drafts, presentations, portfolio work, or approvals.' }
+    ],
+    useCases: ['Ecommerce product visuals', 'Apparel collection boards', 'Design approval mockups'],
+    useCaseDetails: [
+      'Prepare product images for apparel pages before photoshoots are ready.',
+      'Show multiple garment categories in one launch or seasonal planning deck.',
+      'Help clients, buyers, and internal teams understand shape, color, and artwork direction.'
+    ],
+    visualGallery: [
+      { title: 'Multi-category mockup set', image: 'https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.png', caption: 'T-shirt, hoodie, jacket, and dress mockups in one visual system.' },
+      { title: 'T-shirt product mockup', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Single-garment product mockup with clear artwork placement.' },
+      { title: 'Hoodie product mockup', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Structured hoodie mockup for streetwear, merch, and ecommerce visuals.' }
+    ],
+    examplesEyebrow: '3D apparel examples',
+    examplesTitle: '3D clothing mockup examples across categories',
+    examplesSubtitle: 'Plan apparel visuals across shirts, hoodies, dresses, jackets, and product presentation workflows.',
+    planningEyebrow: 'Plan the collection',
+    planningTitle: 'Explore apparel mockups across garment categories',
+    benefitsEyebrow: 'Why use it',
+    benefitsTitle: 'Plan apparel mockups across more than one garment type',
+    benefitsSubtitle: 'Use ClothingDesign when a flat template is not enough and you need T-shirts, hoodies, dresses, jackets, and accessories to feel part of one product system.',
+    pickerEyebrow: 'Choose a focused workflow',
+    pickerTitle: 'Start broad, then move into the garment mockup you need',
+    workflowEyebrow: '3D apparel workflow',
+    workflowTitle: 'From garment category to collection-ready mockup direction',
+    useCasesEyebrow: 'Best for',
+    useCasesTitle: '3D clothing mockups for collections, approvals, and ecommerce',
+    relatedEyebrow: 'Related mockup tools',
+    relatedTitle: 'Narrow the 3D apparel workflow by product type',
+    relatedCardLabel: 'Mockup workflow',
+    finalCtaEyebrow: 'Start with a model',
+    finalCtaTitle: 'Choose a 3D garment model and build the mockup direction around it.',
+    finalCtaSubtitle: 'Use model previews to plan product visuals across apparel categories before samples, shoots, or launch decks.',
+    secondaryCtaLabel: 'Browse All 3D Models',
+    faqEyebrow: '3D clothing FAQ',
+    faqTitle: '3D clothing mockup generator questions',
+    outputHighlights: ['Multiple garment categories', 'Model-based presentation angles', 'Ecommerce visual direction'],
+    keywordClusters: [
+      { title: 'Core terms', terms: ['3D clothing mockup generator', 'clothing mockup generator', 'apparel mockup generator', 'online clothing mockup'] },
+      { title: 'Category terms', terms: ['T-shirt mockup', 'hoodie mockup', 'jacket mockup', 'dress mockup'] },
+      { title: 'Output terms', terms: ['product mockup preview', 'ecommerce mockup', 'launch deck visual', 'brand approval mockup'] }
+    ],
+    faq: [
+      { question: 'What is a 3D clothing mockup generator?', answer: 'It is a browser-based workflow for creating apparel visuals from 3D garment model previews instead of editing flat PSD templates.' },
+      { question: 'Which clothing categories can I mock up?', answer: 'Use ClothingDesign for T-shirts, hoodies, shirts, jackets, dresses, bottoms, bags, hats, and other apparel or accessory categories.' },
+      { question: 'Is this only for fashion designers?', answer: 'No. It is useful for POD sellers, ecommerce teams, agencies, merch creators, streetwear brands, students, and product teams.' },
+      { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
+    ],
+    relatedSlugs: ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'print-on-demand-mockup-generator'],
+    cta: { label: 'Start with Dress Model', href: '/3d-models/dress/classic-one-piece-dress-3d-model' }
+  },
+  'bulk-t-shirt-mockup-generator': {
+    title: 'Bulk T-Shirt Mockup Generator',
+    eyebrow: 'Batch T-shirt product visuals',
+    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    heroModel: {
+      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      alt: 'Classic Crew Neck T-Shirt 3D Model'
+    },
+    subtitle: 'Plan bulk T-shirt mockups for print-on-demand catalogs, colorway matrices, Shopify drafts, Etsy listings, and apparel product pages.',
+    intent: 'Use this page when one design needs to be shown across many shirt colors or listing layouts. Build a consistent mockup direction for product catalogs without manually rebuilding every colorway.',
+    primaryKeyword: 'bulk t-shirt mockup generator',
+    keywords: ['bulk mockup generator', 'batch t-shirt mockup', 'POD mockup generator', 'multiple t-shirt mockups', 'colorway mockup generator'],
+    competitorInsights: [
+      { title: 'Compare colorways faster', body: 'Show one artwork direction across multiple shirt colors before committing to a product variant set.' },
+      { title: 'Keep catalog framing consistent', body: 'Use the same visual direction across Shopify, Etsy, Amazon Merch, and internal ecommerce drafts.' },
+      { title: 'Reduce repetitive planning', body: 'Review contrast, readability, and variant logic before rebuilding each listing image by hand.' }
+    ],
+    freePositioning: 'ClothingDesign does not treat bulk mockups as a spreadsheet-only task. The goal is to create a visual colorway matrix that still feels apparel-specific and brand-ready.',
+    steps: [
+      { title: 'Start with one T-shirt design', body: 'Use a T-shirt model and one artwork direction as the source for the batch.' },
+      { title: 'Choose colorway groups', body: 'Select multiple product colors, neutral bases, seasonal shades, or variant groups.' },
+      { title: 'Compare artwork readability', body: 'Review how the same graphic reads across light, dark, neutral, and seasonal bases.' },
+      { title: 'Build the catalog reference', body: 'Use the colorway set as a reference for POD listings, ecommerce drafts, or brand planning.' }
+    ],
+    useCases: ['POD colorway matrices', 'Shopify catalog drafts', 'Brand variant planning'],
+    useCaseDetails: [
+      'Preview how one graphic performs across many blank T-shirt colors.',
+      'Build consistent product imagery before uploading variations to an online store.',
+      'Compare color contrast and artwork readability before committing to print files.'
+    ],
+    visualGallery: [
+      { title: 'Bulk colorway matrix', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'One logo direction shown across multiple T-shirt colorways.' },
+      { title: 'Main T-shirt mockup', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Start from a polished model-based T-shirt mockup before multiplying variants.' },
+      { title: 'POD listing set', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Use bulk mockups as the source for listing-ready product images.' }
+    ],
+    examplesEyebrow: 'Bulk examples',
+    examplesTitle: 'Bulk T-shirt mockup examples for colorway planning',
+    examplesSubtitle: 'Compare one graphic across multiple shirt colors and keep catalog imagery visually consistent.',
+    planningEyebrow: 'Plan the batch',
+    planningTitle: 'Plan one T-shirt design across multiple colorways',
+    benefitsEyebrow: 'Why use it',
+    benefitsTitle: 'Compare T-shirt colorways before building every listing image',
+    benefitsSubtitle: 'Use bulk mockup planning to test one graphic across light, dark, neutral, and seasonal shirt colors while keeping catalog framing consistent.',
+    pickerEyebrow: 'Choose another mockup type',
+    pickerTitle: 'Move from bulk colorways into focused product mockups',
+    workflowEyebrow: 'Bulk workflow',
+    workflowTitle: 'From one T-shirt design to a consistent colorway set',
+    useCasesEyebrow: 'Best for',
+    useCasesTitle: 'Bulk T-shirt mockups for variants, catalogs, and POD stores',
+    relatedEyebrow: 'Related mockup tools',
+    relatedTitle: 'Turn a batch colorway plan into stronger product visuals',
+    relatedCardLabel: 'Mockup workflow',
+    finalCtaEyebrow: 'Start a colorway set',
+    finalCtaTitle: 'Open a T-shirt model and plan your first batch of colorways.',
+    finalCtaSubtitle: 'Use one garment model to check artwork readability, variant logic, and store-ready visual consistency.',
+    secondaryCtaLabel: 'Browse Apparel Models',
+    faqEyebrow: 'Bulk mockup FAQ',
+    faqTitle: 'Bulk T-shirt mockup generator questions',
+    outputHighlights: ['Batch product variants', 'Colorway comparison', 'Consistent catalog framing'],
+    keywordClusters: [
+      { title: 'Core terms', terms: ['bulk t-shirt mockup generator', 'bulk mockup generator', 'batch mockup generator', 'multiple t-shirt mockups'] },
+      { title: 'POD terms', terms: ['POD mockup generator', 'print on demand mockup', 'Shopify T-shirt mockup', 'Etsy T-shirt mockup'] },
+      { title: 'Variant terms', terms: ['colorway mockup', 'black and white T-shirt mockup', 'product variant image', 'catalog mockup set'] }
+    ],
+    faq: [
+      { question: 'What is a bulk T-shirt mockup generator?', answer: 'It is a workflow for showing one T-shirt design across multiple shirt colors, product angles, or ecommerce listing variants.' },
+      { question: 'Is this useful for print-on-demand?', answer: 'Yes. POD sellers often need the same artwork shown across many colors and listing images before publishing products.' },
+      { question: 'Can I compare dark and light shirts?', answer: 'Yes. A bulk colorway matrix helps you compare artwork contrast on black, white, neutral, and seasonal base colors.' },
+      { question: 'Should I use this before production?', answer: 'Yes. Bulk mockups help validate colorways and reduce visual inconsistencies before print files or listings go live.' }
+    ],
+    relatedSlugs: ['t-shirt-mockup-generator', 'print-on-demand-mockup-generator', '3d-clothing-mockup-generator'],
+    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+  },
+  'print-on-demand-mockup-generator': {
+    title: 'Print-on-Demand Mockup Generator',
+    eyebrow: 'POD apparel listing visuals',
+    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    heroModel: {
+      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      alt: 'Classic Crew Neck T-Shirt 3D Model'
+    },
+    subtitle: 'Plan print-on-demand apparel mockups for T-shirts, hoodies, online stores, merch catalogs, Shopify drafts, and Etsy product listings.',
+    intent: 'Use this page when a design needs to become a product listing. Build a clean apparel mockup direction, compare colorways, and prepare visuals that communicate product value before printing or publishing.',
+    primaryKeyword: 'print on demand mockup generator',
+    keywords: ['POD mockup generator', 'Shopify product mockup generator', 'Etsy t-shirt mockup', 'merch mockup generator', 'ecommerce apparel mockup'],
+    competitorInsights: [
+      { title: 'Shape the listing before publishing', body: 'Turn apparel artwork into a product-image direction before samples, photography, or marketplace upload.' },
+      { title: 'Keep POD products consistent', body: 'Plan T-shirt and hoodie mockups with repeatable framing for catalogs, launch pages, and marketplace drafts.' },
+      { title: 'Review before the store goes live', body: 'Preview colorways and product composition before publishing to Shopify, Etsy, Amazon Merch, or campaign pages.' }
+    ],
+    freePositioning: 'ClothingDesign supports the product-image step in a POD workflow: choose a garment, test artwork, generate visual direction, and move toward store-ready listings.',
+    steps: [
+      { title: 'Choose the POD product', body: 'Start with a T-shirt, hoodie, sweatshirt, jacket, or another apparel model.' },
+      { title: 'Set artwork and colorways', body: 'Apply the artwork direction and decide the first product colors for the listing.' },
+      { title: 'Keep catalog framing consistent', body: 'Prepare mockup visuals that feel repeatable across the product catalog.' },
+      { title: 'Prepare the listing direction', body: 'Use the preview direction in store drafts, launch decks, ads, or POD listing preparation.' }
+    ],
+    useCases: ['Shopify product pages', 'Etsy apparel listings', 'Merch catalog planning'],
+    useCaseDetails: [
+      'Create product visuals for a Shopify collection before samples are photographed.',
+      'Prepare Etsy-style mockups that make artwork and product color clear.',
+      'Plan merch catalogs for creators, teams, events, and streetwear capsules.'
+    ],
+    visualGallery: [
+      { title: 'POD product listing visual', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Listing-ready mockup framing for online store product images.' },
+      { title: 'Bulk colorway source', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'Create product variants from one artwork direction.' },
+      { title: 'Hoodie product example', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Use hoodie mockups for streetwear and sweatshirt POD listings.' }
+    ],
+    examplesEyebrow: 'POD examples',
+    examplesTitle: 'Print-on-demand mockup examples for listings',
+    examplesSubtitle: 'Plan Shopify, Etsy, merch, and POD listing visuals before publishing products or ordering samples.',
+    planningEyebrow: 'Plan the listing',
+    planningTitle: 'Shape a print-on-demand listing before publishing',
+    benefitsEyebrow: 'Why use it',
+    benefitsTitle: 'Turn POD artwork into clearer product listing visuals',
+    benefitsSubtitle: 'Use model-based mockups to plan Shopify, Etsy, Amazon Merch, and creator-store product images before publishing or ordering samples.',
+    pickerEyebrow: 'Choose another mockup type',
+    pickerTitle: 'Build POD listings from focused garment mockup workflows',
+    workflowEyebrow: 'POD workflow',
+    workflowTitle: 'From artwork upload idea to store-ready mockup direction',
+    useCasesEyebrow: 'Best for',
+    useCasesTitle: 'POD mockups for Shopify, Etsy, merch, and catalog launches',
+    relatedEyebrow: 'Related mockup tools',
+    relatedTitle: 'Create the product mockups behind a stronger POD catalog',
+    relatedCardLabel: 'Mockup workflow',
+    finalCtaEyebrow: 'Start a POD preview',
+    finalCtaTitle: 'Open a garment model and shape the listing visual before publishing.',
+    finalCtaSubtitle: 'Use apparel mockups to test product colors, artwork scale, and consistent ecommerce framing for print-on-demand stores.',
+    secondaryCtaLabel: 'Browse Apparel Models',
+    faqEyebrow: 'POD FAQ',
+    faqTitle: 'Print-on-demand mockup generator questions',
+    outputHighlights: ['Shopify and Etsy listing visuals', 'POD color variants', 'Catalog-ready apparel mockups'],
+    keywordClusters: [
+      { title: 'Core terms', terms: ['print on demand mockup generator', 'POD mockup generator', 'merch mockup generator', 'ecommerce apparel mockup'] },
+      { title: 'Store terms', terms: ['Shopify product mockup', 'Etsy T-shirt mockup', 'Amazon Merch mockup', 'online store product image'] },
+      { title: 'Product terms', terms: ['T-shirt POD mockup', 'hoodie POD mockup', 'product listing preview', 'catalog mockup set'] }
+    ],
+    faq: [
+      { question: 'Can I use these mockups for print-on-demand listings?', answer: 'Yes. The pages are planned around POD use cases such as T-shirt listings, hoodie previews, colorway sets, and ecommerce drafts.' },
+      { question: 'Which products should I mock up first?', answer: 'Start with high-demand apparel such as T-shirts and hoodies, then expand into sweatshirts, jackets, dresses, and accessories.' },
+      { question: 'Can I use mockups for Shopify or Etsy?', answer: 'Yes. The visual workflow supports product page drafts, Etsy-style listing images, Shopify catalog planning, and launch deck visuals.' },
+      { question: 'Do I need product photography first?', answer: 'No. Use mockups before photography to test artwork, product colors, listing structure, and sales-page presentation.' }
+    ],
+    relatedSlugs: ['bulk-t-shirt-mockup-generator', 't-shirt-mockup-generator', 'hoodie-mockup-generator'],
+    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+  },
   't-shirt-designer': {
     title: 'Free T-Shirt Designer Online',
     eyebrow: 'Free custom shirt mockup tool',
@@ -792,10 +1157,12 @@ function getToolPage(slug) {
   const page = TOOL_PAGE_CONTENT[slug];
   if (!page) return null;
   const image = `/images/tools/${slug}.webp`;
-  const related = Object.entries(TOOL_PAGE_CONTENT)
-    .filter(([key]) => key !== slug)
-    .slice(0, 3)
-    .map(([key, value]) => ({ slug: key, title: value.title, primaryKeyword: value.primaryKeyword }));
+  const related = (page.relatedSlugs || Object.keys(TOOL_PAGE_CONTENT).filter(key => key !== slug).slice(0, 3))
+    .map(key => {
+      const value = TOOL_PAGE_CONTENT[key];
+      return value ? { slug: key, title: value.title, primaryKeyword: value.primaryKeyword } : null;
+    })
+    .filter(Boolean);
   return { slug, image, ...page, related };
 }
 
@@ -1657,9 +2024,11 @@ router.get('/tools', (req, res) => {
         '@type': 'ItemList',
         name: 'ClothingDesign tools',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'T-Shirt Designer', url: toAbsoluteUrl(req, '/tools/t-shirt-designer') },
-          { '@type': 'ListItem', position: 2, name: '3D Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-mockup') },
-          { '@type': 'ListItem', position: 3, name: 'Free Sewing Patterns', url: toAbsoluteUrl(req, '/tools/free-patterns') }
+          { '@type': 'ListItem', position: 1, name: 'T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/t-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 2, name: 'Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/hoodie-mockup-generator') },
+          { '@type': 'ListItem', position: 3, name: '3D Clothing Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-clothing-mockup-generator') },
+          { '@type': 'ListItem', position: 4, name: 'Bulk T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/bulk-t-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 5, name: 'Print-on-Demand Mockup Generator', url: toAbsoluteUrl(req, '/tools/print-on-demand-mockup-generator') }
         ]
       }
     }),

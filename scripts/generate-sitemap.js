@@ -16,6 +16,11 @@ const baseUrl = (process.env.SITEMAP_BASE_URL || 'https://www.cloz-design.com').
 const outputPath = path.resolve(__dirname, '..', 'public', 'sitemap.xml');
 const robotsPath = path.resolve(__dirname, '..', 'public', 'robots.txt');
 const staticToolPaths = [
+  '/tools/t-shirt-mockup-generator',
+  '/tools/hoodie-mockup-generator',
+  '/tools/3d-clothing-mockup-generator',
+  '/tools/bulk-t-shirt-mockup-generator',
+  '/tools/print-on-demand-mockup-generator',
   '/tools/t-shirt-designer',
   '/tools/hoodie-designer',
   '/tools/dress-designer',

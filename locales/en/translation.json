@@ -4,7 +4,7 @@
     "design2d": "Design 2D",
     "patterns": "Sew Patterns",
     "gallery": "Get Inspired",
-    "tools": "Use Tools",
+    "tools": "Tools",
     "pricing": "See Plans",
     "signIn": "Sign In",
     "startFree": "Start Free",
@@ -141,9 +141,9 @@
     "pageSubtitle": "Get inspired by designs from our community"
   },
   "tools": {
-    "title": "Use Tools - ClothingDesign",
-    "pageTitle": "Use Tools",
-    "pageSubtitle": "Free design tools, mockup generators, and learning resources",
+    "title": "Apparel Mockup Tools - ClothingDesign",
+    "pageTitle": "Apparel Mockup Tools",
+    "pageSubtitle": "Plan T-shirt, hoodie, clothing, bulk colorway, and print-on-demand mockups from browser-based apparel model previews",
     "popularTools": "Popular Tools",
     "designTools": "Design Tools",
     "tShirtDesigner": "T-Shirt Designer",

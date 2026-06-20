@@ -13,32 +13,66 @@
       <span class="generator-eyebrow"><%= toolPage.eyebrow %></span>
       <h1><%= toolPage.title %></h1>
       <p><%= toolPage.subtitle %></p>
+      <div class="tool-trust-row" aria-label="Mockup planning highlights">
+        <% (toolPage.outputHighlights || ['No Photoshop needed', 'Model-based apparel previews', 'Product visual planning']).forEach(function(item) { %>
+          <span><%= item %></span>
+        <% }); %>
+      </div>
       <div class="hero-actions">
         <a href="<%= toolPage.cta.href %>" class="btn btn-primary btn-large"><%= toolPage.cta.label %></a>
-        <a href="/tools" class="btn btn-secondary btn-large">Browse All Free Tools</a>
+        <a href="/design-3d" class="btn btn-secondary btn-large"><%= toolPage.secondaryCtaLabel || 'Browse Mockup Models' %></a>
       </div>
     </div>
     <div class="tool-detail-visual">
-      <img src="<%= toolPage.image %>" alt="<%= toolPage.title %> preview image">
-      <div class="tool-detail-panel" aria-label="Popular searches">
-        <small>Popular search</small>
-        <strong><%= toolPage.primaryKeyword %></strong>
-        <div class="tool-keyword-list">
-          <% toolPage.keywords.forEach(function(keyword) { %>
-            <span><%= keyword %></span>
-          <% }); %>
-        </div>
-      </div>
+      <% if (toolPage.heroModel && toolPage.heroModel.src) { %>
+        <model-viewer
+          class="model-viewer-natural tool-hero-model-viewer"
+          src="<%= toolPage.heroModel.src %>"
+          alt="<%= toolPage.heroModel.alt || toolPage.title %>"
+          camera-controls
+          auto-rotate
+          shadow-intensity="1.55"
+          shadow-softness="0.52"
+          exposure="0.66"
+          environment-image="neutral"
+          aria-label="<%= toolPage.heroModel.alt || toolPage.title %>"
+        ></model-viewer>
+      <% } else { %>
+        <img src="<%= toolPage.image %>" alt="<%= toolPage.title %> preview image">
+      <% } %>
     </div>
   </div>
 </section>
+
+<% if (toolPage.visualGallery && toolPage.visualGallery.length) { %>
+  <section class="generator-section tool-visual-section">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow"><%= toolPage.examplesEyebrow || 'Examples' %></span>
+        <h2><%= toolPage.examplesTitle || 'Mockup examples for real apparel workflows' %></h2>
+        <p><%= toolPage.examplesSubtitle || 'Show the garment, artwork placement, and product framing clearly before you print, sample, or publish.' %></p>
+      </div>
+      <div class="tool-visual-grid">
+        <% toolPage.visualGallery.forEach(function(item) { %>
+          <article class="tool-visual-card">
+            <img src="<%= item.image %>" alt="<%= item.title %>">
+            <div>
+              <h3><%= item.title %></h3>
+              <p><%= item.caption %></p>
+            </div>
+          </article>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+<% } %>
 
 <section class="generator-section">
   <div class="container">
     <div class="tool-answer-grid">
       <div>
-        <span class="generator-eyebrow">What you can create</span>
-        <h2>Make apparel visuals before production starts</h2>
+        <span class="generator-eyebrow"><%= toolPage.planningEyebrow || 'Plan faster' %></span>
+        <h2><%= toolPage.planningTitle || 'Turn a garment idea into a clearer mockup direction' %></h2>
       </div>
       <p><%= toolPage.intent %></p>
     </div>
@@ -48,29 +82,34 @@
 <section class="generator-section generator-section-muted">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Why it helps</span>
-      <h2>Free tools for faster apparel decisions</h2>
-      <p>Use ClothingDesign when you need realistic product direction quickly, without waiting for samples, photography, or a paid mockup pack.</p>
+      <span class="generator-eyebrow"><%= toolPage.benefitsEyebrow || 'Why teams use it' %></span>
+      <h2><%= toolPage.benefitsTitle || 'Preview the product before you spend on samples' %></h2>
+      <p><%= toolPage.benefitsSubtitle || 'Use ClothingDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' %></p>
     </div>
     <div class="generator-output-grid">
       <% toolPage.competitorInsights.forEach(function(insight) { %>
         <article class="generator-output-card">
-          <h3>Practical benefit</h3>
-          <p><%= insight %></p>
+          <h3><%= insight.title || 'Why it helps' %></h3>
+          <p><%= insight.body || insight %></p>
         </article>
       <% }); %>
     </div>
   </div>
 </section>
 
-<section class="generator-section">
+<section class="generator-section tool-picker-section">
   <div class="container">
-    <div class="tool-answer-grid">
-      <div>
-        <span class="generator-eyebrow">Free workflow</span>
-        <h2>Start free and export clean visuals</h2>
-      </div>
-      <p><%= toolPage.freePositioning %></p>
+    <div class="generator-section-header">
+      <span class="generator-eyebrow"><%= toolPage.pickerEyebrow || 'Choose a starting point' %></span>
+      <h2><%= toolPage.pickerTitle || 'Pick the mockup path that matches your product' %></h2>
+    </div>
+    <div class="tool-picker-grid">
+      <a href="/tools/t-shirt-mockup-generator">T-shirt mockups</a>
+      <a href="/tools/hoodie-mockup-generator">Hoodie mockups</a>
+      <a href="/tools/3d-clothing-mockup-generator">3D clothing mockups</a>
+      <a href="/tools/bulk-t-shirt-mockup-generator">Bulk colorways</a>
+      <a href="/tools/print-on-demand-mockup-generator">POD listings</a>
+      <a href="/design-3d">All 3D models</a>
     </div>
   </div>
 </section>
@@ -78,15 +117,15 @@
 <section class="generator-section generator-section-muted">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Workflow</span>
-      <h2>How to create your apparel mockup</h2>
+      <span class="generator-eyebrow"><%= toolPage.workflowEyebrow || 'Workflow' %></span>
+      <h2><%= toolPage.workflowTitle || 'From blank garment to clearer product direction' %></h2>
     </div>
     <div class="generator-steps">
       <% toolPage.steps.forEach(function(step, index) { %>
         <article class="generator-step">
           <span><%= String(index + 1).padStart(2, '0') %></span>
-          <h3>Step <%= index + 1 %></h3>
-          <p><%= step %></p>
+          <h3><%= step.title || `Step ${index + 1}` %></h3>
+          <p><%= step.body || step %></p>
         </article>
       <% }); %>
     </div>
@@ -96,8 +135,8 @@
 <section class="generator-section">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Use cases</span>
-      <h2>Where this free tool fits</h2>
+      <span class="generator-eyebrow"><%= toolPage.useCasesEyebrow || 'Use it for' %></span>
+      <h2><%= toolPage.useCasesTitle || 'Mockup planning before a photoshoot' %></h2>
     </div>
     <div class="generator-output-grid">
       <% toolPage.useCases.forEach(function(useCase, index) { %>
@@ -113,8 +152,8 @@
 <section class="generator-section generator-faq-section">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">FAQ</span>
-      <h2><%= toolPage.title %> questions</h2>
+      <span class="generator-eyebrow"><%= toolPage.faqEyebrow || 'FAQ' %></span>
+      <h2><%= toolPage.faqTitle || `${toolPage.title} questions` %></h2>
     </div>
     <div class="generator-faq-list">
       <% toolPage.faq.forEach(function(item, index) { %>
@@ -130,13 +169,13 @@
 <section class="generator-section generator-section-muted">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Related free tools</span>
-      <h2>Explore more free clothing design tools</h2>
+      <span class="generator-eyebrow"><%= toolPage.relatedEyebrow || 'Related free tools' %></span>
+      <h2><%= toolPage.relatedTitle || 'Continue with another mockup workflow' %></h2>
     </div>
     <div class="generator-category-grid">
       <% toolPage.related.forEach(function(item) { %>
         <a href="/tools/<%= item.slug %>" class="generator-category-card">
-          <small><%= item.primaryKeyword %></small>
+          <small><%= toolPage.relatedCardLabel || 'Free apparel tool' %></small>
           <strong><%= item.title %></strong>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M5 12h14"/>
@@ -152,9 +191,9 @@
   <div class="container">
     <div class="pattern-design-cta-inner">
       <div>
-        <span class="generator-eyebrow">Free first</span>
-        <h2>Create your next apparel visual with ClothingDesign.</h2>
-        <p>Start with a free tool, then move into 3D models, sewing patterns, or beginner guides when your concept is ready for the next step.</p>
+        <span class="generator-eyebrow"><%= toolPage.finalCtaEyebrow || 'Start now' %></span>
+        <h2><%= toolPage.finalCtaTitle || 'Plan a cleaner product mockup before your next launch.' %></h2>
+        <p><%= toolPage.finalCtaSubtitle || 'Use model-based apparel previews to test artwork, colors, and product framing before you publish or produce.' %></p>
       </div>
       <div class="generator-final-actions">
         <a href="<%= toolPage.cta.href %>" class="btn btn-primary"><%= toolPage.cta.label %></a>
@@ -162,5 +201,9 @@
     </div>
   </div>
 </section>
+
+<% if (toolPage.heroModel && toolPage.heroModel.src) { %>
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+<% } %>
 
 <%- include('partials/footer') %>
