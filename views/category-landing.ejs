@@ -22,21 +22,6 @@
     </div>
   </section>
 
-  <% if (landingContent && landingContent.output && landingContent.output.cards) { %>
-    <section class="category-intent-section">
-      <div class="container">
-        <div class="category-intent-grid">
-          <% landingContent.output.cards.slice(0, 3).forEach(function(card) { %>
-            <article class="category-intent-item">
-              <h2><%= card.title %></h2>
-              <p><%= card.body %></p>
-            </article>
-          <% }); %>
-        </div>
-      </div>
-    </section>
-  <% } %>
-
   <section class="content-section">
     <div class="container">
       <div class="filters-bar">
@@ -91,6 +76,20 @@
       </div>
     </div>
   </section>
+  <% if (landingContent && landingContent.output && landingContent.output.cards) { %>
+    <section class="category-intent-section">
+      <div class="container">
+        <div class="category-intent-grid">
+          <% landingContent.output.cards.slice(0, 3).forEach(function(card) { %>
+            <article class="category-intent-item">
+              <h2><%= card.title %></h2>
+              <p><%= card.body %></p>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+  <% } %>
   <%- include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) %>
 <% } else { %>
   <section class="category-hero">

@@ -1287,19 +1287,7 @@ title = __locals.title,
     ;  }
     ; __append("\n      <div class=\"category-hero-meta\">\n        <span>")
     ; __append(escapeFn( items && items.length ? `${items.length} models` : '3D model category' ))
-    ; __append("</span>\n        <span>Editable UV workflow</span>\n        <span>Browser-based mockups</span>\n      </div>\n    </div>\n  </section>\n\n  ")
-    ;  if (landingContent && landingContent.output && landingContent.output.cards) {
-    ; __append("\n    <section class=\"category-intent-section\">\n      <div class=\"container\">\n        <div class=\"category-intent-grid\">\n          ")
-    ;  landingContent.output.cards.slice(0, 3).forEach(function(card) {
-    ; __append("\n            <article class=\"category-intent-item\">\n              <h2>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h2>\n              <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n            </article>\n          ")
-    ;  });
-    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
-    ;  }
-    ; __append("\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/design-3d\" class=\"filter-btn\">")
+    ; __append("</span>\n        <span>Editable UV workflow</span>\n        <span>Browser-based mockups</span>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/design-3d\" class=\"filter-btn\">")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</a>\n          ")
     ;  (categories || []).forEach(function(cat) {
@@ -1350,6 +1338,18 @@ title = __locals.title,
     ; __append(" models yet</h3>\n            <p>There are no active 3D models in this category right now.</p>\n          </div>\n        ")
     ;  }
     ; __append("\n      </div>\n    </div>\n  </section>\n  ")
+    ;  if (landingContent && landingContent.output && landingContent.output.cards) {
+    ; __append("\n    <section class=\"category-intent-section\">\n      <div class=\"container\">\n        <div class=\"category-intent-grid\">\n          ")
+    ;  landingContent.output.cards.slice(0, 3).forEach(function(card) {
+    ; __append("\n            <article class=\"category-intent-item\">\n              <h2>")
+    ; __append(escapeFn( card.title ))
+    ; __append("</h2>\n              <p>")
+    ; __append(escapeFn( card.body ))
+    ; __append("</p>\n            </article>\n          ")
+    ;  });
+    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
+    ;  }
+    ; __append("\n  ")
     ; __append( include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) )
     ; __append("\n")
     ;  } else {
