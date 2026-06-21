@@ -1,4 +1,10 @@
 <% const content = landingContent || {}; %>
+<% const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; %>
+<% const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] }; %>
+<% const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; %>
+<% const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/design-3d' }; %>
+<% const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; %>
+<% const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/design-3d' }; %>
 <% const sectionCategories = categories || []; %>
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
 <% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>
@@ -10,15 +16,15 @@
 <section class="generator-section generator-section-muted">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow"><%= content.workflow.eyebrow %></span>
-      <h2><%= content.workflow.title %></h2>
-      <% if (content.workflow.description) { %>
-        <p><%= content.workflow.description %></p>
+      <span class="generator-eyebrow"><%= workflow.eyebrow %></span>
+      <h2><%= workflow.title %></h2>
+      <% if (workflow.description) { %>
+        <p><%= workflow.description %></p>
       <% } %>
     </div>
 
     <div class="generator-steps">
-      <% content.workflow.steps.forEach(function(step, index) { %>
+      <% (workflow.steps || []).forEach(function(step, index) { %>
         <div class="generator-step">
           <span><%= String(index + 1).padStart(2, '0') %></span>
           <h3><%= step.title %></h3>
@@ -33,14 +39,14 @@
   <div class="container">
     <div class="generator-section-header generator-section-header-row">
       <div>
-        <span class="generator-eyebrow"><%= content.categories.eyebrow %></span>
-        <h2><%= content.categories.title %></h2>
+        <span class="generator-eyebrow"><%= categorySection.eyebrow %></span>
+        <h2><%= categorySection.title %></h2>
       </div>
-      <% if (content.categories.description) { %>
-        <p><%= content.categories.description %></p>
+      <% if (categorySection.description) { %>
+        <p><%= categorySection.description %></p>
       <% } %>
-      <% if (content.categories.buttonLabel && content.categories.buttonHref) { %>
-        <a href="<%= content.categories.buttonHref %>" class="btn btn-secondary"><%= content.categories.buttonLabel %></a>
+      <% if (categorySection.buttonLabel && categorySection.buttonHref) { %>
+        <a href="<%= categorySection.buttonHref %>" class="btn btn-secondary"><%= categorySection.buttonLabel %></a>
       <% } %>
     </div>
 
@@ -58,8 +64,8 @@
           </a>
         <% }); %>
       <% } else { %>
-        <% (content.categories.cards || []).forEach(function(card) { %>
-          <a href="<%= card.href || content.categories.buttonHref || '#' %>" class="generator-category-card">
+        <% (categorySection.cards || []).forEach(function(card) { %>
+          <a href="<%= card.href || categorySection.buttonHref || '#' %>" class="generator-category-card">
             <small><%= card.meta || fallbackMeta %></small>
             <strong><%= card.title %></strong>
           </a>
@@ -73,12 +79,12 @@
   <section class="generator-section generator-section-muted">
     <div class="container">
       <div class="generator-section-header">
-        <span class="generator-eyebrow"><%= content.output.eyebrow %></span>
-        <h2><%= content.output.title %></h2>
+        <span class="generator-eyebrow"><%= output.eyebrow %></span>
+        <h2><%= output.title %></h2>
       </div>
 
       <div class="generator-output-grid">
-        <% content.output.cards.forEach(function(card) { %>
+        <% (output.cards || []).forEach(function(card) { %>
           <div class="generator-output-card">
             <h3><%= card.title %></h3>
             <p><%= card.body %></p>
@@ -91,10 +97,10 @@
 
 <section class="generator-library-cta">
   <div class="container">
-    <span class="generator-eyebrow"><%= content.library.eyebrow %></span>
-    <h2><%= content.library.title %></h2>
-    <% if (content.library.buttonLabel && content.library.buttonHref) { %>
-      <a href="<%= content.library.buttonHref %>" class="btn btn-secondary"><%= content.library.buttonLabel %></a>
+    <span class="generator-eyebrow"><%= library.eyebrow %></span>
+    <h2><%= library.title %></h2>
+    <% if (library.buttonLabel && library.buttonHref) { %>
+      <a href="<%= library.buttonHref %>" class="btn btn-secondary"><%= library.buttonLabel %></a>
     <% } %>
   </div>
 </section>
@@ -102,12 +108,12 @@
 <section class="generator-section generator-faq-section">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow"><%= content.faq.eyebrow %></span>
-      <h2><%= content.faq.title %></h2>
+      <span class="generator-eyebrow"><%= faq.eyebrow %></span>
+      <h2><%= faq.title %></h2>
     </div>
 
     <div class="generator-faq-list">
-      <% content.faq.items.forEach(function(item) { %>
+      <% (faq.items || []).forEach(function(item) { %>
         <details class="generator-faq-item">
           <summary><%= item.question %></summary>
           <p><%= item.answer %></p>
@@ -121,18 +127,18 @@
   <div class="container">
     <div class="generator-final-cta-inner">
       <div>
-        <span class="generator-eyebrow"><%= content.cta.eyebrow %></span>
-        <h2><%= content.cta.title %></h2>
-        <% if (content.cta.description) { %>
-          <p><%= content.cta.description %></p>
+        <span class="generator-eyebrow"><%= cta.eyebrow %></span>
+        <h2><%= cta.title %></h2>
+        <% if (cta.description) { %>
+          <p><%= cta.description %></p>
         <% } %>
       </div>
       <div class="generator-final-actions">
-        <% if (content.cta.primaryLabel && content.cta.primaryHref) { %>
-          <a href="<%= content.cta.primaryHref %>" class="btn btn-primary"><%= content.cta.primaryLabel %></a>
+        <% if (cta.primaryLabel && cta.primaryHref) { %>
+          <a href="<%= cta.primaryHref %>" class="btn btn-primary"><%= cta.primaryLabel %></a>
         <% } %>
-        <% if (content.cta.secondaryLabel && content.cta.secondaryHref) { %>
-          <a href="<%= content.cta.secondaryHref %>" class="btn btn-secondary"><%= content.cta.secondaryLabel %></a>
+        <% if (cta.secondaryLabel && cta.secondaryHref) { %>
+          <a href="<%= cta.secondaryHref %>" class="btn btn-secondary"><%= cta.secondaryLabel %></a>
         <% } %>
       </div>
     </div>

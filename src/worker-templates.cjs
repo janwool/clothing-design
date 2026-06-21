@@ -2472,6 +2472,18 @@ title = __locals.title,
   counts = __locals.counts;
     ;  const content = landingContent || {};
     ; __append("\n")
+    ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] };
+    ; __append("\n")
+    ;  const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] };
+    ; __append("\n")
+    ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] };
+    ; __append("\n")
+    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/design-3d' };
+    ; __append("\n")
+    ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] };
+    ; __append("\n")
+    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/design-3d' };
+    ; __append("\n")
     ;  const sectionCategories = categories || [];
     ; __append("\n")
     ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : []));
@@ -2486,17 +2498,17 @@ title = __locals.title,
     ; __append("\n")
     ;  const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models';
     ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.workflow.eyebrow ))
+    ; __append(escapeFn( workflow.eyebrow ))
     ; __append("</span>\n      <h2>")
-    ; __append(escapeFn( content.workflow.title ))
+    ; __append(escapeFn( workflow.title ))
     ; __append("</h2>\n      ")
-    ;  if (content.workflow.description) {
+    ;  if (workflow.description) {
     ; __append("\n        <p>")
-    ; __append(escapeFn( content.workflow.description ))
+    ; __append(escapeFn( workflow.description ))
     ; __append("</p>\n      ")
     ;  }
     ; __append("\n    </div>\n\n    <div class=\"generator-steps\">\n      ")
-    ;  content.workflow.steps.forEach(function(step, index) {
+    ;  (workflow.steps || []).forEach(function(step, index) {
     ; __append("\n        <div class=\"generator-step\">\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
@@ -2506,21 +2518,21 @@ title = __locals.title,
     ; __append("</p>\n        </div>\n      ")
     ;  });
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <div>\n        <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.categories.eyebrow ))
+    ; __append(escapeFn( categorySection.eyebrow ))
     ; __append("</span>\n        <h2>")
-    ; __append(escapeFn( content.categories.title ))
+    ; __append(escapeFn( categorySection.title ))
     ; __append("</h2>\n      </div>\n      ")
-    ;  if (content.categories.description) {
+    ;  if (categorySection.description) {
     ; __append("\n        <p>")
-    ; __append(escapeFn( content.categories.description ))
+    ; __append(escapeFn( categorySection.description ))
     ; __append("</p>\n      ")
     ;  }
     ; __append("\n      ")
-    ;  if (content.categories.buttonLabel && content.categories.buttonHref) {
+    ;  if (categorySection.buttonLabel && categorySection.buttonHref) {
     ; __append("\n        <a href=\"")
-    ; __append(escapeFn( content.categories.buttonHref ))
+    ; __append(escapeFn( categorySection.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
-    ; __append(escapeFn( content.categories.buttonLabel ))
+    ; __append(escapeFn( categorySection.buttonLabel ))
     ; __append("</a>\n      ")
     ;  }
     ; __append("\n    </div>\n\n    <div class=\"generator-category-grid\">\n      ")
@@ -2544,9 +2556,9 @@ title = __locals.title,
     ; __append("\n      ")
     ;  } else {
     ; __append("\n        ")
-    ;  (content.categories.cards || []).forEach(function(card) {
+    ;  (categorySection.cards || []).forEach(function(card) {
     ; __append("\n          <a href=\"")
-    ; __append(escapeFn( card.href || content.categories.buttonHref || '#' ))
+    ; __append(escapeFn( card.href || categorySection.buttonHref || '#' ))
     ; __append("\" class=\"generator-category-card\">\n            <small>")
     ; __append(escapeFn( card.meta || fallbackMeta ))
     ; __append("</small>\n            <strong>")
@@ -2558,11 +2570,11 @@ title = __locals.title,
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ;  if (!skipOutputSection) {
     ; __append("\n  <section class=\"generator-section generator-section-muted\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.output.eyebrow ))
+    ; __append(escapeFn( output.eyebrow ))
     ; __append("</span>\n        <h2>")
-    ; __append(escapeFn( content.output.title ))
+    ; __append(escapeFn( output.title ))
     ; __append("</h2>\n      </div>\n\n      <div class=\"generator-output-grid\">\n        ")
-    ;  content.output.cards.forEach(function(card) {
+    ;  (output.cards || []).forEach(function(card) {
     ; __append("\n          <div class=\"generator-output-card\">\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
@@ -2572,23 +2584,23 @@ title = __locals.title,
     ; __append("\n      </div>\n    </div>\n  </section>\n")
     ;  }
     ; __append("\n\n<section class=\"generator-library-cta\">\n  <div class=\"container\">\n    <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.library.eyebrow ))
+    ; __append(escapeFn( library.eyebrow ))
     ; __append("</span>\n    <h2>")
-    ; __append(escapeFn( content.library.title ))
+    ; __append(escapeFn( library.title ))
     ; __append("</h2>\n    ")
-    ;  if (content.library.buttonLabel && content.library.buttonHref) {
+    ;  if (library.buttonLabel && library.buttonHref) {
     ; __append("\n      <a href=\"")
-    ; __append(escapeFn( content.library.buttonHref ))
+    ; __append(escapeFn( library.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
-    ; __append(escapeFn( content.library.buttonLabel ))
+    ; __append(escapeFn( library.buttonLabel ))
     ; __append("</a>\n    ")
     ;  }
     ; __append("\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.faq.eyebrow ))
+    ; __append(escapeFn( faq.eyebrow ))
     ; __append("</span>\n      <h2>")
-    ; __append(escapeFn( content.faq.title ))
+    ; __append(escapeFn( faq.title ))
     ; __append("</h2>\n    </div>\n\n    <div class=\"generator-faq-list\">\n      ")
-    ;  content.faq.items.forEach(function(item) {
+    ;  (faq.items || []).forEach(function(item) {
     ; __append("\n        <details class=\"generator-faq-item\">\n          <summary>")
     ; __append(escapeFn( item.question ))
     ; __append("</summary>\n          <p>")
@@ -2596,29 +2608,29 @@ title = __locals.title,
     ; __append("</p>\n        </details>\n      ")
     ;  });
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-final-cta\">\n  <div class=\"container\">\n    <div class=\"generator-final-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( content.cta.eyebrow ))
+    ; __append(escapeFn( cta.eyebrow ))
     ; __append("</span>\n        <h2>")
-    ; __append(escapeFn( content.cta.title ))
+    ; __append(escapeFn( cta.title ))
     ; __append("</h2>\n        ")
-    ;  if (content.cta.description) {
+    ;  if (cta.description) {
     ; __append("\n          <p>")
-    ; __append(escapeFn( content.cta.description ))
+    ; __append(escapeFn( cta.description ))
     ; __append("</p>\n        ")
     ;  }
     ; __append("\n      </div>\n      <div class=\"generator-final-actions\">\n        ")
-    ;  if (content.cta.primaryLabel && content.cta.primaryHref) {
+    ;  if (cta.primaryLabel && cta.primaryHref) {
     ; __append("\n          <a href=\"")
-    ; __append(escapeFn( content.cta.primaryHref ))
+    ; __append(escapeFn( cta.primaryHref ))
     ; __append("\" class=\"btn btn-primary\">")
-    ; __append(escapeFn( content.cta.primaryLabel ))
+    ; __append(escapeFn( cta.primaryLabel ))
     ; __append("</a>\n        ")
     ;  }
     ; __append("\n        ")
-    ;  if (content.cta.secondaryLabel && content.cta.secondaryHref) {
+    ;  if (cta.secondaryLabel && cta.secondaryHref) {
     ; __append("\n          <a href=\"")
-    ; __append(escapeFn( content.cta.secondaryHref ))
+    ; __append(escapeFn( cta.secondaryHref ))
     ; __append("\" class=\"btn btn-secondary\">")
-    ; __append(escapeFn( content.cta.secondaryLabel ))
+    ; __append(escapeFn( cta.secondaryLabel ))
     ; __append("</a>\n        ")
     ;  }
     ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n")
