@@ -1591,47 +1591,7 @@ title = __locals.title,
     ; __append(escapeFn( t('design3d.pageTitle') ))
     ; __append("</h1>\n    <p class=\"page-subtitle\">")
     ; __append(escapeFn( t('design3d.pageSubtitle') ))
-    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"design3d-category-overview\" id=\"model-categories\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <div>\n        <span class=\"generator-eyebrow\">Model categories</span>\n        <h2>Start with the garment type behind your mockup</h2>\n      </div>\n      <p>Choose a focused category before opening the editor, so T-shirt, hoodie, dress, jacket, and accessory mockups stay easier to compare.</p>\n    </div>\n    <div class=\"design3d-category-grid\">\n      ")
-    ;  categories.slice(0, 12).forEach(function(cat) {
-    ; __append("\n        <a href=\"/3d-models/")
-    ; __append(escapeFn( cat.slug ))
-    ; __append("\" class=\"design3d-category-tile\">\n          <span>")
-    ; __append(escapeFn( categoryCounts && categoryCounts[cat.slug] ? `${categoryCounts[cat.slug]} models` : '3D models' ))
-    ; __append("</span>\n          <strong>")
-    ; __append(escapeFn( cat.name ))
-    ; __append("</strong>\n        </a>\n      ")
-    ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (featuredModels && featuredModels.length) {
-    ; __append("\n  <section class=\"content-section design3d-featured-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header generator-section-header-row\">\n        <div>\n          <span class=\"generator-eyebrow\">Featured models</span>\n          <h2>Mockup-ready garment models for product visuals</h2>\n        </div>\n        <p>Use these models as practical starting points for T-shirt mockups, hoodie previews, product renders, and apparel launch planning.</p>\n      </div>\n\n      <div class=\"models-grid\">\n        ")
-    ;  featuredModels.forEach(function(model) {
-    ; __append("\n          <a href=\"/3d-models/")
-    ; __append(escapeFn( model.category_slug || model.category ))
-    ; __append("/")
-    ; __append(escapeFn( model.slug ))
-    ; __append("\" class=\"model-card\" data-category=\"")
-    ; __append(escapeFn( model.category_slug || model.category ))
-    ; __append("\">\n            <div class=\"model-preview-3d\">\n              ")
-    ;  if (model.image_url) {
-    ; __append("\n                <img src=\"")
-    ; __append(escapeFn( model.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append("\" class=\"model-img\">\n              ")
-    ;  } else {
-    ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
-    ; __append(escapeFn( model.name.charAt(0) ))
-    ; __append("</span>\n                </div>\n              ")
-    ;  }
-    ; __append("\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
-    ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n              <div class=\"model-tags\">\n                <span class=\"tag tag-free\">")
-    ; __append(escapeFn( model.category_label || model.category || '3D model' ))
-    ; __append("</span>\n                <span class=\"tag\">Open model</span>\n              </div>\n            </div>\n          </a>\n        ")
-    ;  });
-    ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
-    ; __append("\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Filters -->\n    <div class=\"filters-bar\" id=\"model-filters\">\n      <div class=\"filter-group\">\n        <a href=\"/design-3d\" class=\"filter-btn active\">")
+    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/design-3d\" class=\"filter-btn active\">")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</a>\n        ")
     ;  categories.forEach(function(cat) {
@@ -1641,10 +1601,10 @@ title = __locals.title,
     ; __append(escapeFn( cat.name ))
     ; __append("</a>\n        ")
     ;  });
-    ; __append("\n      </div>\n    </div>\n\n    <div class=\"generator-section-header generator-section-header-row design3d-recent-header\">\n      <div>\n        <span class=\"generator-eyebrow\">Recently added</span>\n        <h2>Latest 3D clothing models</h2>\n      </div>\n      <p>Browse the newest model previews, then open the closest garment base for browser-based apparel mockup work.</p>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
-    ;  if (recentModels && recentModels.length > 0) {
+    ; __append("\n      </div>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
+    ;  if (models && models.length > 0) {
     ; __append("\n        ")
-    ;  recentModels.forEach(function(model) {
+    ;  models.forEach(function(model) {
     ; __append("\n          <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -1671,19 +1631,13 @@ title = __locals.title,
     ;  } else {
     ; __append("\n                  <span class=\"tag tag-pro\">Pro</span>\n                ")
     ;  }
-    ; __append("\n                <span class=\"tag\">")
-    ; __append(escapeFn( model.category_label || model.category || '3D model' ))
-    ; __append("</span>\n              </div>\n            </div>\n          </a>\n        ")
+    ; __append("\n              </div>\n            </div>\n          </a>\n        ")
     ;  });
     ; __append("\n      ")
     ;  } else {
     ; __append("\n        <div class=\"empty-state\">\n          <p>No 3D models available yet.</p>\n        </div>\n      ")
     ;  }
-    ; __append("\n    </div>\n    ")
-    ;  if (models && models.length > recentModels.length) {
-    ; __append("\n      <div class=\"design3d-more-link\">\n        <a href=\"#model-filters\" class=\"btn btn-secondary\">Use category filters to browse all models</a>\n      </div>\n    ")
-    ;  }
-    ; __append("\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/generator-sections', { landingContent, categories, models }) )
     ; __append("\n\n")
     ; __append( include('partials/footer') )
