@@ -219,12 +219,62 @@ function buildModelSearchIntent(model, categoryName) {
   ].filter(Boolean).join(' '), 260);
 }
 
+const CATEGORY_IMAGE_ASSETS = {
+  't-shirt-mockup': '/images/categories/t-shirt-mockup.webp',
+  shirt: '/images/categories/shirt.webp',
+  pants: '/images/categories/pants.webp',
+  jacket: '/images/categories/jacket.webp',
+  'hoodie-mockup': '/images/categories/hoodie-mockup.webp',
+  dress: '/images/categories/dress.webp',
+  cloak: '/images/categories/cloak.webp',
+  underwear: '/images/categories/underwear.webp'
+};
+
+const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'shirt', 'hoodie-mockup', 'dress'];
+const HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY = {
+  't-shirt-mockup': 'classic-crew-neck-t-shirt-3d-model',
+  shirt: 'tailored-long-sleeve-shirt-3d-model',
+  'hoodie-mockup': 'tailored-pullover-hoodie-3d-model',
+  dress: 'classic-one-piece-dress-3d-model'
+};
+
+function selectHomeFeaturedModels(models = []) {
+  const normalizedModels = normalize3dModels(models);
+  const selected = [];
+  const selectedIds = new Set();
+
+  HOME_FEATURED_CATEGORY_SLUGS.forEach(categorySlug => {
+    const matchesCategory = item => {
+      const slugs = item.category_slugs && item.category_slugs.length
+        ? item.category_slugs
+        : [item.category_slug || item.category];
+      return !selectedIds.has(item.id) && slugs.includes(categorySlug) && item.image_url;
+    };
+    const preferredSlug = HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY[categorySlug];
+    const model = normalizedModels.find(item => matchesCategory(item) && item.slug === preferredSlug)
+      || normalizedModels.find(matchesCategory);
+
+    if (model) {
+      selected.push({
+        ...model,
+        category_slug: categorySlug
+      });
+      selectedIds.add(model.id);
+    }
+  });
+
+  return selected;
+}
+
 function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
   const modelCount = Number(modelTotal) || models.length;
   const categoryCount = categories.length;
   const pageUrl = toAbsoluteUrl(req, '/');
-  const featuredModels = normalize3dModels(models.slice(0, 6));
-  const featuredCategories = categories.slice(0, 8);
+  const featuredModels = selectHomeFeaturedModels(models);
+  const featuredCategories = categories.slice(0, 8).map(category => ({
+    ...category,
+    image_url: CATEGORY_IMAGE_ASSETS[category.slug] || category.category_image_url || category.image_url || ''
+  }));
   const heroImages = featuredModels
     .filter(model => model.image_url)
     .slice(0, 4)
@@ -235,48 +285,55 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
   const stats = [
     { value: `${modelCount}+`, label: '3D garment models' },
     { value: `${categoryCount}`, label: 'apparel categories' },
-    { value: `${patternCount}+`, label: 'sewing patterns' }
+    { value: `${patternCount}+`, label: 'supporting patterns' }
   ];
   const workflow = [
     {
       title: 'Choose a garment model',
-      text: 'Start from shirts, hoodies, dresses, coats, pants, bags, hats, and other Design3D-ready apparel models.'
+      text: 'Start from shirts, hoodies, dresses, coats, pants, bags, hats, and other free 3D apparel models.',
+      image_url: '/images/workflow/choose-garment-model.webp'
     },
     {
-      title: 'Customize color and artwork',
-      text: 'Use the browser designer to place logos, prints, graphics, and surface directions on the garment preview.'
+      title: 'Place artwork and prints',
+      text: 'Use the browser mockup workflow to position logos, graphics, textile ideas, and print placement directions on the garment.',
+      image_url: '/images/workflow/place-artwork-prints.webp'
     },
     {
-      title: 'Review the 3D mockup',
-      text: 'Rotate the model, check scale and placement, and compare the design against the garment shape before production.'
+      title: 'Preview the apparel mockup',
+      text: 'Rotate the garment, check artwork scale, compare colorways, and review how the design sits on the clothing shape.',
+      image_url: '/images/workflow/preview-apparel-mockup.webp'
     },
     {
-      title: 'Export a clean render',
-      text: 'Download a high-resolution transparent WebP render for ecommerce pages, launch decks, portfolios, and approvals.'
+      title: 'Export product visuals',
+      text: 'Download a clean transparent product image for ecommerce pages, POD listings, launch decks, portfolios, and approvals.',
+      image_url: '/images/workflow/export-product-visuals.webp'
     }
   ];
   const useCases = [
     {
-      title: 'Free 3D model downloads',
-      text: 'Find browser-ready clothing models for shirts, hoodies, dresses, coats, pants, accessories, and digital apparel presentations.'
+      title: 'Print placement previews',
+      text: 'Preview chest graphics, back prints, sleeve artwork, logo scale, and garment color direction before sampling or photoshoots.',
+      image_url: '/images/use-cases/print-placement-previews.webp'
     },
     {
-      title: 'CLO 3D and Marvelous Designer workflows',
-      text: 'Use model pages alongside downloadable sewing patterns when you need references for CLO 3D, Marvelous Designer, Blender, or apparel review.'
+      title: 'Product page mockups',
+      text: 'Create consistent transparent apparel images for ecommerce product pages, launch pages, line sheets, and client presentations.',
+      image_url: '/images/use-cases/product-page-mockups.webp'
     },
     {
-      title: 'Transparent ecommerce renders',
-      text: 'Customize the garment online and export a transparent WebP render for product pages, print-on-demand previews, launch decks, and approvals.'
+      title: 'POD and merch listing images',
+      text: 'Build mockup visuals for print-on-demand products, merch drops, brand colorways, and store listing drafts.',
+      image_url: '/images/use-cases/pod-merch-listing-images.webp'
     }
   ];
   const faq = [
     {
       question: 'Can I download free 3D clothing models?',
-      answer: 'Yes. ClothingDesign focuses on free Design3D garment resources that can be opened online for mockups, reviewed on detail pages, and used as starting points for apparel presentations.'
+      answer: 'Yes. ClothingDesign focuses on free 3D garment models that can be opened online, reviewed on detail pages, and used as starting points for apparel mockups.'
     },
     {
-      question: 'Do I need CLO 3D or Marvelous Designer to use the 3D models?',
-      answer: 'No. The Design3D workflow runs in the browser. CLO 3D and Marvelous Designer patterns are available as supporting resources for teams that also work in desktop garment software.'
+      question: 'Can I create apparel mockups in the browser?',
+      answer: 'Yes. Choose a garment model, preview artwork placement, test colors, and export a transparent product image without starting in desktop 3D software.'
     },
     {
       question: 'Which garment models are available?',
@@ -284,10 +341,10 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     },
     {
       question: 'Can I use the exported render on product pages?',
-      answer: 'Yes. The render workflow is built for ecommerce previews, product detail pages, portfolio images, client approvals, and campaign planning.'
+      answer: 'Yes. The mockup workflow is built for ecommerce previews, product detail pages, POD listings, portfolio images, client approvals, and campaign planning.'
     }
   ];
-  const metaDescription = 'Download free 3D clothing models and create apparel mockups online. Browse shirts, hoodies, dresses and coats, then export transparent WebP renders.';
+  const metaDescription = 'Browse free 3D clothing models, create apparel mockups online, preview print placement, and export transparent product images for ecommerce and POD listings.';
   const primaryImage = firstImage(req, heroImages.map(image => image.src));
   const structuredData = [
     {
@@ -312,7 +369,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free 3D Clothing Models and Apparel Mockup Generator',
+      name: 'Free 3D Clothing Models for Apparel Mockups',
       description: metaDescription,
       url: pageUrl,
       image: primaryImage,
@@ -322,7 +379,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
         name: 'ClothingDesign Design3D',
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
-        description: 'Free browser-based 3D clothing model library and apparel mockup generator for customizing garment models and exporting transparent product renders.',
+        description: 'Free browser-based 3D clothing model library and apparel mockup generator for print placement previews, garment colorways, and transparent product images.',
         offers: {
           '@type': 'Offer',
           price: '0',
@@ -1740,12 +1797,38 @@ router.get('/', async (req, res) => {
       WHERE m.status = ?
       ${getModelCategoryGroupBy()}
       ORDER BY m.updated_at DESC, m.created_at DESC
-      LIMIT 6
+      LIMIT 120
     `, ['active']);
-    const categories = await db.all(
-      'SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC',
-      ['3d-models', 'active']
-    );
+    const categories = await db.all(`
+      SELECT
+        c.*,
+        COALESCE(
+          (
+            SELECT m.image_url
+            FROM model_3d_categories mc
+            JOIN models_3d m ON m.id = mc.model_id
+            WHERE mc.category_id = c.id
+              AND m.status = 'active'
+              AND m.image_url IS NOT NULL
+              AND m.image_url != ''
+            ORDER BY mc.is_primary DESC, m.updated_at DESC, m.created_at DESC
+            LIMIT 1
+          ),
+          (
+            SELECT m.image_url
+            FROM models_3d m
+            WHERE m.category = c.name
+              AND m.status = 'active'
+              AND m.image_url IS NOT NULL
+              AND m.image_url != ''
+            ORDER BY m.updated_at DESC, m.created_at DESC
+            LIMIT 1
+          )
+        ) AS category_image_url
+      FROM categories c
+      WHERE c.resource_type = ? AND c.status = ?
+      ORDER BY c.sort_order ASC, c.name ASC
+    `, ['3d-models', 'active']);
     const modelSummary = await db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']);
     const patternSummary = await db.get('SELECT COUNT(*) as count FROM patterns WHERE status = ?', ['active']);
     const homeContent = buildHomeContent(req, models || [], categories || [], patternSummary?.count || 0, modelSummary?.count || 0);

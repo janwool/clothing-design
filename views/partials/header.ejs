@@ -38,9 +38,6 @@
   <link rel="shortcut icon" href="https://cdn.cloz-design.com/site/favicon.ico">
   <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <nav class="navbar">
@@ -67,32 +64,79 @@
               <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </button>
-          <div class="dropdown-menu">
-            <div class="dropdown-section">
-              <span class="dropdown-label"><%= t('tools.designTools') %></span>
-              <a href="/tools/t-shirt-designer" class="dropdown-item"><%= t('tools.tShirtDesigner') %></a>
-              <a href="/tools/hoodie-designer" class="dropdown-item"><%= t('tools.hoodieDesigner') %></a>
-              <a href="/tools/dress-designer" class="dropdown-item"><%= t('tools.dressDesigner') %></a>
-            </div>
-            <div class="dropdown-section">
-              <span class="dropdown-label"><%= t('tools.mockupGenerators') %></span>
-              <a href="/tools/t-shirt-mockup-generator" class="dropdown-item">T-Shirt Mockup Generator</a>
-              <a href="/tools/hoodie-mockup-generator" class="dropdown-item">Hoodie Mockup Generator</a>
-              <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">3D Clothing Mockup Generator</a>
-              <a href="/tools/bulk-t-shirt-mockup-generator" class="dropdown-item">Bulk T-Shirt Mockup Generator</a>
-              <a href="/tools/print-on-demand-mockup-generator" class="dropdown-item">POD Mockup Generator</a>
-              <a href="/tools/3d-mockup" class="dropdown-item"><%= t('tools.mockup3d') %></a>
-              <a href="/tools/2d-mockup" class="dropdown-item"><%= t('tools.mockup2d') %></a>
-            </div>
-            <div class="dropdown-section">
-              <span class="dropdown-label"><%= t('tools.freeDownloads') %></span>
-              <a href="/tools/free-patterns" class="dropdown-item"><%= t('tools.freePatterns') %></a>
-              <a href="/tools/free-templates" class="dropdown-item"><%= t('tools.freeTemplates') %></a>
-            </div>
-            <div class="dropdown-section">
-              <span class="dropdown-label"><%= t('tools.learn') %></span>
-              <a href="/tools/clo3d-guide" class="dropdown-item"><%= t('tools.clo3dGuide') %></a>
-              <a href="/tools/md-guide" class="dropdown-item"><%= t('tools.mdGuide') %></a>
+          <div class="dropdown-menu tools-mega-menu">
+            <div class="tools-mega-inner">
+              <div class="tools-mega-intro">
+                <span class="tools-mega-eyebrow">Free clothing design tools</span>
+                <strong>Pick a mockup workflow</strong>
+                <p>Browser-based tools for apparel mockups, print placement, pattern planning, and product listing visuals.</p>
+              </div>
+              <div class="tools-mega-grid">
+                <div class="dropdown-section">
+                  <span class="dropdown-label">Mockup generators</span>
+                  <a href="/tools/t-shirt-mockup-generator" class="dropdown-item">
+                    <span>T-Shirt Mockup Generator</span>
+                    <small>Free front, back, and colorway mockups.</small>
+                  </a>
+                  <a href="/tools/hoodie-mockup-generator" class="dropdown-item">
+                    <span>Hoodie Mockup Generator</span>
+                    <small>Build hoodie previews for print tests.</small>
+                  </a>
+                  <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">
+                    <span>3D Clothing Mockup Generator</span>
+                    <small>Use 3D models for apparel mockups.</small>
+                  </a>
+                </div>
+                <div class="dropdown-section">
+                  <span class="dropdown-label">Production previews</span>
+                  <a href="/tools/bulk-t-shirt-mockup-generator" class="dropdown-item">
+                    <span>Bulk T-Shirt Mockup Generator</span>
+                    <small>Create many colorways faster.</small>
+                  </a>
+                  <a href="/tools/print-on-demand-mockup-generator" class="dropdown-item">
+                    <span>POD Mockup Generator</span>
+                    <small>Prepare marketplace listing images.</small>
+                  </a>
+                  <a href="/tools/3d-mockup" class="dropdown-item">
+                    <span><%= t('tools.mockup3d') %></span>
+                    <small>Preview artwork on 3D garments.</small>
+                  </a>
+                </div>
+                <div class="dropdown-section">
+                  <span class="dropdown-label"><%= t('tools.designTools') %></span>
+                  <a href="/tools/t-shirt-designer" class="dropdown-item">
+                    <span><%= t('tools.tShirtDesigner') %></span>
+                    <small>Start a clean T-shirt design layout.</small>
+                  </a>
+                  <a href="/tools/hoodie-designer" class="dropdown-item">
+                    <span><%= t('tools.hoodieDesigner') %></span>
+                    <small>Plan hoodie graphics and placement.</small>
+                  </a>
+                  <a href="/tools/dress-designer" class="dropdown-item">
+                    <span><%= t('tools.dressDesigner') %></span>
+                    <small>Explore dress design directions.</small>
+                  </a>
+                </div>
+                <div class="dropdown-section">
+                  <span class="dropdown-label">Free resources</span>
+                  <a href="/tools/free-patterns" class="dropdown-item">
+                    <span><%= t('tools.freePatterns') %></span>
+                    <small>Download editable apparel patterns.</small>
+                  </a>
+                  <a href="/tools/free-templates" class="dropdown-item">
+                    <span><%= t('tools.freeTemplates') %></span>
+                    <small>Use templates for faster previews.</small>
+                  </a>
+                  <a href="/tools/2d-mockup" class="dropdown-item">
+                    <span><%= t('tools.mockup2d') %></span>
+                    <small>Make flat apparel mockup concepts.</small>
+                  </a>
+                  <a href="/tools/clo3d-guide" class="dropdown-item">
+                    <span><%= t('tools.clo3dGuide') %></span>
+                    <small>Learn the 3D apparel workflow.</small>
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>

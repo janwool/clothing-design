@@ -16,18 +16,18 @@
   </div>
   <div class="container home-hero-container">
     <div class="home-hero-content">
-      <span class="generator-eyebrow">Free Design3D model library</span>
-      <h1>Free 3D Clothing Models and Apparel Mockup Generator</h1>
-      <p>
-        Download free 3D clothing models, customize garment colors and artwork online,
-        and export high-resolution transparent renders for ecommerce, print-on-demand, fashion reviews, and product launches.
+      <span class="generator-eyebrow home-hero-reveal">Free apparel mockup resources</span>
+      <h1 class="home-hero-reveal">Free 3D Clothing Models for Apparel Mockups</h1>
+      <p class="home-hero-reveal">
+        Browse free 3D garment models, place artwork on clothing, preview print placement,
+        and export clean product images for ecommerce, POD listings, and design review.
       </p>
-      <div class="hero-actions">
+      <div class="hero-actions home-hero-reveal">
         <a href="/design-3d" class="btn btn-primary btn-large">Browse Free 3D Models</a>
-        <a href="/patterns" class="btn btn-secondary btn-large">Download Sewing Patterns</a>
+        <a href="/tools/3d-clothing-mockup-generator" class="btn btn-secondary btn-large">Create a Clothing Mockup</a>
       </div>
       <% if (stats.length) { %>
-        <dl class="home-hero-stats">
+        <dl class="home-hero-stats home-hero-reveal">
           <% stats.forEach(function(stat) { %>
             <div>
               <dt><%= stat.value %></dt>
@@ -40,35 +40,40 @@
   </div>
 </section>
 
-<section class="home-answer-section">
+<section class="home-answer-section home-reveal">
   <div class="container">
     <div class="home-answer-grid">
       <div>
-        <span class="generator-eyebrow">Quick answer</span>
-        <h2>What is ClothingDesign?</h2>
+        <span class="generator-eyebrow home-copy-reveal">Quick answer</span>
+        <h2 class="home-copy-reveal">What is ClothingDesign?</h2>
       </div>
-      <p>
-        ClothingDesign is a free 3D clothing model library and browser mockup workspace.
-        Pick a garment model, review its category and detail page, customize artwork in Design3D,
-        and download a clean transparent render before samples, photoshoots, or product pages are ready.
+      <p class="home-copy-reveal">
+        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.
+        Choose a garment, preview artwork placement, test colors, and create clean product visuals before
+        samples, photoshoots, or product pages are ready.
       </p>
     </div>
   </div>
 </section>
 
-<section class="generator-section">
+<section class="generator-section home-reveal">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Free download workflow</span>
-      <h2>From free 3D garment model to finished apparel preview</h2>
-      <p>A focused Design3D workflow for product teams, print-on-demand stores, fashion designers, and brand presentation work.</p>
+      <span class="generator-eyebrow home-copy-reveal">Mockup workflow</span>
+      <h2 class="home-copy-reveal">From free 3D garment model to finished mockup direction</h2>
+      <p class="home-copy-reveal">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>
     </div>
     <div class="generator-steps">
       <% workflow.forEach(function(step, index) { %>
-        <article class="generator-step">
+        <article class="generator-step <%= step.image_url ? 'generator-step-with-media' : '' %> home-reveal-card">
+          <% if (step.image_url) { %>
+            <div class="generator-step-media">
+              <img src="<%= step.image_url %>" alt="<%= step.title %> apparel mockup workflow step" loading="lazy">
+            </div>
+          <% } %>
           <span><%= String(index + 1).padStart(2, '0') %></span>
-          <h3><%= step.title %></h3>
-          <p><%= step.text %></p>
+          <h3 class="home-copy-reveal"><%= step.title %></h3>
+          <p class="home-copy-reveal"><%= step.text %></p>
         </article>
       <% }); %>
     </div>
@@ -76,19 +81,26 @@
 </section>
 
 <% if (featuredCategories.length) { %>
-<section class="generator-section generator-section-muted">
+<section class="generator-section generator-section-muted home-reveal">
   <div class="container">
     <div class="generator-section-header generator-section-header-row">
-      <span class="generator-eyebrow">Free model categories</span>
-      <h2>Browse 3D clothing models by garment type</h2>
-      <p>Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models with search-friendly detail pages.</p>
+      <span class="generator-eyebrow home-copy-reveal">Free model categories</span>
+      <h2 class="home-copy-reveal">Browse 3D clothing models by garment type</h2>
+      <p class="home-copy-reveal">Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models for mockup and print placement work.</p>
     </div>
     <div class="generator-category-grid">
       <% featuredCategories.forEach(function(category) { %>
-        <a href="/3d-models/<%= category.slug %>" class="generator-category-card">
-          <small>Design3D category</small>
-          <strong><%= category.name %></strong>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <a href="/3d-models/<%= category.slug %>" class="generator-category-card home-reveal-card">
+          <% if (category.image_url) { %>
+            <div class="generator-category-media">
+              <img src="<%= category.image_url %>" alt="Free <%= category.name %> 3D clothing model mockup category" loading="lazy">
+            </div>
+          <% } %>
+          <div class="generator-category-copy">
+            <small class="home-copy-reveal">Free mockup category</small>
+            <strong class="home-copy-reveal"><%= category.name %></strong>
+          </div>
+          <svg class="generator-category-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M5 12h14"/>
             <path d="m12 5 7 7-7 7"/>
           </svg>
@@ -100,16 +112,16 @@
 <% } %>
 
 <% if (featuredModels.length) { %>
-<section class="home-featured-models">
+<section class="home-featured-models home-reveal">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Featured models</span>
-      <h2>Popular free 3D apparel models for mockups</h2>
-      <p>Open a model detail page to view the garment, read use cases, customize artwork, and export an HD transparent render.</p>
+      <span class="generator-eyebrow home-copy-reveal">Featured models</span>
+      <h2 class="home-copy-reveal">Popular free 3D apparel models for mockups</h2>
+      <p class="home-copy-reveal">Open a model detail page to view the garment, plan artwork placement, customize colors, and export a clean transparent product image.</p>
     </div>
     <div class="models-grid">
       <% featuredModels.forEach(function(model) { %>
-        <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card">
+        <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card home-reveal-card">
           <div class="model-preview-3d">
             <% if (model.image_url) { %>
               <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
@@ -120,8 +132,8 @@
             <% } %>
           </div>
           <div class="model-info">
-            <h3 class="model-name"><%= model.name %></h3>
-            <p class="model-meta"><%= model.category_label || model.category %></p>
+            <h3 class="model-name home-copy-reveal"><%= model.name %></h3>
+            <p class="model-meta home-copy-reveal"><%= model.category_label || model.category %></p>
           </div>
         </a>
       <% }); %>
@@ -130,51 +142,56 @@
 </section>
 <% } %>
 
-<section class="generator-section generator-section-muted">
+<section class="generator-section generator-section-muted home-reveal">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">Use cases</span>
-      <h2>Why searchers choose ClothingDesign instead of generic model sites</h2>
-      <p>Generic 3D marketplaces focus on broad asset downloads. ClothingDesign focuses on free apparel models, online garment mockups, transparent renders, and pages written for search engines and AI answer systems.</p>
+      <span class="generator-eyebrow home-copy-reveal">Use cases</span>
+      <h2 class="home-copy-reveal">Built for apparel mockups, not generic 3D downloads</h2>
+      <p class="home-copy-reveal">Use ClothingDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>
     </div>
     <div class="generator-output-grid">
       <% useCases.forEach(function(item) { %>
-        <article class="generator-output-card">
-          <h3><%= item.title %></h3>
-          <p><%= item.text %></p>
+        <article class="generator-output-card <%= item.image_url ? 'generator-output-card-with-media' : '' %> home-reveal-card">
+          <% if (item.image_url) { %>
+            <div class="generator-output-media">
+              <img src="<%= item.image_url %>" alt="<%= item.title %> apparel mockup use case" loading="lazy">
+            </div>
+          <% } %>
+          <h3 class="home-copy-reveal"><%= item.title %></h3>
+          <p class="home-copy-reveal"><%= item.text %></p>
         </article>
       <% }); %>
     </div>
   </div>
 </section>
 
-<section class="generator-section generator-faq-section">
+<section class="generator-section generator-faq-section home-reveal">
   <div class="container">
     <div class="generator-section-header">
-      <span class="generator-eyebrow">FAQ</span>
-      <h2>Free 3D clothing model questions</h2>
+      <span class="generator-eyebrow home-copy-reveal">FAQ</span>
+      <h2 class="home-copy-reveal">Free 3D clothing model questions</h2>
     </div>
     <div class="generator-faq-list">
       <% faq.forEach(function(item, index) { %>
-        <details class="generator-faq-item" <%= index === 0 ? 'open' : '' %>>
-          <summary><%= item.question %></summary>
-          <p><%= item.answer %></p>
+        <details class="generator-faq-item home-reveal-card" <%= index === 0 ? 'open' : '' %>>
+          <summary class="home-copy-reveal"><%= item.question %></summary>
+          <p class="home-copy-reveal"><%= item.answer %></p>
         </details>
       <% }); %>
     </div>
   </div>
 </section>
 
-<section class="pattern-design-cta">
+<section class="pattern-design-cta home-reveal">
   <div class="container">
     <div class="pattern-design-cta-inner">
       <div>
-        <span class="generator-eyebrow">Start designing</span>
-        <h2>Download a free 3D clothing model and turn it into a mockup.</h2>
-        <p>Choose a garment model, customize the surface design, and export a clean render for review or product presentation.</p>
+        <span class="generator-eyebrow home-copy-reveal">Start designing</span>
+        <h2 class="home-copy-reveal">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>
+        <p class="home-copy-reveal">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>
       </div>
       <div class="generator-final-actions">
-        <a href="/design-3d" class="btn btn-primary">Browse free Design3D models</a>
+        <a href="/design-3d" class="btn btn-primary">Browse free 3D clothing models</a>
       </div>
     </div>
   </div>

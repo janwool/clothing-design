@@ -17,9 +17,15 @@
     <!-- Filters -->
     <div class="filters-bar">
       <div class="filter-group">
-        <a href="/design-3d" class="filter-btn active"><%= t('design3d.filterAll') %></a>
+        <a href="/design-3d" class="filter-btn active">
+          <%- include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) %>
+          <span><%= t('design3d.filterAll') %></span>
+        </a>
         <% categories.forEach(function(cat) { %>
-          <a href="/3d-models/<%= cat.slug %>" class="filter-btn"><%= cat.name %></a>
+          <a href="/3d-models/<%= cat.slug %>" class="filter-btn">
+            <%- include('partials/category-icon', { slug: cat.slug, name: cat.name }) %>
+            <span><%= cat.name %></span>
+          </a>
         <% }); %>
       </div>
     </div>

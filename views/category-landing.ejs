@@ -26,9 +26,15 @@
     <div class="container">
       <div class="filters-bar">
         <div class="filter-group">
-          <a href="/design-3d" class="filter-btn"><%= t('design3d.filterAll') %></a>
+          <a href="/design-3d" class="filter-btn">
+            <%- include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) %>
+            <span><%= t('design3d.filterAll') %></span>
+          </a>
           <% (categories || []).forEach(function(cat) { %>
-            <a href="/3d-models/<%= cat.slug %>" class="filter-btn <%= cat.slug === category.slug ? 'active' : '' %>"><%= cat.name %></a>
+            <a href="/3d-models/<%= cat.slug %>" class="filter-btn <%= cat.slug === category.slug ? 'active' : '' %>">
+              <%- include('partials/category-icon', { slug: cat.slug, name: cat.name }) %>
+              <span><%= cat.name %></span>
+            </a>
           <% }); %>
         </div>
       </div>
@@ -169,6 +175,48 @@
   max-width: 760px;
   margin-left: auto;
   margin-right: auto;
+}
+
+@media (max-width: 768px) {
+  .category-page-header .container {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+    text-align: left;
+  }
+
+  .category-page-header .page-title,
+  .category-page-header .category-seo-copy {
+    width: 100%;
+    max-width: 342px;
+    margin-left: 0;
+    margin-right: auto;
+    overflow-wrap: break-word;
+  }
+
+  .category-page-header .page-title {
+    font-size: 34px;
+    line-height: 1.08;
+  }
+
+  .category-page-header .category-seo-copy {
+    font-size: 16px;
+    line-height: 1.45;
+  }
+
+  .category-hero-meta {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-bottom: 2px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .category-hero-meta span {
+    flex: 0 0 auto;
+  }
 }
 
 .model-empty-state {
