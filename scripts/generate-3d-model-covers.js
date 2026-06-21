@@ -21,8 +21,29 @@ const outputDir = path.resolve(__dirname, '..', 'public', 'uploads', 'preview');
 const version = process.env.COVER_VERSION || new Date().toISOString().slice(0, 10).replace(/-/g, '');
 const onlySlug = process.env.MODEL_SLUG || '';
 const modelStatus = process.env.MODEL_STATUS || '';
+const modelIdMin = Number(process.env.MODEL_ID_MIN || 0);
+const modelIdMax = Number(process.env.MODEL_ID_MAX || 0);
 const onlyMissingCovers = process.env.ONLY_MISSING_COVERS === '1';
+const excludedSlugs = (process.env.MODEL_EXCLUDE_SLUGS || 'test-model')
+  .split(',')
+  .map(slug => slug.trim())
+  .filter(Boolean);
 const coverPrepareTimeoutMs = Number(process.env.COVER_PREPARE_TIMEOUT_MS || 120000);
+const perModelTimeoutMs = Number(process.env.COVER_MODEL_TIMEOUT_MS || 180000);
+
+function coverSlugFromModel(model) {
+  const rawUrl = model.file_url || '';
+  try {
+    const parsed = new URL(rawUrl, 'http://local.invalid');
+    const basename = path.basename(parsed.pathname);
+    if (basename.toLowerCase().endsWith('.glb')) {
+      return basename.replace(/\.glb$/i, '');
+    }
+  } catch (err) {
+    // Fall through to the model slug fallback.
+  }
+  return model.slug;
+}
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -258,11 +279,11 @@ async function evaluate(cdp, expression, timeoutMs = 120000) {
 async function waitForExportFunction(cdp) {
   const startedAt = Date.now();
   while (Date.now() - startedAt < 60000) {
-    const ready = await evaluate(cdp, 'typeof window.prepareDesignedModelCoverCapture === "function"', 5000);
+    const ready = await evaluate(cdp, 'typeof window.exportDesignedModelCover === "function"', 5000);
     if (ready) return;
     await sleep(500);
   }
-  throw new Error('Timed out waiting for cover capture function');
+  throw new Error('Timed out waiting for model cover export function');
 }
 
 function dataUrlToBuffer(dataUrl) {
@@ -381,6 +402,7 @@ async function main() {
 
   chrome.stderr.on('data', chunk => {
     const text = chunk.toString();
+    if (/ReadPixels|SharedImageManager|google_apis|chrome\/updater|crashpad|ssl_client_socket_impl|DevTools/i.test(text)) return;
     if (/error|failed/i.test(text) && !/DevTools/i.test(text)) process.stderr.write(text);
   });
 
@@ -400,9 +422,21 @@ async function main() {
       filters.push('slug = ?');
       params.push(onlySlug);
     }
+    if (modelIdMin > 0) {
+      filters.push('id >= ?');
+      params.push(modelIdMin);
+    }
+    if (modelIdMax > 0) {
+      filters.push('id <= ?');
+      params.push(modelIdMax);
+    }
     if (onlyMissingCovers) {
       filters.push("(image_url IS NULL OR image_url NOT LIKE ?)");
       params.push(`/uploads/preview/%.webp?v=cover-${version}`);
+    }
+    if (excludedSlugs.length) {
+      filters.push(`slug NOT IN (${excludedSlugs.map(() => '?').join(', ')})`);
+      params.push(...excludedSlugs);
     }
 
     const models = await db.all(`
@@ -418,58 +452,42 @@ async function main() {
     for (const model of models) {
       const categorySlug = generateSlug(model.category, '3d-models');
       const pageUrl = `http://127.0.0.1:${serverPort}/3d-models/${categorySlug}/${model.slug}`;
-      const filename = `${model.slug}.webp`;
+      const coverSlug = coverSlugFromModel(model);
+      const filename = `${coverSlug}.webp`;
       const publicPath = `/uploads/preview/${filename}?v=cover-${version}`;
       const outputPath = path.join(outputDir, filename);
       let cdp;
 
       try {
         console.log(`rendering ${model.id}: ${model.slug}`);
-        cdp = await createPage(pageUrl);
-        await waitForExportFunction(cdp);
-        const clip = await evaluate(
-          cdp,
-          'window.prepareDesignedModelCoverCapture()',
-          coverPrepareTimeoutMs
-        );
-        const pngScreenshot = await withTimeout(cdp.send('Page.captureScreenshot', {
-          format: 'png',
-          clip: {
-            x: clip.x,
-            y: clip.y,
-            width: clip.width,
-            height: clip.height,
-            scale: 1
-          },
-          fromSurface: true,
-          captureBeyondViewport: false
-        }), 30000, 'PNG screenshot');
-        const pngBuffer = Buffer.from(pngScreenshot.data, 'base64');
-        const visibleStats = analyzePngPixels(pngBuffer);
-        if (visibleStats.nonTransparent < 50000 || visibleStats.nonBlack < 2500) {
-          throw new Error(`render produced too few visible pixels (${JSON.stringify(visibleStats)})`);
-        }
+        await withTimeout((async () => {
+          cdp = await createPage(pageUrl);
+          await waitForExportFunction(cdp);
+          const renders = await evaluate(
+            cdp,
+            `window.exportDesignedModelCoverFormats(${JSON.stringify([
+              { key: 'png', mimeType: 'image/png', quality: 0.95 },
+              { key: 'webp', mimeType: 'image/webp', quality: 0.96 }
+            ])})`,
+            coverPrepareTimeoutMs
+          );
+          const pngBuffer = dataUrlToBuffer(renders.png).buffer;
+          const visibleStats = analyzePngPixels(pngBuffer);
+          if (visibleStats.nonTransparent < 50000 || visibleStats.nonBlack < 2500) {
+            throw new Error(`render produced too few visible pixels (${JSON.stringify(visibleStats)})`);
+          }
 
-        const screenshot = await withTimeout(cdp.send('Page.captureScreenshot', {
-          format: 'webp',
-          quality: 96,
-          clip: {
-            x: clip.x,
-            y: clip.y,
-            width: clip.width,
-            height: clip.height,
-            scale: 1
-          },
-          fromSurface: true,
-          captureBeyondViewport: false
-        }), 30000, 'WebP screenshot');
-        await evaluate(cdp, 'window.cleanupDesignedModelCoverCapture?.()', 5000).catch(() => {});
-        const buffer = Buffer.from(screenshot.data, 'base64');
-        await fs.writeFile(outputPath, buffer);
-        await db.run(
-          'UPDATE models_3d SET image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-          [publicPath, model.id]
-        );
+          const webpData = dataUrlToBuffer(renders.webp);
+          if (webpData.mimeType !== 'image/webp') {
+            throw new Error(`cover export returned ${webpData.mimeType}, expected image/webp`);
+          }
+          const buffer = webpData.buffer;
+          await fs.writeFile(outputPath, buffer);
+          await db.run(
+            'UPDATE models_3d SET image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+            [publicPath, model.id]
+          );
+        })(), perModelTimeoutMs, `cover render for ${model.slug}`);
         success += 1;
         console.log(`updated ${model.slug} -> ${publicPath}`);
       } catch (err) {

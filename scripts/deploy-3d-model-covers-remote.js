@@ -15,6 +15,19 @@ const version = process.env.COVER_VERSION || '20260607';
 const keyPrefix = process.env.COVER_R2_PREFIX || 'image/design3d-covers';
 const dryRun = process.argv.includes('--dry-run');
 
+function coverSlugFromFileUrl(rawUrl) {
+  try {
+    const parsed = new URL(rawUrl || '', 'http://local.invalid');
+    const basename = path.basename(parsed.pathname);
+    if (basename.toLowerCase().endsWith('.glb')) {
+      return basename.replace(/\.glb$/i, '');
+    }
+  } catch (err) {
+    // Fall through to null.
+  }
+  return null;
+}
+
 function required(name) {
   if (!process.env[name]) throw new Error(`${name} is required`);
   return process.env[name];
@@ -46,13 +59,16 @@ async function getLocalCovers() {
 
 async function main() {
   const localCovers = await getLocalCovers();
-  const remoteRows = await db.all('SELECT id, slug, image_url FROM models_3d ORDER BY id');
-  const remoteSlugs = new Set(remoteRows.map(row => row.slug));
-  const coversToDeploy = localCovers.filter(cover => remoteSlugs.has(cover.slug));
-  const unmatchedLocal = localCovers.filter(cover => !remoteSlugs.has(cover.slug)).map(cover => cover.slug);
+  const remoteRows = (await db.all('SELECT id, slug, file_url, image_url FROM models_3d ORDER BY id'))
+    .map(row => ({ ...row, cover_slug: coverSlugFromFileUrl(row.file_url) }));
+  const remoteByCoverSlug = new Map(remoteRows.filter(row => row.cover_slug).map(row => [row.cover_slug, row]));
+  const coversToDeploy = localCovers
+    .map(cover => ({ ...cover, model: remoteByCoverSlug.get(cover.slug) }))
+    .filter(cover => cover.model);
+  const unmatchedLocal = localCovers.filter(cover => !remoteByCoverSlug.has(cover.slug)).map(cover => cover.slug);
   const unmatchedRemote = remoteRows
-    .filter(row => !localCovers.some(cover => cover.slug === row.slug))
-    .map(row => ({ id: row.id, slug: row.slug, image_url: row.image_url }));
+    .filter(row => row.cover_slug && !localCovers.some(cover => cover.slug === row.cover_slug))
+    .map(row => ({ id: row.id, slug: row.slug, cover_slug: row.cover_slug, image_url: row.image_url }));
 
   console.log(JSON.stringify({
     dryRun,
@@ -84,8 +100,8 @@ async function main() {
     uploaded += 1;
 
     const result = await db.run(
-      'UPDATE models_3d SET image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE slug = ?',
-      [imageUrl, cover.slug]
+      'UPDATE models_3d SET image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [imageUrl, cover.model.id]
     );
     updated += result.changes || 0;
     console.log(`deployed ${cover.slug} -> ${imageUrl}`);

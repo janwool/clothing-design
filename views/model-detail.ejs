@@ -1248,12 +1248,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function frameCoverExportViewer(viewerElement) {
     if (!viewerElement) return;
-    viewerElement.cameraOrbit = '0deg 75deg 138%';
+    const coverCameraOrbit = '-48deg 72deg 142%';
     viewerElement.cameraTarget = 'auto auto auto';
-    viewerElement.fieldOfView = '30deg';
+    viewerElement.fieldOfView = '28deg';
+    viewerElement.cameraOrbit = coverCameraOrbit;
     if (typeof viewerElement.updateFraming === 'function') {
       await viewerElement.updateFraming();
     }
+    viewerElement.cameraOrbit = coverCameraOrbit;
     if (typeof viewerElement.jumpCameraToGoal === 'function') {
       viewerElement.jumpCameraToGoal();
     }
@@ -1368,6 +1370,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  async function renderDesignedModelImages(textureUrl, formatOptions = []) {
+    const exportViewer = createCoverExportViewer();
+    document.body.appendChild(exportViewer);
+
+    try {
+      await waitForModelViewerReady(exportViewer);
+      await frameCoverExportViewer(exportViewer);
+      exportViewer.autoRotate = false;
+      if (textureUrl) {
+        await applyTextureToViewer(exportViewer, textureUrl);
+      } else if (state.selectedMaterial) {
+        await applyMaterialToViewer(exportViewer, state.selectedMaterial);
+      }
+      await exportViewer.updateComplete;
+      await waitForVisibleModelRender(exportViewer);
+      await new Promise(resolve => setTimeout(resolve, 360));
+
+      const results = {};
+      for (const format of formatOptions) {
+        const key = format.key || format.mimeType || `image-${Object.keys(results).length + 1}`;
+        results[key] = await captureModelViewerImage(exportViewer, {
+          mimeType: format.mimeType || 'image/png',
+          quality: format.quality ?? 0.95
+        });
+      }
+      return results;
+    } finally {
+      exportViewer.remove();
+    }
+  }
+
   async function prepareDesignedModelCoverCapture() {
     stopModelRotation();
     const textureUrl = await createFinalRenderTexture();
@@ -1457,6 +1490,11 @@ document.addEventListener('DOMContentLoaded', () => {
       mimeType: options.mimeType || 'image/webp',
       quality: options.quality ?? 0.95
     });
+  };
+  window.exportDesignedModelCoverFormats = async function exportDesignedModelCoverFormats(formatOptions = []) {
+    stopModelRotation();
+    const textureUrl = await createFinalRenderTexture();
+    return renderDesignedModelImages(textureUrl, formatOptions);
   };
   window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;
   window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;
