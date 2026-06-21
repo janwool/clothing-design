@@ -2,6 +2,7 @@
 <% const sectionCategories = categories || []; %>
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
 <% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>
+<% const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; %>
 <% const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/3d-models'; %>
 <% const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; %>
 <% const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
@@ -68,23 +69,25 @@
   </div>
 </section>
 
-<section class="generator-section generator-section-muted">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow"><%= content.output.eyebrow %></span>
-      <h2><%= content.output.title %></h2>
-    </div>
+<% if (!skipOutputSection) { %>
+  <section class="generator-section generator-section-muted">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow"><%= content.output.eyebrow %></span>
+        <h2><%= content.output.title %></h2>
+      </div>
 
-    <div class="generator-output-grid">
-      <% content.output.cards.forEach(function(card) { %>
-        <div class="generator-output-card">
-          <h3><%= card.title %></h3>
-          <p><%= card.body %></p>
-        </div>
-      <% }); %>
+      <div class="generator-output-grid">
+        <% content.output.cards.forEach(function(card) { %>
+          <div class="generator-output-card">
+            <h3><%= card.title %></h3>
+            <p><%= card.body %></p>
+          </div>
+        <% }); %>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
+<% } %>
 
 <section class="generator-library-cta">
   <div class="container">

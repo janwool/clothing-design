@@ -924,6 +924,110 @@ img {
   padding: var(--spacing-2xl) 0 var(--spacing-4xl);
 }
 
+.design3d-category-overview {
+  padding: var(--spacing-3xl) 0;
+  background-color: var(--color-light);
+}
+
+.design3d-category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-md);
+}
+
+.design3d-category-tile {
+  min-height: 112px;
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.design3d-category-tile:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.design3d-category-tile span {
+  color: var(--color-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.design3d-category-tile strong {
+  color: var(--color-primary);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.design3d-featured-section {
+  padding-bottom: var(--spacing-3xl);
+}
+
+.design3d-recent-header {
+  margin-top: var(--spacing-xl);
+}
+
+.design3d-more-link {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-2xl);
+}
+
+.category-hero-meta {
+  margin-top: var(--spacing-lg);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.category-hero-meta span {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-white);
+  color: var(--color-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.category-intent-section {
+  padding: var(--spacing-2xl) 0;
+  background-color: var(--color-light);
+}
+
+.category-intent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spacing-lg);
+}
+
+.category-intent-item {
+  min-height: 170px;
+  padding: var(--spacing-xl);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-white);
+}
+
+.category-intent-item h2 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.category-intent-item p {
+  color: var(--color-secondary);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
 /* ===== Filters ===== */
 .filters-bar {
   display: flex;
@@ -2677,9 +2781,14 @@ img {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .design3d-category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
   .generator-steps,
   .generator-category-grid,
-  .generator-output-grid {
+  .generator-output-grid,
+  .category-intent-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -2911,6 +3020,11 @@ img {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .design3d-category-grid,
+  .category-intent-grid {
+    grid-template-columns: 1fr;
+  }
+
   .generator-steps,
   .generator-category-grid,
   .generator-output-grid,
@@ -2950,6 +3064,11 @@ img {
 @media (max-width: 480px) {
   .models-grid {
     grid-template-columns: 1fr;
+  }
+
+  .design3d-category-tile,
+  .category-intent-item {
+    min-height: 0;
   }
 
   .gallery-grid {

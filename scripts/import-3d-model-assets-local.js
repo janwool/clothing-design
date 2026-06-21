@@ -5,6 +5,7 @@ const path = require('path');
 const {
   applyUniqueSeoNames,
   buildSeoContent,
+  buildModelCategoryLandingContent,
   categoryDescription,
   categoryMetaDescription,
   categoryMetaTitle,
@@ -83,6 +84,7 @@ async function upsertCategory(category) {
     categoryDescription(category.name),
     categoryMetaTitle(category.name),
     categoryMetaDescription(category.name),
+    JSON.stringify(buildModelCategoryLandingContent(category.name)),
     category.sort_order,
     'active'
   ];
@@ -94,7 +96,7 @@ async function upsertCategory(category) {
     await db.run(
       `UPDATE categories
        SET name = ?, slug = ?, resource_type = ?, description = ?, meta_title = ?, meta_description = ?,
-           sort_order = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+           landing_content = ?, sort_order = ?, status = ?, updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
       [...params, existing.id]
     );
@@ -102,8 +104,8 @@ async function upsertCategory(category) {
   }
 
   const result = await db.run(
-    `INSERT INTO categories (name, slug, resource_type, description, meta_title, meta_description, sort_order, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO categories (name, slug, resource_type, description, meta_title, meta_description, landing_content, sort_order, status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     params
   );
   return result.lastID;

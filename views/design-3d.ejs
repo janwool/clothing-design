@@ -12,10 +12,67 @@
   </div>
 </section>
 
+<section class="design3d-category-overview" id="model-categories">
+  <div class="container">
+    <div class="generator-section-header generator-section-header-row">
+      <div>
+        <span class="generator-eyebrow">Model categories</span>
+        <h2>Start with the garment type behind your mockup</h2>
+      </div>
+      <p>Choose a focused category before opening the editor, so T-shirt, hoodie, dress, jacket, and accessory mockups stay easier to compare.</p>
+    </div>
+    <div class="design3d-category-grid">
+      <% categories.slice(0, 12).forEach(function(cat) { %>
+        <a href="/3d-models/<%= cat.slug %>" class="design3d-category-tile">
+          <span><%= categoryCounts && categoryCounts[cat.slug] ? `${categoryCounts[cat.slug]} models` : '3D models' %></span>
+          <strong><%= cat.name %></strong>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<% if (featuredModels && featuredModels.length) { %>
+  <section class="content-section design3d-featured-section">
+    <div class="container">
+      <div class="generator-section-header generator-section-header-row">
+        <div>
+          <span class="generator-eyebrow">Featured models</span>
+          <h2>Mockup-ready garment models for product visuals</h2>
+        </div>
+        <p>Use these models as practical starting points for T-shirt mockups, hoodie previews, product renders, and apparel launch planning.</p>
+      </div>
+
+      <div class="models-grid">
+        <% featuredModels.forEach(function(model) { %>
+          <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || model.category %>">
+            <div class="model-preview-3d">
+              <% if (model.image_url) { %>
+                <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
+              <% } else { %>
+                <div class="model-placeholder">
+                  <span><%= model.name.charAt(0) %></span>
+                </div>
+              <% } %>
+            </div>
+            <div class="model-info">
+              <h3 class="model-name"><%= model.name %></h3>
+              <div class="model-tags">
+                <span class="tag tag-free"><%= model.category_label || model.category || '3D model' %></span>
+                <span class="tag">Open model</span>
+              </div>
+            </div>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+<% } %>
+
 <section class="content-section">
   <div class="container">
     <!-- Filters -->
-    <div class="filters-bar">
+    <div class="filters-bar" id="model-filters">
       <div class="filter-group">
         <a href="/design-3d" class="filter-btn active"><%= t('design3d.filterAll') %></a>
         <% categories.forEach(function(cat) { %>
@@ -24,10 +81,18 @@
       </div>
     </div>
 
+    <div class="generator-section-header generator-section-header-row design3d-recent-header">
+      <div>
+        <span class="generator-eyebrow">Recently added</span>
+        <h2>Latest 3D clothing models</h2>
+      </div>
+      <p>Browse the newest model previews, then open the closest garment base for browser-based apparel mockup work.</p>
+    </div>
+
     <!-- 3D Models Grid -->
     <div class="models-grid">
-      <% if (models && models.length > 0) { %>
-        <% models.forEach(function(model) { %>
+      <% if (recentModels && recentModels.length > 0) { %>
+        <% recentModels.forEach(function(model) { %>
           <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || model.category %>">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
@@ -46,6 +111,7 @@
                 <% } else { %>
                   <span class="tag tag-pro">Pro</span>
                 <% } %>
+                <span class="tag"><%= model.category_label || model.category || '3D model' %></span>
               </div>
             </div>
           </a>
@@ -56,6 +122,11 @@
         </div>
       <% } %>
     </div>
+    <% if (models && models.length > recentModels.length) { %>
+      <div class="design3d-more-link">
+        <a href="#model-filters" class="btn btn-secondary">Use category filters to browse all models</a>
+      </div>
+    <% } %>
   </div>
 </section>
 

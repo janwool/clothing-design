@@ -5,6 +5,7 @@ const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
 const { shouldIndexModel, shouldIndexPattern } = require('../lib/seo-priority');
+const { buildModelCategoryLandingContent } = require('../lib/design3d-seo');
 const {
   DEFAULT_SITE_IMAGE_PATH,
   toAbsoluteUrl,
@@ -76,64 +77,7 @@ function getDefaultLandingContent(name = '3D clothing models', resourceType = '3
     };
   }
 
-  return {
-    workflow: {
-      eyebrow: 'Workflow',
-      title: `From blank model to finished ${name} mockup`,
-      description: 'Use the same browser-based flow to select a garment, place your artwork, preview the result, and prepare visuals for review.',
-      steps: [
-        { title: 'Select a garment', body: 'Choose the 3D clothing model that matches the silhouette you want to present.' },
-        { title: 'Add your design', body: 'Apply colors, artwork, logos, and surface directions to the selected model.' },
-        { title: 'Preview the mockup', body: 'Rotate the model and check artwork scale, placement, and color balance.' },
-        { title: 'Export visuals', body: 'Save presentation-ready mockups for stores, launch decks, and approvals.' }
-      ]
-    },
-    categories: {
-      eyebrow: 'Popular categories',
-      title: 'Find the right model category',
-      description: 'Browse model categories and choose the closest garment base before opening the 3D designer.',
-      buttonLabel: 'Browse categories',
-      buttonHref: '/design-3d',
-      cards: [
-        { title: 'Hoodies', meta: '3D models', href: '/design-3d' },
-        { title: 'T-Shirts', meta: '3D models', href: '/design-3d' },
-        { title: 'Dresses', meta: '3D models', href: '/design-3d' },
-        { title: 'Outerwear', meta: '3D models', href: '/design-3d' }
-      ]
-    },
-    output: {
-      eyebrow: 'Built for apparel output',
-      title: 'Use 3D clothing models across every apparel workflow',
-      cards: [
-        { title: 'Online product pages', body: 'Create consistent visuals for ecommerce listings and product detail pages.' },
-        { title: 'Campaign and launch decks', body: 'Show garment concepts in context before samples or photoshoots are ready.' },
-        { title: 'Client and team approvals', body: 'Review color, placement, and scale with a more realistic apparel preview.' }
-      ]
-    },
-    library: {
-      eyebrow: 'Library',
-      title: 'Start from editable 3D garment models instead of flat artwork previews.',
-      buttonLabel: 'Browse 3D Models',
-      buttonHref: '/design-3d'
-    },
-    faq: {
-      eyebrow: 'FAQ',
-      title: '3D clothing model questions',
-      items: [
-        { question: 'Can I use these 3D models for apparel mockups?', answer: 'Yes. Choose a model, open the designer, and use it to preview graphics, colorways, and garment presentation angles.' },
-        { question: 'Do I need 3D software to customize a model?', answer: 'No. The workflow runs in the browser, so you can preview and adjust designs without opening a desktop 3D application.' },
-        { question: 'Which garment categories are available?', answer: 'The library can include tops, hoodies, dresses, outerwear, bottoms, and other apparel categories depending on the active model set.' },
-        { question: 'Can I use the renders for product pages?', answer: 'Yes. The mockup workflow is intended for ecommerce previews, presentations, portfolio visuals, and design review materials.' }
-      ]
-    },
-    cta: {
-      eyebrow: 'Start creating',
-      title: 'Open a model and create your next apparel mockup.',
-      description: 'Choose a garment above and move straight into the 3D designer.',
-      primaryLabel: 'Browse 3D Models',
-      primaryHref: '/design-3d'
-    }
-  };
+  return buildModelCategoryLandingContent(name);
 }
 
 function mergeLandingContent(defaults, overrides) {
@@ -1829,6 +1773,19 @@ router.get('/design-3d', async (req, res) => {
     `, ['active']);
     const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order', ['3d-models', 'active']);
     const normalizedModels = normalize3dModels(models);
+    const categoryCounts = normalizedModels.reduce((counts, model) => {
+      (model.category_slugs || [model.category_slug || model.category]).forEach(slug => {
+        counts[slug] = (counts[slug] || 0) + 1;
+      });
+      return counts;
+    }, {});
+    const featuredCategorySlugs = ['t-shirt-mockup', 'hoodie-mockup', 'dress', 'jacket', 'coat', 'top'];
+    const featuredModels = featuredCategorySlugs.flatMap(slug => (
+      normalizedModels
+        .filter(model => (model.category_slugs || [model.category_slug]).includes(slug))
+        .slice(0, 2)
+    )).slice(0, 12);
+    const recentModels = normalizedModels.slice(0, 24);
     const description = 'Browse free 3D clothing models for apparel mockups. Customize shirts, hoodies, dresses and coats online, then export high-resolution transparent renders.';
     const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
     
@@ -1850,6 +1807,9 @@ router.get('/design-3d', async (req, res) => {
       }),
       page: 'design-3d',
       models: normalizedModels,
+      featuredModels,
+      recentModels,
+      categoryCounts,
       categories: categories || [],
       landingContent: getLandingContent()
     });
@@ -1872,6 +1832,9 @@ router.get('/design-3d', async (req, res) => {
       }),
       page: 'design-3d',
       models: [],
+      featuredModels: [],
+      recentModels: [],
+      categoryCounts: {},
       categories: [],
       landingContent: getLandingContent()
     });
