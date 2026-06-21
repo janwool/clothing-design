@@ -441,13 +441,15 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
   ];
 }
 
+const MOCKUP_GLB_BASE_URL = 'https://cdn.cloz-design.com/uploads/glb';
+
 const TOOL_PAGE_CONTENT = {
   't-shirt-mockup-generator': {
     title: 'Free T-Shirt Mockup Generator',
     eyebrow: 'Free online T-shirt mockups',
     image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
     heroModel: {
-      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
     subtitle: 'Preview T-shirt mockups online from ClothingDesign apparel model pages. Plan chest graphics, oversized fits, colorways, and product-page imagery before photography or sampling.',
@@ -520,7 +522,7 @@ const TOOL_PAGE_CONTENT = {
     eyebrow: 'Free online hoodie mockups',
     image: '/uploads/preview/hoodie-mockup-3d-model-03-dca998b8.webp?v=cover-20260607',
     heroModel: {
-      src: '/uploads/glb/hoodie-mockup-3d-model-03-dca998b8.glb',
+      src: `${MOCKUP_GLB_BASE_URL}/hoodie-mockup-3d-model-03-dca998b8.glb`,
       alt: 'Tailored Fleece Lined Hoodie 3D Model'
     },
     subtitle: 'Preview hoodie mockups online for streetwear drops, team merch, sleeve-zone ideas, back-print planning, oversized fits, and ecommerce product pages.',
@@ -593,7 +595,7 @@ const TOOL_PAGE_CONTENT = {
     eyebrow: '3D apparel product visuals',
     image: '/uploads/preview/dress-3d-model-06-29e39d9a.webp?v=cover-20260607',
     heroModel: {
-      src: '/uploads/glb/dress-3d-model-06-29e39d9a.glb',
+      src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
       alt: 'Classic One-Piece Dress 3D Model'
     },
     subtitle: 'Plan 3D clothing mockups for T-shirts, hoodies, jackets, dresses, and apparel product pages using ClothingDesign model previews.',
@@ -666,7 +668,7 @@ const TOOL_PAGE_CONTENT = {
     eyebrow: 'Batch T-shirt product visuals',
     image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
     heroModel: {
-      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
     subtitle: 'Plan bulk T-shirt mockups for print-on-demand catalogs, colorway matrices, Shopify drafts, Etsy listings, and apparel product pages.',
@@ -739,7 +741,7 @@ const TOOL_PAGE_CONTENT = {
     eyebrow: 'POD apparel listing visuals',
     image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
     heroModel: {
-      src: '/uploads/glb/t-shirt-mockup-3d-model-01-aa09ae0d.glb',
+      src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
     subtitle: 'Plan print-on-demand apparel mockups for T-shirts, hoodies, online stores, merch catalogs, Shopify drafts, and Etsy product listings.',
@@ -1683,6 +1685,15 @@ function redirectToCanonical3dModel(req, res, model, editPath = false) {
   }
   return false;
 }
+
+router.get('/uploads/glb/:filename', (req, res) => {
+  const filename = req.params.filename;
+  if (!/^[a-z0-9][a-z0-9-]*\.glb$/i.test(filename)) {
+    return res.status(404).render('404', { title: 'Not Found', page: '' });
+  }
+
+  return res.redirect(301, `${MOCKUP_GLB_BASE_URL}/${filename}`);
+});
 
 router.get('/api/texture-svg', async (req, res) => {
   const textureUrl = req.query.url;
