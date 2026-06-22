@@ -69,7 +69,7 @@ function getPriority(pathname) {
   if (pathname === '/') return '1.0';
   if (['/mockups', '/tools', '/patterns'].includes(pathname)) return '0.9';
   if (pathname.startsWith('/tools/')) return '0.8';
-  if (pathname.startsWith('/3d-models/') && pathname.split('/').length === 3) return '0.8';
+  if (pathname.startsWith('/mockups/') && pathname.split('/').length === 3) return '0.8';
   if (pathname.startsWith('/3d-models/')) return '0.7';
   if (pathname.startsWith('/patterns/item/')) return '0.5';
   return '0.6';
@@ -77,7 +77,7 @@ function getPriority(pathname) {
 
 function getChangefreq(pathname) {
   if (pathname === '/' || pathname === '/mockups') return 'weekly';
-  if (pathname.startsWith('/3d-models/') || pathname.startsWith('/patterns/')) return 'monthly';
+  if (pathname.startsWith('/mockups/') || pathname.startsWith('/3d-models/') || pathname.startsWith('/patterns/')) return 'monthly';
   return 'weekly';
 }
 
@@ -139,7 +139,7 @@ async function getPatterns() {
 
 function categoryPath(category) {
   const prefixes = {
-    '3d-models': '/3d-models',
+    '3d-models': '/mockups',
     patterns: '/patterns',
     gallery: '/gallery',
     tools: '/tools'

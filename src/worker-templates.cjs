@@ -1293,7 +1293,7 @@ title = __locals.title,
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n          </a>\n          ")
     ;  (categories || []).forEach(function(cat) {
-    ; __append("\n            <a href=\"/3d-models/")
+    ; __append("\n            <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"filter-btn ")
     ; __append(escapeFn( cat.slug === category.slug ? 'active' : '' ))
@@ -1595,7 +1595,7 @@ title = __locals.title,
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n        </a>\n        ")
     ;  categories.forEach(function(cat) {
-    ; __append("\n          <a href=\"/3d-models/")
+    ; __append("\n          <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"filter-btn\">\n            ")
     ; __append( include('partials/category-icon', { slug: cat.slug, name: cat.name }) )
@@ -1954,7 +1954,7 @@ title = __locals.title,
     ;  if (featuredCategories.length) {
     ; __append("\n<section class=\"generator-section generator-section-muted home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free model categories</span>\n      <h2 class=\"home-copy-reveal\">Browse 3D clothing models by garment type</h2>\n      <p class=\"home-copy-reveal\">Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models for mockup and print placement work.</p>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
     ;  featuredCategories.forEach(function(category) {
-    ; __append("\n        <a href=\"/3d-models/")
+    ; __append("\n        <a href=\"/mockups/")
     ; __append(escapeFn( category.slug ))
     ; __append("\" class=\"generator-category-card home-reveal-card\">\n          ")
     ;  if (category.image_url) {
@@ -2112,7 +2112,7 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  }
-    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/3d-models/")
+    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">")
     ; __append(escapeFn( model.category_label || model.category ))
@@ -2579,7 +2579,7 @@ title = __locals.title,
     ; __append("\n")
     ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false;
     ; __append("\n")
-    ;  const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/3d-models';
+    ;  const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups';
     ; __append("\n")
     ;  const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models';
     ; __append("\n")

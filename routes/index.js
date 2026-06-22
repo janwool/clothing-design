@@ -462,7 +462,7 @@ function buildSimplePageStructuredData(req, options = {}) {
 }
 
 function buildCategoryStructuredData(req, category, items = [], resourceType, resourceTypeLabel) {
-  const basePath = `/${resourceType}/${category.slug}`;
+  const basePath = resourceType === '3d-models' ? `/mockups/${category.slug}` : `/${resourceType}/${category.slug}`;
   const collectionPath = resourceType === '3d-models' ? '/mockups' : `/${resourceType}`;
   const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClothingDesign.`;
   const normalizedItems = resourceType === '3d-models' ? normalize3dModels(items, category.slug) : items;
@@ -896,7 +896,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I use the mockup for a product listing?', answer: 'Yes. The exported visual is useful for draft ecommerce pages, print-on-demand planning, campaign previews, and internal approvals.' },
       { question: 'Do I need Photoshop or 3D software?', answer: 'No. The workflow is browser-based, so you can create a visual preview without editing a PSD file or setting up a desktop 3D scene.' }
     ],
-    cta: { label: 'Start with T-Shirt Models', href: '/3d-models/t-shirt-mockup' }
+    cta: { label: 'Start with T-Shirt Models', href: '/mockups/t-shirt-mockup' }
   },
   'hoodie-designer': {
     title: 'Free Hoodie Designer Online',
@@ -928,7 +928,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I preview sleeve or back artwork?', answer: 'Use the 3D garment view to plan artwork zones and check how placement works across the hoodie shape.' },
       { question: 'Who is this best for?', answer: 'It is useful for streetwear brands, print-on-demand sellers, schools, teams, agencies, and anyone validating hoodie designs before production.' }
     ],
-    cta: { label: 'Browse Hoodie Models', href: '/3d-models/hoodie-mockup' }
+    cta: { label: 'Browse Hoodie Models', href: '/mockups/hoodie-mockup' }
   },
   'dress-designer': {
     title: 'Free Dress Design Tool Online',
@@ -960,7 +960,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Is this for fashion designers or shoppers?', answer: 'It is built for apparel creators, boutique teams, students, and designers who need mockups and planning references.' },
       { question: 'Can I use sewing patterns with this workflow?', answer: 'Yes. Pattern resources can help you connect a dress concept with construction references and digital garment review.' }
     ],
-    cta: { label: 'Browse Dress Models', href: '/3d-models/dress' }
+    cta: { label: 'Browse Dress Models', href: '/mockups/dress' }
   },
   '3d-mockup': {
     title: 'Free 3D Clothing Mockup Generator',
@@ -1362,7 +1362,7 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
   const fileExt = `.${format}`;
   const categoryName = pattern.category || 'apparel';
   const design3dCategoryName = design3dCategory?.name || categoryName;
-  const design3dHref = design3dCategory?.slug ? `/3d-models/${design3dCategory.slug}` : '/mockups';
+  const design3dHref = design3dCategory?.slug ? `/mockups/${design3dCategory.slug}` : '/mockups';
   const series = getPatternSeriesInfo(pattern);
   const guide = getPatternCategoryGuide(categoryName);
   const pageTitle = buildSeoTitle(pattern.name, `Free ${format.toUpperCase()} Pattern #${pattern.id}`);
@@ -1620,7 +1620,7 @@ function buildModelDetailContent(model, related, req) {
         breadcrumbs: [
           { name: 'Home', url: '/' },
           { name: '3D Clothing Models', url: '/mockups' },
-          { name: categoryName, url: `/3d-models/${categorySlug}` },
+          { name: categoryName, url: `/mockups/${categorySlug}` },
           { name: model.name, url: req.originalUrl }
         ]
       }),
@@ -2130,7 +2130,11 @@ router.get('/pricing', (req, res) => {
 // ==================== SEO Category Routes ====================
 
 // 3D Models Category Route
-router.get('/3d-models/:slug', async (req, res) => {
+router.get('/3d-models/:slug', (req, res) => {
+  res.redirect(301, `/mockups/${req.params.slug}`);
+});
+
+router.get('/mockups/:slug', async (req, res) => {
   try {
     await ensureModelCategoryTable();
     const category = await db.get('SELECT * FROM categories WHERE slug = ? AND resource_type = ? AND status = ?', 
@@ -2339,6 +2343,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
         breadcrumbs: [
           { name: 'Home', url: '/' },
           { name: '3D Clothing Models', url: '/mockups' },
+          { name: normalizedModel.category_label || normalizedModel.category || categorySlug, url: `/mockups/${categorySlug}` },
           { name: normalizedModel.name, url: `/3d-models/${categorySlug}/${normalizedModel.slug}` },
           { name: 'Designer', url: `/3d-models/${categorySlug}/${normalizedModel.slug}/edit` }
         ],

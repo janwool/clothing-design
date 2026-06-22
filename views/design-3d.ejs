@@ -22,7 +22,7 @@
           <span><%= t('design3d.filterAll') %></span>
         </a>
         <% categories.forEach(function(cat) { %>
-          <a href="/3d-models/<%= cat.slug %>" class="filter-btn">
+          <a href="/mockups/<%= cat.slug %>" class="filter-btn">
             <%- include('partials/category-icon', { slug: cat.slug, name: cat.name }) %>
             <span><%= cat.name %></span>
           </a>

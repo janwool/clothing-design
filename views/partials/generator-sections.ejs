@@ -9,7 +9,7 @@
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
 <% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>
 <% const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; %>
-<% const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/3d-models'; %>
+<% const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups'; %>
 <% const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; %>
 <% const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
 
