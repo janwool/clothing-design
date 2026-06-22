@@ -34,39 +34,8 @@
           <a href="/3d-models/<%= firstModel.category_slug || category.slug %>/<%= firstModel.slug %>" class="btn btn-secondary">Open first mockup model</a>
         <% } %>
       </div>
-    </div>
-  </section>
-
-  <% if (categoryOutputCards.length) { %>
-    <section class="category-intent-section category-intent-section-top">
-      <div class="container">
-        <div class="category-section-kicker">
-          <span class="generator-eyebrow"><%= landingContent.output.eyebrow || 'Use cases' %></span>
-          <h2><%= landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` %></h2>
-          <% if (categoryWorkflow.description) { %>
-            <p><%= categoryWorkflow.description %></p>
-          <% } %>
-        </div>
-        <div class="category-intent-grid">
-          <% categoryOutputCards.forEach(function(card) { %>
-            <article class="category-intent-item">
-              <h3><%= card.title %></h3>
-              <p><%= card.body %></p>
-            </article>
-          <% }); %>
-        </div>
-      </div>
-    </section>
-  <% } %>
-
-  <section class="content-section">
-    <div class="container">
-      <div class="category-models-header" id="free-models">
-        <span class="generator-eyebrow">Free model library</span>
-        <h2>Choose a free <%= categoryLower %> model for your next mockup</h2>
-        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>
-      </div>
-      <div class="filters-bar">
+      <div class="category-hero-filters" aria-label="Mockup categories">
+        <span class="category-hero-filter-label">Categories</span>
         <div class="filter-group">
           <a href="/mockups" class="filter-btn">
             <%- include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) %>
@@ -79,6 +48,16 @@
             </a>
           <% }); %>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section category-models-section">
+    <div class="container">
+      <div class="category-models-header" id="free-models">
+        <span class="generator-eyebrow">Free model library</span>
+        <h2>Choose a free <%= categoryLower %> model for your next mockup</h2>
+        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>
       </div>
 
       <div class="models-grid">
@@ -120,6 +99,29 @@
       </div>
     </div>
   </section>
+
+  <% if (categoryOutputCards.length) { %>
+    <section class="category-intent-section category-intent-section-top">
+      <div class="container">
+        <div class="category-section-kicker">
+          <span class="generator-eyebrow"><%= landingContent.output.eyebrow || 'Use cases' %></span>
+          <h2><%= landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` %></h2>
+          <% if (categoryWorkflow.description) { %>
+            <p><%= categoryWorkflow.description %></p>
+          <% } %>
+        </div>
+        <div class="category-intent-grid">
+          <% categoryOutputCards.forEach(function(card) { %>
+            <article class="category-intent-item">
+              <h3><%= card.title %></h3>
+              <p><%= card.body %></p>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
   <%- include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) %>
 <% } else { %>
   <section class="category-hero">

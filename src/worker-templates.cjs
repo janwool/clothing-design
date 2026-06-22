@@ -1308,31 +1308,7 @@ title = __locals.title,
     ; __append(escapeFn( firstModel.slug ))
     ; __append("\" class=\"btn btn-secondary\">Open first mockup model</a>\n        ")
     ;  }
-    ; __append("\n      </div>\n    </div>\n  </section>\n\n  ")
-    ;  if (categoryOutputCards.length) {
-    ; __append("\n    <section class=\"category-intent-section category-intent-section-top\">\n      <div class=\"container\">\n        <div class=\"category-section-kicker\">\n          <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( landingContent.output.eyebrow || 'Use cases' ))
-    ; __append("</span>\n          <h2>")
-    ; __append(escapeFn( landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` ))
-    ; __append("</h2>\n          ")
-    ;  if (categoryWorkflow.description) {
-    ; __append("\n            <p>")
-    ; __append(escapeFn( categoryWorkflow.description ))
-    ; __append("</p>\n          ")
-    ;  }
-    ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
-    ;  categoryOutputCards.forEach(function(card) {
-    ; __append("\n            <article class=\"category-intent-item\">\n              <h3>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h3>\n              <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n            </article>\n          ")
-    ;  });
-    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
-    ;  }
-    ; __append("\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"category-models-header\" id=\"free-models\">\n        <span class=\"generator-eyebrow\">Free model library</span>\n        <h2>Choose a free ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" model for your next mockup</h2>\n        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>\n      </div>\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
+    ; __append("\n      </div>\n      <div class=\"category-hero-filters\" aria-label=\"Mockup categories\">\n        <span class=\"category-hero-filter-label\">Categories</span>\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
@@ -1348,7 +1324,9 @@ title = __locals.title,
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n            </a>\n          ")
     ;  });
-    ; __append("\n        </div>\n      </div>\n\n      <div class=\"models-grid\">\n        ")
+    ; __append("\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section category-models-section\">\n    <div class=\"container\">\n      <div class=\"category-models-header\" id=\"free-models\">\n        <span class=\"generator-eyebrow\">Free model library</span>\n        <h2>Choose a free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" model for your next mockup</h2>\n        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>\n      </div>\n\n      <div class=\"models-grid\">\n        ")
     ;  if (items && items.length > 0) {
     ; __append("\n          ")
     ;  items.forEach(function(model) {
@@ -1380,7 +1358,29 @@ title = __locals.title,
     ; __append(escapeFn( category.name ))
     ; __append(" models yet</h3>\n            <p>There are no active 3D models in this category right now.</p>\n          </div>\n        ")
     ;  }
-    ; __append("\n      </div>\n    </div>\n  </section>\n  ")
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  ")
+    ;  if (categoryOutputCards.length) {
+    ; __append("\n    <section class=\"category-intent-section category-intent-section-top\">\n      <div class=\"container\">\n        <div class=\"category-section-kicker\">\n          <span class=\"generator-eyebrow\">")
+    ; __append(escapeFn( landingContent.output.eyebrow || 'Use cases' ))
+    ; __append("</span>\n          <h2>")
+    ; __append(escapeFn( landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` ))
+    ; __append("</h2>\n          ")
+    ;  if (categoryWorkflow.description) {
+    ; __append("\n            <p>")
+    ; __append(escapeFn( categoryWorkflow.description ))
+    ; __append("</p>\n          ")
+    ;  }
+    ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
+    ;  categoryOutputCards.forEach(function(card) {
+    ; __append("\n            <article class=\"category-intent-item\">\n              <h3>")
+    ; __append(escapeFn( card.title ))
+    ; __append("</h3>\n              <p>")
+    ; __append(escapeFn( card.body ))
+    ; __append("</p>\n            </article>\n          ")
+    ;  });
+    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
+    ;  }
+    ; __append("\n\n  ")
     ; __append( include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) )
     ; __append("\n")
     ;  } else {
