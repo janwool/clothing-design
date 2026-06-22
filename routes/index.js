@@ -362,7 +362,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
       image: primaryImage,
       potentialAction: {
         '@type': 'SearchAction',
-        target: `${toAbsoluteUrl(req, '/design-3d')}?q={search_term_string}`,
+        target: `${toAbsoluteUrl(req, '/mockups')}?q={search_term_string}`,
         'query-input': 'required name=search_term_string'
       }
     },
@@ -463,7 +463,7 @@ function buildSimplePageStructuredData(req, options = {}) {
 
 function buildCategoryStructuredData(req, category, items = [], resourceType, resourceTypeLabel) {
   const basePath = `/${resourceType}/${category.slug}`;
-  const collectionPath = resourceType === '3d-models' ? '/design-3d' : `/${resourceType}`;
+  const collectionPath = resourceType === '3d-models' ? '/mockups' : `/${resourceType}`;
   const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClothingDesign.`;
   const normalizedItems = resourceType === '3d-models' ? normalize3dModels(items, category.slug) : items;
   const image = firstImage(req, normalizedItems.map(item => item.image_url));
@@ -992,7 +992,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'What makes a 3D mockup better than a flat template?', answer: 'A 3D mockup helps you judge garment shape, artwork scale, folds, angle, and presentation more clearly than a flat front-view template.' },
       { question: 'Can I export transparent renders?', answer: 'Yes. The workflow is designed for clean render output that can be placed on ecommerce pages, decks, and marketing layouts.' }
     ],
-    cta: { label: 'Open 3D Model Library', href: '/design-3d' }
+    cta: { label: 'Open 3D Model Library', href: '/mockups' }
   },
   '2d-mockup': {
     title: 'Free 2D Clothing Mockup Generator',
@@ -1362,7 +1362,7 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
   const fileExt = `.${format}`;
   const categoryName = pattern.category || 'apparel';
   const design3dCategoryName = design3dCategory?.name || categoryName;
-  const design3dHref = design3dCategory?.slug ? `/3d-models/${design3dCategory.slug}` : '/design-3d';
+  const design3dHref = design3dCategory?.slug ? `/3d-models/${design3dCategory.slug}` : '/mockups';
   const series = getPatternSeriesInfo(pattern);
   const guide = getPatternCategoryGuide(categoryName);
   const pageTitle = buildSeoTitle(pattern.name, `Free ${format.toUpperCase()} Pattern #${pattern.id}`);
@@ -1608,7 +1608,7 @@ function buildModelDetailContent(model, related, req) {
       primaryLabel: 'Design This Model',
       primaryHref: designHref,
       secondaryLabel: 'Browse 3D Models',
-      secondaryHref: '/design-3d'
+      secondaryHref: '/mockups'
     },
     structuredData: [
       ...pageStructuredData(req, {
@@ -1619,7 +1619,7 @@ function buildModelDetailContent(model, related, req) {
         image: imageUrl,
         breadcrumbs: [
           { name: 'Home', url: '/' },
-          { name: '3D Clothing Models', url: '/design-3d' },
+          { name: '3D Clothing Models', url: '/mockups' },
           { name: categoryName, url: `/3d-models/${categorySlug}` },
           { name: model.name, url: req.originalUrl }
         ]
@@ -1855,8 +1855,12 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Design 3D
-router.get('/design-3d', async (req, res) => {
+router.get('/design-3d', (req, res) => {
+  res.redirect(301, '/mockups');
+});
+
+// Mockups
+router.get('/mockups', async (req, res) => {
   try {
     await ensureModelCategoryTable();
     const models = await db.all(`
@@ -1888,14 +1892,14 @@ router.get('/design-3d', async (req, res) => {
       metaDescription: description,
       metaImage: collectionImage,
       structuredData: buildCollectionStructuredData(req, {
-        name: 'Free 3D Clothing Models',
+        name: 'Free Apparel Mockups',
         description,
-        path: '/design-3d',
+        path: '/mockups',
         items: normalizedModels,
-        itemListName: 'Free Design3D clothing model library',
+        itemListName: 'Free apparel mockup model library',
         breadcrumbs: [
           { name: 'Home', url: '/' },
-          { name: '3D Clothing Models', url: '/design-3d' }
+          { name: 'Mockups', url: '/mockups' }
         ],
         getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
       }),
@@ -1914,14 +1918,14 @@ router.get('/design-3d', async (req, res) => {
       title: req.t('design3d.title'),
       metaDescription: description,
       structuredData: buildCollectionStructuredData(req, {
-        name: '3D Clothing Models',
+        name: 'Free Apparel Mockups',
         description,
-        path: '/design-3d',
+        path: '/mockups',
         items: [],
-        itemListName: 'Design3D clothing model library',
+        itemListName: 'Apparel mockup model library',
         breadcrumbs: [
           { name: 'Home', url: '/' },
-          { name: '3D Clothing Models', url: '/design-3d' }
+          { name: 'Mockups', url: '/mockups' }
         ]
       }),
       page: 'design-3d',
@@ -2334,7 +2338,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
         image: normalizedModel.image_url,
         breadcrumbs: [
           { name: 'Home', url: '/' },
-          { name: '3D Clothing Models', url: '/design-3d' },
+          { name: '3D Clothing Models', url: '/mockups' },
           { name: normalizedModel.name, url: `/3d-models/${categorySlug}/${normalizedModel.slug}` },
           { name: 'Designer', url: `/3d-models/${categorySlug}/${normalizedModel.slug}/edit` }
         ],

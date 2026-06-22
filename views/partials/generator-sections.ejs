@@ -2,9 +2,9 @@
 <% const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; %>
 <% const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] }; %>
 <% const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; %>
-<% const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/design-3d' }; %>
+<% const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' }; %>
 <% const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; %>
-<% const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/design-3d' }; %>
+<% const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' }; %>
 <% const sectionCategories = categories || []; %>
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
 <% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>

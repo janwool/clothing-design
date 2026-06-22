@@ -1,6 +1,6 @@
 {
   "nav": {
-    "design3d": "Design 3D",
+    "design3d": "Mockups",
     "design2d": "Design 2D",
     "patterns": "Sew Patterns",
     "gallery": "Get Inspired",
@@ -64,9 +64,9 @@
     "error": "An error occurred"
   },
   "design3d": {
-    "title": "Free 3D Clothing Models for Apparel Mockups | ClothingDesign",
-    "pageTitle": "Free 3D Clothing Models",
-    "pageSubtitle": "Browse free Design3D garment models, customize apparel artwork online, and export transparent renders for ecommerce and fashion review",
+    "title": "Free Apparel Mockups and 3D Clothing Models | ClothingDesign",
+    "pageTitle": "Free Apparel Mockups",
+    "pageSubtitle": "Browse free 3D garment mockup models, customize apparel artwork online, and export transparent renders for ecommerce and fashion review",
     "filterAll": "All Models",
     "filterTops": "Tops",
     "filterBottoms": "Bottoms",

@@ -67,7 +67,7 @@ function addUrl(urls, seen, pathname, lastmod) {
 
 function getPriority(pathname) {
   if (pathname === '/') return '1.0';
-  if (['/design-3d', '/tools', '/patterns'].includes(pathname)) return '0.9';
+  if (['/mockups', '/tools', '/patterns'].includes(pathname)) return '0.9';
   if (pathname.startsWith('/tools/')) return '0.8';
   if (pathname.startsWith('/3d-models/') && pathname.split('/').length === 3) return '0.8';
   if (pathname.startsWith('/3d-models/')) return '0.7';
@@ -76,7 +76,7 @@ function getPriority(pathname) {
 }
 
 function getChangefreq(pathname) {
-  if (pathname === '/' || pathname === '/design-3d') return 'weekly';
+  if (pathname === '/' || pathname === '/mockups') return 'weekly';
   if (pathname.startsWith('/3d-models/') || pathname.startsWith('/patterns/')) return 'monthly';
   return 'weekly';
 }

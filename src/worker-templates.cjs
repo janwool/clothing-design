@@ -1273,7 +1273,7 @@ title = __locals.title,
     ; __append( include('partials/header') )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') {
-    ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/design-3d\">")
+    ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/mockups\">")
     ; __append(escapeFn( resourceTypeLabel ))
     ; __append("</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( category.name ))
@@ -1287,7 +1287,7 @@ title = __locals.title,
     ;  }
     ; __append("\n      <div class=\"category-hero-meta\">\n        <span>")
     ; __append(escapeFn( items && items.length ? `${items.length} models` : '3D model category' ))
-    ; __append("</span>\n        <span>Editable UV workflow</span>\n        <span>Browser-based mockups</span>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/design-3d\" class=\"filter-btn\">\n            ")
+    ; __append("</span>\n        <span>Editable UV workflow</span>\n        <span>Browser-based mockups</span>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
@@ -1589,7 +1589,7 @@ title = __locals.title,
     ; __append(escapeFn( t('design3d.pageTitle') ))
     ; __append("</h1>\n    <p class=\"page-subtitle\">")
     ; __append(escapeFn( t('design3d.pageSubtitle') ))
-    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/design-3d\" class=\"filter-btn active\">\n          ")
+    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/mockups\" class=\"filter-btn active\">\n          ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n          <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
@@ -1918,7 +1918,7 @@ title = __locals.title,
     ; __append(escapeFn( index + 1 ))
     ; __append("\">\n    ")
     ;  });
-    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/design-3d\" class=\"btn btn-primary btn-large\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\">Create a Clothing Mockup</a>\n      </div>\n      ")
+    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\">Create a Clothing Mockup</a>\n      </div>\n      ")
     ;  if (stats.length) {
     ; __append("\n        <dl class=\"home-hero-stats home-hero-reveal\">\n          ")
     ;  stats.forEach(function(stat) {
@@ -2026,7 +2026,7 @@ title = __locals.title,
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
     ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/design-3d\" class=\"btn btn-primary\">Browse free 3D clothing models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/mockups\" class=\"btn btn-primary\">Browse free 3D clothing models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2112,7 +2112,7 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  }
-    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/design-3d\">3D Models</a>\n          <span>/</span>\n          <a href=\"/3d-models/")
+    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">")
     ; __append(escapeFn( model.category_label || model.category ))
@@ -2500,7 +2500,7 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/design-3d\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/tools/free-patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/tools/free-templates\" class=\"footer-link\">Free Templates</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/tools/free-patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/tools/free-templates\" class=\"footer-link\">Free Templates</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=overlay-fix-1\"></script>\n</body>\n</html>\n")
   return __output;
@@ -2565,11 +2565,11 @@ title = __locals.title,
     ; __append("\n")
     ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] };
     ; __append("\n")
-    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/design-3d' };
+    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' };
     ; __append("\n")
     ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] };
     ; __append("\n")
-    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/design-3d' };
+    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' };
     ; __append("\n")
     ;  const sectionCategories = categories || [];
     ; __append("\n")
@@ -2836,7 +2836,7 @@ title = __locals.title,
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
     ;  }
-    ; __append("\n  <link rel=\"icon\" href=\"https://cdn.cloz-design.com/site/favicon.ico\" sizes=\"any\">\n  <link rel=\"shortcut icon\" href=\"https://cdn.cloz-design.com/site/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png\">\n  <link rel=\"stylesheet\" href=\"/css/style.css\">\n</head>\n<body>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/design-3d\" class=\"nav-link ")
+    ; __append("\n  <link rel=\"icon\" href=\"https://cdn.cloz-design.com/site/favicon.ico\" sizes=\"any\">\n  <link rel=\"shortcut icon\" href=\"https://cdn.cloz-design.com/site/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png\">\n  <link rel=\"stylesheet\" href=\"/css/style.css\">\n</head>\n<body>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          ")
     ; __append(escapeFn( t('nav.design3d') ))
@@ -2886,7 +2886,7 @@ title = __locals.title,
     ; __append(escapeFn( t('nav.startFree') ))
     ; __append("</a>\n        ")
     ;  }
-    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" aria-label=\"Menu\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\">\n      <a href=\"/design-3d\" class=\"mobile-link\">")
+    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" aria-label=\"Menu\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\">\n      <a href=\"/mockups\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.design3d') ))
     ; __append("</a>\n      <a href=\"/patterns\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.patterns') ))
@@ -2971,7 +2971,7 @@ title = __locals.title,
   const detailContent = typeof patternDetailContent !== 'undefined' ? patternDetailContent : {};
   const fileExt = detailContent.fileExt || ('.' + (pattern.format || 'zprj'));
   const categoryName = detailContent.categoryName || pattern.category || 'apparel';
-  const design3dHref = detailContent.design3dHref || '/design-3d';
+  const design3dHref = detailContent.design3dHref || '/mockups';
   const design3dCategoryName = detailContent.design3dCategoryName || categoryName;
   const faqItems = detailContent.faqItems || [];
   const cloSteps = detailContent.cloSteps || [];
@@ -3467,7 +3467,7 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.cta.href ))
     ; __append("\" class=\"btn btn-primary btn-large\">")
     ; __append(escapeFn( toolPage.cta.label ))
-    ; __append("</a>\n        <a href=\"/design-3d\" class=\"btn btn-secondary btn-large\">")
+    ; __append("</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">")
     ; __append(escapeFn( toolPage.secondaryCtaLabel || 'Browse Mockup Models' ))
     ; __append("</a>\n      </div>\n    </div>\n    <div class=\"tool-detail-visual\">\n      ")
     ;  if (toolPage.heroModel && toolPage.heroModel.src) {
@@ -3531,7 +3531,7 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.pickerEyebrow || 'Choose a starting point' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.pickerTitle || 'Pick the mockup path that matches your product' ))
-    ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockups</a>\n      <a href=\"/tools/hoodie-mockup-generator\">Hoodie mockups</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\">3D clothing mockups</a>\n      <a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk colorways</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD listings</a>\n      <a href=\"/design-3d\">All 3D models</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockups</a>\n      <a href=\"/tools/hoodie-mockup-generator\">Hoodie mockups</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\">3D clothing mockups</a>\n      <a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk colorways</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD listings</a>\n      <a href=\"/mockups\">All 3D models</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.workflowEyebrow || 'Workflow' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.workflowTitle || 'From blank garment to clearer product direction' ))

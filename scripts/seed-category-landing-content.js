@@ -69,7 +69,7 @@ function modelLandingContent({ name, focus, outputs }) {
     library: {
       title: `Open an editable ${name.toLowerCase()} model and create apparel mockups in the browser.`,
       buttonLabel: `Browse ${name} 3D Models`,
-      buttonHref: '/design-3d'
+      buttonHref: '/mockups'
     },
     faq: {
       title: `${name} 3D model questions`,
