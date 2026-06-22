@@ -2683,13 +2683,21 @@ title = __locals.title,
     ; __append(escapeFn( categoryHrefPrefix ))
     ; __append("/")
     ; __append(escapeFn( cat.slug ))
-    ; __append("\" class=\"generator-category-card\">\n            <small>")
+    ; __append("\" class=\"generator-category-card\">\n            ")
+    ;  if (cat.image_url) {
+    ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
+    ; __append(escapeFn( cat.image_url ))
+    ; __append("\" alt=\"Free ")
+    ; __append(escapeFn( cat.name ))
+    ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n              </div>\n            ")
+    ;  }
+    ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
     ; __append(escapeFn( categoryCount || fallbackMeta ))
     ; __append(" ")
     ; __append(escapeFn( categoryCount ? categoryItemLabel : '' ))
-    ; __append("</small>\n            <strong>")
+    ; __append("</small>\n              <strong>")
     ; __append(escapeFn( cat.name ))
-    ; __append("</strong>\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M5 12h14\"/>\n              <path d=\"m12 5 7 7-7 7\"/>\n            </svg>\n          </a>\n        ")
+    ; __append("</strong>\n            </div>\n            <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M5 12h14\"/>\n              <path d=\"m12 5 7 7-7 7\"/>\n            </svg>\n          </a>\n        ")
     ;  });
     ; __append("\n      ")
     ;  } else {
@@ -2697,11 +2705,19 @@ title = __locals.title,
     ;  (categorySection.cards || []).forEach(function(card) {
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( card.href || categorySection.buttonHref || '#' ))
-    ; __append("\" class=\"generator-category-card\">\n            <small>")
-    ; __append(escapeFn( card.meta || fallbackMeta ))
-    ; __append("</small>\n            <strong>")
+    ; __append("\" class=\"generator-category-card\">\n            ")
+    ;  if (card.image_url) {
+    ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
+    ; __append(escapeFn( card.image_url ))
+    ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
-    ; __append("</strong>\n          </a>\n        ")
+    ; __append(" mockup category\" loading=\"lazy\">\n              </div>\n            ")
+    ;  }
+    ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
+    ; __append(escapeFn( card.meta || fallbackMeta ))
+    ; __append("</small>\n              <strong>")
+    ; __append(escapeFn( card.title ))
+    ; __append("</strong>\n            </div>\n          </a>\n        ")
     ;  });
     ; __append("\n      ")
     ;  }

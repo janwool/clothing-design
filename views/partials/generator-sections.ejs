@@ -60,9 +60,16 @@
         <% sectionCategories.slice(0, 6).forEach(function(cat) { %>
           <% const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; %>
           <a href="<%= categoryHrefPrefix %>/<%= cat.slug %>" class="generator-category-card">
-            <small><%= categoryCount || fallbackMeta %> <%= categoryCount ? categoryItemLabel : '' %></small>
-            <strong><%= cat.name %></strong>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <% if (cat.image_url) { %>
+              <div class="generator-category-media">
+                <img src="<%= cat.image_url %>" alt="Free <%= cat.name %> 3D clothing model mockup category" loading="lazy">
+              </div>
+            <% } %>
+            <div class="generator-category-copy">
+              <small><%= categoryCount || fallbackMeta %> <%= categoryCount ? categoryItemLabel : '' %></small>
+              <strong><%= cat.name %></strong>
+            </div>
+            <svg class="generator-category-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M5 12h14"/>
               <path d="m12 5 7 7-7 7"/>
             </svg>
@@ -71,8 +78,15 @@
       <% } else { %>
         <% (categorySection.cards || []).forEach(function(card) { %>
           <a href="<%= card.href || categorySection.buttonHref || '#' %>" class="generator-category-card">
-            <small><%= card.meta || fallbackMeta %></small>
-            <strong><%= card.title %></strong>
+            <% if (card.image_url) { %>
+              <div class="generator-category-media">
+                <img src="<%= card.image_url %>" alt="<%= card.title %> mockup category" loading="lazy">
+              </div>
+            <% } %>
+            <div class="generator-category-copy">
+              <small><%= card.meta || fallbackMeta %></small>
+              <strong><%= card.title %></strong>
+            </div>
           </a>
         <% }); %>
       <% } %>

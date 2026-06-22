@@ -283,6 +283,13 @@ const CATEGORY_IMAGE_ASSETS = {
   underwear: '/images/categories/underwear.webp'
 };
 
+function withCategoryImages(categories = []) {
+  return (categories || []).map(category => ({
+    ...category,
+    image_url: CATEGORY_IMAGE_ASSETS[category.slug] || category.category_image_url || category.image_url || ''
+  }));
+}
+
 const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'shirt', 'hoodie-mockup', 'dress'];
 const HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY = {
   't-shirt-mockup': 'classic-crew-neck-t-shirt-3d-model',
@@ -324,10 +331,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
   const categoryCount = categories.length;
   const pageUrl = toAbsoluteUrl(req, '/');
   const featuredModels = selectHomeFeaturedModels(models);
-  const featuredCategories = categories.slice(0, 8).map(category => ({
-    ...category,
-    image_url: CATEGORY_IMAGE_ASSETS[category.slug] || category.category_image_url || category.image_url || ''
-  }));
+  const featuredCategories = withCategoryImages(categories).slice(0, 8);
   const heroImages = featuredModels
     .filter(model => model.image_url)
     .slice(0, 4)
@@ -1961,7 +1965,7 @@ router.get('/mockups', async (req, res) => {
       featuredModels,
       recentModels,
       categoryCounts,
-      categories: categories || [],
+      categories: withCategoryImages(categories),
       landingContent: getLandingContent()
     });
   } catch (err) {
@@ -2237,7 +2241,7 @@ router.get('/mockups/:slug', async (req, res) => {
       page: 'design-3d',
       category: { ...category, meta_title: seoTitle, description },
       items: normalizedItems,
-      categories: categories || [],
+      categories: withCategoryImages(categories),
       models: normalizedAllModels,
       landingContent: getLandingContent(category),
       resourceType: '3d-models',
