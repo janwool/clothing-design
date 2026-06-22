@@ -62,11 +62,7 @@
         <h1 class="model-detail-title"><%= model.name %></h1>
         
         <div class="model-detail-meta">
-          <% if (model.is_free) { %>
-            <span class="tag tag-free">Free</span>
-          <% } else { %>
-            <span class="tag tag-pro">Pro</span>
-          <% } %>
+          <span class="tag tag-free">Free</span>
           <% if (model.poly_count) { %>
             <span class="meta-item"><%= model.poly_count %></span>
           <% } %>
@@ -289,11 +285,7 @@
           <div class="model-info">
             <h3 class="model-name"><%= item.name %></h3>
             <div class="model-tags">
-              <% if (item.is_free) { %>
-                <span class="tag tag-free">Free</span>
-              <% } else { %>
-                <span class="tag tag-pro">Pro</span>
-              <% } %>
+              <span class="tag tag-free">Free</span>
             </div>
           </div>
         </a>

@@ -44,17 +44,13 @@
                 </div>
               <% } %>
             </div>
-            <div class="model-info">
-              <h3 class="model-name"><%= model.name %></h3>
-              <div class="model-tags">
-                <% if (model.is_free) { %>
+              <div class="model-info">
+                <h3 class="model-name"><%= model.name %></h3>
+                <div class="model-tags">
                   <span class="tag tag-free">Free</span>
-                <% } else { %>
-                  <span class="tag tag-pro">Pro</span>
-                <% } %>
+                </div>
               </div>
-            </div>
-          </a>
+            </a>
         <% }); %>
       <% } else { %>
         <div class="empty-state">

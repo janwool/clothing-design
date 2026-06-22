@@ -1327,13 +1327,7 @@ title = __locals.title,
     ;  }
     ; __append("\n              </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n                <div class=\"model-tags\">\n                  ")
-    ;  if (model.is_free) {
-    ; __append("\n                    <span class=\"tag tag-free\">Free</span>\n                  ")
-    ;  } else {
-    ; __append("\n                    <span class=\"tag tag-pro\">Pro</span>\n                  ")
-    ;  }
-    ; __append("\n                  <span class=\"tag\">Open model</span>\n                </div>\n              </div>\n            </a>\n          ")
+    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">Open model</span>\n                </div>\n              </div>\n            </a>\n          ")
     ;  });
     ; __append("\n        ")
     ;  } else {
@@ -1631,15 +1625,9 @@ title = __locals.title,
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n                </div>\n              ")
     ;  }
-    ; __append("\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
+    ; __append("\n            </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n              <div class=\"model-tags\">\n                ")
-    ;  if (model.is_free) {
-    ; __append("\n                  <span class=\"tag tag-free\">Free</span>\n                ")
-    ;  } else {
-    ; __append("\n                  <span class=\"tag tag-pro\">Pro</span>\n                ")
-    ;  }
-    ; __append("\n              </div>\n            </div>\n          </a>\n        ")
+    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                </div>\n              </div>\n            </a>\n        ")
     ;  });
     ; __append("\n      ")
     ;  } else {
@@ -2132,13 +2120,7 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("</span>\n        </div>\n        \n        <h1 class=\"model-detail-title\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h1>\n        \n        <div class=\"model-detail-meta\">\n          ")
-    ;  if (model.is_free) {
-    ; __append("\n            <span class=\"tag tag-free\">Free</span>\n          ")
-    ;  } else {
-    ; __append("\n            <span class=\"tag tag-pro\">Pro</span>\n          ")
-    ;  }
-    ; __append("\n          ")
+    ; __append("</h1>\n        \n        <div class=\"model-detail-meta\">\n          <span class=\"tag tag-free\">Free</span>\n          ")
     ;  if (model.poly_count) {
     ; __append("\n            <span class=\"meta-item\">")
     ; __append(escapeFn( model.poly_count ))
@@ -2282,13 +2264,7 @@ title = __locals.title,
     ;  }
     ; __append("\n          </div>\n          <div class=\"model-info\">\n            <h3 class=\"model-name\">")
     ; __append(escapeFn( item.name ))
-    ; __append("</h3>\n            <div class=\"model-tags\">\n              ")
-    ;  if (item.is_free) {
-    ; __append("\n                <span class=\"tag tag-free\">Free</span>\n              ")
-    ;  } else {
-    ; __append("\n                <span class=\"tag tag-pro\">Pro</span>\n              ")
-    ;  }
-    ; __append("\n            </div>\n          </div>\n        </a>\n      ")
+    ; __append("</h3>\n            <div class=\"model-tags\">\n              <span class=\"tag tag-free\">Free</span>\n            </div>\n          </div>\n        </a>\n      ")
     ;  });
     ; __append("\n    </div>\n  </div>\n</section>\n")
     ;  }
@@ -2867,7 +2843,7 @@ title = __locals.title,
     ; __append(escapeFn( t('nav.patterns') ))
     ; __append("\n        </a>\n        \n        <!-- Tools Dropdown -->\n        <div class=\"nav-dropdown\">\n          <button class=\"nav-link dropdown-toggle ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'tools' ? 'active' : '' ))
-    ; __append("\">\n            ")
+    ; __append("\" type=\"button\" aria-expanded=\"false\">\n            ")
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, pattern planning, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                  <a href=\"/tools/3d-mockup\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.mockup3d') ))
@@ -2887,25 +2863,7 @@ title = __locals.title,
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/clo3d-guide\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.clo3dGuide') ))
-    ; __append("</span>\n                    <small>Learn the 3D apparel workflow.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        <!-- Language Switcher -->\n        <div class=\"language-switcher\">\n          <button class=\"lang-toggle\">\n            <span>🌐</span>\n            <span class=\"lang-code\">")
-    ; __append(escapeFn( i18next && i18next.language ? i18next.language.toUpperCase() : 'EN' ))
-    ; __append("</span>\n          </button>\n          <div class=\"lang-menu\">\n            <a href=\"?lng=en\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'en' ? 'active' : '' ))
-    ; __append("\">English</a>\n            <a href=\"?lng=zh\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'zh' ? 'active' : '' ))
-    ; __append("\">中文</a>\n            <a href=\"?lng=es\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'es' ? 'active' : '' ))
-    ; __append("\">Español</a>\n            <a href=\"?lng=fr\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'fr' ? 'active' : '' ))
-    ; __append("\">Français</a>\n            <a href=\"?lng=de\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'de' ? 'active' : '' ))
-    ; __append("\">Deutsch</a>\n            <a href=\"?lng=ja\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'ja' ? 'active' : '' ))
-    ; __append("\">日本語</a>\n            <a href=\"?lng=ko\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'ko' ? 'active' : '' ))
-    ; __append("\">한국어</a>\n            <a href=\"?lng=ar\" class=\"lang-item ")
-    ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'active' : '' ))
-    ; __append("\">العربية</a>\n          </div>\n        </div>\n\n        ")
+    ; __append("</span>\n                    <small>Learn the 3D apparel workflow.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
     ;  if (user) {
     ; __append("\n          <!-- User Menu -->\n          <div class=\"user-dropdown\">\n            <button class=\"user-toggle\">\n              <div class=\"user-avatar\">\n                ")
     ; __append(escapeFn( user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() ))

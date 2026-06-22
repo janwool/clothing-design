@@ -28,6 +28,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  const navDropdowns = document.querySelectorAll('.nav-dropdown');
+
+  navDropdowns.forEach(dropdown => {
+    const toggle = dropdown.querySelector('.dropdown-toggle');
+
+    if (!toggle) return;
+
+    const closeOtherDropdowns = () => {
+      navDropdowns.forEach(item => {
+        if (item === dropdown) return;
+        item.classList.remove('is-open');
+        item.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+      });
+    };
+
+    const openDropdown = () => {
+      closeOtherDropdowns();
+      dropdown.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+    };
+
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      const shouldOpen = !dropdown.classList.contains('is-open');
+      closeOtherDropdowns();
+      dropdown.classList.toggle('is-open', shouldOpen);
+      toggle.setAttribute('aria-expanded', shouldOpen ? 'true' : 'false');
+    });
+
+    dropdown.addEventListener('mouseenter', openDropdown);
+    dropdown.addEventListener('focusin', openDropdown);
+  });
+
   // Close mobile menu when clicking outside
   document.addEventListener('click', function(e) {
     if (mobileMenu && mobileMenu.classList.contains('active')) {
@@ -35,6 +68,22 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenu.classList.remove('active');
       }
     }
+
+    navDropdowns.forEach(dropdown => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('is-open');
+        dropdown.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== 'Escape') return;
+
+    navDropdowns.forEach(dropdown => {
+      dropdown.classList.remove('is-open');
+      dropdown.querySelector('.dropdown-toggle')?.setAttribute('aria-expanded', 'false');
+    });
   });
 
   // Navbar scroll effect
