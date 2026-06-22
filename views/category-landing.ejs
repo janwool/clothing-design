@@ -1,6 +1,14 @@
 <%- include('partials/header') %>
 
 <% if (resourceType === '3d-models') { %>
+  <%
+    const categoryModelCount = items && items.length ? items.length : 0;
+    const categoryOutputCards = landingContent && landingContent.output && landingContent.output.cards ? landingContent.output.cards.slice(0, 3) : [];
+    const categoryWorkflow = landingContent && landingContent.workflow ? landingContent.workflow : {};
+    const firstModel = items && items.length ? items[0] : null;
+    const categoryLabel = category.name || 'apparel';
+    const categoryLower = categoryLabel.toLowerCase();
+  %>
   <section class="page-header category-page-header">
     <div class="container">
       <div class="category-breadcrumbs">
@@ -10,20 +18,54 @@
         <span>/</span>
         <span><%= category.name %></span>
       </div>
+      <span class="category-page-eyebrow">Free <%= categoryLower %> mockups</span>
       <h1 class="page-title"><%= category.meta_title || category.name %></h1>
       <% if (category.description) { %>
         <p class="page-subtitle category-seo-copy"><%= category.description %></p>
       <% } %>
       <div class="category-hero-meta">
-        <span><%= items && items.length ? `${items.length} models` : '3D model category' %></span>
-        <span>Editable UV workflow</span>
-        <span>Browser-based mockups</span>
+        <span><%= categoryModelCount ? `${categoryModelCount} free models` : 'Free mockup category' %></span>
+        <span>3D garment mockups</span>
+        <span>Transparent render workflow</span>
+      </div>
+      <div class="category-hero-actions">
+        <a href="#free-models" class="btn btn-primary">Browse free <%= categoryLower %> models</a>
+        <% if (firstModel) { %>
+          <a href="/3d-models/<%= firstModel.category_slug || category.slug %>/<%= firstModel.slug %>" class="btn btn-secondary">Open first mockup model</a>
+        <% } %>
       </div>
     </div>
   </section>
 
+  <% if (categoryOutputCards.length) { %>
+    <section class="category-intent-section category-intent-section-top">
+      <div class="container">
+        <div class="category-section-kicker">
+          <span class="generator-eyebrow"><%= landingContent.output.eyebrow || 'Use cases' %></span>
+          <h2><%= landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` %></h2>
+          <% if (categoryWorkflow.description) { %>
+            <p><%= categoryWorkflow.description %></p>
+          <% } %>
+        </div>
+        <div class="category-intent-grid">
+          <% categoryOutputCards.forEach(function(card) { %>
+            <article class="category-intent-item">
+              <h3><%= card.title %></h3>
+              <p><%= card.body %></p>
+            </article>
+          <% }); %>
+        </div>
+      </div>
+    </section>
+  <% } %>
+
   <section class="content-section">
     <div class="container">
+      <div class="category-models-header" id="free-models">
+        <span class="generator-eyebrow">Free model library</span>
+        <h2>Choose a free <%= categoryLower %> model for your next mockup</h2>
+        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>
+      </div>
       <div class="filters-bar">
         <div class="filter-group">
           <a href="/mockups" class="filter-btn">
@@ -78,20 +120,6 @@
       </div>
     </div>
   </section>
-  <% if (landingContent && landingContent.output && landingContent.output.cards) { %>
-    <section class="category-intent-section">
-      <div class="container">
-        <div class="category-intent-grid">
-          <% landingContent.output.cards.slice(0, 3).forEach(function(card) { %>
-            <article class="category-intent-item">
-              <h2><%= card.title %></h2>
-              <p><%= card.body %></p>
-            </article>
-          <% }); %>
-        </div>
-      </div>
-    </section>
-  <% } %>
   <%- include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) %>
 <% } else { %>
   <section class="category-hero">
@@ -210,10 +238,40 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  .category-hero-meta span {
-    flex: 0 0 auto;
-  }
-}
+	  .category-hero-meta span {
+	    flex: 0 0 auto;
+	  }
+
+	  .category-hero-actions {
+	    width: 100%;
+	    justify-content: flex-start;
+	  }
+
+	  .category-hero-actions .btn {
+	    width: 100%;
+	    max-width: 300px;
+	    justify-content: center;
+	  }
+
+	  .category-section-kicker,
+	  .category-models-header {
+	    max-width: 342px;
+	    margin-left: 0;
+	    text-align: left;
+	  }
+
+	  .category-section-kicker h2,
+	  .category-models-header h2 {
+	    font-size: 30px;
+	    line-height: 1.1;
+	    letter-spacing: -0.02em;
+	  }
+
+	  .category-section-kicker p,
+	  .category-models-header p {
+	    font-size: 15px;
+	  }
+	}
 
 .model-empty-state {
   grid-column: 1 / -1;

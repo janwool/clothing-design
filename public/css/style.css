@@ -1278,9 +1278,53 @@ img {
   font-weight: 600;
 }
 
+.category-page-eyebrow {
+  display: inline-flex;
+  margin: var(--spacing-xl) 0 var(--spacing-sm);
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.category-hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
 .category-intent-section {
   padding: var(--spacing-2xl) 0;
   background-color: var(--color-light);
+}
+
+.category-intent-section-top {
+  padding-top: var(--spacing-4xl);
+}
+
+.category-section-kicker,
+.category-models-header {
+  max-width: 780px;
+  margin: 0 auto var(--spacing-2xl);
+  text-align: center;
+}
+
+.category-section-kicker h2,
+.category-models-header h2 {
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-primary);
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+}
+
+.category-section-kicker p,
+.category-models-header p {
+  color: var(--color-secondary);
+  font-size: 17px;
+  line-height: 1.55;
 }
 
 .category-intent-grid {
@@ -1297,7 +1341,8 @@ img {
   background-color: var(--color-white);
 }
 
-.category-intent-item h2 {
+.category-intent-item h2,
+.category-intent-item h3 {
   margin-bottom: var(--spacing-sm);
   color: var(--color-primary);
   font-size: 20px;

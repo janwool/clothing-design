@@ -5,7 +5,12 @@ const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
 const { shouldIndexModel, shouldIndexPattern } = require('../lib/seo-priority');
-const { buildModelCategoryLandingContent } = require('../lib/design3d-seo');
+const {
+  buildModelCategoryLandingContent,
+  categoryDescription,
+  categoryMetaTitle,
+  categoryMetaDescription
+} = require('../lib/design3d-seo');
 const {
   DEFAULT_SITE_IMAGE_PATH,
   toAbsoluteUrl,
@@ -104,7 +109,18 @@ function getLandingContent(category, resourceType = '3d-models') {
   const defaults = getDefaultLandingContent(category ? category.name : fallbackName, resourceType);
   if (!category || !category.landing_content) return defaults;
   try {
-    return mergeLandingContent(defaults, JSON.parse(category.landing_content));
+    const merged = mergeLandingContent(defaults, JSON.parse(category.landing_content));
+    if (resourceType === '3d-models') {
+      return {
+        ...merged,
+        workflow: { ...(merged.workflow || {}), eyebrow: defaults.workflow.eyebrow, title: defaults.workflow.title, description: defaults.workflow.description },
+        output: { ...(merged.output || {}), eyebrow: defaults.output.eyebrow, title: defaults.output.title },
+        library: { ...(merged.library || {}), title: defaults.library.title },
+        faq: { ...(merged.faq || {}), title: defaults.faq.title, items: defaults.faq.items },
+        cta: { ...(merged.cta || {}), title: defaults.cta.title, description: defaults.cta.description }
+      };
+    }
+    return merged;
   } catch (err) {
     console.warn('Invalid landing_content JSON for category:', category.slug || category.name);
     return defaults;
@@ -2172,16 +2188,17 @@ router.get('/mockups/:slug', async (req, res) => {
     `, ['active']);
     const normalizedItems = normalize3dModels(items, category.slug);
     const normalizedAllModels = normalize3dModels(allModels);
-    const description = category.meta_description || category.description || `Browse ${category.name} 3D clothing models for apparel mockups and browser-based Design3D workflows.`;
+    const seoTitle = categoryMetaTitle(category.name);
+    const description = categoryMetaDescription(category.name) || categoryDescription(category.name);
     const categoryImage = firstImage(req, normalizedItems.map(item => item.image_url));
     
     res.render('category-landing', {
-      title: buildSeoTitle(category.meta_title || `${category.name} 3D Models`, 'ClothingDesign'),
+      title: buildSeoTitle(seoTitle, 'ClothingDesign'),
       metaDescription: description,
       metaImage: categoryImage,
-      structuredData: buildCategoryStructuredData(req, category, normalizedItems, '3d-models', '3D Models'),
+      structuredData: buildCategoryStructuredData(req, { ...category, meta_title: seoTitle, meta_description: description }, normalizedItems, '3d-models', '3D Models'),
       page: 'design-3d',
-      category: category,
+      category: { ...category, meta_title: seoTitle, description },
       items: normalizedItems,
       categories: categories || [],
       models: normalizedAllModels,

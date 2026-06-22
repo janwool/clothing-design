@@ -1273,11 +1273,22 @@ title = __locals.title,
     ; __append( include('partials/header') )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') {
+    ; __append("\n  ")
+    ;
+    const categoryModelCount = items && items.length ? items.length : 0;
+    const categoryOutputCards = landingContent && landingContent.output && landingContent.output.cards ? landingContent.output.cards.slice(0, 3) : [];
+    const categoryWorkflow = landingContent && landingContent.workflow ? landingContent.workflow : {};
+    const firstModel = items && items.length ? items[0] : null;
+    const categoryLabel = category.name || 'apparel';
+    const categoryLower = categoryLabel.toLowerCase();
+
     ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/mockups\">")
     ; __append(escapeFn( resourceTypeLabel ))
     ; __append("</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( category.name ))
-    ; __append("</span>\n      </div>\n      <h1 class=\"page-title\">")
+    ; __append("</span>\n      </div>\n      <span class=\"category-page-eyebrow\">Free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" mockups</span>\n      <h1 class=\"page-title\">")
     ; __append(escapeFn( category.meta_title || category.name ))
     ; __append("</h1>\n      ")
     ;  if (category.description) {
@@ -1286,8 +1297,42 @@ title = __locals.title,
     ; __append("</p>\n      ")
     ;  }
     ; __append("\n      <div class=\"category-hero-meta\">\n        <span>")
-    ; __append(escapeFn( items && items.length ? `${items.length} models` : '3D model category' ))
-    ; __append("</span>\n        <span>Editable UV workflow</span>\n        <span>Browser-based mockups</span>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
+    ; __append(escapeFn( categoryModelCount ? `${categoryModelCount} free models` : 'Free mockup category' ))
+    ; __append("</span>\n        <span>3D garment mockups</span>\n        <span>Transparent render workflow</span>\n      </div>\n      <div class=\"category-hero-actions\">\n        <a href=\"#free-models\" class=\"btn btn-primary\">Browse free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" models</a>\n        ")
+    ;  if (firstModel) {
+    ; __append("\n          <a href=\"/3d-models/")
+    ; __append(escapeFn( firstModel.category_slug || category.slug ))
+    ; __append("/")
+    ; __append(escapeFn( firstModel.slug ))
+    ; __append("\" class=\"btn btn-secondary\">Open first mockup model</a>\n        ")
+    ;  }
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  ")
+    ;  if (categoryOutputCards.length) {
+    ; __append("\n    <section class=\"category-intent-section category-intent-section-top\">\n      <div class=\"container\">\n        <div class=\"category-section-kicker\">\n          <span class=\"generator-eyebrow\">")
+    ; __append(escapeFn( landingContent.output.eyebrow || 'Use cases' ))
+    ; __append("</span>\n          <h2>")
+    ; __append(escapeFn( landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` ))
+    ; __append("</h2>\n          ")
+    ;  if (categoryWorkflow.description) {
+    ; __append("\n            <p>")
+    ; __append(escapeFn( categoryWorkflow.description ))
+    ; __append("</p>\n          ")
+    ;  }
+    ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
+    ;  categoryOutputCards.forEach(function(card) {
+    ; __append("\n            <article class=\"category-intent-item\">\n              <h3>")
+    ; __append(escapeFn( card.title ))
+    ; __append("</h3>\n              <p>")
+    ; __append(escapeFn( card.body ))
+    ; __append("</p>\n            </article>\n          ")
+    ;  });
+    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
+    ;  }
+    ; __append("\n\n  <section class=\"content-section\">\n    <div class=\"container\">\n      <div class=\"category-models-header\" id=\"free-models\">\n        <span class=\"generator-eyebrow\">Free model library</span>\n        <h2>Choose a free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" model for your next mockup</h2>\n        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>\n      </div>\n      <div class=\"filters-bar\">\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
@@ -1336,18 +1381,6 @@ title = __locals.title,
     ; __append(" models yet</h3>\n            <p>There are no active 3D models in this category right now.</p>\n          </div>\n        ")
     ;  }
     ; __append("\n      </div>\n    </div>\n  </section>\n  ")
-    ;  if (landingContent && landingContent.output && landingContent.output.cards) {
-    ; __append("\n    <section class=\"category-intent-section\">\n      <div class=\"container\">\n        <div class=\"category-intent-grid\">\n          ")
-    ;  landingContent.output.cards.slice(0, 3).forEach(function(card) {
-    ; __append("\n            <article class=\"category-intent-item\">\n              <h2>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h2>\n              <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n            </article>\n          ")
-    ;  });
-    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
-    ;  }
-    ; __append("\n  ")
     ; __append( include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) )
     ; __append("\n")
     ;  } else {
@@ -1413,7 +1446,7 @@ title = __locals.title,
     ;  }
     ; __append("\n")
     ;  }
-    ; __append("\n\n<style>\n.category-page-header .category-breadcrumbs {\n  justify-content: flex-start;\n}\n\n.category-seo-copy {\n  max-width: 760px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n@media (max-width: 768px) {\n  .category-page-header .container {\n    width: 100%;\n    max-width: 100%;\n    padding-left: 24px;\n    padding-right: 24px;\n    text-align: left;\n  }\n\n  .category-page-header .page-title,\n  .category-page-header .category-seo-copy {\n    width: 100%;\n    max-width: 342px;\n    margin-left: 0;\n    margin-right: auto;\n    overflow-wrap: break-word;\n  }\n\n  .category-page-header .page-title {\n    font-size: 34px;\n    line-height: 1.08;\n  }\n\n  .category-page-header .category-seo-copy {\n    font-size: 16px;\n    line-height: 1.45;\n  }\n\n  .category-hero-meta {\n    justify-content: flex-start;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    max-width: 100%;\n    padding-bottom: 2px;\n    -webkit-overflow-scrolling: touch;\n  }\n\n  .category-hero-meta span {\n    flex: 0 0 auto;\n  }\n}\n\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
+    ; __append("\n\n<style>\n.category-page-header .category-breadcrumbs {\n  justify-content: flex-start;\n}\n\n.category-seo-copy {\n  max-width: 760px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n@media (max-width: 768px) {\n  .category-page-header .container {\n    width: 100%;\n    max-width: 100%;\n    padding-left: 24px;\n    padding-right: 24px;\n    text-align: left;\n  }\n\n  .category-page-header .page-title,\n  .category-page-header .category-seo-copy {\n    width: 100%;\n    max-width: 342px;\n    margin-left: 0;\n    margin-right: auto;\n    overflow-wrap: break-word;\n  }\n\n  .category-page-header .page-title {\n    font-size: 34px;\n    line-height: 1.08;\n  }\n\n  .category-page-header .category-seo-copy {\n    font-size: 16px;\n    line-height: 1.45;\n  }\n\n  .category-hero-meta {\n    justify-content: flex-start;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    max-width: 100%;\n    padding-bottom: 2px;\n    -webkit-overflow-scrolling: touch;\n  }\n\n	  .category-hero-meta span {\n	    flex: 0 0 auto;\n	  }\n\n	  .category-hero-actions {\n	    width: 100%;\n	    justify-content: flex-start;\n	  }\n\n	  .category-hero-actions .btn {\n	    width: 100%;\n	    max-width: 300px;\n	    justify-content: center;\n	  }\n\n	  .category-section-kicker,\n	  .category-models-header {\n	    max-width: 342px;\n	    margin-left: 0;\n	    text-align: left;\n	  }\n\n	  .category-section-kicker h2,\n	  .category-models-header h2 {\n	    font-size: 30px;\n	    line-height: 1.1;\n	    letter-spacing: -0.02em;\n	  }\n\n	  .category-section-kicker p,\n	  .category-models-header p {\n	    font-size: 15px;\n	  }\n	}\n\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
