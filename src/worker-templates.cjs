@@ -1324,9 +1324,7 @@ title = __locals.title,
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n            </a>\n          ")
     ;  });
-    ; __append("\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section category-models-section\">\n    <div class=\"container\">\n      <div class=\"category-models-header\" id=\"free-models\">\n        <span class=\"generator-eyebrow\">Free model library</span>\n        <h2>Choose a free ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" model for your next mockup</h2>\n        <p>Open any model to inspect the 3D garment, test artwork placement, adjust color direction, and export cleaner product visuals for ecommerce, POD, or design review.</p>\n      </div>\n\n      <div class=\"models-grid\">\n        ")
+    ; __append("\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section category-models-section\">\n    <div class=\"container\">\n      <div id=\"free-models\" class=\"category-models-anchor\" aria-hidden=\"true\"></div>\n\n      <div class=\"models-grid\">\n        ")
     ;  if (items && items.length > 0) {
     ; __append("\n          ")
     ;  items.forEach(function(model) {

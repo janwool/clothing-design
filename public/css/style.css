@@ -1330,6 +1330,10 @@ img {
   padding-top: var(--spacing-xl);
 }
 
+.category-models-anchor {
+  scroll-margin-top: calc(var(--navbar-height) + 16px);
+}
+
 .category-intent-section {
   padding: var(--spacing-2xl) 0;
   background-color: var(--color-light);
