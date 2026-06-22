@@ -2380,7 +2380,10 @@ title = __locals.title,
   model = __locals.model,
   counts = __locals.counts;
     ;
-  const rawKey = String(slug || name || 'all').toLowerCase();
+  const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
+  const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
+  const iconName = Object.prototype.hasOwnProperty.call(iconLocals, 'name') ? iconLocals.name : (typeof name !== 'undefined' ? name : '');
+  const rawKey = String(iconSlug || iconName || 'all').toLowerCase();
   const key = rawKey.replace(/_/g, '-');
   let iconType = 'garment';
   if (key === 'all') iconType = 'all';
