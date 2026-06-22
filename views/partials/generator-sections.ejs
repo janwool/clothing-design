@@ -119,15 +119,17 @@
   </section>
 <% } %>
 
-<section class="generator-library-cta">
-  <div class="container">
-    <span class="generator-eyebrow"><%= library.eyebrow %></span>
-    <h2><%= library.title %></h2>
-    <% if (library.buttonLabel && library.buttonHref) { %>
-      <a href="<%= library.buttonHref %>" class="btn btn-secondary"><%= library.buttonLabel %></a>
-    <% } %>
-  </div>
-</section>
+<% if (sectionResourceType !== '3d-models') { %>
+  <section class="generator-library-cta">
+    <div class="container">
+      <span class="generator-eyebrow"><%= library.eyebrow %></span>
+      <h2><%= library.title %></h2>
+      <% if (library.buttonLabel && library.buttonHref) { %>
+        <a href="<%= library.buttonHref %>" class="btn btn-secondary"><%= library.buttonLabel %></a>
+      <% } %>
+    </div>
+  </section>
+<% } %>
 
 <section class="generator-section generator-faq-section">
   <div class="container">

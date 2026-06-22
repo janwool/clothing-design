@@ -2747,19 +2747,23 @@ title = __locals.title,
     ;  });
     ; __append("\n      </div>\n    </div>\n  </section>\n")
     ;  }
-    ; __append("\n\n<section class=\"generator-library-cta\">\n  <div class=\"container\">\n    <span class=\"generator-eyebrow\">")
+    ; __append("\n\n")
+    ;  if (sectionResourceType !== '3d-models') {
+    ; __append("\n  <section class=\"generator-library-cta\">\n    <div class=\"container\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( library.eyebrow ))
-    ; __append("</span>\n    <h2>")
+    ; __append("</span>\n      <h2>")
     ; __append(escapeFn( library.title ))
-    ; __append("</h2>\n    ")
+    ; __append("</h2>\n      ")
     ;  if (library.buttonLabel && library.buttonHref) {
-    ; __append("\n      <a href=\"")
+    ; __append("\n        <a href=\"")
     ; __append(escapeFn( library.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( library.buttonLabel ))
-    ; __append("</a>\n    ")
+    ; __append("</a>\n      ")
     ;  }
-    ; __append("\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ; __append("\n    </div>\n  </section>\n")
+    ;  }
+    ; __append("\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( faq.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( faq.title ))
