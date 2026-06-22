@@ -208,6 +208,56 @@ function getModelCategoryGroupBy() {
   return 'GROUP BY m.id';
 }
 
+async function getActive3dCategories() {
+  await ensureModelCategoryTable();
+  return db.all(`
+    SELECT
+      c.*,
+      COALESCE(
+        (
+          SELECT m.image_url
+          FROM model_3d_categories mc
+          JOIN models_3d m ON m.id = mc.model_id
+          WHERE mc.category_id = c.id
+            AND m.status = 'active'
+            AND m.image_url IS NOT NULL
+            AND m.image_url != ''
+          ORDER BY mc.is_primary DESC, m.updated_at DESC, m.created_at DESC
+          LIMIT 1
+        ),
+        (
+          SELECT m.image_url
+          FROM models_3d m
+          WHERE m.category = c.name
+            AND m.status = 'active'
+            AND m.image_url IS NOT NULL
+            AND m.image_url != ''
+          ORDER BY m.updated_at DESC, m.created_at DESC
+          LIMIT 1
+        )
+      ) AS category_image_url
+    FROM categories c
+    WHERE c.resource_type = ?
+      AND c.status = ?
+      AND (
+        EXISTS (
+          SELECT 1
+          FROM model_3d_categories mc_exists
+          JOIN models_3d m_exists ON m_exists.id = mc_exists.model_id
+          WHERE mc_exists.category_id = c.id
+            AND m_exists.status = 'active'
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM models_3d m_legacy
+          WHERE m_legacy.category = c.name
+            AND m_legacy.status = 'active'
+        )
+      )
+    ORDER BY c.sort_order ASC, c.name ASC
+  `, ['3d-models', 'active']);
+}
+
 function toSlug(value) {
   return String(value || '')
     .trim()
@@ -1856,36 +1906,7 @@ router.get('/', async (req, res) => {
       ORDER BY m.updated_at DESC, m.created_at DESC
       LIMIT 120
     `, ['active']);
-    const categories = await db.all(`
-      SELECT
-        c.*,
-        COALESCE(
-          (
-            SELECT m.image_url
-            FROM model_3d_categories mc
-            JOIN models_3d m ON m.id = mc.model_id
-            WHERE mc.category_id = c.id
-              AND m.status = 'active'
-              AND m.image_url IS NOT NULL
-              AND m.image_url != ''
-            ORDER BY mc.is_primary DESC, m.updated_at DESC, m.created_at DESC
-            LIMIT 1
-          ),
-          (
-            SELECT m.image_url
-            FROM models_3d m
-            WHERE m.category = c.name
-              AND m.status = 'active'
-              AND m.image_url IS NOT NULL
-              AND m.image_url != ''
-            ORDER BY m.updated_at DESC, m.created_at DESC
-            LIMIT 1
-          )
-        ) AS category_image_url
-      FROM categories c
-      WHERE c.resource_type = ? AND c.status = ?
-      ORDER BY c.sort_order ASC, c.name ASC
-    `, ['3d-models', 'active']);
+    const categories = await getActive3dCategories();
     const modelSummary = await db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']);
     const patternSummary = await db.get('SELECT COUNT(*) as count FROM patterns WHERE status = ?', ['active']);
     const homeContent = buildHomeContent(req, models || [], categories || [], patternSummary?.count || 0, modelSummary?.count || 0);
@@ -1926,7 +1947,7 @@ router.get('/mockups', async (req, res) => {
       ${getModelCategoryGroupBy()}
       ORDER BY m.created_at DESC
     `, ['active']);
-    const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order', ['3d-models', 'active']);
+    const categories = await getActive3dCategories();
     const normalizedModels = normalize3dModels(models);
     const categoryCounts = normalizedModels.reduce((counts, model) => {
       (model.category_slugs || [model.category_slug || model.category]).forEach(slug => {
@@ -2218,9 +2239,7 @@ router.get('/mockups/:slug', async (req, res) => {
       ORDER BY m.created_at DESC
     `, ['active', category.name, category.id]);
 
-    const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order', 
-      ['3d-models', 'active']
-    );
+    const categories = await getActive3dCategories();
     const allModels = await db.all(`
       ${getModelCategorySelect()}
       WHERE m.status = ?
@@ -2228,6 +2247,9 @@ router.get('/mockups/:slug', async (req, res) => {
       ORDER BY m.created_at DESC
     `, ['active']);
     const normalizedItems = normalize3dModels(items, category.slug);
+    if (normalizedItems.length === 0) {
+      return res.status(404).render('404', { title: 'Not Found', page: '' });
+    }
     const normalizedAllModels = normalize3dModels(allModels);
     const seoTitle = categoryMetaTitle(category.name);
     const description = categoryMetaDescription(category.name) || categoryDescription(category.name);

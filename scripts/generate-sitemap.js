@@ -120,10 +120,36 @@ async function get3dModelUrls() {
 }
 
 async function getCategories() {
+  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_categories (
+    model_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
+    is_primary INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (model_id, category_id)
+  )`);
+
   return db.all(`
     SELECT slug, resource_type, updated_at, created_at
     FROM categories
-    WHERE status = ? AND slug IS NOT NULL AND slug != ''
+    WHERE status = ?
+      AND slug IS NOT NULL
+      AND slug != ''
+      AND (
+        resource_type != '3d-models'
+        OR EXISTS (
+          SELECT 1
+          FROM model_3d_categories mc_exists
+          JOIN models_3d m_exists ON m_exists.id = mc_exists.model_id
+          WHERE mc_exists.category_id = categories.id
+            AND m_exists.status = 'active'
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM models_3d m_legacy
+          WHERE m_legacy.category = categories.name
+            AND m_legacy.status = 'active'
+        )
+      )
     ORDER BY resource_type ASC, sort_order ASC, name ASC
   `, ['active']);
 }
