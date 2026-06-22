@@ -108,7 +108,12 @@
         </div>
         <div class="category-intent-grid">
           <% categoryOutputCards.forEach(function(card) { %>
-            <article class="category-intent-item">
+            <article class="category-intent-item <%= card.image_url ? 'category-intent-item-with-media' : '' %>">
+              <% if (card.image_url) { %>
+                <div class="category-intent-media">
+                  <img src="<%= card.image_url %>" alt="<%= card.title %> apparel mockup use case" loading="lazy">
+                </div>
+              <% } %>
               <h3><%= card.title %></h3>
               <p><%= card.body %></p>
             </article>

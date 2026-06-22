@@ -20,6 +20,19 @@ const {
   pageStructuredData
 } = require('../lib/seo');
 
+const MOCKUP_WORKFLOW_IMAGES = [
+  '/images/workflow/choose-garment-model.webp',
+  '/images/workflow/place-artwork-prints.webp',
+  '/images/workflow/preview-apparel-mockup.webp',
+  '/images/workflow/export-product-visuals.webp'
+];
+
+const MOCKUP_USE_CASE_IMAGES = [
+  '/images/use-cases/print-placement-previews.webp',
+  '/images/use-cases/product-page-mockups.webp',
+  '/images/use-cases/pod-merch-listing-images.webp'
+];
+
 function getDefaultLandingContent(name = '3D clothing models', resourceType = '3d-models') {
   if (resourceType === 'patterns') {
     return {
@@ -99,6 +112,27 @@ function mergeLandingContent(defaults, overrides) {
   return merged;
 }
 
+function addIndexedImages(items = [], images = []) {
+  return (items || []).map((item, index) => ({
+    ...item,
+    image_url: item.image_url || images[index % images.length]
+  }));
+}
+
+function enrichMockupLandingImages(content = {}) {
+  return {
+    ...content,
+    workflow: {
+      ...(content.workflow || {}),
+      steps: addIndexedImages(content.workflow?.steps, MOCKUP_WORKFLOW_IMAGES)
+    },
+    output: {
+      ...(content.output || {}),
+      cards: addIndexedImages(content.output?.cards, MOCKUP_USE_CASE_IMAGES)
+    }
+  };
+}
+
 function shouldUseLocalModelAssets(req) {
   const host = (req.get('host') || '').toLowerCase();
   return (host.startsWith('localhost') || host.startsWith('127.0.0.1')) && process.env.USE_REMOTE_MODEL_ASSETS !== 'true';
@@ -107,23 +141,26 @@ function shouldUseLocalModelAssets(req) {
 function getLandingContent(category, resourceType = '3d-models') {
   const fallbackName = resourceType === 'patterns' ? 'ZPRJ sewing patterns' : '3D clothing models';
   const defaults = getDefaultLandingContent(category ? category.name : fallbackName, resourceType);
-  if (!category || !category.landing_content) return defaults;
+  if (!category || !category.landing_content) {
+    return resourceType === '3d-models' ? enrichMockupLandingImages(defaults) : defaults;
+  }
   try {
     const merged = mergeLandingContent(defaults, JSON.parse(category.landing_content));
     if (resourceType === '3d-models') {
-      return {
+      return enrichMockupLandingImages({
         ...merged,
         workflow: { ...(merged.workflow || {}), eyebrow: defaults.workflow.eyebrow, title: defaults.workflow.title, description: defaults.workflow.description },
         output: { ...(merged.output || {}), eyebrow: defaults.output.eyebrow, title: defaults.output.title },
-        library: { ...(merged.library || {}), title: defaults.library.title },
+        categories: { ...(merged.categories || {}), buttonLabel: defaults.categories.buttonLabel, buttonHref: defaults.categories.buttonHref },
+        library: { ...(merged.library || {}), title: defaults.library.title, buttonLabel: defaults.library.buttonLabel, buttonHref: defaults.library.buttonHref },
         faq: { ...(merged.faq || {}), title: defaults.faq.title, items: defaults.faq.items },
-        cta: { ...(merged.cta || {}), title: defaults.cta.title, description: defaults.cta.description }
-      };
+        cta: { ...(merged.cta || {}), title: defaults.cta.title, description: defaults.cta.description, primaryLabel: defaults.cta.primaryLabel, primaryHref: defaults.cta.primaryHref }
+      });
     }
     return merged;
   } catch (err) {
     console.warn('Invalid landing_content JSON for category:', category.slug || category.name);
-    return defaults;
+    return resourceType === '3d-models' ? enrichMockupLandingImages(defaults) : defaults;
   }
 }
 

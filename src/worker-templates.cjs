@@ -1370,7 +1370,17 @@ title = __locals.title,
     ;  }
     ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
     ;  categoryOutputCards.forEach(function(card) {
-    ; __append("\n            <article class=\"category-intent-item\">\n              <h3>")
+    ; __append("\n            <article class=\"category-intent-item ")
+    ; __append(escapeFn( card.image_url ? 'category-intent-item-with-media' : '' ))
+    ; __append("\">\n              ")
+    ;  if (card.image_url) {
+    ; __append("\n                <div class=\"category-intent-media\">\n                  <img src=\"")
+    ; __append(escapeFn( card.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( card.title ))
+    ; __append(" apparel mockup use case\" loading=\"lazy\">\n                </div>\n              ")
+    ;  }
+    ; __append("\n              <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( card.body ))
@@ -2627,7 +2637,17 @@ title = __locals.title,
     ;  }
     ; __append("\n    </div>\n\n    <div class=\"generator-steps\">\n      ")
     ;  (workflow.steps || []).forEach(function(step, index) {
-    ; __append("\n        <div class=\"generator-step\">\n          <span>")
+    ; __append("\n        <div class=\"generator-step ")
+    ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
+    ; __append("\">\n          ")
+    ;  if (step.image_url) {
+    ; __append("\n            <div class=\"generator-step-media\">\n              <img src=\"")
+    ; __append(escapeFn( step.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( step.title ))
+    ; __append(" apparel mockup workflow step\" loading=\"lazy\">\n            </div>\n          ")
+    ;  }
+    ; __append("\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
     ; __append(escapeFn( step.title ))
@@ -2693,7 +2713,17 @@ title = __locals.title,
     ; __append(escapeFn( output.title ))
     ; __append("</h2>\n      </div>\n\n      <div class=\"generator-output-grid\">\n        ")
     ;  (output.cards || []).forEach(function(card) {
-    ; __append("\n          <div class=\"generator-output-card\">\n            <h3>")
+    ; __append("\n          <div class=\"generator-output-card ")
+    ; __append(escapeFn( card.image_url ? 'generator-output-card-with-media' : '' ))
+    ; __append("\">\n            ")
+    ;  if (card.image_url) {
+    ; __append("\n              <div class=\"generator-output-media\">\n                <img src=\"")
+    ; __append(escapeFn( card.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( card.title ))
+    ; __append(" apparel mockup use case\" loading=\"lazy\">\n              </div>\n            ")
+    ;  }
+    ; __append("\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( card.body ))

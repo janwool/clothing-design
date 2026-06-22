@@ -25,7 +25,12 @@
 
     <div class="generator-steps">
       <% (workflow.steps || []).forEach(function(step, index) { %>
-        <div class="generator-step">
+        <div class="generator-step <%= step.image_url ? 'generator-step-with-media' : '' %>">
+          <% if (step.image_url) { %>
+            <div class="generator-step-media">
+              <img src="<%= step.image_url %>" alt="<%= step.title %> apparel mockup workflow step" loading="lazy">
+            </div>
+          <% } %>
           <span><%= String(index + 1).padStart(2, '0') %></span>
           <h3><%= step.title %></h3>
           <p><%= step.body %></p>
@@ -85,7 +90,12 @@
 
       <div class="generator-output-grid">
         <% (output.cards || []).forEach(function(card) { %>
-          <div class="generator-output-card">
+          <div class="generator-output-card <%= card.image_url ? 'generator-output-card-with-media' : '' %>">
+            <% if (card.image_url) { %>
+              <div class="generator-output-media">
+                <img src="<%= card.image_url %>" alt="<%= card.title %> apparel mockup use case" loading="lazy">
+              </div>
+            <% } %>
             <h3><%= card.title %></h3>
             <p><%= card.body %></p>
           </div>
