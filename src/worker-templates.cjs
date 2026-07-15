@@ -672,7 +672,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next ? i18next.language : 'en' ))
     ; __append("\" dir=\"")
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
-    ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B');\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css\">\n</head>\n<body class=\"admin-body\">\n  <!-- Google Tag Manager (noscript) -->\n  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-K7STMRPH\"\n  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n  <!-- End Google Tag Manager (noscript) -->\n")
   return __output;
@@ -1815,7 +1815,7 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B');\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title || 'Error' ))
     ; __append("</title>\n  <style>\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      background: #f8fafc;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 100vh;\n      padding: 2rem;\n    }\n    .error-container {\n      text-align: center;\n      max-width: 480px;\n    }\n    .error-code {\n      font-size: 6rem;\n      font-weight: 700;\n      color: #1e293b;\n      line-height: 1;\n      margin-bottom: 1rem;\n    }\n    .error-title {\n      font-size: 1.5rem;\n      color: #334155;\n      margin-bottom: 0.75rem;\n    }\n    .error-message {\n      color: #64748b;\n      margin-bottom: 2rem;\n      line-height: 1.6;\n    }\n    .error-actions {\n      display: flex;\n      gap: 1rem;\n      justify-content: center;\n    }\n    .btn {\n      padding: 0.75rem 1.5rem;\n      border-radius: 8px;\n      text-decoration: none;\n      font-weight: 500;\n      transition: all 0.2s;\n    }\n    .btn-primary {\n      background: #2563eb;\n      color: white;\n    }\n    .btn-primary:hover {\n      background: #1d4ed8;\n    }\n    .btn-ghost {\n      background: white;\n      color: #64748b;\n      border: 1px solid #e2e8f0;\n    }\n    .btn-ghost:hover {\n      background: #f1f5f9;\n    }\n  </style>\n</head>\n<body>\n  <!-- Google Tag Manager (noscript) -->\n  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-K7STMRPH\"\n  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n  <!-- End Google Tag Manager (noscript) -->\n  <div class=\"error-container\">\n    <div class=\"error-code\">500</div>\n    <h1 class=\"error-title\">Something went wrong</h1>\n    <p class=\"error-message\">We're sorry, but something went wrong on our end. Please try again later.</p>\n    <div class=\"error-actions\">\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n      <a href=\"javascript:history.back()\" class=\"btn btn-ghost\">Go Back</a>\n    </div>\n  </div>\n</body>\n</html>\n")
   return __output;
@@ -1959,7 +1959,7 @@ title = __locals.title,
     ; __append(escapeFn( index + 1 ))
     ; __append("\">\n    ")
     ;  }); 
-    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\">Create a Clothing Mockup</a>\n      </div>\n      ")
+    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\" data-analytics-event=\"home_hero_models_click\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\" data-analytics-event=\"home_hero_mockup_tool_click\">Create a Clothing Mockup</a>\n      </div>\n      ")
     ;  if (stats.length) { 
     ; __append("\n        <dl class=\"home-hero-stats home-hero-reveal\">\n          ")
     ;  stats.forEach(function(stat) { 
@@ -1997,7 +1997,13 @@ title = __locals.title,
     ;  featuredCategories.forEach(function(category) { 
     ; __append("\n        <a href=\"/mockups/")
     ; __append(escapeFn( category.slug ))
-    ; __append("\" class=\"generator-category-card home-reveal-card\">\n          ")
+    ; __append("\" class=\"generator-category-card home-reveal-card\" data-analytics-event=\"home_category_")
+    ; __append(escapeFn( category.slug ))
+    ; __append("_select\" data-analytics-item=\"")
+    ; __append(escapeFn( category.name ))
+    ; __append("\" data-analytics-category=\"")
+    ; __append(escapeFn( category.slug ))
+    ; __append("\">\n          ")
     ;  if (category.image_url) { 
     ; __append("\n            <div class=\"generator-category-media\">\n              <img src=\"")
     ; __append(escapeFn( category.image_url ))
@@ -2019,7 +2025,13 @@ title = __locals.title,
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
     ; __append(escapeFn( model.slug ))
-    ; __append("\" class=\"model-card home-reveal-card\">\n          <div class=\"model-preview-3d\">\n            ")
+    ; __append("\" class=\"model-card home-reveal-card\" data-analytics-event=\"home_model_")
+    ; __append(escapeFn( model.slug ))
+    ; __append("_select\" data-analytics-item=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append("\" data-analytics-category=\"")
+    ; __append(escapeFn( model.category_slug || model.category ))
+    ; __append("\">\n          <div class=\"model-preview-3d\">\n            ")
     ;  if (model.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2059,7 +2071,11 @@ title = __locals.title,
     ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">FAQ</span>\n      <h2 class=\"home-copy-reveal\">Free 3D clothing model questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
     ;  faq.forEach(function(item, index) { 
-    ; __append("\n        <details class=\"generator-faq-item home-reveal-card\" ")
+    ; __append("\n        <details class=\"generator-faq-item home-reveal-card\" data-analytics-event=\"home_faq_")
+    ; __append(escapeFn( index + 1 ))
+    ; __append("_toggle\" data-analytics-item=\"")
+    ; __append(escapeFn( item.question ))
+    ; __append("\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n          <summary class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.question ))
@@ -2067,7 +2083,7 @@ title = __locals.title,
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
     ;  }); 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/mockups\" class=\"btn btn-primary\">Browse free 3D clothing models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/mockups\" class=\"btn btn-primary\" data-analytics-event=\"home_bottom_models_click\">Browse free 3D clothing models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2858,7 +2874,7 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
-    ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B');\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 

@@ -23,8 +23,8 @@
         and export clean product images for ecommerce, POD listings, and design review.
       </p>
       <div class="hero-actions home-hero-reveal">
-        <a href="/mockups" class="btn btn-primary btn-large">Browse Free 3D Models</a>
-        <a href="/tools/3d-clothing-mockup-generator" class="btn btn-secondary btn-large">Create a Clothing Mockup</a>
+        <a href="/mockups" class="btn btn-primary btn-large" data-analytics-event="home_hero_models_click">Browse Free 3D Models</a>
+        <a href="/tools/3d-clothing-mockup-generator" class="btn btn-secondary btn-large" data-analytics-event="home_hero_mockup_tool_click">Create a Clothing Mockup</a>
       </div>
       <% if (stats.length) { %>
         <dl class="home-hero-stats home-hero-reveal">
@@ -90,7 +90,7 @@
     </div>
     <div class="generator-category-grid">
       <% featuredCategories.forEach(function(category) { %>
-        <a href="/mockups/<%= category.slug %>" class="generator-category-card home-reveal-card">
+        <a href="/mockups/<%= category.slug %>" class="generator-category-card home-reveal-card" data-analytics-event="home_category_<%= category.slug %>_select" data-analytics-item="<%= category.name %>" data-analytics-category="<%= category.slug %>">
           <% if (category.image_url) { %>
             <div class="generator-category-media">
               <img src="<%= category.image_url %>" alt="Free <%= category.name %> 3D clothing model mockup category" loading="lazy">
@@ -121,7 +121,7 @@
     </div>
     <div class="models-grid">
       <% featuredModels.forEach(function(model) { %>
-        <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card home-reveal-card">
+        <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card home-reveal-card" data-analytics-event="home_model_<%= model.slug %>_select" data-analytics-item="<%= model.name %>" data-analytics-category="<%= model.category_slug || model.category %>">
           <div class="model-preview-3d">
             <% if (model.image_url) { %>
               <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
@@ -173,7 +173,7 @@
     </div>
     <div class="generator-faq-list">
       <% faq.forEach(function(item, index) { %>
-        <details class="generator-faq-item home-reveal-card" <%= index === 0 ? 'open' : '' %>>
+        <details class="generator-faq-item home-reveal-card" data-analytics-event="home_faq_<%= index + 1 %>_toggle" data-analytics-item="<%= item.question %>" <%= index === 0 ? 'open' : '' %>>
           <summary class="home-copy-reveal"><%= item.question %></summary>
           <p class="home-copy-reveal"><%= item.answer %></p>
         </details>
@@ -191,7 +191,7 @@
         <p class="home-copy-reveal">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>
       </div>
       <div class="generator-final-actions">
-        <a href="/mockups" class="btn btn-primary">Browse free 3D clothing models</a>
+        <a href="/mockups" class="btn btn-primary" data-analytics-event="home_bottom_models_click">Browse free 3D clothing models</a>
       </div>
     </div>
   </div>
