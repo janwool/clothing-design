@@ -3,6 +3,7 @@ require('dotenv').config();
 const fs = require('fs/promises');
 const path = require('path');
 const db = require('../lib/db');
+const { modelCover, siteImage } = require('../lib/site-assets');
 const {
   CORE_STATIC_PATHS,
   isPriority3dCategory,
@@ -30,17 +31,17 @@ const staticToolPaths = [
 ];
 
 const staticToolImages = {
-  '/tools/t-shirt-mockup-generator': '/images/tools/t-shirt-mockup-generator.webp',
-  '/tools/hoodie-mockup-generator': '/images/tools/hoodie-mockup-generator.webp',
-  '/tools/3d-clothing-mockup-generator': '/images/tools/3d-clothing-mockup-generator.webp',
-  '/tools/bulk-t-shirt-mockup-generator': '/images/tools/bulk-t-shirt-mockup-generator.webp',
-  '/tools/print-on-demand-mockup-generator': '/images/tools/print-on-demand-mockup-generator.webp',
+  '/tools/t-shirt-mockup-generator': siteImage('mockups/t-shirt-mockup-generator.webp'),
+  '/tools/hoodie-mockup-generator': siteImage('mockups/hoodie-mockup-generator.webp'),
+  '/tools/3d-clothing-mockup-generator': siteImage('mockups/clothing-mockup-generator.webp'),
+  '/tools/bulk-t-shirt-mockup-generator': siteImage('mockups/bulk-t-shirt-mockup-generator.webp'),
+  '/tools/print-on-demand-mockup-generator': siteImage('mockups/print-on-demand-mockup-generator.webp'),
   '/tools/oversized-t-shirt-mockup-generator': 'https://cdn.cloz-design.com/image/1780135799225-218296703.webp',
-  '/tools/front-and-back-t-shirt-mockup': '/images/tools/t-shirt-mockup-generator.webp',
-  '/tools/polo-shirt-mockup-generator': '/uploads/preview/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail',
-  '/tools/long-sleeve-shirt-mockup-generator': '/uploads/preview/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail',
-  '/tools/streetwear-hoodie-mockup-generator': '/uploads/preview/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail',
-  '/tools/transparent-apparel-mockup-generator': '/images/tools/3d-clothing-mockup-generator.webp'
+  '/tools/front-and-back-t-shirt-mockup': modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
+  '/tools/polo-shirt-mockup-generator': modelCover('short-sleeve-polo-shirt-3d-model.webp'),
+  '/tools/long-sleeve-shirt-mockup-generator': modelCover('long-sleeve-crewneck-shirt-3d-model.webp'),
+  '/tools/streetwear-hoodie-mockup-generator': modelCover('hoodie-mockup-3d-model-04-e77e8039.webp'),
+  '/tools/transparent-apparel-mockup-generator': siteImage('mockups/clothing-mockup-generator.webp')
 };
 
 function escapeXml(value) {

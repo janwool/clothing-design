@@ -9,6 +9,7 @@
     "build": "node scripts/build-worker.js",
     "sitemap": "node scripts/generate-sitemap.js",
     "indexnow": "node scripts/submit-indexnow.js",
+    "assets:upload": "node scripts/upload-site-images-r2.js",
     "content:seed": "node scripts/seed-category-landing-content.js",
     "content:3d-categories": "node scripts/refresh-3d-category-pages.js",
     "content:patterns": "node scripts/refresh-pattern-seo-descriptions.js",

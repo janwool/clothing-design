@@ -39,18 +39,8 @@ const publicAssetEntries = [
   { route: '/favicon.svg', file: path.join(rootDir, 'public', 'favicon.svg'), contentType: 'image/svg+xml' },
   { route: '/favicon.ico', file: path.join(rootDir, 'public', 'favicon.ico'), contentType: 'image/x-icon' },
   { route: '/robots.txt', file: path.join(rootDir, 'public', 'robots.txt'), contentType: 'text/plain; charset=utf-8' },
-  { route: '/sitemap.xml', file: path.join(rootDir, 'public', 'sitemap.xml'), contentType: 'application/xml; charset=utf-8' },
-  { route: '/images/icon.png', file: path.join(rootDir, 'public', 'images', 'icon.png'), contentType: 'image/png' }
+  { route: '/sitemap.xml', file: path.join(rootDir, 'public', 'sitemap.xml'), contentType: 'application/xml; charset=utf-8' }
 ];
-
-const toolImagesDir = path.join(rootDir, 'public', 'images', 'tools');
-for (const filePath of walk(toolImagesDir, file => file.endsWith('.webp'))) {
-  publicAssetEntries.push({
-    route: `/images/tools/${path.basename(filePath)}`,
-    file: filePath,
-    contentType: 'image/webp'
-  });
-}
 
 publicAssetEntries.forEach(asset => {
   if (fs.existsSync(asset.file)) {

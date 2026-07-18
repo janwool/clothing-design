@@ -19,18 +19,19 @@ const {
   itemList,
   pageStructuredData
 } = require('../lib/seo');
+const { modelCover, siteImage } = require('../lib/site-assets');
 
 const MOCKUP_WORKFLOW_IMAGES = [
-  '/images/workflow/choose-garment-model.webp',
-  '/images/workflow/place-artwork-prints.webp',
-  '/images/workflow/preview-apparel-mockup.webp',
-  '/images/workflow/export-product-visuals.webp'
+  siteImage('workflow/choose-garment-model.webp'),
+  siteImage('workflow/place-artwork-prints.webp'),
+  siteImage('workflow/preview-apparel-mockup.webp'),
+  siteImage('workflow/export-product-visuals.webp')
 ];
 
 const MOCKUP_USE_CASE_IMAGES = [
-  '/images/use-cases/print-placement-previews.webp',
-  '/images/use-cases/product-page-mockups.webp',
-  '/images/use-cases/pod-merch-listing-images.webp'
+  siteImage('use-cases/print-placement-previews.webp'),
+  siteImage('use-cases/product-page-mockups.webp'),
+  siteImage('use-cases/pod-merch-listing-images.webp')
 ];
 
 function getDefaultLandingContent(name = '3D clothing models', resourceType = '3d-models') {
@@ -333,14 +334,14 @@ function buildModelSearchIntent(model, categoryName) {
 }
 
 const CATEGORY_IMAGE_ASSETS = {
-  't-shirt-mockup': '/images/categories/t-shirt-mockup.webp',
-  shirt: '/images/categories/shirt.webp',
-  pants: '/images/categories/pants.webp',
-  jacket: '/images/categories/jacket.webp',
-  'hoodie-mockup': '/images/categories/hoodie-mockup.webp',
-  dress: '/images/categories/dress.webp',
-  cloak: '/images/categories/cloak.webp',
-  underwear: '/images/categories/underwear.webp'
+  't-shirt-mockup': siteImage('categories/t-shirt-mockup.webp'),
+  shirt: siteImage('categories/shirt.webp'),
+  pants: siteImage('categories/pants.webp'),
+  jacket: siteImage('categories/jacket.webp'),
+  'hoodie-mockup': siteImage('categories/hoodie-mockup.webp'),
+  dress: siteImage('categories/dress.webp'),
+  cloak: siteImage('categories/cloak.webp'),
+  underwear: siteImage('categories/underwear.webp')
 };
 
 function withCategoryImages(categories = []) {
@@ -408,39 +409,39 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     {
       title: 'Choose a garment model',
       text: 'Start from shirts, hoodies, dresses, coats, pants, bags, hats, and other free 3D apparel models.',
-      image_url: '/images/workflow/choose-garment-model.webp'
+      image_url: MOCKUP_WORKFLOW_IMAGES[0]
     },
     {
       title: 'Place artwork and prints',
       text: 'Use the browser mockup workflow to position logos, graphics, textile ideas, and print placement directions on the garment.',
-      image_url: '/images/workflow/place-artwork-prints.webp'
+      image_url: MOCKUP_WORKFLOW_IMAGES[1]
     },
     {
       title: 'Preview the apparel mockup',
       text: 'Rotate the garment, check artwork scale, compare colorways, and review how the design sits on the clothing shape.',
-      image_url: '/images/workflow/preview-apparel-mockup.webp'
+      image_url: MOCKUP_WORKFLOW_IMAGES[2]
     },
     {
       title: 'Export product visuals',
       text: 'Download a clean transparent product image for ecommerce pages, POD listings, launch decks, portfolios, and approvals.',
-      image_url: '/images/workflow/export-product-visuals.webp'
+      image_url: MOCKUP_WORKFLOW_IMAGES[3]
     }
   ];
   const useCases = [
     {
       title: 'Print placement previews',
       text: 'Preview chest graphics, back prints, sleeve artwork, logo scale, and garment color direction before sampling or photoshoots.',
-      image_url: '/images/use-cases/print-placement-previews.webp'
+      image_url: MOCKUP_USE_CASE_IMAGES[0]
     },
     {
       title: 'Product page mockups',
       text: 'Create consistent transparent apparel images for ecommerce product pages, launch pages, line sheets, and client presentations.',
-      image_url: '/images/use-cases/product-page-mockups.webp'
+      image_url: MOCKUP_USE_CASE_IMAGES[1]
     },
     {
       title: 'POD and merch listing images',
       text: 'Build mockup visuals for print-on-demand products, merch drops, brand colorways, and store listing drafts.',
-      image_url: '/images/use-cases/pod-merch-listing-images.webp'
+      image_url: MOCKUP_USE_CASE_IMAGES[2]
     }
   ];
   const faq = [
@@ -621,7 +622,7 @@ const TOOL_PAGE_CONTENT = {
   't-shirt-mockup-generator': {
     title: 'Free T-Shirt Mockup Generator',
     eyebrow: 'Free online T-shirt mockups',
-    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    image: modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
@@ -694,7 +695,7 @@ const TOOL_PAGE_CONTENT = {
   'hoodie-mockup-generator': {
     title: 'Free Hoodie Mockup Generator',
     eyebrow: 'Free online hoodie mockups',
-    image: '/uploads/preview/hoodie-mockup-3d-model-03-dca998b8.webp?v=cover-20260607',
+    image: modelCover('hoodie-mockup-3d-model-03-dca998b8.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/hoodie-mockup-3d-model-03-dca998b8.glb`,
       alt: 'Tailored Fleece Lined Hoodie 3D Model'
@@ -767,7 +768,7 @@ const TOOL_PAGE_CONTENT = {
   '3d-clothing-mockup-generator': {
     title: 'Free 3D Clothing Mockup Generator',
     eyebrow: '3D apparel product visuals',
-    image: '/uploads/preview/dress-3d-model-06-29e39d9a.webp?v=cover-20260607',
+    image: modelCover('dress-3d-model-06-29e39d9a.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
       alt: 'Classic One-Piece Dress 3D Model'
@@ -840,7 +841,7 @@ const TOOL_PAGE_CONTENT = {
   'bulk-t-shirt-mockup-generator': {
     title: 'Free Bulk T-Shirt Mockup Generator',
     eyebrow: 'Batch T-shirt product visuals',
-    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    image: modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
@@ -913,7 +914,7 @@ const TOOL_PAGE_CONTENT = {
   'print-on-demand-mockup-generator': {
     title: 'Free Print-on-Demand Mockup Generator',
     eyebrow: 'POD apparel listing visuals',
-    image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
+    image: modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
@@ -1288,7 +1289,7 @@ const TOOL_VARIANT_CONTENT = {
     intent: 'Use the polo model when collar, placket, sleeve, and left-chest logo proportions matter for uniforms, clubs, hospitality, golf apparel, or branded workwear.',
     primaryKeyword: 'free polo shirt mockup generator',
     keywords: ['polo mockup', 'collared shirt mockup', 'uniform polo mockup', 'polo logo preview'],
-    image: '/uploads/preview/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail',
+    image: modelCover('short-sleeve-polo-shirt-3d-model.webp'),
     heroModel: { src: `${MOCKUP_GLB_BASE_URL}/short-sleeve-polo-shirt-3d-model.glb?v=uvfix-20260606`, alt: 'Short sleeve polo shirt 3D mockup' },
     editorHref: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design',
     cta: { label: 'Customize Polo Shirt', href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design' },
@@ -1308,7 +1309,7 @@ const TOOL_VARIANT_CONTENT = {
     intent: 'Use the long-sleeve model to review extended sleeve graphics, cuff-area details, chest placement, and seasonal colorways that a short-sleeve mockup cannot show.',
     primaryKeyword: 'free long sleeve shirt mockup generator',
     keywords: ['long sleeve t-shirt mockup', 'sleeve print mockup', 'crewneck shirt mockup', 'long sleeve merch mockup'],
-    image: '/uploads/preview/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail',
+    image: modelCover('long-sleeve-crewneck-shirt-3d-model.webp'),
     heroModel: { src: `${MOCKUP_GLB_BASE_URL}/long-sleeve-crewneck-shirt-3d-model.glb?v=uvfix-20260606`, alt: 'Long sleeve crewneck shirt 3D mockup' },
     editorHref: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model#design',
     cta: { label: 'Customize Long Sleeve Shirt', href: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model#design' },
@@ -1328,7 +1329,7 @@ const TOOL_VARIANT_CONTENT = {
     intent: 'Use a real pullover hoodie shape to review graphic scale against the hood, kangaroo pocket, cuffs, and heavier upper-body volume before planning a streetwear drop.',
     primaryKeyword: 'free streetwear hoodie mockup generator',
     keywords: ['streetwear hoodie mockup', 'pullover hoodie mockup', 'hoodie back print mockup', 'oversized hoodie preview'],
-    image: '/uploads/preview/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail',
+    image: modelCover('hoodie-mockup-3d-model-04-e77e8039.webp'),
     heroModel: { src: `${MOCKUP_GLB_BASE_URL}/hoodie-mockup-3d-model-04-e77e8039.glb`, alt: 'Pullover streetwear hoodie 3D mockup' },
     editorHref: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design',
     cta: { label: 'Customize Streetwear Hoodie', href: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design' },
@@ -1391,7 +1392,7 @@ function getToolPage(slug) {
     ]
   } : TOOL_PAGE_CONTENT[slug];
   if (!page) return null;
-  const image = `/images/tools/${slug}.webp`;
+  const image = siteImage(`tools/${slug}.webp`);
   const related = (page.relatedSlugs || Object.keys(TOOL_PAGE_CONTENT).filter(key => key !== slug).slice(0, 3))
     .map(key => {
       const value = TOOL_PAGE_CONTENT[key];
@@ -2305,7 +2306,7 @@ router.get('/tools', (req, res) => {
   res.render('tools', { 
     title: req.t('tools.title'),
     metaDescription: description,
-    metaImage: firstImage(req, ['/images/tools/3d-mockup.webp']),
+    metaImage: firstImage(req, [siteImage('tools/3d-mockup.webp')]),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'CollectionPage',
       name: 'Design Tools',
