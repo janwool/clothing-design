@@ -24,7 +24,6 @@ const staticToolPaths = [
   '/tools/t-shirt-designer',
   '/tools/hoodie-designer',
   '/tools/dress-designer',
-  '/tools/3d-mockup',
   '/tools/2d-mockup',
   '/tools/free-patterns',
   '/tools/free-templates',

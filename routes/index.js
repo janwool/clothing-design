@@ -164,19 +164,29 @@ function getLandingContent(category, resourceType = '3d-models') {
   }
 }
 
+let modelCategoryTablesReady;
+
 async function ensureModelCategoryTable() {
-  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_categories (
-    model_id INTEGER NOT NULL,
-    category_id INTEGER NOT NULL,
-    is_primary INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (model_id, category_id)
-  )`);
-  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_slug_redirects (
-    old_slug TEXT PRIMARY KEY,
-    model_id INTEGER NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )`);
+  if (!modelCategoryTablesReady) {
+    modelCategoryTablesReady = (async () => {
+      await db.run(`CREATE TABLE IF NOT EXISTS model_3d_categories (
+        model_id INTEGER NOT NULL,
+        category_id INTEGER NOT NULL,
+        is_primary INTEGER DEFAULT 0,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (model_id, category_id)
+      )`);
+      await db.run(`CREATE TABLE IF NOT EXISTS model_3d_slug_redirects (
+        old_slug TEXT PRIMARY KEY,
+        model_id INTEGER NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
+    })().catch(error => {
+      modelCategoryTablesReady = null;
+      throw error;
+    });
+  }
+  return modelCategoryTablesReady;
 }
 
 function getModelCategorySelect() {
@@ -274,7 +284,7 @@ function compactText(value, maxLength = 160) {
   return `${clipped.slice(0, lastSpace > 80 ? lastSpace : maxLength - 1).trim()}.`;
 }
 
-function buildSeoTitle(base, suffix, maxLength = 68) {
+function buildSeoTitle(base, suffix, maxLength = 58) {
   const cleanBase = String(base || '').replace(/\s+/g, ' ').trim();
   const cleanSuffix = String(suffix || '').replace(/\s+/g, ' ').trim();
   const full = cleanSuffix ? `${cleanBase} | ${cleanSuffix}` : cleanBase;
@@ -679,7 +689,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I make oversized or streetwear mockups?', answer: 'Yes. Use oversized and relaxed T-shirt model previews, then test front graphics, back prints, chest logos, and colorways.' }
     ],
     relatedSlugs: ['hoodie-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'],
-    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+    cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   'hoodie-mockup-generator': {
     title: 'Free Hoodie Mockup Generator',
@@ -752,7 +762,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Do I need a PSD hoodie template?', answer: 'No. This workflow is designed around browser-based apparel mockups and 3D hoodie model previews.' }
     ],
     relatedSlugs: ['t-shirt-mockup-generator', 'print-on-demand-mockup-generator', '3d-clothing-mockup-generator'],
-    cta: { label: 'Start with Hoodie Model', href: '/3d-models/hoodie/tailored-fleece-lined-hoodie-3d-model' }
+    cta: { label: 'Open Hoodie Editor', href: '/3d-models/hoodie-mockup/tailored-fleece-lined-hoodie-3d-model/edit' }
   },
   '3d-clothing-mockup-generator': {
     title: 'Free 3D Clothing Mockup Generator',
@@ -825,7 +835,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
     ],
     relatedSlugs: ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'print-on-demand-mockup-generator'],
-    cta: { label: 'Start with Dress Model', href: '/3d-models/dress/classic-one-piece-dress-3d-model' }
+    cta: { label: 'Open 3D Clothing Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   'bulk-t-shirt-mockup-generator': {
     title: 'Bulk T-Shirt Mockup Generator',
@@ -898,7 +908,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Should I use this before production?', answer: 'Yes. Bulk mockups help validate colorways and reduce visual inconsistencies before print files or listings go live.' }
     ],
     relatedSlugs: ['t-shirt-mockup-generator', 'print-on-demand-mockup-generator', '3d-clothing-mockup-generator'],
-    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+    cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   'print-on-demand-mockup-generator': {
     title: 'Print-on-Demand Mockup Generator',
@@ -971,7 +981,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Do I need product photography first?', answer: 'No. Use mockups before photography to test artwork, product colors, listing structure, and sales-page presentation.' }
     ],
     relatedSlugs: ['bulk-t-shirt-mockup-generator', 't-shirt-mockup-generator', 'hoodie-mockup-generator'],
-    cta: { label: 'Start with T-Shirt Model', href: '/3d-models/t-shirt/classic-crew-neck-t-shirt-3d-model' }
+    cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   't-shirt-designer': {
     title: 'Free T-Shirt Designer Online',
@@ -1068,38 +1078,6 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I use sewing patterns with this workflow?', answer: 'Yes. Pattern resources can help you connect a dress concept with construction references and digital garment review.' }
     ],
     cta: { label: 'Browse Dress Models', href: '/mockups/dress' }
-  },
-  '3d-mockup': {
-    title: 'Free 3D Clothing Mockup Generator',
-    eyebrow: 'Free 3D apparel mockups',
-    subtitle: 'Generate 3D clothing mockups from browser-ready garment models and export high-resolution transparent renders for ecommerce, launch decks, and design approvals.',
-    intent: 'Create apparel visuals that feel more realistic than flat templates and faster than building a scene from scratch. Choose a model, preview the garment, and export a clean render.',
-    primaryKeyword: 'free 3D clothing mockup generator',
-    keywords: ['3D apparel mockup generator', 'clothing mockup generator free', 'online 3D product mockup', 'transparent apparel render'],
-    competitorInsights: [
-      'Create apparel-first mockups instead of searching through generic product mockup libraries.',
-      'Use transparent renders for product pages, landing pages, ads, pitch decks, and collection boards.',
-      'Preview garment shape and artwork placement in 3D before ordering samples or scheduling photography.'
-    ],
-    freePositioning: 'ClothingDesign focuses on free apparel-first 3D mockups, giving product teams and creators a practical way to create garment visuals without paid mockup packs.',
-    steps: [
-      'Pick a 3D clothing model from the library.',
-      'Customize color, artwork direction, and viewing angle.',
-      'Check garment shape, print scale, and visual balance.',
-      'Export a transparent render for ecommerce, presentations, or approvals.'
-    ],
-    useCases: ['Ecommerce images', 'Product launch decks', 'Portfolio mockups'],
-    useCaseDetails: [
-      'Prepare clean product images before a photoshoot is ready.',
-      'Show a new apparel concept in a buyer deck or launch presentation.',
-      'Build a portfolio mockup that makes the garment shape easy to understand.'
-    ],
-    faq: [
-      { question: 'Can I make 3D clothing mockups for free?', answer: 'Yes. You can use Design3D garment models to create and export mockup visuals without buying a PSD mockup pack.' },
-      { question: 'What makes a 3D mockup better than a flat template?', answer: 'A 3D mockup helps you judge garment shape, artwork scale, folds, angle, and presentation more clearly than a flat front-view template.' },
-      { question: 'Can I export transparent renders?', answer: 'Yes. The workflow is designed for clean render output that can be placed on ecommerce pages, decks, and marketing layouts.' }
-    ],
-    cta: { label: 'Open 3D Model Library', href: '/mockups' }
   },
   '2d-mockup': {
     title: 'Free 2D Clothing Mockup Generator',
@@ -1311,7 +1289,8 @@ function buildToolStructuredData(req, toolPage) {
       step: toolPage.steps.map((step, index) => ({
         '@type': 'HowToStep',
         position: index + 1,
-        text: step
+        name: step.title || undefined,
+        text: step.body || step
       }))
     },
     {
@@ -2348,6 +2327,10 @@ router.get('/gallery/:slug', async (req, res) => {
   } catch (err) {
     res.status(500).render('404', { title: 'Error', page: '' });
   }
+});
+
+router.get('/tools/3d-mockup', (req, res) => {
+  res.redirect(301, '/tools/3d-clothing-mockup-generator');
 });
 
 // Tools Category Route
