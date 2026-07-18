@@ -8,6 +8,24 @@
     const firstModel = items && items.length ? items[0] : null;
     const categoryLabel = category.name || 'apparel';
     const categoryLower = categoryLabel.toLowerCase();
+    const categoryToolMap = {
+      't-shirt-mockup': [
+        ['/tools/t-shirt-mockup-generator', 'Free T-shirt mockup generator'],
+        ['/tools/oversized-t-shirt-mockup-generator', 'Oversized T-shirt mockups'],
+        ['/tools/front-and-back-t-shirt-mockup', 'Front and back T-shirt views'],
+        ['/tools/polo-shirt-mockup-generator', 'Polo shirt mockups'],
+        ['/tools/long-sleeve-shirt-mockup-generator', 'Long-sleeve shirt mockups']
+      ],
+      'hoodie-mockup': [
+        ['/tools/hoodie-mockup-generator', 'Free hoodie mockup generator'],
+        ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie mockups'],
+        ['/tools/print-on-demand-mockup-generator', 'POD apparel mockups']
+      ]
+    };
+    const categoryToolLinks = categoryToolMap[category.slug] || [
+      ['/tools/3d-clothing-mockup-generator', `Free ${categoryLabel} 3D mockups`],
+      ['/tools/transparent-apparel-mockup-generator', 'Transparent apparel PNGs']
+    ];
   %>
   <section class="page-header category-page-header">
     <div class="container">
@@ -92,6 +110,20 @@
             <p>There are no active 3D models in this category right now.</p>
           </div>
         <% } %>
+      </div>
+    </div>
+  </section>
+
+  <section class="generator-section category-tool-links-section">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow">Create with these models</span>
+        <h2>Free <%= categoryLower %> mockup tools</h2>
+      </div>
+      <div class="tool-picker-grid">
+        <% categoryToolLinks.forEach(function(link) { %>
+          <a href="<%= link[0] %>"><%= link[1] %></a>
+        <% }); %>
       </div>
     </div>
   </section>
@@ -267,7 +299,7 @@
 	  .category-models-header h2 {
 	    font-size: 30px;
 	    line-height: 1.1;
-	    letter-spacing: -0.02em;
+	    letter-spacing: 0;
 	  }
 
 	  .category-section-kicker p,

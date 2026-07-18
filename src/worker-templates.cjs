@@ -113,9 +113,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Categories</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Category</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Categories</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search categories...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Slug</th>\n              <th>Resource Type</th>\n              <th>Sort</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -141,11 +141,11 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n            <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n          </svg>\n          <h3>No categories yet</h3>\n          <p>Add your first category to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Category</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"categoryForm\">\n        <input type=\"hidden\" id=\"categoryId\">\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Name</label>\n            <input type=\"text\" class=\"form-input\" id=\"categoryName\" required>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Slug</label>\n            <input type=\"text\" class=\"form-input\" id=\"categorySlug\" required placeholder=\"e.g. t-shirts\">\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Resource Type</label>\n            <select class=\"form-select\" id=\"categoryResourceType\" required>\n              <option value=\"3d-models\">3D Models</option>\n              <option value=\"2d-templates\">2D Templates</option>\n              <option value=\"patterns\">Sew Patterns</option>\n              <option value=\"gallery\">Gallery</option>\n              <option value=\"tools\">Tools</option>\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Sort Order</label>\n            <input type=\"number\" class=\"form-input\" id=\"categorySortOrder\" value=\"0\" min=\"0\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Status</label>\n          <select class=\"form-select\" id=\"categoryStatus\">\n            <option value=\"active\">Active</option>\n            <option value=\"inactive\">Inactive</option>\n          </select>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"categoryDescription\" rows=\"2\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Title (SEO)</label>\n          <input type=\"text\" class=\"form-input\" id=\"categoryMetaTitle\" placeholder=\"Page title for search engines\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Description (SEO)</label>\n          <textarea class=\"form-textarea\" id=\"categoryMetaDescription\" rows=\"2\" placeholder=\"Page description for search engines\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Landing Content JSON</label>\n          <textarea class=\"form-textarea\" id=\"categoryLandingContent\" rows=\"10\" placeholder='{\"workflow\":{\"title\":\"...\"},\"faq\":{\"items\":[{\"question\":\"...\",\"answer\":\"...\"}]}}'></textarea>\n          <small style=\"display:block;margin-top:6px;color:var(--gray-500);line-height:1.5;\">\n            Optional. Controls the Workflow, Popular categories, Built for apparel output, Library, FAQ, and CTA sections on category pages.\n          </small>\n          <button type=\"button\" class=\"btn btn-ghost btn-small\" style=\"margin-top:8px;\" onclick=\"insertLandingContentTemplate()\">Insert template</button>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveCategory()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst categoryForm = document.getElementById('categoryForm');\nconst categoriesData = ")
     ; __append( JSON.stringify(items || []).replace(/</g, '\\u003c') )
     ; __append(";\nconst landingContentTemplate = {\n  workflow: {\n    eyebrow: 'Workflow',\n    title: 'From blank model to finished apparel mockup',\n    description: 'Use the same browser-based flow to select a garment, place your artwork, preview the result, and prepare visuals for review.',\n    steps: [\n      { title: 'Select a garment', body: 'Choose the 3D clothing model that matches the silhouette you want to present.' },\n      { title: 'Add your design', body: 'Apply colors, artwork, logos, and surface directions to the selected model.' },\n      { title: 'Preview the mockup', body: 'Rotate the model and check artwork scale, placement, and color balance.' },\n      { title: 'Export visuals', body: 'Save presentation-ready mockups for stores, launch decks, and approvals.' }\n    ]\n  },\n  output: {\n    eyebrow: 'Built for apparel output',\n    title: 'Use 3D clothing models across every apparel workflow',\n    cards: [\n      { title: 'Online product pages', body: 'Create consistent visuals for ecommerce listings and product detail pages.' },\n      { title: 'Campaign and launch decks', body: 'Show garment concepts in context before samples or photoshoots are ready.' },\n      { title: 'Client and team approvals', body: 'Review color, placement, and scale with a more realistic apparel preview.' }\n    ]\n  },\n  faq: {\n    eyebrow: 'FAQ',\n    title: '3D clothing model questions',\n    items: [\n      { question: 'Can I use these 3D models for apparel mockups?', answer: 'Yes. Choose a model, open the designer, and use it to preview graphics, colorways, and garment presentation angles.' }\n    ]\n  }\n};\n\nfunction insertLandingContentTemplate() {\n  document.getElementById('categoryLandingContent').value = JSON.stringify(landingContentTemplate, null, 2);\n}\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Category';\n  categoryForm.reset();\n  document.getElementById('categoryId').value = '';\n  document.getElementById('categoryLandingContent').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editCategory(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  const category = categoriesData.find(item => String(item.id) === String(id));\n  if (!row || !category) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('categoryId').value = id;\n  document.getElementById('categoryName').value = category.name || '';\n  document.getElementById('categorySlug').value = category.slug || '';\n  document.getElementById('categoryResourceType').value = category.resource_type || '3d-models';\n  document.getElementById('categorySortOrder').value = category.sort_order || 0;\n  document.getElementById('categoryStatus').value = category.status || 'active';\n  document.getElementById('categoryDescription').value = category.description || '';\n  document.getElementById('categoryMetaTitle').value = category.meta_title || '';\n  document.getElementById('categoryMetaDescription').value = category.meta_description || '';\n  document.getElementById('categoryLandingContent').value = category.landing_content || '';\n\n  modalTitle.textContent = 'Edit Category';\n  modal.style.display = 'flex';\n}\n\nasync function saveCategory() {\n  const id = document.getElementById('categoryId').value;\n  const landingContent = document.getElementById('categoryLandingContent').value.trim();\n  if (landingContent) {\n    try {\n      JSON.parse(landingContent);\n    } catch (err) {\n      alert('Landing Content JSON is invalid.');\n      return;\n    }\n  }\n  const data = {\n    name: document.getElementById('categoryName').value,\n    slug: document.getElementById('categorySlug').value,\n    resource_type: document.getElementById('categoryResourceType').value,\n    description: document.getElementById('categoryDescription').value,\n    meta_title: document.getElementById('categoryMetaTitle').value,\n    meta_description: document.getElementById('categoryMetaDescription').value,\n    landing_content: landingContent,\n    sort_order: document.getElementById('categorySortOrder').value,\n    status: document.getElementById('categoryStatus').value\n  };\n\n  const url = id ? '/admin/categories/' + id : '/admin/categories';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving category');\n  }\n}\n\nasync function deleteCategory(id) {\n  if (!confirm('Are you sure you want to delete this category?')) return;\n\n  try {\n    const response = await fetch('/admin/categories/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting category');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editCategory(id);\n  } else if (action === 'delete') {\n    deleteCategory(id);\n  }\n});\n</script>\n\n")
@@ -281,9 +281,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Gallery</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Item</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Items</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search gallery...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Title</th>\n              <th>Author</th>\n              <th>Category</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -307,23 +307,23 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n            <polyline points=\"21 15 16 10 5 21\"/>\n          </svg>\n          <h3>No gallery items yet</h3>\n          <p>Add your first gallery item to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Gallery Item</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"galleryForm\">\n        <input type=\"hidden\" id=\"galleryId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Title</label>\n          <input type=\"text\" class=\"form-input\" id=\"galleryTitle\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Author</label>\n            <input type=\"text\" class=\"form-input\" id=\"galleryAuthor\">\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"galleryCategory\">\n              <option value=\"\">Select...</option>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"galleryStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"galleryTags\" placeholder=\"e.g. Casual, Street\">\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveGalleryItem()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst galleryForm = document.getElementById('galleryForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Gallery Item';\n  galleryForm.reset();\n  document.getElementById('galleryId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editGalleryItem(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('galleryId').value = id;\n  document.getElementById('galleryTitle').value = cells[1].textContent;\n  document.getElementById('galleryAuthor').value = cells[2].textContent === '-' ? '' : cells[2].textContent;\n  document.getElementById('galleryCategory').value = cells[3].textContent === '-' ? '' : cells[3].textContent;\n  document.getElementById('galleryTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('galleryStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit Gallery Item';\n  modal.style.display = 'flex';\n}\n\nasync function saveGalleryItem() {\n  const id = document.getElementById('galleryId').value;\n  const data = {\n    title: document.getElementById('galleryTitle').value,\n    author: document.getElementById('galleryAuthor').value,\n    category: document.getElementById('galleryCategory').value,\n    status: document.getElementById('galleryStatus').value,\n    tags: document.getElementById('galleryTags').value\n  };\n\n  const url = id ? '/admin/gallery/' + id : '/admin/gallery';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving gallery item');\n  }\n}\n\nasync function deleteGalleryItem(id) {\n  if (!confirm('Are you sure you want to delete this item?')) return;\n\n  try {\n    const response = await fetch('/admin/gallery/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting gallery item');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editGalleryItem(id);\n  } else if (action === 'delete') {\n    deleteGalleryItem(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -385,9 +385,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">2D Templates</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Template</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Templates</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search templates...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Category</th>\n              <th>Format</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -411,25 +411,25 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/>\n            <line x1=\"9\" y1=\"21\" x2=\"9\" y2=\"9\"/>\n          </svg>\n          <h3>No templates yet</h3>\n          <p>Add your first 2D template to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add 2D Template</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"templateForm\">\n        <input type=\"hidden\" id=\"templateId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"templateName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"templateCategory\" required>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Format</label>\n            <select class=\"form-select\" id=\"templateFormat\">\n              <option value=\"svg\">SVG</option>\n              <option value=\"ai\">AI</option>\n              <option value=\"psd\">PSD</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"templateStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"templateTags\" placeholder=\"e.g. Free, Vector\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"templateDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveTemplate()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst templateForm = document.getElementById('templateForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add 2D Template';\n  templateForm.reset();\n  document.getElementById('templateId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editTemplate(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('templateId').value = id;\n  document.getElementById('templateName').value = cells[1].textContent;\n  document.getElementById('templateCategory').value = cells[2].textContent;\n  document.getElementById('templateFormat').value = cells[3].textContent;\n  document.getElementById('templateTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('templateStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit 2D Template';\n  modal.style.display = 'flex';\n}\n\nasync function saveTemplate() {\n  const id = document.getElementById('templateId').value;\n  const data = {\n    name: document.getElementById('templateName').value,\n    category: document.getElementById('templateCategory').value,\n    format: document.getElementById('templateFormat').value,\n    status: document.getElementById('templateStatus').value,\n    tags: document.getElementById('templateTags').value,\n    description: document.getElementById('templateDescription').value\n  };\n\n  const url = id ? '/admin/models-2d/' + id : '/admin/models-2d';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving template');\n  }\n}\n\nasync function deleteTemplate(id) {\n  if (!confirm('Are you sure you want to delete this template?')) return;\n\n  try {\n    const response = await fetch('/admin/models-2d/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting template');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editTemplate(id);\n  } else if (action === 'delete') {\n    deleteTemplate(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -491,9 +491,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">3D Models</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Model</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Models</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search models...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Preview</th>\n              <th>Name</th>\n              <th>Slug</th>\n              <th>Category</th>\n              <th>Files</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\" data-item='")
@@ -501,15 +501,15 @@ title = __locals.title,
     ; __append("'>\n                <td>#")
     ; __append(escapeFn( item.id ))
     ; __append("</td>\n                <td>\n                  ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                    <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name ))
     ; __append("\" class=\"table-preview\" style=\"width: 48px; height: 48px; object-fit: cover; border-radius: 6px;\">\n                  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                    <div class=\"table-preview-placeholder\" style=\"width: 48px; height: 48px; background: var(--gray-100); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--gray-400);\">\n                      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                        <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                        <path d=\"M21 15l-5-5L5 21\"/>\n                      </svg>\n                    </div>\n                  ")
-    ;  }
+    ;  } 
     ; __append("\n                </td>\n                <td>")
     ; __append(escapeFn( item.name ))
     ; __append("</td>\n                <td><code>")
@@ -517,13 +517,13 @@ title = __locals.title,
     ; __append("</code></td>\n                <td>")
     ; __append(escapeFn( item.category_names || item.category ))
     ; __append("</td>\n                <td>\n                  <div class=\"file-badges\">\n                    ")
-    ;  if (item.file_url) {
+    ;  if (item.file_url) { 
     ; __append("\n                      <span class=\"file-badge glb\">GLB</span>\n                    ")
-    ;  }
+    ;  } 
     ; __append("\n                    ")
-    ;  if (item.texture_url) {
+    ;  if (item.texture_url) { 
     ; __append("\n                      <span class=\"file-badge svg\">SVG</span>\n                    ")
-    ;  }
+    ;  } 
     ; __append("\n                  </div>\n                </td>\n                <td>\n                  <span class=\"status-badge status-")
     ; __append(escapeFn( item.status ))
     ; __append("\">")
@@ -535,15 +535,15 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"/>\n          </svg>\n          <h3>No models yet</h3>\n          <p>Add your first 3D model to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add 3D Model</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"modelForm\" enctype=\"multipart/form-data\">\n        <input type=\"hidden\" id=\"modelId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"modelName\" required>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Slug <span class=\"label-hint\">(URL path)</span></label>\n          <input type=\"text\" class=\"form-input\" id=\"modelSlug\" placeholder=\"long-sleeved-t-shirt\">\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Categories <span class=\"label-hint\">(first selected becomes primary)</span></label>\n            <select class=\"form-select\" id=\"modelCategory\" multiple required size=\"6\">\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.id ))
     ; __append("\" data-name=\"")
@@ -551,11 +551,11 @@ title = __locals.title,
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"modelStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"modelTags\" placeholder=\"e.g. Free, 4K\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"modelDescription\" rows=\"3\"></textarea>\n        </div>\n\n        <!-- File Uploads -->\n        <div class=\"form-section\">\n          <h4 class=\"form-section-title\">Files</h4>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">GLB File <span class=\"label-hint\">(3D Model)</span></label>\n            <div class=\"file-upload\" id=\"glbUpload\">\n              <input type=\"file\" name=\"glbFile\" id=\"glbFile\" accept=\".glb\" class=\"file-input\" onchange=\"handleFileSelect(this, 'glbPreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n                  <polyline points=\"17 8 12 3 7 8\"/>\n                  <line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload GLB file</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"glbPreview\" style=\"display: none;\">\n                <span class=\"file-name\"></span>\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('glbFile', 'glbPreview')\">×</button>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">Preview Image <span class=\"label-hint\">(PNG, JPG)</span></label>\n            <div class=\"file-upload\" id=\"previewUpload\">\n              <input type=\"file\" name=\"previewImage\" id=\"previewImage\" accept=\"image/*\" class=\"file-input\" onchange=\"handleFileSelect(this, 'previewPreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                  <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                  <path d=\"M21 15l-5-5L5 21\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload preview image</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"previewPreview\" style=\"display: none;\">\n                <img class=\"file-preview-img\" src=\"\" alt=\"Preview\">\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('previewImage', 'previewPreview')\">×</button>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">Texture SVG <span class=\"label-hint\">(Optional)</span></label>\n            <div class=\"file-upload\" id=\"textureUpload\">\n              <input type=\"file\" name=\"textureSvg\" id=\"textureSvg\" accept=\".svg\" class=\"file-input\" onchange=\"handleFileSelect(this, 'texturePreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <path d=\"M12 2L2 7l10 5 10-5-10-5z\"/>\n                  <path d=\"M2 17l10 5 10-5\"/>\n                  <path d=\"M2 12l10 5 10-5\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload texture SVG</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"texturePreview\" style=\"display: none;\">\n                <span class=\"file-name\"></span>\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('textureSvg', 'texturePreview')\">×</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveModel()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<style>\n.file-badges {\n  display: flex;\n  gap: 0.375rem;\n}\n.file-badge {\n  font-size: 0.625rem;\n  font-weight: 600;\n  padding: 0.125rem 0.5rem;\n  border-radius: 4px;\n  text-transform: uppercase;\n  letter-spacing: 0.025em;\n}\n.file-badge.glb {\n  background: #dbeafe;\n  color: #1e40af;\n}\n.file-badge.svg {\n  background: #dcfce7;\n  color: #166534;\n}\n\n.form-section {\n  margin-top: 1.5rem;\n  padding-top: 1.5rem;\n  border-top: 1px solid var(--gray-200);\n}\n.form-section-title {\n  font-size: 0.875rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 1rem;\n}\n\n#modelCategory {\n  min-height: 132px;\n}\n\n.label-hint {\n  font-weight: 400;\n  color: var(--gray-500);\n  font-size: 0.75rem;\n}\n\n.file-upload {\n  position: relative;\n  border: 2px dashed var(--gray-300);\n  border-radius: 8px;\n  padding: 1.25rem;\n  text-align: center;\n  transition: border-color 0.2s, background 0.2s;\n  cursor: pointer;\n}\n.file-upload:hover {\n  border-color: var(--primary);\n  background: var(--gray-50);\n}\n.file-upload.has-file {\n  border-style: solid;\n  border-color: var(--gray-300);\n  background: var(--gray-50);\n}\n.file-input {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  cursor: pointer;\n}\n.file-upload-content {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 0.375rem;\n  color: var(--gray-500);\n}\n.file-upload-content svg {\n  color: var(--gray-400);\n  margin-bottom: 0.25rem;\n}\n.file-upload-text {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--gray-700);\n}\n.file-upload-hint {\n  font-size: 0.75rem;\n  color: var(--gray-500);\n}\n.file-preview {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem;\n  padding: 0.5rem 0.75rem;\n  background: var(--white);\n  border-radius: 6px;\n}\n.file-preview-img {\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: 4px;\n}\n.file-name {\n  font-size: 0.875rem;\n  color: var(--gray-700);\n  word-break: break-all;\n  flex: 1;\n}\n.file-remove {\n  width: 24px;\n  height: 24px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: none;\n  background: var(--gray-200);\n  color: var(--gray-600);\n  border-radius: 4px;\n  cursor: pointer;\n  font-size: 1rem;\n  line-height: 1;\n}\n.file-remove:hover {\n  background: var(--gray-300);\n  color: var(--gray-900);\n}\n</style>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst modelForm = document.getElementById('modelForm');\nconst modelNameInput = document.getElementById('modelName');\nconst modelSlugInput = document.getElementById('modelSlug');\nlet slugTouched = false;\n\nfunction slugify(value) {\n  return String(value || '')\n    .toLowerCase()\n    .trim()\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/^-+|-+$/g, '');\n}\n\nfunction syncSlugFromName(force = false) {\n  if (!force && slugTouched) return;\n  modelSlugInput.value = slugify(modelNameInput.value);\n}\n\nfunction getSelectedCategoryIds() {\n  return Array.from(document.getElementById('modelCategory').selectedOptions)\n    .map(option => option.value)\n    .filter(Boolean);\n}\n\nfunction setSelectedCategoryIds(categoryIds, fallbackCategoryName = '') {\n  const select = document.getElementById('modelCategory');\n  const selected = new Set((categoryIds || []).map(String));\n  Array.from(select.options).forEach(option => {\n    option.selected = selected.has(option.value);\n  });\n\n  if (selected.size === 0 && fallbackCategoryName) {\n    const fallbackOption = Array.from(select.options).find(option => option.dataset.name === fallbackCategoryName);\n    if (fallbackOption) fallbackOption.selected = true;\n  }\n\n  if (getSelectedCategoryIds().length === 0 && select.options.length > 0) {\n    select.options[0].selected = true;\n  }\n}\n\nfunction openModal() {\n  modalTitle.textContent = 'Add 3D Model';\n  modelForm.reset();\n  document.getElementById('modelId').value = '';\n  slugTouched = false;\n  setSelectedCategoryIds([]);\n  resetFilePreviews();\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction resetFilePreviews() {\n  ['glbPreview', 'previewPreview', 'texturePreview'].forEach(id => {\n    document.getElementById(id).style.display = 'none';\n  });\n  ['glbUpload', 'previewUpload', 'textureUpload'].forEach(id => {\n    document.getElementById(id).classList.remove('has-file');\n  });\n}\n\nfunction handleFileSelect(input, previewId) {\n  const file = input.files[0];\n  if (!file) return;\n\n  const preview = document.getElementById(previewId);\n  const uploadBox = input.closest('.file-upload');\n  uploadBox.classList.add('has-file');\n  preview.style.display = 'flex';\n\n  if (previewId === 'previewPreview') {\n    const img = preview.querySelector('.file-preview-img');\n    img.src = URL.createObjectURL(file);\n  } else {\n    preview.querySelector('.file-name').textContent = file.name;\n  }\n}\n\nfunction removeFile(inputId, previewId) {\n  document.getElementById(inputId).value = '';\n  document.getElementById(previewId).style.display = 'none';\n  document.getElementById(inputId).closest('.file-upload').classList.remove('has-file');\n}\n\nfunction getFileNameFromUrl(url, fallback) {\n  try {\n    const pathname = new URL(url).pathname;\n    return decodeURIComponent(pathname.split('/').pop()) || fallback;\n  } catch (err) {\n    return fallback;\n  }\n}\n\nfunction showExistingFile(inputId, previewId, url, fallback) {\n  if (!url) return;\n  const input = document.getElementById(inputId);\n  const preview = document.getElementById(previewId);\n  const uploadBox = input.closest('.file-upload');\n  uploadBox.classList.add('has-file');\n  preview.style.display = 'flex';\n\n  const previewImage = preview.querySelector('.file-preview-img');\n  const fileName = preview.querySelector('.file-name');\n  if (previewImage) {\n    previewImage.src = url;\n  }\n  if (fileName) {\n    fileName.textContent = getFileNameFromUrl(url, fallback);\n  }\n}\n\nfunction editModel(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const itemData = row.getAttribute('data-item');\n  let item;\n  try {\n    item = JSON.parse(itemData);\n  } catch (e) {\n    return;\n  }\n\n  document.getElementById('modelId').value = id;\n  document.getElementById('modelName').value = item.name || '';\n  document.getElementById('modelSlug').value = item.slug || '';\n  const categoryIds = String(item.category_ids || '')\n    .split(',')\n    .map(value => value.trim())\n    .filter(Boolean);\n  setSelectedCategoryIds(categoryIds, item.category || '');\n  document.getElementById('modelTags').value = item.tags || '';\n  document.getElementById('modelDescription').value = item.description || '';\n  document.getElementById('modelStatus').value = item.status || 'active';\n  slugTouched = Boolean(item.slug);\n  syncSlugFromName();\n\n  resetFilePreviews();\n  showExistingFile('glbFile', 'glbPreview', item.file_url, 'Current GLB file');\n  showExistingFile('previewImage', 'previewPreview', item.image_url, 'Current preview image');\n  showExistingFile('textureSvg', 'texturePreview', item.texture_url, 'Current texture SVG');\n  modalTitle.textContent = 'Edit 3D Model';\n  modal.style.display = 'flex';\n}\n\nasync function getUploadToken(filename, contentType, folder) {\n  const response = await fetch('/admin/upload-token', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ filename, contentType, folder })\n  });\n  const result = await response.json();\n  if (!result.success) {\n    throw new Error(result.error || 'Failed to get upload token');\n  }\n  return result;\n}\n\nasync function uploadFileToR2(file, folder) {\n  const uploadContentType = file.type || 'application/octet-stream';\n  const token = await getUploadToken(file.name, uploadContentType, folder);\n\n  const response = await fetch(token.signedUrl, {\n    method: 'PUT',\n    headers: {\n      'Content-Type': uploadContentType,\n    },\n    body: file\n  });\n\n  if (!response.ok) {\n    throw new Error('Upload failed: ' + response.statusText);\n  }\n\n  return token.publicUrl;\n}\n\nasync function saveModel() {\n  const id = document.getElementById('modelId').value;\n\n  const glbFile = document.getElementById('glbFile').files[0];\n  const previewImage = document.getElementById('previewImage').files[0];\n  const textureSvg = document.getElementById('textureSvg').files[0];\n\n  const data = {\n    name: document.getElementById('modelName').value,\n    slug: slugify(document.getElementById('modelSlug').value),\n    category_ids: getSelectedCategoryIds(),\n    tags: document.getElementById('modelTags').value,\n    description: document.getElementById('modelDescription').value,\n    status: document.getElementById('modelStatus').value\n  };\n\n  if (data.category_ids.length === 0) {\n    alert('Please select at least one category.');\n    return;\n  }\n\n  try {\n    if (glbFile) {\n      data.file_url = await uploadFileToR2(glbFile, 'd3');\n    }\n    if (previewImage) {\n      data.image_url = await uploadFileToR2(previewImage, 'image');\n    }\n    if (textureSvg) {\n      data.texture_url = await uploadFileToR2(textureSvg, 'd2');\n    }\n  } catch (err) {\n    alert('Upload error: ' + err.message);\n    return;\n  }\n\n  const url = id ? '/admin/models-3d/' + id : '/admin/models-3d';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving model');\n  }\n}\n\nmodelNameInput.addEventListener('input', function() {\n  syncSlugFromName();\n});\n\nmodelSlugInput.addEventListener('input', function() {\n  slugTouched = this.value.trim() !== '';\n});\n\nmodelSlugInput.addEventListener('blur', function() {\n  this.value = slugify(this.value);\n});\n\nasync function deleteModel(id) {\n  if (!confirm('Are you sure you want to delete this model?')) return;\n\n  try {\n    const response = await fetch('/admin/models-3d/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting model');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editModel(id);\n  } else if (action === 'delete') {\n    deleteModel(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -804,9 +804,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Sew Patterns</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Pattern</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Patterns</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search patterns...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Category</th>\n              <th>Format</th>\n              <th>File</th>\n              <th>Preview</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -818,21 +818,21 @@ title = __locals.title,
     ; __append("</td>\n                <td>")
     ; __append(escapeFn( item.format || 'zprj' ))
     ; __append("</td>\n                <td>\n                  ")
-    ;  if (item.file_url) {
+    ;  if (item.file_url) { 
     ; __append("\n                    <a href=\"")
     ; __append(escapeFn( item.file_url ))
     ; __append("\" target=\"_blank\" rel=\"noopener\">Download</a>\n                  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                    -\n                  ")
-    ;  }
+    ;  } 
     ; __append("\n                </td>\n                <td>\n                  ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                    <a href=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" target=\"_blank\" rel=\"noopener\">View</a>\n                  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                    -\n                  ")
-    ;  }
+    ;  } 
     ; __append("\n                </td>\n                <td>")
     ; __append(escapeFn( item.tags || '-' ))
     ; __append("</td>\n                <td>\n                  <span class=\"status-badge status-")
@@ -846,25 +846,25 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n            <polyline points=\"7 10 12 15 17 10\"/>\n            <line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>\n          </svg>\n          <h3>No patterns yet</h3>\n          <p>Add your first sewing pattern to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Sew Pattern</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"patternForm\">\n        <input type=\"hidden\" id=\"patternId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"patternName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"patternCategory\" required>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Format</label>\n            <select class=\"form-select\" id=\"patternFormat\">\n              <option value=\"zprj\">.zprj</option>\n              <option value=\"obj\">.obj</option>\n              <option value=\"fbx\">.fbx</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"patternStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Pattern File (.zprj)</label>\n          <input type=\"file\" class=\"form-input\" id=\"patternFile\" accept=\".zprj\">\n          <small class=\"form-help\" id=\"patternFileCurrent\"></small>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Preview Image</label>\n          <input type=\"file\" class=\"form-input\" id=\"patternImage\" accept=\"image/*\">\n          <small class=\"form-help\" id=\"patternImageCurrent\"></small>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"patternTags\" placeholder=\"e.g. Free, CLO3D\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"patternDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"savePattern()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst patternForm = document.getElementById('patternForm');\nconst patternsData = ")
     ; __append( JSON.stringify(items || []).replace(/</g, '\\u003c') )
     ; __append(";\nconst patternsById = new Map(patternsData.map(item => [String(item.id), item]));\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Sew Pattern';\n  patternForm.reset();\n  document.getElementById('patternId').value = '';\n  document.getElementById('patternFileCurrent').innerHTML = '';\n  document.getElementById('patternImageCurrent').innerHTML = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editPattern(id) {\n  const item = patternsById.get(String(id));\n  if (!item) return;\n\n  document.getElementById('patternId').value = id;\n  document.getElementById('patternName').value = item.name || '';\n  document.getElementById('patternCategory').value = item.category || '';\n  document.getElementById('patternFormat').value = item.format || 'zprj';\n  document.getElementById('patternTags').value = item.tags || '';\n  document.getElementById('patternDescription').value = item.description || '';\n  document.getElementById('patternStatus').value = item.status || 'active';\n  document.getElementById('patternFile').value = '';\n  document.getElementById('patternImage').value = '';\n  const fileCurrent = document.getElementById('patternFileCurrent');\n  fileCurrent.textContent = '';\n  if (item.file_url) {\n    fileCurrent.append('Current file: ');\n    const fileLink = document.createElement('a');\n    fileLink.href = item.file_url;\n    fileLink.target = '_blank';\n    fileLink.rel = 'noopener';\n    fileLink.textContent = 'Download';\n    fileCurrent.append(fileLink);\n  } else {\n    fileCurrent.textContent = 'No file uploaded yet.';\n  }\n  const imageCurrent = document.getElementById('patternImageCurrent');\n  imageCurrent.textContent = '';\n  if (item.image_url) {\n    imageCurrent.append('Current image: ');\n    const imageLink = document.createElement('a');\n    imageLink.href = item.image_url;\n    imageLink.target = '_blank';\n    imageLink.rel = 'noopener';\n    imageLink.textContent = 'View';\n    imageCurrent.append(imageLink);\n  } else {\n    imageCurrent.textContent = 'No preview image uploaded yet.';\n  }\n\n  modalTitle.textContent = 'Edit Sew Pattern';\n  modal.style.display = 'flex';\n}\n\nasync function getUploadToken(filename, contentType, folder) {\n  const response = await fetch('/admin/upload-token', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ filename, contentType, folder })\n  });\n  const result = await response.json();\n  if (!result.success) {\n    throw new Error(result.error || 'Failed to get upload token');\n  }\n  return result;\n}\n\nasync function uploadFileToR2(file, folder) {\n  const token = await getUploadToken(file.name, file.type || 'application/octet-stream', folder);\n\n  const response = await fetch(token.signedUrl, {\n    method: 'PUT',\n    headers: { 'Content-Type': file.type || 'application/octet-stream' },\n    body: file\n  });\n\n  if (!response.ok) {\n    throw new Error('Upload failed: ' + response.statusText);\n  }\n\n  return token.publicUrl;\n}\n\nasync function savePattern() {\n  const id = document.getElementById('patternId').value;\n  const patternFile = document.getElementById('patternFile').files[0];\n  const patternImage = document.getElementById('patternImage').files[0];\n\n  if (!id && !patternFile) {\n    alert('Please upload a .zprj pattern file.');\n    return;\n  }\n\n  let fileUrl;\n  let imageUrl;\n  if (patternFile) {\n    const fileName = patternFile.name.toLowerCase();\n    if (!fileName.endsWith('.zprj')) {\n      alert('Only .zprj pattern files are allowed.');\n      return;\n    }\n\n    try {\n      fileUrl = await uploadFileToR2(patternFile, 'patterns');\n    } catch (err) {\n      alert('Upload error: ' + err.message);\n      return;\n    }\n  }\n  if (patternImage) {\n    if (!patternImage.type.startsWith('image/')) {\n      alert('Only image files are allowed for the preview.');\n      return;\n    }\n\n    try {\n      imageUrl = await uploadFileToR2(patternImage, 'image');\n    } catch (err) {\n      alert('Preview upload error: ' + err.message);\n      return;\n    }\n  }\n\n  const data = {\n    name: document.getElementById('patternName').value,\n    category: document.getElementById('patternCategory').value,\n    format: document.getElementById('patternFormat').value,\n    status: document.getElementById('patternStatus').value,\n    tags: document.getElementById('patternTags').value,\n    description: document.getElementById('patternDescription').value\n  };\n\n  if (fileUrl) {\n    data.file_url = fileUrl;\n  }\n  if (imageUrl) {\n    data.image_url = imageUrl;\n  }\n\n  const url = id ? '/admin/patterns/' + id : '/admin/patterns';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving pattern');\n  }\n}\n\nasync function deletePattern(id) {\n  if (!confirm('Are you sure you want to delete this pattern?')) return;\n\n  try {\n    const response = await fetch('/admin/patterns/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting pattern');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editPattern(id);\n  } else if (action === 'delete') {\n    deletePattern(id);\n  }\n});\n</script>\n\n")
@@ -928,9 +928,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Tools</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Tool</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Tools</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search tools...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Type</th>\n              <th>URL</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -954,25 +954,25 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/>\n          </svg>\n          <h3>No tools yet</h3>\n          <p>Add your first tool to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Tool</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"toolForm\">\n        <input type=\"hidden\" id=\"toolId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"toolName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"toolType\" required>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"toolStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">URL</label>\n          <input type=\"url\" class=\"form-input\" id=\"toolUrl\" placeholder=\"https://...\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"toolTags\" placeholder=\"e.g. Free, Tutorial\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"toolDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveTool()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst toolForm = document.getElementById('toolForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Tool';\n  toolForm.reset();\n  document.getElementById('toolId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editTool(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('toolId').value = id;\n  document.getElementById('toolName').value = cells[1].textContent;\n  document.getElementById('toolType').value = cells[2].textContent;\n  document.getElementById('toolUrl').value = cells[3].textContent === '-' ? '' : cells[3].textContent;\n  document.getElementById('toolTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('toolStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit Tool';\n  modal.style.display = 'flex';\n}\n\nasync function saveTool() {\n  const id = document.getElementById('toolId').value;\n  const data = {\n    name: document.getElementById('toolName').value,\n    type: document.getElementById('toolType').value,\n    status: document.getElementById('toolStatus').value,\n    url: document.getElementById('toolUrl').value,\n    tags: document.getElementById('toolTags').value,\n    description: document.getElementById('toolDescription').value\n  };\n\n  const url = id ? '/admin/tools/' + id : '/admin/tools';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving tool');\n  }\n}\n\nasync function deleteTool(id) {\n  if (!confirm('Are you sure you want to delete this tool?')) return;\n\n  try {\n    const response = await fetch('/admin/tools/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting tool');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editTool(id);\n  } else if (action === 'delete') {\n    deleteTool(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1034,9 +1034,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Users</h1>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Users</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -1054,11 +1054,11 @@ title = __locals.title,
     ; __append("</td>\n                <td>\n                  <div class=\"table-actions\">\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          <h3>No users yet</h3>\n          <p>Users will appear here once they register.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<script>\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Delete user\nasync function deleteUser(id) {\n  if (!confirm('Are you sure you want to delete this user?')) return;\n\n  try {\n    const response = await fetch('/admin/users/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting user');\n  }\n}\n\n// Event delegation for delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'delete') {\n    deleteUser(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1120,11 +1120,11 @@ title = __locals.title,
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
     ; __append("</h1>\n      \n      ")
-    ;  if (typeof error !== 'undefined') {
+    ;  if (typeof error !== 'undefined') { 
     ; __append("\n        <div class=\"auth-error\">")
     ; __append(escapeFn( error ))
     ; __append("</div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n\n      <form action=\"/auth/login\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.email') ))
     ; __append("</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-input\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"password\" class=\"form-label\">")
@@ -1196,11 +1196,11 @@ title = __locals.title,
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
     ; __append("</h1>\n      \n      ")
-    ;  if (typeof error !== 'undefined') {
+    ;  if (typeof error !== 'undefined') { 
     ; __append("\n        <div class=\"auth-error\">")
     ; __append(escapeFn( error ))
     ; __append("</div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n\n      <form action=\"/auth/register\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"name\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.name') ))
     ; __append("</label>\n          <input type=\"text\" id=\"name\" name=\"name\" class=\"form-input\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
@@ -1272,16 +1272,34 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n\n")
-    ;  if (resourceType === '3d-models') {
+    ;  if (resourceType === '3d-models') { 
     ; __append("\n  ")
-    ;
+    ; 
     const categoryModelCount = items && items.length ? items.length : 0;
     const categoryOutputCards = landingContent && landingContent.output && landingContent.output.cards ? landingContent.output.cards.slice(0, 3) : [];
     const categoryWorkflow = landingContent && landingContent.workflow ? landingContent.workflow : {};
     const firstModel = items && items.length ? items[0] : null;
     const categoryLabel = category.name || 'apparel';
     const categoryLower = categoryLabel.toLowerCase();
-
+    const categoryToolMap = {
+      't-shirt-mockup': [
+        ['/tools/t-shirt-mockup-generator', 'Free T-shirt mockup generator'],
+        ['/tools/oversized-t-shirt-mockup-generator', 'Oversized T-shirt mockups'],
+        ['/tools/front-and-back-t-shirt-mockup', 'Front and back T-shirt views'],
+        ['/tools/polo-shirt-mockup-generator', 'Polo shirt mockups'],
+        ['/tools/long-sleeve-shirt-mockup-generator', 'Long-sleeve shirt mockups']
+      ],
+      'hoodie-mockup': [
+        ['/tools/hoodie-mockup-generator', 'Free hoodie mockup generator'],
+        ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie mockups'],
+        ['/tools/print-on-demand-mockup-generator', 'POD apparel mockups']
+      ]
+    };
+    const categoryToolLinks = categoryToolMap[category.slug] || [
+      ['/tools/3d-clothing-mockup-generator', `Free ${categoryLabel} 3D mockups`],
+      ['/tools/transparent-apparel-mockup-generator', 'Transparent apparel PNGs']
+    ];
+  
     ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/mockups\">")
     ; __append(escapeFn( resourceTypeLabel ))
     ; __append("</a>\n        <span>/</span>\n        <span>")
@@ -1291,29 +1309,29 @@ title = __locals.title,
     ; __append(" mockups</span>\n      <h1 class=\"page-title\">")
     ; __append(escapeFn( category.meta_title || category.name ))
     ; __append("</h1>\n      ")
-    ;  if (category.description) {
+    ;  if (category.description) { 
     ; __append("\n        <p class=\"page-subtitle category-seo-copy\">")
     ; __append(escapeFn( category.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      <div class=\"category-hero-meta\">\n        <span>")
     ; __append(escapeFn( categoryModelCount ? `${categoryModelCount} free models` : 'Free mockup category' ))
     ; __append("</span>\n        <span>3D garment mockups</span>\n        <span>Transparent render workflow</span>\n      </div>\n      <div class=\"category-hero-actions\">\n        <a href=\"#free-models\" class=\"btn btn-primary\">Browse free ")
     ; __append(escapeFn( categoryLower ))
     ; __append(" models</a>\n        ")
-    ;  if (firstModel) {
+    ;  if (firstModel) { 
     ; __append("\n          <a href=\"/3d-models/")
     ; __append(escapeFn( firstModel.category_slug || category.slug ))
     ; __append("/")
     ; __append(escapeFn( firstModel.slug ))
     ; __append("\" class=\"btn btn-secondary\">Open first mockup model</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n      <div class=\"category-hero-filters\" aria-label=\"Mockup categories\">\n        <span class=\"category-hero-filter-label\">Categories</span>\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n          </a>\n          ")
-    ;  (categories || []).forEach(function(cat) {
+    ;  (categories || []).forEach(function(cat) { 
     ; __append("\n            <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"filter-btn ")
@@ -1323,11 +1341,11 @@ title = __locals.title,
     ; __append("\n              <span>")
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n            </a>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section category-models-section\">\n    <div class=\"container\">\n      <div id=\"free-models\" class=\"category-models-anchor\" aria-hidden=\"true\"></div>\n\n      <div class=\"models-grid\">\n        ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n          ")
-    ;  items.forEach(function(model) {
+    ;  items.forEach(function(model) { 
     ; __append("\n            <a href=\"/3d-models/")
     ; __append(escapeFn( category.slug ))
     ; __append("/")
@@ -1335,63 +1353,73 @@ title = __locals.title,
     ; __append("\" class=\"model-card\" data-category=\"")
     ; __append(escapeFn( category.slug ))
     ; __append("\">\n              <div class=\"model-preview-3d\">\n                ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-img\">\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <div class=\"model-placeholder\">\n                    <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n                  </div>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">Open model</span>\n                </div>\n              </div>\n            </a>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n          <div class=\"empty-state model-empty-state\">\n            <svg class=\"empty-state-illustration\" width=\"120\" height=\"96\" viewBox=\"0 0 120 96\" fill=\"none\" aria-hidden=\"true\">\n              <rect x=\"24\" y=\"18\" width=\"72\" height=\"58\" rx=\"6\" fill=\"#f5f5f5\" stroke=\"#d4d4d4\" stroke-width=\"2\"/>\n              <path d=\"M43 18c2.8 9.2 31.2 9.2 34 0\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n              <path d=\"M24 31 13 43l13 13M96 31l11 12-11 13\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              <path d=\"M43 52h34M49 62h22\" stroke=\"#b8b8b8\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n              <circle cx=\"91\" cy=\"74\" r=\"12\" fill=\"#ffffff\" stroke=\"#111111\" stroke-width=\"2\"/>\n              <path d=\"m99 82 8 8\" stroke=\"#111111\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n            </svg>\n            <h3>No ")
     ; __append(escapeFn( category.name ))
     ; __append(" models yet</h3>\n            <p>There are no active 3D models in this category right now.</p>\n          </div>\n        ")
-    ;  }
+    ;  } 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"generator-section category-tool-links-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Create with these models</span>\n        <h2>Free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" mockup tools</h2>\n      </div>\n      <div class=\"tool-picker-grid\">\n        ")
+    ;  categoryToolLinks.forEach(function(link) { 
+    ; __append("\n          <a href=\"")
+    ; __append(escapeFn( link[0] ))
+    ; __append("\">")
+    ; __append(escapeFn( link[1] ))
+    ; __append("</a>\n        ")
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n\n  ")
-    ;  if (categoryOutputCards.length) {
+    ;  if (categoryOutputCards.length) { 
     ; __append("\n    <section class=\"category-intent-section category-intent-section-top\">\n      <div class=\"container\">\n        <div class=\"category-section-kicker\">\n          <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( landingContent.output.eyebrow || 'Use cases' ))
     ; __append("</span>\n          <h2>")
     ; __append(escapeFn( landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` ))
     ; __append("</h2>\n          ")
-    ;  if (categoryWorkflow.description) {
+    ;  if (categoryWorkflow.description) { 
     ; __append("\n            <p>")
     ; __append(escapeFn( categoryWorkflow.description ))
     ; __append("</p>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
-    ;  categoryOutputCards.forEach(function(card) {
+    ;  categoryOutputCards.forEach(function(card) { 
     ; __append("\n            <article class=\"category-intent-item ")
     ; __append(escapeFn( card.image_url ? 'category-intent-item-with-media' : '' ))
     ; __append("\">\n              ")
-    ;  if (card.image_url) {
+    ;  if (card.image_url) { 
     ; __append("\n                <div class=\"category-intent-media\">\n                  <img src=\"")
     ; __append(escapeFn( card.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
     ; __append(" apparel mockup use case\" loading=\"lazy\">\n                </div>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n              <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( card.body ))
     ; __append("</p>\n            </article>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    </section>\n  ")
-    ;  }
+    ;  } 
     ; __append("\n\n  ")
     ; __append( include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) )
     ; __append("\n")
-    ;  } else {
+    ;  } else { 
     ; __append("\n  <section class=\"category-hero\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/")
     ; __append(escapeFn( resourceType ))
     ; __append("\">")
@@ -1401,60 +1429,60 @@ title = __locals.title,
     ; __append("</span>\n      </div>\n      <h1 class=\"category-title\">")
     ; __append(escapeFn( category.name ))
     ; __append("</h1>\n      ")
-    ;  if (category.description) {
+    ;  if (category.description) { 
     ; __append("\n        <p class=\"category-description\">")
     ; __append(escapeFn( category.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </section>\n\n  <section class=\"category-content\">\n    <div class=\"container\">\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <div class=\"resource-grid\">\n          ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n            <div class=\"resource-card\">\n              <div class=\"resource-image\">\n                ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                  <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name || item.title ))
     ; __append("\">\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <div class=\"resource-placeholder\">\n                    <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\">\n                      <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                      <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                      <path d=\"M21 15l-5-5L5 21\"/>\n                    </svg>\n                  </div>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n              <div class=\"resource-info\">\n                <h3 class=\"resource-name\">")
     ; __append(escapeFn( item.name || item.title ))
     ; __append("</h3>\n                ")
-    ;  if (item.description) {
+    ;  if (item.description) { 
     ; __append("\n                  <p class=\"resource-desc\">")
     ; __append(escapeFn( item.description ))
     ; __append("</p>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n                ")
-    ;  if (item.tags) {
+    ;  if (item.tags) { 
     ; __append("\n                  <div class=\"resource-tags\">\n                    ")
-    ;  item.tags.split(',').forEach(tag => {
+    ;  item.tags.split(',').forEach(tag => { 
     ; __append("\n                      <span class=\"tag\">")
     ; __append(escapeFn( tag.trim() ))
     ; __append("</span>\n                    ")
-    ;  })
+    ;  }) 
     ; __append("\n                  </div>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n            </div>\n          ")
-    ;  })
+    ;  }) 
     ; __append("\n        </div>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"64\" height=\"64\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\">\n            <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n            <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n          </svg>\n          <h3>No items yet</h3>\n          <p>Check back soon for new ")
     ; __append(escapeFn( category.name.toLowerCase() ))
     ; __append(".</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </section>\n  ")
-    ;  if (landingContent) {
+    ;  if (landingContent) { 
     ; __append("\n    ")
     ; __append( include('partials/generator-sections', { landingContent, categories, items, resourceType }) )
     ; __append("\n  ")
-    ;  }
+    ;  } 
     ; __append("\n")
-    ;  }
-    ; __append("\n\n<style>\n.category-page-header .category-breadcrumbs {\n  justify-content: flex-start;\n}\n\n.category-seo-copy {\n  max-width: 760px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n@media (max-width: 768px) {\n  .category-page-header .container {\n    width: 100%;\n    max-width: 100%;\n    padding-left: 24px;\n    padding-right: 24px;\n    text-align: left;\n  }\n\n  .category-page-header .page-title,\n  .category-page-header .category-seo-copy {\n    width: 100%;\n    max-width: 342px;\n    margin-left: 0;\n    margin-right: auto;\n    overflow-wrap: break-word;\n  }\n\n  .category-page-header .page-title {\n    font-size: 34px;\n    line-height: 1.08;\n  }\n\n  .category-page-header .category-seo-copy {\n    font-size: 16px;\n    line-height: 1.45;\n  }\n\n  .category-hero-meta {\n    justify-content: flex-start;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    max-width: 100%;\n    padding-bottom: 2px;\n    -webkit-overflow-scrolling: touch;\n  }\n\n	  .category-hero-meta span {\n	    flex: 0 0 auto;\n	  }\n\n	  .category-hero-actions {\n	    width: 100%;\n	    justify-content: flex-start;\n	  }\n\n	  .category-hero-actions .btn {\n	    width: 100%;\n	    max-width: 300px;\n	    justify-content: center;\n	  }\n\n	  .category-section-kicker,\n	  .category-models-header {\n	    max-width: 342px;\n	    margin-left: 0;\n	    text-align: left;\n	  }\n\n	  .category-section-kicker h2,\n	  .category-models-header h2 {\n	    font-size: 30px;\n	    line-height: 1.1;\n	    letter-spacing: -0.02em;\n	  }\n\n	  .category-section-kicker p,\n	  .category-models-header p {\n	    font-size: 15px;\n	  }\n	}\n\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
+    ;  } 
+    ; __append("\n\n<style>\n.category-page-header .category-breadcrumbs {\n  justify-content: flex-start;\n}\n\n.category-seo-copy {\n  max-width: 760px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n@media (max-width: 768px) {\n  .category-page-header .container {\n    width: 100%;\n    max-width: 100%;\n    padding-left: 24px;\n    padding-right: 24px;\n    text-align: left;\n  }\n\n  .category-page-header .page-title,\n  .category-page-header .category-seo-copy {\n    width: 100%;\n    max-width: 342px;\n    margin-left: 0;\n    margin-right: auto;\n    overflow-wrap: break-word;\n  }\n\n  .category-page-header .page-title {\n    font-size: 34px;\n    line-height: 1.08;\n  }\n\n  .category-page-header .category-seo-copy {\n    font-size: 16px;\n    line-height: 1.45;\n  }\n\n  .category-hero-meta {\n    justify-content: flex-start;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    max-width: 100%;\n    padding-bottom: 2px;\n    -webkit-overflow-scrolling: touch;\n  }\n\n	  .category-hero-meta span {\n	    flex: 0 0 auto;\n	  }\n\n	  .category-hero-actions {\n	    width: 100%;\n	    justify-content: flex-start;\n	  }\n\n	  .category-hero-actions .btn {\n	    width: 100%;\n	    max-width: 300px;\n	    justify-content: center;\n	  }\n\n	  .category-section-kicker,\n	  .category-models-header {\n	    max-width: 342px;\n	    margin-left: 0;\n	    text-align: left;\n	  }\n\n	  .category-section-kicker h2,\n	  .category-models-header h2 {\n	    font-size: 30px;\n	    line-height: 1.1;\n	    letter-spacing: 0;\n	  }\n\n	  .category-section-kicker p,\n	  .category-models-header p {\n	    font-size: 15px;\n	  }\n	}\n\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -1635,7 +1663,7 @@ title = __locals.title,
     ; __append("\n          <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n        </a>\n        ")
-    ;  categories.forEach(function(cat) {
+    ;  categories.forEach(function(cat) { 
     ; __append("\n          <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"filter-btn\">\n            ")
@@ -1643,11 +1671,11 @@ title = __locals.title,
     ; __append("\n            <span>")
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
-    ;  if (models && models.length > 0) {
+    ;  if (models && models.length > 0) { 
     ; __append("\n        ")
-    ;  models.forEach(function(model) {
+    ;  models.forEach(function(model) { 
     ; __append("\n          <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -1655,25 +1683,25 @@ title = __locals.title,
     ; __append("\" class=\"model-card\" data-category=\"")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">\n            <div class=\"model-preview-3d\">\n              ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n                <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-img\">\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n                </div>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                </div>\n              </div>\n            </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <p>No 3D models available yet.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/generator-sections', { landingContent, categories, models }) )
     ; __append("\n\n")
@@ -1735,7 +1763,7 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;  const previewModelFileUrl = model.file_url;
+    ;  const previewModelFileUrl = model.file_url; 
     ; __append("\n\n<section class=\"designer-page\">\n  <div class=\"designer-toolbar\">\n    <div class=\"designer-toolbar-left\">\n      <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -1743,19 +1771,19 @@ title = __locals.title,
     ; __append("\" class=\"btn btn-ghost btn-small\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M19 12H5M12 19l-7-7 7-7\"/>\n        </svg>\n        Back\n      </a>\n      <h1 class=\"designer-title\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n        <model-viewer \n          class=\"model-viewer-natural\"\n          id=\"designerViewer\"\n          src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n          alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\"\n          camera-controls\n          auto-rotate\n          shadow-intensity=\"1.55\"\n          shadow-softness=\"0.52\"\n          exposure=\"0.66\"\n          environment-image=\"neutral\"\n          style=\"width: 100%; height: 100%;\"\n        ></model-viewer>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"designer-placeholder\">\n          <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\">\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    // Apply color to model (if material is accessible)\n    if (viewer && viewer.model) {\n      const color = btn.dataset.color;\n      // Note: Actual material manipulation requires model materials to be exposed\n      console.log('Apply color:', color, 'to', target);\n    }\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    console.log('Apply pattern:', btn.dataset.pattern);\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n  });\n}\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n  });\n}\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', () => {\n    if (viewer && viewer.toDataURL) {\n      const link = document.createElement('a');\n      link.download = '")
     ; __append(escapeFn( model.slug ))
     ; __append("-design.png';\n      link.href = viewer.toDataURL('image/png');\n      link.click();\n    } else {\n      alert('Render download is not available for this model.');\n    }\n  });\n}\n</script>\n\n")
@@ -1936,53 +1964,53 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;  const content = homeContent || {};
+    ;  const content = homeContent || {}; 
     ; __append("\n")
-    ;  const heroImages = content.heroImages || [];
+    ;  const heroImages = content.heroImages || []; 
     ; __append("\n")
-    ;  const stats = content.stats || [];
+    ;  const stats = content.stats || []; 
     ; __append("\n")
-    ;  const workflow = content.workflow || [];
+    ;  const workflow = content.workflow || []; 
     ; __append("\n")
-    ;  const useCases = content.useCases || [];
+    ;  const useCases = content.useCases || []; 
     ; __append("\n")
-    ;  const faq = content.faq || [];
+    ;  const faq = content.faq || []; 
     ; __append("\n")
-    ;  const featuredModels = content.featuredModels || [];
+    ;  const featuredModels = content.featuredModels || []; 
     ; __append("\n")
-    ;  const featuredCategories = content.featuredCategories || [];
+    ;  const featuredCategories = content.featuredCategories || []; 
     ; __append("\n\n<section class=\"home-hero\">\n  <div class=\"home-hero-media\" aria-hidden=\"true\">\n    ")
-    ;  heroImages.forEach(function(image, index) {
+    ;  heroImages.forEach(function(image, index) { 
     ; __append("\n      <img src=\"")
     ; __append(escapeFn( image.src ))
     ; __append("\" alt=\"\" class=\"home-hero-model home-hero-model-")
     ; __append(escapeFn( index + 1 ))
     ; __append("\">\n    ")
-    ;  });
+    ;  }); 
     ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\" data-analytics-event=\"home_hero_models_click\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\" data-analytics-event=\"home_hero_mockup_tool_click\">Create a Clothing Mockup</a>\n      </div>\n      ")
-    ;  if (stats.length) {
+    ;  if (stats.length) { 
     ; __append("\n        <dl class=\"home-hero-stats home-hero-reveal\">\n          ")
-    ;  stats.forEach(function(stat) {
+    ;  stats.forEach(function(stat) { 
     ; __append("\n            <div>\n              <dt>")
     ; __append(escapeFn( stat.value ))
     ; __append("</dt>\n              <dd>")
     ; __append(escapeFn( stat.label ))
     ; __append("</dd>\n            </div>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </dl>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClothingDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
-    ;  workflow.forEach(function(step, index) {
+    ;  workflow.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
     ; __append(" home-reveal-card\">\n          ")
-    ;  if (step.image_url) {
+    ;  if (step.image_url) { 
     ; __append("\n            <div class=\"generator-step-media\">\n              <img src=\"")
     ; __append(escapeFn( step.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( step.title ))
     ; __append(" apparel mockup workflow step\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3 class=\"home-copy-reveal\">")
@@ -1990,11 +2018,11 @@ title = __locals.title,
     ; __append("</h3>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( step.text ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (featuredCategories.length) {
+    ;  if (featuredCategories.length) { 
     ; __append("\n<section class=\"generator-section generator-section-muted home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free model categories</span>\n      <h2 class=\"home-copy-reveal\">Browse 3D clothing models by garment type</h2>\n      <p class=\"home-copy-reveal\">Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models for mockup and print placement work.</p>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
-    ;  featuredCategories.forEach(function(category) {
+    ;  featuredCategories.forEach(function(category) { 
     ; __append("\n        <a href=\"/mockups/")
     ; __append(escapeFn( category.slug ))
     ; __append("\" class=\"generator-category-card home-reveal-card\" data-analytics-event=\"home_category_")
@@ -2004,23 +2032,23 @@ title = __locals.title,
     ; __append("\" data-analytics-category=\"")
     ; __append(escapeFn( category.slug ))
     ; __append("\">\n          ")
-    ;  if (category.image_url) {
+    ;  if (category.image_url) { 
     ; __append("\n            <div class=\"generator-category-media\">\n              <img src=\"")
     ; __append(escapeFn( category.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( category.name ))
     ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <div class=\"generator-category-copy\">\n            <small class=\"home-copy-reveal\">Free mockup category</small>\n            <strong class=\"home-copy-reveal\">")
     ; __append(escapeFn( category.name ))
     ; __append("</strong>\n          </div>\n          <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M5 12h14\"/>\n            <path d=\"m12 5 7 7-7 7\"/>\n          </svg>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
-    ; __append("\n\n")
-    ;  if (featuredModels.length) {
+    ;  } 
+    ; __append("\n\n<section class=\"generator-section home-tool-links home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free mockup tools</span>\n      <h2 class=\"home-copy-reveal\">Start with the garment you actually need</h2>\n      <p class=\"home-copy-reveal\">Open a live 3D garment, test colors and views, upload artwork, then export a transparent apparel mockup.</p>\n    </div>\n    <div class=\"tool-picker-grid home-reveal-card\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockup generator</a>\n      <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockup</a>\n      <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt mockup</a>\n      <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockup generator</a>\n      <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long sleeve shirt mockup</a>\n      <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockup</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockup</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD clothing mockup generator</a>\n    </div>\n  </div>\n</section>\n\n")
+    ;  if (featuredModels.length) { 
     ; __append("\n<section class=\"home-featured-models home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Featured models</span>\n      <h2 class=\"home-copy-reveal\">Popular free 3D apparel models for mockups</h2>\n      <p class=\"home-copy-reveal\">Open a model detail page to view the garment, plan artwork placement, customize colors, and export a clean transparent product image.</p>\n    </div>\n    <div class=\"models-grid\">\n      ")
-    ;  featuredModels.forEach(function(model) {
+    ;  featuredModels.forEach(function(model) { 
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -2032,45 +2060,45 @@ title = __locals.title,
     ; __append("\" data-analytics-category=\"")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">\n          <div class=\"model-preview-3d\">\n            ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-img\">\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <div class=\"model-placeholder\">\n                <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n          <div class=\"model-info\">\n            <h3 class=\"model-name home-copy-reveal\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h3>\n            <p class=\"model-meta home-copy-reveal\">")
     ; __append(escapeFn( model.category_label || model.category ))
     ; __append("</p>\n          </div>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section generator-section-muted home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Use cases</span>\n      <h2 class=\"home-copy-reveal\">Built for apparel mockups, not generic 3D downloads</h2>\n      <p class=\"home-copy-reveal\">Use ClothingDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  useCases.forEach(function(item) {
+    ;  useCases.forEach(function(item) { 
     ; __append("\n        <article class=\"generator-output-card ")
     ; __append(escapeFn( item.image_url ? 'generator-output-card-with-media' : '' ))
     ; __append(" home-reveal-card\">\n          ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n            <div class=\"generator-output-media\">\n              <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.title ))
     ; __append(" apparel mockup use case\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <h3 class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.title ))
     ; __append("</h3>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.text ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">FAQ</span>\n      <h2 class=\"home-copy-reveal\">Free 3D clothing model questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
-    ;  faq.forEach(function(item, index) {
+    ;  faq.forEach(function(item, index) { 
     ; __append("\n        <details class=\"generator-faq-item home-reveal-card\" data-analytics-event=\"home_faq_")
     ; __append(escapeFn( index + 1 ))
     ; __append("_toggle\" data-analytics-item=\"")
@@ -2082,7 +2110,7 @@ title = __locals.title,
     ; __append("</summary>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/mockups\" class=\"btn btn-primary\" data-analytics-event=\"home_bottom_models_click\">Browse free 3D clothing models</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -2142,33 +2170,33 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;  const detailContent = modelDetailContent || {};
+    ;  const detailContent = modelDetailContent || {}; 
     ; __append("\n")
-    ;  const previewModelFileUrl = model.file_url;
+    ;  const previewModelFileUrl = model.file_url; 
     ; __append("\n")
-    ;  const howToSteps = detailContent.howToSteps || [];
+    ;  const howToSteps = detailContent.howToSteps || []; 
     ; __append("\n")
-    ;  const applications = detailContent.applications || [];
+    ;  const applications = detailContent.applications || []; 
     ; __append("\n")
-    ;  const faqItems = detailContent.faqItems || [];
+    ;  const faqItems = detailContent.faqItems || []; 
     ; __append("\n")
-    ;  const detailCta = detailContent.cta || {};
+    ;  const detailCta = detailContent.cta || {}; 
     ; __append("\n")
-    ;  const howToIcons = ['open', 'inspect', 'simulate', 'download'];
+    ;  const howToIcons = ['open', 'inspect', 'simulate', 'download']; 
     ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer\" id=\"model3dViewer\">\n          ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n              alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">")
@@ -2178,115 +2206,135 @@ title = __locals.title,
     ; __append("</span>\n        </div>\n        \n        <h1 class=\"model-detail-title\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h1>\n        \n        <div class=\"model-detail-meta\">\n          <span class=\"tag tag-free\">Free</span>\n          ")
-    ;  if (model.poly_count) {
+    ;  if (model.poly_count) { 
     ; __append("\n            <span class=\"meta-item\">")
     ; __append(escapeFn( model.poly_count ))
     ; __append("</span>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n\n        <div class=\"model-description\">\n          <h3>Description</h3>\n          <p>")
     ; __append(escapeFn( model.description || 'No description available.' ))
     ; __append("</p>\n        </div>\n\n        ")
-    ;  if (detailContent.searchIntentSummary) {
+    ;  if (detailContent.searchIntentSummary) { 
     ; __append("\n          <div class=\"model-description model-search-summary\">\n            <h3>Mockup workflow</h3>\n            <p>")
     ; __append(escapeFn( detailContent.searchIntentSummary ))
     ; __append("</p>\n          </div>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n        <div class=\"model-specs\">\n          <h3>Specifications</h3>\n          <div class=\"specs-grid\">\n            ")
-    ;  (detailContent.formatNotes || []).forEach(function(note) {
+    ;  (detailContent.formatNotes || []).forEach(function(note) { 
     ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">")
     ; __append(escapeFn( note.label ))
     ; __append("</span>\n                <span class=\"spec-value\">")
     ; __append(escapeFn( note.value ))
     ; __append("</span>\n              </div>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n            ")
-    ;  if (model.file_size) {
+    ;  if (model.file_size) { 
     ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">File Size</span>\n                <span class=\"spec-value\">")
     ; __append(escapeFn( model.file_size ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n        </div>\n\n        ")
-    ;  if (detailContent.tagList && detailContent.tagList.length) {
+    ;  if (detailContent.tagList && detailContent.tagList.length) { 
     ; __append("\n          <div class=\"model-keyword-list\" aria-label=\"Related model topics\">\n            ")
-    ;  detailContent.tagList.forEach(function(tag) {
+    ;  detailContent.tagList.forEach(function(tag) { 
     ; __append("\n              <span>")
     ; __append(escapeFn( tag ))
     ; __append("</span>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          </div>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Design Now\n          </button>\n          ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download HD Render\n            </button>\n          ")
-    ;  }
-    ; __append("\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Scene Showcase -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Scene Showcase</h2>\n    <p class=\"section-subtitle\">See how this model looks in different environments</p>\n    \n    <div class=\"showcase-grid\">\n      <div class=\"showcase-item\">\n        <div class=\"showcase-image\">\n          <img src=\"")
-    ; __append(escapeFn( model.image_url || '/images/placeholder.jpg' ))
-    ; __append("\" alt=\"Studio Lighting\">\n        </div>\n        <span class=\"showcase-label\">Studio</span>\n      </div>\n      <div class=\"showcase-item\">\n        <div class=\"showcase-image\">\n          <img src=\"")
-    ; __append(escapeFn( model.image_url || '/images/placeholder.jpg' ))
-    ; __append("\" alt=\"Outdoor Scene\">\n        </div>\n        <span class=\"showcase-label\">Outdoor</span>\n      </div>\n      <div class=\"showcase-item\">\n        <div class=\"showcase-image\">\n          <img src=\"")
-    ; __append(escapeFn( model.image_url || '/images/placeholder.jpg' ))
-    ; __append("\" alt=\"Runway\">\n        </div>\n        <span class=\"showcase-label\">Runway</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) {
+    ;  } 
+    ; __append("\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Searchable model assets -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">")
+    ; __append(escapeFn( model.name ))
+    ; __append(" model views</h2>\n    <p class=\"section-subtitle\">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>\n    \n    <div class=\"showcase-grid\">\n      ")
+    ;  if (model.image_url) { 
+    ; __append("\n        <div class=\"showcase-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
+    ; __append(escapeFn( model.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append(" front 3D apparel mockup preview\">\n          </div>\n          <span class=\"showcase-label\">Garment preview</span>\n        </div>\n      ")
+    ;  } 
+    ; __append("\n      ")
+    ;  if (model.texture_url) { 
+    ; __append("\n        <div class=\"showcase-item showcase-texture-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
+    ; __append(escapeFn( model.texture_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append(" UV texture and artwork placement layout\">\n          </div>\n          <span class=\"showcase-label\">UV artwork layout</span>\n        </div>\n      ")
+    ;  } 
+    ; __append("\n      <div class=\"showcase-item\">\n        <div class=\"showcase-image\">\n          ")
+    ;  if (previewModelFileUrl) { 
+    ; __append("\n            <model-viewer\n              class=\"model-viewer-natural showcase-side-viewer\"\n              src=\"")
+    ; __append(escapeFn( previewModelFileUrl ))
+    ; __append("\"\n              alt=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append(" side silhouette 3D view\"\n              camera-controls\n              camera-orbit=\"90deg 75deg 112%\"\n              shadow-intensity=\"1.2\"\n              exposure=\"0.72\"\n              environment-image=\"neutral\"\n            ></model-viewer>\n          ")
+    ;  } 
+    ; __append("\n        </div>\n        <span class=\"showcase-label\">Side silhouette</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { 
     ; __append("\n<section class=\"model-seo-section generator-section\">\n  <div class=\"container\">\n    ")
-    ;  if (howToSteps.length) {
+    ;  if (howToSteps.length) { 
     ; __append("\n      <div class=\"model-seo-block model-howto-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Design workflow</span>\n          <h2>How to design ")
     ; __append(escapeFn( model.name ))
     ; __append("</h2>\n          <p>Use the browser-based Design3D studio to customize the model, review the garment preview, and export a high-resolution render.</p>\n        </div>\n        <div class=\"pattern-step-card-grid\">\n          ")
-    ;  howToSteps.forEach(function(step, index) {
+    ;  howToSteps.forEach(function(step, index) { 
     ; __append("\n            ")
-    ;  const icon = howToIcons[index] || 'inspect';
+    ;  const icon = howToIcons[index] || 'inspect'; 
     ; __append("\n            ")
-    ;  const stepTitle = step.name || step.title;
+    ;  const stepTitle = step.name || step.title; 
     ; __append("\n            ")
-    ;  const stepText = step.text || step.body;
+    ;  const stepText = step.text || step.body; 
     ; __append("\n            <article class=\"pattern-step-card\">\n              <div class=\"pattern-step-media pattern-step-media-")
     ; __append(escapeFn( icon ))
     ; __append("\">\n                <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n                ")
-    ;  if (icon === 'download') {
+    ;  if (icon === 'download') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                    <path d=\"M40 22v25\"/>\n                    <path d=\"m29 38 11 11 11-11\"/>\n                    <path d=\"M27 59h26\"/>\n                  </svg>\n                ")
-    ;  } else if (icon === 'open') {
+    ;  } else if (icon === 'open') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                    <path d=\"M12 31h56\"/>\n                    <path d=\"M27 49h16\"/>\n                    <path d=\"M47 41l10 8-10 8\"/>\n                  </svg>\n                ")
-    ;  } else if (icon === 'simulate') {
+    ;  } else if (icon === 'simulate') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M19 55c8-22 20-31 37-31\"/>\n                    <path d=\"M51 19h11v11\"/>\n                    <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                    <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                    <path d=\"M35 56h22\"/>\n                  </svg>\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M18 18h20v20H18z\"/>\n                    <path d=\"M42 18h20v20H42z\"/>\n                    <path d=\"M18 42h20v20H18z\"/>\n                    <path d=\"M42 42h20v20H42z\"/>\n                    <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n                  </svg>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n              <div class=\"pattern-step-copy\">\n                <h3>")
     ; __append(escapeFn( stepTitle ))
     ; __append("</h3>\n                <p>")
     ; __append(escapeFn( stepText ))
     ; __append("</p>\n              </div>\n            </article>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (detailContent.geoSummary) {
+    ;  if (detailContent.geoSummary) { 
     ; __append("\n      <div class=\"model-seo-block model-geo-summary\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">AI overview</span>\n          <h2>")
     ; __append(escapeFn( model.name ))
     ; __append(" summary</h2>\n          <p>")
     ; __append(escapeFn( detailContent.geoSummary ))
     ; __append("</p>\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (applications.length) {
+    ;  if (applications.length) { 
     ; __append("\n      <div class=\"model-seo-block\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Applications</span>\n          <h2>Where this model works best</h2>\n        </div>\n        <div class=\"generator-output-grid model-application-grid\">\n          ")
-    ;  applications.forEach(function(application) {
+    ;  applications.forEach(function(application) { 
     ; __append("\n            <article class=\"generator-output-card\">\n              <h3>")
     ; __append(escapeFn( application.title ))
     ; __append("</h3>\n              <p>")
-    ; __append(escapeFn( application.text ))
+    ; __append(escapeFn( application.text || application.body ))
     ; __append("</p>\n            </article>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (faqItems.length) {
+    ;  if (faqItems.length) { 
     ; __append("\n      <div class=\"model-seo-block model-faq-section generator-faq-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">FAQ</span>\n          <h2>")
     ; __append(escapeFn( model.name ))
     ; __append(" questions</h2>\n        </div>\n        <div class=\"generator-faq-list\">\n          ")
-    ;  faqItems.forEach(function(item, index) {
+    ;  faqItems.forEach(function(item, index) { 
     ; __append("\n            <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n              <summary>")
@@ -2294,73 +2342,73 @@ title = __locals.title,
     ; __append("</summary>\n              <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n            </details>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<!-- Related Models -->\n")
-    ;  if (related && related.length > 0) {
+    ;  if (related && related.length > 0) { 
     ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related Models</h2>\n    \n    <div class=\"models-grid\">\n      ")
-    ;  related.forEach(function(item) {
+    ;  related.forEach(function(item) { 
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( item.category_slug || item.category ))
     ; __append("/")
     ; __append(escapeFn( item.slug ))
     ; __append("\" class=\"model-card\">\n          <div class=\"model-preview-3d\">\n            ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name ))
     ; __append("\" class=\"model-img\">\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <div class=\"model-placeholder\">\n                <span>")
     ; __append(escapeFn( item.name.charAt(0) ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n          <div class=\"model-info\">\n            <h3 class=\"model-name\">")
     ; __append(escapeFn( item.name ))
     ; __append("</h3>\n            <div class=\"model-tags\">\n              <span class=\"tag tag-free\">Free</span>\n            </div>\n          </div>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n")
-    ;  if (detailCta.title || detailCta.text) {
+    ;  if (detailCta.title || detailCta.text) { 
     ; __append("\n<section class=\"model-detail-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>")
     ; __append(escapeFn( detailCta.title || ('Customize ' + model.name) ))
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( detailCta.text || 'Open the 3D design studio, apply artwork, and export a production-ready render.' ))
     ; __append("</p>\n      </div>\n      <button class=\"btn btn-primary btn-large\" id=\"designCtaBtn\">Start Designing</button>\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n\n<!-- Design Modal -->\n<div class=\"design-modal\" id=\"designModal\">\n  <div class=\"design-modal-overlay\" id=\"designModalOverlay\"></div>\n    <div class=\"design-modal-content\">\n      <div class=\"design-modal-header\">\n        <h2>Design Studio - ")
     ; __append(escapeFn( model.name ))
     ; __append("</h2>\n      <div class=\"design-modal-actions\">\n        ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n          <button class=\"btn btn-secondary btn-small\" id=\"downloadRenderModalBtn\">\n            Download HD\n          </button>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\">\n          Apply\n        </button>\n      </div>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- 3D Preview (Top Left) -->\n        <div class=\"preview-3d-panel\">\n          ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              id=\"designerViewer\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n              alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\"\n              camera-controls\n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n            <div class=\"designer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <div class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <span class=\"material-panel-kicker\">Fabric</span>\n                <h3>Material Balls</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n            <div class=\"material-readout\" id=\"materialReadout\">\n              <strong>Choose a material</strong>\n              <span>Surface response applies to the 3D garment preview.</span>\n            </div>\n          </div>\n        </div>\n\n        <!-- Main Texture Design Area (Center) -->\n        <div class=\"texture-canvas-area\">\n          <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\">\n            <defs>\n              <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n            </defs>\n            <rect id=\"textureWhiteBase\" fill=\"#ffffff\"/>\n            <!-- Model SVG Texture Background -->\n            ")
-    ;  if (model.texture_url) {
+    ;  if (model.texture_url) { 
     ; __append("\n              <image id=\"textureBg\" href=\"")
     ; __append(escapeFn( model.texture_url ))
     ; __append("\" preserveAspectRatio=\"none\"/>\n              <g id=\"textureTemplateLayer\"></g>\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <rect id=\"textureBg\" fill=\"#ffffff\"/>\n              <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <rect id=\"texturePattern\" fill=\"none\"/>\n            <g id=\"textureElements\"></g>\n            <g id=\"selectionLayer\" class=\"editor-ui\"></g>\n          </svg>\n        </div>\n\n        <!-- Bottom Global Toolbar -->\n        <div class=\"designer-toolbar\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolPan\" title=\"Pan\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDraw\" title=\"Draw\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M12 20h9\"/>\n                <path d=\"M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z\"/>\n              </svg>\n            </button>\n          </div>\n          <div class=\"toolbar-divider\"></div>\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n            </button>\n          </div>\n          <div class=\"toolbar-divider\"></div>\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn\" id=\"toolUndo\" title=\"Undo\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 7v6h6\"/>\n                <path d=\"M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolRedo\" title=\"Redo\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 7v6h-6\"/>\n                <path d=\"M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13\"/>\n              </svg>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDelete\" title=\"Delete\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 6h18\"/>\n                <path d=\"M8 6V4h8v2\"/>\n                <path d=\"M19 6l-1 14H6L5 6\"/>\n              </svg>\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js\"></script>\n<script src=\"/js/design3d-materials.js\"></script>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fullscreenBtn = document.getElementById('fullscreenBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', () => {\n    viewer.autoRotate = !viewer.autoRotate;\n    rotateBtn.classList.toggle('active');\n  });\n}\n\nif (fullscreenBtn && viewer) {\n  fullscreenBtn.addEventListener('click', () => {\n    if (viewer.requestFullscreen) {\n      viewer.requestFullscreen();\n    }\n  });\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Design Modal\ndocument.addEventListener('DOMContentLoaded', () => {\n  const designNowBtn = document.getElementById('designNowBtn');\n  const designModal = document.getElementById('designModal');\n  const designModalOverlay = document.getElementById('designModalOverlay');\n  const saveDesignModal = document.getElementById('saveDesignModal');\n  const downloadRenderBtn = document.getElementById('downloadRenderBtn');\n  const downloadRenderModalBtn = document.getElementById('downloadRenderModalBtn');\n  const downloadRenderStatus = document.getElementById('downloadRenderStatus');\n  const designCtaBtn = document.getElementById('designCtaBtn');\n  const designerViewer = document.getElementById('designerViewer');\n  const detailViewer = document.querySelector('#model3dViewer model-viewer');\n  const textureCanvasArea = document.querySelector('.texture-canvas-area');\n  const textureSvg = document.getElementById('textureSvg');\n  const textureElements = document.getElementById('textureElements');\n  const texturePattern = document.getElementById('texturePattern');\n  const selectionLayer = document.getElementById('selectionLayer');\n  const materialSwatchGrid = document.getElementById('materialSwatchGrid');\n  const materialReadout = document.getElementById('materialReadout');\n  const materialCount = document.getElementById('materialCount');\n  const elementToolbar = document.createElement('div');\n  elementToolbar.className = 'element-toolbar';\n  elementToolbar.dataset.editorToolbar = 'true';\n  textureCanvasArea.appendChild(elementToolbar);\n  const colorPopover = document.createElement('div');\n  colorPopover.className = 'color-popover';\n  colorPopover.dataset.editorToolbar = 'true';\n  textureCanvasArea.appendChild(colorPopover);\n\n  const SVG_NS = 'http://www.w3.org/2000/svg';\n  const defaultTextContent = ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
     ; __append(";\n  const currentModelCategory = ")
@@ -2379,7 +2427,7 @@ title = __locals.title,
     ; __append( JSON.stringify(Boolean(previewModelFileUrl)) )
     ; __append(") return;\n    setExportingState(true);\n    setRenderStatus('Rendering high-resolution 3D image...');\n\n    try {\n      stopModelRotation();\n      const textureUrl = await createFinalRenderTexture();\n      const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, { mimeType: 'image/png', quality: 0.95 });\n      downloadDataUrl(renderUrl, `${")
     ; __append( JSON.stringify(model.slug || 'designed-3d-model') )
-    ; __append("}-hd-render.png`);\n      setRenderStatus('HD render downloaded.');\n      window.setTimeout(() => setRenderStatus(''), 2800);\n    } catch (error) {\n      console.error('Failed to export designed 3D render:', error);\n      setRenderStatus('Render export failed. Try again after the 3D model finishes loading.');\n    } finally {\n      setExportingState(false);\n    }\n  }\n\n  window.exportDesignedModelCover = async function exportDesignedModelCover(options = {}) {\n    stopModelRotation();\n    const textureUrl = await createFinalRenderTexture();\n    return renderDesignedModelImageWithFallback(textureUrl, {\n      mimeType: options.mimeType || 'image/webp',\n      quality: options.quality ?? 0.95\n    });\n  };\n  window.exportDesignedModelCoverFormats = async function exportDesignedModelCoverFormats(formatOptions = []) {\n    stopModelRotation();\n    const textureUrl = await createFinalRenderTexture();\n    return renderDesignedModelImages(textureUrl, formatOptions);\n  };\n  window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;\n  window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;\n\n  function getCleanElementsHtml() {\n    const clone = textureElements.cloneNode(true);\n    clone.querySelectorAll('[contenteditable]').forEach((element) => {\n      element.removeAttribute('contenteditable');\n      element.classList.remove('is-editing');\n    });\n    clone.querySelectorAll('.texture-element.selected').forEach((element) => {\n      element.classList.remove('selected');\n    });\n    return clone.innerHTML;\n  }\n\n  function getData(group) {\n    if (group.classList?.contains('texture-template-path')) {\n      const bbox = group.getBBox();\n      return {\n        x: bbox.x,\n        y: bbox.y,\n        width: Math.max(minSize, bbox.width),\n        height: Math.max(minSize, bbox.height),\n        baseWidth: Math.max(minSize, bbox.width),\n        baseHeight: Math.max(minSize, bbox.height),\n        fontSize: 24,\n        rotate: 0\n      };\n    }\n    return {\n      x: parseFloat(group.dataset.x || 0),\n      y: parseFloat(group.dataset.y || 0),\n      width: parseFloat(group.dataset.width || 1),\n      height: parseFloat(group.dataset.height || 1),\n      baseWidth: parseFloat(group.dataset.baseWidth || group.dataset.width || 1),\n      baseHeight: parseFloat(group.dataset.baseHeight || group.dataset.height || 1),\n      fontSize: parseFloat(group.dataset.fontSize || 24),\n      rotate: parseFloat(group.dataset.rotate || 0)\n    };\n  }\n\n  function setData(group, patch) {\n    const data = { ...getData(group), ...patch };\n    data.width = Math.max(minSize, data.width);\n    data.height = Math.max(minSize, data.height);\n    group.dataset.x = data.x;\n    group.dataset.y = data.y;\n    group.dataset.width = data.width;\n    group.dataset.height = data.height;\n    group.dataset.baseWidth = data.baseWidth || data.width;\n    group.dataset.baseHeight = data.baseHeight || data.height;\n    group.dataset.fontSize = data.fontSize || parseFloat(group.dataset.fontSize || 24);\n    group.dataset.rotate = data.rotate;\n    group.setAttribute('transform', `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`);\n    renderElementContent(group);\n  }\n\n  function renderElementContent(group) {\n    const data = getData(group);\n    const content = group.querySelector('.texture-content');\n    if (!content) return;\n    const type = group.dataset.type;\n\n    if (type === 'text') {\n      content.setAttribute('width', data.width);\n      content.setAttribute('height', data.height);\n      const textBox = group.querySelector('.texture-text-box');\n      if (textBox) {\n        textBox.style.fontSize = `${Math.max(12, data.fontSize)}px`;\n        textBox.style.color = textBox.dataset.color || '#111827';\n      }\n    } else if (type === 'rect' || type === 'image') {\n      content.setAttribute('width', data.width);\n      content.setAttribute('height', data.height);\n    } else if (type === 'arrow') {\n      const line = group.querySelector('line.texture-content');\n      const head = group.querySelector('polygon');\n      const mid = data.height / 2;\n      const headSize = Math.min(data.height * 0.8, Math.max(10, data.width * 0.22));\n      line.setAttribute('x1', 0);\n      line.setAttribute('y1', mid);\n      line.setAttribute('x2', Math.max(0, data.width - headSize * 0.55));\n      line.setAttribute('y2', mid);\n      line.setAttribute('stroke-width', group.dataset.strokeWidth || Math.max(2, data.height * 0.16));\n      head.setAttribute('points', `${data.width},${mid} ${data.width - headSize},${mid - headSize / 2} ${data.width - headSize},${mid + headSize / 2}`);\n    } else if (type === 'path') {\n      const scaleX = data.width / Math.max(1, data.baseWidth);\n      const scaleY = data.height / Math.max(1, data.baseHeight);\n      content.setAttribute('transform', `scale(${scaleX} ${scaleY})`);\n    }\n  }\n\n  function autoFitTextHeight(group) {\n    if (!group || group.dataset.type !== 'text') return false;\n    const textBox = group.querySelector('.texture-text-box');\n    if (!textBox) return false;\n    const data = getData(group);\n    const previousHeight = textBox.style.height;\n    textBox.style.height = 'auto';\n    const nextHeight = Math.max(minSize, Math.ceil(textBox.scrollHeight));\n    textBox.style.height = previousHeight || '100%';\n    if (Math.abs(nextHeight - data.height) <= 1) return false;\n    setData(group, { height: nextHeight });\n    return true;\n  }\n\n  function setElementColor(group, color) {\n    if (!group) return;\n    if (group.classList?.contains('texture-template-path')) {\n      group.dataset.color = color;\n      const fillPath = getTemplateFillPath(group, true, true);\n      fillPath.setAttribute('fill', getSvgPaint(group, color, 'fill'));\n      fillPath.setAttribute('fill-opacity', '1');\n      group.dataset.areaEmpty = 'false';\n      return;\n    }\n    const type = group.dataset.type;\n    group.dataset.color = color;\n    if (type === 'text') {\n      const textBox = group.querySelector('.texture-text-box');\n      textBox.dataset.color = color;\n      if (String(color).includes('linear-gradient')) {\n        textBox.style.backgroundImage = color;\n        textBox.style.webkitBackgroundClip = 'text';\n        textBox.style.backgroundClip = 'text';\n        textBox.style.color = 'transparent';\n      } else {\n        textBox.style.backgroundImage = '';\n        textBox.style.webkitBackgroundClip = '';\n        textBox.style.backgroundClip = '';\n        textBox.style.color = color;\n      }\n    } else if (type === 'rect') {\n      group.querySelector('rect.texture-content')?.setAttribute('fill', getSvgPaint(group, color, 'fill'));\n    } else if (type === 'arrow') {\n      const paint = getSvgPaint(group, color, 'stroke');\n      group.querySelector('line.texture-content')?.setAttribute('stroke', paint);\n      group.querySelector('polygon')?.setAttribute('fill', paint);\n    } else if (type === 'path') {\n      group.querySelector('path.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));\n    }\n  }\n\n  function colorToCss(value) {\n    return value || '#111827';\n  }\n\n  function getSvgPaint(group, value, prop) {\n    if (!String(value || '').includes('linear-gradient')) return value;\n    const parsed = parseColorState(value);\n    const id = `${group.id}-${prop}-gradient`;\n    let gradient = document.getElementById(id);\n    if (!gradient) {\n      gradient = createSvg('linearGradient', { id, x1: '0%', y1: '0%', x2: '100%', y2: '0%' });\n      textureSvg.querySelector('defs')?.appendChild(gradient);\n    }\n    gradient.innerHTML = '';\n    gradient.appendChild(createSvg('stop', { offset: '0%', 'stop-color': rgbaFrom(parsed.start, parsed.alpha) }));\n    gradient.appendChild(createSvg('stop', { offset: '100%', 'stop-color': rgbaFrom(parsed.end, parsed.alpha) }));\n    return `url(#${id})`;\n  }\n\n  function getColorValue(group, prop) {\n    if (!group) return '#111827';\n    if (group.classList?.contains('texture-template-path')) {\n      return group.dataset.color || (group.dataset.areaEmpty === 'true' ? '#ffffff' : group.style.fill || group.getAttribute('fill')) || '#ffffff';\n    }\n    const type = group.dataset.type;\n    if (prop === 'strokeColor') {\n      if (group.dataset.strokeColor) return group.dataset.strokeColor;\n      return group.querySelector('rect.texture-content')?.getAttribute('stroke') || '#1e3a8a';\n    }\n    if (group.dataset.color) return group.dataset.color;\n    if (type === 'text') return group.querySelector('.texture-text-box')?.dataset.color || '#111827';\n    if (type === 'rect') return group.querySelector('rect.texture-content')?.getAttribute('fill') || '#3b82f6';\n    return group.querySelector('.texture-content')?.getAttribute('stroke') || '#111827';\n  }\n\n  function hexToRgb(hex) {\n    const clean = (hex || '#111827').replace('#', '');\n    const value = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean;\n    return {\n      r: parseInt(value.slice(0, 2), 16) || 0,\n      g: parseInt(value.slice(2, 4), 16) || 0,\n      b: parseInt(value.slice(4, 6), 16) || 0\n    };\n  }\n\n  function rgbToHex(r, g, b) {\n    return `#${[r, g, b].map((value) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, '0')).join('')}`;\n  }\n\n  function rgbToHsv(r, g, b) {\n    r /= 255; g /= 255; b /= 255;\n    const max = Math.max(r, g, b);\n    const min = Math.min(r, g, b);\n    const d = max - min;\n    let h = 0;\n    if (d !== 0) {\n      if (max === r) h = ((g - b) / d) % 6;\n      else if (max === g) h = (b - r) / d + 2;\n      else h = (r - g) / d + 4;\n      h *= 60;\n      if (h < 0) h += 360;\n    }\n    return { h, s: max === 0 ? 0 : d / max, v: max };\n  }\n\n  function hsvToRgb(h, s, v) {\n    const c = v * s;\n    const x = c * (1 - Math.abs((h / 60) % 2 - 1));\n    const m = v - c;\n    let r = 0, g = 0, b = 0;\n    if (h < 60) [r, g, b] = [c, x, 0];\n    else if (h < 120) [r, g, b] = [x, c, 0];\n    else if (h < 180) [r, g, b] = [0, c, x];\n    else if (h < 240) [r, g, b] = [0, x, c];\n    else if (h < 300) [r, g, b] = [x, 0, c];\n    else [r, g, b] = [c, 0, x];\n    return {\n      r: (r + m) * 255,\n      g: (g + m) * 255,\n      b: (b + m) * 255\n    };\n  }\n\n  function hsvToHex(h, s, v) {\n    const rgb = hsvToRgb(h, s, v);\n    return rgbToHex(rgb.r, rgb.g, rgb.b);\n  }\n\n  function normalizeHex(value) {\n    const match = String(value || '').match(/#?[0-9a-fA-F]{6}/);\n    return match ? `#${match[0].replace('#', '')}` : '#111827';\n  }\n\n  function rgbaFrom(hex, alpha) {\n    const rgb = hexToRgb(hex);\n    const a = Math.max(0, Math.min(100, parseFloat(alpha) || 100)) / 100;\n    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;\n  }\n\n  function gradientFrom(start, end, alpha) {\n    return `linear-gradient(90deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;\n  }\n\n  function parseCssColorTokens(value) {\n    const source = String(value || '');\n    const colorRegex = /#[0-9a-fA-F]{6}|rgba?\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)(?:\\s*,\\s*([0-9.]+))?\\s*\\)/g;\n    return [...source.matchAll(colorRegex)].map((match) => {\n      if (match[0].startsWith('#')) {\n        return { hex: normalizeHex(match[0]) };\n      }\n      return {\n        hex: rgbToHex(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3])),\n        alpha: match[4] !== undefined ? Math.round(parseFloat(match[4]) * 100) : undefined\n      };\n    });\n  }\n\n  function parseColorState(value) {\n    const colorTokens = parseCssColorTokens(value);\n    const isGradient = String(value || '').includes('linear-gradient');\n    const start = colorTokens[0]?.hex || normalizeHex(value);\n    const end = colorTokens[1]?.hex || (isGradient ? start : '#ffffff');\n    const hsv = rgbToHsv(...Object.values(hexToRgb(start)));\n    return {\n      mode: isGradient ? 'gradient' : 'solid',\n      activeStop: 'start',\n      start,\n      end,\n      h: hsv.h,\n      s: hsv.s,\n      v: hsv.v,\n      alpha: colorTokens.find((token) => token.alpha !== undefined)?.alpha ?? 100\n    };\n  }\n\n  function setElementStrokeColor(group, color) {\n    if (!group) return;\n    if (group.dataset.type === 'rect') {\n      group.dataset.strokeColor = color;\n      group.querySelector('rect.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));\n    }\n  }\n\n  function setElementOpacity(group, value) {\n    if (!group) return;\n    group.setAttribute('opacity', String(Math.max(0, Math.min(100, parseFloat(value) || 100)) / 100));\n  }\n\n  function setElementLineWidth(group, value) {\n    if (!group) return;\n    const width = Math.max(1, parseFloat(value) || 1);\n    if (group.dataset.type === 'path') {\n      group.querySelector('path.texture-content')?.setAttribute('stroke-width', width);\n    } else if (group.dataset.type === 'arrow') {\n      group.dataset.strokeWidth = width;\n      group.querySelector('line.texture-content')?.setAttribute('stroke-width', width);\n    } else if (group.dataset.type === 'rect') {\n      group.querySelector('rect.texture-content')?.setAttribute('stroke-width', width);\n    }\n  }\n\n  function updateSelectedElement(patch, options = {}) {\n    const group = state.selected;\n    if (!group) return;\n    if (group.classList?.contains('texture-template-path')) {\n      if (patch.color) setElementColor(group, patch.color);\n      renderSelection();\n      scheduleTexturePreviewUpdate();\n      return;\n    }\n    if (patch.fontSize !== undefined && group.dataset.type === 'text') {\n      setData(group, { fontSize: parseFloat(patch.fontSize) || 24 });\n      autoFitTextHeight(group);\n    }\n    if (patch.color) setElementColor(group, patch.color);\n    if (patch.strokeColor) setElementStrokeColor(group, patch.strokeColor);\n    if (patch.opacity !== undefined) setElementOpacity(group, patch.opacity);\n    if (patch.lineWidth !== undefined) setElementLineWidth(group, patch.lineWidth);\n    if (options.commit) {\n      renderSelection();\n      saveHistory();\n    } else {\n      renderSelection();\n      scheduleTexturePreviewUpdate();\n    }\n  }\n\n  function createElement(type, options = {}) {\n    const center = getCanvasCenter();\n    const width = options.width || 120;\n    const height = options.height || 80;\n    const group = createSvg('g');\n    group.id = `element-${++state.elementCounter}`;\n    group.classList.add('texture-element');\n    group.dataset.type = type;\n    group.dataset.x = options.x ?? center.cx - width / 2;\n    group.dataset.y = options.y ?? center.cy - height / 2;\n    group.dataset.width = width;\n    group.dataset.height = height;\n    group.dataset.baseWidth = options.baseWidth || width;\n    group.dataset.baseHeight = options.baseHeight || height;\n    group.dataset.fontSize = options.fontSize || 24;\n    group.dataset.rotate = options.rotate || 0;\n\n    let content;\n    if (type === 'text') {\n      content = createSvg('foreignObject', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        width,\n        height\n      });\n      const textBox = document.createElement('div');\n      textBox.className = 'texture-text-box';\n      textBox.dataset.color = options.color || '#111827';\n      textBox.textContent = options.text || defaultTextContent;\n      content.appendChild(textBox);\n    } else if (type === 'rect') {\n      content = createSvg('rect', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        rx: 8,\n        fill: '#3b82f6',\n        stroke: '#1e3a8a',\n        'stroke-width': 2\n      });\n    } else if (type === 'image') {\n      content = createSvg('image', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        href: options.src,\n        preserveAspectRatio: 'xMidYMid meet'\n      });\n    } else if (type === 'arrow') {\n      const line = createSvg('line', {\n        class: 'texture-content',\n        stroke: '#111827',\n        'stroke-linecap': 'round'\n      });\n      const head = createSvg('polygon', { fill: '#111827' });\n      group.append(line, head);\n    } else if (type === 'path') {\n      content = createSvg('path', {\n        class: 'texture-content',\n        d: options.d,\n        fill: 'none',\n        stroke: '#111827',\n        'stroke-width': 6,\n        'stroke-linecap': 'round',\n        'stroke-linejoin': 'round'\n      });\n    }\n\n    if (content) group.appendChild(content);\n    textureElements.appendChild(group);\n    setData(group, {});\n    autoFitTextHeight(group);\n    selectElement(group);\n    saveHistory();\n    setTool('select');\n    return group;\n  }\n\n  function selectElement(element) {\n    state.selected?.classList.remove('selected');\n    restoreTemplatePathPreview(state.selectedTemplatePath);\n    state.selectedTemplatePath?.classList.remove('selected-template-path');\n    state.selectedTemplatePath = null;\n    state.selected = element || null;\n    if (state.selected?.classList?.contains('texture-template-path')) {\n      state.selectedTemplatePath = state.selected;\n      setTemplatePathPreview(state.selectedTemplatePath, 'selected');\n      state.selectedTemplatePath.classList.add('selected-template-path');\n    } else {\n      state.selected?.classList.add('selected');\n    }\n    renderSelection();\n  }\n\n  function clearSelection() {\n    selectElement(null);\n  }\n\n  function editTextElement(group) {\n    if (!group || group.dataset.type !== 'text') return;\n    const textBox = group.querySelector('.texture-text-box');\n    if (!textBox) return;\n    selectElement(group);\n\n    if (state.textEditor) {\n      state.textEditor.commit();\n    }\n\n    textBox.setAttribute('contenteditable', 'true');\n    textBox.classList.add('is-editing');\n    textBox.style.height = 'auto';\n    const originalText = textBox.innerText;\n    const originalData = getData(group);\n    let isDone = false;\n    const syncTextHeight = () => {\n      if (isDone) return;\n      if (autoFitTextHeight(group)) {\n        renderSelection();\n        scheduleTexturePreviewUpdate();\n      }\n    };\n    const closeEditor = (commit) => {\n      if (isDone) return;\n      syncTextHeight();\n      isDone = true;\n      if (commit) {\n        textBox.textContent = textBox.innerText.trim() || defaultTextContent;\n        textBox.style.height = '100%';\n        autoFitTextHeight(group);\n        saveHistory();\n      } else {\n        textBox.textContent = originalText;\n        textBox.style.height = '100%';\n        setData(group, originalData);\n        renderSelection();\n      }\n      textBox.removeAttribute('contenteditable');\n      textBox.classList.remove('is-editing');\n      state.textEditor = null;\n      scheduleTexturePreviewUpdate();\n    };\n\n    const handleKeydown = (event) => {\n      event.stopPropagation();\n      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') closeEditor(true);\n      if (event.key === 'Escape') closeEditor(false);\n      requestAnimationFrame(syncTextHeight);\n    };\n    const handleInput = () => syncTextHeight();\n    const handlePointerDown = (event) => event.stopPropagation();\n    const handleBlur = () => closeEditor(true);\n    textBox.addEventListener('keydown', handleKeydown);\n    textBox.addEventListener('input', handleInput);\n    textBox.addEventListener('pointerdown', handlePointerDown);\n    textBox.addEventListener('blur', handleBlur);\n    state.textEditor = {\n      commit: () => closeEditor(true),\n      cancel: () => closeEditor(false)\n    };\n    requestAnimationFrame(() => {\n      const selection = window.getSelection();\n      const range = document.createRange();\n      textBox.focus();\n      range.selectNodeContents(textBox);\n      range.collapse(false);\n      selection.removeAllRanges();\n      selection.addRange(range);\n      syncTextHeight();\n    });\n  }\n\n  function isTextDoubleClick(target) {\n    if (!target || target.dataset.type !== 'text') return false;\n    const now = Date.now();\n    const isDouble = state.lastTextClick.element === target && now - state.lastTextClick.time < 420;\n    state.lastTextClick = { element: target, time: now };\n    return isDouble;\n  }\n\n  function buildElementToolbar(group) {\n    if (group.classList?.contains('texture-template-path')) {\n      elementToolbar.innerHTML = '';\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = 'Area';\n      const button = document.createElement('button');\n      button.type = 'button';\n      button.className = 'color-chip';\n      button.dataset.colorProp = 'color';\n      const value = getColorValue(group, 'color');\n      button.dataset.colorValue = value;\n      button.style.background = colorToCss(value);\n      button.setAttribute('aria-label', 'Area color');\n      control.appendChild(button);\n      elementToolbar.appendChild(control);\n      positionElementToolbar(group);\n      return;\n    }\n    const type = group.dataset.type;\n    const data = getData(group);\n    elementToolbar.innerHTML = '';\n\n    const addColor = (label, value, name) => {\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = label;\n      const button = document.createElement('button');\n      button.type = 'button';\n      button.className = 'color-chip';\n      button.dataset.colorProp = name;\n      button.dataset.colorValue = value;\n      button.style.background = colorToCss(value);\n      button.setAttribute('aria-label', label);\n      control.appendChild(button);\n      elementToolbar.appendChild(control);\n    };\n    const addNumber = (label, value, name, min, max) => {\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = label;\n      const input = document.createElement('input');\n      input.type = 'number';\n      input.value = value;\n      input.min = min;\n      input.max = max;\n      input.dataset.prop = name;\n      control.appendChild(input);\n      elementToolbar.appendChild(control);\n    };\n\n    if (type === 'text') {\n      const textBox = group.querySelector('.texture-text-box');\n      addNumber('Size', Math.round(data.fontSize), 'fontSize', 8, 160);\n      addColor('Color', textBox?.dataset.color || '#111827', 'color');\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    } else if (type === 'rect') {\n      const rect = group.querySelector('rect.texture-content');\n      addColor('Fill', rect?.getAttribute('fill') || '#3b82f6', 'color');\n      addColor('Stroke', rect?.getAttribute('stroke') || '#1e3a8a', 'strokeColor');\n      addNumber('W', rect?.getAttribute('stroke-width') || 2, 'lineWidth', 0, 40);\n    } else if (type === 'image') {\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    } else {\n      const content = group.querySelector('.texture-content');\n      addColor('Color', content?.getAttribute('stroke') || '#111827', 'color');\n      addNumber('W', content?.getAttribute('stroke-width') || group.dataset.strokeWidth || 6, 'lineWidth', 1, 80);\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    }\n\n    positionElementToolbar(group);\n  }\n\n  function positionElementToolbar(group = state.selected) {\n    if (!group) {\n      elementToolbar.classList.remove('visible');\n      return;\n    }\n    const svgRect = textureSvg.getBoundingClientRect();\n    const areaRect = textureCanvasArea.getBoundingClientRect();\n    const data = getData(group);\n    const scaleX = svgRect.width / state.svgWidth;\n    const scaleY = svgRect.height / state.svgHeight;\n    elementToolbar.classList.add('visible');\n    const toolbarWidth = elementToolbar.offsetWidth || 320;\n    const toolbarHeight = elementToolbar.offsetHeight || 44;\n    const left = svgRect.left - areaRect.left + (data.x + data.width / 2) * scaleX - toolbarWidth / 2;\n    const top = svgRect.top - areaRect.top + data.y * scaleY - toolbarHeight - 12;\n    elementToolbar.style.left = `${Math.max(8, Math.min(areaRect.width - toolbarWidth - 8, left))}px`;\n    elementToolbar.style.top = `${Math.max(8, top)}px`;\n  }\n\n  function closeColorPopover() {\n    colorPopover.classList.remove('visible');\n    colorPopover.innerHTML = '';\n    state.colorPicker = null;\n  }\n\n  function openColorPopover(button) {\n    const prop = button.dataset.colorProp;\n    const group = state.selected;\n    if (!group || !prop) return;\n    const current = parseColorState(getColorValue(group, prop));\n    const startHsv = rgbToHsv(...Object.values(hexToRgb(current.start)));\n    const endHsv = rgbToHsv(...Object.values(hexToRgb(current.end)));\n    state.colorPicker = {\n      prop,\n      mode: current.mode,\n      activeStop: current.activeStop,\n      start: current.start,\n      end: current.end,\n      stopHsv: {\n        start: startHsv,\n        end: endHsv\n      },\n      h: current.h,\n      s: current.s,\n      v: current.v,\n      alpha: current.alpha\n    };\n\n    const buttonRect = button.getBoundingClientRect();\n    const areaRect = textureCanvasArea.getBoundingClientRect();\n    colorPopover.innerHTML = `\n      <div class=\"color-mode\" role=\"group\">\n        <button type=\"button\" data-mode=\"solid\" class=\"${current.mode === 'solid' ? 'active' : ''}\">Solid</button>\n        <button type=\"button\" data-mode=\"gradient\" class=\"${current.mode === 'gradient' ? 'active' : ''}\">Gradient</button>\n      </div>\n      <div class=\"gradient-stops\">\n        <button type=\"button\" data-stop=\"start\" class=\"active\"><span style=\"background:${current.start}\"></span> A</button>\n        <button type=\"button\" data-stop=\"end\"><span style=\"background:${current.end}\"></span> B</button>\n      </div>\n      <div class=\"color-area\" data-color-area><span class=\"color-area-cursor\"></span></div>\n      <div class=\"hue-row\">\n        <span>Hue</span>\n        <div class=\"hue-field\" data-hue-field><span class=\"hue-field-cursor\"></span></div>\n      </div>\n      <div class=\"slider-row\">\n        <span>Alpha</span>\n        <input class=\"alpha-slider\" type=\"range\" min=\"0\" max=\"100\" value=\"${current.alpha}\" data-color-field=\"alpha\">\n      </div>\n      <label class=\"color-field\">HEX <input data-color-field=\"hex\" value=\"${current.start}\" maxlength=\"7\"></label>\n      <div class=\"color-preview\"></div>\n    `;\n    colorPopover.style.left = `${Math.max(8, buttonRect.left - areaRect.left)}px`;\n    colorPopover.style.top = `${Math.max(8, buttonRect.bottom - areaRect.top + 8)}px`;\n    colorPopover.classList.add('visible');\n    renderColorPopover();\n  }\n\n  function getPickerCss() {\n    if (!state.colorPicker) return '#111827';\n    return state.colorPicker.mode === 'gradient'\n      ? gradientFrom(state.colorPicker.start, state.colorPicker.end, state.colorPicker.alpha)\n      : rgbaFrom(state.colorPicker.start, state.colorPicker.alpha);\n  }\n\n  function renderColorPopover() {\n    if (!state.colorPicker) return;\n    colorPopover.querySelectorAll('[data-mode]').forEach((button) => {\n      button.classList.toggle('active', button.dataset.mode === state.colorPicker.mode);\n    });\n    const stops = colorPopover.querySelector('.gradient-stops');\n    if (stops) stops.style.display = state.colorPicker.mode === 'gradient' ? 'grid' : 'none';\n    colorPopover.querySelectorAll('[data-stop]').forEach((button) => {\n      button.classList.toggle('active', button.dataset.stop === state.colorPicker.activeStop);\n      const swatch = button.querySelector('span');\n      if (swatch) swatch.style.background = state.colorPicker[button.dataset.stop];\n    });\n    const hue = hsvToHex(state.colorPicker.h, 1, 1);\n    const area = colorPopover.querySelector('.color-area');\n    if (area) area.style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;\n    const cursor = colorPopover.querySelector('.color-area-cursor');\n    if (cursor) {\n      cursor.style.left = `${state.colorPicker.s * 100}%`;\n      cursor.style.top = `${(1 - state.colorPicker.v) * 100}%`;\n    }\n    const hexInput = colorPopover.querySelector('[data-color-field=\"hex\"]');\n    if (hexInput) hexInput.value = state.colorPicker[state.colorPicker.activeStop];\n    const hueCursor = colorPopover.querySelector('.hue-field-cursor');\n    if (hueCursor) hueCursor.style.left = `${(state.colorPicker.h / 360) * 100}%`;\n    const alphaInput = colorPopover.querySelector('[data-color-field=\"alpha\"]');\n    if (alphaInput) alphaInput.value = state.colorPicker.alpha;\n    const preview = colorPopover.querySelector('.color-preview');\n    if (preview) preview.style.background = getPickerCss();\n  }\n\n  function applyColorPicker(commit = false) {\n    if (!state.colorPicker) return;\n    const value = getPickerCss();\n    updateSelectedElement({ [state.colorPicker.prop]: value }, { commit });\n    elementToolbar.querySelectorAll(`[data-color-prop=\"${state.colorPicker.prop}\"]`).forEach((button) => {\n      button.dataset.colorValue = value;\n      button.style.background = value;\n    });\n  }\n\n  function setActiveColorFromHex(hex) {\n    if (!state.colorPicker) return;\n    const normalized = normalizeHex(hex);\n    state.colorPicker[state.colorPicker.activeStop] = normalized;\n    const rgb = hexToRgb(normalized);\n    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = hsv;\n    state.colorPicker.h = hsv.h;\n    state.colorPicker.s = hsv.s;\n    state.colorPicker.v = hsv.v;\n  }\n\n  function setActiveStop(stop) {\n    if (!state.colorPicker) return;\n    state.colorPicker.activeStop = stop;\n    const hsv = state.colorPicker.stopHsv[stop] || rgbToHsv(...Object.values(hexToRgb(state.colorPicker[stop])));\n    state.colorPicker.h = hsv.h;\n    state.colorPicker.s = hsv.s;\n    state.colorPicker.v = hsv.v;\n  }\n\n  function setPickerHue(event) {\n    if (!state.colorPicker) return;\n    const field = colorPopover.querySelector('[data-hue-field]');\n    if (!field) return;\n    const rect = field.getBoundingClientRect();\n    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));\n    state.colorPicker.h = ratio * 360;\n    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {\n      h: state.colorPicker.h,\n      s: state.colorPicker.s,\n      v: state.colorPicker.v\n    };\n    renderColorPopover();\n    applyColorPicker(false);\n  }\n\n  function updatePickerFromArea(event) {\n    if (!state.colorPicker) return;\n    const area = colorPopover.querySelector('[data-color-area]');\n    if (!area) return;\n    const rect = area.getBoundingClientRect();\n    const s = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));\n    const v = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));\n    state.colorPicker.s = s;\n    state.colorPicker.v = v;\n    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, s, v);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {\n      h: state.colorPicker.h,\n      s,\n      v\n    };\n    renderColorPopover();\n    applyColorPicker(false);\n  }\n\n  function renderSelection() {\n    selectionLayer.innerHTML = '';\n    if (!state.selected) {\n      positionElementToolbar(null);\n      return;\n    }\n    const data = getData(state.selected);\n    const box = createSvg('g', {\n      class: 'selection-box',\n      transform: `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`\n    });\n    box.appendChild(createSvg('rect', {\n      class: 'selection-outline',\n      x: 0,\n      y: 0,\n      width: data.width,\n      height: data.height\n    }));\n\n    if (!state.selected.classList?.contains('texture-template-path')) {\n      [\n        ['nw', 0, 0], ['n', data.width / 2, 0], ['ne', data.width, 0],\n        ['e', data.width, data.height / 2], ['se', data.width, data.height],\n        ['s', data.width / 2, data.height], ['sw', 0, data.height], ['w', 0, data.height / 2]\n      ].forEach(([handle, x, y]) => {\n        box.appendChild(createSvg('rect', {\n          class: 'selection-handle',\n          'data-action': 'resize',\n          'data-handle': handle,\n          x: x - 5,\n          y: y - 5,\n          width: 10,\n          height: 10,\n          rx: 2\n        }));\n      });\n\n      box.appendChild(createSvg('line', {\n        class: 'selection-rotate-line',\n        x1: data.width / 2,\n        y1: -30,\n        x2: data.width / 2,\n        y2: 0\n      }));\n      box.appendChild(createSvg('circle', {\n        class: 'selection-rotate-handle',\n        'data-action': 'rotate',\n        cx: data.width / 2,\n        cy: -38,\n        r: 8\n      }));\n    }\n    selectionLayer.appendChild(box);\n    buildElementToolbar(state.selected);\n  }\n\n  toolButtons.text?.addEventListener('click', () => {\n    createElement('text', { text: defaultTextContent, width: 190, height: 54 });\n  });\n\n  toolButtons.shape?.addEventListener('click', () => createElement('rect', { width: 120, height: 120 }));\n  toolButtons.arrow?.addEventListener('click', () => createElement('arrow', { width: 150, height: 38 }));\n  toolButtons.image?.addEventListener('click', () => {\n    const input = document.createElement('input');\n    input.type = 'file';\n    input.accept = 'image/*';\n    input.onchange = (e) => {\n      const file = e.target.files[0];\n      if (file) {\n        const reader = new FileReader();\n        reader.onload = (event) => {\n          createElement('image', { src: event.target.result, width: 160, height: 120 });\n        };\n        reader.readAsDataURL(file);\n      }\n    };\n    input.click();\n  });\n\n  function localVector(dx, dy, angle) {\n    const rad = -angle * Math.PI / 180;\n    return {\n      x: dx * Math.cos(rad) - dy * Math.sin(rad),\n      y: dx * Math.sin(rad) + dy * Math.cos(rad)\n    };\n  }\n\n  function startDraw(event) {\n    const point = svgPoint(event);\n    const path = createSvg('path', {\n      d: `M ${point.x} ${point.y}`,\n      fill: 'none',\n      stroke: '#111827',\n      'stroke-width': 6,\n      'stroke-linecap': 'round',\n      'stroke-linejoin': 'round'\n    });\n    textureElements.appendChild(path);\n    state.active = { mode: 'draw', path, points: [point] };\n  }\n\n  function finishDraw() {\n    if (!state.active || state.active.mode !== 'draw') return;\n    const { path, points } = state.active;\n    state.active = null;\n    if (points.length < 2) {\n      path.remove();\n      return;\n    }\n    const bbox = path.getBBox();\n    const d = points.map((point, index) => {\n      const cmd = index === 0 ? 'M' : 'L';\n      return `${cmd} ${point.x - bbox.x} ${point.y - bbox.y}`;\n    }).join(' ');\n    path.remove();\n    createElement('path', {\n      x: bbox.x,\n      y: bbox.y,\n      width: Math.max(minSize, bbox.width),\n      height: Math.max(minSize, bbox.height),\n      baseWidth: Math.max(minSize, bbox.width),\n      baseHeight: Math.max(minSize, bbox.height),\n      d\n    });\n  }\n\n  textureSvg.addEventListener('pointerdown', (event) => {\n    if (event.button !== 0) return;\n    if (event.target.closest('[data-editor-toolbar]')) {\n      event.stopPropagation();\n      return;\n    }\n    if (event.target.closest('.texture-text-box.is-editing')) {\n      event.stopPropagation();\n      return;\n    }\n    if (state.tool === 'pan') {\n      textureSvg.setPointerCapture(event.pointerId);\n      state.active = {\n        mode: 'pan',\n        startClientX: event.clientX,\n        startClientY: event.clientY,\n        startScrollLeft: textureCanvasArea.scrollLeft,\n        startScrollTop: textureCanvasArea.scrollTop\n      };\n      textureSvg.style.cursor = 'grabbing';\n      return;\n    }\n\n    if (state.tool === 'draw') {\n      event.preventDefault();\n      textureSvg.setPointerCapture(event.pointerId);\n      startDraw(event);\n      return;\n    }\n\n    const actionTarget = event.target.closest('[data-action]');\n    if (actionTarget && state.selected) {\n      event.preventDefault();\n      textureSvg.setPointerCapture(event.pointerId);\n      state.active = {\n        mode: actionTarget.dataset.action,\n        handle: actionTarget.dataset.handle,\n        startPoint: svgPoint(event),\n        startData: getData(state.selected)\n      };\n      return;\n    }\n\n    const target = event.target.closest('.texture-element');\n    const templatePath = event.target.closest('.texture-template-path');\n    if (templatePath) {\n      event.preventDefault();\n      selectElement(templatePath);\n      scheduleTexturePreviewUpdate();\n      return;\n    }\n    if (target) {\n      event.preventDefault();\n      if (isTextDoubleClick(target)) {\n        state.active = null;\n        selectElement(target);\n        editTextElement(target);\n        return;\n      }\n      textureSvg.setPointerCapture(event.pointerId);\n      selectElement(target);\n      state.active = {\n        mode: 'move',\n        startPoint: svgPoint(event),\n        startData: getData(target)\n      };\n    } else {\n      clearSelection();\n    }\n  });\n\n  textureSvg.addEventListener('pointerover', (event) => {\n    const templatePath = event.target.closest('.texture-template-path');\n    if (!templatePath || templatePath === state.selectedTemplatePath) return;\n    setTemplatePathPreview(templatePath, 'hover');\n  });\n\n  textureSvg.addEventListener('pointerout', (event) => {\n    const templatePath = event.target.closest('.texture-template-path');\n    if (!templatePath || templatePath === state.selectedTemplatePath) return;\n    restoreTemplatePathPreview(templatePath);\n  });\n\n  textureSvg.addEventListener('dblclick', (event) => {\n    const target = event.target.closest('.texture-element');\n    if (!target || target.dataset.type !== 'text') return;\n    event.preventDefault();\n    event.stopPropagation();\n    editTextElement(target);\n  });\n\n  textureSvg.addEventListener('pointermove', (event) => {\n    if (!state.active) return;\n    const point = svgPoint(event);\n\n    if (state.active.mode === 'pan') {\n      textureCanvasArea.scrollLeft = state.active.startScrollLeft - (event.clientX - state.active.startClientX);\n      textureCanvasArea.scrollTop = state.active.startScrollTop - (event.clientY - state.active.startClientY);\n      return;\n    }\n\n    if (state.active.mode === 'draw') {\n      state.active.points.push(point);\n      state.active.path.setAttribute('d', `${state.active.path.getAttribute('d')} L ${point.x} ${point.y}`);\n      return;\n    }\n\n    if (!state.selected) return;\n    const start = state.active.startPoint;\n    const data = state.active.startData;\n    const dx = point.x - start.x;\n    const dy = point.y - start.y;\n\n    if (state.active.mode === 'move') {\n      setData(state.selected, { x: data.x + dx, y: data.y + dy });\n    } else if (state.active.mode === 'resize') {\n      const local = localVector(dx, dy, data.rotate);\n      const isText = state.selected.dataset.type === 'text';\n      let x = data.x;\n      let y = data.y;\n      let width = data.width;\n      let height = data.height;\n      const handle = state.active.handle;\n\n      if (handle.includes('e')) width = data.width + local.x;\n      if (handle.includes('s')) height = data.height + local.y;\n      if (handle.includes('w')) {\n        width = data.width - local.x;\n        x = data.x + dx;\n      }\n      if (handle.includes('n')) {\n        height = data.height - local.y;\n        y = data.y + dy;\n      }\n      if (event.shiftKey || (isText && handle.length === 2)) {\n        const aspect = data.width / data.height;\n        if (Math.abs(local.x) > Math.abs(local.y)) height = width / aspect;\n        else width = height * aspect;\n      }\n      const patch = { x, y, width, height };\n      if (isText) {\n        const widthScale = width / Math.max(minSize, data.width);\n        const heightScale = height / Math.max(minSize, data.height);\n        const scale = handle.length === 2\n          ? Math.max(widthScale, heightScale)\n          : handle.includes('e') || handle.includes('w')\n            ? widthScale\n            : heightScale;\n        patch.fontSize = Math.max(8, data.fontSize * scale);\n      }\n      setData(state.selected, patch);\n      if (isText && !state.active.handle.includes('n') && !state.active.handle.includes('s')) {\n        autoFitTextHeight(state.selected);\n      }\n    } else if (state.active.mode === 'rotate') {\n      const cx = data.x + data.width / 2;\n      const cy = data.y + data.height / 2;\n      const startAngle = Math.atan2(start.y - cy, start.x - cx);\n      const currentAngle = Math.atan2(point.y - cy, point.x - cx);\n      setData(state.selected, { rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI });\n    }\n    renderSelection();\n    scheduleTexturePreviewUpdate();\n  });\n\n  function endInteraction(event) {\n    if (!state.active) return;\n    const mode = state.active.mode;\n    if (mode === 'draw') {\n      finishDraw();\n    } else if (mode !== 'pan') {\n      saveHistory();\n    }\n    state.active = null;\n    if (state.tool === 'pan') {\n      textureSvg.style.cursor = 'grab';\n    }\n    if (event.pointerId !== undefined && textureSvg.hasPointerCapture(event.pointerId)) {\n      textureSvg.releasePointerCapture(event.pointerId);\n    }\n  }\n\n  textureSvg.addEventListener('pointerup', endInteraction);\n  textureSvg.addEventListener('pointercancel', endInteraction);\n\n  elementToolbar.addEventListener('input', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    updateSelectedElement({ [input.dataset.prop]: input.value });\n  });\n\n  elementToolbar.addEventListener('change', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });\n  });\n\n  elementToolbar.addEventListener('keydown', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    if (event.key === 'Enter') {\n      updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });\n      input.blur();\n    }\n  });\n\n  elementToolbar.addEventListener('pointerdown', (event) => {\n    if (event.target.closest('[data-editor-toolbar]')) {\n      event.stopPropagation();\n    }\n  });\n\n  elementToolbar.addEventListener('click', (event) => {\n    const button = event.target.closest('[data-color-prop]');\n    if (!button) return;\n    event.preventDefault();\n    event.stopPropagation();\n    openColorPopover(button);\n  });\n\n  colorPopover.addEventListener('pointerdown', (event) => event.stopPropagation());\n  colorPopover.addEventListener('click', (event) => {\n    const modeButton = event.target.closest('[data-mode]');\n    const stopButton = event.target.closest('[data-stop]');\n    if (!state.colorPicker) return;\n    if (modeButton) {\n      state.colorPicker.mode = modeButton.dataset.mode;\n    } else if (stopButton) {\n      setActiveStop(stopButton.dataset.stop);\n    } else {\n      return;\n    }\n    renderColorPopover();\n    applyColorPicker(false);\n  });\n  colorPopover.addEventListener('input', (event) => {\n    const field = event.target.closest('[data-color-field]');\n    if (!field || !state.colorPicker) return;\n    const key = field.dataset.colorField;\n    if (key === 'alpha') {\n      state.colorPicker[key] = field.value;\n    } else {\n      if (!/^#?[0-9a-fA-F]{6}$/.test(field.value)) return;\n      setActiveColorFromHex(field.value);\n    }\n    renderColorPopover();\n    applyColorPicker(false);\n  });\n  colorPopover.addEventListener('change', () => applyColorPicker(true));\n  colorPopover.addEventListener('pointerdown', (event) => {\n    if (!event.target.closest('[data-color-area]')) return;\n    event.preventDefault();\n    updatePickerFromArea(event);\n    const handleMove = (moveEvent) => updatePickerFromArea(moveEvent);\n    const handleUp = () => {\n      window.removeEventListener('pointermove', handleMove);\n      window.removeEventListener('pointerup', handleUp);\n      applyColorPicker(true);\n    };\n    window.addEventListener('pointermove', handleMove);\n    window.addEventListener('pointerup', handleUp);\n  });\n  colorPopover.addEventListener('pointerdown', (event) => {\n    if (!event.target.closest('[data-hue-field]')) return;\n    event.preventDefault();\n    setPickerHue(event);\n    const handleMove = (moveEvent) => setPickerHue(moveEvent);\n    const handleUp = () => {\n      window.removeEventListener('pointermove', handleMove);\n      window.removeEventListener('pointerup', handleUp);\n      applyColorPicker(true);\n    };\n    window.addEventListener('pointermove', handleMove);\n    window.addEventListener('pointerup', handleUp);\n  });\n\n  document.addEventListener('pointerdown', (event) => {\n    if (!colorPopover.classList.contains('visible')) return;\n    if (event.target.closest('[data-editor-toolbar]')) return;\n    closeColorPopover();\n  });\n\n  textureCanvasArea.addEventListener('scroll', () => positionElementToolbar());\n  window.addEventListener('resize', () => positionElementToolbar());\n\n  function saveHistory() {\n    const snapshot = getCleanElementsHtml();\n    if (state.history[state.historyIndex] === snapshot) return;\n    state.history = state.history.slice(0, state.historyIndex + 1);\n    state.history.push(snapshot);\n    state.historyIndex++;\n    scheduleTexturePreviewUpdate();\n  }\n\n  function restoreHistory(index) {\n    textureElements.innerHTML = state.history[index] || '';\n    selectElement(null);\n    const ids = [...textureElements.querySelectorAll('.texture-element')]\n      .map(element => parseInt((element.id || '').replace('element-', ''), 10))\n      .filter(Number.isFinite);\n    state.elementCounter = Math.max(state.elementCounter, 0, ...ids);\n    scheduleTexturePreviewUpdate();\n  }\n\n  function undo() {\n    state.textEditor?.commit();\n    if (state.historyIndex > 0) {\n      state.historyIndex--;\n      restoreHistory(state.historyIndex);\n    }\n  }\n\n  function redo() {\n    state.textEditor?.commit();\n    if (state.historyIndex < state.history.length - 1) {\n      state.historyIndex++;\n      restoreHistory(state.historyIndex);\n    }\n  }\n\n  function deleteSelected() {\n    state.textEditor?.cancel();\n    if (!state.selected) return;\n    state.selected.remove();\n    clearSelection();\n    saveHistory();\n  }\n\n  document.getElementById('toolUndo')?.addEventListener('click', undo);\n  document.getElementById('toolRedo')?.addEventListener('click', redo);\n  document.getElementById('toolDelete')?.addEventListener('click', deleteSelected);\n\n  document.addEventListener('keydown', (event) => {\n    if (!designModal.classList.contains('active')) return;\n    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {\n      event.preventDefault();\n      event.shiftKey ? redo() : undo();\n    } else if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {\n      event.preventDefault();\n      deleteSelected();\n    }\n  });\n\n  designerViewer?.addEventListener('load', () => {\n    if (state.selectedMaterial) {\n      applyMaterialToViewer(designerViewer, state.selectedMaterial);\n    }\n    scheduleTexturePreviewUpdate();\n  });\n  detailViewer?.addEventListener('load', () => {\n    if (state.selectedMaterial) {\n      applyMaterialToViewer(detailViewer, state.selectedMaterial);\n    }\n  });\n  saveDesignModal?.addEventListener('click', saveDesignAndClose);\n  downloadRenderBtn?.addEventListener('click', downloadDesignedRender);\n  downloadRenderModalBtn?.addEventListener('click', downloadDesignedRender);\n\n  // Initialize history\n  renderMaterialSwatches();\n  if (state.selectedMaterial) {\n    applyMaterialToViewer(detailViewer, state.selectedMaterial);\n  }\n  saveHistory();\n});\n</script>\n\n")
+    ; __append("}-hd-render.png`);\n      setRenderStatus('HD render downloaded.');\n      window.setTimeout(() => setRenderStatus(''), 2800);\n    } catch (error) {\n      console.error('Failed to export designed 3D render:', error);\n      setRenderStatus('Render export failed. Try again after the 3D model finishes loading.');\n    } finally {\n      setExportingState(false);\n    }\n  }\n\n  window.exportDesignedModelCover = async function exportDesignedModelCover(options = {}) {\n    stopModelRotation();\n    const textureUrl = await createFinalRenderTexture();\n    return renderDesignedModelImageWithFallback(textureUrl, {\n      mimeType: options.mimeType || 'image/webp',\n      quality: options.quality ?? 0.95\n    });\n  };\n  window.exportDesignedModelCoverFormats = async function exportDesignedModelCoverFormats(formatOptions = []) {\n    stopModelRotation();\n    const textureUrl = await createFinalRenderTexture();\n    return renderDesignedModelImages(textureUrl, formatOptions);\n  };\n  window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;\n  window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;\n\n  function getCleanElementsHtml() {\n    const clone = textureElements.cloneNode(true);\n    clone.querySelectorAll('[contenteditable]').forEach((element) => {\n      element.removeAttribute('contenteditable');\n      element.classList.remove('is-editing');\n    });\n    clone.querySelectorAll('.texture-element.selected').forEach((element) => {\n      element.classList.remove('selected');\n    });\n    return clone.innerHTML;\n  }\n\n  function getData(group) {\n    if (group.classList?.contains('texture-template-path')) {\n      const bbox = group.getBBox();\n      return {\n        x: bbox.x,\n        y: bbox.y,\n        width: Math.max(minSize, bbox.width),\n        height: Math.max(minSize, bbox.height),\n        baseWidth: Math.max(minSize, bbox.width),\n        baseHeight: Math.max(minSize, bbox.height),\n        fontSize: 24,\n        rotate: 0\n      };\n    }\n    return {\n      x: parseFloat(group.dataset.x || 0),\n      y: parseFloat(group.dataset.y || 0),\n      width: parseFloat(group.dataset.width || 1),\n      height: parseFloat(group.dataset.height || 1),\n      baseWidth: parseFloat(group.dataset.baseWidth || group.dataset.width || 1),\n      baseHeight: parseFloat(group.dataset.baseHeight || group.dataset.height || 1),\n      fontSize: parseFloat(group.dataset.fontSize || 24),\n      rotate: parseFloat(group.dataset.rotate || 0)\n    };\n  }\n\n  function setData(group, patch) {\n    const data = { ...getData(group), ...patch };\n    data.width = Math.max(minSize, data.width);\n    data.height = Math.max(minSize, data.height);\n    group.dataset.x = data.x;\n    group.dataset.y = data.y;\n    group.dataset.width = data.width;\n    group.dataset.height = data.height;\n    group.dataset.baseWidth = data.baseWidth || data.width;\n    group.dataset.baseHeight = data.baseHeight || data.height;\n    group.dataset.fontSize = data.fontSize || parseFloat(group.dataset.fontSize || 24);\n    group.dataset.rotate = data.rotate;\n    group.setAttribute('transform', `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`);\n    renderElementContent(group);\n  }\n\n  function renderElementContent(group) {\n    const data = getData(group);\n    const content = group.querySelector('.texture-content');\n    if (!content) return;\n    const type = group.dataset.type;\n\n    if (type === 'text') {\n      content.setAttribute('width', data.width);\n      content.setAttribute('height', data.height);\n      const textBox = group.querySelector('.texture-text-box');\n      if (textBox) {\n        textBox.style.fontSize = `${Math.max(12, data.fontSize)}px`;\n        textBox.style.color = textBox.dataset.color || '#111827';\n      }\n    } else if (type === 'rect' || type === 'image') {\n      content.setAttribute('width', data.width);\n      content.setAttribute('height', data.height);\n    } else if (type === 'arrow') {\n      const line = group.querySelector('line.texture-content');\n      const head = group.querySelector('polygon');\n      const mid = data.height / 2;\n      const headSize = Math.min(data.height * 0.8, Math.max(10, data.width * 0.22));\n      line.setAttribute('x1', 0);\n      line.setAttribute('y1', mid);\n      line.setAttribute('x2', Math.max(0, data.width - headSize * 0.55));\n      line.setAttribute('y2', mid);\n      line.setAttribute('stroke-width', group.dataset.strokeWidth || Math.max(2, data.height * 0.16));\n      head.setAttribute('points', `${data.width},${mid} ${data.width - headSize},${mid - headSize / 2} ${data.width - headSize},${mid + headSize / 2}`);\n    } else if (type === 'path') {\n      const scaleX = data.width / Math.max(1, data.baseWidth);\n      const scaleY = data.height / Math.max(1, data.baseHeight);\n      content.setAttribute('transform', `scale(${scaleX} ${scaleY})`);\n    }\n  }\n\n  function autoFitTextHeight(group) {\n    if (!group || group.dataset.type !== 'text') return false;\n    const textBox = group.querySelector('.texture-text-box');\n    if (!textBox) return false;\n    const data = getData(group);\n    const previousHeight = textBox.style.height;\n    textBox.style.height = 'auto';\n    const nextHeight = Math.max(minSize, Math.ceil(textBox.scrollHeight));\n    textBox.style.height = previousHeight || '100%';\n    if (Math.abs(nextHeight - data.height) <= 1) return false;\n    setData(group, { height: nextHeight });\n    return true;\n  }\n\n  function setElementColor(group, color) {\n    if (!group) return;\n    if (group.classList?.contains('texture-template-path')) {\n      group.dataset.color = color;\n      const fillPath = getTemplateFillPath(group, true, true);\n      fillPath.setAttribute('fill', getSvgPaint(group, color, 'fill'));\n      fillPath.setAttribute('fill-opacity', '1');\n      group.dataset.areaEmpty = 'false';\n      return;\n    }\n    const type = group.dataset.type;\n    group.dataset.color = color;\n    if (type === 'text') {\n      const textBox = group.querySelector('.texture-text-box');\n      textBox.dataset.color = color;\n      if (String(color).includes('linear-gradient')) {\n        textBox.style.backgroundImage = color;\n        textBox.style.webkitBackgroundClip = 'text';\n        textBox.style.backgroundClip = 'text';\n        textBox.style.color = 'transparent';\n      } else {\n        textBox.style.backgroundImage = '';\n        textBox.style.webkitBackgroundClip = '';\n        textBox.style.backgroundClip = '';\n        textBox.style.color = color;\n      }\n    } else if (type === 'rect') {\n      group.querySelector('rect.texture-content')?.setAttribute('fill', getSvgPaint(group, color, 'fill'));\n    } else if (type === 'arrow') {\n      const paint = getSvgPaint(group, color, 'stroke');\n      group.querySelector('line.texture-content')?.setAttribute('stroke', paint);\n      group.querySelector('polygon')?.setAttribute('fill', paint);\n    } else if (type === 'path') {\n      group.querySelector('path.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));\n    }\n  }\n\n  function colorToCss(value) {\n    return value || '#111827';\n  }\n\n  function getSvgPaint(group, value, prop) {\n    if (!String(value || '').includes('linear-gradient')) return value;\n    const parsed = parseColorState(value);\n    const id = `${group.id}-${prop}-gradient`;\n    let gradient = document.getElementById(id);\n    if (!gradient) {\n      gradient = createSvg('linearGradient', { id, x1: '0%', y1: '0%', x2: '100%', y2: '0%' });\n      textureSvg.querySelector('defs')?.appendChild(gradient);\n    }\n    gradient.innerHTML = '';\n    gradient.appendChild(createSvg('stop', { offset: '0%', 'stop-color': rgbaFrom(parsed.start, parsed.alpha) }));\n    gradient.appendChild(createSvg('stop', { offset: '100%', 'stop-color': rgbaFrom(parsed.end, parsed.alpha) }));\n    return `url(#${id})`;\n  }\n\n  function getColorValue(group, prop) {\n    if (!group) return '#111827';\n    if (group.classList?.contains('texture-template-path')) {\n      return group.dataset.color || (group.dataset.areaEmpty === 'true' ? '#ffffff' : group.style.fill || group.getAttribute('fill')) || '#ffffff';\n    }\n    const type = group.dataset.type;\n    if (prop === 'strokeColor') {\n      if (group.dataset.strokeColor) return group.dataset.strokeColor;\n      return group.querySelector('rect.texture-content')?.getAttribute('stroke') || '#1e3a8a';\n    }\n    if (group.dataset.color) return group.dataset.color;\n    if (type === 'text') return group.querySelector('.texture-text-box')?.dataset.color || '#111827';\n    if (type === 'rect') return group.querySelector('rect.texture-content')?.getAttribute('fill') || '#3b82f6';\n    return group.querySelector('.texture-content')?.getAttribute('stroke') || '#111827';\n  }\n\n  function hexToRgb(hex) {\n    const clean = (hex || '#111827').replace('#', '');\n    const value = clean.length === 3 ? clean.split('').map((c) => c + c).join('') : clean;\n    return {\n      r: parseInt(value.slice(0, 2), 16) || 0,\n      g: parseInt(value.slice(2, 4), 16) || 0,\n      b: parseInt(value.slice(4, 6), 16) || 0\n    };\n  }\n\n  function rgbToHex(r, g, b) {\n    return `#${[r, g, b].map((value) => Math.max(0, Math.min(255, Math.round(value))).toString(16).padStart(2, '0')).join('')}`;\n  }\n\n  function rgbToHsv(r, g, b) {\n    r /= 255; g /= 255; b /= 255;\n    const max = Math.max(r, g, b);\n    const min = Math.min(r, g, b);\n    const d = max - min;\n    let h = 0;\n    if (d !== 0) {\n      if (max === r) h = ((g - b) / d) % 6;\n      else if (max === g) h = (b - r) / d + 2;\n      else h = (r - g) / d + 4;\n      h *= 60;\n      if (h < 0) h += 360;\n    }\n    return { h, s: max === 0 ? 0 : d / max, v: max };\n  }\n\n  function hsvToRgb(h, s, v) {\n    const c = v * s;\n    const x = c * (1 - Math.abs((h / 60) % 2 - 1));\n    const m = v - c;\n    let r = 0, g = 0, b = 0;\n    if (h < 60) [r, g, b] = [c, x, 0];\n    else if (h < 120) [r, g, b] = [x, c, 0];\n    else if (h < 180) [r, g, b] = [0, c, x];\n    else if (h < 240) [r, g, b] = [0, x, c];\n    else if (h < 300) [r, g, b] = [x, 0, c];\n    else [r, g, b] = [c, 0, x];\n    return {\n      r: (r + m) * 255,\n      g: (g + m) * 255,\n      b: (b + m) * 255\n    };\n  }\n\n  function hsvToHex(h, s, v) {\n    const rgb = hsvToRgb(h, s, v);\n    return rgbToHex(rgb.r, rgb.g, rgb.b);\n  }\n\n  function normalizeHex(value) {\n    const match = String(value || '').match(/#?[0-9a-fA-F]{6}/);\n    return match ? `#${match[0].replace('#', '')}` : '#111827';\n  }\n\n  function rgbaFrom(hex, alpha) {\n    const rgb = hexToRgb(hex);\n    const a = Math.max(0, Math.min(100, parseFloat(alpha) || 100)) / 100;\n    return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;\n  }\n\n  function gradientFrom(start, end, alpha) {\n    return `linear-gradient(90deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;\n  }\n\n  function parseCssColorTokens(value) {\n    const source = String(value || '');\n    const colorRegex = /#[0-9a-fA-F]{6}|rgba?\\(\\s*([0-9.]+)\\s*,\\s*([0-9.]+)\\s*,\\s*([0-9.]+)(?:\\s*,\\s*([0-9.]+))?\\s*\\)/g;\n    return [...source.matchAll(colorRegex)].map((match) => {\n      if (match[0].startsWith('#')) {\n        return { hex: normalizeHex(match[0]) };\n      }\n      return {\n        hex: rgbToHex(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3])),\n        alpha: match[4] !== undefined ? Math.round(parseFloat(match[4]) * 100) : undefined\n      };\n    });\n  }\n\n  function parseColorState(value) {\n    const colorTokens = parseCssColorTokens(value);\n    const isGradient = String(value || '').includes('linear-gradient');\n    const start = colorTokens[0]?.hex || normalizeHex(value);\n    const end = colorTokens[1]?.hex || (isGradient ? start : '#ffffff');\n    const hsv = rgbToHsv(...Object.values(hexToRgb(start)));\n    return {\n      mode: isGradient ? 'gradient' : 'solid',\n      activeStop: 'start',\n      start,\n      end,\n      h: hsv.h,\n      s: hsv.s,\n      v: hsv.v,\n      alpha: colorTokens.find((token) => token.alpha !== undefined)?.alpha ?? 100\n    };\n  }\n\n  function setElementStrokeColor(group, color) {\n    if (!group) return;\n    if (group.dataset.type === 'rect') {\n      group.dataset.strokeColor = color;\n      group.querySelector('rect.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));\n    }\n  }\n\n  function setElementOpacity(group, value) {\n    if (!group) return;\n    group.setAttribute('opacity', String(Math.max(0, Math.min(100, parseFloat(value) || 100)) / 100));\n  }\n\n  function setElementLineWidth(group, value) {\n    if (!group) return;\n    const width = Math.max(1, parseFloat(value) || 1);\n    if (group.dataset.type === 'path') {\n      group.querySelector('path.texture-content')?.setAttribute('stroke-width', width);\n    } else if (group.dataset.type === 'arrow') {\n      group.dataset.strokeWidth = width;\n      group.querySelector('line.texture-content')?.setAttribute('stroke-width', width);\n    } else if (group.dataset.type === 'rect') {\n      group.querySelector('rect.texture-content')?.setAttribute('stroke-width', width);\n    }\n  }\n\n  function updateSelectedElement(patch, options = {}) {\n    const group = state.selected;\n    if (!group) return;\n    if (group.classList?.contains('texture-template-path')) {\n      if (patch.color) setElementColor(group, patch.color);\n      renderSelection();\n      scheduleTexturePreviewUpdate();\n      return;\n    }\n    if (patch.fontSize !== undefined && group.dataset.type === 'text') {\n      setData(group, { fontSize: parseFloat(patch.fontSize) || 24 });\n      autoFitTextHeight(group);\n    }\n    if (patch.color) setElementColor(group, patch.color);\n    if (patch.strokeColor) setElementStrokeColor(group, patch.strokeColor);\n    if (patch.opacity !== undefined) setElementOpacity(group, patch.opacity);\n    if (patch.lineWidth !== undefined) setElementLineWidth(group, patch.lineWidth);\n    if (options.commit) {\n      renderSelection();\n      saveHistory();\n    } else {\n      renderSelection();\n      scheduleTexturePreviewUpdate();\n    }\n  }\n\n  function createElement(type, options = {}) {\n    const center = getCanvasCenter();\n    const width = options.width || 120;\n    const height = options.height || 80;\n    const group = createSvg('g');\n    group.id = `element-${++state.elementCounter}`;\n    group.classList.add('texture-element');\n    group.dataset.type = type;\n    group.dataset.x = options.x ?? center.cx - width / 2;\n    group.dataset.y = options.y ?? center.cy - height / 2;\n    group.dataset.width = width;\n    group.dataset.height = height;\n    group.dataset.baseWidth = options.baseWidth || width;\n    group.dataset.baseHeight = options.baseHeight || height;\n    group.dataset.fontSize = options.fontSize || 24;\n    group.dataset.rotate = options.rotate || 0;\n\n    let content;\n    if (type === 'text') {\n      content = createSvg('foreignObject', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        width,\n        height\n      });\n      const textBox = document.createElement('div');\n      textBox.className = 'texture-text-box';\n      textBox.dataset.color = options.color || '#111827';\n      textBox.textContent = options.text || defaultTextContent;\n      content.appendChild(textBox);\n    } else if (type === 'rect') {\n      content = createSvg('rect', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        rx: 8,\n        fill: '#3b82f6',\n        stroke: '#1e3a8a',\n        'stroke-width': 2\n      });\n    } else if (type === 'image') {\n      content = createSvg('image', {\n        class: 'texture-content',\n        x: 0,\n        y: 0,\n        href: options.src,\n        preserveAspectRatio: 'xMidYMid meet'\n      });\n    } else if (type === 'arrow') {\n      const line = createSvg('line', {\n        class: 'texture-content',\n        stroke: '#111827',\n        'stroke-linecap': 'round'\n      });\n      const head = createSvg('polygon', { fill: '#111827' });\n      group.append(line, head);\n    } else if (type === 'path') {\n      content = createSvg('path', {\n        class: 'texture-content',\n        d: options.d,\n        fill: 'none',\n        stroke: '#111827',\n        'stroke-width': 6,\n        'stroke-linecap': 'round',\n        'stroke-linejoin': 'round'\n      });\n    }\n\n    if (content) group.appendChild(content);\n    textureElements.appendChild(group);\n    setData(group, {});\n    autoFitTextHeight(group);\n    selectElement(group);\n    saveHistory();\n    setTool('select');\n    return group;\n  }\n\n  function selectElement(element) {\n    state.selected?.classList.remove('selected');\n    restoreTemplatePathPreview(state.selectedTemplatePath);\n    state.selectedTemplatePath?.classList.remove('selected-template-path');\n    state.selectedTemplatePath = null;\n    state.selected = element || null;\n    if (state.selected?.classList?.contains('texture-template-path')) {\n      state.selectedTemplatePath = state.selected;\n      setTemplatePathPreview(state.selectedTemplatePath, 'selected');\n      state.selectedTemplatePath.classList.add('selected-template-path');\n    } else {\n      state.selected?.classList.add('selected');\n    }\n    renderSelection();\n  }\n\n  function clearSelection() {\n    selectElement(null);\n  }\n\n  function editTextElement(group) {\n    if (!group || group.dataset.type !== 'text') return;\n    const textBox = group.querySelector('.texture-text-box');\n    if (!textBox) return;\n    selectElement(group);\n\n    if (state.textEditor) {\n      state.textEditor.commit();\n    }\n\n    textBox.setAttribute('contenteditable', 'true');\n    textBox.classList.add('is-editing');\n    textBox.style.height = 'auto';\n    const originalText = textBox.innerText;\n    const originalData = getData(group);\n    let isDone = false;\n    const syncTextHeight = () => {\n      if (isDone) return;\n      if (autoFitTextHeight(group)) {\n        renderSelection();\n        scheduleTexturePreviewUpdate();\n      }\n    };\n    const closeEditor = (commit) => {\n      if (isDone) return;\n      syncTextHeight();\n      isDone = true;\n      if (commit) {\n        textBox.textContent = textBox.innerText.trim() || defaultTextContent;\n        textBox.style.height = '100%';\n        autoFitTextHeight(group);\n        saveHistory();\n      } else {\n        textBox.textContent = originalText;\n        textBox.style.height = '100%';\n        setData(group, originalData);\n        renderSelection();\n      }\n      textBox.removeAttribute('contenteditable');\n      textBox.classList.remove('is-editing');\n      state.textEditor = null;\n      scheduleTexturePreviewUpdate();\n    };\n\n    const handleKeydown = (event) => {\n      event.stopPropagation();\n      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') closeEditor(true);\n      if (event.key === 'Escape') closeEditor(false);\n      requestAnimationFrame(syncTextHeight);\n    };\n    const handleInput = () => syncTextHeight();\n    const handlePointerDown = (event) => event.stopPropagation();\n    const handleBlur = () => closeEditor(true);\n    textBox.addEventListener('keydown', handleKeydown);\n    textBox.addEventListener('input', handleInput);\n    textBox.addEventListener('pointerdown', handlePointerDown);\n    textBox.addEventListener('blur', handleBlur);\n    state.textEditor = {\n      commit: () => closeEditor(true),\n      cancel: () => closeEditor(false)\n    };\n    requestAnimationFrame(() => {\n      const selection = window.getSelection();\n      const range = document.createRange();\n      textBox.focus();\n      range.selectNodeContents(textBox);\n      range.collapse(false);\n      selection.removeAllRanges();\n      selection.addRange(range);\n      syncTextHeight();\n    });\n  }\n\n  function isTextDoubleClick(target) {\n    if (!target || target.dataset.type !== 'text') return false;\n    const now = Date.now();\n    const isDouble = state.lastTextClick.element === target && now - state.lastTextClick.time < 420;\n    state.lastTextClick = { element: target, time: now };\n    return isDouble;\n  }\n\n  function buildElementToolbar(group) {\n    if (group.classList?.contains('texture-template-path')) {\n      elementToolbar.innerHTML = '';\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = 'Area';\n      const button = document.createElement('button');\n      button.type = 'button';\n      button.className = 'color-chip';\n      button.dataset.colorProp = 'color';\n      const value = getColorValue(group, 'color');\n      button.dataset.colorValue = value;\n      button.style.background = colorToCss(value);\n      button.setAttribute('aria-label', 'Area color');\n      control.appendChild(button);\n      elementToolbar.appendChild(control);\n      positionElementToolbar(group);\n      return;\n    }\n    const type = group.dataset.type;\n    const data = getData(group);\n    elementToolbar.innerHTML = '';\n\n    const addColor = (label, value, name) => {\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = label;\n      const button = document.createElement('button');\n      button.type = 'button';\n      button.className = 'color-chip';\n      button.dataset.colorProp = name;\n      button.dataset.colorValue = value;\n      button.style.background = colorToCss(value);\n      button.setAttribute('aria-label', label);\n      control.appendChild(button);\n      elementToolbar.appendChild(control);\n    };\n    const addNumber = (label, value, name, min, max) => {\n      const control = document.createElement('label');\n      control.className = 'element-toolbar-control';\n      control.textContent = label;\n      const input = document.createElement('input');\n      input.type = 'number';\n      input.value = value;\n      input.min = min;\n      input.max = max;\n      input.dataset.prop = name;\n      control.appendChild(input);\n      elementToolbar.appendChild(control);\n    };\n\n    if (type === 'text') {\n      const textBox = group.querySelector('.texture-text-box');\n      addNumber('Size', Math.round(data.fontSize), 'fontSize', 8, 160);\n      addColor('Color', textBox?.dataset.color || '#111827', 'color');\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    } else if (type === 'rect') {\n      const rect = group.querySelector('rect.texture-content');\n      addColor('Fill', rect?.getAttribute('fill') || '#3b82f6', 'color');\n      addColor('Stroke', rect?.getAttribute('stroke') || '#1e3a8a', 'strokeColor');\n      addNumber('W', rect?.getAttribute('stroke-width') || 2, 'lineWidth', 0, 40);\n    } else if (type === 'image') {\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    } else {\n      const content = group.querySelector('.texture-content');\n      addColor('Color', content?.getAttribute('stroke') || '#111827', 'color');\n      addNumber('W', content?.getAttribute('stroke-width') || group.dataset.strokeWidth || 6, 'lineWidth', 1, 80);\n      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);\n    }\n\n    positionElementToolbar(group);\n  }\n\n  function positionElementToolbar(group = state.selected) {\n    if (!group) {\n      elementToolbar.classList.remove('visible');\n      return;\n    }\n    const svgRect = textureSvg.getBoundingClientRect();\n    const areaRect = textureCanvasArea.getBoundingClientRect();\n    const data = getData(group);\n    const scaleX = svgRect.width / state.svgWidth;\n    const scaleY = svgRect.height / state.svgHeight;\n    elementToolbar.classList.add('visible');\n    const toolbarWidth = elementToolbar.offsetWidth || 320;\n    const toolbarHeight = elementToolbar.offsetHeight || 44;\n    const left = svgRect.left - areaRect.left + (data.x + data.width / 2) * scaleX - toolbarWidth / 2;\n    const top = svgRect.top - areaRect.top + data.y * scaleY - toolbarHeight - 12;\n    elementToolbar.style.left = `${Math.max(8, Math.min(areaRect.width - toolbarWidth - 8, left))}px`;\n    elementToolbar.style.top = `${Math.max(8, top)}px`;\n  }\n\n  function closeColorPopover() {\n    colorPopover.classList.remove('visible');\n    colorPopover.innerHTML = '';\n    state.colorPicker = null;\n  }\n\n  function openColorPopover(button) {\n    const prop = button.dataset.colorProp;\n    const group = state.selected;\n    if (!group || !prop) return;\n    const current = parseColorState(getColorValue(group, prop));\n    const startHsv = rgbToHsv(...Object.values(hexToRgb(current.start)));\n    const endHsv = rgbToHsv(...Object.values(hexToRgb(current.end)));\n    state.colorPicker = {\n      prop,\n      mode: current.mode,\n      activeStop: current.activeStop,\n      start: current.start,\n      end: current.end,\n      stopHsv: {\n        start: startHsv,\n        end: endHsv\n      },\n      h: current.h,\n      s: current.s,\n      v: current.v,\n      alpha: current.alpha\n    };\n\n    const buttonRect = button.getBoundingClientRect();\n    const areaRect = textureCanvasArea.getBoundingClientRect();\n    colorPopover.innerHTML = `\n      <div class=\"color-mode\" role=\"group\">\n        <button type=\"button\" data-mode=\"solid\" class=\"${current.mode === 'solid' ? 'active' : ''}\">Solid</button>\n        <button type=\"button\" data-mode=\"gradient\" class=\"${current.mode === 'gradient' ? 'active' : ''}\">Gradient</button>\n      </div>\n      <div class=\"gradient-stops\">\n        <button type=\"button\" data-stop=\"start\" class=\"active\"><span style=\"background:${current.start}\"></span> A</button>\n        <button type=\"button\" data-stop=\"end\"><span style=\"background:${current.end}\"></span> B</button>\n      </div>\n      <div class=\"color-area\" data-color-area><span class=\"color-area-cursor\"></span></div>\n      <div class=\"hue-row\">\n        <span>Hue</span>\n        <div class=\"hue-field\" data-hue-field><span class=\"hue-field-cursor\"></span></div>\n      </div>\n      <div class=\"slider-row\">\n        <span>Alpha</span>\n        <input class=\"alpha-slider\" type=\"range\" min=\"0\" max=\"100\" value=\"${current.alpha}\" data-color-field=\"alpha\">\n      </div>\n      <label class=\"color-field\">HEX <input data-color-field=\"hex\" value=\"${current.start}\" maxlength=\"7\"></label>\n      <div class=\"color-preview\"></div>\n    `;\n    colorPopover.style.left = `${Math.max(8, buttonRect.left - areaRect.left)}px`;\n    colorPopover.style.top = `${Math.max(8, buttonRect.bottom - areaRect.top + 8)}px`;\n    colorPopover.classList.add('visible');\n    renderColorPopover();\n  }\n\n  function getPickerCss() {\n    if (!state.colorPicker) return '#111827';\n    return state.colorPicker.mode === 'gradient'\n      ? gradientFrom(state.colorPicker.start, state.colorPicker.end, state.colorPicker.alpha)\n      : rgbaFrom(state.colorPicker.start, state.colorPicker.alpha);\n  }\n\n  function renderColorPopover() {\n    if (!state.colorPicker) return;\n    colorPopover.querySelectorAll('[data-mode]').forEach((button) => {\n      button.classList.toggle('active', button.dataset.mode === state.colorPicker.mode);\n    });\n    const stops = colorPopover.querySelector('.gradient-stops');\n    if (stops) stops.style.display = state.colorPicker.mode === 'gradient' ? 'grid' : 'none';\n    colorPopover.querySelectorAll('[data-stop]').forEach((button) => {\n      button.classList.toggle('active', button.dataset.stop === state.colorPicker.activeStop);\n      const swatch = button.querySelector('span');\n      if (swatch) swatch.style.background = state.colorPicker[button.dataset.stop];\n    });\n    const hue = hsvToHex(state.colorPicker.h, 1, 1);\n    const area = colorPopover.querySelector('.color-area');\n    if (area) area.style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;\n    const cursor = colorPopover.querySelector('.color-area-cursor');\n    if (cursor) {\n      cursor.style.left = `${state.colorPicker.s * 100}%`;\n      cursor.style.top = `${(1 - state.colorPicker.v) * 100}%`;\n    }\n    const hexInput = colorPopover.querySelector('[data-color-field=\"hex\"]');\n    if (hexInput) hexInput.value = state.colorPicker[state.colorPicker.activeStop];\n    const hueCursor = colorPopover.querySelector('.hue-field-cursor');\n    if (hueCursor) hueCursor.style.left = `${(state.colorPicker.h / 360) * 100}%`;\n    const alphaInput = colorPopover.querySelector('[data-color-field=\"alpha\"]');\n    if (alphaInput) alphaInput.value = state.colorPicker.alpha;\n    const preview = colorPopover.querySelector('.color-preview');\n    if (preview) preview.style.background = getPickerCss();\n  }\n\n  function applyColorPicker(commit = false) {\n    if (!state.colorPicker) return;\n    const value = getPickerCss();\n    updateSelectedElement({ [state.colorPicker.prop]: value }, { commit });\n    elementToolbar.querySelectorAll(`[data-color-prop=\"${state.colorPicker.prop}\"]`).forEach((button) => {\n      button.dataset.colorValue = value;\n      button.style.background = value;\n    });\n  }\n\n  function setActiveColorFromHex(hex) {\n    if (!state.colorPicker) return;\n    const normalized = normalizeHex(hex);\n    state.colorPicker[state.colorPicker.activeStop] = normalized;\n    const rgb = hexToRgb(normalized);\n    const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = hsv;\n    state.colorPicker.h = hsv.h;\n    state.colorPicker.s = hsv.s;\n    state.colorPicker.v = hsv.v;\n  }\n\n  function setActiveStop(stop) {\n    if (!state.colorPicker) return;\n    state.colorPicker.activeStop = stop;\n    const hsv = state.colorPicker.stopHsv[stop] || rgbToHsv(...Object.values(hexToRgb(state.colorPicker[stop])));\n    state.colorPicker.h = hsv.h;\n    state.colorPicker.s = hsv.s;\n    state.colorPicker.v = hsv.v;\n  }\n\n  function setPickerHue(event) {\n    if (!state.colorPicker) return;\n    const field = colorPopover.querySelector('[data-hue-field]');\n    if (!field) return;\n    const rect = field.getBoundingClientRect();\n    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));\n    state.colorPicker.h = ratio * 360;\n    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {\n      h: state.colorPicker.h,\n      s: state.colorPicker.s,\n      v: state.colorPicker.v\n    };\n    renderColorPopover();\n    applyColorPicker(false);\n  }\n\n  function updatePickerFromArea(event) {\n    if (!state.colorPicker) return;\n    const area = colorPopover.querySelector('[data-color-area]');\n    if (!area) return;\n    const rect = area.getBoundingClientRect();\n    const s = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));\n    const v = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));\n    state.colorPicker.s = s;\n    state.colorPicker.v = v;\n    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, s, v);\n    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {\n      h: state.colorPicker.h,\n      s,\n      v\n    };\n    renderColorPopover();\n    applyColorPicker(false);\n  }\n\n  function renderSelection() {\n    selectionLayer.innerHTML = '';\n    if (!state.selected) {\n      positionElementToolbar(null);\n      return;\n    }\n    const data = getData(state.selected);\n    const box = createSvg('g', {\n      class: 'selection-box',\n      transform: `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`\n    });\n    box.appendChild(createSvg('rect', {\n      class: 'selection-outline',\n      x: 0,\n      y: 0,\n      width: data.width,\n      height: data.height\n    }));\n\n    if (!state.selected.classList?.contains('texture-template-path')) {\n      [\n        ['nw', 0, 0], ['n', data.width / 2, 0], ['ne', data.width, 0],\n        ['e', data.width, data.height / 2], ['se', data.width, data.height],\n        ['s', data.width / 2, data.height], ['sw', 0, data.height], ['w', 0, data.height / 2]\n      ].forEach(([handle, x, y]) => {\n        box.appendChild(createSvg('rect', {\n          class: 'selection-handle',\n          'data-action': 'resize',\n          'data-handle': handle,\n          x: x - 5,\n          y: y - 5,\n          width: 10,\n          height: 10,\n          rx: 2\n        }));\n      });\n\n      box.appendChild(createSvg('line', {\n        class: 'selection-rotate-line',\n        x1: data.width / 2,\n        y1: -30,\n        x2: data.width / 2,\n        y2: 0\n      }));\n      box.appendChild(createSvg('circle', {\n        class: 'selection-rotate-handle',\n        'data-action': 'rotate',\n        cx: data.width / 2,\n        cy: -38,\n        r: 8\n      }));\n    }\n    selectionLayer.appendChild(box);\n    buildElementToolbar(state.selected);\n  }\n\n  toolButtons.text?.addEventListener('click', () => {\n    createElement('text', { text: defaultTextContent, width: 190, height: 54 });\n  });\n\n  toolButtons.shape?.addEventListener('click', () => createElement('rect', { width: 120, height: 120 }));\n  toolButtons.arrow?.addEventListener('click', () => createElement('arrow', { width: 150, height: 38 }));\n\n  function importArtworkDataUrl(dataUrl) {\n    if (!/^data:image\\//i.test(String(dataUrl || ''))) return false;\n    createElement('image', { src: dataUrl, width: 190, height: 142 });\n    setTool('select');\n    return true;\n  }\n\n  toolButtons.image?.addEventListener('click', () => {\n    const input = document.createElement('input');\n    input.type = 'file';\n    input.accept = 'image/*';\n    input.onchange = (e) => {\n      const file = e.target.files[0];\n      if (file) {\n        const reader = new FileReader();\n        reader.onload = (event) => {\n          importArtworkDataUrl(event.target.result);\n        };\n        reader.readAsDataURL(file);\n      }\n    };\n    input.click();\n  });\n\n  function localVector(dx, dy, angle) {\n    const rad = -angle * Math.PI / 180;\n    return {\n      x: dx * Math.cos(rad) - dy * Math.sin(rad),\n      y: dx * Math.sin(rad) + dy * Math.cos(rad)\n    };\n  }\n\n  function startDraw(event) {\n    const point = svgPoint(event);\n    const path = createSvg('path', {\n      d: `M ${point.x} ${point.y}`,\n      fill: 'none',\n      stroke: '#111827',\n      'stroke-width': 6,\n      'stroke-linecap': 'round',\n      'stroke-linejoin': 'round'\n    });\n    textureElements.appendChild(path);\n    state.active = { mode: 'draw', path, points: [point] };\n  }\n\n  function finishDraw() {\n    if (!state.active || state.active.mode !== 'draw') return;\n    const { path, points } = state.active;\n    state.active = null;\n    if (points.length < 2) {\n      path.remove();\n      return;\n    }\n    const bbox = path.getBBox();\n    const d = points.map((point, index) => {\n      const cmd = index === 0 ? 'M' : 'L';\n      return `${cmd} ${point.x - bbox.x} ${point.y - bbox.y}`;\n    }).join(' ');\n    path.remove();\n    createElement('path', {\n      x: bbox.x,\n      y: bbox.y,\n      width: Math.max(minSize, bbox.width),\n      height: Math.max(minSize, bbox.height),\n      baseWidth: Math.max(minSize, bbox.width),\n      baseHeight: Math.max(minSize, bbox.height),\n      d\n    });\n  }\n\n  textureSvg.addEventListener('pointerdown', (event) => {\n    if (event.button !== 0) return;\n    if (event.target.closest('[data-editor-toolbar]')) {\n      event.stopPropagation();\n      return;\n    }\n    if (event.target.closest('.texture-text-box.is-editing')) {\n      event.stopPropagation();\n      return;\n    }\n    if (state.tool === 'pan') {\n      textureSvg.setPointerCapture(event.pointerId);\n      state.active = {\n        mode: 'pan',\n        startClientX: event.clientX,\n        startClientY: event.clientY,\n        startScrollLeft: textureCanvasArea.scrollLeft,\n        startScrollTop: textureCanvasArea.scrollTop\n      };\n      textureSvg.style.cursor = 'grabbing';\n      return;\n    }\n\n    if (state.tool === 'draw') {\n      event.preventDefault();\n      textureSvg.setPointerCapture(event.pointerId);\n      startDraw(event);\n      return;\n    }\n\n    const actionTarget = event.target.closest('[data-action]');\n    if (actionTarget && state.selected) {\n      event.preventDefault();\n      textureSvg.setPointerCapture(event.pointerId);\n      state.active = {\n        mode: actionTarget.dataset.action,\n        handle: actionTarget.dataset.handle,\n        startPoint: svgPoint(event),\n        startData: getData(state.selected)\n      };\n      return;\n    }\n\n    const target = event.target.closest('.texture-element');\n    const templatePath = event.target.closest('.texture-template-path');\n    if (templatePath) {\n      event.preventDefault();\n      selectElement(templatePath);\n      scheduleTexturePreviewUpdate();\n      return;\n    }\n    if (target) {\n      event.preventDefault();\n      if (isTextDoubleClick(target)) {\n        state.active = null;\n        selectElement(target);\n        editTextElement(target);\n        return;\n      }\n      textureSvg.setPointerCapture(event.pointerId);\n      selectElement(target);\n      state.active = {\n        mode: 'move',\n        startPoint: svgPoint(event),\n        startData: getData(target)\n      };\n    } else {\n      clearSelection();\n    }\n  });\n\n  textureSvg.addEventListener('pointerover', (event) => {\n    const templatePath = event.target.closest('.texture-template-path');\n    if (!templatePath || templatePath === state.selectedTemplatePath) return;\n    setTemplatePathPreview(templatePath, 'hover');\n  });\n\n  textureSvg.addEventListener('pointerout', (event) => {\n    const templatePath = event.target.closest('.texture-template-path');\n    if (!templatePath || templatePath === state.selectedTemplatePath) return;\n    restoreTemplatePathPreview(templatePath);\n  });\n\n  textureSvg.addEventListener('dblclick', (event) => {\n    const target = event.target.closest('.texture-element');\n    if (!target || target.dataset.type !== 'text') return;\n    event.preventDefault();\n    event.stopPropagation();\n    editTextElement(target);\n  });\n\n  textureSvg.addEventListener('pointermove', (event) => {\n    if (!state.active) return;\n    const point = svgPoint(event);\n\n    if (state.active.mode === 'pan') {\n      textureCanvasArea.scrollLeft = state.active.startScrollLeft - (event.clientX - state.active.startClientX);\n      textureCanvasArea.scrollTop = state.active.startScrollTop - (event.clientY - state.active.startClientY);\n      return;\n    }\n\n    if (state.active.mode === 'draw') {\n      state.active.points.push(point);\n      state.active.path.setAttribute('d', `${state.active.path.getAttribute('d')} L ${point.x} ${point.y}`);\n      return;\n    }\n\n    if (!state.selected) return;\n    const start = state.active.startPoint;\n    const data = state.active.startData;\n    const dx = point.x - start.x;\n    const dy = point.y - start.y;\n\n    if (state.active.mode === 'move') {\n      setData(state.selected, { x: data.x + dx, y: data.y + dy });\n    } else if (state.active.mode === 'resize') {\n      const local = localVector(dx, dy, data.rotate);\n      const isText = state.selected.dataset.type === 'text';\n      let x = data.x;\n      let y = data.y;\n      let width = data.width;\n      let height = data.height;\n      const handle = state.active.handle;\n\n      if (handle.includes('e')) width = data.width + local.x;\n      if (handle.includes('s')) height = data.height + local.y;\n      if (handle.includes('w')) {\n        width = data.width - local.x;\n        x = data.x + dx;\n      }\n      if (handle.includes('n')) {\n        height = data.height - local.y;\n        y = data.y + dy;\n      }\n      if (event.shiftKey || (isText && handle.length === 2)) {\n        const aspect = data.width / data.height;\n        if (Math.abs(local.x) > Math.abs(local.y)) height = width / aspect;\n        else width = height * aspect;\n      }\n      const patch = { x, y, width, height };\n      if (isText) {\n        const widthScale = width / Math.max(minSize, data.width);\n        const heightScale = height / Math.max(minSize, data.height);\n        const scale = handle.length === 2\n          ? Math.max(widthScale, heightScale)\n          : handle.includes('e') || handle.includes('w')\n            ? widthScale\n            : heightScale;\n        patch.fontSize = Math.max(8, data.fontSize * scale);\n      }\n      setData(state.selected, patch);\n      if (isText && !state.active.handle.includes('n') && !state.active.handle.includes('s')) {\n        autoFitTextHeight(state.selected);\n      }\n    } else if (state.active.mode === 'rotate') {\n      const cx = data.x + data.width / 2;\n      const cy = data.y + data.height / 2;\n      const startAngle = Math.atan2(start.y - cy, start.x - cx);\n      const currentAngle = Math.atan2(point.y - cy, point.x - cx);\n      setData(state.selected, { rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI });\n    }\n    renderSelection();\n    scheduleTexturePreviewUpdate();\n  });\n\n  function endInteraction(event) {\n    if (!state.active) return;\n    const mode = state.active.mode;\n    if (mode === 'draw') {\n      finishDraw();\n    } else if (mode !== 'pan') {\n      saveHistory();\n    }\n    state.active = null;\n    if (state.tool === 'pan') {\n      textureSvg.style.cursor = 'grab';\n    }\n    if (event.pointerId !== undefined && textureSvg.hasPointerCapture(event.pointerId)) {\n      textureSvg.releasePointerCapture(event.pointerId);\n    }\n  }\n\n  textureSvg.addEventListener('pointerup', endInteraction);\n  textureSvg.addEventListener('pointercancel', endInteraction);\n\n  elementToolbar.addEventListener('input', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    updateSelectedElement({ [input.dataset.prop]: input.value });\n  });\n\n  elementToolbar.addEventListener('change', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });\n  });\n\n  elementToolbar.addEventListener('keydown', (event) => {\n    const input = event.target.closest('[data-prop]');\n    if (!input) return;\n    event.stopPropagation();\n    if (event.key === 'Enter') {\n      updateSelectedElement({ [input.dataset.prop]: input.value }, { commit: true });\n      input.blur();\n    }\n  });\n\n  elementToolbar.addEventListener('pointerdown', (event) => {\n    if (event.target.closest('[data-editor-toolbar]')) {\n      event.stopPropagation();\n    }\n  });\n\n  elementToolbar.addEventListener('click', (event) => {\n    const button = event.target.closest('[data-color-prop]');\n    if (!button) return;\n    event.preventDefault();\n    event.stopPropagation();\n    openColorPopover(button);\n  });\n\n  colorPopover.addEventListener('pointerdown', (event) => event.stopPropagation());\n  colorPopover.addEventListener('click', (event) => {\n    const modeButton = event.target.closest('[data-mode]');\n    const stopButton = event.target.closest('[data-stop]');\n    if (!state.colorPicker) return;\n    if (modeButton) {\n      state.colorPicker.mode = modeButton.dataset.mode;\n    } else if (stopButton) {\n      setActiveStop(stopButton.dataset.stop);\n    } else {\n      return;\n    }\n    renderColorPopover();\n    applyColorPicker(false);\n  });\n  colorPopover.addEventListener('input', (event) => {\n    const field = event.target.closest('[data-color-field]');\n    if (!field || !state.colorPicker) return;\n    const key = field.dataset.colorField;\n    if (key === 'alpha') {\n      state.colorPicker[key] = field.value;\n    } else {\n      if (!/^#?[0-9a-fA-F]{6}$/.test(field.value)) return;\n      setActiveColorFromHex(field.value);\n    }\n    renderColorPopover();\n    applyColorPicker(false);\n  });\n  colorPopover.addEventListener('change', () => applyColorPicker(true));\n  colorPopover.addEventListener('pointerdown', (event) => {\n    if (!event.target.closest('[data-color-area]')) return;\n    event.preventDefault();\n    updatePickerFromArea(event);\n    const handleMove = (moveEvent) => updatePickerFromArea(moveEvent);\n    const handleUp = () => {\n      window.removeEventListener('pointermove', handleMove);\n      window.removeEventListener('pointerup', handleUp);\n      applyColorPicker(true);\n    };\n    window.addEventListener('pointermove', handleMove);\n    window.addEventListener('pointerup', handleUp);\n  });\n  colorPopover.addEventListener('pointerdown', (event) => {\n    if (!event.target.closest('[data-hue-field]')) return;\n    event.preventDefault();\n    setPickerHue(event);\n    const handleMove = (moveEvent) => setPickerHue(moveEvent);\n    const handleUp = () => {\n      window.removeEventListener('pointermove', handleMove);\n      window.removeEventListener('pointerup', handleUp);\n      applyColorPicker(true);\n    };\n    window.addEventListener('pointermove', handleMove);\n    window.addEventListener('pointerup', handleUp);\n  });\n\n  document.addEventListener('pointerdown', (event) => {\n    if (!colorPopover.classList.contains('visible')) return;\n    if (event.target.closest('[data-editor-toolbar]')) return;\n    closeColorPopover();\n  });\n\n  textureCanvasArea.addEventListener('scroll', () => positionElementToolbar());\n  window.addEventListener('resize', () => positionElementToolbar());\n\n  function saveHistory() {\n    const snapshot = getCleanElementsHtml();\n    if (state.history[state.historyIndex] === snapshot) return;\n    state.history = state.history.slice(0, state.historyIndex + 1);\n    state.history.push(snapshot);\n    state.historyIndex++;\n    scheduleTexturePreviewUpdate();\n  }\n\n  function restoreHistory(index) {\n    textureElements.innerHTML = state.history[index] || '';\n    selectElement(null);\n    const ids = [...textureElements.querySelectorAll('.texture-element')]\n      .map(element => parseInt((element.id || '').replace('element-', ''), 10))\n      .filter(Number.isFinite);\n    state.elementCounter = Math.max(state.elementCounter, 0, ...ids);\n    scheduleTexturePreviewUpdate();\n  }\n\n  function undo() {\n    state.textEditor?.commit();\n    if (state.historyIndex > 0) {\n      state.historyIndex--;\n      restoreHistory(state.historyIndex);\n    }\n  }\n\n  function redo() {\n    state.textEditor?.commit();\n    if (state.historyIndex < state.history.length - 1) {\n      state.historyIndex++;\n      restoreHistory(state.historyIndex);\n    }\n  }\n\n  function deleteSelected() {\n    state.textEditor?.cancel();\n    if (!state.selected) return;\n    state.selected.remove();\n    clearSelection();\n    saveHistory();\n  }\n\n  document.getElementById('toolUndo')?.addEventListener('click', undo);\n  document.getElementById('toolRedo')?.addEventListener('click', redo);\n  document.getElementById('toolDelete')?.addEventListener('click', deleteSelected);\n\n  document.addEventListener('keydown', (event) => {\n    if (!designModal.classList.contains('active')) return;\n    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {\n      event.preventDefault();\n      event.shiftKey ? redo() : undo();\n    } else if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {\n      event.preventDefault();\n      deleteSelected();\n    }\n  });\n\n  designerViewer?.addEventListener('load', () => {\n    if (state.selectedMaterial) {\n      applyMaterialToViewer(designerViewer, state.selectedMaterial);\n    }\n    scheduleTexturePreviewUpdate();\n  });\n  detailViewer?.addEventListener('load', () => {\n    if (state.selectedMaterial) {\n      applyMaterialToViewer(detailViewer, state.selectedMaterial);\n    }\n  });\n  saveDesignModal?.addEventListener('click', saveDesignAndClose);\n  downloadRenderBtn?.addEventListener('click', downloadDesignedRender);\n  downloadRenderModalBtn?.addEventListener('click', downloadDesignedRender);\n\n  // Initialize history\n  renderMaterialSwatches();\n  if (state.selectedMaterial) {\n    applyMaterialToViewer(detailViewer, state.selectedMaterial);\n  }\n  saveHistory();\n\n  let pendingArtwork = null;\n  try {\n    pendingArtwork = JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null');\n  } catch (error) {\n    pendingArtwork = null;\n  }\n  sessionStorage.removeItem('clothingdesign_pending_artwork');\n  const pendingArtworkIsFresh = pendingArtwork?.dataUrl && Date.now() - Number(pendingArtwork.createdAt || 0) < 10 * 60 * 1000;\n  let pendingArtworkImported = false;\n  const openDesignFromNavigation = () => {\n    if (window.location.hash !== '#design' && !pendingArtworkIsFresh) return;\n    window.setTimeout(() => {\n      if (!designModal.classList.contains('active')) openModal();\n      if (pendingArtworkIsFresh && !pendingArtworkImported) {\n        importArtworkDataUrl(pendingArtwork.dataUrl);\n        saveHistory();\n        pendingArtworkImported = true;\n      }\n    }, 80);\n  };\n  openDesignFromNavigation();\n  window.addEventListener('load', openDesignFromNavigation, { once: true });\n  window.addEventListener('hashchange', openDesignFromNavigation);\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2436,7 +2484,7 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ;
+    ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
   const iconName = Object.prototype.hasOwnProperty.call(iconLocals, 'name') ? iconLocals.name : (typeof name !== 'undefined' ? name : '');
@@ -2463,45 +2511,45 @@ title = __locals.title,
   else if (key.includes('top')) iconType = 'top';
 
     ; __append("\n<svg class=\"category-filter-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\">\n  ")
-    ;  if (iconType === 'all') {
+    ;  if (iconType === 'all') { 
     ; __append("\n    <rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"13.5\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n  ")
-    ;  } else if (iconType === 'shirt') {
+    ;  } else if (iconType === 'shirt') { 
     ; __append("\n    <path d=\"M9 4.5c1.6 1.2 4.4 1.2 6 0l4 2.4 1.5 4.1-3.1 1.3-1.2-2.1v8.3H7.8v-8.3l-1.2 2.1L3.5 11 5 6.9l4-2.4Z\"/>\n    <path d=\"M9 4.5c.8 2 5.2 2 6 0\"/>\n  ")
-    ;  } else if (iconType === 'hoodie') {
+    ;  } else if (iconType === 'hoodie') { 
     ; __append("\n    <path d=\"M8 8.5c.4-2.7 2-4.5 4-4.5s3.6 1.8 4 4.5\"/>\n    <path d=\"M7.2 8.2 4.5 10l1 3.6 2.1-1.1v7h8.8v-7l2.1 1.1 1-3.6-2.7-1.8\"/>\n    <path d=\"M10 4.8c.8 1.9 3.2 1.9 4 0M12 9v10.5\"/>\n  ")
-    ;  } else if (iconType === 'pants') {
+    ;  } else if (iconType === 'pants') { 
     ; __append("\n    <path d=\"M8 4.5h8l1.2 15h-4.1L12 11l-1.1 8.5H6.8L8 4.5Z\"/>\n    <path d=\"M8.3 8h7.4M12 4.5V11\"/>\n  ")
-    ;  } else if (iconType === 'outerwear') {
+    ;  } else if (iconType === 'outerwear') { 
     ; __append("\n    <path d=\"M8.5 4.5h7L19 8v11.5h-5.1L12 13l-1.9 6.5H5V8l3.5-3.5Z\"/>\n    <path d=\"M8.5 4.5c.8 2 6.2 2 7 0M12 7v6M7.5 10h2M14.5 10h2\"/>\n  ")
-    ;  } else if (iconType === 'dress') {
+    ;  } else if (iconType === 'dress') { 
     ; __append("\n    <path d=\"M9.2 4.5h5.6l1.2 5 3 10H5l3-10 1.2-5Z\"/>\n    <path d=\"M9.2 4.5c.8 1.8 4.8 1.8 5.6 0M8 10h8\"/>\n  ")
-    ;  } else if (iconType === 'skirt') {
+    ;  } else if (iconType === 'skirt') { 
     ; __append("\n    <path d=\"M8 5h8l2.5 14H5.5L8 5Z\"/>\n    <path d=\"M7.3 9h9.4M10 9l-1.2 10M14 9l1.2 10\"/>\n  ")
-    ;  } else if (iconType === 'hat') {
+    ;  } else if (iconType === 'hat') { 
     ; __append("\n    <path d=\"M7 12.5c.4-4.1 2.2-6.5 5-6.5s4.6 2.4 5 6.5\"/>\n    <path d=\"M4 14.5c4.8 1.4 11.2 1.4 16 0\"/>\n    <path d=\"M7 12.5h10\"/>\n  ")
-    ;  } else if (iconType === 'bag') {
+    ;  } else if (iconType === 'bag') { 
     ; __append("\n    <path d=\"M7 9h10l1 10H6L7 9Z\"/>\n    <path d=\"M9 9V7.5C9 5.6 10.3 4.5 12 4.5s3 1.1 3 3V9\"/>\n    <path d=\"M9.5 12.5h5\"/>\n  ")
-    ;  } else if (iconType === 'backpack') {
+    ;  } else if (iconType === 'backpack') { 
     ; __append("\n    <path d=\"M8 8c0-2.2 1.6-3.5 4-3.5s4 1.3 4 3.5v11.5H8V8Z\"/>\n    <path d=\"M8 10H6.5v6.5M16 10h1.5v6.5M9.5 12.5h5M10 16h4\"/>\n  ")
-    ;  } else if (iconType === 'waist-bag') {
+    ;  } else if (iconType === 'waist-bag') { 
     ; __append("\n    <path d=\"M6.5 10h11l1.5 3-1.8 5H6.8L5 13l1.5-3Z\"/>\n    <path d=\"M6.5 10 4 8M17.5 10 20 8M8.5 13h7\"/>\n  ")
-    ;  } else if (iconType === 'swimwear') {
+    ;  } else if (iconType === 'swimwear') { 
     ; __append("\n    <path d=\"M9 5.5c1.4 1.2 4.6 1.2 6 0l2.5 13h-4.2L12 14l-1.3 4.5H6.5L9 5.5Z\"/>\n    <path d=\"M8.2 10h7.6M10.2 5.2 12 14l1.8-8.8\"/>\n  ")
-    ;  } else if (iconType === 'tie') {
+    ;  } else if (iconType === 'tie') { 
     ; __append("\n    <path d=\"M10 4.5h4l1 3-3 3-3-3 1-3Z\"/>\n    <path d=\"m12 10.5 3 3.5-3 5.5L9 14l3-3.5Z\"/>\n  ")
-    ;  } else if (iconType === 'gloves') {
+    ;  } else if (iconType === 'gloves') { 
     ; __append("\n    <path d=\"M8.5 19.5H5.8V11c0-1 .7-1.8 1.7-1.8S9.2 10 9.2 11v2.5\"/>\n    <path d=\"M9.2 13.5V7.8c0-1 .7-1.8 1.7-1.8s1.7.8 1.7 1.8v5.7\"/>\n    <path d=\"M12.6 13.5V8.8c0-1 .7-1.8 1.7-1.8s1.7.8 1.7 1.8v6.7l1.3-1.7c.6-.8 1.7-.9 2.4-.3.7.6.8 1.6.3 2.4l-2.7 3.6h-8\"/>\n  ")
-    ;  } else if (iconType === 'cloak') {
+    ;  } else if (iconType === 'cloak') { 
     ; __append("\n    <path d=\"M10 4.5h4l3.5 15H6.5L10 4.5Z\"/>\n    <path d=\"M10 4.5c.5 1.7 3.5 1.7 4 0M12 6.5v13\"/>\n  ")
-    ;  } else if (iconType === 'underwear') {
+    ;  } else if (iconType === 'underwear') { 
     ; __append("\n    <path d=\"M5.5 7.5h13l-1 8.5c-.2 1.6-1.4 2.8-3 3l-2.5-5-2.5 5c-1.6-.2-2.8-1.4-3-3l-1-8.5Z\"/>\n    <path d=\"M5.8 10h12.4M12 10v4\"/>\n  ")
-    ;  } else if (iconType === 'jumpsuit') {
+    ;  } else if (iconType === 'jumpsuit') { 
     ; __append("\n    <path d=\"M8.5 4.5h7l1.5 6-2 2.5 1.3 6.5h-3.5L12 14l-.8 5.5H7.7L9 13l-2-2.5 1.5-6Z\"/>\n    <path d=\"M8.5 4.5c.8 1.8 6.2 1.8 7 0M12 7v7\"/>\n  ")
-    ;  } else if (iconType === 'top') {
+    ;  } else if (iconType === 'top') { 
     ; __append("\n    <path d=\"M8.8 4.5h6.4L17 9v10.5H7V9l1.8-4.5Z\"/>\n    <path d=\"M8.8 4.5c.8 1.8 5.6 1.8 6.4 0M8 9h8\"/>\n  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n    <path d=\"M9 4.5h6l3 3v12H6v-12l3-3Z\"/>\n    <path d=\"M9 4.5c.8 1.8 5.2 1.8 6 0M8.5 10h7\"/>\n  ")
-    ;  }
+    ;  } 
     ; __append("\n</svg>\n")
   return __output;
 
@@ -2557,7 +2605,7 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/tools/free-patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/tools/free-templates\" class=\"footer-link\">Free Templates</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=overlay-fix-1\"></script>\n</body>\n</html>\n")
   return __output;
@@ -2614,55 +2662,55 @@ title = __locals.title,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ;  const content = landingContent || {};
+    ;  const content = landingContent || {}; 
     ; __append("\n")
-    ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] };
+    ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
     ; __append("\n")
-    ;  const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] };
+    ;  const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] }; 
     ; __append("\n")
-    ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] };
+    ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; 
     ; __append("\n")
-    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' };
+    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' }; 
     ; __append("\n")
-    ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] };
+    ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; 
     ; __append("\n")
-    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' };
+    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' }; 
     ; __append("\n")
-    ;  const sectionCategories = categories || [];
+    ;  const sectionCategories = categories || []; 
     ; __append("\n")
-    ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : []));
+    ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); 
     ; __append("\n")
-    ;  const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models';
+    ;  const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; 
     ; __append("\n")
-    ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false;
+    ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; 
     ; __append("\n")
-    ;  const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups';
+    ;  const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups'; 
     ; __append("\n")
-    ;  const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models';
+    ;  const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; 
     ; __append("\n")
-    ;  const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models';
+    ;  const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; 
     ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( workflow.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( workflow.title ))
     ; __append("</h2>\n      ")
-    ;  if (workflow.description) {
+    ;  if (workflow.description) { 
     ; __append("\n        <p>")
     ; __append(escapeFn( workflow.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <div class=\"generator-steps\">\n      ")
-    ;  (workflow.steps || []).forEach(function(step, index) {
+    ;  (workflow.steps || []).forEach(function(step, index) { 
     ; __append("\n        <div class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
     ; __append("\">\n          ")
-    ;  if (step.image_url) {
+    ;  if (step.image_url) { 
     ; __append("\n            <div class=\"generator-step-media\">\n              <img src=\"")
     ; __append(escapeFn( step.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( step.title ))
     ; __append(" apparel mockup workflow step\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
@@ -2670,43 +2718,43 @@ title = __locals.title,
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( step.body ))
     ; __append("</p>\n        </div>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( categorySection.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( categorySection.title ))
     ; __append("</h2>\n      </div>\n      ")
-    ;  if (categorySection.description) {
+    ;  if (categorySection.description) { 
     ; __append("\n        <p>")
     ; __append(escapeFn( categorySection.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      ")
-    ;  if (categorySection.buttonLabel && categorySection.buttonHref) {
+    ;  if (categorySection.buttonLabel && categorySection.buttonHref) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( categorySection.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( categorySection.buttonLabel ))
     ; __append("</a>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <div class=\"generator-category-grid\">\n      ")
-    ;  if (sectionCategories.length > 0) {
+    ;  if (sectionCategories.length > 0) { 
     ; __append("\n        ")
-    ;  sectionCategories.slice(0, 6).forEach(function(cat) {
+    ;  sectionCategories.slice(0, 6).forEach(function(cat) { 
     ; __append("\n          ")
-    ;  const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length;
+    ;  const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( categoryHrefPrefix ))
     ; __append("/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"generator-category-card\">\n            ")
-    ;  if (cat.image_url) {
+    ;  if (cat.image_url) { 
     ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
     ; __append(escapeFn( cat.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( cat.name ))
     ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
     ; __append(escapeFn( categoryCount || fallbackMeta ))
     ; __append(" ")
@@ -2714,109 +2762,109 @@ title = __locals.title,
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( cat.name ))
     ; __append("</strong>\n            </div>\n            <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M5 12h14\"/>\n              <path d=\"m12 5 7 7-7 7\"/>\n            </svg>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        ")
-    ;  (categorySection.cards || []).forEach(function(card) {
+    ;  (categorySection.cards || []).forEach(function(card) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( card.href || categorySection.buttonHref || '#' ))
     ; __append("\" class=\"generator-category-card\">\n            ")
-    ;  if (card.image_url) {
+    ;  if (card.image_url) { 
     ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
     ; __append(escapeFn( card.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
     ; __append(" mockup category\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
     ; __append(escapeFn( card.meta || fallbackMeta ))
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( card.title ))
     ; __append("</strong>\n            </div>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (!skipOutputSection) {
+    ;  if (!skipOutputSection) { 
     ; __append("\n  <section class=\"generator-section generator-section-muted\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( output.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( output.title ))
     ; __append("</h2>\n      </div>\n\n      <div class=\"generator-output-grid\">\n        ")
-    ;  (output.cards || []).forEach(function(card) {
+    ;  (output.cards || []).forEach(function(card) { 
     ; __append("\n          <div class=\"generator-output-card ")
     ; __append(escapeFn( card.image_url ? 'generator-output-card-with-media' : '' ))
     ; __append("\">\n            ")
-    ;  if (card.image_url) {
+    ;  if (card.image_url) { 
     ; __append("\n              <div class=\"generator-output-media\">\n                <img src=\"")
     ; __append(escapeFn( card.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
     ; __append(" apparel mockup use case\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( card.body ))
     ; __append("</p>\n          </div>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n")
-    ;  if (sectionResourceType !== '3d-models') {
+    ;  if (sectionResourceType !== '3d-models') { 
     ; __append("\n  <section class=\"generator-library-cta\">\n    <div class=\"container\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( library.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( library.title ))
     ; __append("</h2>\n      ")
-    ;  if (library.buttonLabel && library.buttonHref) {
+    ;  if (library.buttonLabel && library.buttonHref) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( library.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( library.buttonLabel ))
     ; __append("</a>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( faq.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( faq.title ))
     ; __append("</h2>\n    </div>\n\n    <div class=\"generator-faq-list\">\n      ")
-    ;  (faq.items || []).forEach(function(item) {
+    ;  (faq.items || []).forEach(function(item) { 
     ; __append("\n        <details class=\"generator-faq-item\">\n          <summary>")
     ; __append(escapeFn( item.question ))
     ; __append("</summary>\n          <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-final-cta\">\n  <div class=\"container\">\n    <div class=\"generator-final-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( cta.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( cta.title ))
     ; __append("</h2>\n        ")
-    ;  if (cta.description) {
+    ;  if (cta.description) { 
     ; __append("\n          <p>")
     ; __append(escapeFn( cta.description ))
     ; __append("</p>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n      <div class=\"generator-final-actions\">\n        ")
-    ;  if (cta.primaryLabel && cta.primaryHref) {
+    ;  if (cta.primaryLabel && cta.primaryHref) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( cta.primaryHref ))
     ; __append("\" class=\"btn btn-primary\">")
     ; __append(escapeFn( cta.primaryLabel ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n        ")
-    ;  if (cta.secondaryLabel && cta.secondaryHref) {
+    ;  if (cta.secondaryLabel && cta.secondaryHref) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( cta.secondaryHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( cta.secondaryLabel ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n")
   return __output;
 
@@ -2877,42 +2925,42 @@ title = __locals.title,
     ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta name=\"description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  ")
-    ;  if (typeof metaRobots !== 'undefined' && metaRobots) {
+    ;  if (typeof metaRobots !== 'undefined' && metaRobots) { 
     ; __append("\n    <meta name=\"robots\" content=\"")
     ; __append(escapeFn( metaRobots ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  ")
-    ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : '';
+    ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : ''; 
     ; __append("\n  ")
-    ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png');
+    ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png'); 
 
     ; __append("\n  ")
-    ;  if (headCanonicalUrl) {
+    ;  if (headCanonicalUrl) { 
     ; __append("\n    <link rel=\"canonical\" href=\"")
     ; __append(escapeFn( headCanonicalUrl ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:title\" content=\"")
     ; __append(escapeFn( title ))
     ; __append("\">\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta property=\"og:description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  ")
-    ;  if (headCanonicalUrl) {
+    ;  if (headCanonicalUrl) { 
     ; __append("\n    <meta property=\"og:url\" content=\"")
     ; __append(escapeFn( headCanonicalUrl ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta property=\"og:image\" content=\"")
     ; __append(escapeFn( headMetaImage ))
     ; __append("\">\n  <meta property=\"og:image:alt\" content=\"")
@@ -2920,19 +2968,19 @@ title = __locals.title,
     ; __append("\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:title\" content=\"")
     ; __append(escapeFn( title ))
     ; __append("\">\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta name=\"twitter:description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta name=\"twitter:image\" content=\"")
     ; __append(escapeFn( headMetaImage ))
     ; __append("\">\n  ")
-    ;  if (typeof structuredData !== 'undefined' && structuredData) {
+    ;  if (typeof structuredData !== 'undefined' && structuredData) { 
     ; __append("\n    <script type=\"application/ld+json\">")
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"/images/icon.png\">\n  <link rel=\"stylesheet\" href=\"/css/style.css\">\n</head>\n<body>\n  <!-- Google Tag Manager (noscript) -->\n  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-K7STMRPH\"\n  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n  <!-- End Google Tag Manager (noscript) -->\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          ")
@@ -2947,22 +2995,16 @@ title = __locals.title,
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, pattern planning, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">")
     ; __append(escapeFn( t('tools.designTools') ))
-    ; __append("</span>\n                  <a href=\"/tools/t-shirt-designer\" class=\"dropdown-item\">\n                    <span>")
-    ; __append(escapeFn( t('tools.tShirtDesigner') ))
-    ; __append("</span>\n                    <small>Start a clean T-shirt design layout.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-designer\" class=\"dropdown-item\">\n                    <span>")
-    ; __append(escapeFn( t('tools.hoodieDesigner') ))
-    ; __append("</span>\n                    <small>Plan hoodie graphics and placement.</small>\n                  </a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>")
+    ; __append("</span>\n                  <a href=\"/tools/oversized-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Oversized T-Shirt Mockups</span>\n                    <small>Design on a relaxed drop-shoulder fit.</small>\n                  </a>\n                  <a href=\"/tools/polo-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Polo Shirt Mockups</span>\n                    <small>Preview uniforms and chest logos.</small>\n                  </a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.dressDesigner') ))
-    ; __append("</span>\n                    <small>Explore dress design directions.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/tools/free-patterns\" class=\"dropdown-item\">\n                    <span>")
+    ; __append("</span>\n                    <small>Explore dress design directions.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/patterns\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.freePatterns') ))
-    ; __append("</span>\n                    <small>Download editable apparel patterns.</small>\n                  </a>\n                  <a href=\"/tools/free-templates\" class=\"dropdown-item\">\n                    <span>")
-    ; __append(escapeFn( t('tools.freeTemplates') ))
-    ; __append("</span>\n                    <small>Use templates for faster previews.</small>\n                  </a>\n                  <a href=\"/tools/2d-mockup\" class=\"dropdown-item\">\n                    <span>")
+    ; __append("</span>\n                    <small>Download editable apparel patterns.</small>\n                  </a>\n                  <a href=\"/mockups\" class=\"dropdown-item\">\n                    <span>Free 3D Models</span>\n                    <small>Browse editable garment models.</small>\n                  </a>\n                  <a href=\"/tools/2d-mockup\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/clo3d-guide\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.clo3dGuide') ))
     ; __append("</span>\n                    <small>Learn the 3D apparel workflow.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
-    ;  if (user) {
+    ;  if (user) { 
     ; __append("\n          <!-- User Menu -->\n          <div class=\"user-dropdown\">\n            <button class=\"user-toggle\">\n              <div class=\"user-avatar\">\n                ")
     ; __append(escapeFn( user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() ))
     ; __append("\n              </div>\n            </button>\n            <div class=\"user-menu\">\n              <a href=\"/dashboard/designs\" class=\"user-item\">")
@@ -2974,13 +3016,13 @@ title = __locals.title,
     ; __append("</a>\n              <div class=\"user-divider\"></div>\n              <a href=\"/auth/logout\" class=\"user-item\">")
     ; __append(escapeFn( t('nav.signOut') ))
     ; __append("</a>\n            </div>\n          </div>\n        ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n          <!-- Auth Buttons -->\n          <a href=\"/auth/login\" class=\"btn btn-ghost\">")
     ; __append(escapeFn( t('nav.signIn') ))
     ; __append("</a>\n          <a href=\"/auth/register\" class=\"btn btn-primary\">")
     ; __append(escapeFn( t('nav.startFree') ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" aria-label=\"Menu\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\">\n      <a href=\"/mockups\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.design3d') ))
     ; __append("</a>\n      <a href=\"/patterns\" class=\"mobile-link\">")
@@ -2988,7 +3030,7 @@ title = __locals.title,
     ; __append("</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("</a>\n      <div class=\"mobile-divider\"></div>\n      ")
-    ;  if (user) {
+    ;  if (user) { 
     ; __append("\n        <a href=\"/dashboard/designs\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.myDesigns') ))
     ; __append("</a>\n        <a href=\"/dashboard/assets\" class=\"mobile-link\">")
@@ -2998,13 +3040,13 @@ title = __locals.title,
     ; __append("</a>\n        <a href=\"/auth/logout\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.signOut') ))
     ; __append("</a>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <a href=\"/auth/login\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.signIn') ))
     ; __append("</a>\n        <a href=\"/auth/register\" class=\"mobile-link btn btn-primary\">")
     ; __append(escapeFn( t('nav.startFree') ))
     ; __append("</a>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </nav>\n\n  <main>\n")
   return __output;
 
@@ -3062,7 +3104,7 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;
+    ; 
   const detailContent = typeof patternDetailContent !== 'undefined' ? patternDetailContent : {};
   const fileExt = detailContent.fileExt || ('.' + (pattern.format || 'zprj'));
   const categoryName = detailContent.categoryName || pattern.category || 'apparel';
@@ -3085,29 +3127,29 @@ title = __locals.title,
   const marvelousStepCards = detailContent.marvelousStepCards || toStepCards(marvelousSteps);
 
     ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer pattern-detail-preview\">\n          ")
-    ;  if (pattern.image_url) {
+    ;  if (pattern.image_url) { 
     ; __append("\n            <img src=\"")
     ; __append(escapeFn( pattern.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( pattern.name ))
     ; __append("\" class=\"pattern-detail-img\">\n          ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder pattern-detail-placeholder\">\n              <svg viewBox=\"0 0 200 200\" class=\"model-svg\" aria-hidden=\"true\">\n                <rect x=\"40\" y=\"40\" width=\"120\" height=\"120\" rx=\"4\" fill=\"#f5f5f5\" stroke=\"#999\" stroke-width=\"1\"/>\n                <path d=\"M40 70H160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                <path d=\"M70 40V160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                <circle cx=\"100\" cy=\"100\" r=\"20\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\"/>\n                <text x=\"100\" y=\"140\" text-anchor=\"middle\" fill=\"#999\" font-size=\"12\">")
     ; __append(escapeFn( pattern.format || 'zprj' ))
     ; __append("</text>\n              </svg>\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n      </div>\n\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/patterns\">Sew Patterns</a>\n          <span>/</span>\n          ")
-    ;  if (pattern.category_slug) {
+    ;  if (pattern.category_slug) { 
     ; __append("\n            <a href=\"/patterns/")
     ; __append(escapeFn( pattern.category_slug ))
     ; __append("\">")
     ; __append(escapeFn( pattern.category ))
     ; __append("</a>\n          ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n            <span>")
     ; __append(escapeFn( pattern.category ))
     ; __append("</span>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <span>/</span>\n          <span>")
     ; __append(escapeFn( pattern.name ))
     ; __append("</span>\n        </div>\n\n        <h1 class=\"model-detail-title\">")
@@ -3115,39 +3157,39 @@ title = __locals.title,
     ; __append("</h1>\n\n        <div class=\"model-detail-meta\">\n          <span class=\"tag\">.")
     ; __append(escapeFn( pattern.format || 'zprj' ))
     ; __append("</span>\n          ")
-    ;  if (pattern.tags) {
+    ;  if (pattern.tags) { 
     ; __append("\n            ")
-    ;  pattern.tags.split(',').forEach(function(tag) {
+    ;  pattern.tags.split(',').forEach(function(tag) { 
     ; __append("\n              ")
-    ;  if (tag.trim()) {
+    ;  if (tag.trim()) { 
     ; __append("\n                <span class=\"tag\">")
     ; __append(escapeFn( tag.trim() ))
     ; __append("</span>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n\n        <div class=\"model-description\">\n          <h3>Description</h3>\n          <p>")
     ; __append(escapeFn( pattern.description || 'No description available.' ))
     ; __append("</p>\n          ")
-    ;  if (detailContent.searchIntentSummary) {
+    ;  if (detailContent.searchIntentSummary) { 
     ; __append("\n            <p>")
     ; __append(escapeFn( detailContent.searchIntentSummary ))
     ; __append("</p>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          ")
-    ;  if (detailContent.patternHighlights && detailContent.patternHighlights.length) {
+    ;  if (detailContent.patternHighlights && detailContent.patternHighlights.length) { 
     ; __append("\n            <div class=\"pattern-highlight-list\">\n              ")
-    ;  detailContent.patternHighlights.forEach(function(item) {
+    ;  detailContent.patternHighlights.forEach(function(item) { 
     ; __append("\n                <div class=\"pattern-highlight-item\">\n                  <span>")
     ; __append(escapeFn( item.label ))
     ; __append("</span>\n                  <strong>")
     ; __append(escapeFn( item.value ))
     ; __append("</strong>\n                </div>\n              ")
-    ;  });
+    ;  }); 
     ; __append("\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n\n        <div class=\"model-specs\">\n          <h3>Specifications</h3>\n          <div class=\"specs-grid\">\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Format</span>\n              <span class=\"spec-value\">.")
     ; __append(escapeFn( pattern.format || 'zprj' ))
     ; __append("</span>\n            </div>\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Category</span>\n              <span class=\"spec-value\">")
@@ -3155,63 +3197,63 @@ title = __locals.title,
     ; __append("</span>\n            </div>\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Resource</span>\n              <span class=\"spec-value\">Sew Pattern</span>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"model-actions\">\n          <a href=\"")
     ; __append(escapeFn( design3dHref ))
     ; __append("\" class=\"btn btn-primary btn-large\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M12 3 3 8l9 5 9-5-9-5Z\"/>\n              <path d=\"m3 16 9 5 9-5\"/>\n              <path d=\"m3 12 9 5 9-5\"/>\n            </svg>\n            Design in 3D\n          </a>\n          ")
-    ;  if (pattern.file_url) {
+    ;  if (pattern.file_url) { 
     ; __append("\n            <a href=\"")
     ; __append(escapeFn( pattern.file_url ))
     ; __append("\" download class=\"btn btn-secondary btn-large\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download Pattern\n            </a>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <a href=\"/patterns\" class=\"btn btn-secondary btn-large\">\n            Browse Patterns\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-seo-section pattern-clo-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">CLO 3D workflow</span>\n      <h2>How to use ")
     ; __append(escapeFn( pattern.name ))
     ; __append(" in CLO 3D</h2>\n      <p>\n        ")
     ; __append(escapeFn( detailContent.cloIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside CLO 3D for ' + categoryName + ' development and simulation.') ))
     ; __append("\n      </p>\n    </div>\n\n    <div class=\"pattern-step-card-grid\">\n      ")
-    ;  cloStepCards.forEach(function(card, index) {
+    ;  cloStepCards.forEach(function(card, index) { 
     ; __append("\n        <article class=\"pattern-step-card\">\n          <div class=\"pattern-step-media pattern-step-media-")
     ; __append(escapeFn( card.icon || 'inspect' ))
     ; __append("\">\n            <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n            ")
-    ;  if (card.icon === 'download') {
+    ;  if (card.icon === 'download') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                <path d=\"M40 22v25\"/>\n                <path d=\"m29 38 11 11 11-11\"/>\n                <path d=\"M27 59h26\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'open') {
+    ;  } else if (card.icon === 'open') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                <path d=\"M12 31h56\"/>\n                <path d=\"M27 49h16\"/>\n                <path d=\"M47 41l10 8-10 8\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'simulate') {
+    ;  } else if (card.icon === 'simulate') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M19 55c8-22 20-31 37-31\"/>\n                <path d=\"M51 19h11v11\"/>\n                <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                <path d=\"M35 56h22\"/>\n              </svg>\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M18 18h20v20H18z\"/>\n                <path d=\"M42 18h20v20H42z\"/>\n                <path d=\"M18 42h20v20H18z\"/>\n                <path d=\"M42 42h20v20H42z\"/>\n                <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n              </svg>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n          <div class=\"pattern-step-copy\">\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( card.body ))
     ; __append("</p>\n          </div>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-seo-section pattern-marvelous-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Marvelous Designer workflow</span>\n      <h2>How to use ")
     ; __append(escapeFn( pattern.name ))
     ; __append(" in Marvelous Designer</h2>\n      <p>\n        ")
     ; __append(escapeFn( detailContent.marvelousIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside Marvelous Designer to review pattern pieces, sewing lines, materials, and fit.') ))
     ; __append("\n      </p>\n    </div>\n\n    <div class=\"pattern-step-card-grid\">\n      ")
-    ;  marvelousStepCards.forEach(function(card, index) {
+    ;  marvelousStepCards.forEach(function(card, index) { 
     ; __append("\n        <article class=\"pattern-step-card\">\n          <div class=\"pattern-step-media pattern-step-media-")
     ; __append(escapeFn( card.icon || 'inspect' ))
     ; __append("\">\n            <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n            ")
-    ;  if (card.icon === 'download') {
+    ;  if (card.icon === 'download') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                <path d=\"M40 22v25\"/>\n                <path d=\"m29 38 11 11 11-11\"/>\n                <path d=\"M27 59h26\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'open') {
+    ;  } else if (card.icon === 'open') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                <path d=\"M12 31h56\"/>\n                <path d=\"M27 49h16\"/>\n                <path d=\"M47 41l10 8-10 8\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'simulate') {
+    ;  } else if (card.icon === 'simulate') { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M19 55c8-22 20-31 37-31\"/>\n                <path d=\"M51 19h11v11\"/>\n                <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                <path d=\"M35 56h22\"/>\n              </svg>\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M18 18h20v20H18z\"/>\n                <path d=\"M42 18h20v20H42z\"/>\n                <path d=\"M18 42h20v20H18z\"/>\n                <path d=\"M42 42h20v20H42z\"/>\n                <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n              </svg>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n          <div class=\"pattern-step-copy\">\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( card.body ))
     ; __append("</p>\n          </div>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>Design this ")
     ; __append(escapeFn( categoryName ))
     ; __append(" pattern with matching 3D models.</h2>\n        <p>\n          Open the ")
@@ -3221,17 +3263,17 @@ title = __locals.title,
     ; __append("\" class=\"btn btn-primary\">Open ")
     ; __append(escapeFn( design3dCategoryName ))
     ; __append(" Design 3D</a>\n        ")
-    ;  if (pattern.file_url) {
+    ;  if (pattern.file_url) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( pattern.file_url ))
     ; __append("\" download class=\"btn btn-secondary\">Download ")
     ; __append(escapeFn( fileExt.toUpperCase() ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-faq-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">FAQ</span>\n      <h2>")
     ; __append(escapeFn( pattern.name ))
     ; __append(" pattern questions</h2>\n    </div>\n\n    <div class=\"generator-faq-list\">\n      ")
-    ;  faqItems.forEach(function(item, index) {
+    ;  faqItems.forEach(function(item, index) { 
     ; __append("\n        <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n          <summary>")
@@ -3239,33 +3281,33 @@ title = __locals.title,
     ; __append("</summary>\n          <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (related && related.length > 0) {
+    ;  if (related && related.length > 0) { 
     ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related Patterns</h2>\n\n    <div class=\"models-grid\">\n      ")
-    ;  related.forEach(function(item) {
+    ;  related.forEach(function(item) { 
     ; __append("\n        <div class=\"model-card\">\n          <a href=\"/patterns/item/")
     ; __append(escapeFn( item.id ))
     ; __append("\" class=\"pattern-card-link\">\n            <div class=\"model-preview-3d\">\n              ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name ))
     ; __append("\" class=\"model-img\">\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
     ; __append(escapeFn( item.name.charAt(0) ))
     ; __append("</span>\n                </div>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
     ; __append(escapeFn( item.name ))
     ; __append("</h3>\n              <div class=\"model-tags\">\n                <span class=\"tag\">.")
     ; __append(escapeFn( item.format || 'zprj' ))
     ; __append("</span>\n              </div>\n            </div>\n          </a>\n        </div>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3325,7 +3367,7 @@ title = __locals.title,
   counts = __locals.counts;
     ; __append( include('partials/header') )
     ; __append("\n\n")
-    ;
+    ; 
   const patternItems = patterns || [];
   const normalizeCategory = function(value) {
     return String(value || 'uncategorized')
@@ -3347,21 +3389,21 @@ title = __locals.title,
     ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <button class=\"filter-btn active\" data-filter=\"all\">")
     ; __append(escapeFn( t('patterns.filterAll') ))
     ; __append("</button>\n        ")
-    ;  categoryFilters.forEach(function(cat) {
+    ;  categoryFilters.forEach(function(cat) { 
     ; __append("\n          <button class=\"filter-btn\" data-filter=\"")
     ; __append(escapeFn( cat.key ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</button>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n      <div class=\"sort-group\">\n        <select class=\"sort-select\" id=\"patternsSort\">\n          <option value=\"newest\">")
     ; __append(escapeFn( t('patterns.sortNewest') ))
     ; __append("</option>\n          <option value=\"name\">")
     ; __append(escapeFn( t('patterns.sortName') ))
     ; __append("</option>\n          <option value=\"category\">Category</option>\n        </select>\n      </div>\n    </div>\n\n    <div class=\"models-grid\" id=\"patternsGrid\">\n      ")
-    ;  if (patternItems.length > 0) {
+    ;  if (patternItems.length > 0) { 
     ; __append("\n        ")
-    ;  patternItems.forEach(function(pattern) {
+    ;  patternItems.forEach(function(pattern) { 
     ; __append("\n          <div\n            class=\"model-card\"\n            data-category=\"")
     ; __append(escapeFn( normalizeCategory(pattern.category) ))
     ; __append("\"\n            data-name=\"")
@@ -3373,61 +3415,61 @@ title = __locals.title,
     ; __append("\" class=\"pattern-card-link\" aria-label=\"")
     ; __append(escapeFn( pattern.name ))
     ; __append("\">\n            <div class=\"model-preview-3d\">\n              <div class=\"model-thumbnail\">\n                ")
-    ;  if (pattern.image_url) {
+    ;  if (pattern.image_url) { 
     ; __append("\n                  <img src=\"")
     ; __append(escapeFn( pattern.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( pattern.name ))
     ; __append("\" class=\"model-img\">\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <svg viewBox=\"0 0 200 200\" class=\"model-svg\" aria-hidden=\"true\">\n                    <rect x=\"40\" y=\"40\" width=\"120\" height=\"120\" rx=\"4\" fill=\"#f5f5f5\" stroke=\"#999\" stroke-width=\"1\"/>\n                    <path d=\"M40 70H160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                    <path d=\"M70 40V160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                    <circle cx=\"100\" cy=\"100\" r=\"20\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\"/>\n                    <text x=\"100\" y=\"140\" text-anchor=\"middle\" fill=\"#999\" font-size=\"12\">")
     ; __append(escapeFn( pattern.format || 'zprj' ))
     ; __append("</text>\n                  </svg>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
     ; __append(escapeFn( pattern.name ))
     ; __append("</h3>\n              <p class=\"model-meta\">")
     ; __append(escapeFn( pattern.category ))
     ; __append("</p>\n              ")
-    ;  if (pattern.description) {
+    ;  if (pattern.description) { 
     ; __append("\n                <p class=\"model-card-description\">")
     ; __append(escapeFn( pattern.description ))
     ; __append("</p>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n              <div class=\"model-tags\">\n                ")
-    ;  if (pattern.tags) {
+    ;  if (pattern.tags) { 
     ; __append("\n                  ")
-    ;  pattern.tags.split(',').forEach(function(tag) {
+    ;  pattern.tags.split(',').forEach(function(tag) { 
     ; __append("\n                    ")
-    ;  if (tag.trim()) {
+    ;  if (tag.trim()) { 
     ; __append("\n                      <span class=\"tag\">")
     ; __append(escapeFn( tag.trim() ))
     ; __append("</span>\n                    ")
-    ;  }
+    ;  } 
     ; __append("\n                  ")
-    ;  });
+    ;  }); 
     ; __append("\n                ")
-    ;  }
+    ;  } 
     ; __append("\n                <span class=\"tag\">.")
     ; __append(escapeFn( pattern.format || 'zprj' ))
     ; __append("</span>\n              </div>\n            </div>\n            </a>\n            <div class=\"model-actions-overlay\">\n              ")
-    ;  if (pattern.file_url) {
+    ;  if (pattern.file_url) { 
     ; __append("\n                <a href=\"")
     ; __append(escapeFn( pattern.file_url ))
     ; __append("\" class=\"btn btn-primary btn-small\" download>")
     ; __append(escapeFn( t('patterns.downloadNow') ))
     ; __append("</a>\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <button class=\"btn btn-primary btn-small\" type=\"button\" disabled>")
     ; __append(escapeFn( t('patterns.downloadNow') ))
     ; __append("</button>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </div>\n          </div>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state model-empty-state\">\n          <svg class=\"empty-state-illustration\" width=\"120\" height=\"96\" viewBox=\"0 0 120 96\" fill=\"none\" aria-hidden=\"true\">\n            <rect x=\"24\" y=\"18\" width=\"72\" height=\"58\" rx=\"6\" fill=\"#f5f5f5\" stroke=\"#d4d4d4\" stroke-width=\"2\"/>\n            <path d=\"M43 18c2.8 9.2 31.2 9.2 34 0\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n            <path d=\"M24 31 13 43l13 13M96 31l11 12-11 13\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M43 52h34M49 62h22\" stroke=\"#b8b8b8\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n          </svg>\n          <h3>No patterns yet</h3>\n          <p>Active sew patterns from the admin database will appear here.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<script>\n(function() {\n  const grid = document.getElementById('patternsGrid');\n  if (!grid) return;\n\n  const cards = Array.from(grid.querySelectorAll('.model-card'));\n  const filterButtons = Array.from(document.querySelectorAll('.filter-btn[data-filter]'));\n  const sortSelect = document.getElementById('patternsSort');\n  let activeFilter = 'all';\n\n  function applyFilter() {\n    cards.forEach(card => {\n      const matches = activeFilter === 'all' || card.dataset.category === activeFilter;\n      card.style.display = matches ? '' : 'none';\n    });\n  }\n\n  function applySort() {\n    const sortValue = sortSelect ? sortSelect.value : 'newest';\n    const sorted = cards.slice().sort((a, b) => {\n      if (sortValue === 'name') {\n        return (a.dataset.name || '').localeCompare(b.dataset.name || '');\n      }\n      if (sortValue === 'category') {\n        return (a.dataset.category || '').localeCompare(b.dataset.category || '');\n      }\n      return new Date(b.dataset.created || 0) - new Date(a.dataset.created || 0);\n    });\n    sorted.forEach(card => grid.appendChild(card));\n    applyFilter();\n  }\n\n  filterButtons.forEach(button => {\n    button.addEventListener('click', () => {\n      activeFilter = button.dataset.filter;\n      filterButtons.forEach(item => item.classList.toggle('active', item === button));\n      applyFilter();\n    });\n  });\n\n  if (sortSelect) {\n    sortSelect.addEventListener('change', applySort);\n  }\n})();\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3553,35 +3595,51 @@ title = __locals.title,
     ; __append("</h1>\n      <p>")
     ; __append(escapeFn( toolPage.subtitle ))
     ; __append("</p>\n      <div class=\"tool-trust-row\" aria-label=\"Mockup planning highlights\">\n        ")
-    ;  (toolPage.outputHighlights || ['No Photoshop needed', 'Model-based apparel previews', 'Product visual planning']).forEach(function(item) {
+    ;  (toolPage.outputHighlights || ['No Photoshop needed', 'Model-based apparel previews', 'Product visual planning']).forEach(function(item) { 
     ; __append("\n          <span>")
     ; __append(escapeFn( item ))
     ; __append("</span>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n      <div class=\"hero-actions\">\n        <a href=\"")
-    ; __append(escapeFn( toolPage.cta.href ))
+    ; __append(escapeFn( toolPage.editorHref || toolPage.cta.href ))
     ; __append("\" class=\"btn btn-primary btn-large\">")
     ; __append(escapeFn( toolPage.cta.label ))
     ; __append("</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">")
     ; __append(escapeFn( toolPage.secondaryCtaLabel || 'Browse Mockup Models' ))
     ; __append("</a>\n      </div>\n    </div>\n    <div class=\"tool-detail-visual\">\n      ")
-    ;  if (toolPage.heroModel && toolPage.heroModel.src) {
-    ; __append("\n        <model-viewer\n          class=\"model-viewer-natural tool-hero-model-viewer\"\n          src=\"")
+    ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
+    ; __append("\n        <div class=\"tool-live-preview\" data-editor-href=\"")
+    ; __append(escapeFn( toolPage.editorHref ))
+    ; __append("\">\n          <model-viewer\n            id=\"toolHeroModelViewer\"\n            class=\"model-viewer-natural tool-hero-model-viewer\"\n            src=\"")
     ; __append(escapeFn( toolPage.heroModel.src ))
-    ; __append("\"\n          alt=\"")
+    ; __append("\"\n            alt=\"")
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
-    ; __append("\"\n          camera-controls\n          auto-rotate\n          shadow-intensity=\"1.55\"\n          shadow-softness=\"0.52\"\n          exposure=\"0.66\"\n          environment-image=\"neutral\"\n          aria-label=\"")
+    ; __append("\"\n            camera-controls\n            auto-rotate\n            shadow-intensity=\"1.55\"\n            shadow-softness=\"0.52\"\n            exposure=\"0.66\"\n            environment-image=\"neutral\"\n            aria-label=\"")
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
-    ; __append("\"\n        ></model-viewer>\n      ")
-    ;  } else {
+    ; __append("\"\n          ></model-viewer>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
+    ;  ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) { 
+    ; __append("\n                <button type=\"button\" class=\"tool-color-swatch")
+    ; __append(escapeFn( index === 0 ? ' active' : '' ))
+    ; __append("\" data-color=\"")
+    ; __append(escapeFn( color ))
+    ; __append("\" style=\"--swatch-color: ")
+    ; __append(escapeFn( color ))
+    ; __append("\" aria-label=\"Set garment color ")
+    ; __append(escapeFn( color ))
+    ; __append("\"></button>\n              ")
+    ;  }); 
+    ; __append("\n            </div>\n            <div class=\"tool-control-group tool-angle-controls\" aria-label=\"Model view\">\n              <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n              <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n              <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n            </div>\n            <div class=\"tool-preview-actions\">\n              <label class=\"btn btn-primary tool-upload-button\">\n                Upload artwork\n                <input id=\"toolArtworkUpload\" type=\"file\" accept=\"image/png,image/jpeg,image/webp,image/svg+xml\" hidden>\n              </label>\n              <button type=\"button\" class=\"btn btn-secondary\" id=\"toolDownloadPreview\">")
+    ; __append(escapeFn( toolPage.slug === 'bulk-t-shirt-mockup-generator' ? 'Download colorway sheet' : 'Download PNG' ))
+    ; __append("</button>\n            </div>\n            <p class=\"tool-preview-status\" id=\"toolPreviewStatus\" aria-live=\"polite\">Rotate the model or start with your own artwork.</p>\n          </div>\n        </div>\n      ")
+    ;  } else { 
     ; __append("\n        <img src=\"")
     ; __append(escapeFn( toolPage.image ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( toolPage.title ))
     ; __append(" preview image\">\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (toolPage.visualGallery && toolPage.visualGallery.length) {
+    ;  if (toolPage.visualGallery && toolPage.visualGallery.length) { 
     ; __append("\n  <section class=\"generator-section tool-visual-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.examplesEyebrow || 'Examples' ))
     ; __append("</span>\n        <h2>")
@@ -3589,7 +3647,7 @@ title = __locals.title,
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( toolPage.examplesSubtitle || 'Show the garment, artwork placement, and product framing clearly before you print, sample, or publish.' ))
     ; __append("</p>\n      </div>\n      <div class=\"tool-visual-grid\">\n        ")
-    ;  toolPage.visualGallery.forEach(function(item) {
+    ;  toolPage.visualGallery.forEach(function(item) { 
     ; __append("\n          <article class=\"tool-visual-card\">\n            <img src=\"")
     ; __append(escapeFn( item.image ))
     ; __append("\" alt=\"")
@@ -3599,9 +3657,9 @@ title = __locals.title,
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( item.caption ))
     ; __append("</p>\n            </div>\n          </article>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"tool-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.planningEyebrow || 'Plan faster' ))
     ; __append("</span>\n        <h2>")
@@ -3615,23 +3673,46 @@ title = __locals.title,
     ; __append("</h2>\n      <p>")
     ; __append(escapeFn( toolPage.benefitsSubtitle || 'Use ClothingDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' ))
     ; __append("</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  toolPage.competitorInsights.forEach(function(insight) {
+    ;  toolPage.competitorInsights.forEach(function(insight) { 
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
     ; __append(escapeFn( insight.title || 'Why it helps' ))
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( insight.body || insight ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section tool-picker-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ;  }); 
+    ; __append("\n    </div>\n  </div>\n</section>\n\n")
+    ;  const pickerLinks = [
+  ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
+  ['/tools/hoodie-mockup-generator', 'Hoodie mockups'],
+  ['/tools/3d-clothing-mockup-generator', '3D clothing mockups'],
+  ['/tools/bulk-t-shirt-mockup-generator', 'Bulk colorways'],
+  ['/tools/print-on-demand-mockup-generator', 'POD listings'],
+  ['/tools/oversized-t-shirt-mockup-generator', 'Oversized T-shirt'],
+  ['/tools/front-and-back-t-shirt-mockup', 'Front and back T-shirt'],
+  ['/tools/polo-shirt-mockup-generator', 'Polo shirt'],
+  ['/tools/long-sleeve-shirt-mockup-generator', 'Long sleeve shirt'],
+  ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie'],
+  ['/tools/transparent-apparel-mockup-generator', 'Transparent PNG'],
+  ['/mockups', 'All 3D models']
+].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); 
+    ; __append("\n<section class=\"generator-section tool-picker-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.pickerEyebrow || 'Choose a starting point' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.pickerTitle || 'Pick the mockup path that matches your product' ))
-    ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockups</a>\n      <a href=\"/tools/hoodie-mockup-generator\">Hoodie mockups</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\">3D clothing mockups</a>\n      <a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk colorways</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD listings</a>\n      <a href=\"/mockups\">All 3D models</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      ")
+    ;  pickerLinks.forEach(function(link) { 
+    ; __append("\n        <a href=\"")
+    ; __append(escapeFn( link[0] ))
+    ; __append("\">")
+    ; __append(escapeFn( link[1] ))
+    ; __append("</a>\n      ")
+    ;  }); 
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.workflowEyebrow || 'Workflow' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.workflowTitle || 'From blank garment to clearer product direction' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-steps\">\n      ")
-    ;  toolPage.steps.forEach(function(step, index) {
+    ;  toolPage.steps.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step\">\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
@@ -3639,25 +3720,25 @@ title = __locals.title,
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( step.body || step ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.useCasesEyebrow || 'Use it for' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.useCasesTitle || 'Mockup planning before a photoshoot' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  toolPage.useCases.forEach(function(useCase, index) {
+    ;  toolPage.useCases.forEach(function(useCase, index) { 
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
     ; __append(escapeFn( useCase ))
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( toolPage.useCaseDetails && toolPage.useCaseDetails[index] ? toolPage.useCaseDetails[index] : 'Use this workflow when you need a fast, free apparel design starting point without committing to paid design software.' ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.faqEyebrow || 'FAQ' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.faqTitle || `${toolPage.title} questions` ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
-    ;  toolPage.faq.forEach(function(item, index) {
+    ;  toolPage.faq.forEach(function(item, index) { 
     ; __append("\n        <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n          <summary>")
@@ -3665,13 +3746,13 @@ title = __locals.title,
     ; __append("</summary>\n          <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.relatedEyebrow || 'Related free tools' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.relatedTitle || 'Continue with another mockup workflow' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
-    ;  toolPage.related.forEach(function(item) {
+    ;  toolPage.related.forEach(function(item) { 
     ; __append("\n        <a href=\"/tools/")
     ; __append(escapeFn( item.slug ))
     ; __append("\" class=\"generator-category-card\">\n          <small>")
@@ -3679,7 +3760,7 @@ title = __locals.title,
     ; __append("</small>\n          <strong>")
     ; __append(escapeFn( item.title ))
     ; __append("</strong>\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M5 12h14\"/>\n            <path d=\"m12 5 7 7-7 7\"/>\n          </svg>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.finalCtaEyebrow || 'Start now' ))
     ; __append("</span>\n        <h2>")
@@ -3687,13 +3768,17 @@ title = __locals.title,
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( toolPage.finalCtaSubtitle || 'Use model-based apparel previews to test artwork, colors, and product framing before you publish or produce.' ))
     ; __append("</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"")
-    ; __append(escapeFn( toolPage.cta.href ))
+    ; __append(escapeFn( toolPage.editorHref || toolPage.cta.href ))
     ; __append("\" class=\"btn btn-primary\">")
     ; __append(escapeFn( toolPage.cta.label ))
     ; __append("</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (toolPage.heroModel && toolPage.heroModel.src) {
-    ; __append("\n  <script type=\"module\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js\"></script>\n")
-    ;  }
+    ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
+    ; __append("\n  <script type=\"module\" src=\"https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js\"></script>\n  <script>\n    (() => {\n      const viewer = document.getElementById('toolHeroModelViewer');\n      const preview = document.querySelector('.tool-live-preview');\n      const upload = document.getElementById('toolArtworkUpload');\n      const download = document.getElementById('toolDownloadPreview');\n      const status = document.getElementById('toolPreviewStatus');\n      const isBulkTool = ")
+    ; __append( JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') )
+    ; __append(";\n      if (!viewer || !preview) return;\n\n      const hexFactor = (hex) => {\n        const value = parseInt(String(hex).replace('#', ''), 16);\n        return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n      };\n\n      const applyColor = (hex) => {\n        const materials = viewer.model?.materials || [];\n        materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));\n        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';\n      };\n\n      document.querySelectorAll('.tool-color-swatch').forEach((button) => {\n        button.addEventListener('click', () => {\n          document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));\n          button.classList.add('active');\n          applyColor(button.dataset.color);\n        });\n      });\n\n      document.querySelectorAll('.tool-angle-controls button').forEach((button) => {\n        button.addEventListener('click', () => {\n          document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));\n          button.classList.add('active');\n          viewer.removeAttribute('auto-rotate');\n          viewer.cameraOrbit = button.dataset.orbit;\n          viewer.jumpCameraToGoal?.();\n          status.textContent = `${button.textContent} view selected.`;\n        });\n      });\n\n      upload?.addEventListener('change', () => {\n        const file = upload.files?.[0];\n        if (!file) return;\n        if (file.size > 8 * 1024 * 1024) {\n          status.textContent = 'Choose an artwork file smaller than 8 MB.';\n          upload.value = '';\n          return;\n        }\n        const reader = new FileReader();\n        reader.onload = () => {\n          try {\n            sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({\n              dataUrl: reader.result,\n              name: file.name,\n              createdAt: Date.now()\n            }));\n          } catch (error) {\n            status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';\n            return;\n          }\n          window.location.href = preview.dataset.editorHref;\n        };\n        reader.readAsDataURL(file);\n      });\n\n      download?.addEventListener('click', async () => {\n        try {\n          status.textContent = isBulkTool ? 'Rendering four garment colorways...' : 'Preparing transparent preview...';\n          await customElements.whenDefined('model-viewer');\n          if (isBulkTool) {\n            const colors = ['#f7f7f5', '#171717', '#506b5d', '#a54b43'];\n            const snapshots = [];\n            for (const color of colors) {\n              applyColor(color);\n              await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));\n              const snapshot = viewer.toDataURL?.('image/png');\n              if (!snapshot) throw new Error('Colorway export unavailable');\n              snapshots.push({ color, snapshot });\n            }\n            const tileSize = 900;\n            const canvas = document.createElement('canvas');\n            canvas.width = tileSize * 2;\n            canvas.height = tileSize * 2;\n            const context = canvas.getContext('2d');\n            context.fillStyle = '#f5f5f7';\n            context.fillRect(0, 0, canvas.width, canvas.height);\n            for (let index = 0; index < snapshots.length; index += 1) {\n              const item = snapshots[index];\n              const image = new Image();\n              await new Promise((resolve, reject) => {\n                image.onload = resolve;\n                image.onerror = reject;\n                image.src = item.snapshot;\n              });\n              const x = (index % 2) * tileSize;\n              const y = Math.floor(index / 2) * tileSize;\n              context.drawImage(image, x, y, tileSize, tileSize);\n              context.fillStyle = item.color;\n              context.beginPath();\n              context.arc(x + 54, y + tileSize - 54, 22, 0, Math.PI * 2);\n              context.fill();\n              context.strokeStyle = 'rgba(0, 0, 0, 0.2)';\n              context.stroke();\n            }\n            const link = document.createElement('a');\n            link.href = canvas.toDataURL('image/png');\n            link.download = 'bulk-t-shirt-colorway-sheet.png';\n            document.body.appendChild(link);\n            link.click();\n            link.remove();\n            status.textContent = 'Four-color T-shirt mockup sheet downloaded.';\n            return;\n          }\n          const dataUrl = viewer.toDataURL?.('image/png');\n          if (!dataUrl) throw new Error('Preview export unavailable');\n          const link = document.createElement('a');\n          link.href = dataUrl;\n          link.download = '")
+    ; __append(escapeFn( toolPage.slug ))
+    ; __append("-preview.png';\n          document.body.appendChild(link);\n          link.click();\n          link.remove();\n          status.textContent = 'Transparent PNG downloaded.';\n        } catch (error) {\n          status.textContent = 'Open the full editor to export this model.';\n        }\n      });\n    })();\n  </script>\n")
+    ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3758,23 +3843,17 @@ title = __locals.title,
     ; __append(escapeFn( t('tools.pageSubtitle') ))
     ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Tools Grid -->\n    <div class=\"tools-grid\">\n      <!-- Design Tools -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M12 19l7-7 3 3-7 7-3-3z\"/>\n            <path d=\"M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z\"/>\n            <path d=\"M2 2l7.586 7.586\"/>\n            <circle cx=\"11\" cy=\"11\" r=\"2\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.designTools') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-designer\">")
-    ; __append(escapeFn( t('tools.tShirtDesigner') ))
-    ; __append("</a></li>\n          <li><a href=\"/tools/hoodie-designer\">")
-    ; __append(escapeFn( t('tools.hoodieDesigner') ))
-    ; __append("</a></li>\n          <li><a href=\"/tools/dress-designer\">")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-mockup-generator\">Free T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/hoodie-mockup-generator\">Free Hoodie Mockup Generator</a></li>\n          <li><a href=\"/tools/dress-designer\">")
     ; __append(escapeFn( t('tools.dressDesigner') ))
     ; __append("</a></li>\n        </ul>\n      </div>\n\n      <!-- Mockup Generators -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n            <polyline points=\"21 15 16 10 5 21\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.mockupGenerators') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-mockup-generator\">T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/hoodie-mockup-generator\">Hoodie Mockup Generator</a></li>\n          <li><a href=\"/tools/3d-clothing-mockup-generator\">3D Clothing Mockup Generator</a></li>\n          <li><a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/print-on-demand-mockup-generator\">Print-on-Demand Mockup Generator</a></li>\n          <li><a href=\"/tools/2d-mockup\">")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-mockup-generator\">T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/hoodie-mockup-generator\">Hoodie Mockup Generator</a></li>\n          <li><a href=\"/tools/3d-clothing-mockup-generator\">3D Clothing Mockup Generator</a></li>\n          <li><a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/print-on-demand-mockup-generator\">Print-on-Demand Mockup Generator</a></li>\n          <li><a href=\"/tools/transparent-apparel-mockup-generator\">Transparent Apparel Mockups</a></li>\n          <li><a href=\"/tools/2d-mockup\">")
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</a></li>\n        </ul>\n      </div>\n\n      <!-- Free Downloads -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n            <polyline points=\"7 10 12 15 17 10\"/>\n            <line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.freeDownloads') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/free-patterns\">")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/patterns\">")
     ; __append(escapeFn( t('tools.freePatterns') ))
-    ; __append("</a></li>\n          <li><a href=\"/tools/free-templates\">")
-    ; __append(escapeFn( t('tools.freeTemplates') ))
-    ; __append("</a></li>\n        </ul>\n      </div>\n\n      <!-- Learn -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/>\n            <path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/>\n          </svg>\n        </div>\n        <h3>")
+    ; __append("</a></li>\n          <li><a href=\"/mockups\">Free 3D Clothing Models</a></li>\n        </ul>\n      </div>\n\n      <!-- Learn -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/>\n            <path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.learn') ))
     ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/clo3d-guide\">")
     ; __append(escapeFn( t('tools.clo3dGuide') ))
@@ -3782,7 +3861,7 @@ title = __locals.title,
     ; __append(escapeFn( t('tools.mdGuide') ))
     ; __append("</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <!-- Popular Tools Section -->\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">")
     ; __append(escapeFn( t('tools.popularTools') ))
-    ; __append("</h2>\n      <div class=\"popular-grid\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png\" alt=\"T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>T-Shirt Mockup Generator</h4>\n            <p>Start from T-shirt models and plan product-page mockups</p>\n          </div>\n        </a>\n        <a href=\"/tools/hoodie-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png\" alt=\"Hoodie Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Hoodie Mockup Generator</h4>\n            <p>Preview streetwear fits and hoodie artwork zones</p>\n          </div>\n        </a>\n        <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png\" alt=\"Bulk T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Bulk T-Shirt Mockup Generator</h4>\n            <p>Compare POD colorways and product variants</p>\n          </div>\n        </a>\n        <a href=\"/tools/print-on-demand-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png\" alt=\"Print-on-Demand Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Print-on-Demand Mockup Generator</h4>\n            <p>Plan listing visuals for Shopify and Etsy drafts</p>\n          </div>\n        </a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("</h2>\n      <div class=\"popular-grid\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png\" alt=\"T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>T-Shirt Mockup Generator</h4>\n            <p>Start from T-shirt models and plan product-page mockups</p>\n          </div>\n        </a>\n        <a href=\"/tools/hoodie-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png\" alt=\"Hoodie Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Hoodie Mockup Generator</h4>\n            <p>Preview streetwear fits and hoodie artwork zones</p>\n          </div>\n        </a>\n        <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png\" alt=\"Bulk T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Bulk T-Shirt Mockup Generator</h4>\n            <p>Compare POD colorways and product variants</p>\n          </div>\n        </a>\n        <a href=\"/tools/print-on-demand-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png\" alt=\"Print-on-Demand Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Print-on-Demand Mockup Generator</h4>\n            <p>Plan listing visuals for Shopify and Etsy drafts</p>\n          </div>\n        </a>\n      </div>\n    </div>\n\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">Free garment-specific mockup tools</h2>\n      <div class=\"tool-picker-grid\">\n        <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockups</a>\n        <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt views</a>\n        <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockups</a>\n        <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long-sleeve shirt mockups</a>\n        <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockups</a>\n        <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel PNGs</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

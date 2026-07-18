@@ -21,15 +21,27 @@ const staticToolPaths = [
   '/tools/3d-clothing-mockup-generator',
   '/tools/bulk-t-shirt-mockup-generator',
   '/tools/print-on-demand-mockup-generator',
-  '/tools/t-shirt-designer',
-  '/tools/hoodie-designer',
-  '/tools/dress-designer',
-  '/tools/2d-mockup',
-  '/tools/free-patterns',
-  '/tools/free-templates',
-  '/tools/clo3d-guide',
-  '/tools/md-guide'
+  '/tools/oversized-t-shirt-mockup-generator',
+  '/tools/front-and-back-t-shirt-mockup',
+  '/tools/polo-shirt-mockup-generator',
+  '/tools/long-sleeve-shirt-mockup-generator',
+  '/tools/streetwear-hoodie-mockup-generator',
+  '/tools/transparent-apparel-mockup-generator'
 ];
+
+const staticToolImages = {
+  '/tools/t-shirt-mockup-generator': '/images/tools/t-shirt-mockup-generator.webp',
+  '/tools/hoodie-mockup-generator': '/images/tools/hoodie-mockup-generator.webp',
+  '/tools/3d-clothing-mockup-generator': '/images/tools/3d-clothing-mockup-generator.webp',
+  '/tools/bulk-t-shirt-mockup-generator': '/images/tools/bulk-t-shirt-mockup-generator.webp',
+  '/tools/print-on-demand-mockup-generator': '/images/tools/print-on-demand-mockup-generator.webp',
+  '/tools/oversized-t-shirt-mockup-generator': 'https://cdn.cloz-design.com/image/1780135799225-218296703.webp',
+  '/tools/front-and-back-t-shirt-mockup': '/images/tools/t-shirt-mockup-generator.webp',
+  '/tools/polo-shirt-mockup-generator': '/uploads/preview/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail',
+  '/tools/long-sleeve-shirt-mockup-generator': '/uploads/preview/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail',
+  '/tools/streetwear-hoodie-mockup-generator': '/uploads/preview/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail',
+  '/tools/transparent-apparel-mockup-generator': '/images/tools/3d-clothing-mockup-generator.webp'
+};
 
 function escapeXml(value) {
   return String(value || '')
@@ -52,7 +64,13 @@ function absoluteUrl(pathname) {
   return `${baseUrl}${normalized}`;
 }
 
-function addUrl(urls, seen, pathname, lastmod) {
+function absoluteAssetUrl(value) {
+  if (!value) return null;
+  if (/^https?:\/\//i.test(String(value))) return String(value);
+  return absoluteUrl(value);
+}
+
+function addUrl(urls, seen, pathname, lastmod, image) {
   const loc = absoluteUrl(pathname);
   if (seen.has(loc)) return;
   seen.add(loc);
@@ -60,7 +78,8 @@ function addUrl(urls, seen, pathname, lastmod) {
     loc,
     lastmod: toIsoDate(lastmod),
     changefreq: getChangefreq(pathname),
-    priority: getPriority(pathname)
+    priority: getPriority(pathname),
+    image: absoluteAssetUrl(image)
   });
 }
 
@@ -181,13 +200,16 @@ function renderSitemap(urls) {
       `    <lastmod>${escapeXml(item.lastmod)}</lastmod>`,
       `    <changefreq>${escapeXml(item.changefreq)}</changefreq>`,
       `    <priority>${escapeXml(item.priority)}</priority>`,
+      item.image ? '    <image:image>' : null,
+      item.image ? `      <image:loc>${escapeXml(item.image)}</image:loc>` : null,
+      item.image ? '    </image:image>' : null,
       '  </url>'
-    ].join('\n'))
+    ].filter(Boolean).join('\n'))
     .join('\n');
 
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
     body,
     '</urlset>',
     ''
@@ -200,7 +222,7 @@ async function main() {
   const now = new Date().toISOString();
 
   CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now));
-  staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now));
+  staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now, staticToolImages[pathname]));
 
   const categories = await getCategories();
   categories.forEach(category => {
@@ -220,17 +242,21 @@ async function main() {
         urls,
         seen,
         `/3d-models/${categorySlug}/${model.slug}`,
-        model.updated_at || model.created_at
+        model.updated_at || model.created_at,
+        model.image_url
       );
     });
 
-  const patterns = await getPatterns();
-  patterns
-    .filter(shouldIndexPattern)
-    .slice(0, patternSitemapLimit())
-    .forEach(pattern => {
-      addUrl(urls, seen, `/patterns/item/${pattern.id}`, pattern.updated_at || pattern.created_at);
-    });
+  const patternLimit = patternSitemapLimit();
+  if (patternLimit > 0) {
+    const patterns = await getPatterns();
+    patterns
+      .filter(shouldIndexPattern)
+      .slice(0, patternLimit)
+      .forEach(pattern => {
+        addUrl(urls, seen, `/patterns/item/${pattern.id}`, pattern.updated_at || pattern.created_at);
+      });
+  }
 
   urls.sort((a, b) => a.loc.localeCompare(b.loc));
   await fs.mkdir(path.dirname(outputPath), { recursive: true });

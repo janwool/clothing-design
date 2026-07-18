@@ -128,30 +128,45 @@
   </div>
 </section>
 
-<!-- Scene Showcase -->
+<!-- Searchable model assets -->
 <section class="model-showcase-section">
   <div class="container">
-    <h2 class="section-title">Scene Showcase</h2>
-    <p class="section-subtitle">See how this model looks in different environments</p>
+    <h2 class="section-title"><%= model.name %> model views</h2>
+    <p class="section-subtitle">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>
     
     <div class="showcase-grid">
+      <% if (model.image_url) { %>
+        <div class="showcase-item">
+          <div class="showcase-image">
+            <img src="<%= model.image_url %>" alt="<%= model.name %> front 3D apparel mockup preview">
+          </div>
+          <span class="showcase-label">Garment preview</span>
+        </div>
+      <% } %>
+      <% if (model.texture_url) { %>
+        <div class="showcase-item showcase-texture-item">
+          <div class="showcase-image">
+            <img src="<%= model.texture_url %>" alt="<%= model.name %> UV texture and artwork placement layout">
+          </div>
+          <span class="showcase-label">UV artwork layout</span>
+        </div>
+      <% } %>
       <div class="showcase-item">
         <div class="showcase-image">
-          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Studio Lighting">
+          <% if (previewModelFileUrl) { %>
+            <model-viewer
+              class="model-viewer-natural showcase-side-viewer"
+              src="<%= previewModelFileUrl %>"
+              alt="<%= model.name %> side silhouette 3D view"
+              camera-controls
+              camera-orbit="90deg 75deg 112%"
+              shadow-intensity="1.2"
+              exposure="0.72"
+              environment-image="neutral"
+            ></model-viewer>
+          <% } %>
         </div>
-        <span class="showcase-label">Studio</span>
-      </div>
-      <div class="showcase-item">
-        <div class="showcase-image">
-          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Outdoor Scene">
-        </div>
-        <span class="showcase-label">Outdoor</span>
-      </div>
-      <div class="showcase-item">
-        <div class="showcase-image">
-          <img src="<%= model.image_url || '/images/placeholder.jpg' %>" alt="Runway">
-        </div>
-        <span class="showcase-label">Runway</span>
+        <span class="showcase-label">Side silhouette</span>
       </div>
     </div>
   </div>
@@ -237,7 +252,7 @@
           <% applications.forEach(function(application) { %>
             <article class="generator-output-card">
               <h3><%= application.title %></h3>
-              <p><%= application.text %></p>
+              <p><%= application.text || application.body %></p>
             </article>
           <% }); %>
         </div>
@@ -2314,6 +2329,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   toolButtons.shape?.addEventListener('click', () => createElement('rect', { width: 120, height: 120 }));
   toolButtons.arrow?.addEventListener('click', () => createElement('arrow', { width: 150, height: 38 }));
+
+  function importArtworkDataUrl(dataUrl) {
+    if (!/^data:image\//i.test(String(dataUrl || ''))) return false;
+    createElement('image', { src: dataUrl, width: 190, height: 142 });
+    setTool('select');
+    return true;
+  }
+
   toolButtons.image?.addEventListener('click', () => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -2323,7 +2346,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          createElement('image', { src: event.target.result, width: 160, height: 120 });
+          importArtworkDataUrl(event.target.result);
         };
         reader.readAsDataURL(file);
       }
@@ -2745,6 +2768,30 @@ document.addEventListener('DOMContentLoaded', () => {
     applyMaterialToViewer(detailViewer, state.selectedMaterial);
   }
   saveHistory();
+
+  let pendingArtwork = null;
+  try {
+    pendingArtwork = JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null');
+  } catch (error) {
+    pendingArtwork = null;
+  }
+  sessionStorage.removeItem('clothingdesign_pending_artwork');
+  const pendingArtworkIsFresh = pendingArtwork?.dataUrl && Date.now() - Number(pendingArtwork.createdAt || 0) < 10 * 60 * 1000;
+  let pendingArtworkImported = false;
+  const openDesignFromNavigation = () => {
+    if (window.location.hash !== '#design' && !pendingArtworkIsFresh) return;
+    window.setTimeout(() => {
+      if (!designModal.classList.contains('active')) openModal();
+      if (pendingArtworkIsFresh && !pendingArtworkImported) {
+        importArtworkDataUrl(pendingArtwork.dataUrl);
+        saveHistory();
+        pendingArtworkImported = true;
+      }
+    }, 80);
+  };
+  openDesignFromNavigation();
+  window.addEventListener('load', openDesignFromNavigation, { once: true });
+  window.addEventListener('hashchange', openDesignFromNavigation);
 });
 </script>
 

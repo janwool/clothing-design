@@ -626,7 +626,7 @@ const TOOL_PAGE_CONTENT = {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
-    subtitle: 'Preview T-shirt mockups online from ClothingDesign apparel model pages. Plan chest graphics, oversized fits, colorways, and product-page imagery before photography or sampling.',
+    subtitle: 'Customize a free 3D T-shirt in your browser, test garment colors and viewing angles, upload artwork, and export a transparent product mockup.',
     intent: 'Use this page when you need a fast T-shirt product visual direction before photography or sampling. Start from an apparel-first model page, plan a logo or graphic direction, compare product angles, and prepare a cleaner mockup reference for ecommerce, print-on-demand, or brand review.',
     primaryKeyword: 'free t-shirt mockup generator',
     keywords: ['3D t-shirt mockup', 'online t-shirt mockup generator', 'front and back t-shirt mockup', 'oversized t-shirt mockup', 't-shirt mockup no Photoshop'],
@@ -699,7 +699,7 @@ const TOOL_PAGE_CONTENT = {
       src: `${MOCKUP_GLB_BASE_URL}/hoodie-mockup-3d-model-03-dca998b8.glb`,
       alt: 'Tailored Fleece Lined Hoodie 3D Model'
     },
-    subtitle: 'Preview hoodie mockups online for streetwear drops, team merch, sleeve-zone ideas, back-print planning, oversized fits, and ecommerce product pages.',
+    subtitle: 'Customize a free 3D hoodie in your browser, review chest, back, and sleeve artwork zones, test colors, and export a transparent product mockup.',
     intent: 'Use this page when a flat hoodie outline is not enough. Preview graphics on a structured garment model, compare pullover and oversized hoodie directions, and plan visuals for product listings, launch decks, and client approvals.',
     primaryKeyword: 'hoodie mockup generator',
     keywords: ['free hoodie mockup generator', '3D hoodie mockup', 'oversized hoodie mockup', 'front and back hoodie mockup', 'sweatshirt mockup generator'],
@@ -772,7 +772,7 @@ const TOOL_PAGE_CONTENT = {
       src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
       alt: 'Classic One-Piece Dress 3D Model'
     },
-    subtitle: 'Plan 3D clothing mockups for T-shirts, hoodies, jackets, dresses, and apparel product pages using ClothingDesign model previews.',
+    subtitle: 'Customize free 3D clothing models for T-shirts, hoodies, dresses, and other apparel, then export transparent mockups for product pages and design review.',
     intent: 'Use the 3D clothing mockup workflow when you need garment shape, product angle, and apparel category variety. Build richer visuals than flat templates while keeping the process browser-based and fast.',
     primaryKeyword: '3D clothing mockup generator',
     keywords: ['clothing mockup generator', 'apparel mockup generator', '3D apparel mockup', 'online clothing mockup', 'realistic clothing mockup'],
@@ -838,14 +838,14 @@ const TOOL_PAGE_CONTENT = {
     cta: { label: 'Open 3D Clothing Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   'bulk-t-shirt-mockup-generator': {
-    title: 'Bulk T-Shirt Mockup Generator',
+    title: 'Free Bulk T-Shirt Mockup Generator',
     eyebrow: 'Batch T-shirt product visuals',
     image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
-    subtitle: 'Plan bulk T-shirt mockups for print-on-demand catalogs, colorway matrices, Shopify drafts, Etsy listings, and apparel product pages.',
+    subtitle: 'Apply one design direction across four T-shirt colors and download a free colorway sheet for POD catalogs, Shopify drafts, and apparel review.',
     intent: 'Use this page when one design needs to be shown across many shirt colors or listing layouts. Build a consistent mockup direction for product catalogs without manually rebuilding every colorway.',
     primaryKeyword: 'bulk t-shirt mockup generator',
     keywords: ['bulk mockup generator', 'batch t-shirt mockup', 'POD mockup generator', 'multiple t-shirt mockups', 'colorway mockup generator'],
@@ -911,14 +911,14 @@ const TOOL_PAGE_CONTENT = {
     cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
   },
   'print-on-demand-mockup-generator': {
-    title: 'Print-on-Demand Mockup Generator',
+    title: 'Free Print-on-Demand Mockup Generator',
     eyebrow: 'POD apparel listing visuals',
     image: '/uploads/preview/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260607',
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
     },
-    subtitle: 'Plan print-on-demand apparel mockups for T-shirts, hoodies, online stores, merch catalogs, Shopify drafts, and Etsy product listings.',
+    subtitle: 'Customize free 3D apparel, upload print artwork, test product colors and angles, and export transparent mockups for Shopify, Etsy, and merch listings.',
     intent: 'Use this page when a design needs to become a product listing. Build a clean apparel mockup direction, compare colorways, and prepare visuals that communicate product value before printing or publishing.',
     primaryKeyword: 'print on demand mockup generator',
     keywords: ['POD mockup generator', 'Shopify product mockup generator', 'Etsy t-shirt mockup', 'merch mockup generator', 'ecommerce apparel mockup'],
@@ -1241,8 +1241,155 @@ const TOOL_PAGE_CONTENT = {
   }
 };
 
+const TOOL_VARIANT_CONTENT = {
+  'oversized-t-shirt-mockup-generator': {
+    base: 't-shirt-mockup-generator',
+    title: 'Free Oversized T-Shirt Mockup Generator',
+    eyebrow: 'Drop-shoulder streetwear mockups',
+    subtitle: 'Customize an oversized crew-neck T-shirt in 3D, test front and back artwork, compare garment colors, and export a transparent streetwear product preview.',
+    intent: 'Use the oversized T-shirt model to judge how artwork sits across a wider chest, dropped shoulder, relaxed sleeve, and longer streetwear silhouette before printing or sampling.',
+    primaryKeyword: 'free oversized t-shirt mockup generator',
+    keywords: ['oversized t-shirt mockup', 'streetwear t-shirt mockup', 'drop shoulder tee mockup', 'baggy t-shirt mockup'],
+    image: 'https://cdn.cloz-design.com/image/1780135799225-218296703.webp',
+    heroModel: { src: 'https://cdn.cloz-design.com/d3/1780135797659-346004243.glb', alt: 'Oversized drop shoulder T-shirt 3D mockup' },
+    editorHref: '/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit#design',
+    cta: { label: 'Customize Oversized Tee', href: '/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit#design' },
+    outputHighlights: ['Free browser editor', 'Oversized drop-shoulder fit', 'Transparent PNG export'],
+    examplesTitle: 'Oversized T-shirt mockups for streetwear drops',
+    planningTitle: 'Check graphic scale on a relaxed streetwear fit',
+    benefitsTitle: 'Design for the oversized silhouette, not a standard blank',
+    workflowTitle: 'From oversized blank to streetwear product mockup',
+    useCases: ['Streetwear collection previews', 'Large back-print checks', 'Oversized POD listings'],
+    useCaseDetails: ['Build launch visuals around a wider, relaxed T-shirt silhouette.', 'Compare artwork size against dropped shoulders and a longer body.', 'Prepare oversized tee product images before ordering blanks or samples.']
+  },
+  'front-and-back-t-shirt-mockup': {
+    base: 't-shirt-mockup-generator',
+    title: 'Free Front and Back T-Shirt Mockup',
+    eyebrow: 'Two-sided T-shirt artwork preview',
+    subtitle: 'Rotate a free 3D T-shirt between front, back, and side views to review chest graphics, large back prints, sleeve details, and product-page angles.',
+    intent: 'Use one consistent T-shirt model to compare front and back artwork scale instead of combining unrelated PSD views or guessing placement from a flat template.',
+    primaryKeyword: 'front and back t-shirt mockup',
+    keywords: ['front t-shirt mockup', 'back print t-shirt mockup', 'two sided shirt mockup', '3D shirt angles'],
+    editorHref: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model#design',
+    cta: { label: 'Create Front and Back Mockup', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model#design' },
+    outputHighlights: ['Front, back and side views', 'Artwork placement editor', 'Transparent PNG export'],
+    examplesTitle: 'Front and back T-shirt views from one 3D model',
+    planningTitle: 'Keep two-sided artwork consistent across every angle',
+    benefitsTitle: 'Compare chest and back-print scale on the same garment',
+    workflowTitle: 'From two artwork files to a consistent product view set',
+    useCases: ['Front logo and back graphic sets', 'Band and event merchandise', 'Two-sided ecommerce listings'],
+    useCaseDetails: ['Check a small chest mark against a larger back composition.', 'Present tour, event, school, and team shirts from both sides.', 'Export consistent angles for a product gallery or approval deck.']
+  },
+  'polo-shirt-mockup-generator': {
+    base: 't-shirt-mockup-generator',
+    title: 'Free Polo Shirt Mockup Generator',
+    eyebrow: 'Collared shirt product mockups',
+    subtitle: 'Customize a short-sleeve polo shirt in 3D, test chest logos and garment colors, rotate the collared silhouette, and export a clean product render.',
+    intent: 'Use the polo model when collar, placket, sleeve, and left-chest logo proportions matter for uniforms, clubs, hospitality, golf apparel, or branded workwear.',
+    primaryKeyword: 'free polo shirt mockup generator',
+    keywords: ['polo mockup', 'collared shirt mockup', 'uniform polo mockup', 'polo logo preview'],
+    image: '/uploads/preview/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail',
+    heroModel: { src: `${MOCKUP_GLB_BASE_URL}/short-sleeve-polo-shirt-3d-model.glb?v=uvfix-20260606`, alt: 'Short sleeve polo shirt 3D mockup' },
+    editorHref: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design',
+    cta: { label: 'Customize Polo Shirt', href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design' },
+    outputHighlights: ['Collar and placket detail', 'Left-chest logo preview', 'Free transparent export'],
+    examplesTitle: 'Polo shirt mockups for uniforms and branded apparel',
+    planningTitle: 'Preview logos around the collar and placket structure',
+    benefitsTitle: 'Use a true polo silhouette for branded shirt decisions',
+    workflowTitle: 'From chest logo to polished polo mockup',
+    useCases: ['Team and staff uniforms', 'Golf and club apparel', 'Hospitality workwear'],
+    useCaseDetails: ['Preview embroidered-style chest marks on a collared shirt.', 'Prepare branded polos for teams, clubs, schools, and events.', 'Review color and logo contrast before uniform production.']
+  },
+  'long-sleeve-shirt-mockup-generator': {
+    base: 't-shirt-mockup-generator',
+    title: 'Free Long Sleeve Shirt Mockup Generator',
+    eyebrow: 'Long-sleeve apparel mockups',
+    subtitle: 'Customize a long-sleeve crewneck shirt in 3D, preview chest and sleeve artwork, test garment colors, and export a transparent apparel render.',
+    intent: 'Use the long-sleeve model to review extended sleeve graphics, cuff-area details, chest placement, and seasonal colorways that a short-sleeve mockup cannot show.',
+    primaryKeyword: 'free long sleeve shirt mockup generator',
+    keywords: ['long sleeve t-shirt mockup', 'sleeve print mockup', 'crewneck shirt mockup', 'long sleeve merch mockup'],
+    image: '/uploads/preview/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail',
+    heroModel: { src: `${MOCKUP_GLB_BASE_URL}/long-sleeve-crewneck-shirt-3d-model.glb?v=uvfix-20260606`, alt: 'Long sleeve crewneck shirt 3D mockup' },
+    editorHref: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model#design',
+    cta: { label: 'Customize Long Sleeve Shirt', href: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model#design' },
+    outputHighlights: ['Chest and sleeve artwork', 'Seasonal colorways', 'Transparent PNG export'],
+    examplesTitle: 'Long-sleeve shirt mockups with usable sleeve views',
+    planningTitle: 'Review artwork across the body and sleeve panels',
+    benefitsTitle: 'See sleeve graphics on the garment they were designed for',
+    workflowTitle: 'From long-sleeve artwork to product mockup',
+    useCases: ['Sleeve-print streetwear', 'Seasonal merch releases', 'Long-sleeve POD listings'],
+    useCaseDetails: ['Check vertical sleeve graphics and cuff-area details.', 'Build fall and winter apparel launch previews.', 'Prepare long-sleeve listing images without a photoshoot.']
+  },
+  'streetwear-hoodie-mockup-generator': {
+    base: 'hoodie-mockup-generator',
+    title: 'Free Streetwear Hoodie Mockup Generator',
+    eyebrow: 'Pullover hoodie streetwear previews',
+    subtitle: 'Customize a pullover hoodie in 3D, test chest, back, and sleeve graphics, compare streetwear colorways, and export a transparent product render.',
+    intent: 'Use a real pullover hoodie shape to review graphic scale against the hood, kangaroo pocket, cuffs, and heavier upper-body volume before planning a streetwear drop.',
+    primaryKeyword: 'free streetwear hoodie mockup generator',
+    keywords: ['streetwear hoodie mockup', 'pullover hoodie mockup', 'hoodie back print mockup', 'oversized hoodie preview'],
+    image: '/uploads/preview/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail',
+    heroModel: { src: `${MOCKUP_GLB_BASE_URL}/hoodie-mockup-3d-model-04-e77e8039.glb`, alt: 'Pullover streetwear hoodie 3D mockup' },
+    editorHref: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design',
+    cta: { label: 'Customize Streetwear Hoodie', href: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design' },
+    outputHighlights: ['Pullover hoodie model', 'Chest, back and sleeve planning', 'Free PNG export'],
+    examplesTitle: 'Streetwear hoodie mockups for graphic drops',
+    planningTitle: 'Balance artwork against hood and pocket volume',
+    benefitsTitle: 'Preview the complete pullover silhouette before sampling',
+    workflowTitle: 'From streetwear artwork to hoodie launch mockup',
+    useCases: ['Graphic hoodie drops', 'Creator and team merchandise', 'Streetwear approval decks'],
+    useCaseDetails: ['Review large graphics on a substantial pullover shape.', 'Build hoodie concepts for creators, teams, events, and brands.', 'Share consistent product views before sampling or photography.']
+  },
+  'transparent-apparel-mockup-generator': {
+    base: '3d-clothing-mockup-generator',
+    title: 'Free Transparent Apparel Mockup Generator',
+    eyebrow: 'Background-free product renders',
+    subtitle: 'Customize free 3D clothing models and export clean transparent PNG mockups for ecommerce product pages, catalogs, presentations, and POD listings.',
+    intent: 'Use transparent apparel renders when the garment must drop cleanly into a product page, marketplace gallery, line sheet, launch deck, or reusable design system.',
+    primaryKeyword: 'transparent apparel mockup generator',
+    keywords: ['transparent clothing mockup PNG', 'background free apparel render', 'transparent t-shirt mockup', 'ecommerce clothing PNG'],
+    editorHref: '/3d-models/dress/classic-one-piece-dress-3d-model#design',
+    cta: { label: 'Create Transparent Mockup', href: '/3d-models/dress/classic-one-piece-dress-3d-model#design' },
+    outputHighlights: ['Transparent background', 'High-resolution PNG', 'Multiple apparel categories'],
+    examplesTitle: 'Transparent apparel renders for product layouts',
+    planningTitle: 'Create reusable garment visuals without a fixed scene',
+    benefitsTitle: 'Export product images that fit any storefront layout',
+    workflowTitle: 'From 3D garment to transparent product PNG',
+    useCases: ['Ecommerce product galleries', 'POD and marketplace listings', 'Line sheets and launch decks'],
+    useCaseDetails: ['Place clean garment renders on any product-page background.', 'Reuse transparent apparel images across listing formats.', 'Build consistent collection boards without cutting out photos.']
+  }
+};
+
 function getToolPage(slug) {
-  const page = TOOL_PAGE_CONTENT[slug];
+  const variant = TOOL_VARIANT_CONTENT[slug];
+  const basePage = variant ? TOOL_PAGE_CONTENT[variant.base] : null;
+  const page = variant ? {
+    ...basePage,
+    ...variant,
+    visualGallery: [{
+      title: `${variant.title.replace(/^Free\s+/i, '')} model preview`,
+      image: variant.image || basePage.image,
+      caption: variant.subtitle
+    }],
+    competitorInsights: [
+      { title: 'Work on the correct garment shape', body: variant.intent },
+      { title: 'Make changes in the browser', body: 'Rotate the live 3D model, compare garment colors, and upload artwork without opening a PSD mockup.' },
+      { title: 'Export a reusable product image', body: 'Download a transparent PNG for product pages, listing drafts, presentations, and design approval.' }
+    ],
+    steps: [
+      { title: 'Inspect the live 3D garment', body: 'Rotate the model and choose front, side, or back view before adding artwork.' },
+      { title: 'Choose a garment color', body: 'Compare light, dark, neutral, and accent colors directly on the model.' },
+      { title: 'Upload your artwork', body: 'Choose a PNG, JPG, WebP, or SVG and continue in the full UV artwork editor.' },
+      { title: 'Export the product render', body: 'Download a transparent PNG for ecommerce, POD, client review, or launch planning.' }
+    ],
+    faqTitle: `${variant.title.replace(/^Free\s+/i, '')} questions`,
+    faq: [
+      { question: `Is this ${variant.primaryKeyword.replace(/^free\s+/i, '')} free?`, answer: 'Yes. You can inspect the model, compare colors, upload artwork, use the browser editor, and export a transparent product preview for free.' },
+      { question: 'Can I upload my own logo or graphic?', answer: 'Yes. Upload PNG, JPG, WebP, or SVG artwork from the quick editor and it will open on the matching garment in the full UV editor.' },
+      { question: 'Can I view the front, back, and side?', answer: 'Yes. Use the angle controls or drag the live 3D model to review artwork and garment proportions from any direction.' },
+      { question: 'Do I need Photoshop?', answer: 'No. The model viewer, artwork placement workflow, color controls, and transparent PNG export run in the browser.' }
+    ]
+  } : TOOL_PAGE_CONTENT[slug];
   if (!page) return null;
   const image = `/images/tools/${slug}.webp`;
   const related = (page.relatedSlugs || Object.keys(TOOL_PAGE_CONTENT).filter(key => key !== slug).slice(0, 3))
@@ -1251,7 +1398,8 @@ function getToolPage(slug) {
       return value ? { slug: key, title: value.title, primaryKeyword: value.primaryKeyword } : null;
     })
     .filter(Boolean);
-  return { slug, image, ...page, related };
+  const editorHref = page.editorHref || String(page.cta?.href || '').replace(/\/edit(?:#.*)?$/, '') + '#design';
+  return { slug, image, ...page, editorHref, related };
 }
 
 function buildToolStructuredData(req, toolPage) {
@@ -1273,12 +1421,21 @@ function buildToolStructuredData(req, toolPage) {
         name: toolPage.title,
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
+        isAccessibleForFree: true,
+        featureList: [
+          'Interactive 3D garment preview',
+          'Garment color controls',
+          'Front, side, and back camera views',
+          'Artwork upload and UV placement',
+          'Transparent PNG export'
+        ],
         offers: {
           '@type': 'Offer',
           price: '0',
           priceCurrency: 'USD'
         },
-        image: firstImage(req, [toolPage.image])
+        image: firstImage(req, [toolPage.image]),
+        screenshot: firstImage(req, [toolPage.image])
       }
     }),
     {
@@ -1577,6 +1734,8 @@ function buildPatternDetailContent(pattern, design3dCategory, req) {
         image: imageUrl,
         primaryImageOfPage: imageObject(req, imageUrl),
         associatedMedia: fileUrl,
+        contentUrl: fileUrl,
+        isAccessibleForFree: true,
         keywords: pattern.tags || undefined,
         isPartOf: {
           '@type': 'CollectionPage',
@@ -1605,17 +1764,33 @@ function buildModelDetailContent(model, related, req) {
   const modelUrl = toAbsoluteUrl(req, req.originalUrl);
   const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
-  const designHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
+  const designHref = `/3d-models/${categorySlug}/${model.slug}#design`;
   const pageTitle = buildSeoTitle(model.name, `Free ${categoryName} 3D Model`);
   const searchIntentSummary = buildModelSearchIntent(model, categoryName);
   const descriptorList = modelDescriptor(model, categoryName);
-  const description = compactText(`Free ${categoryName} 3D model for apparel mockups. Customize artwork with GLB and UV assets, then export transparent WebP product renders.`, 158);
+  const description = compactText(`${model.name} is a free editable ${categoryName} 3D model for apparel mockups. Customize colors and artwork online, then export a transparent PNG render.`, 158);
   const tagList = splitKeywordList(model.tags);
+  const modelText = `${model.name} ${model.description || ''}`.toLowerCase();
+  const fit = /oversized|drop shoulder/.test(modelText) ? 'Oversized / relaxed'
+    : /relaxed|loose/.test(modelText) ? 'Relaxed'
+      : /tailored|fitted|slim/.test(modelText) ? 'Tailored / fitted'
+        : /longline/.test(modelText) ? 'Longline'
+          : /structured/.test(modelText) ? 'Structured' : 'Standard model fit';
+  const sleeve = /sleeveless|tank/.test(modelText) ? 'Sleeveless'
+    : /long sleeve|long-sleeve/.test(modelText) ? 'Long sleeve'
+      : /short sleeve|short-sleeve|t-shirt|tee/.test(modelText) ? 'Short sleeve' : 'Garment-specific';
+  const neckline = /crew.?neck/.test(modelText) ? 'Crew neck'
+    : /v.?neck/.test(modelText) ? 'V-neck'
+      : /turtleneck|high neck/.test(modelText) ? 'High neck'
+        : /polo|collar|button shirt|button-front/.test(modelText) ? 'Collared / placket' : 'Model-specific';
   const formatNotes = [
     { label: 'Format', value: 'GLB / GLTF preview model' },
+    { label: 'Fit', value: fit },
+    { label: 'Sleeve', value: sleeve },
+    { label: 'Neckline', value: neckline },
     { label: 'Texture Layout', value: model.texture_url ? 'Packed UV SVG available' : 'Browser preview asset' },
-    { label: 'Best For', value: `${categoryName} mockups and product renders` },
-    { label: 'Output', value: 'Transparent WebP render export' }
+    { label: 'Artwork Areas', value: descriptorList.join('; ') },
+    { label: 'Output', value: 'Transparent PNG render export' }
   ];
   const howToSteps = [
     {
@@ -1719,6 +1894,8 @@ function buildModelDetailContent(model, related, req) {
         image: imageUrl,
         primaryImageOfPage: imageObject(req, imageUrl),
         associatedMedia: fileUrl,
+        contentUrl: fileUrl,
+        isAccessibleForFree: true,
         genre: '3D clothing model',
         keywords: [model.name, categoryName, ...tagList, 'Design 3D', '3D apparel mockup', '3D clothing model', 'GLB clothing model'].filter(Boolean),
         encodingFormat: 'model/gltf-binary',
@@ -2086,7 +2263,7 @@ router.get('/patterns/item/:id', async (req, res) => {
     res.render('pattern-detail', {
       title: patternDetailContent.pageTitle,
       metaDescription: patternDetailContent.metaDescription,
-      metaRobots: shouldIndexPattern(pattern) ? undefined : 'noindex,follow',
+      metaRobots: 'noindex,follow',
       metaImage: patternDetailContent.primaryImage,
       structuredData: patternDetailContent.structuredData,
       page: 'patterns',
@@ -2146,7 +2323,13 @@ router.get('/tools', (req, res) => {
           { '@type': 'ListItem', position: 2, name: 'Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/hoodie-mockup-generator') },
           { '@type': 'ListItem', position: 3, name: '3D Clothing Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-clothing-mockup-generator') },
           { '@type': 'ListItem', position: 4, name: 'Bulk T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/bulk-t-shirt-mockup-generator') },
-          { '@type': 'ListItem', position: 5, name: 'Print-on-Demand Mockup Generator', url: toAbsoluteUrl(req, '/tools/print-on-demand-mockup-generator') }
+          { '@type': 'ListItem', position: 5, name: 'Print-on-Demand Mockup Generator', url: toAbsoluteUrl(req, '/tools/print-on-demand-mockup-generator') },
+          { '@type': 'ListItem', position: 6, name: 'Oversized T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/oversized-t-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 7, name: 'Front and Back T-Shirt Mockup', url: toAbsoluteUrl(req, '/tools/front-and-back-t-shirt-mockup') },
+          { '@type': 'ListItem', position: 8, name: 'Polo Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/polo-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 9, name: 'Long Sleeve Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/long-sleeve-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 10, name: 'Streetwear Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/streetwear-hoodie-mockup-generator') },
+          { '@type': 'ListItem', position: 11, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') }
         ]
       }
     }),
@@ -2333,15 +2516,40 @@ router.get('/tools/3d-mockup', (req, res) => {
   res.redirect(301, '/tools/3d-clothing-mockup-generator');
 });
 
+router.get('/tools/t-shirt-designer', (req, res) => {
+  res.redirect(301, '/tools/t-shirt-mockup-generator');
+});
+
+router.get('/tools/hoodie-designer', (req, res) => {
+  res.redirect(301, '/tools/hoodie-mockup-generator');
+});
+
+router.get(['/tools/free-patterns', '/tools/free-templates'], (req, res) => {
+  res.redirect(301, '/patterns');
+});
+
+router.get('/tools/dress-designer', (req, res) => {
+  res.redirect(301, '/mockups/dress');
+});
+
+router.get('/tools/2d-mockup', (req, res) => {
+  res.redirect(301, '/mockups');
+});
+
 // Tools Category Route
 router.get('/tools/:slug', async (req, res) => {
   const toolPage = getToolPage(req.params.slug);
   if (toolPage) {
+    const isIndexableTool = Boolean(
+      TOOL_VARIANT_CONTENT[req.params.slug]
+      || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
+    );
     return res.render('tool-detail', {
       title: buildSeoTitle(toolPage.title, 'ClothingDesign'),
       metaDescription: compactText(toolPage.subtitle, 160),
       metaImage: firstImage(req, [toolPage.image]),
       structuredData: buildToolStructuredData(req, toolPage),
+      metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
       toolPage
     });

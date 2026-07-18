@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.cloz-design.com/</loc>
     <lastmod>2026-07-18</lastmod>
@@ -11,744 +11,1116 @@
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-05-d658345c.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/longline-fashion-bag-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-03-efaffadf.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/modern-fashion-bag-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-06-eab3de05.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/relaxed-fashion-bag-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-01-bdfc7175.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/structured-fashion-bag-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-04-4a0ca052.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/tailored-fashion-bag-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-02-3806493f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/blazer/longline-blazer-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/blazer-3d-model-04-f16debcc.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/blazer/structured-blazer-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/blazer-3d-model-05-22e9f435.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/classic-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-02-8e11fd6e.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/classic-long-coat-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-03-ec81dc3d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/classic-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-01-1e3f1420.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/layered-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-02-a413536b.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/lightweight-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-03-729550ef.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/lightweight-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-01-2fc05c1e.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/lightweight-trench-coat-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-06-e554ac26.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/longline-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jumpsuit-3d-model-02-7bdfcd8f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/longline-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-03-fb4d540f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/minimal-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-05-93034d58.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/modern-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-05-668987f2.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/relaxed-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jumpsuit-3d-model-01-3efb87d6.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/relaxed-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-07-0c90ff90.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/structured-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-02-e526e605.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/structured-women-s-long-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-05-01e5816e.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/tailored-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-01-eff7aaa8.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/tailored-trench-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-02-c70928e8.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/coat/utility-long-coat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-04-397699ae.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/classic-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-06-29e39d9a.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/classic-one-piece-dress-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-04-b95be9bc.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/layered-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-10-63149e59.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/lightweight-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-08-911a9d7a.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/minimal-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-08-9d6c527d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/modern-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jumpsuit-3d-model-03-6a89d31d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/relaxed-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jumpsuit-3d-model-04-e8a79953.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/tailored-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-07-cb612f18.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/dress/utility-one-piece-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-09-859cc333.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hat/classic-cap-and-hat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-06-2c812517.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hat/relaxed-cap-and-hat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-07-f772e382.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hat/structured-cap-and-hat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-09-414af7e1.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hat/tailored-cap-and-hat-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-08-8b5fff95.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hoodie-mockup/tailored-fleece-lined-hoodie-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-03-dca998b8.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/hoodie-mockup/tailored-pullover-hoodie-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-05-ef62b7ed.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/classic-jacket-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-09-96decb80.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/classic-jacket-garment-men-s-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-13-c469b1be.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/classic-leather-jacket-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-04-c9941106.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/clean-puffer-jacket-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-12-0917d7bb.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/longline-jacket-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-11-768cab6d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/relaxed-leather-jacket-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-05-1cf216c4.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/jacket/tailored-jacket-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-10-9cec3db9.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/classic-pants-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-06-17caa346.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/classic-pants-alternate-fit-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-07-ce8fc26f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/longline-pants-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-04-9373b5df.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/relaxed-pants-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-02-3999c50f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/relaxed-pants-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-08-8ad74c82.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/structured-pants-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-05-81bfd078.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/pants/tailored-pants-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-03-3b0f4130.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/asymmetric-button-womens-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/asymmetric-button-womens-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/asymmetric-wrap-shirt-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/asymmetric-wrap-shirt-dress-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/belted-womens-shirt-jacket-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/belted-womens-shirt-jacket-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/classic-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-01-bbd71a21.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/classic-loose-woven-top-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-03-12e7c69c.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/classic-womens-button-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/classic-womens-button-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/fitted-button-front-womens-blouse-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/fitted-button-front-womens-blouse-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/layered-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-04-1d358912.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/lightweight-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-06-542c52da.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/long-button-front-womens-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/long-button-front-womens-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/longline-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-04-d6e4a1f6.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/minimal-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-03-571971b8.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/modern-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hoodie-mockup-3d-model-01-82ceee9b.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/oversized-utility-shirt-dress-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/oversized-utility-shirt-dress-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/puff-sleeve-button-blouse-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/puff-sleeve-button-blouse-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/relaxed-button-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/shirt-3d-model-01-7911a7bb.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/relaxed-cuffed-sleeve-button-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/shirt-3d-model-02-66e9b2b5.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/relaxed-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-02-9d3b5bb8.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/relaxed-loose-woven-top-panel-layout-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/blazer-3d-model-01-20140479.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/structured-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/cloak-3d-model-05-29b99e07.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/tailored-long-sleeve-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/shirt-3d-model-03-f2dac145.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/tailored-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-01-434a44f6.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/tie-neck-womens-blouse-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/tie-neck-womens-blouse-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/shirt/utility-loose-woven-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-02-cd9d7a5c.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/casual-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-02-aaba44ab.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/classic-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-03-ad8ae3cf.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/clean-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/dress-3d-model-11-0ef20947.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/layered-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-11-6ca90458.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/longline-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/hat-3d-model-10-0b2ff23a.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/minimal-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/coat-3d-model-06-86bfa5a3.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/modern-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jumpsuit-3d-model-05-d919adda.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/skirt/relaxed-skirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-04-42f5d08c.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/basic-short-sleeve-tshirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/henley-roll-sleeve-shirt-3d-garment-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/henley-roll-sleeve-shirt-3d-garment-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/long-sleeve-high-neck-base-layer-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/long-sleeve-high-neck-base-layer-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/long-sleeve-turtleneck-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/long-sleeve-turtleneck-top-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/long-sleeved-t-shirt</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/1780726154688-29661887.webp</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/minimal-long-sleeve-pullover-3d-garment-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/minimal-long-sleeve-pullover-3d-garment-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/1780135799225-218296703.webp</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/short-sleeve-panel-tee-3d-garment-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/short-sleeve-panel-tee-3d-garment-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/t-shirt-mockup/tailored-crew-neck-t-shirt-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/blazer-3d-model-03-fe1aafcd.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/classic-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-06-728eac01.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/layered-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-08-8d4724a3.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/lightweight-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-13-16d90746.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/longline-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-12-d5df211f.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/longline-short-sleeve-top-3d-garment-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/longline-short-sleeve-top-3d-garment-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/minimal-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/blazer-3d-model-02-fce262dc.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/modern-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/jacket-3d-model-07-23919529.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/puff-sleeve-v-neck-button-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/puff-sleeve-v-neck-button-top-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/quarter-zip-long-sleeve-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/quarter-zip-long-sleeve-top-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/relaxed-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-05-236524d6.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/round-neck-button-womens-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/round-neck-button-womens-top-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/structured-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-06-e88074c7.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/tailored-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-11-edffe4a5.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/tailored-sleeveless-tank-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-01-fb5cebc0.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/top/utility-fashion-top-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-14-333f5add.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/classic-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-01-88d0a731.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/layered-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-10-81d86cf9.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/lightweight-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/skirt-3d-model-01-3ec6b0ef.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/longline-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-04-5a17d35d.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/modern-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/top-3d-model-06-157dceff.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/relaxed-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-02-1db039ca.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/structured-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/pants-3d-model-09-2e6a84e9.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/tailored-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-03-d6d81002.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/underwear/utility-underwear-base-garment-3d-model</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/underwear-3d-model-05-8fb7d42c.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups</loc>
@@ -827,486 +1199,6 @@
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/141</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/142</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/143</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/144</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/145</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/146</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/147</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/148</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/149</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/150</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/151</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/152</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/153</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/154</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/155</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/156</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/157</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/158</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/159</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/160</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/161</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/162</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/163</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/164</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/165</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/166</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/167</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/168</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/169</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/170</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/171</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/172</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/173</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/174</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/175</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/176</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/177</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/178</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/179</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/180</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/181</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/182</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/183</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/184</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/185</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/186</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/187</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/188</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/189</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/190</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/191</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/192</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/193</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/194</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/195</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/196</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/197</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/198</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/199</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/200</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/201</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/202</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/203</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/204</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/205</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/206</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/207</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/208</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/209</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/210</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/211</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/212</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/213</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/214</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/215</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/216</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/217</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/218</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/219</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/patterns/item/220</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://www.cloz-design.com/patterns/patterns-accessories</loc>
@@ -1423,12 +1315,6 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://www.cloz-design.com/tools/2d-mockup</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.cloz-design.com/tools/3d-clothing-mockup-generator</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
@@ -1441,34 +1327,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.cloz-design.com/tools/clo3d-guide</loc>
+    <loc>https://www.cloz-design.com/tools/front-and-back-t-shirt-mockup</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/tools/dress-designer</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/tools/free-patterns</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/tools/free-templates</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.cloz-design.com/tools/hoodie-designer</loc>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.cloz-design.com/images/tools/t-shirt-mockup-generator.webp</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/hoodie-mockup-generator</loc>
@@ -1477,10 +1342,31 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.cloz-design.com/tools/md-guide</loc>
+    <loc>https://www.cloz-design.com/tools/long-sleeve-shirt-mockup-generator</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.cloz-design.com/uploads/preview/long-sleeve-crewneck-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.cloz-design.com/tools/oversized-t-shirt-mockup-generator</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/1780135799225-218296703.webp</image:loc>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://www.cloz-design.com/tools/polo-shirt-mockup-generator</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.cloz-design.com/uploads/preview/short-sleeve-polo-shirt-3d-model.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/print-on-demand-mockup-generator</loc>
@@ -1489,15 +1375,27 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.cloz-design.com/tools/t-shirt-designer</loc>
+    <loc>https://www.cloz-design.com/tools/streetwear-hoodie-mockup-generator</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.cloz-design.com/uploads/preview/hoodie-mockup-3d-model-04-e77e8039.webp?v=cover-20260621-detail</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/t-shirt-mockup-generator</loc>
     <lastmod>2026-07-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.cloz-design.com/tools/transparent-apparel-mockup-generator</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://www.cloz-design.com/images/tools/3d-clothing-mockup-generator.webp</image:loc>
+    </image:image>
   </url>
 </urlset>
