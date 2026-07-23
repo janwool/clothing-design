@@ -4,13 +4,12 @@ const fs = require('fs/promises');
 const path = require('path');
 const db = require('../lib/db');
 const { modelCover, siteImage } = require('../lib/site-assets');
+const { articles: blogArticles } = require('../lib/blog-content');
 const {
   CORE_STATIC_PATHS,
   isPriority3dCategory,
   modelSitemapLimit,
-  patternSitemapLimit,
-  shouldIndexModel,
-  shouldIndexPattern
+  shouldIndexModel
 } = require('../lib/seo-priority');
 
 const baseUrl = (process.env.SITEMAP_BASE_URL || 'https://www.cloz-design.com').replace(/\/+$/, '');
@@ -19,6 +18,7 @@ const robotsPath = path.resolve(__dirname, '..', 'public', 'robots.txt');
 const staticToolPaths = [
   '/tools/t-shirt-mockup-generator',
   '/tools/hoodie-mockup-generator',
+  '/tools/dress-designer',
   '/tools/3d-clothing-mockup-generator',
   '/tools/bulk-t-shirt-mockup-generator',
   '/tools/print-on-demand-mockup-generator',
@@ -33,6 +33,7 @@ const staticToolPaths = [
 const staticToolImages = {
   '/tools/t-shirt-mockup-generator': siteImage('mockups/t-shirt-mockup-generator.webp'),
   '/tools/hoodie-mockup-generator': siteImage('mockups/hoodie-mockup-generator.webp'),
+  '/tools/dress-designer': modelCover('dress-3d-model-06-29e39d9a.webp'),
   '/tools/3d-clothing-mockup-generator': siteImage('mockups/clothing-mockup-generator.webp'),
   '/tools/bulk-t-shirt-mockup-generator': siteImage('mockups/bulk-t-shirt-mockup-generator.webp'),
   '/tools/print-on-demand-mockup-generator': siteImage('mockups/print-on-demand-mockup-generator.webp'),
@@ -86,17 +87,17 @@ function addUrl(urls, seen, pathname, lastmod, image) {
 
 function getPriority(pathname) {
   if (pathname === '/') return '1.0';
-  if (['/mockups', '/tools', '/patterns'].includes(pathname)) return '0.9';
+  if (['/mockups', '/tools', '/blog'].includes(pathname)) return '0.9';
+  if (pathname.startsWith('/blog/')) return '0.8';
   if (pathname.startsWith('/tools/')) return '0.8';
   if (pathname.startsWith('/mockups/') && pathname.split('/').length === 3) return '0.8';
   if (pathname.startsWith('/3d-models/')) return '0.7';
-  if (pathname.startsWith('/patterns/item/')) return '0.5';
   return '0.6';
 }
 
 function getChangefreq(pathname) {
   if (pathname === '/' || pathname === '/mockups') return 'weekly';
-  if (pathname.startsWith('/mockups/') || pathname.startsWith('/3d-models/') || pathname.startsWith('/patterns/')) return 'monthly';
+  if (pathname === '/blog' || pathname.startsWith('/blog/') || pathname.startsWith('/mockups/') || pathname.startsWith('/3d-models/')) return 'monthly';
   return 'weekly';
 }
 
@@ -173,19 +174,9 @@ async function getCategories() {
   `, ['active']);
 }
 
-async function getPatterns() {
-  return db.all(`
-    SELECT id, description, tags, image_url, file_url, format, updated_at, created_at
-    FROM patterns
-    WHERE status = ?
-    ORDER BY updated_at DESC, id DESC
-  `, ['active']);
-}
-
 function categoryPath(category) {
   const prefixes = {
     '3d-models': '/mockups',
-    patterns: '/patterns',
     gallery: '/gallery',
     tools: '/tools'
   };
@@ -224,6 +215,9 @@ async function main() {
 
   CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now));
   staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now, staticToolImages[pathname]));
+  blogArticles.forEach(article => {
+    addUrl(urls, seen, `/blog/${article.slug}`, article.updatedAt || article.publishedAt, article.image);
+  });
 
   const categories = await getCategories();
   categories.forEach(category => {
@@ -247,17 +241,6 @@ async function main() {
         model.image_url
       );
     });
-
-  const patternLimit = patternSitemapLimit();
-  if (patternLimit > 0) {
-    const patterns = await getPatterns();
-    patterns
-      .filter(shouldIndexPattern)
-      .slice(0, patternLimit)
-      .forEach(pattern => {
-        addUrl(urls, seen, `/patterns/item/${pattern.id}`, pattern.updated_at || pattern.created_at);
-      });
-  }
 
   urls.sort((a, b) => a.loc.localeCompare(b.loc));
   await fs.mkdir(path.dirname(outputPath), { recursive: true });

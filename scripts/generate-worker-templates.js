@@ -22,7 +22,6 @@ const templateLocals = [
   'homeContent',
   'toolPage',
   'modelDetailContent',
-  'patternDetailContent',
   'items',
   'categories',
   'models',
@@ -30,8 +29,6 @@ const templateLocals = [
   'category',
   'resourceType',
   'resourceTypeLabel',
-  'pattern',
-  'patterns',
   'related',
   'model',
   'counts'

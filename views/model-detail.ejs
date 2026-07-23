@@ -4,6 +4,7 @@
 <% const howToSteps = detailContent.howToSteps || []; %>
 <% const applications = detailContent.applications || []; %>
 <% const faqItems = detailContent.faqItems || []; %>
+<% const relatedLinks = detailContent.relatedLinks || []; %>
 <% const detailCta = detailContent.cta || {}; %>
 <% const howToIcons = ['open', 'inspect', 'simulate', 'download']; %>
 
@@ -17,7 +18,7 @@
             <model-viewer 
               class="model-viewer-natural"
               src="<%= previewModelFileUrl %>" 
-              alt="<%= model.name %>"
+              alt="<%= model.name %> interactive 3D clothing model and apparel mockup"
               camera-controls 
               auto-rotate
               shadow-intensity="1.55"
@@ -106,6 +107,14 @@
           </div>
         <% } %>
 
+        <% if (relatedLinks.length) { %>
+          <nav class="model-intent-links" aria-label="Related 3D clothing resources">
+            <% relatedLinks.forEach(function(link) { %>
+              <a href="<%= link.href %>"><%= link.label %></a>
+            <% }); %>
+          </nav>
+        <% } %>
+
         <div class="model-actions">
           <button class="btn btn-primary btn-large" id="designNowBtn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -138,7 +147,7 @@
       <% if (model.image_url) { %>
         <div class="showcase-item">
           <div class="showcase-image">
-            <img src="<%= model.image_url %>" alt="<%= model.name %> front 3D apparel mockup preview">
+            <img src="<%= model.image_url %>" alt="<%= model.name %> front 3D apparel mockup preview" loading="lazy">
           </div>
           <span class="showcase-label">Garment preview</span>
         </div>
@@ -146,7 +155,7 @@
       <% if (model.texture_url) { %>
         <div class="showcase-item showcase-texture-item">
           <div class="showcase-image">
-            <img src="<%= model.texture_url %>" alt="<%= model.name %> UV texture and artwork placement layout">
+            <img src="<%= model.texture_url %>" alt="<%= model.name %> UV texture and artwork placement layout" loading="lazy">
           </div>
           <span class="showcase-label">UV artwork layout</span>
         </div>
@@ -283,14 +292,14 @@
 <% if (related && related.length > 0) { %>
 <section class="related-models-section">
   <div class="container">
-    <h2 class="section-title">Related Models</h2>
+    <h2 class="section-title">Related <%= model.category_label || model.category %> 3D Models</h2>
     
     <div class="models-grid">
       <% related.forEach(function(item) { %>
         <a href="/3d-models/<%= item.category_slug || item.category %>/<%= item.slug %>" class="model-card">
           <div class="model-preview-3d">
             <% if (item.image_url) { %>
-              <img src="<%= item.image_url %>" alt="<%= item.name %>" class="model-img">
+              <img src="<%= item.image_url %>" alt="Free <%= item.name %> 3D model and apparel mockup" class="model-img" loading="lazy">
             <% } else { %>
               <div class="model-placeholder">
                 <span><%= item.name.charAt(0) %></span>

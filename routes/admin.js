@@ -240,21 +240,6 @@ async function initAdminTables() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
-    // Sew Patterns table
-    await db.run(`CREATE TABLE IF NOT EXISTS patterns (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      category TEXT NOT NULL,
-      description TEXT,
-      tags TEXT,
-      image_url TEXT,
-      file_url TEXT,
-      format TEXT DEFAULT 'zprj',
-      status TEXT DEFAULT 'active',
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-
     // Gallery items table
     await db.run(`CREATE TABLE IF NOT EXISTS gallery_items (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -303,7 +288,6 @@ router.get('/', requireAuth, async (req, res) => {
   try {
     const models3d = await db.get('SELECT COUNT(*) as count FROM models_3d');
     const models2d = await db.get('SELECT COUNT(*) as count FROM models_2d');
-    const patterns = await db.get('SELECT COUNT(*) as count FROM patterns');
     const gallery = await db.get('SELECT COUNT(*) as count FROM gallery_items');
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
     const users = await db.get('SELECT COUNT(*) as count FROM users');
@@ -314,7 +298,6 @@ router.get('/', requireAuth, async (req, res) => {
       counts: {
         models3d: models3d ? models3d.count : 0,
         models2d: models2d ? models2d.count : 0,
-        patterns: patterns ? patterns.count : 0,
         gallery: gallery ? gallery.count : 0,
         tools: tools ? tools.count : 0,
         users: users ? users.count : 0
@@ -324,7 +307,7 @@ router.get('/', requireAuth, async (req, res) => {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, patterns: 0, gallery: 0, tools: 0, users: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0 }
     });
   }
 });
@@ -475,77 +458,6 @@ router.put('/models-2d/:id', requireAuth, async (req, res) => {
 router.delete('/models-2d/:id', requireAuth, async (req, res) => {
   try {
     await db.run('DELETE FROM models_2d WHERE id = ?', [req.params.id]);
-    res.json({ success: true });
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-
-// ==================== Sew Patterns CRUD ====================
-router.get('/patterns', requireAuth, async (req, res) => {
-  try {
-    const items = await db.all('SELECT * FROM patterns ORDER BY created_at DESC');
-    const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC', ['patterns', 'active']);
-    res.render('admin/patterns', { title: 'Sew Patterns Management', page: 'admin-patterns', items: items || [], categories: categories || [] });
-  } catch (err) {
-    res.render('admin/patterns', { title: 'Sew Patterns Management', page: 'admin-patterns', items: [], categories: [] });
-  }
-});
-
-router.post('/patterns', requireAuth, async (req, res) => {
-  try {
-    const { name, category, description, tags, format, status, file_url, image_url } = req.body;
-    if (!file_url) {
-      return res.json({ success: false, error: 'Pattern file is required' });
-    }
-
-    const result = await db.run(
-      'INSERT INTO patterns (name, category, description, tags, file_url, image_url, format, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [name, category, description, tags, file_url, image_url, format || 'zprj', status || 'active']
-    );
-    res.json({ success: true, id: result.lastID });
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-
-router.put('/patterns/:id', requireAuth, async (req, res) => {
-  try {
-    const { name, category, description, tags, format, status, file_url, image_url } = req.body;
-    const updates = [
-      'name = ?',
-      'category = ?',
-      'description = ?',
-      'tags = ?',
-      'format = ?',
-      'status = ?',
-    ];
-    const params = [name, category, description, tags, format || 'zprj', status || 'active'];
-
-    if (file_url !== undefined && file_url !== '') {
-      updates.push('file_url = ?');
-      params.push(file_url);
-    }
-    if (image_url !== undefined && image_url !== '') {
-      updates.push('image_url = ?');
-      params.push(image_url);
-    }
-
-    params.push(req.params.id);
-
-    await db.run(
-      'UPDATE patterns SET ' + updates.join(', ') + ', updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      params
-    );
-    res.json({ success: true });
-  } catch (err) {
-    res.json({ success: false, error: err.message });
-  }
-});
-
-router.delete('/patterns/:id', requireAuth, async (req, res) => {
-  try {
-    await db.run('DELETE FROM patterns WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {
     res.json({ success: false, error: err.message });
@@ -717,13 +629,9 @@ router.post('/upload-token', requireAuth, async (req, res) => {
       return res.status(400).json({ success: false, error: 'filename and folder are required' });
     }
 
-    const validFolders = ['d3', 'd2', 'image', 'patterns'];
+    const validFolders = ['d3', 'd2', 'image'];
     if (!validFolders.includes(folder)) {
       return res.status(400).json({ success: false, error: 'Invalid folder' });
-    }
-
-    if (folder === 'patterns' && path.extname(filename).toLowerCase() !== '.zprj') {
-      return res.status(400).json({ success: false, error: 'Only .zprj pattern files are allowed' });
     }
 
     const key = `${folder}/${Date.now()}-${Math.round(Math.random() * 1E9)}${path.extname(filename)}`;

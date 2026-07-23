@@ -9,11 +9,29 @@
     </div>
     <h1 class="page-title"><%= t('design3d.pageTitle') %></h1>
     <p class="page-subtitle"><%= t('design3d.pageSubtitle') %></p>
+    <div class="category-hero-meta mockup-library-meta">
+      <span><%= models && models.length ? `${models.length} free 3D models` : 'Free 3D model library' %></span>
+      <span>Browser-based customization</span>
+      <span>Transparent PNG export</span>
+    </div>
+    <div class="category-hero-actions">
+      <a href="#free-3d-models" class="btn btn-primary">Browse free models</a>
+      <a href="/tools/3d-clothing-mockup-generator" class="btn btn-secondary">Open 3D mockup generator</a>
+    </div>
   </div>
 </section>
 
 <section class="content-section">
   <div class="container">
+    <nav class="mockup-intent-links" aria-label="Popular 3D clothing mockup searches">
+      <a href="/mockups/jacket">Jacket 3D models</a>
+      <a href="/mockups/pants">3D pants design models</a>
+      <a href="/mockups/dress">Free dress mockups</a>
+      <a href="/mockups/shirt">Shirt 3D models</a>
+      <a href="/tools/dress-designer">Online dress designer</a>
+      <a href="/tools/transparent-apparel-mockup-generator">Transparent apparel mockups</a>
+    </nav>
+
     <!-- Filters -->
     <div class="filters-bar">
       <div class="filter-group">
@@ -30,6 +48,14 @@
       </div>
     </div>
 
+    <div class="mockup-library-heading" id="free-3d-models">
+      <div>
+        <span class="generator-eyebrow">3D mockup clothing library</span>
+        <h2>Choose a free 3D clothing model</h2>
+      </div>
+      <p>Open a garment to inspect its 3D shape, test colors and artwork placement, and create an apparel mockup for ecommerce, print-on-demand, or design review.</p>
+    </div>
+
     <!-- 3D Models Grid -->
     <div class="models-grid">
       <% if (models && models.length > 0) { %>
@@ -37,7 +63,7 @@
           <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || model.category %>">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
-                <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
+                <img src="<%= model.image_url %>" alt="Free <%= model.name %> 3D clothing model and apparel mockup" class="model-img" loading="lazy">
               <% } else { %>
                 <div class="model-placeholder">
                   <span><%= model.name.charAt(0) %></span>
@@ -48,6 +74,7 @@
                 <h3 class="model-name"><%= model.name %></h3>
                 <div class="model-tags">
                   <span class="tag tag-free">Free</span>
+                  <span class="tag">3D mockup</span>
                 </div>
               </div>
             </a>

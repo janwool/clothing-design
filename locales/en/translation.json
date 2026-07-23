@@ -2,7 +2,6 @@
   "nav": {
     "design3d": "Mockups",
     "design2d": "Design 2D",
-    "patterns": "Sew Patterns",
     "gallery": "Get Inspired",
     "tools": "Tools",
     "pricing": "See Plans",
@@ -23,17 +22,14 @@
     "mockup3d": "3D Mockup Generator",
     "mockup2d": "2D Mockup Generator",
     "freeDownloads": "Free Downloads",
-    "freePatterns": "Free Patterns",
     "freeTemplates": "Free Templates",
-    "learn": "Learn",
-    "clo3dGuide": "CLO3D Guide",
-    "mdGuide": "Marvelous Designer Guide"
+    "learn": "Learn"
   },
   "home": {
     "title": "Free 3D Clothing Models for Apparel Mockups | ClothingDesign",
     "heroTitle": "Free 3D Clothing Models for Apparel Mockups",
     "heroSubtitle": "Browse free 3D garment models, preview print placement, and export clean product images for ecommerce and POD listings.",
-    "startDesigning": "Create a Clothing Mockup",
+    "startDesigning": "Design Clothing Online in 3D",
     "browseModels": "Browse Free 3D Models",
     "featuresTitle": "Free Apparel Mockup Tools for Product Visuals",
     "feature1Title": "3D Clothing Models",
@@ -64,9 +60,9 @@
     "error": "An error occurred"
   },
   "design3d": {
-    "title": "Free Apparel Mockups and 3D Clothing Models | ClothingDesign",
-    "pageTitle": "Free Apparel Mockups",
-    "pageSubtitle": "Browse free 3D garment mockup models, customize apparel artwork online, and export transparent renders for ecommerce and fashion review",
+    "title": "Free 3D Clothing Models & Apparel Mockups | ClothingDesign",
+    "pageTitle": "Free 3D Clothing Models & Apparel Mockups",
+    "pageSubtitle": "Browse free 3D clothing mockups for jackets, pants, dresses, shirts, and hoodies. Customize artwork online and export transparent PNG product renders",
     "filterAll": "All Models",
     "filterTops": "Tops",
     "filterBottoms": "Bottoms",
@@ -112,38 +108,15 @@
     "blazer": "Blazer Template",
     "tankTop": "Tank Top Template"
   },
-  "patterns": {
-    "title": "Sew Patterns - ClothingDesign",
-    "pageTitle": "Sewing Patterns",
-    "pageSubtitle": "Professional patterns for CLO3D and Marvelous Designer",
-    "filterAll": "All Patterns",
-    "filterTops": "Tops",
-    "filterBottoms": "Bottoms",
-    "filterDresses": "Dresses",
-    "filterOuterwear": "Outerwear",
-    "filterAccessories": "Accessories",
-    "sortPopular": "Most Popular",
-    "sortNewest": "Newest",
-    "sortName": "Name",
-    "downloadNow": "Download Now",
-    "tShirt": "T-Shirt Pattern",
-    "hoodie": "Hoodie Pattern",
-    "dress": "Dress Pattern",
-    "jeans": "Jeans Pattern",
-    "jacket": "Jacket Pattern",
-    "skirt": "Skirt Pattern",
-    "blazer": "Blazer Pattern",
-    "tankTop": "Tank Top Pattern"
-  },
   "gallery": {
     "title": "Get Inspired - ClothingDesign",
     "pageTitle": "Design Gallery",
     "pageSubtitle": "Get inspired by designs from our community"
   },
   "tools": {
-    "title": "Apparel Mockup Tools - ClothingDesign",
-    "pageTitle": "Apparel Mockup Tools",
-    "pageSubtitle": "Plan T-shirt, hoodie, clothing, bulk colorway, and print-on-demand mockups from browser-based apparel model previews",
+    "title": "Free Online Clothing Design & Mockup Tools | ClothingDesign",
+    "pageTitle": "Free Online Clothing Design & Mockup Tools",
+    "pageSubtitle": "Design clothing online with free 3D garment models, apparel mockup generators, artwork previews, and transparent product exports",
     "popularTools": "Popular Tools",
     "designTools": "Design Tools",
     "tShirtDesigner": "T-Shirt Designer",
@@ -153,11 +126,8 @@
     "mockup3d": "3D Mockup Generator",
     "mockup2d": "2D Mockup Generator",
     "freeDownloads": "Free Downloads",
-    "freePatterns": "Free Patterns",
     "freeTemplates": "Free Templates",
-    "learn": "Learn",
-    "clo3dGuide": "CLO3D Guide",
-    "mdGuide": "Marvelous Designer Guide"
+    "learn": "Learn"
   },
   "pricing": {
     "title": "See Plans - ClothingDesign"

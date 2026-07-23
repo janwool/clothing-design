@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
-const { shouldIndexModel, shouldIndexPattern } = require('../lib/seo-priority');
+const { shouldIndexModel } = require('../lib/seo-priority');
 const {
   buildModelCategoryLandingContent,
   categoryDescription,
@@ -20,6 +20,7 @@ const {
   pageStructuredData
 } = require('../lib/seo');
 const { modelCover, siteImage } = require('../lib/site-assets');
+const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
 
 const MOCKUP_WORKFLOW_IMAGES = [
   siteImage('workflow/choose-garment-model.webp'),
@@ -35,67 +36,6 @@ const MOCKUP_USE_CASE_IMAGES = [
 ];
 
 function getDefaultLandingContent(name = '3D clothing models', resourceType = '3d-models') {
-  if (resourceType === 'patterns') {
-    return {
-      workflow: {
-        eyebrow: 'Pattern workflow',
-        title: `From ${name} pattern to simulated garment`,
-        description: 'Use each ZPRJ sewing pattern as a starting point for digital sample review, fit checks, and 3D apparel handoff.',
-        steps: [
-          { title: 'Choose a pattern', body: 'Start from a category that matches the garment type, silhouette, and production question you need to answer.' },
-          { title: 'Open the ZPRJ file', body: 'Load the project in CLO 3D or Marvelous Designer and confirm the 2D pattern pieces, sewing lines, avatar scale, and fabrics.' },
-          { title: 'Simulate and adjust', body: 'Review drape, tension, fit balance, and construction details before making colorway or material changes.' },
-          { title: 'Prepare handoff visuals', body: 'Export review images, technical references, or a revised project file for design, merchandising, or sample development.' }
-        ]
-      },
-      categories: {
-        eyebrow: 'Pattern categories',
-        title: 'Browse ZPRJ pattern categories',
-        description: 'Move between garment categories when comparing construction types, silhouettes, and simulation-ready apparel files.',
-        buttonLabel: 'Browse patterns',
-        buttonHref: '/patterns',
-        cards: [
-          { title: 'T-Shirts', meta: 'ZPRJ patterns', href: '/patterns/patterns-t-shirts' },
-          { title: 'Hoodies', meta: 'ZPRJ patterns', href: '/patterns/patterns-hoodies' },
-          { title: 'Outerwear', meta: 'ZPRJ patterns', href: '/patterns/patterns-outerwear' },
-          { title: 'Women Shirts', meta: 'ZPRJ patterns', href: '/patterns/patterns-women-shirts' }
-        ]
-      },
-      output: {
-        eyebrow: 'Built for simulation',
-        title: `${name} patterns for practical apparel development`,
-        cards: [
-          { title: 'CLO 3D and Marvelous Designer review', body: 'Open the project file to inspect pattern pieces, garment arrangement, fabric behavior, and simulation quality.' },
-          { title: 'Digital sample iteration', body: 'Test construction, proportions, and styling changes before committing to physical sampling.' },
-          { title: 'Mockup and production handoff', body: 'Create clearer references for designers, pattern makers, factories, buyers, and ecommerce teams.' }
-        ]
-      },
-      library: {
-        eyebrow: 'Pattern library',
-        title: 'Start from preview-guided ZPRJ sewing patterns instead of rebuilding a garment from zero.',
-        buttonLabel: 'Browse Sew Patterns',
-        buttonHref: '/patterns'
-      },
-      faq: {
-        eyebrow: 'FAQ',
-        title: `${name} pattern questions`,
-        items: [
-          { question: 'Can I use these patterns in CLO 3D?', answer: 'Yes. The pattern pages focus on ZPRJ project files that can be opened in CLO 3D for simulation, fit review, and digital sample work.' },
-          { question: 'Can Marvelous Designer open the files?', answer: 'Yes. Marvelous Designer supports ZPRJ project files, so you can inspect 2D pattern pieces, sewing relationships, fabric settings, and the simulated garment.' },
-          { question: 'Are the previews useful before downloading?', answer: 'Yes. Preview images help you choose a garment type and avoid opening project files that do not match your intended silhouette or workflow.' },
-          { question: 'How do I turn a pattern into a mockup?', answer: 'Open the ZPRJ file in your 3D apparel software, simulate the garment, apply materials or graphics, and export review renders or technical references.' }
-        ]
-      },
-      cta: {
-        eyebrow: 'Start reviewing',
-        title: `Choose a ${name} pattern and open it in your 3D apparel workflow.`,
-        description: 'Use the pattern grid above to select a simulation-ready project file with a visual preview.',
-        primaryLabel: 'Browse Sew Patterns',
-        primaryHref: '/patterns'
-      }
-    };
-  }
-
   return buildModelCategoryLandingContent(name);
 }
 
@@ -140,8 +80,7 @@ function shouldUseLocalModelAssets(req) {
 }
 
 function getLandingContent(category, resourceType = '3d-models') {
-  const fallbackName = resourceType === 'patterns' ? 'ZPRJ sewing patterns' : '3D clothing models';
-  const defaults = getDefaultLandingContent(category ? category.name : fallbackName, resourceType);
+  const defaults = getDefaultLandingContent(category ? category.name : '3D clothing models', resourceType);
   if (!category || !category.landing_content) {
     return resourceType === '3d-models' ? enrichMockupLandingImages(defaults) : defaults;
   }
@@ -294,7 +233,11 @@ function buildSeoTitle(base, suffix, maxLength = 58) {
   if (room > 24) {
     const clipped = cleanBase.slice(0, room);
     const lastSpace = clipped.lastIndexOf(' ');
-    return `${clipped.slice(0, lastSpace > 18 ? lastSpace : room).trim()} | ${cleanSuffix}`;
+    const shortenedBase = clipped
+      .slice(0, lastSpace > 18 ? lastSpace : room)
+      .trim()
+      .replace(/\s+(?:a|an|and|for|in|of|on|the|with)$/i, '');
+    return `${shortenedBase} | ${cleanSuffix}`;
   }
   const clipped = full.slice(0, maxLength);
   const lastSpace = clipped.lastIndexOf(' ');
@@ -322,15 +265,30 @@ function modelDescriptor(model, categoryName) {
   return descriptors.slice(0, 3);
 }
 
-function buildModelSearchIntent(model, categoryName) {
+function modelSearchPhrases(categoryName, categorySlug) {
+  const key = `${categoryName || ''} ${categorySlug || ''}`.toLowerCase();
+  if (/dress|skirt/.test(key)) return ['dress mockup', '3D dress model', 'online dress design'];
+  if (/jacket|blazer/.test(key)) return ['jacket 3D model', 'jacket mockup', '3D outerwear design'];
+  if (/pants|trouser/.test(key)) return ['3D pants design', 'pants 3D model', 'trousers mockup'];
+  if (/hoodie/.test(key)) return ['3D hoodie model', 'hoodie mockup', 'online hoodie design'];
+  if (/t-shirt|tee/.test(key)) return ['3D T-shirt model', 'T-shirt mockup', 'online T-shirt design'];
+  if (/shirt|top/.test(key)) return ['shirt 3D model', 'shirt mockup', '3D apparel design'];
+  if (/coat|cloak/.test(key)) return ['coat 3D model', 'coat mockup', '3D outerwear design'];
+  if (/underwear/.test(key)) return ['underwear 3D model', 'underwear mockup', '3D apparel design'];
+  return ['3D clothing model', '3D apparel mockup', 'online clothing design'];
+}
+
+function buildModelSearchIntent(model, categoryName, categorySlug) {
   const category = String(categoryName || 'apparel').toLowerCase();
   const tags = splitKeywordList(model.tags);
   const descriptor = modelDescriptor(model, categoryName).join(', ');
+  const searchPhrases = modelSearchPhrases(categoryName, categorySlug);
   return compactText([
     `${model.name} is a free ${category} 3D model for online apparel mockups.`,
-    `Use the GLB preview and UV texture layout to test ${descriptor}, then export transparent product renders for ecommerce, print-on-demand, client review, or digital fashion planning.`,
-    tags.length ? `Related search terms include ${tags.slice(0, 4).join(', ')}.` : ''
-  ].filter(Boolean).join(' '), 260);
+    `Use it for ${searchPhrases.join(', ')} workflows.`,
+    `Preview ${descriptor}, then export transparent product renders for ecommerce, print-on-demand, or design review.`,
+    tags.length ? `Related topics include ${tags.slice(0, 2).join(', ')}.` : ''
+  ].filter(Boolean).join(' '), 285);
 }
 
 const CATEGORY_IMAGE_ASSETS = {
@@ -387,7 +345,7 @@ function selectHomeFeaturedModels(models = []) {
   return selected;
 }
 
-function buildHomeContent(req, models = [], categories = [], patternCount = 0, modelTotal = models.length) {
+function buildHomeContent(req, models = [], categories = [], modelTotal = models.length) {
   const modelCount = Number(modelTotal) || models.length;
   const categoryCount = categories.length;
   const pageUrl = toAbsoluteUrl(req, '/');
@@ -403,7 +361,7 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
   const stats = [
     { value: `${modelCount}+`, label: '3D garment models' },
     { value: `${categoryCount}`, label: 'apparel categories' },
-    { value: `${patternCount}+`, label: 'supporting patterns' }
+    { value: 'Free', label: 'browser mockup workflow' }
   ];
   const workflow = [
     {
@@ -519,6 +477,31 @@ function buildHomeContent(req, models = [], categories = [], patternCount = 0, m
     },
     {
       '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'T-shirt mockup starting points',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Free T-Shirt Mockup Generator',
+          url: toAbsoluteUrl(req, '/tools/t-shirt-mockup-generator')
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Free T-Shirt 3D Models',
+          url: toAbsoluteUrl(req, '/mockups/t-shirt-mockup')
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: 'Classic Crew Neck T-Shirt 3D Model',
+          url: toAbsoluteUrl(req, '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model')
+        }
+      ]
+    },
+    {
+      '@context': 'https://schema.org',
       '@type': 'FAQPage',
       mainEntity: faq.map(item => ({
         '@type': 'Question',
@@ -584,7 +567,7 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
   const collectionPath = resourceType === '3d-models' ? '/mockups' : `/${resourceType}`;
   const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClothingDesign.`;
   const normalizedItems = resourceType === '3d-models' ? normalize3dModels(items, category.slug) : items;
-  const image = firstImage(req, normalizedItems.map(item => item.image_url));
+  const image = firstImage(req, [category.image_url, ...normalizedItems.map(item => item.image_url)]);
 
   return [
     ...pageStructuredData(req, {
@@ -607,9 +590,6 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
     itemList(req, `${category.name} ${resourceTypeLabel}`, normalizedItems, item => {
       if (resourceType === '3d-models') {
         return `/3d-models/${category.slug}/${item.slug}`;
-      }
-      if (resourceType === 'patterns') {
-        return `/patterns/item/${item.id}`;
       }
       return item.url || basePath;
     }, item => item.image_url)
@@ -648,6 +628,28 @@ const TOOL_PAGE_CONTENT = {
       'Prepare a T-shirt mockup for Shopify, Etsy, Amazon Merch, or POD catalog drafts before printing.',
       'Compare oversized, black tee, white tee, logo tee, and graphic tee directions for a clothing brand launch.',
       'Plan front placement, back print scale, chest logo sizing, and sleeve detail before final artwork lockup.'
+    ],
+    modelStarters: [
+      {
+        title: 'Classic crew-neck T-shirt',
+        body: 'Start with the highest-interest short-sleeve blank for chest logos, front graphics, back prints, and everyday product listings.',
+        href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model'
+      },
+      {
+        title: 'Oversized drop-shoulder T-shirt',
+        body: 'Use a relaxed streetwear silhouette when artwork scale, shoulder position, and garment volume matter.',
+        href: '/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit'
+      },
+      {
+        title: 'Short-sleeve polo shirt',
+        body: 'Choose a collared model for teamwear, uniforms, embroidered logos, and smart-casual product previews.',
+        href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model'
+      },
+      {
+        title: 'Long-sleeve crewneck shirt',
+        body: 'Plan front, back, and sleeve artwork on a long-sleeve model before creating the final product set.',
+        href: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model'
+      }
     ],
     visualGallery: [
       { title: 'Graphic tee preview', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Realistic T-shirt mockup with a small chest artwork placement and ecommerce-ready lighting.' },
@@ -766,17 +768,17 @@ const TOOL_PAGE_CONTENT = {
     cta: { label: 'Open Hoodie Editor', href: '/3d-models/hoodie-mockup/tailored-fleece-lined-hoodie-3d-model/edit' }
   },
   '3d-clothing-mockup-generator': {
-    title: 'Free 3D Clothing Mockup Generator',
-    eyebrow: '3D apparel product visuals',
+    title: 'Free 3D Clothing Design & Mockup Generator',
+    eyebrow: 'Free online 3D clothing design',
     image: modelCover('dress-3d-model-06-29e39d9a.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
       alt: 'Classic One-Piece Dress 3D Model'
     },
-    subtitle: 'Customize free 3D clothing models for T-shirts, hoodies, dresses, and other apparel, then export transparent mockups for product pages and design review.',
-    intent: 'Use the 3D clothing mockup workflow when you need garment shape, product angle, and apparel category variety. Build richer visuals than flat templates while keeping the process browser-based and fast.',
+    subtitle: 'Design clothing online with free 3D garment models for T-shirts, hoodies, dresses, and other apparel, then export transparent mockups for product pages and design review.',
+    intent: 'Use the free online 3D clothing design workflow when you need garment shape, product angle, artwork placement, and apparel category variety. Build richer visuals than flat templates while keeping the process browser-based and fast.',
     primaryKeyword: '3D clothing mockup generator',
-    keywords: ['clothing mockup generator', 'apparel mockup generator', '3D apparel mockup', 'online clothing mockup', 'realistic clothing mockup'],
+    keywords: ['free 3D clothing design online', 'free online clothing designer', 'clothing mockup generator', 'apparel mockup generator', '3D apparel mockup', 'online clothing mockup', 'realistic clothing mockup'],
     competitorInsights: [
       { title: 'Cover more garment types', body: 'Move from T-shirts and hoodies into jackets, dresses, bottoms, and accessories without changing content strategy.' },
       { title: 'Show shape, not just art', body: 'Use 3D model previews to communicate garment form, product angle, and category fit better than flat templates.' },
@@ -825,12 +827,13 @@ const TOOL_PAGE_CONTENT = {
     faqTitle: '3D clothing mockup generator questions',
     outputHighlights: ['Multiple garment categories', 'Model-based presentation angles', 'Ecommerce visual direction'],
     keywordClusters: [
-      { title: 'Core terms', terms: ['3D clothing mockup generator', 'clothing mockup generator', 'apparel mockup generator', 'online clothing mockup'] },
+      { title: 'Core terms', terms: ['3D clothing mockup generator', 'free 3D clothing design online', 'free online clothing designer', 'apparel mockup generator'] },
       { title: 'Category terms', terms: ['T-shirt mockup', 'hoodie mockup', 'jacket mockup', 'dress mockup'] },
       { title: 'Output terms', terms: ['product mockup preview', 'ecommerce mockup', 'launch deck visual', 'brand approval mockup'] }
     ],
     faq: [
       { question: 'What is a 3D clothing mockup generator?', answer: 'It is a browser-based workflow for creating apparel visuals from 3D garment model previews instead of editing flat PSD templates.' },
+      { question: 'Can I design clothing online for free?', answer: 'Yes. Choose a free 3D garment model, test colors and viewing angles, upload artwork, and export a transparent apparel preview in the browser.' },
       { question: 'Which clothing categories can I mock up?', answer: 'Use ClothingDesign for T-shirts, hoodies, shirts, jackets, dresses, bottoms, bags, hats, and other apparel or accessory categories.' },
       { question: 'Is this only for fashion designers?', answer: 'No. It is useful for POD sellers, ecommerce teams, agencies, merch creators, streetwear brands, students, and product teams.' },
       { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
@@ -1049,41 +1052,58 @@ const TOOL_PAGE_CONTENT = {
     cta: { label: 'Browse Hoodie Models', href: '/mockups/hoodie-mockup' }
   },
   'dress-designer': {
-    title: 'Free Dress Design Tool Online',
-    eyebrow: 'Free fashion concept preview',
-    subtitle: 'Plan dress concepts online with silhouette-focused references, garment mockups, and free resources for fashion presentations, boutique planning, and digital sample review.',
-    intent: 'Move a dress idea from sketch-level planning into a visual preview. Use models and pattern resources to explore silhouette, length, fabric direction, and presentation before sample making.',
-    primaryKeyword: 'free dress design tool online',
-    keywords: ['dress mockup maker', 'design your own dress online', 'fashion dress design tool', 'dress template creator'],
+    title: 'Free Online Dress Designer & 3D Mockup Tool',
+    eyebrow: 'Design a dress online for free',
+    image: modelCover('dress-3d-model-06-29e39d9a.webp'),
+    heroModel: {
+      src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
+      alt: 'Free online one-piece dress designer 3D model'
+    },
+    editorHref: '/3d-models/dress/classic-one-piece-dress-3d-model#design',
+    subtitle: 'Design a dress online for free with an editable 3D garment model, color controls, artwork upload, multiple viewing angles, and transparent mockup export.',
+    intent: 'Move a dress idea from early planning into a usable 3D visual preview. Choose a dress model, compare silhouette and color direction, upload artwork, review multiple angles, and export a mockup before sampling or photography.',
+    primaryKeyword: 'online dress designer tool free',
+    keywords: ['design a dress online free', 'free dress design tool online', 'dress mockup maker', 'design your own dress online', '3D dress designer', 'fashion dress design tool'],
     competitorInsights: [
-      'Explore dress silhouettes and presentation angles before investing in sampling.',
-      'Use visual mockups to communicate color, proportion, length, and surface detail.',
-      'Connect early concept work with sewing patterns and 3D garment previews when the design needs more structure.'
+      { title: 'Design on a real dress shape', body: 'Explore dress silhouettes, length, proportion, and presentation angles before investing in sampling.' },
+      { title: 'Preview color and artwork', body: 'Use the live 3D model to communicate color, artwork scale, surface direction, and product presentation.' },
+      { title: 'Export a reusable mockup', body: 'Create a transparent dress image for boutique planning, collection reviews, product drafts, or client presentations.' }
     ],
     freePositioning: 'ClothingDesign gives dress designers a free starting point for visual planning, especially when a flat sketch is not enough and a full CAD workflow is too much.',
     steps: [
-      'Start from a dress model, template, or sewing pattern reference.',
-      'Define silhouette, length, color, fabric direction, and key details.',
-      'Use the preview to check proportion and presentation quality.',
-      'Export a visual reference for a moodboard, line review, or sample brief.'
+      { title: 'Open the 3D dress model', body: 'Rotate the garment and review the one-piece silhouette from front, side, and back views.' },
+      { title: 'Choose a dress color', body: 'Compare neutral, dark, seasonal, and accent colors directly on the garment.' },
+      { title: 'Upload artwork', body: 'Add a PNG, JPG, WebP, or SVG graphic and continue in the full browser editor.' },
+      { title: 'Export the dress mockup', body: 'Download a transparent product preview for a moodboard, boutique draft, line review, or design approval.' }
     ],
-    useCases: ['Fashion concept boards', 'Boutique product planning', 'Pattern review'],
+    useCases: ['Fashion concept boards', 'Boutique product planning', '3D design review'],
     useCaseDetails: [
       'Create visuals for a fashion concept board or early collection review.',
       'Plan boutique product ideas before commissioning samples.',
-      'Pair dress patterns with mockup visuals to explain fit and construction direction.'
+      'Use dress models and mockup visuals to explain silhouette, proportion, and surface direction.'
     ],
     faq: [
-      { question: 'Can I design a dress online without CAD?', answer: 'Yes. This page gives you a free visual planning workflow that can support dress concepts before you move into CAD, sampling, or pattern work.' },
+      { question: 'Can I design a dress online for free?', answer: 'Yes. Choose the 3D dress model, test colors and viewing angles, upload artwork, and export a transparent dress mockup in the browser.' },
+      { question: 'Can I design a dress online without CAD?', answer: 'Yes. The page provides a browser-based visual workflow for dress concepts without requiring desktop CAD or image-editing software.' },
       { question: 'Is this for fashion designers or shoppers?', answer: 'It is built for apparel creators, boutique teams, students, and designers who need mockups and planning references.' },
-      { question: 'Can I use sewing patterns with this workflow?', answer: 'Yes. Pattern resources can help you connect a dress concept with construction references and digital garment review.' }
+      { question: 'Can I compare different dress categories?', answer: 'Yes. Use category-specific dress models to compare silhouette, length, proportion, color, and surface design direction.' }
     ],
-    cta: { label: 'Browse Dress Models', href: '/mockups/dress' }
+    outputHighlights: ['Free browser editor', 'Live 3D dress preview', 'Transparent PNG export'],
+    planningEyebrow: 'Online dress workflow',
+    planningTitle: 'Design a dress online before sampling or photography',
+    benefitsTitle: 'Preview the dress on a real 3D garment shape',
+    workflowTitle: 'From dress idea to transparent 3D mockup',
+    useCasesTitle: 'Online dress design for boutiques, collections, and review',
+    faqTitle: 'Free online dress designer questions',
+    relatedSlugs: ['3d-clothing-mockup-generator', 'transparent-apparel-mockup-generator', 't-shirt-mockup-generator'],
+    secondaryCtaLabel: 'Browse All Dress Models',
+    secondaryCtaHref: '/mockups/dress',
+    cta: { label: 'Design a Dress Online', href: '/3d-models/dress/classic-one-piece-dress-3d-model#design' }
   },
   '2d-mockup': {
     title: 'Free 2D Clothing Mockup Generator',
     eyebrow: 'Free flat apparel mockups',
-    subtitle: 'Create quick 2D clothing mockup plans with apparel templates, pattern references, and free visual resources before moving into 3D review.',
+    subtitle: 'Create quick 2D clothing mockup plans with apparel templates and visual references before moving into category-specific 3D review.',
     intent: 'Use a flat mockup workflow when you need to communicate artwork placement, garment notes, and early layout ideas quickly.',
     primaryKeyword: 'free 2D clothing mockup generator',
     keywords: ['2D apparel mockup', 'free clothing mockup template', 'flat garment mockup', 'shirt template mockup'],
@@ -1092,9 +1112,9 @@ const TOOL_PAGE_CONTENT = {
       'Use flat views for production notes, line sheets, vendor communication, and simple approvals.',
       'Move from 2D planning to 3D mockups when shape, drape, or product photography matters.'
     ],
-    freePositioning: 'ClothingDesign keeps the early flat mockup stage free and connects it to patterns and 3D models when your design needs more realism.',
+    freePositioning: 'ClothingDesign keeps the early flat mockup stage free and connects it to category-specific 3D models when your design needs more realism.',
     steps: [
-      'Choose a garment type and collect a flat reference or pattern.',
+      'Choose a garment category and collect a clear flat reference.',
       'Plan text, artwork, seams, and placement notes.',
       'Use the mockup as a quick communication draft.',
       'Move into 3D preview when you need realistic shape and angles.'
@@ -1110,56 +1130,24 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I move from 2D to 3D later?', answer: 'Yes. Start with flat planning, then open a Design3D model when you need garment shape, angle, and presentation quality.' },
       { question: 'Is this useful for production communication?', answer: 'Yes. Flat mockups are often helpful for showing placement notes, basic construction ideas, and collection organization.' }
     ],
-    cta: { label: 'Browse Free Patterns', href: '/patterns' }
-  },
-  'free-patterns': {
-    title: 'Free Sewing Patterns for CLO 3D and Marvelous Designer',
-    eyebrow: 'Free digital garment patterns',
-    subtitle: 'Browse free sewing pattern resources for CLO 3D, Marvelous Designer, digital garment practice, and apparel mockup planning.',
-    intent: 'Find usable pattern resources with clear next steps. Download a garment file, open it in your 3D fashion workflow, and use it for practice, fit review, or mockup creation.',
-    primaryKeyword: 'free sewing patterns CLO3D Marvelous Designer',
-    keywords: ['free ZPRJ pattern download', 'CLO 3D sewing patterns free', 'Marvelous Designer patterns free', 'digital garment patterns'],
-    competitorInsights: [
-      'Download patterns for garment simulation, practice projects, portfolio building, and digital sample review.',
-      'Use pattern previews and categories to choose the right garment before opening your 3D software.',
-      'Pair patterns with Design3D mockups when you need a clearer visual presentation.'
-    ],
-    freePositioning: 'ClothingDesign makes free pattern discovery practical by connecting downloads with CLO 3D, Marvelous Designer, and apparel mockup workflows.',
-    steps: [
-      'Browse active sewing pattern previews.',
-      'Open a pattern detail page to confirm category and file format.',
-      'Download the source file and open it in CLO 3D or Marvelous Designer.',
-      'Pair it with related Design3D models for apparel mockup visuals.'
-    ],
-    useCases: ['Digital garment practice', 'Pattern review', '3D apparel mockup planning'],
-    useCaseDetails: [
-      'Practice garment simulation with files you can inspect and modify.',
-      'Review pattern construction before creating a digital sample.',
-      'Use a pattern as the foundation for a more complete apparel mockup workflow.'
-    ],
-    faq: [
-      { question: 'Are these sewing patterns free?', answer: 'Yes. The pattern library is designed around free resources for digital garment practice and apparel design workflows.' },
-      { question: 'Can I use the files in CLO 3D or Marvelous Designer?', answer: 'The pattern pages clarify file format and intended workflow so you can choose resources that fit CLO 3D, Marvelous Designer, or related garment software.' },
-      { question: 'What should I do after downloading a pattern?', answer: 'Open the file in your 3D garment tool, check the 2D pattern and sewing relationships, then simulate or pair it with a Design3D model for presentation.' }
-    ],
-    cta: { label: 'Browse Free Sewing Patterns', href: '/patterns' }
+    cta: { label: 'Browse Free 3D Models', href: '/mockups' }
   },
   'free-templates': {
     title: 'Free Clothing Templates for Apparel Mockups',
     eyebrow: 'Free apparel template resources',
     subtitle: 'Find free clothing template ideas for shirts, hoodies, dresses, and apparel mockups, then move into 3D previews when you need realistic product presentation.',
-    intent: 'Use templates to organize garment ideas quickly, then upgrade the strongest concepts into 3D mockups, pattern references, or product-ready visuals.',
+    intent: 'Use templates to organize garment ideas quickly, then upgrade the strongest concepts into 3D mockups or product-ready visuals.',
     primaryKeyword: 'free clothing templates',
     keywords: ['free apparel templates', 'free t-shirt template', 'clothing mockup template free', 'fashion design templates'],
     competitorInsights: [
       'Plan apparel artwork, colorways, and collection structure before committing to production assets.',
       'Use flat templates for fast briefs, then switch to 3D models when realistic presentation matters.',
-      'Keep templates, sewing patterns, and mockups connected in one free apparel workflow.'
+      'Keep flat templates and category-specific 3D mockups connected in one free apparel workflow.'
     ],
     freePositioning: 'ClothingDesign treats templates as the start of a real apparel workflow, not a dead-end download page.',
     steps: [
       'Pick the apparel category you want to mock up.',
-      'Use a flat template or sewing pattern for early planning.',
+      'Use a flat apparel template for early planning.',
       'Translate placement notes into a 3D clothing model when needed.',
       'Export a final render or keep the template as a production reference.'
     ],
@@ -1171,74 +1159,10 @@ const TOOL_PAGE_CONTENT = {
     ],
     faq: [
       { question: 'What are clothing templates used for?', answer: 'They help you plan garment layouts, artwork placement, colorways, construction notes, and early collection ideas before creating final product visuals.' },
-      { question: 'Are these templates free to start with?', answer: 'Yes. ClothingDesign focuses on free entry points for apparel planning, patterns, and mockups.' },
+      { question: 'Are these templates free to start with?', answer: 'Yes. ClothingDesign focuses on free entry points for apparel design planning and 3D mockups.' },
       { question: 'Should I use a template or a 3D model?', answer: 'Use templates for quick flat planning. Use a 3D model when you need shape, drape, angle, and presentation-ready renders.' }
     ],
-    cta: { label: 'Explore Pattern Resources', href: '/patterns' }
-  },
-  'clo3d-guide': {
-    title: 'Free CLO 3D Guide for Beginners',
-    eyebrow: 'Free digital fashion guide',
-    subtitle: 'Learn the beginner CLO 3D workflow: open garment files, review 2D patterns, simulate fabric, and create apparel visuals for design review.',
-    intent: 'Get a practical starting path for CLO 3D. Learn what to open first, what to inspect in the 2D and 3D windows, and how to turn a garment file into a usable preview.',
-    primaryKeyword: 'CLO 3D guide for beginners',
-    keywords: ['CLO3D tutorial', 'how to use CLO 3D', 'CLO 3D sewing pattern guide', 'digital fashion design guide'],
-    competitorInsights: [
-      'Understand the practical sequence: open a file, inspect patterns, check sewing, simulate, and export.',
-      'Use free practice resources instead of starting from a blank garment file.',
-      'Connect CLO 3D learning with real apparel mockup and digital sample workflows.'
-    ],
-    freePositioning: 'ClothingDesign keeps the CLO 3D learning path resource-led, so beginners can practice with free patterns and connect the result to apparel mockups.',
-    steps: [
-      'Download a compatible sewing pattern file.',
-      'Open the file in CLO 3D and inspect the 2D pattern window.',
-      'Check sewing relationships, arrangement, avatar scale, and fabric settings.',
-      'Simulate, refine, and export preview images for review.'
-    ],
-    useCases: ['Beginner garment simulation', 'Pattern learning', 'Digital sample review'],
-    useCaseDetails: [
-      'Practice the core CLO 3D interface with a real garment file.',
-      'Learn how 2D pattern pieces relate to the simulated garment.',
-      'Create visual references for fit review, sample discussion, or portfolio work.'
-    ],
-    faq: [
-      { question: 'Is CLO 3D beginner friendly?', answer: 'It is learnable, but beginners do best with a focused workflow: open an existing garment, inspect patterns, check sewing, simulate, and export views.' },
-      { question: 'Do I need pattern-making experience?', answer: 'Pattern knowledge helps, but you can start by studying existing pattern files and learning how sewing relationships affect the 3D garment.' },
-      { question: 'Where should I practice?', answer: 'Start with free pattern resources, then use Design3D models and mockups to understand how digital garments become presentation visuals.' }
-    ],
-    cta: { label: 'Practice with Free Patterns', href: '/patterns' }
-  },
-  'md-guide': {
-    title: 'Free Marvelous Designer Guide for Beginners',
-    eyebrow: 'Free garment simulation guide',
-    subtitle: 'Learn the Marvelous Designer basics for opening garment projects, checking 2D patterns, simulating fit, and preparing apparel visuals.',
-    intent: 'Start Marvelous Designer with a practical garment workflow instead of a blank scene. Open a project, understand the 2D/3D relationship, simulate the garment, and prepare useful preview images.',
-    primaryKeyword: 'Marvelous Designer guide for beginners',
-    keywords: ['Marvelous Designer tutorial', 'how to use Marvelous Designer', 'Marvelous Designer sewing pattern', '3D clothing simulation guide'],
-    competitorInsights: [
-      'Learn the core loop: pattern pieces, sewing lines, arrangement, simulation, fit review, and export.',
-      'Use downloadable garment resources so the first session produces something visible.',
-      'Turn simulation practice into mockups, portfolio visuals, and design review images.'
-    ],
-    freePositioning: 'ClothingDesign keeps Marvelous Designer practice practical and free by pointing beginners toward patterns, garment projects, and mockup next steps.',
-    steps: [
-      'Download a garment project or sewing pattern file.',
-      'Open it in Marvelous Designer and review the 2D/3D workspace.',
-      'Inspect sewing lines, fabric assignments, and avatar placement.',
-      'Run simulation, adjust fit, and save a clean project version.'
-    ],
-    useCases: ['Beginner MD practice', 'Fit and fabric simulation', 'Garment presentation prep'],
-    useCaseDetails: [
-      'Learn Marvelous Designer with an existing file instead of starting from scratch.',
-      'Practice fit and fabric simulation for digital garment review.',
-      'Prepare apparel visuals for portfolios, presentations, or production conversations.'
-    ],
-    faq: [
-      { question: 'Can beginners learn Marvelous Designer with free resources?', answer: 'Yes. Existing garment files and sewing patterns make it easier to learn the interface, simulation, and export workflow.' },
-      { question: 'What should I learn first?', answer: 'Start with the relationship between 2D pattern pieces and the 3D garment, then practice sewing, arrangement, fabric settings, simulation, and fit review.' },
-      { question: 'Can I use the results as mockups?', answer: 'Yes. Once the garment is simulated cleanly, export preview images or connect the workflow with Design3D mockups for presentation.' }
-    ],
-    cta: { label: 'Download Practice Patterns', href: '/patterns' }
+    cta: { label: 'Browse Free 3D Models', href: '/mockups' }
   }
 };
 
@@ -1405,7 +1329,7 @@ function getToolPage(slug) {
 
 function buildToolStructuredData(req, toolPage) {
   const path = `/tools/${toolPage.slug}`;
-  return [
+  const structuredData = [
     ...buildSimplePageStructuredData(req, {
       type: 'WebPage',
       name: toolPage.title,
@@ -1464,299 +1388,23 @@ function buildToolStructuredData(req, toolPage) {
       }))
     }
   ];
-}
 
-async function findDesign3dCategoryForPattern(pattern) {
-  const categoryName = pattern?.category || '';
-  const categorySlug = pattern?.category_slug || '';
-  const generatedSlug = toSlug(categoryName);
-  if (!categoryName && !categorySlug) return null;
-
-  return db.get(`
-    SELECT *
-    FROM categories
-    WHERE resource_type = ? AND status = ?
-      AND (LOWER(name) = LOWER(?) OR slug = ? OR slug = ?)
-    ORDER BY
-      CASE
-        WHEN LOWER(name) = LOWER(?) THEN 0
-        WHEN slug = ? THEN 1
-        ELSE 2
-      END,
-      sort_order ASC,
-      name ASC
-    LIMIT 1
-  `, ['3d-models', 'active', categoryName, categorySlug, generatedSlug, categoryName, categorySlug]);
-}
-
-function getPatternSeriesInfo(pattern) {
-  const name = String(pattern?.name || '');
-  const slug = String(pattern?.slug || '');
-  const source = `${name} ${slug}`;
-  const collectionNumberMatch = source.match(/\b0?(\d{1,3})\s+Collection\s+([12])\b/i);
-  const pMatch = source.match(/\bP0?(\d{1,3})\b/i);
-  const namedSampleMatch = source.match(/\b(?:Pattern|Look|Sample)\s+0?(\d{1,3})\b/i);
-  const number = collectionNumberMatch
-    ? collectionNumberMatch[1].padStart(2, '0')
-    : (pMatch ? pMatch[1].padStart(2, '0') : (namedSampleMatch ? namedSampleMatch[1].padStart(2, '0') : ''));
-  let collection = '';
-
-  if (collectionNumberMatch) {
-    collection = `Collection ${collectionNumberMatch[2]}`;
-  } else if (/vol(?:ume)?\s*2|collection\s*2/i.test(source)) {
-    collection = 'Vol 2';
-  } else if (/collection\s*1/i.test(source)) {
-    collection = 'Collection 1';
-  } else if (/6588|t-shirt zprj sewing pattern/i.test(source)) {
-    collection = 'T-shirt sample series';
+  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters?.length) {
+    structuredData.push({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'T-shirt mockup model starting points',
+      itemListElement: toolPage.modelStarters.map((model, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: model.title,
+        description: model.body,
+        url: toAbsoluteUrl(req, model.href)
+      }))
+    });
   }
 
-  return {
-    number,
-    collection,
-    label: [collection, number ? `sample ${number}` : ''].filter(Boolean).join(' ')
-  };
-}
-
-function getPatternCategoryGuide(categoryName) {
-  const normalized = String(categoryName || '').toLowerCase();
-  const guides = [
-    {
-      test: /t-?shirts?/,
-      garment: 'T-shirt',
-      intent: 'fast jersey top mockups, print placement tests, and everyday apparel fit checks',
-      construction: 'neckline shape, sleeve balance, hem level, side seam position, and graphic scale',
-      useCase: 'merch concepts, ecommerce previews, and fit comparison across T-shirt silhouettes'
-    },
-    {
-      test: /hood/,
-      garment: 'hoodie',
-      intent: 'casualwear mockups, hood construction checks, and sweatshirt colorway development',
-      construction: 'hood volume, cuff tension, pocket placement, rib trim, and shoulder drape',
-      useCase: 'streetwear sampling, brand merch decks, and warm-up garment reviews'
-    },
-    {
-      test: /outerwear|coat|jacket|blazer/,
-      garment: 'outerwear',
-      intent: 'structured layer simulation, seasonal line review, and jacket or coat presentation',
-      construction: 'collar roll, sleeve pitch, closure placement, layer clearance, and fabric weight',
-      useCase: 'outerwear sampling, buyer previews, and technical construction discussions'
-    },
-    {
-      test: /women shirts?|shirts?/,
-      garment: normalized.includes('women') ? 'women shirt' : 'shirt',
-      intent: 'shirt and blouse development, collar review, sleeve fit, and woven top simulation',
-      construction: 'collar stand, button placket, cuff shape, yoke position, and sleeve cap balance',
-      useCase: 'woven apparel prototyping, fit review, and design handoff'
-    },
-    {
-      test: /dress/,
-      garment: 'dress',
-      intent: 'one-piece silhouette review, drape testing, and digital dress sample development',
-      construction: 'bodice balance, waist placement, skirt volume, hem sweep, and fabric fall',
-      useCase: 'fashion line planning, ecommerce mockups, and fit presentation'
-    },
-    {
-      test: /skirt/,
-      garment: 'skirt',
-      intent: 'skirt silhouette exploration, hem shape review, and bottom-weight fabric simulation',
-      construction: 'waistband fit, side seam balance, flare, pleat behavior, and hem level',
-      useCase: 'range planning, drape studies, and digital sample comparison'
-    },
-    {
-      test: /pants|trouser/,
-      garment: 'pants',
-      intent: 'trouser fit checks, leg shape review, and bottom garment mockup preparation',
-      construction: 'rise, waistband, crotch curve, leg opening, pocket placement, and fabric tension',
-      useCase: 'fit sessions, technical review, and product page draft visuals'
-    },
-    {
-      test: /bags?|accessor/,
-      garment: normalized.includes('bag') ? 'bag accessory' : 'fashion accessory',
-      intent: 'accessory visualization, proportion checks, and 3D product sample presentation',
-      construction: 'strap length, body volume, seam placement, handle position, and hardware scale',
-      useCase: 'accessory mockups, product concept review, and styling presentation'
-    },
-    {
-      test: /underwear/,
-      garment: 'underwear',
-      intent: 'close-fit garment simulation, stretch material review, and intimate apparel sampling',
-      construction: 'elastic placement, seam tension, leg opening, waistband behavior, and fit pressure',
-      useCase: 'close-fit sample review, material testing, and private label development'
-    },
-    {
-      test: /sportswear/,
-      garment: 'sportswear',
-      intent: 'teamwear visualization, active apparel simulation, and movement-ready sample review',
-      construction: 'panel placement, sleeve mobility, neckline comfort, graphic zones, and fabric stretch',
-      useCase: 'team kit mockups, activewear line review, and sponsor artwork testing'
-    }
-  ];
-  const guide = guides.find(item => item.test.test(normalized));
-  return guide || {
-    garment: categoryName || 'apparel garment',
-    intent: 'digital apparel prototyping, garment simulation, fit review, and 3D sample handoff',
-    construction: 'pattern piece balance, sewing relationships, avatar scale, fabric settings, and garment drape',
-    useCase: 'CLO 3D review, Marvelous Designer simulation, and apparel production planning'
-  };
-}
-
-function buildPatternDetailContent(pattern, design3dCategory, req) {
-  const format = String(pattern.format || 'zprj').replace(/^\./, '').toLowerCase();
-  const fileExt = `.${format}`;
-  const categoryName = pattern.category || 'apparel';
-  const design3dCategoryName = design3dCategory?.name || categoryName;
-  const design3dHref = design3dCategory?.slug ? `/mockups/${design3dCategory.slug}` : '/mockups';
-  const series = getPatternSeriesInfo(pattern);
-  const guide = getPatternCategoryGuide(categoryName);
-  const pageTitle = buildSeoTitle(pattern.name, `Free ${format.toUpperCase()} Pattern #${pattern.id}`);
-  const description = compactText(`${pattern.name} is a free ${fileExt.toUpperCase()} ${guide.garment} pattern for ${guide.intent}. Open it in CLO 3D or Marvelous Designer and pair it with ${design3dCategoryName} 3D apparel models.`, 158);
-  const seriesContext = series.label ? ` This page belongs to the ${series.label} group, so compare it with nearby files when reviewing silhouette options.` : '';
-  const patternHighlights = [
-    { label: 'Best for', value: guide.intent },
-    { label: 'Review focus', value: guide.construction },
-    { label: 'Workflow use', value: guide.useCase }
-  ];
-  const faqItems = [
-    {
-      question: `Can I use ${pattern.name} in CLO 3D?`,
-      answer: `Yes. Download the ${fileExt} file, open CLO 3D, and use File > Open Project to load the sewing pattern with its garment data.`
-    },
-    {
-      question: `Can I use ${pattern.name} in Marvelous Designer?`,
-      answer: `Yes. Marvelous Designer can open ${fileExt.toUpperCase()} project files, so you can import the file, inspect the 2D pattern window, and simulate the garment.`
-    },
-    {
-      question: 'Does this pattern include a preview image?',
-      answer: pattern.image_url
-        ? 'Yes. The preview image on this page helps you check the pattern before downloading the source file.'
-        : 'The source file is available from the download action. A preview image may be added by the admin team when available.'
-    },
-    {
-      question: 'How do I create a 3D mockup with this file category?',
-      answer: `Use the CTA on this page to open the ${design3dCategoryName} Design 3D category, choose a matching model, and apply artwork or colorways in the browser.`
-    }
-  ];
-  const pageUrl = toAbsoluteUrl(req, req.originalUrl);
-  const imageUrl = firstImage(req, [pattern.image_url]);
-  const fileUrl = toAbsoluteUrl(req, pattern.file_url);
-
-  return {
-    fileExt,
-    categoryName,
-    design3dCategoryName,
-    design3dHref,
-    pageTitle,
-    metaDescription: description,
-    primaryImage: imageUrl,
-    searchIntentSummary: `${pattern.name} is useful for ${guide.intent}.${seriesContext}`,
-    patternHighlights,
-    faqItems,
-    cloIntro: `Use ${pattern.name} as a CLO 3D project file for ${guide.garment} development. Open the project, inspect ${guide.construction}, then simulate and refine the garment before creating review visuals.${seriesContext}`,
-    marvelousIntro: `Use ${pattern.name} in Marvelous Designer when you need to review ${guide.construction}. It is especially useful for ${guide.useCase}.`,
-    cloSteps: [
-      `Download the ${fileExt} file from this page and keep the project file in an easy-to-find folder.`,
-      'Open CLO 3D, then choose File > Open Project and select the downloaded file.',
-      'Check the 2D pattern window, arrangement points, sewing lines, fabric settings, and avatar scale before simulation.',
-      'Simulate the garment, adjust fabric or fit details, and export screenshots or turntable previews for review.'
-    ],
-    cloStepCards: [
-      {
-        icon: 'download',
-        title: 'Download the project file',
-        body: `Save the ${fileExt} source file locally so CLO 3D can open the complete garment project.`
-      },
-      {
-        icon: 'open',
-        title: 'Open it in CLO 3D',
-        body: 'Use File > Open Project, select the downloaded file, and let CLO 3D load the garment setup.'
-      },
-      {
-        icon: 'inspect',
-        title: 'Check construction details',
-        body: `Review ${guide.construction} before simulation.`
-      },
-      {
-        icon: 'simulate',
-        title: 'Simulate and export previews',
-        body: 'Run simulation, tune fit or fabric behavior, then export screenshots or turntable views for review.'
-      }
-    ],
-    marvelousSteps: [
-      `Download the ${fileExt} pattern file and open Marvelous Designer on your desktop.`,
-      'Use File > Open Project to load the file, or drag the project file into the application window.',
-      'Review the 2D pattern pieces, sewing relationship, fabric assignment, and garment placement around the avatar.',
-      'Run simulation, refine fit or material settings, and save a new project version before production handoff.'
-    ],
-    marvelousStepCards: [
-      {
-        icon: 'download',
-        title: 'Prepare the pattern project',
-        body: `Download the ${fileExt} file and keep it with any related production notes or references.`
-      },
-      {
-        icon: 'open',
-        title: 'Open in Marvelous Designer',
-        body: 'Choose File > Open Project or drag the project file into Marvelous Designer to load the garment.'
-      },
-      {
-        icon: 'inspect',
-        title: 'Review 2D and 3D setup',
-        body: `Check ${guide.construction}, plus fabric assignment and avatar placement.`
-      },
-      {
-        icon: 'simulate',
-        title: 'Refine and save the result',
-        body: 'Run simulation, adjust fit or material settings, then save a clean project version for handoff.'
-      }
-    ],
-    structuredData: [
-      ...pageStructuredData(req, {
-        type: 'WebPage',
-        name: pattern.name,
-        description,
-        path: req.originalUrl,
-        image: imageUrl,
-        breadcrumbs: [
-          { name: 'Home', url: '/' },
-          { name: 'Sewing Patterns', url: '/patterns' },
-          { name: categoryName, url: pattern.category_slug ? `/patterns/${pattern.category_slug}` : '/patterns' },
-          { name: pattern.name, url: req.originalUrl }
-        ]
-      }),
-      {
-        '@context': 'https://schema.org',
-        '@type': 'DigitalDocument',
-        name: pattern.name,
-        description,
-        fileFormat: fileExt,
-        encodingFormat: format,
-        url: pageUrl,
-        image: imageUrl,
-        primaryImageOfPage: imageObject(req, imageUrl),
-        associatedMedia: fileUrl,
-        contentUrl: fileUrl,
-        isAccessibleForFree: true,
-        keywords: pattern.tags || undefined,
-        isPartOf: {
-          '@type': 'CollectionPage',
-          name: `${categoryName} sewing patterns`
-        }
-      },
-      {
-        '@context': 'https://schema.org',
-        '@type': 'FAQPage',
-        mainEntity: faqItems.map(item => ({
-          '@type': 'Question',
-          name: item.question,
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: item.answer
-          }
-        }))
-      }
-    ]
-  };
+  return structuredData;
 }
 
 function buildModelDetailContent(model, related, req) {
@@ -1766,11 +1414,16 @@ function buildModelDetailContent(model, related, req) {
   const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
   const designHref = `/3d-models/${categorySlug}/${model.slug}#design`;
-  const pageTitle = buildSeoTitle(model.name, `Free ${categoryName} 3D Model`);
-  const searchIntentSummary = buildModelSearchIntent(model, categoryName);
+  const searchPhrases = modelSearchPhrases(categoryName, categorySlug);
+  const pageTitle = categorySlug === 't-shirt-mockup'
+    ? buildSeoTitle(model.name, 'Free T-Shirt Mockup', 62)
+    : /3d model/i.test(model.name)
+      ? buildSeoTitle(model.name, `Free Editable ${categoryName} Mockup`, 62)
+      : buildSeoTitle(model.name, `Free ${categoryName} 3D Model & Mockup`, 62);
+  const searchIntentSummary = buildModelSearchIntent(model, categoryName, categorySlug);
   const descriptorList = modelDescriptor(model, categoryName);
-  const description = compactText(`${model.name} is a free editable ${categoryName} 3D model for apparel mockups. Customize colors and artwork online, then export a transparent PNG render.`, 158);
-  const tagList = splitKeywordList(model.tags);
+  const description = compactText(`${model.name} is a free editable ${searchPhrases[0]} for online clothing design. Customize colors and artwork, then export a transparent PNG render.`, 158);
+  const tagList = [...new Set([...searchPhrases, ...splitKeywordList(model.tags)])].slice(0, 8);
   const modelText = `${model.name} ${model.description || ''}`.toLowerCase();
   const fit = /oversized|drop shoulder/.test(modelText) ? 'Oversized / relaxed'
     : /relaxed|loose/.test(modelText) ? 'Relaxed'
@@ -1843,8 +1496,8 @@ function buildModelDetailContent(model, related, req) {
       answer: 'Yes. Open the Design 3D editor from this page to preview the model and test colors, graphics, and placement ideas in the browser.'
     },
     {
-      question: 'Do I need CLO 3D or Marvelous Designer to use this model?',
-      answer: 'No. The page is designed for browser-based mockup work. Desktop 3D software can still be useful for advanced garment simulation or pattern work.'
+      question: 'Do I need desktop 3D software to use this model?',
+      answer: 'No. The page is designed for browser-based clothing design and mockup work, including color, artwork placement, camera views, and product-image exports.'
     },
     {
       question: 'Can I use this model for product page mockups?',
@@ -1863,14 +1516,32 @@ function buildModelDetailContent(model, related, req) {
     howToSteps,
     applications,
     faqItems,
+    relatedLinks: [
+      {
+        label: `Browse all free ${String(categoryName).toLowerCase()} 3D models`,
+        href: `/mockups/${categorySlug}`
+      },
+      ...(categorySlug === 't-shirt-mockup' ? [{
+        label: 'Open the free T-shirt mockup generator',
+        href: '/tools/t-shirt-mockup-generator'
+      }] : []),
+      {
+        label: 'Open the free 3D clothing mockup generator',
+        href: '/tools/3d-clothing-mockup-generator'
+      },
+      ...(categorySlug === 'dress' ? [{
+        label: 'Use the free online dress designer',
+        href: '/tools/dress-designer'
+      }] : [])
+    ],
     cta: {
       eyebrow: 'Design 3D',
       title: `Customize ${model.name} in the 3D designer.`,
       description: 'Open the editor, apply your artwork direction, and create a polished apparel mockup from this model.',
       primaryLabel: 'Design This Model',
       primaryHref: designHref,
-      secondaryLabel: 'Browse 3D Models',
-      secondaryHref: '/mockups'
+      secondaryLabel: `Browse ${categoryName} Models`,
+      secondaryHref: `/mockups/${categorySlug}`
     },
     structuredData: [
       ...pageStructuredData(req, {
@@ -1898,7 +1569,7 @@ function buildModelDetailContent(model, related, req) {
         contentUrl: fileUrl,
         isAccessibleForFree: true,
         genre: '3D clothing model',
-        keywords: [model.name, categoryName, ...tagList, 'Design 3D', '3D apparel mockup', '3D clothing model', 'GLB clothing model'].filter(Boolean),
+        keywords: [...new Set([model.name, categoryName, ...tagList, 'Design 3D', '3D apparel mockup', '3D clothing model', 'GLB clothing model'].filter(Boolean))],
         encodingFormat: 'model/gltf-binary',
         isPartOf: {
           '@type': 'CollectionPage',
@@ -2065,8 +1736,7 @@ router.get('/', async (req, res) => {
     `, ['active']);
     const categories = await getActive3dCategories();
     const modelSummary = await db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']);
-    const patternSummary = await db.get('SELECT COUNT(*) as count FROM patterns WHERE status = ?', ['active']);
-    const homeContent = buildHomeContent(req, models || [], categories || [], patternSummary?.count || 0, modelSummary?.count || 0);
+    const homeContent = buildHomeContent(req, models || [], categories || [], modelSummary?.count || 0);
 
     res.render('index', {
       title: req.t('home.title'),
@@ -2119,7 +1789,7 @@ router.get('/mockups', async (req, res) => {
         .slice(0, 2)
     )).slice(0, 12);
     const recentModels = normalizedModels.slice(0, 24);
-    const description = 'Browse free 3D clothing models for apparel mockups. Customize shirts, hoodies, dresses and coats online, then export high-resolution transparent renders.';
+    const description = 'Browse free 3D clothing models and apparel mockups for shirts, jackets, pants, dresses and hoodies. Customize online and export transparent PNG renders.';
     const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
     
     res.render('design-3d', { 
@@ -2127,11 +1797,11 @@ router.get('/mockups', async (req, res) => {
       metaDescription: description,
       metaImage: collectionImage,
       structuredData: buildCollectionStructuredData(req, {
-        name: 'Free Apparel Mockups',
+        name: 'Free 3D Clothing Models and Apparel Mockups',
         description,
         path: '/mockups',
         items: normalizedModels,
-        itemListName: 'Free apparel mockup model library',
+        itemListName: 'Free 3D clothing model and apparel mockup library',
         breadcrumbs: [
           { name: 'Home', url: '/' },
           { name: 'Mockups', url: '/mockups' }
@@ -2148,12 +1818,12 @@ router.get('/mockups', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading 3D models:', err);
-    const description = 'Browse free 3D clothing models for apparel mockups. Customize shirts, hoodies, dresses and coats online, then export high-resolution transparent renders.';
+    const description = 'Browse free 3D clothing models and apparel mockups for shirts, jackets, pants, dresses and hoodies. Customize online and export transparent PNG renders.';
     res.render('design-3d', { 
       title: req.t('design3d.title'),
       metaDescription: description,
       structuredData: buildCollectionStructuredData(req, {
-        name: 'Free Apparel Mockups',
+        name: 'Free 3D Clothing Models and Apparel Mockups',
         description,
         path: '/mockups',
         items: [],
@@ -2179,104 +1849,9 @@ router.get('/design-2d', (req, res) => {
   res.status(404).render('404', { title: 'Not Found', page: '' });
 });
 
-// Sew Patterns
-router.get('/patterns', async (req, res) => {
-  try {
-    const patterns = await db.all('SELECT * FROM patterns WHERE status = ? ORDER BY created_at DESC', ['active']);
-    const categories = await db.all(
-      'SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order ASC, name ASC',
-      ['patterns', 'active']
-    );
-    const description = 'Browse downloadable CLO 3D and Marvelous Designer sewing patterns for apparel development, garment review, and 3D mockup workflows.';
-    const patternImage = firstImage(req, (patterns || []).map(pattern => pattern.image_url));
-
-    res.render('patterns', {
-      title: req.t('patterns.title'),
-      metaDescription: description,
-      metaImage: patternImage,
-      structuredData: buildCollectionStructuredData(req, {
-        name: 'Sewing Patterns',
-        description,
-        path: '/patterns',
-        items: patterns || [],
-        itemListName: 'CLO 3D and Marvelous Designer sewing patterns',
-        breadcrumbs: [
-          { name: 'Home', url: '/' },
-          { name: 'Sewing Patterns', url: '/patterns' }
-        ],
-        getUrl: pattern => `/patterns/item/${pattern.id}`
-      }),
-      page: 'patterns',
-      patterns: patterns || [],
-      categories: categories || []
-    });
-  } catch (err) {
-    console.error('Error loading patterns:', err);
-    const description = 'Browse downloadable CLO 3D and Marvelous Designer sewing patterns for apparel development, garment review, and 3D mockup workflows.';
-    res.render('patterns', {
-      title: req.t('patterns.title'),
-      metaDescription: description,
-      metaImage: firstImage(req),
-      structuredData: buildCollectionStructuredData(req, {
-        name: 'Sewing Patterns',
-        description,
-        path: '/patterns',
-        items: [],
-        itemListName: 'CLO 3D and Marvelous Designer sewing patterns',
-        breadcrumbs: [
-          { name: 'Home', url: '/' },
-          { name: 'Sewing Patterns', url: '/patterns' }
-        ]
-      }),
-      page: 'patterns',
-      patterns: [],
-      categories: []
-    });
-  }
-});
-
-// Sew Pattern Detail Page
-router.get('/patterns/item/:id', async (req, res) => {
-  try {
-    const pattern = await db.get(`
-      SELECT p.*, c.slug as category_slug
-      FROM patterns p
-      LEFT JOIN categories c ON p.category = c.name AND c.resource_type = 'patterns'
-      WHERE p.id = ? AND p.status = ?
-    `, [req.params.id, 'active']);
-
-    if (!pattern) {
-      return res.status(404).render('404', { title: 'Not Found', page: '' });
-    }
-
-    const related = await db.all(`
-      SELECT p.*, c.slug as category_slug
-      FROM patterns p
-      LEFT JOIN categories c ON p.category = c.name AND c.resource_type = 'patterns'
-      WHERE p.category = ? AND p.id != ? AND p.status = ?
-      ORDER BY p.created_at DESC
-      LIMIT 4
-    `, [pattern.category, pattern.id, 'active']);
-
-    const design3dCategory = await findDesign3dCategoryForPattern(pattern);
-    const patternDetailContent = buildPatternDetailContent(pattern, design3dCategory, req);
-
-    res.render('pattern-detail', {
-      title: patternDetailContent.pageTitle,
-      metaDescription: patternDetailContent.metaDescription,
-      metaRobots: 'noindex,follow',
-      metaImage: patternDetailContent.primaryImage,
-      structuredData: patternDetailContent.structuredData,
-      page: 'patterns',
-      pattern,
-      patternDetailContent,
-      design3dCategory,
-      related: related || []
-    });
-  } catch (err) {
-    console.error('Error loading pattern detail:', err);
-    res.status(500).render('404', { title: 'Error', page: '' });
-  }
+// Retire legacy Sew Patterns URLs in favor of the active 3D model library.
+router.get(['/patterns', '/patterns/item/:id', '/patterns/:slug'], (req, res) => {
+  res.redirect(301, '/mockups');
 });
 
 // Get Inspired (Gallery)
@@ -2302,7 +1877,7 @@ router.get('/gallery', (req, res) => {
 
 // Tools
 router.get('/tools', (req, res) => {
-  const description = 'Use clothing design tools, apparel mockup generators, free downloads, and learning resources for 3D fashion workflows.';
+  const description = 'Design clothing online with free 3D garment models, apparel mockup generators, artwork previews, and transparent exports for ecommerce and POD.';
   res.render('tools', { 
     title: req.t('tools.title'),
     metaDescription: description,
@@ -2322,19 +1897,142 @@ router.get('/tools', (req, res) => {
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/t-shirt-mockup-generator') },
           { '@type': 'ListItem', position: 2, name: 'Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/hoodie-mockup-generator') },
-          { '@type': 'ListItem', position: 3, name: '3D Clothing Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-clothing-mockup-generator') },
-          { '@type': 'ListItem', position: 4, name: 'Bulk T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/bulk-t-shirt-mockup-generator') },
-          { '@type': 'ListItem', position: 5, name: 'Print-on-Demand Mockup Generator', url: toAbsoluteUrl(req, '/tools/print-on-demand-mockup-generator') },
-          { '@type': 'ListItem', position: 6, name: 'Oversized T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/oversized-t-shirt-mockup-generator') },
-          { '@type': 'ListItem', position: 7, name: 'Front and Back T-Shirt Mockup', url: toAbsoluteUrl(req, '/tools/front-and-back-t-shirt-mockup') },
-          { '@type': 'ListItem', position: 8, name: 'Polo Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/polo-shirt-mockup-generator') },
-          { '@type': 'ListItem', position: 9, name: 'Long Sleeve Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/long-sleeve-shirt-mockup-generator') },
-          { '@type': 'ListItem', position: 10, name: 'Streetwear Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/streetwear-hoodie-mockup-generator') },
-          { '@type': 'ListItem', position: 11, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') }
+          { '@type': 'ListItem', position: 3, name: 'Online Dress Designer', url: toAbsoluteUrl(req, '/tools/dress-designer') },
+          { '@type': 'ListItem', position: 4, name: '3D Clothing Design & Mockup Generator', url: toAbsoluteUrl(req, '/tools/3d-clothing-mockup-generator') },
+          { '@type': 'ListItem', position: 5, name: 'Bulk T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/bulk-t-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 6, name: 'Print-on-Demand Mockup Generator', url: toAbsoluteUrl(req, '/tools/print-on-demand-mockup-generator') },
+          { '@type': 'ListItem', position: 7, name: 'Oversized T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/oversized-t-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 8, name: 'Front and Back T-Shirt Mockup', url: toAbsoluteUrl(req, '/tools/front-and-back-t-shirt-mockup') },
+          { '@type': 'ListItem', position: 9, name: 'Polo Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/polo-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 10, name: 'Long Sleeve Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/long-sleeve-shirt-mockup-generator') },
+          { '@type': 'ListItem', position: 11, name: 'Streetwear Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/streetwear-hoodie-mockup-generator') },
+          { '@type': 'ListItem', position: 12, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') }
         ]
       }
     }),
     page: 'tools'
+  });
+});
+
+function buildBlogIndexStructuredData(req) {
+  const description = 'Practical clothing design, 3D garment model, apparel mockup, print-on-demand, and streetwear guides informed by recurring designer questions.';
+  return [
+    ...buildSimplePageStructuredData(req, {
+      type: 'CollectionPage',
+      name: 'ClothingDesign Blog',
+      description,
+      path: '/blog',
+      breadcrumbs: [
+        { name: 'Home', url: '/' },
+        { name: 'Blog', url: '/blog' }
+      ]
+    }),
+    itemList(
+      req,
+      'Clothing design and apparel mockup guides',
+      blogArticles.map(article => ({
+        ...article,
+        name: article.title,
+        url: `/blog/${article.slug}`,
+        image_url: article.image
+      }))
+    )
+  ];
+}
+
+function buildBlogArticleStructuredData(req, article) {
+  const articleUrl = toAbsoluteUrl(req, `/blog/${article.slug}`);
+  const articleImage = firstImage(req, [article.image]);
+  const citations = article.redditSources.map(source => source.url);
+
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: article.title,
+      description: article.description,
+      image: [articleImage],
+      datePublished: article.publishedAt,
+      dateModified: article.updatedAt,
+      mainEntityOfPage: articleUrl,
+      url: articleUrl,
+      author: {
+        '@type': 'Organization',
+        name: 'ClothingDesign Editorial',
+        url: toAbsoluteUrl(req, '/blog')
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'ClothingDesign',
+        url: toAbsoluteUrl(req, '/'),
+        logo: {
+          '@type': 'ImageObject',
+          url: firstImage(req)
+        }
+      },
+      keywords: [article.targetKeyword, ...article.keywords].join(', '),
+      citation: citations,
+      about: article.keywords.map(name => ({ '@type': 'Thing', name }))
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: article.faq.map(item => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer
+        }
+      }))
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: toAbsoluteUrl(req, '/') },
+        { '@type': 'ListItem', position: 2, name: 'Blog', item: toAbsoluteUrl(req, '/blog') },
+        { '@type': 'ListItem', position: 3, name: article.title, item: articleUrl }
+      ]
+    }
+  ];
+}
+
+router.get('/blog', (req, res) => {
+  const description = 'Apparel mockup and 3D clothing design guides for T-shirts, hoodies, jackets, pants, dresses, vests, leggings, knitwear, and streetwear production.';
+  res.render('blog-index', {
+    title: 'Apparel Mockup & 3D Clothing Design Guides | ClothingDesign',
+    metaDescription: description,
+    metaImage: firstImage(req, [blogArticles[0]?.image]),
+    structuredData: buildBlogIndexStructuredData(req),
+    page: 'blog',
+    articles: blogArticles
+  });
+});
+
+router.get('/blog/:slug', (req, res) => {
+  const retiredBlogSlugs = {
+    'clo3d-beginner-workflow': 'how-to-choose-a-3d-clothing-model',
+    'fix-clo3d-folds-pattern-or-fabric': '3d-apparel-mockup-workflow'
+  };
+  if (retiredBlogSlugs[req.params.slug]) {
+    return res.redirect(301, `/blog/${retiredBlogSlugs[req.params.slug]}`);
+  }
+
+  const article = findArticle(req.params.slug);
+  if (!article) {
+    return res.status(404).render('404', { title: 'Not Found', page: '' });
+  }
+
+  res.render('blog-article', {
+    title: buildSeoTitle(article.seoTitle || article.title, 'ClothingDesign'),
+    metaDescription: article.description,
+    metaImage: firstImage(req, [article.image]),
+    structuredData: buildBlogArticleStructuredData(req, article),
+    page: 'blog',
+    article,
+    resources: articleResourceLinks(article),
+    related: relatedArticles(article)
   });
 });
 
@@ -2373,6 +2071,22 @@ router.get('/pricing', (req, res) => {
 // 3D Models Category Route
 router.get('/3d-models/:slug', (req, res) => {
   res.redirect(301, `/mockups/${req.params.slug}`);
+});
+
+router.get('/mockups/t-shirt-mockup-generator', (req, res) => {
+  res.redirect(301, '/tools/t-shirt-mockup-generator');
+});
+
+router.get('/mockups/t-shirts', (req, res) => {
+  res.redirect(301, '/mockups/t-shirt-mockup');
+});
+
+router.get('/resources/glb', (req, res) => {
+  res.redirect(301, '/mockups');
+});
+
+router.get('/resources/zprj-files', (req, res) => {
+  res.redirect(301, '/mockups');
 });
 
 router.get('/mockups/:slug', async (req, res) => {
@@ -2416,19 +2130,40 @@ router.get('/mockups/:slug', async (req, res) => {
     const normalizedAllModels = normalize3dModels(allModels);
     const seoTitle = categoryMetaTitle(category.name);
     const description = categoryMetaDescription(category.name) || categoryDescription(category.name);
-    const categoryImage = firstImage(req, normalizedItems.map(item => item.image_url));
+    const categoryImage = firstImage(req, [CATEGORY_IMAGE_ASSETS[category.slug], ...normalizedItems.map(item => item.image_url)]);
+    const landingContent = getLandingContent(category);
+    const categoryFaqItems = landingContent.faq?.items || [];
     
     res.render('category-landing', {
-      title: buildSeoTitle(seoTitle, 'ClothingDesign'),
+      title: buildSeoTitle(seoTitle, 'ClothingDesign', 65),
       metaDescription: description,
       metaImage: categoryImage,
-      structuredData: buildCategoryStructuredData(req, { ...category, meta_title: seoTitle, meta_description: description }, normalizedItems, '3d-models', '3D Models'),
+      structuredData: [
+        ...buildCategoryStructuredData(req, {
+          ...category,
+          image_url: CATEGORY_IMAGE_ASSETS[category.slug],
+          meta_title: seoTitle,
+          meta_description: description
+        }, normalizedItems, '3d-models', '3D Models'),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: categoryFaqItems.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer
+            }
+          }))
+        }
+      ],
       page: 'design-3d',
       category: { ...category, meta_title: seoTitle, description },
       items: normalizedItems,
       categories: withCategoryImages(categories),
       models: normalizedAllModels,
-      landingContent: getLandingContent(category),
+      landingContent,
       resourceType: '3d-models',
       resourceTypeLabel: '3D Models'
     });
@@ -2440,44 +2175,6 @@ router.get('/mockups/:slug', async (req, res) => {
 // Hidden legacy 2D templates category route
 router.get('/2d-templates/:slug', async (req, res) => {
   res.status(404).render('404', { title: 'Not Found', page: '' });
-});
-
-// Patterns Category Route
-router.get('/patterns/:slug', async (req, res) => {
-  try {
-    const category = await db.get('SELECT * FROM categories WHERE slug = ? AND resource_type = ? AND status = ?', 
-      [req.params.slug, 'patterns', 'active']
-    );
-    
-    if (!category) {
-      return res.status(404).render('404', { title: 'Not Found', page: '' });
-    }
-    
-    const items = await db.all('SELECT * FROM patterns WHERE category = ? AND status = ? ORDER BY created_at DESC',
-      [category.name, 'active']
-    );
-    const categories = await db.all('SELECT * FROM categories WHERE resource_type = ? AND status = ? ORDER BY sort_order',
-      ['patterns', 'active']
-    );
-    const description = category.meta_description || category.description || `Browse ${category.name} sewing patterns for CLO 3D, Marvelous Designer, and apparel development workflows.`;
-    const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
-    
-    res.render('category-landing', {
-      title: buildSeoTitle(category.meta_title || `${category.name} Sew Patterns`, 'ClothingDesign'),
-      metaDescription: description,
-      metaImage: categoryImage,
-      structuredData: buildCategoryStructuredData(req, category, items || [], 'patterns', 'Sew Patterns'),
-      page: 'patterns',
-      category: category,
-      items: items || [],
-      categories: categories || [],
-      landingContent: getLandingContent(category, 'patterns'),
-      resourceType: 'patterns',
-      resourceTypeLabel: 'Sew Patterns'
-    });
-  } catch (err) {
-    res.status(500).render('404', { title: 'Error', page: '' });
-  }
 });
 
 // Gallery Category Route
@@ -2517,6 +2214,35 @@ router.get('/tools/3d-mockup', (req, res) => {
   res.redirect(301, '/tools/3d-clothing-mockup-generator');
 });
 
+router.get('/free-3d-clothing-models', (req, res) => {
+  res.redirect(301, '/mockups');
+});
+
+router.get([
+  '/3d-clothing-mockups-free',
+  '/free-3d-clothing-design-online',
+  '/free-online-clothing-designer',
+  '/apparel-mockup-generator'
+], (req, res) => {
+  res.redirect(301, '/tools/3d-clothing-mockup-generator');
+});
+
+router.get([
+  '/online-dress-designer-free',
+  '/design-a-dress-online-free',
+  '/online-dress-designer-tool-free'
+], (req, res) => {
+  res.redirect(301, '/tools/dress-designer');
+});
+
+router.get('/3d-garment-design-resources', (req, res) => {
+  res.redirect(301, '/blog');
+});
+
+router.get('/clothing-models-for-ecommerce', (req, res) => {
+  res.redirect(301, '/tools/transparent-apparel-mockup-generator');
+});
+
 router.get('/tools/t-shirt-designer', (req, res) => {
   res.redirect(301, '/tools/t-shirt-mockup-generator');
 });
@@ -2525,12 +2251,12 @@ router.get('/tools/hoodie-designer', (req, res) => {
   res.redirect(301, '/tools/hoodie-mockup-generator');
 });
 
-router.get(['/tools/free-patterns', '/tools/free-templates'], (req, res) => {
-  res.redirect(301, '/patterns');
+router.get('/tools/free-patterns', (req, res) => {
+  res.redirect(301, '/mockups');
 });
 
-router.get('/tools/dress-designer', (req, res) => {
-  res.redirect(301, '/mockups/dress');
+router.get(['/tools/clo3d-guide', '/tools/md-guide'], (req, res) => {
+  res.redirect(301, '/tools/3d-clothing-mockup-generator');
 });
 
 router.get('/tools/2d-mockup', (req, res) => {
@@ -2543,7 +2269,7 @@ router.get('/tools/:slug', async (req, res) => {
   if (toolPage) {
     const isIndexableTool = Boolean(
       TOOL_VARIANT_CONTENT[req.params.slug]
-      || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
+      || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
     );
     return res.render('tool-detail', {
       title: buildSeoTitle(toolPage.title, 'ClothingDesign'),

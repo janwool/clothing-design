@@ -20,7 +20,7 @@
       </div>
       <div class="hero-actions">
         <a href="<%= toolPage.editorHref || toolPage.cta.href %>" class="btn btn-primary btn-large"><%= toolPage.cta.label %></a>
-        <a href="/mockups" class="btn btn-secondary btn-large"><%= toolPage.secondaryCtaLabel || 'Browse Mockup Models' %></a>
+        <a href="<%= toolPage.secondaryCtaHref || '/mockups' %>" class="btn btn-secondary btn-large"><%= toolPage.secondaryCtaLabel || 'Browse Mockup Models' %></a>
       </div>
     </div>
     <div class="tool-detail-visual">
@@ -103,6 +103,27 @@
   </div>
 </section>
 
+<% if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) { %>
+  <section class="generator-section tool-model-starters">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow">Choose a T-shirt model</span>
+        <h2>Start your T-shirt mockup with the right fit</h2>
+        <p>Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.</p>
+      </div>
+      <div class="generator-output-grid">
+        <% toolPage.modelStarters.forEach(function(model) { %>
+          <a class="generator-output-card" href="<%= model.href %>">
+            <h3><%= model.title %></h3>
+            <p><%= model.body %></p>
+            <strong>Open free 3D model →</strong>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+<% } %>
+
 <section class="generator-section generator-section-muted">
   <div class="container">
     <div class="generator-section-header">
@@ -124,6 +145,7 @@
 <% const pickerLinks = [
   ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
   ['/tools/hoodie-mockup-generator', 'Hoodie mockups'],
+  ['/tools/dress-designer', 'Online dress designer'],
   ['/tools/3d-clothing-mockup-generator', '3D clothing mockups'],
   ['/tools/bulk-t-shirt-mockup-generator', 'Bulk colorways'],
   ['/tools/print-on-demand-mockup-generator', 'POD listings'],
@@ -135,6 +157,38 @@
   ['/tools/transparent-apparel-mockup-generator', 'Transparent PNG'],
   ['/mockups', 'All 3D models']
 ].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); %>
+<% const toolGuideMap = {
+  'dress-designer': [
+    ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
+    ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
+    ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+  ],
+  '3d-clothing-mockup-generator': [
+    ['/blog/free-3d-clothing-design-online', 'Free 3D clothing design online'],
+    ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+    ['/blog/how-to-create-a-360-clothing-mockup', 'Create a 360° clothing mockup']
+  ],
+  't-shirt-mockup-generator': [
+    ['/blog/how-to-make-realistic-t-shirt-mockups', 'Make realistic T-shirt mockups'],
+    ['/blog/t-shirt-print-placement-size-guide', 'T-shirt print placement guide'],
+    ['/blog/front-and-back-t-shirt-mockup-guide', 'Front and back T-shirt guide']
+  ],
+  'hoodie-mockup-generator': [
+    ['/blog/hoodie-print-placement-guide', 'Hoodie print placement guide'],
+    ['/blog/streetwear-first-drop-mockup-checklist', 'Streetwear mockup checklist'],
+    ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+  ],
+  'transparent-apparel-mockup-generator': [
+    ['/blog/transparent-background-apparel-mockups', 'Transparent apparel mockup guide'],
+    ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide'],
+    ['/blog/white-background-vs-lifestyle-apparel-images', 'White background vs lifestyle images']
+  ]
+}; %>
+<% const toolGuideLinks = toolGuideMap[toolPage.slug] || [
+  ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+  ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
+  ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
+]; %>
 <section class="generator-section tool-picker-section">
   <div class="container">
     <div class="generator-section-header">
@@ -143,6 +197,21 @@
     </div>
     <div class="tool-picker-grid">
       <% pickerLinks.forEach(function(link) { %>
+        <a href="<%= link[0] %>"><%= link[1] %></a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="generator-section tool-guide-links-section">
+  <div class="container">
+    <div class="generator-section-header">
+      <span class="generator-eyebrow">Learn the workflow</span>
+      <h2>Guides for better apparel mockups</h2>
+      <p>Use practical checks for model choice, artwork placement, export quality, and product presentation.</p>
+    </div>
+    <div class="tool-picker-grid">
+      <% toolGuideLinks.forEach(function(link) { %>
         <a href="<%= link[0] %>"><%= link[1] %></a>
       <% }); %>
     </div>

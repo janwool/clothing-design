@@ -20,11 +20,58 @@
         ['/tools/hoodie-mockup-generator', 'Free hoodie mockup generator'],
         ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie mockups'],
         ['/tools/print-on-demand-mockup-generator', 'POD apparel mockups']
+      ],
+      'dress': [
+        ['/tools/dress-designer', 'Free online dress designer'],
+        ['/tools/3d-clothing-mockup-generator', '3D clothing design tool'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent dress mockups']
+      ],
+      'jacket': [
+        ['/tools/3d-clothing-mockup-generator', 'Free jacket 3D model editor'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent jacket mockups'],
+        ['/mockups/coat', 'Coat and outerwear 3D models']
+      ],
+      'pants': [
+        ['/tools/3d-clothing-mockup-generator', 'Free 3D pants design tool'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent pants mockups'],
+        ['/mockups/top', 'Pair with free 3D top models']
+      ],
+      'shirt': [
+        ['/tools/3d-clothing-mockup-generator', 'Free shirt 3D model editor'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent shirt mockups'],
+        ['/tools/long-sleeve-shirt-mockup-generator', 'Long-sleeve shirt mockups']
       ]
     };
     const categoryToolLinks = categoryToolMap[category.slug] || [
       ['/tools/3d-clothing-mockup-generator', `Free ${categoryLabel} 3D mockups`],
       ['/tools/transparent-apparel-mockup-generator', 'Transparent apparel PNGs']
+    ];
+    const categoryGuideMap = {
+      't-shirt-mockup': [
+        ['/blog/how-to-make-realistic-t-shirt-mockups', 'How to make realistic T-shirt mockups'],
+        ['/blog/t-shirt-print-placement-size-guide', 'T-shirt print placement and size guide'],
+        ['/blog/front-and-back-t-shirt-mockup-guide', 'Front and back T-shirt mockup guide']
+      ],
+      'dress': [
+        ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
+        ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
+        ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+      ],
+      'jacket': [
+        ['/blog/3d-jacket-and-trench-coat-model-guide', '3D jacket and trench coat model guide'],
+        ['/blog/make-apparel-mockups-match-the-real-product', 'Make mockups match the real product'],
+        ['/blog/3d-vs-ai-vs-template-vs-product-photography', '3D mockups vs product photography']
+      ],
+      'pants': [
+        ['/blog/3d-pants-design-and-mockup-guide', '3D pants design and mockup guide'],
+        ['/blog/how-to-create-a-360-clothing-mockup', 'Create a 360° clothing mockup'],
+        ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
+      ]
+    };
+    const categoryGuideLinks = categoryGuideMap[category.slug] || [
+      ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+      ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
+      ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
     ];
   %>
   <section class="page-header category-page-header">
@@ -80,7 +127,7 @@
             <a href="/3d-models/<%= category.slug %>/<%= model.slug %>" class="model-card" data-category="<%= category.slug %>">
               <div class="model-preview-3d">
                 <% if (model.image_url) { %>
-                  <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
+                  <img src="<%= model.image_url %>" alt="<%= model.name %> free <%= categoryLower %> 3D model and apparel mockup" class="model-img" loading="lazy">
                 <% } else { %>
                   <div class="model-placeholder">
                     <span><%= model.name.charAt(0) %></span>
@@ -91,7 +138,7 @@
                 <h3 class="model-name"><%= model.name %></h3>
                 <div class="model-tags">
                   <span class="tag tag-free">Free</span>
-                  <span class="tag">Open model</span>
+                  <span class="tag"><%= categoryLabel %> 3D mockup</span>
                 </div>
               </div>
             </a>
@@ -122,6 +169,21 @@
       </div>
       <div class="tool-picker-grid">
         <% categoryToolLinks.forEach(function(link) { %>
+          <a href="<%= link[0] %>"><%= link[1] %></a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="generator-section category-guide-links-section">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow">Practical guides</span>
+        <h2>Learn the <%= categoryLower %> 3D mockup workflow</h2>
+        <p>Use these guides to improve model choice, artwork placement, product angles, and ecommerce presentation.</p>
+      </div>
+      <div class="tool-picker-grid">
+        <% categoryGuideLinks.forEach(function(link) { %>
           <a href="<%= link[0] %>"><%= link[1] %></a>
         <% }); %>
       </div>

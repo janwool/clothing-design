@@ -2,16 +2,11 @@
 <% const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; %>
 <% const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] }; %>
 <% const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; %>
-<% const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' }; %>
 <% const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; %>
 <% const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' }; %>
 <% const sectionCategories = categories || []; %>
 <% const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); %>
-<% const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; %>
 <% const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; %>
-<% const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups'; %>
-<% const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; %>
-<% const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; %>
 
 <section class="generator-section generator-section-muted">
   <div class="container">
@@ -59,14 +54,14 @@
       <% if (sectionCategories.length > 0) { %>
         <% sectionCategories.slice(0, 6).forEach(function(cat) { %>
           <% const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; %>
-          <a href="<%= categoryHrefPrefix %>/<%= cat.slug %>" class="generator-category-card">
+          <a href="/mockups/<%= cat.slug %>" class="generator-category-card">
             <% if (cat.image_url) { %>
               <div class="generator-category-media">
                 <img src="<%= cat.image_url %>" alt="Free <%= cat.name %> 3D clothing model mockup category" loading="lazy">
               </div>
             <% } %>
             <div class="generator-category-copy">
-              <small><%= categoryCount || fallbackMeta %> <%= categoryCount ? categoryItemLabel : '' %></small>
+              <small><%= categoryCount || '3D models' %> <%= categoryCount ? 'models' : '' %></small>
               <strong><%= cat.name %></strong>
             </div>
             <svg class="generator-category-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -84,7 +79,7 @@
               </div>
             <% } %>
             <div class="generator-category-copy">
-              <small><%= card.meta || fallbackMeta %></small>
+              <small><%= card.meta || '3D models' %></small>
               <strong><%= card.title %></strong>
             </div>
           </a>
@@ -115,18 +110,6 @@
           </div>
         <% }); %>
       </div>
-    </div>
-  </section>
-<% } %>
-
-<% if (sectionResourceType !== '3d-models') { %>
-  <section class="generator-library-cta">
-    <div class="container">
-      <span class="generator-eyebrow"><%= library.eyebrow %></span>
-      <h2><%= library.title %></h2>
-      <% if (library.buttonLabel && library.buttonHref) { %>
-        <a href="<%= library.buttonHref %>" class="btn btn-secondary"><%= library.buttonLabel %></a>
-      <% } %>
     </div>
   </section>
 <% } %>

@@ -63,8 +63,6 @@
     if (path.startsWith('/auth/')) return 'auth';
     if (path.startsWith('/designer/')) return 'designer';
     if (path.startsWith('/3d-models/')) return 'model_detail';
-    if (path.startsWith('/patterns/')) return 'pattern_detail';
-    if (path === '/patterns') return 'patterns';
     if (path.startsWith('/tools/')) return 'tool_detail';
     if (path === '/tools') return 'tools';
     if (path.startsWith('/admin')) return 'admin';

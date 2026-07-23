@@ -5,7 +5,7 @@ const { generateSlug } = require('../lib/slug');
 async function main() {
   console.log('Adding slugs to existing models...\n');
 
-  const tables = ['models_3d', 'models_2d', 'patterns', 'gallery_items', 'tools'];
+  const tables = ['models_3d', 'models_2d', 'gallery_items', 'tools'];
 
   for (const table of tables) {
     try {

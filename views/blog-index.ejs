@@ -1,0 +1,77 @@
+<%- include('partials/header') %>
+
+<section class="blog-index-hero">
+  <div class="container">
+    <div class="blog-index-kicker">
+      <span>Field notes for apparel creators</span>
+      <span><%= articles.length %> practical guides</span>
+    </div>
+    <h1>Apparel mockup and 3D clothing design guides.</h1>
+    <p>Practical answers for T-shirts, hoodies, jackets, pants, dresses, vests, leggings, knitwear, print-on-demand workflows, and streetwear launches—shaped by the problems designers repeatedly ask about.</p>
+  </div>
+</section>
+
+<section class="blog-featured">
+  <div class="container">
+    <% const featured = articles[0]; %>
+    <a class="blog-featured-card" href="/blog/<%= featured.slug %>">
+      <div class="blog-featured-media">
+        <img src="<%= featured.image %>" alt="<%= featured.imageAlt %>">
+      </div>
+      <div class="blog-featured-copy">
+        <span class="blog-card-category"><%= featured.category %></span>
+        <h2><%= featured.title %></h2>
+        <p><%= featured.dek %></p>
+        <div class="blog-card-meta">
+          <span><%= featured.readingTime %> min read</span>
+          <span>Start here <span aria-hidden="true">↗</span></span>
+        </div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="blog-library">
+  <div class="container">
+    <div class="blog-section-heading">
+      <div>
+        <span class="blog-card-category">The library</span>
+        <h2>Answers you can use before the next sample.</h2>
+      </div>
+      <p>Each guide opens with a direct answer, then adds measured steps, decision tables, FAQs, and community research signals.</p>
+    </div>
+
+    <div class="blog-grid">
+      <% articles.slice(1).forEach(function(article, index) { %>
+        <article class="blog-card">
+          <a class="blog-card-media" href="/blog/<%= article.slug %>">
+            <img src="<%= article.image %>" alt="<%= article.imageAlt %>" loading="lazy">
+            <span class="blog-card-index"><%= String(index + 2).padStart(2, '0') %></span>
+          </a>
+          <div class="blog-card-body">
+            <span class="blog-card-category"><%= article.category %></span>
+            <h3><a href="/blog/<%= article.slug %>"><%= article.title %></a></h3>
+            <p><%= article.dek %></p>
+            <a class="blog-card-link" href="/blog/<%= article.slug %>">
+              Read the guide <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="blog-method">
+  <div class="container">
+    <div class="blog-method-inner">
+      <div>
+        <span class="blog-card-category">Editorial method</span>
+        <h2>Built from real workflow friction.</h2>
+      </div>
+      <p>We look for recurring questions in apparel communities, separate opinions from production constraints, test each topic against a real mockup workflow, and cite the community discussions that shaped the guide.</p>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

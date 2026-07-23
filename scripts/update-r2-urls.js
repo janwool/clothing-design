@@ -28,7 +28,6 @@ async function main() {
 
   total += await updateUrls('models_3d', ['file_url', 'image_url', 'texture_url']);
   total += await updateUrls('models_2d', ['file_url', 'image_url']);
-  total += await updateUrls('patterns', ['file_url', 'image_url']);
   total += await updateUrls('gallery_items', ['image_url']);
   total += await updateUrls('tools', ['icon']);
 

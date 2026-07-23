@@ -1,0 +1,198 @@
+<%- include('partials/header') %>
+
+<article class="blog-article">
+  <header class="article-hero">
+    <div class="container">
+      <nav class="article-breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span>/</span>
+        <a href="/blog">Blog</a>
+        <span>/</span>
+        <span><%= article.category %></span>
+      </nav>
+      <div class="article-hero-grid">
+        <div class="article-hero-copy">
+          <span class="blog-card-category"><%= article.category %></span>
+          <h1><%= article.title %></h1>
+          <p class="article-dek"><%= article.dek %></p>
+          <div class="article-byline">
+            <span>ClothingDesign Editorial</span>
+            <span><time datetime="<%= article.updatedAt %>">Updated <%= new Date(article.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %></time></span>
+            <span><%= article.readingTime %> min read</span>
+          </div>
+        </div>
+        <div class="article-hero-media">
+          <img src="<%= article.image %>" alt="<%= article.imageAlt %>">
+          <span class="article-image-caption">ClothingDesign workflow reference</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container article-layout">
+    <aside class="article-toc">
+      <span>In this guide</span>
+      <ol>
+        <li><a href="#direct-answer">Direct answer</a></li>
+        <% article.sections.forEach(function(section) { %>
+          <li><a href="#<%= section.id %>"><%= section.title %></a></li>
+        <% }); %>
+        <li><a href="#free-resources">Free tools and models</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#research-signals">Research signals</a></li>
+      </ol>
+    </aside>
+
+    <div class="article-content">
+      <section class="article-answer" id="direct-answer">
+        <span>Direct answer</span>
+        <p><%= article.answer %></p>
+      </section>
+
+      <section class="article-takeaways" aria-labelledby="takeaways-title">
+        <h2 id="takeaways-title">Key takeaways</h2>
+        <ul>
+          <% article.takeaways.forEach(function(item) { %>
+            <li><%= item %></li>
+          <% }); %>
+        </ul>
+      </section>
+
+      <% if (resources && resources.length) { %>
+        <section class="article-resource-section" id="free-resources">
+          <span class="blog-card-category">Continue in ClothingDesign</span>
+          <h2>Free tools and 3D models for this workflow</h2>
+          <div class="article-resource-grid">
+            <% resources.forEach(function(resource) { %>
+              <a href="<%= resource.href %>" class="article-resource-card">
+                <small><%= resource.eyebrow %></small>
+                <h3><%= resource.title %></h3>
+                <p><%= resource.body %></p>
+                <span>Open resource <span aria-hidden="true">→</span></span>
+              </a>
+            <% }); %>
+          </div>
+        </section>
+      <% } %>
+
+      <% article.sections.forEach(function(section) { %>
+        <section class="article-section" id="<%= section.id %>">
+          <h2><%= section.title %></h2>
+
+          <% (section.paragraphs || []).forEach(function(paragraph) { %>
+            <p><%= paragraph %></p>
+          <% }); %>
+
+          <% if (section.bullets) { %>
+            <ul>
+              <% section.bullets.forEach(function(item) { %>
+                <li><%= item %></li>
+              <% }); %>
+            </ul>
+          <% } %>
+
+          <% if (section.steps) { %>
+            <ol class="article-steps">
+              <% section.steps.forEach(function(step, index) { %>
+                <li>
+                  <span><%= String(index + 1).padStart(2, '0') %></span>
+                  <div>
+                    <h3><%= step.title %></h3>
+                    <p><%= step.body %></p>
+                  </div>
+                </li>
+              <% }); %>
+            </ol>
+          <% } %>
+
+          <% if (section.table) { %>
+            <div class="article-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <% section.table.headers.forEach(function(header) { %>
+                      <th scope="col"><%= header %></th>
+                    <% }); %>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% section.table.rows.forEach(function(row) { %>
+                    <tr>
+                      <% row.forEach(function(cell, index) { %>
+                        <<%= index === 0 ? 'th scope="row"' : 'td' %>><%= cell %></<%= index === 0 ? 'th' : 'td' %>>
+                      <% }); %>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } %>
+
+          <% if (section.callout) { %>
+            <blockquote><%= section.callout %></blockquote>
+          <% } %>
+        </section>
+      <% }); %>
+
+      <section class="article-tool-cta">
+        <span>Put it into practice</span>
+        <h2><%= article.cta.title %></h2>
+        <p><%= article.cta.body %></p>
+        <a class="btn btn-primary" href="<%= article.cta.href %>"><%= article.cta.label %></a>
+      </section>
+
+      <section class="article-faq" id="faq">
+        <span class="blog-card-category">FAQ</span>
+        <h2>Questions people ask next</h2>
+        <% article.faq.forEach(function(item, index) { %>
+          <details <%= index === 0 ? 'open' : '' %>>
+            <summary><%= item.question %></summary>
+            <p><%= item.answer %></p>
+          </details>
+        <% }); %>
+      </section>
+
+      <section class="article-sources" id="research-signals">
+        <span class="blog-card-category">Research signals</span>
+        <h2>Community discussions behind this guide</h2>
+        <p>These Reddit threads helped identify the questions and failure modes covered above. Community comments are treated as qualitative research signals, not as manufacturing specifications.</p>
+        <ul>
+          <% article.redditSources.forEach(function(source) { %>
+            <li>
+              <a href="<%= source.url %>" rel="nofollow noopener" target="_blank"><%= source.title %></a>
+              <span><%= source.community %></span>
+            </li>
+          <% }); %>
+        </ul>
+      </section>
+    </div>
+  </div>
+</article>
+
+<section class="article-related">
+  <div class="container">
+    <div class="blog-section-heading">
+      <div>
+        <span class="blog-card-category">Keep building</span>
+        <h2>Related guides</h2>
+      </div>
+      <a href="/blog" class="blog-card-link">View all guides <span aria-hidden="true">→</span></a>
+    </div>
+    <div class="blog-grid blog-grid-related">
+      <% related.forEach(function(item) { %>
+        <article class="blog-card">
+          <a class="blog-card-media" href="/blog/<%= item.slug %>">
+            <img src="<%= item.image %>" alt="<%= item.imageAlt %>" loading="lazy">
+          </a>
+          <div class="blog-card-body">
+            <span class="blog-card-category"><%= item.category %></span>
+            <h3><a href="/blog/<%= item.slug %>"><%= item.title %></a></h3>
+            <a class="blog-card-link" href="/blog/<%= item.slug %>">Read guide <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

@@ -38,7 +38,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -46,8 +45,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -96,7 +93,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -104,8 +100,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -146,7 +140,7 @@ title = __locals.title,
     ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n            <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n          </svg>\n          <h3>No categories yet</h3>\n          <p>Add your first category to get started.</p>\n        </div>\n      ")
     ;  } 
-    ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Category</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"categoryForm\">\n        <input type=\"hidden\" id=\"categoryId\">\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Name</label>\n            <input type=\"text\" class=\"form-input\" id=\"categoryName\" required>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Slug</label>\n            <input type=\"text\" class=\"form-input\" id=\"categorySlug\" required placeholder=\"e.g. t-shirts\">\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Resource Type</label>\n            <select class=\"form-select\" id=\"categoryResourceType\" required>\n              <option value=\"3d-models\">3D Models</option>\n              <option value=\"2d-templates\">2D Templates</option>\n              <option value=\"patterns\">Sew Patterns</option>\n              <option value=\"gallery\">Gallery</option>\n              <option value=\"tools\">Tools</option>\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Sort Order</label>\n            <input type=\"number\" class=\"form-input\" id=\"categorySortOrder\" value=\"0\" min=\"0\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Status</label>\n          <select class=\"form-select\" id=\"categoryStatus\">\n            <option value=\"active\">Active</option>\n            <option value=\"inactive\">Inactive</option>\n          </select>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"categoryDescription\" rows=\"2\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Title (SEO)</label>\n          <input type=\"text\" class=\"form-input\" id=\"categoryMetaTitle\" placeholder=\"Page title for search engines\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Description (SEO)</label>\n          <textarea class=\"form-textarea\" id=\"categoryMetaDescription\" rows=\"2\" placeholder=\"Page description for search engines\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Landing Content JSON</label>\n          <textarea class=\"form-textarea\" id=\"categoryLandingContent\" rows=\"10\" placeholder='{\"workflow\":{\"title\":\"...\"},\"faq\":{\"items\":[{\"question\":\"...\",\"answer\":\"...\"}]}}'></textarea>\n          <small style=\"display:block;margin-top:6px;color:var(--gray-500);line-height:1.5;\">\n            Optional. Controls the Workflow, Popular categories, Built for apparel output, Library, FAQ, and CTA sections on category pages.\n          </small>\n          <button type=\"button\" class=\"btn btn-ghost btn-small\" style=\"margin-top:8px;\" onclick=\"insertLandingContentTemplate()\">Insert template</button>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveCategory()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst categoryForm = document.getElementById('categoryForm');\nconst categoriesData = ")
+    ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Category</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"categoryForm\">\n        <input type=\"hidden\" id=\"categoryId\">\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Name</label>\n            <input type=\"text\" class=\"form-input\" id=\"categoryName\" required>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Slug</label>\n            <input type=\"text\" class=\"form-input\" id=\"categorySlug\" required placeholder=\"e.g. t-shirts\">\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Resource Type</label>\n            <select class=\"form-select\" id=\"categoryResourceType\" required>\n              <option value=\"3d-models\">3D Models</option>\n              <option value=\"2d-templates\">2D Templates</option>\n              <option value=\"gallery\">Gallery</option>\n              <option value=\"tools\">Tools</option>\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Sort Order</label>\n            <input type=\"number\" class=\"form-input\" id=\"categorySortOrder\" value=\"0\" min=\"0\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Status</label>\n          <select class=\"form-select\" id=\"categoryStatus\">\n            <option value=\"active\">Active</option>\n            <option value=\"inactive\">Inactive</option>\n          </select>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"categoryDescription\" rows=\"2\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Title (SEO)</label>\n          <input type=\"text\" class=\"form-input\" id=\"categoryMetaTitle\" placeholder=\"Page title for search engines\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Description (SEO)</label>\n          <textarea class=\"form-textarea\" id=\"categoryMetaDescription\" rows=\"2\" placeholder=\"Page description for search engines\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Landing Content JSON</label>\n          <textarea class=\"form-textarea\" id=\"categoryLandingContent\" rows=\"10\" placeholder='{\"workflow\":{\"title\":\"...\"},\"faq\":{\"items\":[{\"question\":\"...\",\"answer\":\"...\"}]}}'></textarea>\n          <small style=\"display:block;margin-top:6px;color:var(--gray-500);line-height:1.5;\">\n            Optional. Controls the Workflow, Popular categories, Built for apparel output, Library, FAQ, and CTA sections on category pages.\n          </small>\n          <button type=\"button\" class=\"btn btn-ghost btn-small\" style=\"margin-top:8px;\" onclick=\"insertLandingContentTemplate()\">Insert template</button>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveCategory()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst categoryForm = document.getElementById('categoryForm');\nconst categoriesData = ")
     ; __append( JSON.stringify(items || []).replace(/</g, '\\u003c') )
     ; __append(";\nconst landingContentTemplate = {\n  workflow: {\n    eyebrow: 'Workflow',\n    title: 'From blank model to finished apparel mockup',\n    description: 'Use the same browser-based flow to select a garment, place your artwork, preview the result, and prepare visuals for review.',\n    steps: [\n      { title: 'Select a garment', body: 'Choose the 3D clothing model that matches the silhouette you want to present.' },\n      { title: 'Add your design', body: 'Apply colors, artwork, logos, and surface directions to the selected model.' },\n      { title: 'Preview the mockup', body: 'Rotate the model and check artwork scale, placement, and color balance.' },\n      { title: 'Export visuals', body: 'Save presentation-ready mockups for stores, launch decks, and approvals.' }\n    ]\n  },\n  output: {\n    eyebrow: 'Built for apparel output',\n    title: 'Use 3D clothing models across every apparel workflow',\n    cards: [\n      { title: 'Online product pages', body: 'Create consistent visuals for ecommerce listings and product detail pages.' },\n      { title: 'Campaign and launch decks', body: 'Show garment concepts in context before samples or photoshoots are ready.' },\n      { title: 'Client and team approvals', body: 'Review color, placement, and scale with a more realistic apparel preview.' }\n    ]\n  },\n  faq: {\n    eyebrow: 'FAQ',\n    title: '3D clothing model questions',\n    items: [\n      { question: 'Can I use these 3D models for apparel mockups?', answer: 'Yes. Choose a model, open the designer, and use it to preview graphics, colorways, and garment presentation angles.' }\n    ]\n  }\n};\n\nfunction insertLandingContentTemplate() {\n  document.getElementById('categoryLandingContent').value = JSON.stringify(landingContentTemplate, null, 2);\n}\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Category';\n  categoryForm.reset();\n  document.getElementById('categoryId').value = '';\n  document.getElementById('categoryLandingContent').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editCategory(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  const category = categoriesData.find(item => String(item.id) === String(id));\n  if (!row || !category) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('categoryId').value = id;\n  document.getElementById('categoryName').value = category.name || '';\n  document.getElementById('categorySlug').value = category.slug || '';\n  document.getElementById('categoryResourceType').value = category.resource_type || '3d-models';\n  document.getElementById('categorySortOrder').value = category.sort_order || 0;\n  document.getElementById('categoryStatus').value = category.status || 'active';\n  document.getElementById('categoryDescription').value = category.description || '';\n  document.getElementById('categoryMetaTitle').value = category.meta_title || '';\n  document.getElementById('categoryMetaDescription').value = category.meta_description || '';\n  document.getElementById('categoryLandingContent').value = category.landing_content || '';\n\n  modalTitle.textContent = 'Edit Category';\n  modal.style.display = 'flex';\n}\n\nasync function saveCategory() {\n  const id = document.getElementById('categoryId').value;\n  const landingContent = document.getElementById('categoryLandingContent').value.trim();\n  if (landingContent) {\n    try {\n      JSON.parse(landingContent);\n    } catch (err) {\n      alert('Landing Content JSON is invalid.');\n      return;\n    }\n  }\n  const data = {\n    name: document.getElementById('categoryName').value,\n    slug: document.getElementById('categorySlug').value,\n    resource_type: document.getElementById('categoryResourceType').value,\n    description: document.getElementById('categoryDescription').value,\n    meta_title: document.getElementById('categoryMetaTitle').value,\n    meta_description: document.getElementById('categoryMetaDescription').value,\n    landing_content: landingContent,\n    sort_order: document.getElementById('categorySortOrder').value,\n    status: document.getElementById('categoryStatus').value\n  };\n\n  const url = id ? '/admin/categories/' + id : '/admin/categories';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving category');\n  }\n}\n\nasync function deleteCategory(id) {\n  if (!confirm('Are you sure you want to delete this category?')) return;\n\n  try {\n    const response = await fetch('/admin/categories/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting category');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editCategory(id);\n  } else if (action === 'delete') {\n    deleteCategory(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
@@ -192,7 +186,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -200,8 +193,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -212,15 +203,13 @@ title = __locals.title,
     ; __append(escapeFn( counts.models3d ))
     ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">2D Templates</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.models2d ))
-    ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Sew Patterns</div>\n        <div class=\"stat-value\">")
-    ; __append(escapeFn( counts.patterns ))
     ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Gallery Items</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.gallery ))
     ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Tools</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.tools ))
     ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Users</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.users ))
-    ; __append("</div>\n      </div>\n    </div>\n    \n    <!-- Quick Links -->\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">Quick Actions</h2>\n      </div>\n      <div style=\"padding: var(--spacing-xl);\">\n        <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);\">\n          <a href=\"/admin/models-3d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 3D Models</a>\n          <a href=\"/admin/models-2d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 2D Templates</a>\n          <a href=\"/admin/patterns\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage Patterns</a>\n        </div>\n      </div>\n    </div>\n  </main>\n</div>\n\n")
+    ; __append("</div>\n      </div>\n    </div>\n    \n    <!-- Quick Links -->\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">Quick Actions</h2>\n      </div>\n      <div style=\"padding: var(--spacing-xl);\">\n        <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);\">\n          <a href=\"/admin/models-3d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 3D Models</a>\n          <a href=\"/admin/models-2d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 2D Templates</a>\n        </div>\n      </div>\n    </div>\n  </main>\n</div>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -264,7 +253,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -272,8 +260,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -368,7 +354,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -376,8 +361,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -474,7 +457,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -482,8 +464,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -600,7 +580,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -608,8 +587,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -655,7 +632,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -663,8 +639,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -716,7 +690,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -724,8 +697,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -735,9 +706,7 @@ title = __locals.title,
     ; __append(escapeFn( page === 'admin-models-3d' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"/>\n      </svg>\n      3D Models\n    </a>\n    \n    <a href=\"/admin/models-2d\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-models-2d' ? 'active' : '' ))
-    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n        <line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/>\n        <line x1=\"9\" y1=\"21\" x2=\"9\" y2=\"9\"/>\n      </svg>\n      2D Templates\n    </a>\n    \n    <a href=\"/admin/patterns\" class=\"sidebar-link ")
-    ; __append(escapeFn( page === 'admin-patterns' ? 'active' : '' ))
-    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n        <polyline points=\"7 10 12 15 17 10\"/>\n        <line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>\n      </svg>\n      Sew Patterns\n    </a>\n    \n    <a href=\"/admin/gallery\" class=\"sidebar-link ")
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n        <line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/>\n        <line x1=\"9\" y1=\"21\" x2=\"9\" y2=\"9\"/>\n      </svg>\n      2D Templates\n    </a>\n    \n    <a href=\"/admin/gallery\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-gallery' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n        <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n        <polyline points=\"21 15 16 10 5 21\"/>\n      </svg>\n      Gallery\n    </a>\n    \n    <a href=\"/admin/tools\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-tools' ? 'active' : '' ))
@@ -746,130 +715,6 @@ title = __locals.title,
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n        <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n      </svg>\n      Categories\n    </a>\n    \n    <div class=\"sidebar-section\">System</div>\n    \n    <a href=\"/admin/users\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-users' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n        <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n      </svg>\n      Users\n    </a>\n    \n    <a href=\"/\" class=\"sidebar-link\" target=\"_blank\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/>\n        <polyline points=\"15 3 21 3 21 9\"/>\n        <line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>\n      </svg>\n      View Site\n    </a>\n  </nav>\n  \n  <div class=\"sidebar-footer\">\n    <a href=\"/auth/logout\" class=\"sidebar-link\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\"/>\n        <polyline points=\"16 17 21 12 16 7\"/>\n        <line x1=\"21\" y1=\"12\" x2=\"9\" y2=\"12\"/>\n      </svg>\n      Sign Out\n    </a>\n  </div>\n</aside>\n")
-  return __output;
-
-},
-  "admin/patterns.ejs": function anonymous(locals, escapeFn, include, rethrow
-) {
-escapeFn = escapeFn || function (markup) {
-  return markup == undefined
-    ? ''
-    : String(markup)
-      .replace(_MATCH_HTML, encode_char);
-};
-var _ENCODE_HTML_RULES = {
-      "&": "&amp;"
-    , "<": "&lt;"
-    , ">": "&gt;"
-    , '"': "&#34;"
-    , "'": "&#39;"
-    }
-  , _MATCH_HTML = /[&<>'"]/g;
-function encode_char(c) {
-  return _ENCODE_HTML_RULES[c] || c;
-};
-;
-  var __output = "";
-  function __append(s) { if (s !== undefined && s !== null) __output += s }
-  var __locals = (locals || {}),
-title = __locals.title,
-  page = __locals.page,
-  error = __locals.error,
-  metaDescription = __locals.metaDescription,
-  metaRobots = __locals.metaRobots,
-  metaImage = __locals.metaImage,
-  canonicalUrl = __locals.canonicalUrl,
-  defaultMetaImage = __locals.defaultMetaImage,
-  structuredData = __locals.structuredData,
-  user = __locals.user,
-  i18next = __locals.i18next,
-  t = __locals.t,
-  homeContent = __locals.homeContent,
-  toolPage = __locals.toolPage,
-  modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
-  items = __locals.items,
-  categories = __locals.categories,
-  models = __locals.models,
-  landingContent = __locals.landingContent,
-  category = __locals.category,
-  resourceType = __locals.resourceType,
-  resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
-  related = __locals.related,
-  model = __locals.model,
-  counts = __locals.counts;
-    ; __append( include('partials/header') )
-    ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
-    ; __append( include('partials/sidebar') )
-    ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Sew Patterns</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Pattern</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Patterns</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search patterns...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) { 
-    ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Category</th>\n              <th>Format</th>\n              <th>File</th>\n              <th>Preview</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => { 
-    ; __append("\n              <tr data-id=\"")
-    ; __append(escapeFn( item.id ))
-    ; __append("\">\n                <td>#")
-    ; __append(escapeFn( item.id ))
-    ; __append("</td>\n                <td>")
-    ; __append(escapeFn( item.name ))
-    ; __append("</td>\n                <td>")
-    ; __append(escapeFn( item.category ))
-    ; __append("</td>\n                <td>")
-    ; __append(escapeFn( item.format || 'zprj' ))
-    ; __append("</td>\n                <td>\n                  ")
-    ;  if (item.file_url) { 
-    ; __append("\n                    <a href=\"")
-    ; __append(escapeFn( item.file_url ))
-    ; __append("\" target=\"_blank\" rel=\"noopener\">Download</a>\n                  ")
-    ;  } else { 
-    ; __append("\n                    -\n                  ")
-    ;  } 
-    ; __append("\n                </td>\n                <td>\n                  ")
-    ;  if (item.image_url) { 
-    ; __append("\n                    <a href=\"")
-    ; __append(escapeFn( item.image_url ))
-    ; __append("\" target=\"_blank\" rel=\"noopener\">View</a>\n                  ")
-    ;  } else { 
-    ; __append("\n                    -\n                  ")
-    ;  } 
-    ; __append("\n                </td>\n                <td>")
-    ; __append(escapeFn( item.tags || '-' ))
-    ; __append("</td>\n                <td>\n                  <span class=\"status-badge status-")
-    ; __append(escapeFn( item.status ))
-    ; __append("\">")
-    ; __append(escapeFn( item.status ))
-    ; __append("</span>\n                </td>\n                <td>")
-    ; __append(escapeFn( new Date(item.created_at).toLocaleDateString() ))
-    ; __append("</td>\n                <td>\n                  <div class=\"table-actions\">\n                    <button class=\"btn btn-ghost btn-small\" data-action=\"edit\" data-id=\"")
-    ; __append(escapeFn( item.id ))
-    ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
-    ; __append(escapeFn( item.id ))
-    ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  }) 
-    ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else { 
-    ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n            <polyline points=\"7 10 12 15 17 10\"/>\n            <line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>\n          </svg>\n          <h3>No patterns yet</h3>\n          <p>Add your first sewing pattern to get started.</p>\n        </div>\n      ")
-    ;  } 
-    ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Sew Pattern</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"patternForm\">\n        <input type=\"hidden\" id=\"patternId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"patternName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"patternCategory\" required>\n              ")
-    ;  if (categories && categories.length > 0) { 
-    ; __append("\n                ")
-    ;  categories.forEach(cat => { 
-    ; __append("\n                  <option value=\"")
-    ; __append(escapeFn( cat.name ))
-    ; __append("\">")
-    ; __append(escapeFn( cat.name ))
-    ; __append("</option>\n                ")
-    ;  }) 
-    ; __append("\n              ")
-    ;  } else { 
-    ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  } 
-    ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Format</label>\n            <select class=\"form-select\" id=\"patternFormat\">\n              <option value=\"zprj\">.zprj</option>\n              <option value=\"obj\">.obj</option>\n              <option value=\"fbx\">.fbx</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"patternStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Pattern File (.zprj)</label>\n          <input type=\"file\" class=\"form-input\" id=\"patternFile\" accept=\".zprj\">\n          <small class=\"form-help\" id=\"patternFileCurrent\"></small>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Preview Image</label>\n          <input type=\"file\" class=\"form-input\" id=\"patternImage\" accept=\"image/*\">\n          <small class=\"form-help\" id=\"patternImageCurrent\"></small>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"patternTags\" placeholder=\"e.g. Free, CLO3D\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"patternDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"savePattern()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst patternForm = document.getElementById('patternForm');\nconst patternsData = ")
-    ; __append( JSON.stringify(items || []).replace(/</g, '\\u003c') )
-    ; __append(";\nconst patternsById = new Map(patternsData.map(item => [String(item.id), item]));\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Sew Pattern';\n  patternForm.reset();\n  document.getElementById('patternId').value = '';\n  document.getElementById('patternFileCurrent').innerHTML = '';\n  document.getElementById('patternImageCurrent').innerHTML = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editPattern(id) {\n  const item = patternsById.get(String(id));\n  if (!item) return;\n\n  document.getElementById('patternId').value = id;\n  document.getElementById('patternName').value = item.name || '';\n  document.getElementById('patternCategory').value = item.category || '';\n  document.getElementById('patternFormat').value = item.format || 'zprj';\n  document.getElementById('patternTags').value = item.tags || '';\n  document.getElementById('patternDescription').value = item.description || '';\n  document.getElementById('patternStatus').value = item.status || 'active';\n  document.getElementById('patternFile').value = '';\n  document.getElementById('patternImage').value = '';\n  const fileCurrent = document.getElementById('patternFileCurrent');\n  fileCurrent.textContent = '';\n  if (item.file_url) {\n    fileCurrent.append('Current file: ');\n    const fileLink = document.createElement('a');\n    fileLink.href = item.file_url;\n    fileLink.target = '_blank';\n    fileLink.rel = 'noopener';\n    fileLink.textContent = 'Download';\n    fileCurrent.append(fileLink);\n  } else {\n    fileCurrent.textContent = 'No file uploaded yet.';\n  }\n  const imageCurrent = document.getElementById('patternImageCurrent');\n  imageCurrent.textContent = '';\n  if (item.image_url) {\n    imageCurrent.append('Current image: ');\n    const imageLink = document.createElement('a');\n    imageLink.href = item.image_url;\n    imageLink.target = '_blank';\n    imageLink.rel = 'noopener';\n    imageLink.textContent = 'View';\n    imageCurrent.append(imageLink);\n  } else {\n    imageCurrent.textContent = 'No preview image uploaded yet.';\n  }\n\n  modalTitle.textContent = 'Edit Sew Pattern';\n  modal.style.display = 'flex';\n}\n\nasync function getUploadToken(filename, contentType, folder) {\n  const response = await fetch('/admin/upload-token', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ filename, contentType, folder })\n  });\n  const result = await response.json();\n  if (!result.success) {\n    throw new Error(result.error || 'Failed to get upload token');\n  }\n  return result;\n}\n\nasync function uploadFileToR2(file, folder) {\n  const token = await getUploadToken(file.name, file.type || 'application/octet-stream', folder);\n\n  const response = await fetch(token.signedUrl, {\n    method: 'PUT',\n    headers: { 'Content-Type': file.type || 'application/octet-stream' },\n    body: file\n  });\n\n  if (!response.ok) {\n    throw new Error('Upload failed: ' + response.statusText);\n  }\n\n  return token.publicUrl;\n}\n\nasync function savePattern() {\n  const id = document.getElementById('patternId').value;\n  const patternFile = document.getElementById('patternFile').files[0];\n  const patternImage = document.getElementById('patternImage').files[0];\n\n  if (!id && !patternFile) {\n    alert('Please upload a .zprj pattern file.');\n    return;\n  }\n\n  let fileUrl;\n  let imageUrl;\n  if (patternFile) {\n    const fileName = patternFile.name.toLowerCase();\n    if (!fileName.endsWith('.zprj')) {\n      alert('Only .zprj pattern files are allowed.');\n      return;\n    }\n\n    try {\n      fileUrl = await uploadFileToR2(patternFile, 'patterns');\n    } catch (err) {\n      alert('Upload error: ' + err.message);\n      return;\n    }\n  }\n  if (patternImage) {\n    if (!patternImage.type.startsWith('image/')) {\n      alert('Only image files are allowed for the preview.');\n      return;\n    }\n\n    try {\n      imageUrl = await uploadFileToR2(patternImage, 'image');\n    } catch (err) {\n      alert('Preview upload error: ' + err.message);\n      return;\n    }\n  }\n\n  const data = {\n    name: document.getElementById('patternName').value,\n    category: document.getElementById('patternCategory').value,\n    format: document.getElementById('patternFormat').value,\n    status: document.getElementById('patternStatus').value,\n    tags: document.getElementById('patternTags').value,\n    description: document.getElementById('patternDescription').value\n  };\n\n  if (fileUrl) {\n    data.file_url = fileUrl;\n  }\n  if (imageUrl) {\n    data.image_url = imageUrl;\n  }\n\n  const url = id ? '/admin/patterns/' + id : '/admin/patterns';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving pattern');\n  }\n}\n\nasync function deletePattern(id) {\n  if (!confirm('Are you sure you want to delete this pattern?')) return;\n\n  try {\n    const response = await fetch('/admin/patterns/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting pattern');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editPattern(id);\n  } else if (action === 'delete') {\n    deletePattern(id);\n  }\n});\n</script>\n\n")
-    ; __append( include('partials/footer') )
-    ; __append("\n")
   return __output;
 
 },
@@ -911,7 +756,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -919,8 +763,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1017,7 +859,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1025,8 +866,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1103,7 +942,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1111,8 +949,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1179,7 +1015,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1187,8 +1022,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1215,6 +1048,320 @@ title = __locals.title,
     ; __append(escapeFn( t('auth.signInNow') ))
     ; __append("</a></p>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('../partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "blog-article.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts;
+    ; __append( include('partials/header') )
+    ; __append("\n\n<article class=\"blog-article\">\n  <header class=\"article-hero\">\n    <div class=\"container\">\n      <nav class=\"article-breadcrumbs\" aria-label=\"Breadcrumb\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/blog\">Blog</a>\n        <span>/</span>\n        <span>")
+    ; __append(escapeFn( article.category ))
+    ; __append("</span>\n      </nav>\n      <div class=\"article-hero-grid\">\n        <div class=\"article-hero-copy\">\n          <span class=\"blog-card-category\">")
+    ; __append(escapeFn( article.category ))
+    ; __append("</span>\n          <h1>")
+    ; __append(escapeFn( article.title ))
+    ; __append("</h1>\n          <p class=\"article-dek\">")
+    ; __append(escapeFn( article.dek ))
+    ; __append("</p>\n          <div class=\"article-byline\">\n            <span>ClothingDesign Editorial</span>\n            <span><time datetime=\"")
+    ; __append(escapeFn( article.updatedAt ))
+    ; __append("\">Updated ")
+    ; __append(escapeFn( new Date(article.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) ))
+    ; __append("</time></span>\n            <span>")
+    ; __append(escapeFn( article.readingTime ))
+    ; __append(" min read</span>\n          </div>\n        </div>\n        <div class=\"article-hero-media\">\n          <img src=\"")
+    ; __append(escapeFn( article.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( article.imageAlt ))
+    ; __append("\">\n          <span class=\"article-image-caption\">ClothingDesign workflow reference</span>\n        </div>\n      </div>\n    </div>\n  </header>\n\n  <div class=\"container article-layout\">\n    <aside class=\"article-toc\">\n      <span>In this guide</span>\n      <ol>\n        <li><a href=\"#direct-answer\">Direct answer</a></li>\n        ")
+    ;  article.sections.forEach(function(section) { 
+    ; __append("\n          <li><a href=\"#")
+    ; __append(escapeFn( section.id ))
+    ; __append("\">")
+    ; __append(escapeFn( section.title ))
+    ; __append("</a></li>\n        ")
+    ;  }); 
+    ; __append("\n        <li><a href=\"#free-resources\">Free tools and models</a></li>\n        <li><a href=\"#faq\">FAQ</a></li>\n        <li><a href=\"#research-signals\">Research signals</a></li>\n      </ol>\n    </aside>\n\n    <div class=\"article-content\">\n      <section class=\"article-answer\" id=\"direct-answer\">\n        <span>Direct answer</span>\n        <p>")
+    ; __append(escapeFn( article.answer ))
+    ; __append("</p>\n      </section>\n\n      <section class=\"article-takeaways\" aria-labelledby=\"takeaways-title\">\n        <h2 id=\"takeaways-title\">Key takeaways</h2>\n        <ul>\n          ")
+    ;  article.takeaways.forEach(function(item) { 
+    ; __append("\n            <li>")
+    ; __append(escapeFn( item ))
+    ; __append("</li>\n          ")
+    ;  }); 
+    ; __append("\n        </ul>\n      </section>\n\n      ")
+    ;  if (resources && resources.length) { 
+    ; __append("\n        <section class=\"article-resource-section\" id=\"free-resources\">\n          <span class=\"blog-card-category\">Continue in ClothingDesign</span>\n          <h2>Free tools and 3D models for this workflow</h2>\n          <div class=\"article-resource-grid\">\n            ")
+    ;  resources.forEach(function(resource) { 
+    ; __append("\n              <a href=\"")
+    ; __append(escapeFn( resource.href ))
+    ; __append("\" class=\"article-resource-card\">\n                <small>")
+    ; __append(escapeFn( resource.eyebrow ))
+    ; __append("</small>\n                <h3>")
+    ; __append(escapeFn( resource.title ))
+    ; __append("</h3>\n                <p>")
+    ; __append(escapeFn( resource.body ))
+    ; __append("</p>\n                <span>Open resource <span aria-hidden=\"true\">→</span></span>\n              </a>\n            ")
+    ;  }); 
+    ; __append("\n          </div>\n        </section>\n      ")
+    ;  } 
+    ; __append("\n\n      ")
+    ;  article.sections.forEach(function(section) { 
+    ; __append("\n        <section class=\"article-section\" id=\"")
+    ; __append(escapeFn( section.id ))
+    ; __append("\">\n          <h2>")
+    ; __append(escapeFn( section.title ))
+    ; __append("</h2>\n\n          ")
+    ;  (section.paragraphs || []).forEach(function(paragraph) { 
+    ; __append("\n            <p>")
+    ; __append(escapeFn( paragraph ))
+    ; __append("</p>\n          ")
+    ;  }); 
+    ; __append("\n\n          ")
+    ;  if (section.bullets) { 
+    ; __append("\n            <ul>\n              ")
+    ;  section.bullets.forEach(function(item) { 
+    ; __append("\n                <li>")
+    ; __append(escapeFn( item ))
+    ; __append("</li>\n              ")
+    ;  }); 
+    ; __append("\n            </ul>\n          ")
+    ;  } 
+    ; __append("\n\n          ")
+    ;  if (section.steps) { 
+    ; __append("\n            <ol class=\"article-steps\">\n              ")
+    ;  section.steps.forEach(function(step, index) { 
+    ; __append("\n                <li>\n                  <span>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</span>\n                  <div>\n                    <h3>")
+    ; __append(escapeFn( step.title ))
+    ; __append("</h3>\n                    <p>")
+    ; __append(escapeFn( step.body ))
+    ; __append("</p>\n                  </div>\n                </li>\n              ")
+    ;  }); 
+    ; __append("\n            </ol>\n          ")
+    ;  } 
+    ; __append("\n\n          ")
+    ;  if (section.table) { 
+    ; __append("\n            <div class=\"article-table-wrap\">\n              <table>\n                <thead>\n                  <tr>\n                    ")
+    ;  section.table.headers.forEach(function(header) { 
+    ; __append("\n                      <th scope=\"col\">")
+    ; __append(escapeFn( header ))
+    ; __append("</th>\n                    ")
+    ;  }); 
+    ; __append("\n                  </tr>\n                </thead>\n                <tbody>\n                  ")
+    ;  section.table.rows.forEach(function(row) { 
+    ; __append("\n                    <tr>\n                      ")
+    ;  row.forEach(function(cell, index) { 
+    ; __append("\n                        <")
+    ; __append(escapeFn( index === 0 ? 'th scope="row"' : 'td' ))
+    ; __append(">")
+    ; __append(escapeFn( cell ))
+    ; __append("</")
+    ; __append(escapeFn( index === 0 ? 'th' : 'td' ))
+    ; __append(">\n                      ")
+    ;  }); 
+    ; __append("\n                    </tr>\n                  ")
+    ;  }); 
+    ; __append("\n                </tbody>\n              </table>\n            </div>\n          ")
+    ;  } 
+    ; __append("\n\n          ")
+    ;  if (section.callout) { 
+    ; __append("\n            <blockquote>")
+    ; __append(escapeFn( section.callout ))
+    ; __append("</blockquote>\n          ")
+    ;  } 
+    ; __append("\n        </section>\n      ")
+    ;  }); 
+    ; __append("\n\n      <section class=\"article-tool-cta\">\n        <span>Put it into practice</span>\n        <h2>")
+    ; __append(escapeFn( article.cta.title ))
+    ; __append("</h2>\n        <p>")
+    ; __append(escapeFn( article.cta.body ))
+    ; __append("</p>\n        <a class=\"btn btn-primary\" href=\"")
+    ; __append(escapeFn( article.cta.href ))
+    ; __append("\">")
+    ; __append(escapeFn( article.cta.label ))
+    ; __append("</a>\n      </section>\n\n      <section class=\"article-faq\" id=\"faq\">\n        <span class=\"blog-card-category\">FAQ</span>\n        <h2>Questions people ask next</h2>\n        ")
+    ;  article.faq.forEach(function(item, index) { 
+    ; __append("\n          <details ")
+    ; __append(escapeFn( index === 0 ? 'open' : '' ))
+    ; __append(">\n            <summary>")
+    ; __append(escapeFn( item.question ))
+    ; __append("</summary>\n            <p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p>\n          </details>\n        ")
+    ;  }); 
+    ; __append("\n      </section>\n\n      <section class=\"article-sources\" id=\"research-signals\">\n        <span class=\"blog-card-category\">Research signals</span>\n        <h2>Community discussions behind this guide</h2>\n        <p>These Reddit threads helped identify the questions and failure modes covered above. Community comments are treated as qualitative research signals, not as manufacturing specifications.</p>\n        <ul>\n          ")
+    ;  article.redditSources.forEach(function(source) { 
+    ; __append("\n            <li>\n              <a href=\"")
+    ; __append(escapeFn( source.url ))
+    ; __append("\" rel=\"nofollow noopener\" target=\"_blank\">")
+    ; __append(escapeFn( source.title ))
+    ; __append("</a>\n              <span>")
+    ; __append(escapeFn( source.community ))
+    ; __append("</span>\n            </li>\n          ")
+    ;  }); 
+    ; __append("\n        </ul>\n      </section>\n    </div>\n  </div>\n</article>\n\n<section class=\"article-related\">\n  <div class=\"container\">\n    <div class=\"blog-section-heading\">\n      <div>\n        <span class=\"blog-card-category\">Keep building</span>\n        <h2>Related guides</h2>\n      </div>\n      <a href=\"/blog\" class=\"blog-card-link\">View all guides <span aria-hidden=\"true\">→</span></a>\n    </div>\n    <div class=\"blog-grid blog-grid-related\">\n      ")
+    ;  related.forEach(function(item) { 
+    ; __append("\n        <article class=\"blog-card\">\n          <a class=\"blog-card-media\" href=\"/blog/")
+    ; __append(escapeFn( item.slug ))
+    ; __append("\">\n            <img src=\"")
+    ; __append(escapeFn( item.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( item.imageAlt ))
+    ; __append("\" loading=\"lazy\">\n          </a>\n          <div class=\"blog-card-body\">\n            <span class=\"blog-card-category\">")
+    ; __append(escapeFn( item.category ))
+    ; __append("</span>\n            <h3><a href=\"/blog/")
+    ; __append(escapeFn( item.slug ))
+    ; __append("\">")
+    ; __append(escapeFn( item.title ))
+    ; __append("</a></h3>\n            <a class=\"blog-card-link\" href=\"/blog/")
+    ; __append(escapeFn( item.slug ))
+    ; __append("\">Read guide <span aria-hidden=\"true\">→</span></a>\n          </div>\n        </article>\n      ")
+    ;  }); 
+    ; __append("\n    </div>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "blog-index.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts;
+    ; __append( include('partials/header') )
+    ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
+    ; __append(escapeFn( articles.length ))
+    ; __append(" practical guides</span>\n    </div>\n    <h1>Apparel mockup and 3D clothing design guides.</h1>\n    <p>Practical answers for T-shirts, hoodies, jackets, pants, dresses, vests, leggings, knitwear, print-on-demand workflows, and streetwear launches—shaped by the problems designers repeatedly ask about.</p>\n  </div>\n</section>\n\n<section class=\"blog-featured\">\n  <div class=\"container\">\n    ")
+    ;  const featured = articles[0]; 
+    ; __append("\n    <a class=\"blog-featured-card\" href=\"/blog/")
+    ; __append(escapeFn( featured.slug ))
+    ; __append("\">\n      <div class=\"blog-featured-media\">\n        <img src=\"")
+    ; __append(escapeFn( featured.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( featured.imageAlt ))
+    ; __append("\">\n      </div>\n      <div class=\"blog-featured-copy\">\n        <span class=\"blog-card-category\">")
+    ; __append(escapeFn( featured.category ))
+    ; __append("</span>\n        <h2>")
+    ; __append(escapeFn( featured.title ))
+    ; __append("</h2>\n        <p>")
+    ; __append(escapeFn( featured.dek ))
+    ; __append("</p>\n        <div class=\"blog-card-meta\">\n          <span>")
+    ; __append(escapeFn( featured.readingTime ))
+    ; __append(" min read</span>\n          <span>Start here <span aria-hidden=\"true\">↗</span></span>\n        </div>\n      </div>\n    </a>\n  </div>\n</section>\n\n<section class=\"blog-library\">\n  <div class=\"container\">\n    <div class=\"blog-section-heading\">\n      <div>\n        <span class=\"blog-card-category\">The library</span>\n        <h2>Answers you can use before the next sample.</h2>\n      </div>\n      <p>Each guide opens with a direct answer, then adds measured steps, decision tables, FAQs, and community research signals.</p>\n    </div>\n\n    <div class=\"blog-grid\">\n      ")
+    ;  articles.slice(1).forEach(function(article, index) { 
+    ; __append("\n        <article class=\"blog-card\">\n          <a class=\"blog-card-media\" href=\"/blog/")
+    ; __append(escapeFn( article.slug ))
+    ; __append("\">\n            <img src=\"")
+    ; __append(escapeFn( article.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( article.imageAlt ))
+    ; __append("\" loading=\"lazy\">\n            <span class=\"blog-card-index\">")
+    ; __append(escapeFn( String(index + 2).padStart(2, '0') ))
+    ; __append("</span>\n          </a>\n          <div class=\"blog-card-body\">\n            <span class=\"blog-card-category\">")
+    ; __append(escapeFn( article.category ))
+    ; __append("</span>\n            <h3><a href=\"/blog/")
+    ; __append(escapeFn( article.slug ))
+    ; __append("\">")
+    ; __append(escapeFn( article.title ))
+    ; __append("</a></h3>\n            <p>")
+    ; __append(escapeFn( article.dek ))
+    ; __append("</p>\n            <a class=\"blog-card-link\" href=\"/blog/")
+    ; __append(escapeFn( article.slug ))
+    ; __append("\">\n              Read the guide <span aria-hidden=\"true\">→</span>\n            </a>\n          </div>\n        </article>\n      ")
+    ;  }); 
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"blog-method\">\n  <div class=\"container\">\n    <div class=\"blog-method-inner\">\n      <div>\n        <span class=\"blog-card-category\">Editorial method</span>\n        <h2>Built from real workflow friction.</h2>\n      </div>\n      <p>We look for recurring questions in apparel communities, separate opinions from production constraints, test each topic against a real mockup workflow, and cite the community discussions that shaped the guide.</p>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
 
@@ -1257,7 +1404,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1265,8 +1411,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1293,11 +1437,58 @@ title = __locals.title,
         ['/tools/hoodie-mockup-generator', 'Free hoodie mockup generator'],
         ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie mockups'],
         ['/tools/print-on-demand-mockup-generator', 'POD apparel mockups']
+      ],
+      'dress': [
+        ['/tools/dress-designer', 'Free online dress designer'],
+        ['/tools/3d-clothing-mockup-generator', '3D clothing design tool'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent dress mockups']
+      ],
+      'jacket': [
+        ['/tools/3d-clothing-mockup-generator', 'Free jacket 3D model editor'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent jacket mockups'],
+        ['/mockups/coat', 'Coat and outerwear 3D models']
+      ],
+      'pants': [
+        ['/tools/3d-clothing-mockup-generator', 'Free 3D pants design tool'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent pants mockups'],
+        ['/mockups/top', 'Pair with free 3D top models']
+      ],
+      'shirt': [
+        ['/tools/3d-clothing-mockup-generator', 'Free shirt 3D model editor'],
+        ['/tools/transparent-apparel-mockup-generator', 'Transparent shirt mockups'],
+        ['/tools/long-sleeve-shirt-mockup-generator', 'Long-sleeve shirt mockups']
       ]
     };
     const categoryToolLinks = categoryToolMap[category.slug] || [
       ['/tools/3d-clothing-mockup-generator', `Free ${categoryLabel} 3D mockups`],
       ['/tools/transparent-apparel-mockup-generator', 'Transparent apparel PNGs']
+    ];
+    const categoryGuideMap = {
+      't-shirt-mockup': [
+        ['/blog/how-to-make-realistic-t-shirt-mockups', 'How to make realistic T-shirt mockups'],
+        ['/blog/t-shirt-print-placement-size-guide', 'T-shirt print placement and size guide'],
+        ['/blog/front-and-back-t-shirt-mockup-guide', 'Front and back T-shirt mockup guide']
+      ],
+      'dress': [
+        ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
+        ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
+        ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+      ],
+      'jacket': [
+        ['/blog/3d-jacket-and-trench-coat-model-guide', '3D jacket and trench coat model guide'],
+        ['/blog/make-apparel-mockups-match-the-real-product', 'Make mockups match the real product'],
+        ['/blog/3d-vs-ai-vs-template-vs-product-photography', '3D mockups vs product photography']
+      ],
+      'pants': [
+        ['/blog/3d-pants-design-and-mockup-guide', '3D pants design and mockup guide'],
+        ['/blog/how-to-create-a-360-clothing-mockup', 'Create a 360° clothing mockup'],
+        ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
+      ]
+    };
+    const categoryGuideLinks = categoryGuideMap[category.slug] || [
+      ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+      ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
+      ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
     ];
   
     ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/mockups\">")
@@ -1358,7 +1549,9 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\" class=\"model-img\">\n                ")
+    ; __append(" free ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" 3D model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n                ")
     ;  } else { 
     ; __append("\n                  <div class=\"model-placeholder\">\n                    <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
@@ -1366,7 +1559,9 @@ title = __locals.title,
     ;  } 
     ; __append("\n              </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">Open model</span>\n                </div>\n              </div>\n            </a>\n          ")
+    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">")
+    ; __append(escapeFn( categoryLabel ))
+    ; __append(" 3D mockup</span>\n                </div>\n              </div>\n            </a>\n          ")
     ;  }); 
     ; __append("\n        ")
     ;  } else { 
@@ -1378,6 +1573,16 @@ title = __locals.title,
     ; __append(escapeFn( categoryLower ))
     ; __append(" mockup tools</h2>\n      </div>\n      <div class=\"tool-picker-grid\">\n        ")
     ;  categoryToolLinks.forEach(function(link) { 
+    ; __append("\n          <a href=\"")
+    ; __append(escapeFn( link[0] ))
+    ; __append("\">")
+    ; __append(escapeFn( link[1] ))
+    ; __append("</a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"generator-section category-guide-links-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Practical guides</span>\n        <h2>Learn the ")
+    ; __append(escapeFn( categoryLower ))
+    ; __append(" 3D mockup workflow</h2>\n        <p>Use these guides to improve model choice, artwork placement, product angles, and ecommerce presentation.</p>\n      </div>\n      <div class=\"tool-picker-grid\">\n        ")
+    ;  categoryGuideLinks.forEach(function(link) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( link[0] ))
     ; __append("\">")
@@ -1526,7 +1731,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1534,8 +1738,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1638,7 +1840,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1646,8 +1847,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1658,7 +1857,9 @@ title = __locals.title,
     ; __append(escapeFn( t('design3d.pageTitle') ))
     ; __append("</h1>\n    <p class=\"page-subtitle\">")
     ; __append(escapeFn( t('design3d.pageSubtitle') ))
-    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/mockups\" class=\"filter-btn active\">\n          ")
+    ; __append("</p>\n    <div class=\"category-hero-meta mockup-library-meta\">\n      <span>")
+    ; __append(escapeFn( models && models.length ? `${models.length} free 3D models` : 'Free 3D model library' ))
+    ; __append("</span>\n      <span>Browser-based customization</span>\n      <span>Transparent PNG export</span>\n    </div>\n    <div class=\"category-hero-actions\">\n      <a href=\"#free-3d-models\" class=\"btn btn-primary\">Browse free models</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary\">Open 3D mockup generator</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <nav class=\"mockup-intent-links\" aria-label=\"Popular 3D clothing mockup searches\">\n      <a href=\"/mockups/jacket\">Jacket 3D models</a>\n      <a href=\"/mockups/pants\">3D pants design models</a>\n      <a href=\"/mockups/dress\">Free dress mockups</a>\n      <a href=\"/mockups/shirt\">Shirt 3D models</a>\n      <a href=\"/tools/dress-designer\">Online dress designer</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockups</a>\n    </nav>\n\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/mockups\" class=\"filter-btn active\">\n          ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n          <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
@@ -1672,7 +1873,7 @@ title = __locals.title,
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n          </a>\n        ")
     ;  }); 
-    ; __append("\n      </div>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
+    ; __append("\n      </div>\n    </div>\n\n    <div class=\"mockup-library-heading\" id=\"free-3d-models\">\n      <div>\n        <span class=\"generator-eyebrow\">3D mockup clothing library</span>\n        <h2>Choose a free 3D clothing model</h2>\n      </div>\n      <p>Open a garment to inspect its 3D shape, test colors and artwork placement, and create an apparel mockup for ecommerce, print-on-demand, or design review.</p>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
     ;  if (models && models.length > 0) { 
     ; __append("\n        ")
     ;  models.forEach(function(model) { 
@@ -1686,9 +1887,9 @@ title = __locals.title,
     ;  if (model.image_url) { 
     ; __append("\n                <img src=\"")
     ; __append(escapeFn( model.image_url ))
-    ; __append("\" alt=\"")
+    ; __append("\" alt=\"Free ")
     ; __append(escapeFn( model.name ))
-    ; __append("\" class=\"model-img\">\n              ")
+    ; __append(" 3D clothing model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n              ")
     ;  } else { 
     ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
@@ -1696,7 +1897,7 @@ title = __locals.title,
     ;  } 
     ; __append("\n            </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                </div>\n              </div>\n            </a>\n        ")
+    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">3D mockup</span>\n                </div>\n              </div>\n            </a>\n        ")
     ;  }); 
     ; __append("\n      ")
     ;  } else { 
@@ -1748,7 +1949,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1756,8 +1956,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1830,7 +2028,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1838,8 +2035,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1887,7 +2082,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1895,8 +2089,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1949,7 +2141,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -1957,8 +2148,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -1987,7 +2176,7 @@ title = __locals.title,
     ; __append(escapeFn( index + 1 ))
     ; __append("\">\n    ")
     ;  }); 
-    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\" data-analytics-event=\"home_hero_models_click\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\" data-analytics-event=\"home_hero_mockup_tool_click\">Create a Clothing Mockup</a>\n      </div>\n      ")
+    ; __append("\n  </div>\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free apparel mockup resources</span>\n      <h1 class=\"home-hero-reveal\">Free 3D Clothing Models for Apparel Mockups</h1>\n      <p class=\"home-hero-reveal\">\n        Browse free 3D garment models, place artwork on clothing, preview print placement,\n        and export clean product images for ecommerce, POD listings, and design review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/mockups\" class=\"btn btn-primary btn-large\" data-analytics-event=\"home_hero_models_click\">Browse Free 3D Models</a>\n        <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary btn-large\" data-analytics-event=\"home_hero_mockup_tool_click\">Design Clothing Online in 3D</a>\n      </div>\n      ")
     ;  if (stats.length) { 
     ; __append("\n        <dl class=\"home-hero-stats home-hero-reveal\">\n          ")
     ;  stats.forEach(function(stat) { 
@@ -1999,7 +2188,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </dl>\n      ")
     ;  } 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClothingDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClothingDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-tshirt-cluster home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Popular T-shirt workflow</span>\n      <h2 class=\"home-copy-reveal\">Create a free T-shirt mockup from the right starting point</h2>\n      <p class=\"home-copy-reveal\">Choose the generator for a guided workflow, browse every T-shirt fit, or open the classic crew-neck model directly.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      <a class=\"generator-output-card home-reveal-card\" href=\"/tools/t-shirt-mockup-generator\" data-analytics-event=\"home_tshirt_generator_click\">\n        <h3 class=\"home-copy-reveal\">T-shirt mockup generator</h3>\n        <p class=\"home-copy-reveal\">Test garment colors, artwork placement, viewing angles, and product-image direction in one workflow.</p>\n        <strong>Start a T-shirt mockup →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/mockups/t-shirt-mockup\" data-analytics-event=\"home_tshirt_models_click\">\n        <h3 class=\"home-copy-reveal\">Free T-shirt 3D models</h3>\n        <p class=\"home-copy-reveal\">Compare classic, oversized, polo, and long-sleeve models before choosing a blank.</p>\n        <strong>Browse T-shirt models →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model\" data-analytics-event=\"home_tshirt_classic_model_click\">\n        <h3 class=\"home-copy-reveal\">Classic crew-neck T-shirt</h3>\n        <p class=\"home-copy-reveal\">Open the most-viewed T-shirt model for chest logos, front graphics, back prints, and POD listings.</p>\n        <strong>Open classic T-shirt model →</strong>\n      </a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
     ;  workflow.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
@@ -2045,7 +2234,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
     ;  } 
-    ; __append("\n\n<section class=\"generator-section home-tool-links home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free mockup tools</span>\n      <h2 class=\"home-copy-reveal\">Start with the garment you actually need</h2>\n      <p class=\"home-copy-reveal\">Open a live 3D garment, test colors and views, upload artwork, then export a transparent apparel mockup.</p>\n    </div>\n    <div class=\"tool-picker-grid home-reveal-card\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockup generator</a>\n      <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockup</a>\n      <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt mockup</a>\n      <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockup generator</a>\n      <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long sleeve shirt mockup</a>\n      <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockup</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockup</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD clothing mockup generator</a>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n\n<section class=\"generator-section home-tool-links home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free mockup tools</span>\n      <h2 class=\"home-copy-reveal\">Start with the garment you actually need</h2>\n      <p class=\"home-copy-reveal\">Open a live 3D garment, test colors and views, upload artwork, then export a transparent apparel mockup.</p>\n    </div>\n    <div class=\"tool-picker-grid home-reveal-card\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockup generator</a>\n      <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockup</a>\n      <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt mockup</a>\n      <a href=\"/tools/dress-designer\">Online dress designer</a>\n      <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockup generator</a>\n      <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long sleeve shirt mockup</a>\n      <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockup</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockup</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD clothing mockup generator</a>\n    </div>\n  </div>\n</section>\n\n")
     ;  if (featuredModels.length) { 
     ; __append("\n<section class=\"home-featured-models home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Featured models</span>\n      <h2 class=\"home-copy-reveal\">Popular free 3D apparel models for mockups</h2>\n      <p class=\"home-copy-reveal\">Open a model detail page to view the garment, plan artwork placement, customize colors, and export a clean transparent product image.</p>\n    </div>\n    <div class=\"models-grid\">\n      ")
     ;  featuredModels.forEach(function(model) { 
@@ -2155,7 +2344,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -2163,8 +2351,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -2180,6 +2366,8 @@ title = __locals.title,
     ; __append("\n")
     ;  const faqItems = detailContent.faqItems || []; 
     ; __append("\n")
+    ;  const relatedLinks = detailContent.relatedLinks || []; 
+    ; __append("\n")
     ;  const detailCta = detailContent.cta || {}; 
     ; __append("\n")
     ;  const howToIcons = ['open', 'inspect', 'simulate', 'download']; 
@@ -2189,7 +2377,7 @@ title = __locals.title,
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
+    ; __append(" interactive 3D clothing model and apparel mockup\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
     ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2243,6 +2431,18 @@ title = __locals.title,
     ;  }); 
     ; __append("\n          </div>\n        ")
     ;  } 
+    ; __append("\n\n        ")
+    ;  if (relatedLinks.length) { 
+    ; __append("\n          <nav class=\"model-intent-links\" aria-label=\"Related 3D clothing resources\">\n            ")
+    ;  relatedLinks.forEach(function(link) { 
+    ; __append("\n              <a href=\"")
+    ; __append(escapeFn( link.href ))
+    ; __append("\">")
+    ; __append(escapeFn( link.label ))
+    ; __append("</a>\n            ")
+    ;  }); 
+    ; __append("\n          </nav>\n        ")
+    ;  } 
     ; __append("\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Design Now\n          </button>\n          ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download HD Render\n            </button>\n          ")
@@ -2255,7 +2455,7 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" front 3D apparel mockup preview\">\n          </div>\n          <span class=\"showcase-label\">Garment preview</span>\n        </div>\n      ")
+    ; __append(" front 3D apparel mockup preview\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">Garment preview</span>\n        </div>\n      ")
     ;  } 
     ; __append("\n      ")
     ;  if (model.texture_url) { 
@@ -2263,7 +2463,7 @@ title = __locals.title,
     ; __append(escapeFn( model.texture_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" UV texture and artwork placement layout\">\n          </div>\n          <span class=\"showcase-label\">UV artwork layout</span>\n        </div>\n      ")
+    ; __append(" UV texture and artwork placement layout\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">UV artwork layout</span>\n        </div>\n      ")
     ;  } 
     ; __append("\n      <div class=\"showcase-item\">\n        <div class=\"showcase-image\">\n          ")
     ;  if (previewModelFileUrl) { 
@@ -2349,7 +2549,9 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n<!-- Related Models -->\n")
     ;  if (related && related.length > 0) { 
-    ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related Models</h2>\n    \n    <div class=\"models-grid\">\n      ")
+    ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related ")
+    ; __append(escapeFn( model.category_label || model.category ))
+    ; __append(" 3D Models</h2>\n    \n    <div class=\"models-grid\">\n      ")
     ;  related.forEach(function(item) { 
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( item.category_slug || item.category ))
@@ -2359,9 +2561,9 @@ title = __locals.title,
     ;  if (item.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( item.image_url ))
-    ; __append("\" alt=\"")
+    ; __append("\" alt=\"Free ")
     ; __append(escapeFn( item.name ))
-    ; __append("\" class=\"model-img\">\n            ")
+    ; __append(" 3D model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n            ")
     ;  } else { 
     ; __append("\n              <div class=\"model-placeholder\">\n                <span>")
     ; __append(escapeFn( item.name.charAt(0) ))
@@ -2471,7 +2673,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -2479,8 +2680,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -2592,7 +2791,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -2600,12 +2798,10 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/patterns\" class=\"footer-link\">Patterns</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/patterns\" class=\"footer-link\">Free Patterns</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=overlay-fix-1\"></script>\n</body>\n</html>\n")
   return __output;
@@ -2649,7 +2845,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -2657,8 +2852,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -2670,8 +2863,6 @@ title = __locals.title,
     ; __append("\n")
     ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; 
     ; __append("\n")
-    ;  const library = content.library || { eyebrow: 'Library', title: 'Start from editable 3D garment models.', buttonLabel: 'Browse 3D Models', buttonHref: '/mockups' }; 
-    ; __append("\n")
     ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; 
     ; __append("\n")
     ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' }; 
@@ -2680,15 +2871,7 @@ title = __locals.title,
     ; __append("\n")
     ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); 
     ; __append("\n")
-    ;  const sectionResourceType = typeof resourceType !== 'undefined' ? resourceType : '3d-models'; 
-    ; __append("\n")
     ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; 
-    ; __append("\n")
-    ;  const categoryHrefPrefix = sectionResourceType === 'patterns' ? '/patterns' : '/mockups'; 
-    ; __append("\n")
-    ;  const categoryItemLabel = sectionResourceType === 'patterns' ? 'patterns' : 'models'; 
-    ; __append("\n")
-    ;  const fallbackMeta = sectionResourceType === 'patterns' ? 'ZPRJ patterns' : '3D models'; 
     ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( workflow.eyebrow ))
     ; __append("</span>\n      <h2>")
@@ -2743,9 +2926,7 @@ title = __locals.title,
     ;  sectionCategories.slice(0, 6).forEach(function(cat) { 
     ; __append("\n          ")
     ;  const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; 
-    ; __append("\n          <a href=\"")
-    ; __append(escapeFn( categoryHrefPrefix ))
-    ; __append("/")
+    ; __append("\n          <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"generator-category-card\">\n            ")
     ;  if (cat.image_url) { 
@@ -2756,9 +2937,9 @@ title = __locals.title,
     ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n              </div>\n            ")
     ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
-    ; __append(escapeFn( categoryCount || fallbackMeta ))
+    ; __append(escapeFn( categoryCount || '3D models' ))
     ; __append(" ")
-    ; __append(escapeFn( categoryCount ? categoryItemLabel : '' ))
+    ; __append(escapeFn( categoryCount ? 'models' : '' ))
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( cat.name ))
     ; __append("</strong>\n            </div>\n            <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M5 12h14\"/>\n              <path d=\"m12 5 7 7-7 7\"/>\n            </svg>\n          </a>\n        ")
@@ -2778,7 +2959,7 @@ title = __locals.title,
     ; __append(" mockup category\" loading=\"lazy\">\n              </div>\n            ")
     ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
-    ; __append(escapeFn( card.meta || fallbackMeta ))
+    ; __append(escapeFn( card.meta || '3D models' ))
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( card.title ))
     ; __append("</strong>\n            </div>\n          </a>\n        ")
@@ -2810,22 +2991,6 @@ title = __locals.title,
     ; __append("</p>\n          </div>\n        ")
     ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  } 
-    ; __append("\n\n")
-    ;  if (sectionResourceType !== '3d-models') { 
-    ; __append("\n  <section class=\"generator-library-cta\">\n    <div class=\"container\">\n      <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( library.eyebrow ))
-    ; __append("</span>\n      <h2>")
-    ; __append(escapeFn( library.title ))
-    ; __append("</h2>\n      ")
-    ;  if (library.buttonLabel && library.buttonHref) { 
-    ; __append("\n        <a href=\"")
-    ; __append(escapeFn( library.buttonHref ))
-    ; __append("\" class=\"btn btn-secondary\">")
-    ; __append(escapeFn( library.buttonLabel ))
-    ; __append("</a>\n      ")
-    ;  } 
-    ; __append("\n    </div>\n  </section>\n")
     ;  } 
     ; __append("\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( faq.eyebrow ))
@@ -2907,7 +3072,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -2915,8 +3079,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -2985,25 +3147,19 @@ title = __locals.title,
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          ")
     ; __append(escapeFn( t('nav.design3d') ))
-    ; __append("\n        </a>\n        <a href=\"/patterns\" class=\"nav-link ")
-    ; __append(escapeFn( typeof page !== 'undefined' && page === 'patterns' ? 'active' : '' ))
-    ; __append("\">\n          ")
-    ; __append(escapeFn( t('nav.patterns') ))
-    ; __append("\n        </a>\n        \n        <!-- Tools Dropdown -->\n        <div class=\"nav-dropdown\">\n          <button class=\"nav-link dropdown-toggle ")
+    ; __append("\n        </a>\n        <a href=\"/blog\" class=\"nav-link ")
+    ; __append(escapeFn( typeof page !== 'undefined' && page === 'blog' ? 'active' : '' ))
+    ; __append("\">\n          Blog\n        </a>\n        <!-- Tools Dropdown -->\n        <div class=\"nav-dropdown\">\n          <button class=\"nav-link dropdown-toggle ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'tools' ? 'active' : '' ))
     ; __append("\" type=\"button\" aria-expanded=\"false\">\n            ")
     ; __append(escapeFn( t('nav.tools') ))
-    ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, pattern planning, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">")
+    ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, colorways, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>Online Dress Designer</span>\n                    <small>Design a dress on a live 3D garment model.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Design & Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">")
     ; __append(escapeFn( t('tools.designTools') ))
     ; __append("</span>\n                  <a href=\"/tools/oversized-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Oversized T-Shirt Mockups</span>\n                    <small>Design on a relaxed drop-shoulder fit.</small>\n                  </a>\n                  <a href=\"/tools/polo-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Polo Shirt Mockups</span>\n                    <small>Preview uniforms and chest logos.</small>\n                  </a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.dressDesigner') ))
-    ; __append("</span>\n                    <small>Explore dress design directions.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/patterns\" class=\"dropdown-item\">\n                    <span>")
-    ; __append(escapeFn( t('tools.freePatterns') ))
-    ; __append("</span>\n                    <small>Download editable apparel patterns.</small>\n                  </a>\n                  <a href=\"/mockups\" class=\"dropdown-item\">\n                    <span>Free 3D Models</span>\n                    <small>Browse editable garment models.</small>\n                  </a>\n                  <a href=\"/tools/2d-mockup\" class=\"dropdown-item\">\n                    <span>")
+    ; __append("</span>\n                    <small>Explore dress design directions.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/mockups\" class=\"dropdown-item\">\n                    <span>Free 3D Models</span>\n                    <small>Browse editable garment models.</small>\n                  </a>\n                  <a href=\"/tools/2d-mockup\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.mockup2d') ))
-    ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/clo3d-guide\" class=\"dropdown-item\">\n                    <span>")
-    ; __append(escapeFn( t('tools.clo3dGuide') ))
-    ; __append("</span>\n                    <small>Learn the 3D apparel workflow.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
+    ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockups</span>\n                    <small>Design across garment categories.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
     ;  if (user) { 
     ; __append("\n          <!-- User Menu -->\n          <div class=\"user-dropdown\">\n            <button class=\"user-toggle\">\n              <div class=\"user-avatar\">\n                ")
     ; __append(escapeFn( user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() ))
@@ -3025,9 +3181,7 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" aria-label=\"Menu\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\">\n      <a href=\"/mockups\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.design3d') ))
-    ; __append("</a>\n      <a href=\"/patterns\" class=\"mobile-link\">")
-    ; __append(escapeFn( t('nav.patterns') ))
-    ; __append("</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
+    ; __append("</a>\n      <a href=\"/blog\" class=\"mobile-link\">Blog</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("</a>\n      <div class=\"mobile-divider\"></div>\n      ")
     ;  if (user) { 
@@ -3048,431 +3202,6 @@ title = __locals.title,
     ; __append("</a>\n      ")
     ;  } 
     ; __append("\n    </div>\n  </nav>\n\n  <main>\n")
-  return __output;
-
-},
-  "pattern-detail.ejs": function anonymous(locals, escapeFn, include, rethrow
-) {
-escapeFn = escapeFn || function (markup) {
-  return markup == undefined
-    ? ''
-    : String(markup)
-      .replace(_MATCH_HTML, encode_char);
-};
-var _ENCODE_HTML_RULES = {
-      "&": "&amp;"
-    , "<": "&lt;"
-    , ">": "&gt;"
-    , '"': "&#34;"
-    , "'": "&#39;"
-    }
-  , _MATCH_HTML = /[&<>'"]/g;
-function encode_char(c) {
-  return _ENCODE_HTML_RULES[c] || c;
-};
-;
-  var __output = "";
-  function __append(s) { if (s !== undefined && s !== null) __output += s }
-  var __locals = (locals || {}),
-title = __locals.title,
-  page = __locals.page,
-  error = __locals.error,
-  metaDescription = __locals.metaDescription,
-  metaRobots = __locals.metaRobots,
-  metaImage = __locals.metaImage,
-  canonicalUrl = __locals.canonicalUrl,
-  defaultMetaImage = __locals.defaultMetaImage,
-  structuredData = __locals.structuredData,
-  user = __locals.user,
-  i18next = __locals.i18next,
-  t = __locals.t,
-  homeContent = __locals.homeContent,
-  toolPage = __locals.toolPage,
-  modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
-  items = __locals.items,
-  categories = __locals.categories,
-  models = __locals.models,
-  landingContent = __locals.landingContent,
-  category = __locals.category,
-  resourceType = __locals.resourceType,
-  resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
-  related = __locals.related,
-  model = __locals.model,
-  counts = __locals.counts;
-    ; __append( include('partials/header') )
-    ; __append("\n")
-    ; 
-  const detailContent = typeof patternDetailContent !== 'undefined' ? patternDetailContent : {};
-  const fileExt = detailContent.fileExt || ('.' + (pattern.format || 'zprj'));
-  const categoryName = detailContent.categoryName || pattern.category || 'apparel';
-  const design3dHref = detailContent.design3dHref || '/mockups';
-  const design3dCategoryName = detailContent.design3dCategoryName || categoryName;
-  const faqItems = detailContent.faqItems || [];
-  const cloSteps = detailContent.cloSteps || [];
-  const marvelousSteps = detailContent.marvelousSteps || [];
-  const stepIcons = ['download', 'open', 'inspect', 'simulate'];
-  const toStepCards = function(steps) {
-    return steps.map(function(step, index) {
-      return {
-        icon: stepIcons[index] || 'inspect',
-        title: 'Step ' + String(index + 1).padStart(2, '0'),
-        body: step
-      };
-    });
-  };
-  const cloStepCards = detailContent.cloStepCards || toStepCards(cloSteps);
-  const marvelousStepCards = detailContent.marvelousStepCards || toStepCards(marvelousSteps);
-
-    ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer pattern-detail-preview\">\n          ")
-    ;  if (pattern.image_url) { 
-    ; __append("\n            <img src=\"")
-    ; __append(escapeFn( pattern.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("\" class=\"pattern-detail-img\">\n          ")
-    ;  } else { 
-    ; __append("\n            <div class=\"model-viewer-placeholder pattern-detail-placeholder\">\n              <svg viewBox=\"0 0 200 200\" class=\"model-svg\" aria-hidden=\"true\">\n                <rect x=\"40\" y=\"40\" width=\"120\" height=\"120\" rx=\"4\" fill=\"#f5f5f5\" stroke=\"#999\" stroke-width=\"1\"/>\n                <path d=\"M40 70H160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                <path d=\"M70 40V160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                <circle cx=\"100\" cy=\"100\" r=\"20\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\"/>\n                <text x=\"100\" y=\"140\" text-anchor=\"middle\" fill=\"#999\" font-size=\"12\">")
-    ; __append(escapeFn( pattern.format || 'zprj' ))
-    ; __append("</text>\n              </svg>\n            </div>\n          ")
-    ;  } 
-    ; __append("\n        </div>\n      </div>\n\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/patterns\">Sew Patterns</a>\n          <span>/</span>\n          ")
-    ;  if (pattern.category_slug) { 
-    ; __append("\n            <a href=\"/patterns/")
-    ; __append(escapeFn( pattern.category_slug ))
-    ; __append("\">")
-    ; __append(escapeFn( pattern.category ))
-    ; __append("</a>\n          ")
-    ;  } else { 
-    ; __append("\n            <span>")
-    ; __append(escapeFn( pattern.category ))
-    ; __append("</span>\n          ")
-    ;  } 
-    ; __append("\n          <span>/</span>\n          <span>")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("</span>\n        </div>\n\n        <h1 class=\"model-detail-title\">")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("</h1>\n\n        <div class=\"model-detail-meta\">\n          <span class=\"tag\">.")
-    ; __append(escapeFn( pattern.format || 'zprj' ))
-    ; __append("</span>\n          ")
-    ;  if (pattern.tags) { 
-    ; __append("\n            ")
-    ;  pattern.tags.split(',').forEach(function(tag) { 
-    ; __append("\n              ")
-    ;  if (tag.trim()) { 
-    ; __append("\n                <span class=\"tag\">")
-    ; __append(escapeFn( tag.trim() ))
-    ; __append("</span>\n              ")
-    ;  } 
-    ; __append("\n            ")
-    ;  }); 
-    ; __append("\n          ")
-    ;  } 
-    ; __append("\n        </div>\n\n        <div class=\"model-description\">\n          <h3>Description</h3>\n          <p>")
-    ; __append(escapeFn( pattern.description || 'No description available.' ))
-    ; __append("</p>\n          ")
-    ;  if (detailContent.searchIntentSummary) { 
-    ; __append("\n            <p>")
-    ; __append(escapeFn( detailContent.searchIntentSummary ))
-    ; __append("</p>\n          ")
-    ;  } 
-    ; __append("\n          ")
-    ;  if (detailContent.patternHighlights && detailContent.patternHighlights.length) { 
-    ; __append("\n            <div class=\"pattern-highlight-list\">\n              ")
-    ;  detailContent.patternHighlights.forEach(function(item) { 
-    ; __append("\n                <div class=\"pattern-highlight-item\">\n                  <span>")
-    ; __append(escapeFn( item.label ))
-    ; __append("</span>\n                  <strong>")
-    ; __append(escapeFn( item.value ))
-    ; __append("</strong>\n                </div>\n              ")
-    ;  }); 
-    ; __append("\n            </div>\n          ")
-    ;  } 
-    ; __append("\n        </div>\n\n        <div class=\"model-specs\">\n          <h3>Specifications</h3>\n          <div class=\"specs-grid\">\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Format</span>\n              <span class=\"spec-value\">.")
-    ; __append(escapeFn( pattern.format || 'zprj' ))
-    ; __append("</span>\n            </div>\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Category</span>\n              <span class=\"spec-value\">")
-    ; __append(escapeFn( pattern.category ))
-    ; __append("</span>\n            </div>\n            <div class=\"spec-item\">\n              <span class=\"spec-label\">Resource</span>\n              <span class=\"spec-value\">Sew Pattern</span>\n            </div>\n          </div>\n        </div>\n\n        <div class=\"model-actions\">\n          <a href=\"")
-    ; __append(escapeFn( design3dHref ))
-    ; __append("\" class=\"btn btn-primary btn-large\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M12 3 3 8l9 5 9-5-9-5Z\"/>\n              <path d=\"m3 16 9 5 9-5\"/>\n              <path d=\"m3 12 9 5 9-5\"/>\n            </svg>\n            Design in 3D\n          </a>\n          ")
-    ;  if (pattern.file_url) { 
-    ; __append("\n            <a href=\"")
-    ; __append(escapeFn( pattern.file_url ))
-    ; __append("\" download class=\"btn btn-secondary btn-large\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download Pattern\n            </a>\n          ")
-    ;  } 
-    ; __append("\n          <a href=\"/patterns\" class=\"btn btn-secondary btn-large\">\n            Browse Patterns\n          </a>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-seo-section pattern-clo-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">CLO 3D workflow</span>\n      <h2>How to use ")
-    ; __append(escapeFn( pattern.name ))
-    ; __append(" in CLO 3D</h2>\n      <p>\n        ")
-    ; __append(escapeFn( detailContent.cloIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside CLO 3D for ' + categoryName + ' development and simulation.') ))
-    ; __append("\n      </p>\n    </div>\n\n    <div class=\"pattern-step-card-grid\">\n      ")
-    ;  cloStepCards.forEach(function(card, index) { 
-    ; __append("\n        <article class=\"pattern-step-card\">\n          <div class=\"pattern-step-media pattern-step-media-")
-    ; __append(escapeFn( card.icon || 'inspect' ))
-    ; __append("\">\n            <span>")
-    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
-    ; __append("</span>\n            ")
-    ;  if (card.icon === 'download') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                <path d=\"M40 22v25\"/>\n                <path d=\"m29 38 11 11 11-11\"/>\n                <path d=\"M27 59h26\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'open') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                <path d=\"M12 31h56\"/>\n                <path d=\"M27 49h16\"/>\n                <path d=\"M47 41l10 8-10 8\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'simulate') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M19 55c8-22 20-31 37-31\"/>\n                <path d=\"M51 19h11v11\"/>\n                <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                <path d=\"M35 56h22\"/>\n              </svg>\n            ")
-    ;  } else { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M18 18h20v20H18z\"/>\n                <path d=\"M42 18h20v20H42z\"/>\n                <path d=\"M18 42h20v20H18z\"/>\n                <path d=\"M42 42h20v20H42z\"/>\n                <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n              </svg>\n            ")
-    ;  } 
-    ; __append("\n          </div>\n          <div class=\"pattern-step-copy\">\n            <h3>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h3>\n            <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n          </div>\n        </article>\n      ")
-    ;  }); 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-seo-section pattern-marvelous-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Marvelous Designer workflow</span>\n      <h2>How to use ")
-    ; __append(escapeFn( pattern.name ))
-    ; __append(" in Marvelous Designer</h2>\n      <p>\n        ")
-    ; __append(escapeFn( detailContent.marvelousIntro || ('Use this ' + fileExt.toUpperCase() + ' sewing pattern inside Marvelous Designer to review pattern pieces, sewing lines, materials, and fit.') ))
-    ; __append("\n      </p>\n    </div>\n\n    <div class=\"pattern-step-card-grid\">\n      ")
-    ;  marvelousStepCards.forEach(function(card, index) { 
-    ; __append("\n        <article class=\"pattern-step-card\">\n          <div class=\"pattern-step-media pattern-step-media-")
-    ; __append(escapeFn( card.icon || 'inspect' ))
-    ; __append("\">\n            <span>")
-    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
-    ; __append("</span>\n            ")
-    ;  if (card.icon === 'download') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                <path d=\"M40 22v25\"/>\n                <path d=\"m29 38 11 11 11-11\"/>\n                <path d=\"M27 59h26\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'open') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                <path d=\"M12 31h56\"/>\n                <path d=\"M27 49h16\"/>\n                <path d=\"M47 41l10 8-10 8\"/>\n              </svg>\n            ")
-    ;  } else if (card.icon === 'simulate') { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M19 55c8-22 20-31 37-31\"/>\n                <path d=\"M51 19h11v11\"/>\n                <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                <path d=\"M35 56h22\"/>\n              </svg>\n            ")
-    ;  } else { 
-    ; __append("\n              <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                <path d=\"M18 18h20v20H18z\"/>\n                <path d=\"M42 18h20v20H42z\"/>\n                <path d=\"M18 42h20v20H18z\"/>\n                <path d=\"M42 42h20v20H42z\"/>\n                <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n              </svg>\n            ")
-    ;  } 
-    ; __append("\n          </div>\n          <div class=\"pattern-step-copy\">\n            <h3>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h3>\n            <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n          </div>\n        </article>\n      ")
-    ;  }); 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>Design this ")
-    ; __append(escapeFn( categoryName ))
-    ; __append(" pattern with matching 3D models.</h2>\n        <p>\n          Open the ")
-    ; __append(escapeFn( design3dCategoryName ))
-    ; __append(" Design 3D category, choose a related garment model,\n          and preview artwork, colors, and presentation angles in the browser.\n        </p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"")
-    ; __append(escapeFn( design3dHref ))
-    ; __append("\" class=\"btn btn-primary\">Open ")
-    ; __append(escapeFn( design3dCategoryName ))
-    ; __append(" Design 3D</a>\n        ")
-    ;  if (pattern.file_url) { 
-    ; __append("\n          <a href=\"")
-    ; __append(escapeFn( pattern.file_url ))
-    ; __append("\" download class=\"btn btn-secondary\">Download ")
-    ; __append(escapeFn( fileExt.toUpperCase() ))
-    ; __append("</a>\n        ")
-    ;  } 
-    ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-faq-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">FAQ</span>\n      <h2>")
-    ; __append(escapeFn( pattern.name ))
-    ; __append(" pattern questions</h2>\n    </div>\n\n    <div class=\"generator-faq-list\">\n      ")
-    ;  faqItems.forEach(function(item, index) { 
-    ; __append("\n        <details class=\"generator-faq-item\" ")
-    ; __append(escapeFn( index === 0 ? 'open' : '' ))
-    ; __append(">\n          <summary>")
-    ; __append(escapeFn( item.question ))
-    ; __append("</summary>\n          <p>")
-    ; __append(escapeFn( item.answer ))
-    ; __append("</p>\n        </details>\n      ")
-    ;  }); 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (related && related.length > 0) { 
-    ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related Patterns</h2>\n\n    <div class=\"models-grid\">\n      ")
-    ;  related.forEach(function(item) { 
-    ; __append("\n        <div class=\"model-card\">\n          <a href=\"/patterns/item/")
-    ; __append(escapeFn( item.id ))
-    ; __append("\" class=\"pattern-card-link\">\n            <div class=\"model-preview-3d\">\n              ")
-    ;  if (item.image_url) { 
-    ; __append("\n                <img src=\"")
-    ; __append(escapeFn( item.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( item.name ))
-    ; __append("\" class=\"model-img\">\n              ")
-    ;  } else { 
-    ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
-    ; __append(escapeFn( item.name.charAt(0) ))
-    ; __append("</span>\n                </div>\n              ")
-    ;  } 
-    ; __append("\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
-    ; __append(escapeFn( item.name ))
-    ; __append("</h3>\n              <div class=\"model-tags\">\n                <span class=\"tag\">.")
-    ; __append(escapeFn( item.format || 'zprj' ))
-    ; __append("</span>\n              </div>\n            </div>\n          </a>\n        </div>\n      ")
-    ;  }); 
-    ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  } 
-    ; __append("\n\n")
-    ; __append( include('partials/footer') )
-    ; __append("\n")
-  return __output;
-
-},
-  "patterns.ejs": function anonymous(locals, escapeFn, include, rethrow
-) {
-escapeFn = escapeFn || function (markup) {
-  return markup == undefined
-    ? ''
-    : String(markup)
-      .replace(_MATCH_HTML, encode_char);
-};
-var _ENCODE_HTML_RULES = {
-      "&": "&amp;"
-    , "<": "&lt;"
-    , ">": "&gt;"
-    , '"': "&#34;"
-    , "'": "&#39;"
-    }
-  , _MATCH_HTML = /[&<>'"]/g;
-function encode_char(c) {
-  return _ENCODE_HTML_RULES[c] || c;
-};
-;
-  var __output = "";
-  function __append(s) { if (s !== undefined && s !== null) __output += s }
-  var __locals = (locals || {}),
-title = __locals.title,
-  page = __locals.page,
-  error = __locals.error,
-  metaDescription = __locals.metaDescription,
-  metaRobots = __locals.metaRobots,
-  metaImage = __locals.metaImage,
-  canonicalUrl = __locals.canonicalUrl,
-  defaultMetaImage = __locals.defaultMetaImage,
-  structuredData = __locals.structuredData,
-  user = __locals.user,
-  i18next = __locals.i18next,
-  t = __locals.t,
-  homeContent = __locals.homeContent,
-  toolPage = __locals.toolPage,
-  modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
-  items = __locals.items,
-  categories = __locals.categories,
-  models = __locals.models,
-  landingContent = __locals.landingContent,
-  category = __locals.category,
-  resourceType = __locals.resourceType,
-  resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
-  related = __locals.related,
-  model = __locals.model,
-  counts = __locals.counts;
-    ; __append( include('partials/header') )
-    ; __append("\n\n")
-    ; 
-  const patternItems = patterns || [];
-  const normalizeCategory = function(value) {
-    return String(value || 'uncategorized')
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '') || 'uncategorized';
-  };
-  const categoryFilters = (categories && categories.length > 0)
-    ? categories.map(cat => ({ name: cat.name, key: normalizeCategory(cat.name) }))
-    : Array.from(new Set(patternItems.map(item => item.category).filter(Boolean)))
-      .sort()
-      .map(name => ({ name, key: normalizeCategory(name) }));
-
-    ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
-    ; __append(escapeFn( t('patterns.pageTitle') ))
-    ; __append("</h1>\n    <p class=\"page-subtitle\">")
-    ; __append(escapeFn( t('patterns.pageSubtitle') ))
-    ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <button class=\"filter-btn active\" data-filter=\"all\">")
-    ; __append(escapeFn( t('patterns.filterAll') ))
-    ; __append("</button>\n        ")
-    ;  categoryFilters.forEach(function(cat) { 
-    ; __append("\n          <button class=\"filter-btn\" data-filter=\"")
-    ; __append(escapeFn( cat.key ))
-    ; __append("\">")
-    ; __append(escapeFn( cat.name ))
-    ; __append("</button>\n        ")
-    ;  }); 
-    ; __append("\n      </div>\n      <div class=\"sort-group\">\n        <select class=\"sort-select\" id=\"patternsSort\">\n          <option value=\"newest\">")
-    ; __append(escapeFn( t('patterns.sortNewest') ))
-    ; __append("</option>\n          <option value=\"name\">")
-    ; __append(escapeFn( t('patterns.sortName') ))
-    ; __append("</option>\n          <option value=\"category\">Category</option>\n        </select>\n      </div>\n    </div>\n\n    <div class=\"models-grid\" id=\"patternsGrid\">\n      ")
-    ;  if (patternItems.length > 0) { 
-    ; __append("\n        ")
-    ;  patternItems.forEach(function(pattern) { 
-    ; __append("\n          <div\n            class=\"model-card\"\n            data-category=\"")
-    ; __append(escapeFn( normalizeCategory(pattern.category) ))
-    ; __append("\"\n            data-name=\"")
-    ; __append(escapeFn( pattern.name || '' ))
-    ; __append("\"\n            data-created=\"")
-    ; __append(escapeFn( pattern.created_at || '' ))
-    ; __append("\"\n          >\n            <a href=\"/patterns/item/")
-    ; __append(escapeFn( pattern.id ))
-    ; __append("\" class=\"pattern-card-link\" aria-label=\"")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("\">\n            <div class=\"model-preview-3d\">\n              <div class=\"model-thumbnail\">\n                ")
-    ;  if (pattern.image_url) { 
-    ; __append("\n                  <img src=\"")
-    ; __append(escapeFn( pattern.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("\" class=\"model-img\">\n                ")
-    ;  } else { 
-    ; __append("\n                  <svg viewBox=\"0 0 200 200\" class=\"model-svg\" aria-hidden=\"true\">\n                    <rect x=\"40\" y=\"40\" width=\"120\" height=\"120\" rx=\"4\" fill=\"#f5f5f5\" stroke=\"#999\" stroke-width=\"1\"/>\n                    <path d=\"M40 70H160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                    <path d=\"M70 40V160\" stroke=\"#999\" stroke-width=\"1\" stroke-dasharray=\"4\"/>\n                    <circle cx=\"100\" cy=\"100\" r=\"20\" fill=\"none\" stroke=\"#999\" stroke-width=\"1\"/>\n                    <text x=\"100\" y=\"140\" text-anchor=\"middle\" fill=\"#999\" font-size=\"12\">")
-    ; __append(escapeFn( pattern.format || 'zprj' ))
-    ; __append("</text>\n                  </svg>\n                ")
-    ;  } 
-    ; __append("\n              </div>\n            </div>\n            <div class=\"model-info\">\n              <h3 class=\"model-name\">")
-    ; __append(escapeFn( pattern.name ))
-    ; __append("</h3>\n              <p class=\"model-meta\">")
-    ; __append(escapeFn( pattern.category ))
-    ; __append("</p>\n              ")
-    ;  if (pattern.description) { 
-    ; __append("\n                <p class=\"model-card-description\">")
-    ; __append(escapeFn( pattern.description ))
-    ; __append("</p>\n              ")
-    ;  } 
-    ; __append("\n              <div class=\"model-tags\">\n                ")
-    ;  if (pattern.tags) { 
-    ; __append("\n                  ")
-    ;  pattern.tags.split(',').forEach(function(tag) { 
-    ; __append("\n                    ")
-    ;  if (tag.trim()) { 
-    ; __append("\n                      <span class=\"tag\">")
-    ; __append(escapeFn( tag.trim() ))
-    ; __append("</span>\n                    ")
-    ;  } 
-    ; __append("\n                  ")
-    ;  }); 
-    ; __append("\n                ")
-    ;  } 
-    ; __append("\n                <span class=\"tag\">.")
-    ; __append(escapeFn( pattern.format || 'zprj' ))
-    ; __append("</span>\n              </div>\n            </div>\n            </a>\n            <div class=\"model-actions-overlay\">\n              ")
-    ;  if (pattern.file_url) { 
-    ; __append("\n                <a href=\"")
-    ; __append(escapeFn( pattern.file_url ))
-    ; __append("\" class=\"btn btn-primary btn-small\" download>")
-    ; __append(escapeFn( t('patterns.downloadNow') ))
-    ; __append("</a>\n              ")
-    ;  } else { 
-    ; __append("\n                <button class=\"btn btn-primary btn-small\" type=\"button\" disabled>")
-    ; __append(escapeFn( t('patterns.downloadNow') ))
-    ; __append("</button>\n              ")
-    ;  } 
-    ; __append("\n            </div>\n          </div>\n        ")
-    ;  }); 
-    ; __append("\n      ")
-    ;  } else { 
-    ; __append("\n        <div class=\"empty-state model-empty-state\">\n          <svg class=\"empty-state-illustration\" width=\"120\" height=\"96\" viewBox=\"0 0 120 96\" fill=\"none\" aria-hidden=\"true\">\n            <rect x=\"24\" y=\"18\" width=\"72\" height=\"58\" rx=\"6\" fill=\"#f5f5f5\" stroke=\"#d4d4d4\" stroke-width=\"2\"/>\n            <path d=\"M43 18c2.8 9.2 31.2 9.2 34 0\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n            <path d=\"M24 31 13 43l13 13M96 31l11 12-11 13\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            <path d=\"M43 52h34M49 62h22\" stroke=\"#b8b8b8\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n          </svg>\n          <h3>No patterns yet</h3>\n          <p>Active sew patterns from the admin database will appear here.</p>\n        </div>\n      ")
-    ;  } 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<script>\n(function() {\n  const grid = document.getElementById('patternsGrid');\n  if (!grid) return;\n\n  const cards = Array.from(grid.querySelectorAll('.model-card'));\n  const filterButtons = Array.from(document.querySelectorAll('.filter-btn[data-filter]'));\n  const sortSelect = document.getElementById('patternsSort');\n  let activeFilter = 'all';\n\n  function applyFilter() {\n    cards.forEach(card => {\n      const matches = activeFilter === 'all' || card.dataset.category === activeFilter;\n      card.style.display = matches ? '' : 'none';\n    });\n  }\n\n  function applySort() {\n    const sortValue = sortSelect ? sortSelect.value : 'newest';\n    const sorted = cards.slice().sort((a, b) => {\n      if (sortValue === 'name') {\n        return (a.dataset.name || '').localeCompare(b.dataset.name || '');\n      }\n      if (sortValue === 'category') {\n        return (a.dataset.category || '').localeCompare(b.dataset.category || '');\n      }\n      return new Date(b.dataset.created || 0) - new Date(a.dataset.created || 0);\n    });\n    sorted.forEach(card => grid.appendChild(card));\n    applyFilter();\n  }\n\n  filterButtons.forEach(button => {\n    button.addEventListener('click', () => {\n      activeFilter = button.dataset.filter;\n      filterButtons.forEach(item => item.classList.toggle('active', item === button));\n      applyFilter();\n    });\n  });\n\n  if (sortSelect) {\n    sortSelect.addEventListener('change', applySort);\n  }\n})();\n</script>\n\n")
-    ; __append( include('partials/footer') )
-    ; __append("\n")
   return __output;
 
 },
@@ -3514,7 +3243,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -3522,8 +3250,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -3572,7 +3298,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -3580,8 +3305,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -3604,7 +3327,9 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.editorHref || toolPage.cta.href ))
     ; __append("\" class=\"btn btn-primary btn-large\">")
     ; __append(escapeFn( toolPage.cta.label ))
-    ; __append("</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">")
+    ; __append("</a>\n        <a href=\"")
+    ; __append(escapeFn( toolPage.secondaryCtaHref || '/mockups' ))
+    ; __append("\" class=\"btn btn-secondary btn-large\">")
     ; __append(escapeFn( toolPage.secondaryCtaLabel || 'Browse Mockup Models' ))
     ; __append("</a>\n      </div>\n    </div>\n    <div class=\"tool-detail-visual\">\n      ")
     ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
@@ -3666,7 +3391,21 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.planningTitle || 'Turn a garment idea into a clearer mockup direction' ))
     ; __append("</h2>\n      </div>\n      <p>")
     ; __append(escapeFn( toolPage.intent ))
-    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n")
+    ;  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) { 
+    ; __append("\n  <section class=\"generator-section tool-model-starters\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Choose a T-shirt model</span>\n        <h2>Start your T-shirt mockup with the right fit</h2>\n        <p>Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.</p>\n      </div>\n      <div class=\"generator-output-grid\">\n        ")
+    ;  toolPage.modelStarters.forEach(function(model) { 
+    ; __append("\n          <a class=\"generator-output-card\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("\">\n            <h3>")
+    ; __append(escapeFn( model.title ))
+    ; __append("</h3>\n            <p>")
+    ; __append(escapeFn( model.body ))
+    ; __append("</p>\n            <strong>Open free 3D model →</strong>\n          </a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n")
+    ;  } 
+    ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.benefitsEyebrow || 'Why teams use it' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.benefitsTitle || 'Preview the product before you spend on samples' ))
@@ -3684,6 +3423,7 @@ title = __locals.title,
     ;  const pickerLinks = [
   ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
   ['/tools/hoodie-mockup-generator', 'Hoodie mockups'],
+  ['/tools/dress-designer', 'Online dress designer'],
   ['/tools/3d-clothing-mockup-generator', '3D clothing mockups'],
   ['/tools/bulk-t-shirt-mockup-generator', 'Bulk colorways'],
   ['/tools/print-on-demand-mockup-generator', 'POD listings'],
@@ -3695,12 +3435,54 @@ title = __locals.title,
   ['/tools/transparent-apparel-mockup-generator', 'Transparent PNG'],
   ['/mockups', 'All 3D models']
 ].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); 
+    ; __append("\n")
+    ;  const toolGuideMap = {
+  'dress-designer': [
+    ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
+    ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
+    ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+  ],
+  '3d-clothing-mockup-generator': [
+    ['/blog/free-3d-clothing-design-online', 'Free 3D clothing design online'],
+    ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+    ['/blog/how-to-create-a-360-clothing-mockup', 'Create a 360° clothing mockup']
+  ],
+  't-shirt-mockup-generator': [
+    ['/blog/how-to-make-realistic-t-shirt-mockups', 'Make realistic T-shirt mockups'],
+    ['/blog/t-shirt-print-placement-size-guide', 'T-shirt print placement guide'],
+    ['/blog/front-and-back-t-shirt-mockup-guide', 'Front and back T-shirt guide']
+  ],
+  'hoodie-mockup-generator': [
+    ['/blog/hoodie-print-placement-guide', 'Hoodie print placement guide'],
+    ['/blog/streetwear-first-drop-mockup-checklist', 'Streetwear mockup checklist'],
+    ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow']
+  ],
+  'transparent-apparel-mockup-generator': [
+    ['/blog/transparent-background-apparel-mockups', 'Transparent apparel mockup guide'],
+    ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide'],
+    ['/blog/white-background-vs-lifestyle-apparel-images', 'White background vs lifestyle images']
+  ]
+}; 
+    ; __append("\n")
+    ;  const toolGuideLinks = toolGuideMap[toolPage.slug] || [
+  ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
+  ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
+  ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
+]; 
     ; __append("\n<section class=\"generator-section tool-picker-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.pickerEyebrow || 'Choose a starting point' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.pickerTitle || 'Pick the mockup path that matches your product' ))
     ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      ")
     ;  pickerLinks.forEach(function(link) { 
+    ; __append("\n        <a href=\"")
+    ; __append(escapeFn( link[0] ))
+    ; __append("\">")
+    ; __append(escapeFn( link[1] ))
+    ; __append("</a>\n      ")
+    ;  }); 
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section tool-guide-links-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Learn the workflow</span>\n      <h2>Guides for better apparel mockups</h2>\n      <p>Use practical checks for model choice, artwork placement, export quality, and product presentation.</p>\n    </div>\n    <div class=\"tool-picker-grid\">\n      ")
+    ;  toolGuideLinks.forEach(function(link) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( link[0] ))
     ; __append("\">")
@@ -3823,7 +3605,6 @@ title = __locals.title,
   homeContent = __locals.homeContent,
   toolPage = __locals.toolPage,
   modelDetailContent = __locals.modelDetailContent,
-  patternDetailContent = __locals.patternDetailContent,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
@@ -3831,8 +3612,6 @@ title = __locals.title,
   category = __locals.category,
   resourceType = __locals.resourceType,
   resourceTypeLabel = __locals.resourceTypeLabel,
-  pattern = __locals.pattern,
-  patterns = __locals.patterns,
   related = __locals.related,
   model = __locals.model,
   counts = __locals.counts;
@@ -3847,19 +3626,13 @@ title = __locals.title,
     ; __append(escapeFn( t('tools.dressDesigner') ))
     ; __append("</a></li>\n        </ul>\n      </div>\n\n      <!-- Mockup Generators -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n            <polyline points=\"21 15 16 10 5 21\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.mockupGenerators') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-mockup-generator\">T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/hoodie-mockup-generator\">Hoodie Mockup Generator</a></li>\n          <li><a href=\"/tools/3d-clothing-mockup-generator\">3D Clothing Mockup Generator</a></li>\n          <li><a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/print-on-demand-mockup-generator\">Print-on-Demand Mockup Generator</a></li>\n          <li><a href=\"/tools/transparent-apparel-mockup-generator\">Transparent Apparel Mockups</a></li>\n          <li><a href=\"/tools/2d-mockup\">")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/t-shirt-mockup-generator\">T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/hoodie-mockup-generator\">Hoodie Mockup Generator</a></li>\n          <li><a href=\"/tools/3d-clothing-mockup-generator\">3D Clothing Design & Mockup Generator</a></li>\n          <li><a href=\"/tools/bulk-t-shirt-mockup-generator\">Bulk T-Shirt Mockup Generator</a></li>\n          <li><a href=\"/tools/print-on-demand-mockup-generator\">Print-on-Demand Mockup Generator</a></li>\n          <li><a href=\"/tools/transparent-apparel-mockup-generator\">Transparent Apparel Mockups</a></li>\n          <li><a href=\"/tools/2d-mockup\">")
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</a></li>\n        </ul>\n      </div>\n\n      <!-- Free Downloads -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n            <polyline points=\"7 10 12 15 17 10\"/>\n            <line x1=\"12\" y1=\"15\" x2=\"12\" y2=\"3\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.freeDownloads') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/patterns\">")
-    ; __append(escapeFn( t('tools.freePatterns') ))
-    ; __append("</a></li>\n          <li><a href=\"/mockups\">Free 3D Clothing Models</a></li>\n        </ul>\n      </div>\n\n      <!-- Learn -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/>\n            <path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/>\n          </svg>\n        </div>\n        <h3>")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/mockups\">Free 3D Clothing Models</a></li>\n        </ul>\n      </div>\n\n      <!-- Learn -->\n      <div class=\"tool-card\">\n        <div class=\"tool-icon\">\n          <svg width=\"32\" height=\"32\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z\"/>\n            <path d=\"M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z\"/>\n          </svg>\n        </div>\n        <h3>")
     ; __append(escapeFn( t('tools.learn') ))
-    ; __append("</h3>\n        <ul>\n          <li><a href=\"/tools/clo3d-guide\">")
-    ; __append(escapeFn( t('tools.clo3dGuide') ))
-    ; __append("</a></li>\n          <li><a href=\"/tools/md-guide\">")
-    ; __append(escapeFn( t('tools.mdGuide') ))
-    ; __append("</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <!-- Popular Tools Section -->\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">")
+    ; __append("</h3>\n        <ul>\n          <li><a href=\"/blog/how-to-choose-a-3d-clothing-model\">Choose a 3D Clothing Model</a></li>\n          <li><a href=\"/blog/3d-apparel-mockup-workflow\">3D Apparel Mockup Workflow</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <!-- Popular Tools Section -->\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">")
     ; __append(escapeFn( t('tools.popularTools') ))
     ; __append("</h2>\n      <div class=\"popular-grid\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png\" alt=\"T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>T-Shirt Mockup Generator</h4>\n            <p>Start from T-shirt models and plan product-page mockups</p>\n          </div>\n        </a>\n        <a href=\"/tools/hoodie-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png\" alt=\"Hoodie Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Hoodie Mockup Generator</h4>\n            <p>Preview streetwear fits and hoodie artwork zones</p>\n          </div>\n        </a>\n        <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png\" alt=\"Bulk T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Bulk T-Shirt Mockup Generator</h4>\n            <p>Compare POD colorways and product variants</p>\n          </div>\n        </a>\n        <a href=\"/tools/print-on-demand-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png\" alt=\"Print-on-Demand Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Print-on-Demand Mockup Generator</h4>\n            <p>Plan listing visuals for Shopify and Etsy drafts</p>\n          </div>\n        </a>\n      </div>\n    </div>\n\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">Free garment-specific mockup tools</h2>\n      <div class=\"tool-picker-grid\">\n        <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockups</a>\n        <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt views</a>\n        <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockups</a>\n        <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long-sleeve shirt mockups</a>\n        <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockups</a>\n        <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel PNGs</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )

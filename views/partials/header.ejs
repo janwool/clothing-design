@@ -74,10 +74,9 @@
         <a href="/mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' %>">
           <%= t('nav.design3d') %>
         </a>
-        <a href="/patterns" class="nav-link <%= typeof page !== 'undefined' && page === 'patterns' ? 'active' : '' %>">
-          <%= t('nav.patterns') %>
+        <a href="/blog" class="nav-link <%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">
+          Blog
         </a>
-        
         <!-- Tools Dropdown -->
         <div class="nav-dropdown">
           <button class="nav-link dropdown-toggle <%= typeof page !== 'undefined' && page === 'tools' ? 'active' : '' %>" type="button" aria-expanded="false">
@@ -91,7 +90,7 @@
               <div class="tools-mega-intro">
                 <span class="tools-mega-eyebrow">Free clothing design tools</span>
                 <strong>Pick a mockup workflow</strong>
-                <p>Browser-based tools for apparel mockups, print placement, pattern planning, and product listing visuals.</p>
+                <p>Browser-based tools for apparel mockups, print placement, colorways, and product listing visuals.</p>
               </div>
               <div class="tools-mega-grid">
                 <div class="dropdown-section">
@@ -104,8 +103,12 @@
                     <span>Hoodie Mockup Generator</span>
                     <small>Build hoodie previews for print tests.</small>
                   </a>
+                  <a href="/tools/dress-designer" class="dropdown-item">
+                    <span>Online Dress Designer</span>
+                    <small>Design a dress on a live 3D garment model.</small>
+                  </a>
                   <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">
-                    <span>3D Clothing Mockup Generator</span>
+                    <span>3D Clothing Design & Mockup Generator</span>
                     <small>Use 3D models for apparel mockups.</small>
                   </a>
                 </div>
@@ -137,10 +140,6 @@
                 </div>
                 <div class="dropdown-section">
                   <span class="dropdown-label">Free resources</span>
-                  <a href="/patterns" class="dropdown-item">
-                    <span><%= t('tools.freePatterns') %></span>
-                    <small>Download editable apparel patterns.</small>
-                  </a>
                   <a href="/mockups" class="dropdown-item">
                     <span>Free 3D Models</span>
                     <small>Browse editable garment models.</small>
@@ -149,9 +148,9 @@
                     <span><%= t('tools.mockup2d') %></span>
                     <small>Make flat apparel mockup concepts.</small>
                   </a>
-                  <a href="/tools/clo3d-guide" class="dropdown-item">
-                    <span><%= t('tools.clo3dGuide') %></span>
-                    <small>Learn the 3D apparel workflow.</small>
+                  <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">
+                    <span>3D Clothing Mockups</span>
+                    <small>Design across garment categories.</small>
                   </a>
                 </div>
               </div>
@@ -196,7 +195,7 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu">
       <a href="/mockups" class="mobile-link"><%= t('nav.design3d') %></a>
-      <a href="/patterns" class="mobile-link"><%= t('nav.patterns') %></a>
+      <a href="/blog" class="mobile-link">Blog</a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>
       <% if (user) { %>
