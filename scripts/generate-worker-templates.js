@@ -31,7 +31,10 @@ const templateLocals = [
   'resourceTypeLabel',
   'related',
   'model',
-  'counts'
+  'counts',
+  'articles',
+  'article',
+  'resources'
 ];
 
 function walk(dir, predicate) {

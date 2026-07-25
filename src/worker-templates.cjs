@@ -47,7 +47,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"error-section\">\n  <div class=\"container\">\n    <div class=\"error-content\">\n      <h1 class=\"error-code\">404</h1>\n      <h2 class=\"error-title\">Page Not Found</h2>\n      <p class=\"error-message\">The page you are looking for does not exist or has been moved.</p>\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n    </div>\n  </div>\n</section>\n\n<style>\n.error-section {\n  min-height: 70vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  padding: 4rem 0;\n}\n\n.error-code {\n  font-size: 6rem;\n  font-weight: 800;\n  color: var(--gray-200);\n  line-height: 1;\n  margin-bottom: 1rem;\n}\n\n.error-title {\n  font-size: 1.5rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.error-message {\n  color: var(--gray-600);\n  margin-bottom: 2rem;\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
@@ -102,7 +105,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -195,7 +201,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -262,7 +271,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -363,7 +375,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -466,7 +481,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -589,7 +607,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("  </main>\n</div>\n\n<script>\n// Admin sidebar toggle for mobile\nconst sidebarToggle = document.querySelector('.sidebar-toggle');\nconst adminSidebar = document.querySelector('.admin-sidebar');\n\nif (sidebarToggle) {\n  sidebarToggle.addEventListener('click', () => {\n    adminSidebar.classList.toggle('active');\n  });\n}\n\n// Close modal function\nfunction closeModal() {\n  const modal = document.querySelector('.modal-overlay');\n  if (modal) {\n    modal.remove();\n  }\n}\n\n// Delete confirmation\ndocument.querySelectorAll('.btn-delete').forEach(btn => {\n  btn.addEventListener('click', (e) => {\n    if (!confirm('Are you sure you want to delete this item?')) {\n      e.preventDefault();\n    }\n  });\n});\n</script>\n\n</body>\n</html>\n")
   return __output;
 
@@ -641,7 +662,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next ? i18next.language : 'en' ))
     ; __append("\" dir=\"")
@@ -699,7 +723,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("<aside class=\"admin-sidebar\">\n  <div class=\"sidebar-header\">\n    <a href=\"/admin\" class=\"sidebar-logo\">ClothingDesign</a>\n    <span class=\"sidebar-badge\">Admin</span>\n  </div>\n  \n  <nav class=\"sidebar-nav\">\n    <a href=\"/admin\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/>\n        <rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/>\n      </svg>\n      Dashboard\n    </a>\n    \n    <div class=\"sidebar-section\">Resources</div>\n    \n    <a href=\"/admin/models-3d\" class=\"sidebar-link ")
@@ -765,7 +792,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -868,7 +898,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -951,7 +984,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
@@ -1024,7 +1060,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
@@ -1099,7 +1138,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<article class=\"blog-article\">\n  <header class=\"article-hero\">\n    <div class=\"container\">\n      <nav class=\"article-breadcrumbs\" aria-label=\"Breadcrumb\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/blog\">Blog</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( article.category ))
@@ -1318,7 +1360,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
     ; __append(escapeFn( articles.length ))
@@ -1413,7 +1458,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') { 
@@ -1740,7 +1788,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('design2d.pageTitle') ))
@@ -1849,7 +1900,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <div class=\"category-breadcrumbs\">\n      <a href=\"/\">Home</a>\n      <span>/</span>\n      <span>")
     ; __append(escapeFn( t('design3d.pageTitle') ))
@@ -1958,7 +2012,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const previewModelFileUrl = model.file_url; 
@@ -2037,7 +2094,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title || 'Error' ))
     ; __append("</title>\n  <style>\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      background: #f8fafc;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 100vh;\n      padding: 2rem;\n    }\n    .error-container {\n      text-align: center;\n      max-width: 480px;\n    }\n    .error-code {\n      font-size: 6rem;\n      font-weight: 700;\n      color: #1e293b;\n      line-height: 1;\n      margin-bottom: 1rem;\n    }\n    .error-title {\n      font-size: 1.5rem;\n      color: #334155;\n      margin-bottom: 0.75rem;\n    }\n    .error-message {\n      color: #64748b;\n      margin-bottom: 2rem;\n      line-height: 1.6;\n    }\n    .error-actions {\n      display: flex;\n      gap: 1rem;\n      justify-content: center;\n    }\n    .btn {\n      padding: 0.75rem 1.5rem;\n      border-radius: 8px;\n      text-decoration: none;\n      font-weight: 500;\n      transition: all 0.2s;\n    }\n    .btn-primary {\n      background: #2563eb;\n      color: white;\n    }\n    .btn-primary:hover {\n      background: #1d4ed8;\n    }\n    .btn-ghost {\n      background: white;\n      color: #64748b;\n      border: 1px solid #e2e8f0;\n    }\n    .btn-ghost:hover {\n      background: #f1f5f9;\n    }\n  </style>\n</head>\n<body>\n  <!-- Google Tag Manager (noscript) -->\n  <noscript><iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-K7STMRPH\"\n  height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe></noscript>\n  <!-- End Google Tag Manager (noscript) -->\n  <div class=\"error-container\">\n    <div class=\"error-code\">500</div>\n    <h1 class=\"error-title\">Something went wrong</h1>\n    <p class=\"error-message\">We're sorry, but something went wrong on our end. Please try again later.</p>\n    <div class=\"error-actions\">\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n      <a href=\"javascript:history.back()\" class=\"btn btn-ghost\">Go Back</a>\n    </div>\n  </div>\n</body>\n</html>\n")
@@ -2091,7 +2151,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('gallery.pageTitle') ))
@@ -2150,7 +2213,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const content = homeContent || {}; 
@@ -2353,7 +2419,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {}; 
@@ -2682,7 +2751,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
@@ -2800,7 +2872,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Product</h4>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Resources</h4>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Support -->\n        <div class=\"footer-column\">\n          <h4 class=\"footer-title\">Support</h4>\n          <a href=\"/help\" class=\"footer-link\">Help Center</a>\n          <a href=\"/contact\" class=\"footer-link\">Contact Us</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms of Service</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy Policy</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=overlay-fix-1\"></script>\n</body>\n</html>\n")
@@ -2854,7 +2929,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ;  const content = landingContent || {}; 
     ; __append("\n")
     ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
@@ -3081,7 +3159,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
     ; __append("\">\n<head>\n  <!-- Google Tag Manager -->\n  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n  })(window,document,'script','dataLayer','GTM-K7STMRPH');</script>\n  <!-- End Google Tag Manager -->\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
@@ -3252,7 +3333,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">See Plans</h1>\n    <p class=\"page-subtitle\">Choose the plan that works for you</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <div class=\"pricing-grid\">\n      <div class=\"pricing-card\">\n        <h3>Free</h3>\n        <div class=\"pricing-price\">$0<span>/month</span></div>\n        <ul class=\"pricing-features\">\n          <li>Basic 2D templates</li>\n          <li>3 designs per month</li>\n          <li>1080p exports</li>\n          <li>Community support</li>\n        </ul>\n        <a href=\"/auth/register\" class=\"btn btn-ghost btn-full\">Get Started</a>\n      </div>\n      <div class=\"pricing-card featured\">\n        <div class=\"pricing-badge\">Popular</div>\n        <h3>Pro</h3>\n        <div class=\"pricing-price\">$29<span>/month</span></div>\n        <ul class=\"pricing-features\">\n          <li>All 2D & 3D models</li>\n          <li>Unlimited designs</li>\n          <li>4K exports</li>\n          <li>Priority support</li>\n          <li>Pattern downloads</li>\n        </ul>\n        <a href=\"/auth/register\" class=\"btn btn-primary btn-full\">Get Started</a>\n      </div>\n      <div class=\"pricing-card\">\n        <h3>Enterprise</h3>\n        <div class=\"pricing-price\">$99<span>/month</span></div>\n        <ul class=\"pricing-features\">\n          <li>Everything in Pro</li>\n          <li>Team collaboration</li>\n          <li>API access</li>\n          <li>Dedicated support</li>\n          <li>Custom integrations</li>\n        </ul>\n        <a href=\"/contact\" class=\"btn btn-ghost btn-full\">Contact Us</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
@@ -3307,7 +3391,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"tool-detail-hero\">\n  <div class=\"container tool-detail-hero-grid\">\n    <div class=\"tool-detail-copy\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/tools\">Tools</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( toolPage.title ))
@@ -3614,7 +3701,10 @@ title = __locals.title,
   resourceTypeLabel = __locals.resourceTypeLabel,
   related = __locals.related,
   model = __locals.model,
-  counts = __locals.counts;
+  counts = __locals.counts,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('tools.pageTitle') ))
