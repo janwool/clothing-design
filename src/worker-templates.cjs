@@ -3174,12 +3174,12 @@ title = __locals.title,
     ; __append("\">\n  ")
     ;  } 
     ; __append("\n  ")
-    ;  if (typeof metaRobots !== 'undefined' && metaRobots) { 
-    ; __append("\n    <meta name=\"robots\" content=\"")
-    ; __append(escapeFn( metaRobots ))
+    ;  const headMetaRobots = typeof metaRobots !== 'undefined' && metaRobots
+    ? (String(metaRobots).includes('max-image-preview:') ? metaRobots : `${metaRobots}, max-image-preview:large`)
+    : 'max-image-preview:large';
+    ; __append("\n  <meta name=\"robots\" content=\"")
+    ; __append(escapeFn( headMetaRobots ))
     ; __append("\">\n  ")
-    ;  } 
-    ; __append("\n  ")
     ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : ''; 
     ; __append("\n  ")
     ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png'); 

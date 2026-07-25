@@ -45,6 +45,25 @@ const staticToolImages = {
   '/tools/transparent-apparel-mockup-generator': siteImage('mockups/clothing-mockup-generator.webp')
 };
 
+const staticPageImages = {
+  '/': modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
+  '/mockups': siteImage('mockups/clothing-mockup-generator.webp'),
+  '/tools': siteImage('tools/3d-mockup.webp'),
+  '/blog': blogArticles[0]?.image,
+  ...staticToolImages
+};
+
+const staticCategoryImages = {
+  't-shirt-mockup': siteImage('categories/t-shirt-mockup.webp'),
+  shirt: siteImage('categories/shirt.webp'),
+  pants: siteImage('categories/pants.webp'),
+  jacket: siteImage('categories/jacket.webp'),
+  'hoodie-mockup': siteImage('categories/hoodie-mockup.webp'),
+  dress: siteImage('categories/dress.webp'),
+  cloak: siteImage('categories/cloak.webp'),
+  underwear: siteImage('categories/underwear.webp')
+};
+
 function escapeXml(value) {
   return String(value || '')
     .replace(/&/g, '&amp;')
@@ -74,7 +93,13 @@ function absoluteAssetUrl(value) {
 
 function addUrl(urls, seen, pathname, lastmod, image) {
   const loc = absoluteUrl(pathname);
-  if (seen.has(loc)) return;
+  if (seen.has(loc)) {
+    const existing = urls.find(item => item.loc === loc);
+    if (existing && !existing.image && image) {
+      existing.image = absoluteAssetUrl(image);
+    }
+    return;
+  }
   seen.add(loc);
   urls.push({
     loc,
@@ -213,7 +238,7 @@ async function main() {
   const seen = new Set();
   const now = new Date().toISOString();
 
-  CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now));
+  CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now, staticPageImages[pathname]));
   staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now, staticToolImages[pathname]));
   blogArticles.forEach(article => {
     addUrl(urls, seen, `/blog/${article.slug}`, article.updatedAt || article.publishedAt, article.image);
@@ -224,7 +249,13 @@ async function main() {
     const pathname = categoryPath(category);
     if (!pathname) return;
     if (category.resource_type === '3d-models' && !isPriority3dCategory(category)) return;
-    addUrl(urls, seen, pathname, category.updated_at || category.created_at);
+    addUrl(
+      urls,
+      seen,
+      pathname,
+      category.updated_at || category.created_at,
+      staticCategoryImages[category.slug]
+    );
   });
 
   const models = await get3dModelUrls();

@@ -602,7 +602,7 @@ const TOOL_PAGE_CONTENT = {
   't-shirt-mockup-generator': {
     title: 'Free T-Shirt Mockup Generator',
     eyebrow: 'Free online T-shirt mockups',
-    image: modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
+    image: siteImage('mockups/t-shirt-mockup-generator.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
@@ -1973,6 +1973,15 @@ function buildBlogArticleStructuredData(req, article) {
       keywords: [article.targetKeyword, ...article.keywords].join(', '),
       citation: citations,
       about: article.keywords.map(name => ({ '@type': 'Thing', name }))
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: article.title,
+      description: article.description,
+      url: articleUrl,
+      image: articleImage,
+      primaryImageOfPage: imageObject(req, articleImage)
     },
     {
       '@context': 'https://schema.org',

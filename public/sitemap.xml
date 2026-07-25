@@ -2,9 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://www.cloz-design.com/</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/design3d-covers/t-shirt-mockup-3d-model-01-aa09ae0d.webp?v=cover-20260621</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/3d-models/bag/lightweight-fashion-bag-3d-model</loc>
@@ -1124,9 +1127,12 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/blog</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/blog/3d-apparel-mockup-workflow</loc>
@@ -1386,7 +1392,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <image:image>
-      <image:loc>https://cdn.cloz-design.com/image/use-cases/collection-planning.webp?v=20260719</image:loc>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.webp?v=20260719</image:loc>
     </image:image>
   </url>
   <url>
@@ -1418,9 +1424,12 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/bag</loc>
@@ -1445,30 +1454,45 @@
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/dress.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/hoodie-mockup</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/hoodie-mockup.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/jacket</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/jacket.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/pants</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/pants.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/shirt</loc>
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/shirt.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/skirt</loc>
@@ -1481,6 +1505,9 @@
     <lastmod>2026-06-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/categories/t-shirt-mockup.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/mockups/top</loc>
@@ -1490,25 +1517,34 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/tools/3d-mockup.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/3d-clothing-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/bulk-t-shirt-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/dress-designer</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1517,7 +1553,7 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/front-and-back-t-shirt-mockup</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1526,13 +1562,16 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/hoodie-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/long-sleeve-shirt-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1541,7 +1580,7 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/oversized-t-shirt-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1550,7 +1589,7 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/polo-shirt-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1559,13 +1598,16 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/print-on-demand-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/streetwear-hoodie-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
@@ -1574,13 +1616,16 @@
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/t-shirt-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.webp?v=20260719</image:loc>
+    </image:image>
   </url>
   <url>
     <loc>https://www.cloz-design.com/tools/transparent-apparel-mockup-generator</loc>
-    <lastmod>2026-07-23</lastmod>
+    <lastmod>2026-07-25</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
     <image:image>
