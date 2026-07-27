@@ -2180,8 +2180,6 @@ img {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm);
-  margin-top: auto;
-  padding-top: var(--spacing-lg);
 }
 
 .model-actions .btn {

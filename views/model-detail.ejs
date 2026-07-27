@@ -72,6 +72,24 @@
           <% } %>
         </div>
 
+        <div class="model-actions">
+          <button class="btn btn-primary btn-large" id="designNowBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+            Design Now
+          </button>
+          <% if (previewModelFileUrl) { %>
+            <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+              </svg>
+              Download HD Render
+            </button>
+          <% } %>
+          <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
+        </div>
+
         <div class="model-description">
           <h3>Description</h3>
           <p><%= model.description || 'No description available.' %></p>
@@ -118,23 +136,6 @@
           </nav>
         <% } %>
 
-        <div class="model-actions">
-          <button class="btn btn-primary btn-large" id="designNowBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-            </svg>
-            Design Now
-          </button>
-          <% if (previewModelFileUrl) { %>
-            <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-              </svg>
-              Download HD Render
-            </button>
-          <% } %>
-          <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
-        </div>
       </div>
     </div>
   </div>

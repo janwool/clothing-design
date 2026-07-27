@@ -2470,7 +2470,11 @@ title = __locals.title,
     ; __append(escapeFn( model.poly_count ))
     ; __append("</span>\n          ")
     ;  } 
-    ; __append("\n        </div>\n\n        <div class=\"model-description\">\n          <h3>Description</h3>\n          <p>")
+    ; __append("\n        </div>\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Design Now\n          </button>\n          ")
+    ;  if (previewModelFileUrl) {
+    ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download HD Render\n            </button>\n          ")
+    ;  }
+    ; __append("\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n        </div>\n\n        <div class=\"model-description\">\n          <h3>Description</h3>\n          <p>")
     ; __append(escapeFn( model.description || 'No description available.' ))
     ; __append("</p>\n        </div>\n\n        ")
     ;  if (detailContent.searchIntentSummary) { 
@@ -2514,11 +2518,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n          </nav>\n        ")
     ;  } 
-    ; __append("\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Design Now\n          </button>\n          ")
-    ;  if (previewModelFileUrl) { 
-    ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Download HD Render\n            </button>\n          ")
-    ;  } 
-    ; __append("\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Searchable model assets -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">")
+    ; __append("\n\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Searchable model assets -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">")
     ; __append(escapeFn( model.name ))
     ; __append(" model views</h2>\n    <p class=\"section-subtitle\">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>\n    \n    <div class=\"showcase-grid\">\n      ")
     ;  if (model.image_url) { 
