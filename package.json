@@ -12,8 +12,10 @@
     "assets:upload": "node scripts/upload-site-images-r2.js",
     "content:seed": "node scripts/seed-category-landing-content.js",
     "content:3d-categories": "node scripts/refresh-3d-category-pages.js",
-    "deploy": "npm run build && wrangler deploy",
-    "worker:dev": "npm run build && wrangler dev",
+    "content:repair-taxonomy": "node scripts/repair-3d-model-taxonomy.js --apply",
+    "test": "node --test",
+    "deploy": "npm run build && npx --yes wrangler deploy",
+    "worker:dev": "npm run build && npx --yes wrangler dev",
     "watch": "webpack --mode development --watch"
   },
   "keywords": [

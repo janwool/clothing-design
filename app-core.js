@@ -5,8 +5,13 @@ const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
 const db = require('./lib/db');
+const {
+  canonicalUrl,
+  getCanonicalRedirect
+} = require('./lib/url-policy');
 
 const app = express();
+app.set('trust proxy', true);
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 const appRootDir = typeof __dirname === 'string' ? __dirname : '';
 const viewsDir = path.join(appRootDir, 'views');
@@ -307,6 +312,12 @@ if (!isWorkerRuntime) {
 
 const i18n = configureI18n();
 
+app.use((req, res, next) => {
+  const redirectUrl = getCanonicalRedirect(req);
+  if (!redirectUrl) return next();
+  return res.redirect(301, redirectUrl);
+});
+
 app.use(middleware.handle(i18n));
 if (isWorkerRuntime) {
   app.use(workerBodyParser);
@@ -329,11 +340,7 @@ if (isWorkerRuntime) {
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
   res.locals.user = req.session.user || null;
-  const forwardedProto = String(req.get('x-forwarded-proto') || '').split(',')[0].trim();
-  const protocol = forwardedProto || req.protocol || 'https';
-  const host = req.get('host');
-  const canonicalPath = req.path || '/';
-  res.locals.canonicalUrl = host ? `${protocol}://${host}${canonicalPath}` : canonicalPath;
+  res.locals.canonicalUrl = canonicalUrl(req.path || '/');
   res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;
   next();
 });

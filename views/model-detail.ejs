@@ -17,8 +17,11 @@
           <% if (previewModelFileUrl) { %>
             <model-viewer 
               class="model-viewer-natural"
-              src="<%= previewModelFileUrl %>" 
+              src="<%= previewModelFileUrl %>"
+              poster="<%= model.image_url %>"
               alt="<%= model.name %> interactive 3D clothing model and apparel mockup"
+              loading="lazy"
+              reveal="interaction"
               camera-controls 
               auto-rotate
               shadow-intensity="1.55"
@@ -166,7 +169,10 @@
             <model-viewer
               class="model-viewer-natural showcase-side-viewer"
               src="<%= previewModelFileUrl %>"
+              poster="<%= model.image_url %>"
               alt="<%= model.name %> side silhouette 3D view"
+              loading="lazy"
+              reveal="interaction"
               camera-controls
               camera-orbit="90deg 75deg 112%"
               shadow-intensity="1.2"
@@ -360,8 +366,10 @@
             <model-viewer 
               class="model-viewer-natural"
               id="designerViewer"
-              src="<%= previewModelFileUrl %>" 
+              src="<%= previewModelFileUrl %>"
+              poster="<%= model.image_url %>"
               alt="<%= model.name %>"
+              loading="lazy"
               camera-controls
               auto-rotate
               shadow-intensity="1.55"

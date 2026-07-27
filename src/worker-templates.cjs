@@ -2444,9 +2444,11 @@ title = __locals.title,
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
-    ; __append("\" \n              alt=\"")
+    ; __append("\"\n              poster=\"")
+    ; __append(escapeFn( model.image_url ))
+    ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" interactive 3D clothing model and apparel mockup\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
+    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"lazy\"\n              reveal=\"interaction\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
     ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2538,9 +2540,11 @@ title = __locals.title,
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <model-viewer\n              class=\"model-viewer-natural showcase-side-viewer\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
+    ; __append("\"\n              poster=\"")
+    ; __append(escapeFn( model.image_url ))
     ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" side silhouette 3D view\"\n              camera-controls\n              camera-orbit=\"90deg 75deg 112%\"\n              shadow-intensity=\"1.2\"\n              exposure=\"0.72\"\n              environment-image=\"neutral\"\n            ></model-viewer>\n          ")
+    ; __append(" side silhouette 3D view\"\n              loading=\"lazy\"\n              reveal=\"interaction\"\n              camera-controls\n              camera-orbit=\"90deg 75deg 112%\"\n              shadow-intensity=\"1.2\"\n              exposure=\"0.72\"\n              environment-image=\"neutral\"\n            ></model-viewer>\n          ")
     ;  } 
     ; __append("\n        </div>\n        <span class=\"showcase-label\">Side silhouette</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { 
@@ -2662,9 +2666,11 @@ title = __locals.title,
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              id=\"designerViewer\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
-    ; __append("\" \n              alt=\"")
+    ; __append("\"\n              poster=\"")
+    ; __append(escapeFn( model.image_url ))
+    ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n              camera-controls\n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
+    ; __append("\"\n              loading=\"lazy\"\n              camera-controls\n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n          ")
     ;  } else { 
     ; __append("\n            <div class=\"designer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))

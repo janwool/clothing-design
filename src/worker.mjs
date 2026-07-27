@@ -14,6 +14,7 @@ function applyEnvironment(workerEnv) {
     'R2_ACCESS_KEY_ID',
     'R2_SECRET_ACCESS_KEY',
     'R2_PUBLIC_URL',
+    'PUBLIC_SITE_ORIGIN',
     'SESSION_SECRET'
   ];
 

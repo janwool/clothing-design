@@ -21,6 +21,7 @@ const {
 } = require('../lib/seo');
 const { modelCover, siteImage } = require('../lib/site-assets');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
+const { targetForLegacyPattern } = require('../lib/legacy-patterns');
 
 const MOCKUP_WORKFLOW_IMAGES = [
   siteImage('workflow/choose-garment-model.webp'),
@@ -220,8 +221,25 @@ function compactText(value, maxLength = 160) {
   const text = String(value || '').replace(/\s+/g, ' ').trim();
   if (text.length <= maxLength) return text;
   const clipped = text.slice(0, maxLength - 1);
+  const sentenceEnd = Math.max(
+    clipped.lastIndexOf('.'),
+    clipped.lastIndexOf('!'),
+    clipped.lastIndexOf('?')
+  );
+  if (sentenceEnd >= 80) {
+    return clipped.slice(0, sentenceEnd + 1).trim();
+  }
   const lastSpace = clipped.lastIndexOf(' ');
-  return `${clipped.slice(0, lastSpace > 80 ? lastSpace : maxLength - 1).trim()}.`;
+  return `${clipped.slice(0, lastSpace > 80 ? lastSpace : maxLength - 1).trim()}…`;
+}
+
+function buildModelMetaDescription(modelName, searchPhrase) {
+  const candidates = [
+    `${modelName} is a free editable ${searchPhrase}. Customize colors and artwork online, then export a transparent PNG render.`,
+    `Customize ${modelName} online. Test colors and artwork on this free ${searchPhrase}, then export a transparent PNG render.`,
+    `${modelName}: customize colors and artwork online, then export a transparent PNG render.`
+  ];
+  return candidates.find(candidate => candidate.length <= 158) || compactText(candidates[2], 158);
 }
 
 function buildSeoTitle(base, suffix, maxLength = 58) {
@@ -366,7 +384,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
   const workflow = [
     {
       title: 'Choose a garment model',
-      text: 'Start from shirts, hoodies, dresses, coats, pants, bags, hats, and other free 3D apparel models.',
+      text: 'Start from shirts, hoodies, dresses, coats, pants, skirts, hats, and other free 3D apparel models.',
       image_url: MOCKUP_WORKFLOW_IMAGES[0]
     },
     {
@@ -413,7 +431,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     },
     {
       question: 'Which garment models are available?',
-      answer: 'The library includes apparel and accessory categories such as T-shirts, shirts, pants, jackets, hoodies, dresses, coats, hats, bags, skirts, and more.'
+      answer: 'The library includes categories such as T-shirts, shirts, pants, jackets, hoodies, dresses, coats, hats, skirts, jumpsuits, and more.'
     },
     {
       question: 'Can I use the exported render on product pages?',
@@ -1410,7 +1428,7 @@ function buildToolStructuredData(req, toolPage) {
 function buildModelDetailContent(model, related, req) {
   const categoryName = model.category_label || model.category || 'apparel';
   const categorySlug = model.category_slug || toSlug(categoryName);
-  const modelUrl = toAbsoluteUrl(req, req.originalUrl);
+  const modelUrl = toAbsoluteUrl(req, req.path);
   const imageUrl = firstImage(req, [model.image_url]);
   const fileUrl = toAbsoluteUrl(req, model.file_url);
   const designHref = `/3d-models/${categorySlug}/${model.slug}#design`;
@@ -1422,7 +1440,7 @@ function buildModelDetailContent(model, related, req) {
       : buildSeoTitle(model.name, `Free ${categoryName} 3D Model & Mockup`, 62);
   const searchIntentSummary = buildModelSearchIntent(model, categoryName, categorySlug);
   const descriptorList = modelDescriptor(model, categoryName);
-  const description = compactText(`${model.name} is a free editable ${searchPhrases[0]} for online clothing design. Customize colors and artwork, then export a transparent PNG render.`, 158);
+  const description = buildModelMetaDescription(model.name, searchPhrases[0]);
   const tagList = [...new Set([...searchPhrases, ...splitKeywordList(model.tags)])].slice(0, 8);
   const modelText = `${model.name} ${model.description || ''}`.toLowerCase();
   const fit = /oversized|drop shoulder/.test(modelText) ? 'Oversized / relaxed'
@@ -1548,13 +1566,13 @@ function buildModelDetailContent(model, related, req) {
         type: 'WebPage',
         name: model.name,
         description,
-        path: req.originalUrl,
+        path: req.path,
         image: imageUrl,
         breadcrumbs: [
           { name: 'Home', url: '/' },
           { name: '3D Clothing Models', url: '/mockups' },
           { name: categoryName, url: `/mockups/${categorySlug}` },
-          { name: model.name, url: req.originalUrl }
+          { name: model.name, url: req.path }
         ]
       }),
       {
@@ -1727,15 +1745,23 @@ router.get('/api/texture-svg', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     await ensureModelCategoryTable();
-    const models = await db.all(`
-      ${getModelCategorySelect()}
-      WHERE m.status = ?
-      ${getModelCategoryGroupBy()}
-      ORDER BY m.updated_at DESC, m.created_at DESC
-      LIMIT 120
-    `, ['active']);
-    const categories = await getActive3dCategories();
-    const modelSummary = await db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']);
+    const [models, categories, modelSummary] = await Promise.all([
+      db.all(`
+        ${getModelCategorySelect()}
+        WHERE m.status = ?
+          AND m.slug IN (?, ?, ?, ?)
+        ${getModelCategoryGroupBy()}
+        ORDER BY m.updated_at DESC, m.created_at DESC
+      `, [
+        'active',
+        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY['t-shirt-mockup'],
+        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY.shirt,
+        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY['hoodie-mockup'],
+        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY.dress
+      ]),
+      getActive3dCategories(),
+      db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active'])
+    ]);
     const homeContent = buildHomeContent(req, models || [], categories || [], modelSummary?.count || 0);
 
     res.render('index', {
@@ -1768,13 +1794,15 @@ router.get('/design-3d', (req, res) => {
 router.get('/mockups', async (req, res) => {
   try {
     await ensureModelCategoryTable();
-    const models = await db.all(`
-      ${getModelCategorySelect()}
-      WHERE m.status = ? 
-      ${getModelCategoryGroupBy()}
-      ORDER BY m.created_at DESC
-    `, ['active']);
-    const categories = await getActive3dCategories();
+    const [models, categories] = await Promise.all([
+      db.all(`
+        ${getModelCategorySelect()}
+        WHERE m.status = ?
+        ${getModelCategoryGroupBy()}
+        ORDER BY m.created_at DESC
+      `, ['active']),
+      getActive3dCategories()
+    ]);
     const normalizedModels = normalize3dModels(models);
     const categoryCounts = normalizedModels.reduce((counts, model) => {
       (model.category_slugs || [model.category_slug || model.category]).forEach(slug => {
@@ -1789,6 +1817,7 @@ router.get('/mockups', async (req, res) => {
         .slice(0, 2)
     )).slice(0, 12);
     const recentModels = normalizedModels.slice(0, 24);
+    const displayModels = normalizedModels.slice(0, 48);
     const description = 'Browse free 3D clothing models and apparel mockups for shirts, jackets, pants, dresses and hoodies. Customize online and export transparent PNG renders.';
     const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
     
@@ -1809,7 +1838,7 @@ router.get('/mockups', async (req, res) => {
         getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
       }),
       page: 'design-3d',
-      models: normalizedModels,
+      models: displayModels,
       featuredModels,
       recentModels,
       categoryCounts,
@@ -1849,9 +1878,29 @@ router.get('/design-2d', (req, res) => {
   res.status(404).render('404', { title: 'Not Found', page: '' });
 });
 
-// Retire legacy Sew Patterns URLs in favor of the active 3D model library.
-router.get(['/patterns', '/patterns/item/:id', '/patterns/:slug'], (req, res) => {
+// Retire legacy Sew Patterns URLs while preserving the closest useful intent.
+router.get('/patterns', (req, res) => {
   res.redirect(301, '/mockups');
+});
+
+router.get('/patterns/item/:id', async (req, res, next) => {
+  try {
+    const pattern = await db.get(
+      'SELECT category FROM patterns WHERE id = ? AND status = ?',
+      [req.params.id, 'active']
+    );
+    const target = targetForLegacyPattern(pattern?.category);
+    if (target) return res.redirect(301, target);
+    return res.status(410).render('404', { title: 'Gone', page: '' });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.get('/patterns/:slug', (req, res) => {
+  const target = targetForLegacyPattern(req.params.slug);
+  if (target) return res.redirect(301, target);
+  return res.status(410).render('404', { title: 'Gone', page: '' });
 });
 
 // Get Inspired (Gallery)
@@ -2261,7 +2310,7 @@ router.get('/tools/hoodie-designer', (req, res) => {
 });
 
 router.get('/tools/free-patterns', (req, res) => {
-  res.redirect(301, '/mockups');
+  res.status(410).render('404', { title: 'Gone', page: '' });
 });
 
 router.get(['/tools/clo3d-guide', '/tools/md-guide'], (req, res) => {
