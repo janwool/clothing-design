@@ -343,65 +343,110 @@
 
 
 <!-- Design Modal -->
-<div class="design-modal" id="designModal">
+<div class="design-modal" id="designModal" role="dialog" aria-modal="true" aria-labelledby="designModalTitle" aria-hidden="true">
   <div class="design-modal-overlay" id="designModalOverlay"></div>
-    <div class="design-modal-content">
-      <div class="design-modal-header">
-        <h2>Design Studio - <%= model.name %></h2>
+  <div class="design-modal-content">
+    <div class="design-modal-header">
+      <div class="design-modal-heading">
+        <h2 id="designModalTitle">Design Studio</h2>
+        <span class="design-modal-title-divider" aria-hidden="true">/</span>
+        <p><%= model.name %></p>
+      </div>
+      <div class="design-save-status" id="designSaveStatus" role="status" aria-live="polite">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+          <path d="M20 6L9 17l-5-5"/>
+        </svg>
+        <span id="designSaveStatusText">Saved</span>
+      </div>
       <div class="design-modal-actions">
-        <% if (previewModelFileUrl) { %>
-          <button class="btn btn-secondary btn-small" id="downloadRenderModalBtn">
-            Download HD
-          </button>
-        <% } %>
         <button class="btn btn-primary btn-small" id="saveDesignModal">
-          Apply
+          <span class="apply-label-desktop">Apply design</span>
+          <span class="apply-label-mobile">Apply</span>
+        </button>
+        <button class="design-modal-close" id="designModalClose" type="button" aria-label="Close Design Studio">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
         </button>
       </div>
     </div>
     <div class="design-modal-body">
       <div class="texture-designer">
-        <!-- 3D Preview (Top Left) -->
-        <div class="preview-3d-panel">
-          <% if (previewModelFileUrl) { %>
-            <model-viewer 
-              class="model-viewer-natural"
-              id="designerViewer"
-              src="<%= previewModelFileUrl %>"
-              poster="<%= model.image_url %>"
-              alt="<%= model.name %>"
-              loading="lazy"
-              camera-controls
-              auto-rotate
-              shadow-intensity="1.55"
-              shadow-softness="0.52"
-              exposure="0.66"
-              environment-image="neutral"
-              style="width: 100%; height: 100%;"
-            ></model-viewer>
-          <% } else { %>
-            <div class="designer-placeholder">
-              <img src="<%= model.image_url %>" alt="<%= model.name %>">
-            </div>
-          <% } %>
-          <div class="material-panel" aria-label="Material presets">
-            <div class="material-panel-header">
-              <div>
-                <span class="material-panel-kicker">Fabric</span>
-                <h3>Material Balls</h3>
-              </div>
-              <span class="material-panel-count" id="materialCount">0</span>
-            </div>
-            <div class="material-swatch-grid" id="materialSwatchGrid"></div>
-            <div class="material-readout" id="materialReadout">
-              <strong>Choose a material</strong>
-              <span>Surface response applies to the 3D garment preview.</span>
-            </div>
+        <!-- Editor Tool Rail -->
+        <div class="designer-toolbar" aria-label="Design tools">
+          <div class="toolbar-group">
+            <button class="toolbar-btn active" id="toolSelect" title="Select" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+              </svg>
+              <span>Select</span>
+            </button>
+            <button class="toolbar-btn" id="toolPan" title="Move" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/>
+              </svg>
+              <span>Move</span>
+            </button>
+            <button class="toolbar-btn" id="toolDraw" title="Draw" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+              </svg>
+              <span>Draw</span>
+            </button>
+            <button class="toolbar-btn" id="toolText" title="Add Text" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+              </svg>
+              <span>Text</span>
+            </button>
+            <button class="toolbar-btn" id="toolImage" title="Add Image" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <circle cx="8.5" cy="8.5" r="1.5"/>
+                <polyline points="21 15 16 10 5 21"/>
+              </svg>
+              <span>Image</span>
+            </button>
+            <button class="toolbar-btn" id="toolShape" title="Add Shape" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              </svg>
+              <span>Shape</span>
+            </button>
+          </div>
+          <div class="toolbar-group toolbar-history">
+            <button class="toolbar-btn" id="toolUndo" title="Undo" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 7v6h6"/>
+                <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
+              </svg>
+              <span>Undo</span>
+            </button>
+            <button class="toolbar-btn" id="toolRedo" title="Redo" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 7v6h-6"/>
+                <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13"/>
+              </svg>
+              <span>Redo</span>
+            </button>
+            <button class="toolbar-btn" id="toolDelete" title="Delete" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 6h18"/>
+                <path d="M8 6V4h8v2"/>
+                <path d="M19 6l-1 14H6L5 6"/>
+              </svg>
+              <span>Delete</span>
+            </button>
           </div>
         </div>
 
-        <!-- Main Texture Design Area (Center) -->
+        <!-- Main Texture Design Area -->
         <div class="texture-canvas-area">
+          <div class="canvas-context">
+            <strong>Texture layout</strong>
+            <span>Select a garment panel to edit</span>
+          </div>
           <svg id="textureSvg" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="patternStriped" patternUnits="userSpaceOnUse" width="20" height="20">
@@ -428,70 +473,69 @@
             <g id="textureElements"></g>
             <g id="selectionLayer" class="editor-ui"></g>
           </svg>
+          <div class="canvas-zoom-controls" aria-label="Canvas zoom controls">
+            <button id="canvasZoomOut" type="button" aria-label="Zoom out">−</button>
+            <span id="canvasZoomLabel">100%</span>
+            <button id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
+            <span class="canvas-zoom-divider" aria-hidden="true"></span>
+            <button id="canvasZoomFit" type="button" aria-label="Fit canvas">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Bottom Global Toolbar -->
-        <div class="designer-toolbar">
-          <div class="toolbar-group">
-            <button class="toolbar-btn active" id="toolSelect" title="Select">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+        <!-- 3D Preview and Material Inspector -->
+        <div class="preview-3d-panel">
+          <section class="design-inspector-card design-preview-card">
+            <div class="inspector-card-header">
+              <div>
+                <h3>3D Preview</h3>
+              </div>
+              <span class="preview-live-indicator">Live</span>
+            </div>
+            <div class="preview-model-stage">
+              <% if (previewModelFileUrl) { %>
+                <model-viewer
+                  class="model-viewer-natural"
+                  id="designerViewer"
+                  src="<%= previewModelFileUrl %>"
+                  poster="<%= model.image_url %>"
+                  alt="<%= model.name %>"
+                  loading="lazy"
+                  camera-controls
+                  auto-rotate
+                  shadow-intensity="1.55"
+                  shadow-softness="0.52"
+                  exposure="0.66"
+                  environment-image="neutral"
+                  style="width: 100%; height: 100%;"
+                ></model-viewer>
+              <% } else { %>
+                <div class="designer-placeholder">
+                  <img src="<%= model.image_url %>" alt="<%= model.name %>">
+                </div>
+              <% } %>
+            </div>
+            <p class="preview-rotate-hint">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M20 7v5h-5"/>
+                <path d="M4 17v-5h5"/>
+                <path d="M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1"/>
               </svg>
-            </button>
-            <button class="toolbar-btn" id="toolPan" title="Pan">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/>
-              </svg>
-            </button>
-            <button class="toolbar-btn" id="toolDraw" title="Draw">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"/>
-                <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
-              </svg>
-            </button>
-          </div>
-          <div class="toolbar-divider"></div>
-          <div class="toolbar-group">
-            <button class="toolbar-btn" id="toolText" title="Add Text">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
-              </svg>
-            </button>
-            <button class="toolbar-btn" id="toolImage" title="Add Image">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                <circle cx="8.5" cy="8.5" r="1.5"/>
-                <polyline points="21 15 16 10 5 21"/>
-              </svg>
-            </button>
-            <button class="toolbar-btn" id="toolShape" title="Add Shape">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              </svg>
-            </button>
-          </div>
-          <div class="toolbar-divider"></div>
-          <div class="toolbar-group">
-            <button class="toolbar-btn" id="toolUndo" title="Undo">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 7v6h6"/>
-                <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
-              </svg>
-            </button>
-            <button class="toolbar-btn" id="toolRedo" title="Redo">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 7v6h-6"/>
-                <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13"/>
-              </svg>
-            </button>
-            <button class="toolbar-btn" id="toolDelete" title="Delete">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 6h18"/>
-                <path d="M8 6V4h8v2"/>
-                <path d="M19 6l-1 14H6L5 6"/>
-              </svg>
-            </button>
-          </div>
+              Drag to rotate
+            </p>
+          </section>
+          <section class="material-panel" aria-label="Material presets">
+            <div class="material-panel-header">
+              <div>
+                <h3>Choose material</h3>
+              </div>
+              <span class="material-panel-count" id="materialCount">0</span>
+            </div>
+            <div class="material-swatch-grid" id="materialSwatchGrid"></div>
+          </section>
         </div>
       </div>
     </div>
@@ -545,9 +589,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const designNowBtn = document.getElementById('designNowBtn');
   const designModal = document.getElementById('designModal');
   const designModalOverlay = document.getElementById('designModalOverlay');
+  const designModalClose = document.getElementById('designModalClose');
   const saveDesignModal = document.getElementById('saveDesignModal');
+  const designSaveStatus = document.getElementById('designSaveStatus');
+  const designSaveStatusText = document.getElementById('designSaveStatusText');
   const downloadRenderBtn = document.getElementById('downloadRenderBtn');
-  const downloadRenderModalBtn = document.getElementById('downloadRenderModalBtn');
   const downloadRenderStatus = document.getElementById('downloadRenderStatus');
   const designCtaBtn = document.getElementById('designCtaBtn');
   const designerViewer = document.getElementById('designerViewer');
@@ -558,8 +604,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const texturePattern = document.getElementById('texturePattern');
   const selectionLayer = document.getElementById('selectionLayer');
   const materialSwatchGrid = document.getElementById('materialSwatchGrid');
-  const materialReadout = document.getElementById('materialReadout');
   const materialCount = document.getElementById('materialCount');
+  const canvasZoomOut = document.getElementById('canvasZoomOut');
+  const canvasZoomIn = document.getElementById('canvasZoomIn');
+  const canvasZoomFit = document.getElementById('canvasZoomFit');
+  const canvasZoomLabel = document.getElementById('canvasZoomLabel');
   const elementToolbar = document.createElement('div');
   elementToolbar.className = 'element-toolbar';
   elementToolbar.dataset.editorToolbar = 'true';
@@ -583,6 +632,8 @@ document.addEventListener('DOMContentLoaded', () => {
     historyIndex: -1,
     svgWidth: 800,
     svgHeight: 600,
+    zoom: 1,
+    zoomMode: 'fit',
     textureUpdateTimer: null,
     textureUpdateId: 0,
     lastTextClick: { element: null, time: 0 },
@@ -595,6 +646,7 @@ document.addEventListener('DOMContentLoaded', () => {
     isExportingRender: false,
     coverCaptureHidden: []
   };
+  let modalReturnFocus = null;
 
   const toolButtons = {
     select: document.getElementById('toolSelect'),
@@ -606,8 +658,36 @@ document.addEventListener('DOMContentLoaded', () => {
     arrow: null
   };
 
+  function setDesignSaveStatus(text, isDirty = false) {
+    if (designSaveStatusText) designSaveStatusText.textContent = text;
+    designSaveStatus?.classList.toggle('is-dirty', isDirty);
+  }
+
+  function applyCanvasZoom(nextZoom, mode = 'manual') {
+    const zoom = Math.min(2.5, Math.max(0.2, Number(nextZoom) || 1));
+    state.zoom = zoom;
+    state.zoomMode = mode;
+    textureSvg.style.width = `${state.svgWidth * zoom}px`;
+    textureSvg.style.height = `${state.svgHeight * zoom}px`;
+    textureSvg.style.maxWidth = 'none';
+    textureSvg.style.maxHeight = 'none';
+    if (canvasZoomLabel) canvasZoomLabel.textContent = `${Math.round(zoom * 100)}%`;
+    requestAnimationFrame(() => positionElementToolbar());
+  }
+
+  function fitCanvasZoom() {
+    if (!textureCanvasArea || !state.svgWidth || !state.svgHeight) return;
+    const isCompact = window.matchMedia('(max-width: 900px)').matches;
+    const availableWidth = Math.max(160, textureCanvasArea.clientWidth - (isCompact ? 28 : 48));
+    const availableHeight = Math.max(120, textureCanvasArea.clientHeight - (isCompact ? 118 : 154));
+    const fitScale = Math.min(availableWidth / state.svgWidth, availableHeight / state.svgHeight, 1.4);
+    applyCanvasZoom(fitScale, 'fit');
+  }
+
   function openModal() {
+    modalReturnFocus = document.activeElement;
     designModal.classList.add('active');
+    designModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     loadTextureDimensions();
     renderSelection();
@@ -615,6 +695,10 @@ document.addEventListener('DOMContentLoaded', () => {
       applyMaterialToViewer(designerViewer, state.selectedMaterial);
     }
     scheduleTexturePreviewUpdate();
+    requestAnimationFrame(() => {
+      fitCanvasZoom();
+      designModalClose?.focus({ preventScroll: true });
+    });
   }
 
   function hexToRgbUnit(hex) {
@@ -710,12 +794,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function applyMaterialPreset(material) {
     state.selectedMaterial = material;
+    setDesignSaveStatus('Unsaved changes', true);
     materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
       button.classList.toggle('active', button.dataset.materialId === material.id);
     });
-    if (materialReadout) {
-      materialReadout.innerHTML = `<strong>${material.name}</strong><span>${material.family} · ${material.weave} · roughness ${Math.round(material.roughness * 100)}%</span>`;
-    }
     await Promise.all([
       applyMaterialToViewer(detailViewer, material),
       applyMaterialToViewer(designerViewer, material)
@@ -756,9 +838,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (index === 0) {
         state.selectedMaterial = material;
         button.classList.add('active');
-        if (materialReadout) {
-          materialReadout.innerHTML = `<strong>${material.name}</strong><span>${material.family} · ${material.weave} · roughness ${Math.round(material.roughness * 100)}%</span>`;
-        }
       }
     });
   }
@@ -876,6 +955,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     renderSelection();
     scheduleTexturePreviewUpdate();
+    requestAnimationFrame(() => {
+      if (state.zoomMode === 'fit') fitCanvasZoom();
+      else applyCanvasZoom(state.zoom);
+    });
   }
 
   function parseSvgViewBox(sourceSvg) {
@@ -983,12 +1066,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function closeModal() {
     designModal.classList.remove('active');
+    designModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
+    modalReturnFocus?.focus?.({ preventScroll: true });
   }
 
   designNowBtn?.addEventListener('click', openModal);
   designCtaBtn?.addEventListener('click', openModal);
   designModalOverlay?.addEventListener('click', closeModal);
+  designModalClose?.addEventListener('click', closeModal);
+  canvasZoomOut?.addEventListener('click', () => applyCanvasZoom(state.zoom * 0.85));
+  canvasZoomIn?.addEventListener('click', () => applyCanvasZoom(state.zoom / 0.85));
+  canvasZoomFit?.addEventListener('click', fitCanvasZoom);
 
   function setTool(tool) {
     state.tool = tool;
@@ -1160,12 +1249,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function saveDesignAndClose() {
     state.textEditor?.commit();
+    setDesignSaveStatus('Applying…');
     const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
     state.finalTextureUrl = textureUrl;
     await Promise.all([
       applyTextureToViewer(designerViewer, textureUrl),
       applyTextureToViewer(detailViewer, textureUrl)
     ]);
+    setDesignSaveStatus('Saved');
     closeModal();
   }
 
@@ -1175,7 +1266,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function setExportingState(isExporting) {
     state.isExportingRender = isExporting;
-    [downloadRenderBtn, downloadRenderModalBtn].forEach((button) => {
+    [downloadRenderBtn].forEach((button) => {
       if (!button) return;
       button.disabled = isExporting;
       button.classList.toggle('is-loading', isExporting);
@@ -2705,14 +2796,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   textureCanvasArea.addEventListener('scroll', () => positionElementToolbar());
-  window.addEventListener('resize', () => positionElementToolbar());
+  window.addEventListener('resize', () => {
+    positionElementToolbar();
+    if (state.zoomMode === 'fit' && designModal.classList.contains('active')) fitCanvasZoom();
+  });
 
   function saveHistory() {
     const snapshot = getCleanElementsHtml();
     if (state.history[state.historyIndex] === snapshot) return;
+    const hadHistory = state.historyIndex >= 0;
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push(snapshot);
     state.historyIndex++;
+    if (hadHistory) setDesignSaveStatus('Unsaved changes', true);
     scheduleTexturePreviewUpdate();
   }
 
@@ -2723,6 +2819,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .map(element => parseInt((element.id || '').replace('element-', ''), 10))
       .filter(Number.isFinite);
     state.elementCounter = Math.max(state.elementCounter, 0, ...ids);
+    setDesignSaveStatus('Unsaved changes', true);
     scheduleTexturePreviewUpdate();
   }
 
@@ -2756,7 +2853,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.addEventListener('keydown', (event) => {
     if (!designModal.classList.contains('active')) return;
-    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeModal();
+    } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
       event.shiftKey ? redo() : undo();
     } else if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {
@@ -2778,7 +2878,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
   downloadRenderBtn?.addEventListener('click', downloadDesignedRender);
-  downloadRenderModalBtn?.addEventListener('click', downloadDesignedRender);
 
   // Initialize history
   renderMaterialSwatches();
