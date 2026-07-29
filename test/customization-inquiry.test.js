@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validateInquiryPayload } = require('../lib/customization-inquiry');
-const { parseImageDataUrl } = require('../lib/object-storage');
+const { deleteObject, parseImageDataUrl, uploadImageDataUrl } = require('../lib/object-storage');
 
 const pngHeader = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
 const webpHeader = Buffer.from('RIFF0000WEBP', 'ascii');
@@ -63,4 +63,44 @@ test('rejects image data URLs with spoofed content', () => {
     () => parseImageDataUrl('data:image/png;base64,aGVsbG8=', 'Screenshot'),
     /invalid image signature/
   );
+});
+
+test('uses the Cloudflare R2 binding when it is available', async t => {
+  const previousWorkerEnv = globalThis.__WORKER_ENV__;
+  const calls = [];
+  globalThis.__WORKER_ENV__ = {
+    ...(previousWorkerEnv || {}),
+    OBJECT_FILE: {
+      async put(key, bytes, options) {
+        calls.push({ action: 'put', key, size: bytes.length, contentType: options.httpMetadata.contentType });
+      },
+      async delete(key) {
+        calls.push({ action: 'delete', key });
+      }
+    }
+  };
+  t.after(() => {
+    globalThis.__WORKER_ENV__ = previousWorkerEnv;
+  });
+
+  const uploaded = await uploadImageDataUrl(dataUrl('image/png', pngHeader), {
+    keyBase: 'object-file/test/design-2d',
+    label: '2D screenshot'
+  });
+  await deleteObject(uploaded.key);
+
+  assert.equal(uploaded.key, 'object-file/test/design-2d.png');
+  assert.match(uploaded.url, /object-file\/test\/design-2d\.png$/);
+  assert.deepEqual(calls, [
+    {
+      action: 'put',
+      key: 'object-file/test/design-2d.png',
+      size: pngHeader.length,
+      contentType: 'image/png'
+    },
+    {
+      action: 'delete',
+      key: 'object-file/test/design-2d.png'
+    }
+  ]);
 });

@@ -11,5 +11,9 @@ binding = "DB"
 database_name = "clothing-design"
 database_id = "fcbfbc5c-58d5-46dd-a8c6-43c91c3d730c"
 
+[[r2_buckets]]
+binding = "OBJECT_FILE"
+bucket_name = "clothing-design"
+
 [assets]
 directory = "public"
