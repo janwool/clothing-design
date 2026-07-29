@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 const db = require('../lib/db');
 const { generateSlug } = require('../lib/slug');
+const { ensureCustomizationInquiriesTable } = require('../lib/customization-inquiries-db');
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 
 // Cloudflare R2 Configuration
@@ -283,14 +284,55 @@ function requireAuth(req, res, next) {
   next();
 }
 
+const INQUIRY_PAGE_SIZE = 30;
+const INQUIRY_STATUSES = new Set(['all', 'pending', 'contacted', 'completed', 'closed']);
+
+function normalizeInquiryStatus(value) {
+  const status = String(value || 'all').trim().toLowerCase();
+  return INQUIRY_STATUSES.has(status) ? status : 'all';
+}
+
+function normalizeInquiryPage(value) {
+  const page = Number.parseInt(value, 10);
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
+function formatInquiryDate(value) {
+  if (!value) return '—';
+  const raw = String(value);
+  const isoValue = raw.includes('T') ? raw : `${raw.replace(' ', 'T')}Z`;
+  const date = new Date(isoValue);
+  if (Number.isNaN(date.getTime())) return raw;
+  return new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }).format(date);
+}
+
+function safeHttpUrl(value) {
+  try {
+    const url = new URL(String(value || ''));
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch (error) {
+    return '';
+  }
+}
+
 // Admin Dashboard
 router.get('/', requireAuth, async (req, res) => {
   try {
+    await ensureCustomizationInquiriesTable();
     const models3d = await db.get('SELECT COUNT(*) as count FROM models_3d');
     const models2d = await db.get('SELECT COUNT(*) as count FROM models_2d');
     const gallery = await db.get('SELECT COUNT(*) as count FROM gallery_items');
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
     const users = await db.get('SELECT COUNT(*) as count FROM users');
+    const inquiries = await db.get('SELECT COUNT(*) as count FROM customization_inquiries');
 
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
@@ -300,14 +342,97 @@ router.get('/', requireAuth, async (req, res) => {
         models2d: models2d ? models2d.count : 0,
         gallery: gallery ? gallery.count : 0,
         tools: tools ? tools.count : 0,
-        users: users ? users.count : 0
+        users: users ? users.count : 0,
+        inquiries: inquiries ? inquiries.count : 0
       }
     });
   } catch (err) {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0 }
+    });
+  }
+});
+
+// ==================== Customization Inquiries ====================
+router.get('/inquiries', requireAuth, async (req, res) => {
+  const status = normalizeInquiryStatus(req.query.status);
+  const search = String(req.query.q || '').trim().slice(0, 100);
+  const requestedPage = normalizeInquiryPage(req.query.page);
+
+  try {
+    await ensureCustomizationInquiriesTable();
+    const where = [];
+    const params = [];
+
+    if (status !== 'all') {
+      where.push('status = ?');
+      params.push(status);
+    }
+    if (search) {
+      const pattern = `%${search}%`;
+      where.push('(reference_code LIKE ? OR contact_name LIKE ? OR email LIKE ? OR model_name LIKE ?)');
+      params.push(pattern, pattern, pattern, pattern);
+    }
+
+    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const totalRow = await db.get(
+      `SELECT COUNT(*) as count FROM customization_inquiries ${whereSql}`,
+      params
+    );
+    const total = Number(totalRow?.count || 0);
+    const pageCount = Math.max(1, Math.ceil(total / INQUIRY_PAGE_SIZE));
+    const page = Math.min(requestedPage, pageCount);
+    const offset = (page - 1) * INQUIRY_PAGE_SIZE;
+    const items = await db.all(
+      `SELECT
+        id, reference_code, model_id, model_slug, model_name,
+        contact_name, email, quantity, notes,
+        snapshot_3d_url, snapshot_2d_url, source_url,
+        status, created_at, updated_at
+      FROM customization_inquiries
+      ${whereSql}
+      ORDER BY created_at DESC, id DESC
+      LIMIT ? OFFSET ?`,
+      [...params, INQUIRY_PAGE_SIZE, offset]
+    );
+    const stats = await db.get(`SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
+      SUM(CASE WHEN status != 'pending' THEN 1 ELSE 0 END) as handled
+      FROM customization_inquiries`);
+
+    res.render('admin/inquiries', {
+      title: 'Customization Inquiries',
+      page: 'admin-inquiries',
+      items: (items || []).map(item => ({
+        ...item,
+        snapshot_3d_url_safe: safeHttpUrl(item.snapshot_3d_url),
+        snapshot_2d_url_safe: safeHttpUrl(item.snapshot_2d_url),
+        source_url_safe: safeHttpUrl(item.source_url),
+        created_at_display: formatInquiryDate(item.created_at),
+        updated_at_display: formatInquiryDate(item.updated_at)
+      })),
+      inquiryFilters: { status, search },
+      inquiryPagination: { page, pageCount, total },
+      inquiryStats: {
+        total: Number(stats?.total || 0),
+        pending: Number(stats?.pending || 0),
+        handled: Number(stats?.handled || 0)
+      },
+      error: ''
+    });
+  } catch (err) {
+    console.error('Failed to load customization inquiries:', err);
+    res.render('admin/inquiries', {
+      title: 'Customization Inquiries',
+      page: 'admin-inquiries',
+      items: [],
+      inquiryFilters: { status, search },
+      inquiryPagination: { page: 1, pageCount: 1, total: 0 },
+      inquiryStats: { total: 0, pending: 0, handled: 0 },
+      error: 'Customization inquiries could not be loaded.'
     });
   }
 });

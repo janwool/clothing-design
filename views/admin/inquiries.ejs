@@ -1,0 +1,281 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main">
+    <div class="admin-header inquiry-page-header">
+      <div>
+        <span class="admin-eyebrow">Operations</span>
+        <h1 class="admin-title">Custom Inquiries</h1>
+        <p class="admin-subtitle">Review production requests with their current 3D and 2D design attachments.</p>
+      </div>
+      <button class="sidebar-toggle" type="button" aria-label="Open admin navigation">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="inquiry-stats">
+      <div class="inquiry-stat inquiry-stat-total">
+        <span>All requests</span>
+        <strong><%= inquiryStats.total %></strong>
+        <small>Lifetime submissions</small>
+      </div>
+      <div class="inquiry-stat">
+        <span>Pending</span>
+        <strong><%= inquiryStats.pending %></strong>
+        <small>Waiting for review</small>
+      </div>
+      <div class="inquiry-stat">
+        <span>Other status</span>
+        <strong><%= inquiryStats.handled %></strong>
+        <small>Contacted or completed</small>
+      </div>
+    </div>
+
+    <section class="data-card inquiry-data-card">
+      <div class="data-header inquiry-data-header">
+        <div>
+          <h2 class="data-title">Inquiry list</h2>
+          <p><%= inquiryPagination.total %> matching <%= inquiryPagination.total === 1 ? 'request' : 'requests' %></p>
+        </div>
+        <form class="inquiry-filters" action="/admin/inquiries" method="get">
+          <label>
+            <span class="sr-only">Search inquiries</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" name="q" value="<%= inquiryFilters.search %>" placeholder="Reference, email, model…">
+          </label>
+          <select name="status" aria-label="Filter by status">
+            <option value="all" <%= inquiryFilters.status === 'all' ? 'selected' : '' %>>All statuses</option>
+            <option value="pending" <%= inquiryFilters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+            <option value="contacted" <%= inquiryFilters.status === 'contacted' ? 'selected' : '' %>>Contacted</option>
+            <option value="completed" <%= inquiryFilters.status === 'completed' ? 'selected' : '' %>>Completed</option>
+            <option value="closed" <%= inquiryFilters.status === 'closed' ? 'selected' : '' %>>Closed</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-small">Filter</button>
+          <% if (inquiryFilters.search || inquiryFilters.status !== 'all') {%>
+            <a href="/admin/inquiries" class="inquiry-clear-filter">Clear</a>
+          <% }%>
+        </form>
+      </div>
+
+      <% if (error) {%>
+        <div class="inquiry-error" role="alert"><%= error %></div>
+      <% }%>
+
+      <% if (items && items.length > 0) {%>
+        <div class="inquiry-table-wrap">
+          <table class="data-table inquiry-table">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Contact</th>
+                <th>Model</th>
+                <th>Quantity</th>
+                <th>Design</th>
+                <th>Status</th>
+                <th><span class="sr-only">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% items.forEach(item => {%>
+                <tr>
+                  <td>
+                    <div class="inquiry-reference-cell">
+                      <strong><%= item.reference_code %></strong>
+                      <span><%= item.created_at_display %></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="inquiry-contact-cell">
+                      <strong><%= item.contact_name %></strong>
+                      <a href="mailto:<%= item.email %>"><%= item.email %></a>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="inquiry-model-cell">
+                      <strong><%= item.model_name %></strong>
+                      <% if (item.source_url_safe) {%>
+                        <a href="<%= item.source_url_safe %>" target="_blank" rel="noopener">Open source page ↗</a>
+                      <% }%>
+                    </div>
+                  </td>
+                  <td><strong class="inquiry-quantity"><%= Number(item.quantity || 0).toLocaleString('en-US') %></strong></td>
+                  <td>
+                    <div class="inquiry-mini-previews">
+                      <% if (item.snapshot_3d_url_safe) {%>
+                        <img src="<%= item.snapshot_3d_url_safe %>" alt="3D design for <%= item.reference_code %>" loading="lazy">
+                      <% }%>
+                      <% if (item.snapshot_2d_url_safe) {%>
+                        <img src="<%= item.snapshot_2d_url_safe %>" alt="2D design for <%= item.reference_code %>" loading="lazy">
+                      <% }%>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="inquiry-status inquiry-status-<%= item.status || 'pending' %>">
+                      <i aria-hidden="true"></i><%= item.status || 'pending' %>
+                    </span>
+                  </td>
+                  <td>
+                    <button type="button" class="inquiry-view-button" data-inquiry-open="<%= item.id %>">
+                      View
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M5 12h14M13 6l6 6-6 6"/>
+                      </svg>
+                    </button>
+                  </td>
+                </tr>
+              <% })%>
+            </tbody>
+          </table>
+        </div>
+
+        <% if (inquiryPagination.pageCount > 1) {%>
+          <nav class="inquiry-pagination" aria-label="Inquiry pages">
+            <% if (inquiryPagination.page > 1) {%>
+              <a href="/admin/inquiries?q=<%= encodeURIComponent(inquiryFilters.search) %>&status=<%= encodeURIComponent(inquiryFilters.status) %>&page=<%= inquiryPagination.page - 1 %>">← Previous</a>
+            <% } else {%>
+              <span>← Previous</span>
+            <% }%>
+            <strong>Page <%= inquiryPagination.page %> of <%= inquiryPagination.pageCount %></strong>
+            <% if (inquiryPagination.page < inquiryPagination.pageCount) {%>
+              <a href="/admin/inquiries?q=<%= encodeURIComponent(inquiryFilters.search) %>&status=<%= encodeURIComponent(inquiryFilters.status) %>&page=<%= inquiryPagination.page + 1 %>">Next →</a>
+            <% } else {%>
+              <span>Next →</span>
+            <% }%>
+          </nav>
+        <% }%>
+      <% } else if (!error) {%>
+        <div class="empty-state inquiry-empty-state">
+          <div class="inquiry-empty-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z"/>
+              <path d="M8 9h8M8 13h5"/>
+            </svg>
+          </div>
+          <h3><%= inquiryFilters.search || inquiryFilters.status !== 'all' ? 'No matching inquiries' : 'No inquiries yet' %></h3>
+          <p><%= inquiryFilters.search || inquiryFilters.status !== 'all' ? 'Try a different search or clear the current filter.' : 'New customization requests will appear here automatically.' %></p>
+          <% if (inquiryFilters.search || inquiryFilters.status !== 'all') {%>
+            <a href="/admin/inquiries" class="btn btn-secondary btn-small">Clear filters</a>
+          <% }%>
+        </div>
+      <% }%>
+    </section>
+  </main>
+</div>
+
+<% items.forEach(item => {%>
+  <div class="inquiry-detail-overlay" id="inquiry-detail-<%= item.id %>" hidden aria-hidden="true">
+    <button type="button" class="inquiry-detail-backdrop" data-inquiry-close aria-label="Close inquiry details"></button>
+    <article class="inquiry-detail-panel" role="dialog" aria-modal="true" aria-labelledby="inquiry-detail-title-<%= item.id %>">
+      <header class="inquiry-detail-header">
+        <div>
+          <span>Customization request</span>
+          <h2 id="inquiry-detail-title-<%= item.id %>"><%= item.reference_code %></h2>
+          <p>Submitted <%= item.created_at_display %></p>
+        </div>
+        <button type="button" class="inquiry-detail-close" data-inquiry-close aria-label="Close inquiry details">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M18 6 6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </header>
+
+      <div class="inquiry-detail-body">
+        <div class="inquiry-detail-facts">
+          <div><span>Contact</span><strong><%= item.contact_name %></strong><a href="mailto:<%= item.email %>"><%= item.email %></a></div>
+          <div><span>Quantity</span><strong><%= Number(item.quantity || 0).toLocaleString('en-US') %></strong></div>
+          <div><span>Model</span><strong><%= item.model_name %></strong><small><%= item.model_slug || '—' %></small></div>
+          <div><span>Status</span><strong class="inquiry-detail-status"><%= item.status || 'pending' %></strong></div>
+        </div>
+
+        <section class="inquiry-detail-section">
+          <div class="inquiry-detail-section-heading">
+            <div>
+              <span>Attachments</span>
+              <h3>Current design</h3>
+            </div>
+            <% if (item.source_url_safe) {%>
+              <a href="<%= item.source_url_safe %>" target="_blank" rel="noopener">Open source page ↗</a>
+            <% }%>
+          </div>
+          <div class="inquiry-detail-images">
+            <figure>
+              <% if (item.snapshot_3d_url_safe) {%>
+                <a href="<%= item.snapshot_3d_url_safe %>" target="_blank" rel="noopener">
+                  <img src="<%= item.snapshot_3d_url_safe %>" alt="3D design for <%= item.reference_code %>" loading="lazy">
+                </a>
+              <% } else {%>
+                <div class="inquiry-image-missing">Preview unavailable</div>
+              <% }%>
+              <figcaption>3D design</figcaption>
+            </figure>
+            <figure>
+              <% if (item.snapshot_2d_url_safe) {%>
+                <a href="<%= item.snapshot_2d_url_safe %>" target="_blank" rel="noopener">
+                  <img src="<%= item.snapshot_2d_url_safe %>" alt="2D design for <%= item.reference_code %>" loading="lazy">
+                </a>
+              <% } else {%>
+                <div class="inquiry-image-missing">Preview unavailable</div>
+              <% }%>
+              <figcaption>2D design</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section class="inquiry-detail-section inquiry-notes">
+          <span>Requirements</span>
+          <p><%= item.notes || 'No additional requirements were provided.' %></p>
+        </section>
+      </div>
+    </article>
+  </div>
+<% })%>
+
+<script>
+(() => {
+  let returnFocus = null;
+
+  function closeInquiryDetail(overlay) {
+    if (!overlay) return;
+    overlay.hidden = true;
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    returnFocus?.focus?.();
+  }
+
+  document.addEventListener('click', event => {
+    const openButton = event.target.closest('[data-inquiry-open]');
+    if (openButton) {
+      const overlay = document.getElementById('inquiry-detail-' + openButton.dataset.inquiryOpen);
+      if (!overlay) return;
+      returnFocus = openButton;
+      overlay.hidden = false;
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      overlay.querySelector('.inquiry-detail-close')?.focus();
+      return;
+    }
+
+    const closeButton = event.target.closest('[data-inquiry-close]');
+    if (closeButton) {
+      closeInquiryDetail(closeButton.closest('.inquiry-detail-overlay'));
+    }
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    const activeOverlay = document.querySelector('.inquiry-detail-overlay:not([hidden])');
+    closeInquiryDetail(activeOverlay);
+  });
+})();
+</script>
+
+<%- include('partials/footer') %>

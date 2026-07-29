@@ -37,6 +37,11 @@
         <div class="stat-label">Users</div>
         <div class="stat-value"><%= counts.users %></div>
       </div>
+      <a href="/admin/inquiries" class="stat-card stat-card-link">
+        <div class="stat-label">Custom Inquiries</div>
+        <div class="stat-value"><%= counts.inquiries %></div>
+        <span class="stat-link-label">Open list →</span>
+      </a>
     </div>
     
     <!-- Quick Links -->
@@ -48,6 +53,7 @@
         <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);">
           <a href="/admin/models-3d" class="btn btn-primary" style="justify-content: center;">Manage 3D Models</a>
           <a href="/admin/models-2d" class="btn btn-primary" style="justify-content: center;">Manage 2D Templates</a>
+          <a href="/admin/inquiries" class="btn btn-primary" style="justify-content: center;">View Custom Inquiries</a>
         </div>
       </div>
     </div>

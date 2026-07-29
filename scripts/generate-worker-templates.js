@@ -32,6 +32,9 @@ const templateLocals = [
   'related',
   'model',
   'counts',
+  'inquiryFilters',
+  'inquiryPagination',
+  'inquiryStats',
   'articles',
   'article',
   'resources'

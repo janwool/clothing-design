@@ -18,6 +18,7 @@ const viewsDir = path.join(appRootDir, 'views');
 const SESSION_COOKIE_NAME = 'cd_session';
 const DEFAULT_SOCIAL_IMAGE = 'https://cdn.cloz-design.com/site/icon.png';
 const CDN_BASE_URL = 'https://cdn.cloz-design.com';
+const JSON_BODY_LIMIT_BYTES = 14 * 1024 * 1024;
 
 function requireLocalOnly(moduleName) {
   const nodeRequire = eval('require');
@@ -291,7 +292,7 @@ function workerBodyParser(req, res, next) {
     return;
   }
 
-  readRequestBody(req)
+  readRequestBody(req, JSON_BODY_LIMIT_BYTES)
     .then(text => {
       if (contentType === 'application/json') {
         req.body = text.trim() ? JSON.parse(text) : {};
@@ -323,7 +324,7 @@ if (isWorkerRuntime) {
   app.use(workerBodyParser);
 } else {
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
+  app.use(express.json({ limit: JSON_BODY_LIMIT_BYTES }));
 }
 if (isWorkerRuntime) {
   app.use(workerSessionMiddleware);
@@ -388,6 +389,7 @@ if (isWorkerRuntime) {
 app.set('view engine', 'ejs');
 app.set('views', viewsDir);
 
+app.use('/api/customization-inquiries', require('./routes/customization-inquiries'));
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/admin', require('./routes/admin'));
@@ -398,6 +400,12 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  if (String(req.path || '').startsWith('/api/')) {
+    return res.status(err.status || 500).json({
+      success: false,
+      error: err.status === 413 ? 'The attached design screenshots are too large.' : 'Request failed.'
+    });
+  }
   res.status(err.status || 500).render('error', { title: 'Error', page: '' });
 });
 

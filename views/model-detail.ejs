@@ -87,6 +87,13 @@
               Download HD Render
             </button>
           <% } %>
+          <button type="button" class="btn btn-consult btn-large" id="customizationInquiryBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4v8z"/>
+              <path d="M8 9h8M8 13h5"/>
+            </svg>
+            Request Customization
+          </button>
           <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
         </div>
 
@@ -341,6 +348,118 @@
 </section>
 <% } %>
 
+<!-- Customization Inquiry Modal -->
+<div class="customization-modal" id="customizationInquiryModal" role="dialog" aria-modal="true" aria-labelledby="customizationInquiryTitle" aria-hidden="true">
+  <button class="customization-modal-overlay" id="customizationInquiryOverlay" type="button" aria-label="Close customization request"></button>
+  <div class="customization-modal-content">
+    <header class="customization-modal-header">
+      <div>
+        <span>Production inquiry</span>
+        <h2 id="customizationInquiryTitle">Request customization</h2>
+        <p>Tell us how to reach you and the quantity you need. Your current design will be attached automatically.</p>
+      </div>
+      <button class="customization-modal-close" id="customizationInquiryClose" type="button" aria-label="Close customization request">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="customization-modal-body">
+      <form class="customization-form" id="customizationInquiryForm">
+        <div class="customization-form-grid">
+          <label class="customization-field">
+            <span>Contact name <b>*</b></span>
+            <input type="text" name="name" autocomplete="name" maxlength="100" required placeholder="Your name">
+          </label>
+          <label class="customization-field">
+            <span>Email <b>*</b></span>
+            <input type="email" name="email" autocomplete="email" maxlength="180" required placeholder="you@example.com">
+          </label>
+          <label class="customization-field customization-field-quantity">
+            <span>Customization quantity <b>*</b></span>
+            <input type="number" name="quantity" min="1" max="1000000" step="1" inputmode="numeric" required placeholder="e.g. 500">
+          </label>
+          <label class="customization-field customization-field-wide">
+            <span>Requirements</span>
+            <textarea name="notes" maxlength="3000" rows="4" placeholder="Tell us about fabric, colors, sizes, delivery market, timeline, or other production requirements."></textarea>
+          </label>
+          <label class="customization-honeypot" aria-hidden="true">
+            <span>Website</span>
+            <input type="text" name="website" tabindex="-1" autocomplete="off">
+          </label>
+        </div>
+
+        <section class="customization-attachments" aria-labelledby="customizationAttachmentsTitle">
+          <div class="customization-section-heading">
+            <div>
+              <span>Design attachments</span>
+              <h3 id="customizationAttachmentsTitle">Current 3D and 2D design</h3>
+            </div>
+            <button type="button" class="customization-refresh" id="customizationRefreshSnapshots">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20 11a8 8 0 10-2.34 5.66M20 4v7h-7"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          <div class="customization-preview-grid">
+            <figure class="customization-preview-card">
+              <div class="customization-preview-media">
+                <img id="customizationPreview3d" alt="Current 3D clothing design screenshot">
+                <div class="customization-preview-loading" id="customizationPreview3dLoading">
+                  <span class="customization-spinner" aria-hidden="true"></span>
+                  <span>Rendering 3D view…</span>
+                </div>
+              </div>
+              <figcaption><strong>3D design</strong><span>High-resolution garment view</span></figcaption>
+            </figure>
+            <figure class="customization-preview-card">
+              <div class="customization-preview-media">
+                <img id="customizationPreview2d" alt="Current 2D texture layout screenshot">
+                <div class="customization-preview-loading" id="customizationPreview2dLoading">
+                  <span class="customization-spinner" aria-hidden="true"></span>
+                  <span>Capturing 2D layout…</span>
+                </div>
+              </div>
+              <figcaption><strong>2D design</strong><span>Artwork and panel layout</span></figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <p class="customization-form-status" id="customizationInquiryStatus" role="alert" aria-live="polite"></p>
+        <footer class="customization-form-actions">
+          <p>We use these details only to respond to this customization request.</p>
+          <div>
+            <button type="button" class="btn btn-secondary" id="customizationInquiryCancel">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="customizationInquirySubmit" disabled>
+              <span>Submit request</span>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"/>
+              </svg>
+            </button>
+          </div>
+        </footer>
+      </form>
+
+      <section class="customization-success" id="customizationInquirySuccess" hidden>
+        <div class="customization-success-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M20 6L9 17l-5-5"/>
+          </svg>
+        </div>
+        <span>Request received</span>
+        <h3>Thank you — we’ll be in touch.</h3>
+        <p>Our team will reply within <strong>3 business days</strong>. Please watch your email messages.</p>
+        <div class="customization-reference">
+          <span>Reference</span>
+          <strong id="customizationInquiryReference">—</strong>
+        </div>
+        <button type="button" class="btn btn-primary" id="customizationInquiryDone">Done</button>
+      </section>
+    </div>
+  </div>
+</div>
 
 <!-- Design Modal -->
 <div class="design-modal" id="designModal" role="dialog" aria-modal="true" aria-labelledby="designModalTitle" aria-hidden="true">
@@ -596,6 +715,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const downloadRenderBtn = document.getElementById('downloadRenderBtn');
   const downloadRenderStatus = document.getElementById('downloadRenderStatus');
   const designCtaBtn = document.getElementById('designCtaBtn');
+  const customizationInquiryBtn = document.getElementById('customizationInquiryBtn');
+  const customizationInquiryModal = document.getElementById('customizationInquiryModal');
+  const customizationInquiryOverlay = document.getElementById('customizationInquiryOverlay');
+  const customizationInquiryClose = document.getElementById('customizationInquiryClose');
+  const customizationInquiryCancel = document.getElementById('customizationInquiryCancel');
+  const customizationInquiryDone = document.getElementById('customizationInquiryDone');
+  const customizationInquiryForm = document.getElementById('customizationInquiryForm');
+  const customizationInquirySubmit = document.getElementById('customizationInquirySubmit');
+  const customizationInquiryStatus = document.getElementById('customizationInquiryStatus');
+  const customizationInquirySuccess = document.getElementById('customizationInquirySuccess');
+  const customizationInquiryReference = document.getElementById('customizationInquiryReference');
+  const customizationRefreshSnapshots = document.getElementById('customizationRefreshSnapshots');
+  const customizationPreview3d = document.getElementById('customizationPreview3d');
+  const customizationPreview2d = document.getElementById('customizationPreview2d');
+  const customizationPreview3dLoading = document.getElementById('customizationPreview3dLoading');
+  const customizationPreview2dLoading = document.getElementById('customizationPreview2dLoading');
   const designerViewer = document.getElementById('designerViewer');
   const detailViewer = document.querySelector('#model3dViewer model-viewer');
   const textureCanvasArea = document.querySelector('.texture-canvas-area');
@@ -634,6 +769,7 @@ document.addEventListener('DOMContentLoaded', () => {
     svgHeight: 600,
     zoom: 1,
     zoomMode: 'fit',
+    textureLoadPromise: null,
     textureUpdateTimer: null,
     textureUpdateId: 0,
     lastTextClick: { element: null, time: 0 },
@@ -644,9 +780,13 @@ document.addEventListener('DOMContentLoaded', () => {
     materialTextureCache: new WeakMap(),
     finalTextureUrl: null,
     isExportingRender: false,
+    isCapturingInquiry: false,
+    isSubmittingInquiry: false,
+    inquirySnapshots: null,
     coverCaptureHidden: []
   };
   let modalReturnFocus = null;
+  let customizationReturnFocus = null;
 
   const toolButtons = {
     select: document.getElementById('toolSelect'),
@@ -862,15 +1002,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Load SVG texture dimensions dynamically
   function loadTextureDimensions() {
+    if (state.textureLoadPromise) return state.textureLoadPromise;
     const textureUrl = '<%= model.texture_url %>';
     if (!textureUrl) {
       setSvgDimensions(800, 600);
-      return;
+      state.textureLoadPromise = Promise.resolve();
+      return state.textureLoadPromise;
     }
     const svgFetchUrl = `/api/texture-svg?url=${encodeURIComponent(textureUrl)}`;
 
     // Method 1: Try to get dimensions from SVG text content directly
-    fetch(svgFetchUrl)
+    state.textureLoadPromise = fetch(svgFetchUrl)
       .then(response => {
         if (!response.ok) throw new Error('Failed to load texture SVG');
         return response.text();
@@ -901,17 +1043,20 @@ document.addEventListener('DOMContentLoaded', () => {
         setSvgDimensions(Math.round(width), Math.round(height));
         inlineTextureTemplate(svgText);
       })
-      .catch(() => {
+      .catch(() => new Promise(resolve => {
         // Method 2: Fallback to Image object if fetch fails (CORS)
         const img = new Image();
         img.onload = function() {
           setSvgDimensions(this.naturalWidth || 800, this.naturalHeight || 600);
+          resolve();
         };
         img.onerror = function() {
           setSvgDimensions(800, 600);
+          resolve();
         };
         img.src = textureUrl;
-      });
+      }));
+    return state.textureLoadPromise;
   }
 
   function setSvgDimensions(width, height) {
@@ -1428,7 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function createCoverExportViewer() {
+  function createCoverExportViewer(options = {}) {
     const exportViewer = document.createElement('model-viewer');
     exportViewer.src = <%- JSON.stringify(previewModelFileUrl || '') %>;
     exportViewer.alt = <%- JSON.stringify(model.name || 'Designed 3D model') %>;
@@ -1455,7 +1600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     exportViewer.style.outline = 'none';
     exportViewer.style.border = '0';
     exportViewer.style.opacity = '1';
-    exportViewer.style.zIndex = '2147483647';
+    exportViewer.style.zIndex = options.zIndex || '2147483647';
     exportViewer.style.transform = 'none';
     exportViewer.style.transformOrigin = 'top left';
     exportViewer.style.display = 'block';
@@ -1465,7 +1610,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function renderDesignedModelImage(textureUrl, options = {}) {
-    const exportViewer = createCoverExportViewer();
+    const exportViewer = createCoverExportViewer({ zIndex: options.viewerZIndex });
     document.body.appendChild(exportViewer);
 
     try {
@@ -1596,6 +1741,158 @@ document.addEventListener('DOMContentLoaded', () => {
       setRenderStatus('Render export failed. Try again after the 3D model finishes loading.');
     } finally {
       setExportingState(false);
+    }
+  }
+
+  function setCustomizationStatus(message, type = '') {
+    if (!customizationInquiryStatus) return;
+    customizationInquiryStatus.textContent = message || '';
+    customizationInquiryStatus.classList.toggle('is-success', type === 'success');
+    customizationInquiryStatus.classList.toggle('is-progress', type === 'progress');
+  }
+
+  function setCustomizationPreview(img, loading, dataUrl) {
+    if (!img || !loading) return;
+    if (dataUrl) {
+      img.src = dataUrl;
+      img.classList.add('ready');
+      loading.hidden = true;
+    } else {
+      img.removeAttribute('src');
+      img.classList.remove('ready');
+      loading.hidden = false;
+    }
+  }
+
+  function syncCustomizationSubmitState() {
+    if (!customizationInquirySubmit) return;
+    customizationInquirySubmit.disabled = Boolean(
+      state.isCapturingInquiry ||
+      state.isSubmittingInquiry ||
+      !state.inquirySnapshots?.threeD ||
+      !state.inquirySnapshots?.twoD
+    );
+  }
+
+  async function prepareCustomizationSnapshots() {
+    if (state.isCapturingInquiry) return;
+    state.isCapturingInquiry = true;
+    state.inquirySnapshots = null;
+    customizationRefreshSnapshots.disabled = true;
+    setCustomizationPreview(customizationPreview3d, customizationPreview3dLoading, null);
+    setCustomizationPreview(customizationPreview2d, customizationPreview2dLoading, null);
+    setCustomizationStatus('Preparing the current 3D and 2D design attachments…', 'progress');
+    syncCustomizationSubmitState();
+
+    try {
+      await loadTextureDimensions();
+      state.textEditor?.commit();
+      const textureForModel = await rasterizeTexture({ includeSelectionHighlight: false });
+      const [snapshot2d, snapshot3d] = await Promise.all([
+        rasterizeTexture({
+          includeSelectionHighlight: false,
+          includeTemplateGuides: true
+        }),
+        renderDesignedModelImageWithFallback(textureForModel, {
+          mimeType: 'image/webp',
+          quality: 0.9,
+          viewerZIndex: '10000'
+        })
+      ]);
+      state.inquirySnapshots = {
+        threeD: snapshot3d,
+        twoD: snapshot2d
+      };
+      setCustomizationPreview(customizationPreview3d, customizationPreview3dLoading, snapshot3d);
+      setCustomizationPreview(customizationPreview2d, customizationPreview2dLoading, snapshot2d);
+      setCustomizationStatus('Design attachments are ready.', 'success');
+    } catch (error) {
+      console.error('Failed to prepare customization snapshots:', error);
+      setCustomizationStatus('We could not capture the current design. Please refresh the attachments and try again.');
+    } finally {
+      state.isCapturingInquiry = false;
+      customizationRefreshSnapshots.disabled = false;
+      syncCustomizationSubmitState();
+    }
+  }
+
+  function resetCustomizationView() {
+    customizationInquiryForm.hidden = false;
+    customizationInquirySuccess.hidden = true;
+    customizationInquiryReference.textContent = '—';
+    setCustomizationStatus('');
+    state.inquirySnapshots = null;
+    setCustomizationPreview(customizationPreview3d, customizationPreview3dLoading, null);
+    setCustomizationPreview(customizationPreview2d, customizationPreview2dLoading, null);
+    syncCustomizationSubmitState();
+  }
+
+  function openCustomizationInquiry() {
+    customizationReturnFocus = document.activeElement;
+    resetCustomizationView();
+    customizationInquiryModal.classList.add('active');
+    customizationInquiryModal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      customizationInquiryClose?.focus({ preventScroll: true });
+      prepareCustomizationSnapshots();
+    });
+  }
+
+  function closeCustomizationInquiry() {
+    customizationInquiryModal.classList.remove('active');
+    customizationInquiryModal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = designModal.classList.contains('active') ? 'hidden' : '';
+    customizationReturnFocus?.focus?.({ preventScroll: true });
+  }
+
+  async function submitCustomizationInquiry(event) {
+    event.preventDefault();
+    if (state.isSubmittingInquiry || !state.inquirySnapshots) return;
+    if (!customizationInquiryForm.reportValidity()) return;
+
+    const formData = new FormData(customizationInquiryForm);
+    const originalSubmitLabel = customizationInquirySubmit.querySelector('span')?.textContent || 'Submit request';
+    state.isSubmittingInquiry = true;
+    syncCustomizationSubmitState();
+    const submitLabel = customizationInquirySubmit.querySelector('span');
+    if (submitLabel) submitLabel.textContent = 'Submitting…';
+    setCustomizationStatus('Uploading the design attachments and submitting your request…', 'progress');
+
+    try {
+      const response = await fetch('/api/customization-inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          modelId: <%- JSON.stringify(model.id || null) %>,
+          modelSlug: <%- JSON.stringify(model.slug || '') %>,
+          modelName: <%- JSON.stringify(model.name || '') %>,
+          contact: {
+            name: formData.get('name'),
+            email: formData.get('email')
+          },
+          quantity: formData.get('quantity'),
+          notes: formData.get('notes'),
+          website: formData.get('website'),
+          sourceUrl: window.location.href,
+          snapshots: state.inquirySnapshots
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'We could not submit your request. Please try again.');
+      }
+
+      customizationInquiryReference.textContent = result.referenceCode || 'RECEIVED';
+      customizationInquiryForm.hidden = true;
+      customizationInquirySuccess.hidden = false;
+      customizationInquirySuccess.querySelector('.btn')?.focus({ preventScroll: true });
+    } catch (error) {
+      setCustomizationStatus(error.message || 'We could not submit your request. Please try again.');
+    } finally {
+      state.isSubmittingInquiry = false;
+      if (submitLabel) submitLabel.textContent = originalSubmitLabel;
+      syncCustomizationSubmitState();
     }
   }
 
@@ -2852,6 +3149,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('toolDelete')?.addEventListener('click', deleteSelected);
 
   document.addEventListener('keydown', (event) => {
+    if (customizationInquiryModal.classList.contains('active')) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        closeCustomizationInquiry();
+      }
+      return;
+    }
     if (!designModal.classList.contains('active')) return;
     if (event.key === 'Escape') {
       event.preventDefault();
@@ -2878,6 +3182,13 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
   downloadRenderBtn?.addEventListener('click', downloadDesignedRender);
+  customizationInquiryBtn?.addEventListener('click', openCustomizationInquiry);
+  customizationInquiryOverlay?.addEventListener('click', closeCustomizationInquiry);
+  customizationInquiryClose?.addEventListener('click', closeCustomizationInquiry);
+  customizationInquiryCancel?.addEventListener('click', closeCustomizationInquiry);
+  customizationInquiryDone?.addEventListener('click', closeCustomizationInquiry);
+  customizationRefreshSnapshots?.addEventListener('click', prepareCustomizationSnapshots);
+  customizationInquiryForm?.addEventListener('submit', submitCustomizationInquiry);
 
   // Initialize history
   renderMaterialSwatches();
