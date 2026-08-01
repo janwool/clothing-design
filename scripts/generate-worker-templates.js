@@ -37,7 +37,11 @@ const templateLocals = [
   'inquiryStats',
   'articles',
   'article',
-  'resources'
+  'resources',
+  'shareSurface',
+  'shareTitle',
+  'shareKicker',
+  'sharePrompt'
 ];
 
 function walk(dir, predicate) {
