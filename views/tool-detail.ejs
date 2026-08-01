@@ -68,6 +68,15 @@
   </div>
 </section>
 
+<div class="container">
+  <%- include('partials/share-panel', {
+    shareSurface: 'tool',
+    shareTitle: toolPage.title,
+    shareKicker: 'Pass the tool along',
+    sharePrompt: 'Share this free workflow with a designer, merch team, or print-on-demand seller who can use it.'
+  }) %>
+</div>
+
 <% if (toolPage.visualGallery && toolPage.visualGallery.length) { %>
   <section class="generator-section tool-visual-section">
     <div class="container">

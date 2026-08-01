@@ -21,7 +21,7 @@ const {
 } = require('../lib/seo');
 const { modelCover, siteImage } = require('../lib/site-assets');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
-const { targetForLegacyPattern } = require('../lib/legacy-patterns');
+const { targetForLegacyPattern, targetForLegacyPatternId } = require('../lib/legacy-patterns');
 
 const MOCKUP_WORKFLOW_IMAGES = [
   siteImage('workflow/choose-garment-model.webp'),
@@ -1885,11 +1885,14 @@ router.get('/patterns', (req, res) => {
 
 router.get('/patterns/item/:id', async (req, res, next) => {
   try {
+    const preservedTarget = targetForLegacyPatternId(req.params.id);
+    if (preservedTarget) return res.redirect(301, preservedTarget);
+
     const pattern = await db.get(
-      'SELECT category FROM patterns WHERE id = ? AND status = ?',
+      'SELECT name, category FROM patterns WHERE id = ? AND status = ?',
       [req.params.id, 'active']
     );
-    const target = targetForLegacyPattern(pattern?.category);
+    const target = targetForLegacyPattern(`${pattern?.name || ''} ${pattern?.category || ''}`);
     if (target) return res.redirect(301, target);
     return res.status(410).render('404', { title: 'Gone', page: '' });
   } catch (err) {
@@ -2066,6 +2069,12 @@ router.get('/blog', (req, res) => {
     page: 'blog',
     articles: blogArticles
   });
+});
+
+router.get('/feed.xml', (req, res) => {
+  const { buildRssFeed } = require('../lib/rss');
+  res.set('Cache-Control', 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400');
+  res.type('application/rss+xml').send(buildRssFeed(blogArticles));
 });
 
 router.get('/blog/:slug', (req, res) => {

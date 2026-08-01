@@ -29,6 +29,15 @@
     </div>
   </header>
 
+  <div class="container">
+    <%- include('partials/share-panel', {
+      shareSurface: 'article',
+      shareTitle: article.title,
+      shareKicker: 'Share this field note',
+      sharePrompt: 'Know a designer, POD seller, or apparel team working through this problem? Send them the useful part.'
+    }) %>
+  </div>
+
   <div class="container article-layout">
     <aside class="article-toc">
       <span>In this guide</span>

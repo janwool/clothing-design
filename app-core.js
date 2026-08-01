@@ -109,7 +109,7 @@ function configureI18n() {
         defaultNS: 'translation',
         detection: {
           order: ['querystring', 'cookie', 'header'],
-          caches: ['cookie']
+          caches: []
         }
       });
   } else {
@@ -125,7 +125,7 @@ function configureI18n() {
         },
         detection: {
           order: ['querystring', 'cookie', 'header'],
-          caches: ['cookie']
+          caches: []
         }
       });
   }

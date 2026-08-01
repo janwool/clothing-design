@@ -1,0 +1,23 @@
+<aside
+  class="growth-share-panel"
+  data-growth-share
+  data-share-surface="<%= shareSurface %>"
+  data-share-title="<%= shareTitle %>"
+  aria-label="Share <%= shareTitle %>"
+>
+  <div class="growth-share-copy">
+    <span><%= shareKicker %></span>
+    <strong>Useful work should travel.</strong>
+    <p><%= sharePrompt %></p>
+  </div>
+  <div class="growth-share-actions" aria-label="Share options">
+    <button type="button" class="growth-share-action growth-share-action-primary" data-share-platform="native">
+      <span aria-hidden="true">↗</span> Share
+    </button>
+    <a href="#" class="growth-share-action" data-share-platform="pinterest" target="_blank" rel="noopener noreferrer">Pinterest</a>
+    <a href="#" class="growth-share-action" data-share-platform="x" target="_blank" rel="noopener noreferrer">X</a>
+    <a href="#" class="growth-share-action" data-share-platform="linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <button type="button" class="growth-share-action" data-share-platform="copy">Copy link</button>
+  </div>
+  <p class="growth-share-status" data-share-status role="status" aria-live="polite"></p>
+</aside>
