@@ -622,9 +622,10 @@ const TOOL_PAGE_CONTENT = {
     eyebrow: 'Free online T-shirt mockups',
     image: siteImage('mockups/t-shirt-mockup-generator.webp'),
     heroModel: {
-      src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
-      alt: 'Classic Crew Neck T-Shirt 3D Model'
+      src: 'https://cdn.cloz-design.com/d3/6588/basic-short-sleeve-tshirt-3d-model.glb?v=uv-original-20260606',
+      alt: 'Basic Short Sleeve T-Shirt 3D Model'
     },
+    editorHref: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design',
     subtitle: 'Customize a free 3D T-shirt in your browser, test garment colors and viewing angles, upload artwork, and export a transparent product mockup.',
     intent: 'Use this page when you need a fast T-shirt product visual direction before photography or sampling. Start from an apparel-first model page, plan a logo or graphic direction, compare product angles, and prepare a cleaner mockup reference for ecommerce, print-on-demand, or brand review.',
     primaryKeyword: 'free t-shirt mockup generator',
@@ -649,9 +650,9 @@ const TOOL_PAGE_CONTENT = {
     ],
     modelStarters: [
       {
-        title: 'Classic crew-neck T-shirt',
+        title: 'Basic short-sleeve T-shirt',
         body: 'Start with the highest-interest short-sleeve blank for chest logos, front graphics, back prints, and everyday product listings.',
-        href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model'
+        href: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model'
       },
       {
         title: 'Oversized drop-shoulder T-shirt',
@@ -710,7 +711,7 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I make oversized or streetwear mockups?', answer: 'Yes. Use oversized and relaxed T-shirt model previews, then test front graphics, back prints, chest logos, and colorways.' }
     ],
     relatedSlugs: ['hoodie-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'],
-    cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
+    cta: { label: 'Open T-Shirt Editor', href: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design' }
   },
   'hoodie-mockup-generator': {
     title: 'Free Hoodie Mockup Generator',
