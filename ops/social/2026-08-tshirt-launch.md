@@ -1,6 +1,10 @@
 # T-shirt mockup launch asset 01
 
-Status: asset produced; publishing awaits an authenticated social account.
+Status: published on Pinterest.
+
+Published: 2026-08-02 20:58 CST
+
+Published URL: https://www.pinterest.com/pin/1049690625672480549/
 
 Asset: `public/images/social/august-tshirt-pin-01.png`
 
