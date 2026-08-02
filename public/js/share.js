@@ -53,7 +53,49 @@
     if (!copied) throw new Error('Copy unavailable');
   }
 
+  function mountModelSharePanel() {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const isModelDetail = pathParts[0] === '3d-models' && pathParts.length >= 2 && pathParts.length <= 3;
+    if (!isModelDetail || document.querySelector('[data-growth-share]')) return;
+
+    const footer = document.querySelector('footer');
+    if (!footer) return;
+
+    const modelName = document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim() || 'this 3D model';
+    const container = document.createElement('div');
+    container.className = 'container';
+
+    const panel = document.createElement('aside');
+    panel.className = 'growth-share-panel';
+    panel.dataset.growthShare = '';
+    panel.dataset.shareSurface = 'model-detail';
+    panel.dataset.shareTitle = modelName;
+    panel.setAttribute('aria-label', `Share ${modelName}`);
+    panel.innerHTML = `
+      <div class="growth-share-copy">
+        <span>Share this 3D model</span>
+        <strong>Useful work should travel.</strong>
+        <p>Know a designer who needs this editable garment? Send them the model.</p>
+      </div>
+      <div class="growth-share-actions" aria-label="Share options">
+        <button type="button" class="growth-share-action growth-share-action-primary" data-share-platform="native">
+          <span aria-hidden="true">↗</span> Share
+        </button>
+        <a href="#" class="growth-share-action" data-share-platform="pinterest" target="_blank" rel="noopener noreferrer">Pinterest</a>
+        <a href="#" class="growth-share-action" data-share-platform="x" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="#" class="growth-share-action" data-share-platform="linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <button type="button" class="growth-share-action" data-share-platform="copy">Copy link</button>
+      </div>
+      <p class="growth-share-status" data-share-status role="status" aria-live="polite"></p>
+    `;
+
+    container.appendChild(panel);
+    footer.before(container);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    mountModelSharePanel();
+
     document.querySelectorAll('[data-growth-share]').forEach(function (panel) {
       const surface = panel.dataset.shareSurface || 'page';
       const title = panel.dataset.shareTitle || document.title;
