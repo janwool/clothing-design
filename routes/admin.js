@@ -684,7 +684,7 @@ router.delete('/tools/:id', requireAuth, async (req, res) => {
 // ==================== Users Management ====================
 router.get('/users', requireAuth, async (req, res) => {
   try {
-    const items = await db.all('SELECT id, email, name, status, created_at FROM users ORDER BY created_at DESC');
+    const items = await db.all('SELECT id, email, name, created_at FROM users ORDER BY created_at DESC');
     res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: items || [] });
   } catch (err) {
     res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: [] });

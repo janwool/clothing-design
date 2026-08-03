@@ -23,7 +23,6 @@
               <th>ID</th>
               <th>Username</th>
               <th>Email</th>
-              <th>Status</th>
               <th>Created</th>
               <th>Actions</th>
             </tr>
@@ -34,9 +33,6 @@
                 <td>#<%= item.id %></td>
                 <td><%= item.name || '-' %></td>
                 <td><%= item.email %></td>
-                <td>
-                  <span class="status-badge status-<%= item.status || 'active' %>"><%= item.status || 'active' %></span>
-                </td>
                 <td><%= new Date(item.created_at).toLocaleDateString() %></td>
                 <td>
                   <div class="table-actions">
@@ -89,7 +85,7 @@ async function deleteUser(id) {
 }
 
 // Event delegation for delete buttons
-document.querySelector('.data-table tbody').addEventListener('click', function(e) {
+document.querySelector('.data-table tbody')?.addEventListener('click', function(e) {
   const btn = e.target.closest('[data-action]');
   if (!btn) return;
   const id = btn.getAttribute('data-id');
