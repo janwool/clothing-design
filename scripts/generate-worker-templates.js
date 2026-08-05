@@ -15,6 +15,8 @@ const templateLocals = [
   'metaImage',
   'canonicalUrl',
   'defaultMetaImage',
+  'defaultMetaRobots',
+  'pageStyles',
   'structuredData',
   'user',
   'i18next',

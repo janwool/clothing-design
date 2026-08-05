@@ -3,69 +3,94 @@
 
   window.dataLayer = window.dataLayer || [];
 
-  function cleanText(value) {
-    return String(value || '').replace(/\s+/g, ' ').trim().slice(0, 120);
+  var STABLE_EVENTS = new Set([
+    'page_view',
+    'navigation_click',
+    'select_content',
+    'sign_up_start',
+    'sign_up',
+    'login_start',
+    'login',
+    'auth_error',
+    'form_submit',
+    'file_download',
+    'upload_artwork',
+    'begin_design',
+    'design_customize',
+    'design_export',
+    'generate_lead',
+    'tool_interaction',
+    'search',
+    'faq_toggle',
+    'share',
+    'ui_interaction'
+  ]);
+
+  function cleanText(value, maxLength) {
+    return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength || 120);
   }
 
-  function analyticsKey(value, fallback) {
-    const key = String(value || '')
+  function cleanKey(value, fallback) {
+    var key = String(value || '')
       .toLowerCase()
       .replace(/^https?:\/\/[^/]+/i, '')
       .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_+|_+$/g, '');
+      .replace(/^_+|_+$/g, '')
+      .slice(0, 80);
     return key || fallback || 'unknown';
   }
 
-  function uniqueEvent(parts) {
-    const fullName = parts.map(function (part) { return analyticsKey(part, ''); }).filter(Boolean).join('_');
-    if (fullName.length <= 40) return fullName;
-    let hash = 5381;
-    for (let index = 0; index < fullName.length; index++) hash = ((hash << 5) + hash) ^ fullName.charCodeAt(index);
-    return fullName.slice(0, 31).replace(/_+$/, '') + '_' + (hash >>> 0).toString(36).slice(0, 8);
-  }
-
-  function destinationKey(anchor, target) {
-    if (anchor) {
-      const url = new URL(anchor.href, window.location.origin);
-      if (url.protocol === 'javascript:') return analyticsKey(anchor.getAttribute('href'), 'history');
-      const destination = url.origin === window.location.origin ? url.pathname : url.hostname + url.pathname;
-      return analyticsKey(destination === '/' ? 'home' : destination, 'link');
+  function normalizeEventName(value) {
+    var name = cleanKey(value, 'ui_interaction');
+    if (STABLE_EVENTS.has(name)) return name;
+    if (name === 'content_share' || name.includes('share')) return 'share';
+    if (name.includes('faq')) return 'faq_toggle';
+    if (name.includes('registration') || name.includes('sign_up')) {
+      return name.includes('success') ? 'sign_up' : 'sign_up_start';
     }
-    return analyticsKey(
-      target.id || target.dataset.action || target.dataset.tool || target.dataset.material ||
-      target.dataset.mode || target.dataset.stop || target.dataset.filter || target.getAttribute('title') ||
-      target.getAttribute('aria-label') || target.textContent,
-      'button'
-    );
+    if (name.includes('login')) return name.includes('success') ? 'login' : 'login_start';
+    if (name.includes('lead') || name.includes('inquiry')) return 'generate_lead';
+    if (name.includes('export') || name.includes('download_render')) return 'design_export';
+    if (name.includes('download')) return 'file_download';
+    if (name.includes('upload') || name.includes('file_selected')) return 'upload_artwork';
+    if (name.includes('designer') || name.includes('design_now') || name.includes('designnow')) return 'begin_design';
+    if (name.includes('category') || name.includes('model') || name.includes('tool') || name.includes('select')) return 'select_content';
+    if (name.includes('menu') || name.includes('click')) return 'navigation_click';
+    return 'ui_interaction';
   }
 
   function track(eventName, parameters) {
-    if (!eventName) return;
-    eventName = uniqueEvent([eventName]);
-    const eventParameters = Object.assign({
+    var normalizedName = normalizeEventName(eventName);
+    var eventParameters = Object.assign({
       page_path: window.location.pathname,
-      page_title: document.title
+      page_title: document.title,
+      source_event: normalizedName === cleanKey(eventName, '') ? undefined : cleanKey(eventName, undefined)
     }, parameters || {});
 
+    Object.keys(eventParameters).forEach(function (key) {
+      if (eventParameters[key] === undefined || eventParameters[key] === null || eventParameters[key] === '') {
+        delete eventParameters[key];
+      }
+    });
+
     if (typeof window.gtag === 'function') {
-      window.gtag('event', eventName, eventParameters);
+      window.gtag('event', normalizedName, eventParameters);
     } else {
-      window.dataLayer.push(Object.assign({ event: eventName }, eventParameters));
+      window.dataLayer.push(Object.assign({ event: normalizedName }, eventParameters));
     }
   }
 
   window.trackEvent = track;
 
   function pageType() {
-    const path = window.location.pathname;
+    var path = window.location.pathname;
     if (path === '/') return 'home';
     if (path === '/pricing') return 'pricing';
     if (path.startsWith('/auth/')) return 'auth';
     if (path.startsWith('/designer/')) return 'designer';
-    if (path.startsWith('/3d-models/')) return 'model_detail';
+    if (path.startsWith('/3d-models/')) return path.endsWith('/edit') ? 'designer' : 'model_detail';
     if (path.startsWith('/tools/')) return 'tool_detail';
     if (path === '/tools') return 'tools';
-    if (path.startsWith('/admin')) return 'admin';
     return 'content';
   }
 
@@ -74,90 +99,92 @@
     if (element.closest('footer')) return 'footer';
     if (element.closest('.pricing-card')) return 'pricing_card';
     if (element.closest('.model-card')) return 'model_card';
+    if (element.closest('.tool-detail-hero')) return 'hero';
     return 'content';
   }
 
+  function destination(anchor) {
+    if (!anchor) return '';
+    try {
+      var url = new URL(anchor.href, window.location.origin);
+      return url.origin === window.location.origin ? url.pathname : url.hostname + url.pathname;
+    } catch (_) {
+      return anchor.getAttribute('href') || '';
+    }
+  }
+
+  function contentType(element) {
+    if (element.closest('.model-card')) return '3d_model';
+    if (element.closest('.generator-category-card')) return 'category';
+    if (element.closest('.tool-card, .popular-card')) return 'tool';
+    if (element.closest('.gallery-item')) return 'gallery';
+    if (element.closest('.pattern-card-link')) return 'pattern';
+    return 'link';
+  }
+
   function semanticClick(element) {
-    const anchor = element.closest('a[href]');
-    const button = element.closest('button, [role="button"]');
-    const target = anchor || button;
+    var anchor = element.closest('a[href]');
+    var button = element.closest('button, [role="button"]');
+    var target = anchor || button;
     if (!target) return;
 
-    const href = anchor ? anchor.getAttribute('href') || '' : '';
-    const text = cleanText(target.getAttribute('aria-label') || target.textContent);
-    const common = {
+    var href = anchor ? anchor.getAttribute('href') || '' : '';
+    var text = cleanText(target.getAttribute('aria-label') || target.textContent);
+    var common = {
       element_text: text,
       element_id: target.id || undefined,
       item_id: target.dataset.id || target.closest('[data-id]')?.dataset.id || undefined,
+      item_name: target.dataset.analyticsItem || text,
+      item_category: target.dataset.analyticsCategory || target.dataset.category || undefined,
       link_url: anchor ? anchor.href : undefined,
+      link_path: anchor ? destination(anchor) : undefined,
       link_location: linkLocation(target)
     };
 
-    const menu = target.closest('.navbar, .mobile-menu, .dropdown-menu, .user-menu');
-    const categoryCard = target.closest('.generator-category-card');
-    const listItem = target.closest('.model-card, .pattern-card-link, .popular-card, .tool-card, .gallery-item');
-
-    if (target.dataset.analyticsEvent) return track(target.dataset.analyticsEvent, Object.assign(common, {
-      item_name: target.dataset.analyticsItem || text,
-      item_category: target.dataset.analyticsCategory || target.dataset.category || undefined
-    }));
-
-    if (target.matches('.filter-btn[data-filter]')) return track(uniqueEvent(['category', target.dataset.filter, 'select']), Object.assign(common, {
-      category_name: target.dataset.filter,
-      selection_source: 'filter'
-    }));
-    if (categoryCard) return track(uniqueEvent(['category', destinationKey(anchor, target), 'select']), Object.assign(common, {
-      category_name: cleanText(categoryCard.querySelector('h3, h2, .category-name')?.textContent || target.textContent),
-      category_url: anchor?.href,
-      selection_source: 'category_list'
-    }));
-    if (menu) {
-      track(uniqueEvent(['menu', destinationKey(anchor, target), target.matches('.dropdown-toggle, .user-toggle, .mobile-toggle') ? 'toggle' : 'click']), Object.assign(common, {
-      menu_name: target.closest('.mobile-menu') ? 'mobile_menu' : target.closest('.user-menu') ? 'user_menu' : target.closest('.dropdown-menu') ? 'tools_dropdown' : 'main_navigation',
-      menu_item: text,
-      menu_action: target.matches('.dropdown-toggle, .user-toggle, .mobile-toggle') ? 'toggle' : 'select'
-      }));
-      if (!anchor) return;
-    }
-    if (listItem && anchor) {
-      const listType = listItem.matches('.pattern-card-link') || listItem.closest('[data-category]')?.querySelector('.pattern-card-link') ? 'pattern' : listItem.matches('.popular-card, .tool-card') ? 'tool' : listItem.matches('.gallery-item') ? 'gallery' : 'model';
-      return track(uniqueEvent([listType, destinationKey(anchor, target), 'select']), Object.assign(common, {
-      list_type: listType,
-      item_name: cleanText(listItem.querySelector('h3, h2, .model-name, .tool-title')?.textContent || target.getAttribute('aria-label') || target.textContent),
-      item_category: listItem.dataset.category || listItem.closest('[data-category]')?.dataset.category
-    }));
-    }
-
-    if (href === '/auth/logout') return track('logout', common);
-    if (href.includes('/auth/register')) {
-      const planName = cleanText(target.closest('.pricing-card')?.querySelector('h3')?.textContent);
-      return track(target.closest('.pricing-card') ? uniqueEvent(['pricing', planName, 'select']) : 'registration_start', Object.assign(common, {
-        plan_name: planName
+    if (target.dataset.analyticsEvent) {
+      return track(target.dataset.analyticsEvent, Object.assign(common, {
+        content_type: contentType(target)
       }));
     }
+
+    if (href === '/auth/logout') return track('navigation_click', Object.assign(common, { navigation_type: 'logout' }));
+    if (href.includes('/auth/register')) return track('sign_up_start', Object.assign(common, {
+      plan_name: cleanText(target.closest('.pricing-card')?.querySelector('h3')?.textContent)
+    }));
     if (href.includes('/auth/login')) return track('login_start', common);
-    if (anchor?.hasAttribute('download')) return track(uniqueEvent(['file', href.split('/').pop()?.split('?')[0], 'download']), Object.assign(common, {
+
+    if (anchor?.hasAttribute('download')) return track('file_download', Object.assign(common, {
       file_name: href.split('/').pop()?.split('?')[0]
     }));
-    if (href.startsWith('/designer/') || target.id === 'designNowBtn') return track(uniqueEvent(['designer', destinationKey(anchor, target), 'start']), common);
+
+    if (href.startsWith('/designer/') || href.endsWith('/edit') || target.id === 'designNowBtn') {
+      return track('begin_design', Object.assign(common, { design_entry: target.id || 'link' }));
+    }
+
+    if (target.matches('.filter-btn[data-filter]')) return track('select_content', Object.assign(common, {
+      content_type: 'category_filter',
+      item_id: target.dataset.filter
+    }));
+
+    if (target.closest('.model-card, .pattern-card-link, .popular-card, .tool-card, .gallery-item, .generator-category-card')) {
+      return track('select_content', Object.assign(common, { content_type: contentType(target) }));
+    }
+
+    if (target.matches('[data-color], [data-pattern], [data-env]')) return track('design_customize', Object.assign(common, {
+      control_type: target.hasAttribute('data-color') ? 'color' : target.hasAttribute('data-pattern') ? 'pattern' : 'environment',
+      selected_value: target.dataset.color || target.dataset.pattern || target.dataset.env
+    }));
+
     if (target.id === 'downloadBtn' || target.id === 'downloadRenderBtn' || target.id === 'downloadRenderModalBtn') {
-      return track(uniqueEvent(['design', target.id, 'export']), Object.assign(common, { export_format: 'png' }));
+      // A successful export is reported by the export function. This only records intent.
+      return track('tool_interaction', Object.assign(common, { interaction_type: 'export_intent' }));
     }
-    if (target.matches('[data-color]')) return track(uniqueEvent(['designer', target.dataset.target, target.dataset.color, 'select']), Object.assign(common, {
-      color: target.dataset.color,
-      design_target: target.dataset.target
-    }));
-    if (target.matches('[data-pattern]')) return track(uniqueEvent(['designer', 'pattern', target.dataset.pattern, 'select']), Object.assign(common, {
-      pattern: target.dataset.pattern
-    }));
-    if (target.matches('[data-env]')) return track(uniqueEvent(['designer', 'environment', target.dataset.env, 'select']), Object.assign(common, {
-      environment: target.dataset.env
-    }));
-    if (menu) return;
-    if (anchor && (href.startsWith('/') || anchor.origin === window.location.origin)) {
-      return track(uniqueEvent([pageType(), destinationKey(anchor, target), 'click']), common);
+
+    if (anchor || target.closest('.navbar, .mobile-menu, footer')) {
+      return track('navigation_click', common);
     }
-    track(uniqueEvent([pageType(), destinationKey(anchor, target), 'click']), common);
+
+    track('ui_interaction', Object.assign(common, { interaction_type: cleanKey(target.dataset.action || target.id || text, 'button') }));
   }
 
   function formName(form) {
@@ -167,22 +194,25 @@
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    const type = pageType();
+    var type = pageType();
     track('page_view', {
       page_type: type,
       page_location: window.location.href,
-      referrer: document.referrer || undefined
+      page_referrer: document.referrer || undefined
     });
 
     try {
-      const pendingAuth = JSON.parse(sessionStorage.getItem('analytics_pending_auth') || 'null');
+      var pendingAuth = JSON.parse(sessionStorage.getItem('analytics_pending_auth') || 'null');
       if (pendingAuth) {
-        const authError = document.querySelector('.auth-error, .alert-error, [data-auth-error]');
+        var authError = document.querySelector('.auth-error, .alert-error, [data-auth-error]');
         if (type !== 'auth') {
-          track(pendingAuth.type + '_success');
+          track(pendingAuth.type === 'register' ? 'sign_up' : 'login', { method: 'email' });
           sessionStorage.removeItem('analytics_pending_auth');
         } else if (authError) {
-          track(pendingAuth.type + '_failure', { error_message: cleanText(authError.textContent) });
+          track('auth_error', {
+            auth_type: pendingAuth.type,
+            error_message: cleanText(authError.textContent)
+          });
           sessionStorage.removeItem('analytics_pending_auth');
         }
       }
@@ -195,10 +225,10 @@
     });
 
     document.addEventListener('submit', function (event) {
-      const form = event.target;
+      var form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
-      const name = formName(form);
-      track(name === 'login' ? 'login_submit' : name === 'register' ? 'registration_submit' : uniqueEvent([pageType(), name, 'submit']), {
+      var name = formName(form);
+      track('form_submit', {
         form_name: name,
         form_id: form.id || undefined,
         form_action: form.action
@@ -211,7 +241,7 @@
     document.querySelectorAll('input[type="file"]').forEach(function (input) {
       input.addEventListener('change', function () {
         if (!input.files?.length) return;
-        track(uniqueEvent([pageType(), input.name || input.id, 'file_selected']), {
+        track('upload_artwork', {
           input_name: input.name || input.id,
           file_type: input.files[0].type || undefined,
           file_extension: input.files[0].name.split('.').pop()?.toLowerCase()
@@ -219,23 +249,27 @@
       });
     });
 
-    document.querySelectorAll('select, input[type="range"], input[type="checkbox"], input[type="radio"], input[type="search"], .search-input').forEach(function (control) {
+    document.querySelectorAll('select, input[type="range"], input[type="checkbox"], input[type="radio"]').forEach(function (control) {
       control.addEventListener('change', function () {
-        const controlKey = control.id || control.name || control.classList[0] || control.type;
-        const parameters = {
-          control_name: controlKey,
-          control_type: control.type || control.tagName.toLowerCase()
-        };
-        if (control.matches('select, input[type="range"], input[type="checkbox"], input[type="radio"]')) {
-          parameters.selected_value = control.type === 'checkbox' || control.type === 'radio' ? String(control.checked) : cleanText(control.value);
-        }
-        track(uniqueEvent([pageType(), controlKey, 'change']), parameters);
+        track('design_customize', {
+          control_name: control.id || control.name || control.classList[0] || control.type,
+          control_type: control.type || control.tagName.toLowerCase(),
+          selected_value: control.type === 'checkbox' || control.type === 'radio' ? String(control.checked) : cleanText(control.value)
+        });
+      });
+    });
+
+    document.querySelectorAll('input[type="search"], .search-input').forEach(function (control) {
+      control.addEventListener('change', function () {
+        if (!cleanText(control.value)) return;
+        track('search', { search_term: cleanText(control.value) });
       });
     });
 
     document.querySelectorAll('details').forEach(function (details, index) {
       details.addEventListener('toggle', function () {
-        track(details.dataset.analyticsEvent || uniqueEvent([pageType(), 'faq', index + 1, 'toggle']), {
+        track('faq_toggle', {
+          item_id: details.dataset.analyticsItem || String(index + 1),
           item_name: details.dataset.analyticsItem || cleanText(details.querySelector('summary')?.textContent),
           toggle_state: details.open ? 'open' : 'closed'
         });

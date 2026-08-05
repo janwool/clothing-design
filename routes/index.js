@@ -671,9 +671,9 @@ const TOOL_PAGE_CONTENT = {
       }
     ],
     visualGallery: [
-      { title: 'Graphic tee preview', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Realistic T-shirt mockup with a small chest artwork placement and ecommerce-ready lighting.' },
-      { title: 'Bulk colorway direction', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'Use one artwork idea across multiple shirt colors for POD planning.' },
-      { title: 'POD listing set', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Prepare clean product listing visuals for Shopify, Etsy, and merch catalogs.' }
+      { title: 'Graphic tee preview', image: siteImage('mockups/t-shirt-mockup-generator.webp'), caption: 'Realistic T-shirt mockup with a small chest artwork placement and ecommerce-ready lighting.' },
+      { title: 'Bulk colorway direction', image: siteImage('mockups/bulk-t-shirt-mockup-generator.webp'), caption: 'Use one artwork idea across multiple shirt colors for POD planning.' },
+      { title: 'POD listing set', image: siteImage('mockups/print-on-demand-mockup-generator.webp'), caption: 'Prepare clean product listing visuals for Shopify, Etsy, and merch catalogs.' }
     ],
     examplesEyebrow: 'T-shirt examples',
     examplesTitle: 'T-shirt mockup examples for product pages',
@@ -744,9 +744,9 @@ const TOOL_PAGE_CONTENT = {
       'Prepare product visuals for sweatshirts, fleece hoodies, and casualwear listings.'
     ],
     visualGallery: [
-      { title: 'Pullover hoodie mockup', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Realistic hoodie product mockup with chest and sleeve artwork placement.' },
-      { title: 'POD listing workflow', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Turn hoodie previews into product images for online store drafts.' },
-      { title: 'Multi-product direction', image: 'https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.png', caption: 'Keep T-shirt, hoodie, jacket, and dress mockups visually consistent.' }
+      { title: 'Pullover hoodie mockup', image: siteImage('mockups/hoodie-mockup-generator.webp'), caption: 'Realistic hoodie product mockup with chest and sleeve artwork placement.' },
+      { title: 'POD listing workflow', image: siteImage('mockups/print-on-demand-mockup-generator.webp'), caption: 'Turn hoodie previews into product images for online store drafts.' },
+      { title: 'Multi-product direction', image: siteImage('mockups/clothing-mockup-generator.webp'), caption: 'Keep T-shirt, hoodie, jacket, and dress mockups visually consistent.' }
     ],
     examplesEyebrow: 'Hoodie examples',
     examplesTitle: 'Hoodie mockup examples for streetwear planning',
@@ -817,9 +817,9 @@ const TOOL_PAGE_CONTENT = {
       'Help clients, buyers, and internal teams understand shape, color, and artwork direction.'
     ],
     visualGallery: [
-      { title: 'Multi-category mockup set', image: 'https://cdn.cloz-design.com/image/mockups/clothing-mockup-generator.png', caption: 'T-shirt, hoodie, jacket, and dress mockups in one visual system.' },
-      { title: 'T-shirt product mockup', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Single-garment product mockup with clear artwork placement.' },
-      { title: 'Hoodie product mockup', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Structured hoodie mockup for streetwear, merch, and ecommerce visuals.' }
+      { title: 'Multi-category mockup set', image: siteImage('mockups/clothing-mockup-generator.webp'), caption: 'T-shirt, hoodie, jacket, and dress mockups in one visual system.' },
+      { title: 'T-shirt product mockup', image: siteImage('mockups/t-shirt-mockup-generator.webp'), caption: 'Single-garment product mockup with clear artwork placement.' },
+      { title: 'Hoodie product mockup', image: siteImage('mockups/hoodie-mockup-generator.webp'), caption: 'Structured hoodie mockup for streetwear, merch, and ecommerce visuals.' }
     ],
     examplesEyebrow: '3D apparel examples',
     examplesTitle: '3D clothing mockup examples across categories',
@@ -891,9 +891,9 @@ const TOOL_PAGE_CONTENT = {
       'Compare color contrast and artwork readability before committing to print files.'
     ],
     visualGallery: [
-      { title: 'Bulk colorway matrix', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'One logo direction shown across multiple T-shirt colorways.' },
-      { title: 'Main T-shirt mockup', image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png', caption: 'Start from a polished model-based T-shirt mockup before multiplying variants.' },
-      { title: 'POD listing set', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Use bulk mockups as the source for listing-ready product images.' }
+      { title: 'Bulk colorway matrix', image: siteImage('mockups/bulk-t-shirt-mockup-generator.webp'), caption: 'One logo direction shown across multiple T-shirt colorways.' },
+      { title: 'Main T-shirt mockup', image: siteImage('mockups/t-shirt-mockup-generator.webp'), caption: 'Start from a polished model-based T-shirt mockup before multiplying variants.' },
+      { title: 'POD listing set', image: siteImage('mockups/print-on-demand-mockup-generator.webp'), caption: 'Use bulk mockups as the source for listing-ready product images.' }
     ],
     examplesEyebrow: 'Bulk examples',
     examplesTitle: 'Bulk T-shirt mockup examples for colorway planning',
@@ -964,9 +964,9 @@ const TOOL_PAGE_CONTENT = {
       'Plan merch catalogs for creators, teams, events, and streetwear capsules.'
     ],
     visualGallery: [
-      { title: 'POD product listing visual', image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png', caption: 'Listing-ready mockup framing for online store product images.' },
-      { title: 'Bulk colorway source', image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png', caption: 'Create product variants from one artwork direction.' },
-      { title: 'Hoodie product example', image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png', caption: 'Use hoodie mockups for streetwear and sweatshirt POD listings.' }
+      { title: 'POD product listing visual', image: siteImage('mockups/print-on-demand-mockup-generator.webp'), caption: 'Listing-ready mockup framing for online store product images.' },
+      { title: 'Bulk colorway source', image: siteImage('mockups/bulk-t-shirt-mockup-generator.webp'), caption: 'Create product variants from one artwork direction.' },
+      { title: 'Hoodie product example', image: siteImage('mockups/hoodie-mockup-generator.webp'), caption: 'Use hoodie mockups for streetwear and sweatshirt POD listings.' }
     ],
     examplesEyebrow: 'POD examples',
     examplesTitle: 'Print-on-demand mockup examples for listings',
@@ -2068,6 +2068,7 @@ router.get('/blog', (req, res) => {
     metaImage: firstImage(req, [blogArticles[0]?.image]),
     structuredData: buildBlogIndexStructuredData(req),
     page: 'blog',
+    pageStyles: ['/css/blog.css?v=20260805'],
     articles: blogArticles
   });
 });
@@ -2098,6 +2099,7 @@ router.get('/blog/:slug', (req, res) => {
     metaImage: firstImage(req, [article.image]),
     structuredData: buildBlogArticleStructuredData(req, article),
     page: 'blog',
+    pageStyles: ['/css/blog.css?v=20260805'],
     article,
     resources: articleResourceLinks(article),
     related: relatedArticles(article)
@@ -2475,6 +2477,7 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
+      pageStyles: [],
       model: normalizedModel,
       modelDetailContent,
       related: normalizedRelated,

@@ -26,19 +26,35 @@
     <div class="tool-detail-visual">
       <% if (toolPage.heroModel && toolPage.heroModel.src) { %>
         <div class="tool-live-preview" data-editor-href="<%= toolPage.editorHref %>">
-          <model-viewer
-            id="toolHeroModelViewer"
-            class="model-viewer-natural tool-hero-model-viewer"
-            src="<%= toolPage.heroModel.src %>"
-            alt="<%= toolPage.heroModel.alt || toolPage.title %>"
-            camera-controls
-            auto-rotate
-            shadow-intensity="1.55"
-            shadow-softness="0.52"
-            exposure="0.66"
-            environment-image="neutral"
-            aria-label="<%= toolPage.heroModel.alt || toolPage.title %>"
-          ></model-viewer>
+          <div class="tool-model-stage" id="toolModelStage" aria-busy="false">
+            <img
+              class="tool-hero-model-poster"
+              src="<%= toolPage.image %>"
+              alt="<%= toolPage.heroModel.alt || toolPage.title %> preview"
+              width="1200"
+              height="720"
+              fetchpriority="high"
+              decoding="async"
+            >
+            <model-viewer
+              id="toolHeroModelViewer"
+              class="model-viewer-natural tool-hero-model-viewer"
+              data-model-src="<%= toolPage.heroModel.src %>"
+              alt="<%= toolPage.heroModel.alt || toolPage.title %>"
+              camera-controls
+              auto-rotate
+              shadow-intensity="1.55"
+              shadow-softness="0.52"
+              exposure="0.66"
+              environment-image="neutral"
+              aria-label="<%= toolPage.heroModel.alt || toolPage.title %>"
+              hidden
+            ></model-viewer>
+            <button type="button" class="btn btn-secondary tool-model-load" id="toolLoadPreview">
+              <span>Load interactive 3D</span>
+              <small>Loads only when you need it</small>
+            </button>
+          </div>
           <div class="tool-quick-editor" aria-label="Quick 3D mockup controls">
             <div class="tool-control-group tool-color-controls">
               <span>Color</span>
@@ -58,7 +74,7 @@
               </label>
               <button type="button" class="btn btn-secondary" id="toolDownloadPreview"><%= toolPage.slug === 'bulk-t-shirt-mockup-generator' ? 'Download colorway sheet' : 'Download PNG' %></button>
             </div>
-            <p class="tool-preview-status" id="toolPreviewStatus" aria-live="polite">Rotate the model or start with your own artwork.</p>
+            <p class="tool-preview-status" id="toolPreviewStatus" aria-live="polite">View the fast preview, or load 3D to rotate and export it.</p>
           </div>
         </div>
       <% } else { %>
@@ -88,7 +104,7 @@
       <div class="tool-visual-grid">
         <% toolPage.visualGallery.forEach(function(item) { %>
           <article class="tool-visual-card">
-            <img src="<%= item.image %>" alt="<%= item.title %>">
+            <img src="<%= item.image %>" alt="<%= item.title %>" width="1200" height="720" loading="lazy" decoding="async">
             <div>
               <h3><%= item.title %></h3>
               <p><%= item.caption %></p>
@@ -316,16 +332,95 @@
 </section>
 
 <% if (toolPage.heroModel && toolPage.heroModel.src) { %>
-  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
   <script>
     (() => {
       const viewer = document.getElementById('toolHeroModelViewer');
+      const stage = document.getElementById('toolModelStage');
+      const loadPreview = document.getElementById('toolLoadPreview');
       const preview = document.querySelector('.tool-live-preview');
       const upload = document.getElementById('toolArtworkUpload');
       const download = document.getElementById('toolDownloadPreview');
       const status = document.getElementById('toolPreviewStatus');
       const isBulkTool = <%- JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') %>;
-      if (!viewer || !preview) return;
+      const modelViewerSrc = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';
+      let viewerReadyPromise = null;
+      if (!viewer || !stage || !preview) return;
+
+      const withTimeout = (promise, milliseconds, message) => Promise.race([
+        promise,
+        new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))
+      ]);
+
+      const loadModelViewerModule = () => {
+        if (customElements.get('model-viewer')) return Promise.resolve();
+        const existing = document.querySelector('script[data-tool-model-viewer]');
+        const scriptReady = existing
+          ? new Promise((resolve, reject) => {
+              existing.addEventListener('load', resolve, { once: true });
+              existing.addEventListener('error', reject, { once: true });
+            })
+          : new Promise((resolve, reject) => {
+              const script = document.createElement('script');
+              script.type = 'module';
+              script.src = modelViewerSrc;
+              script.dataset.toolModelViewer = 'true';
+              script.addEventListener('load', resolve, { once: true });
+              script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });
+              document.head.appendChild(script);
+            });
+        return withTimeout(scriptReady, 15000, '3D viewer timed out')
+          .then(() => withTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));
+      };
+
+      const waitForModel = () => {
+        if (viewer.loaded) return Promise.resolve();
+        return withTimeout(new Promise((resolve, reject) => {
+          viewer.addEventListener('load', resolve, { once: true });
+          viewer.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });
+          viewer.src = viewer.dataset.modelSrc;
+        }), 45000, '3D model timed out');
+      };
+
+      const ensureViewerReady = () => {
+        if (viewer.loaded && customElements.get('model-viewer')) return Promise.resolve(viewer);
+        if (viewerReadyPromise) return viewerReadyPromise;
+
+        stage.classList.remove('is-error');
+        stage.classList.add('is-loading');
+        stage.setAttribute('aria-busy', 'true');
+        if (loadPreview) loadPreview.querySelector('span').textContent = 'Loading 3D preview…';
+        status.textContent = 'Loading the interactive garment only once…';
+
+        viewerReadyPromise = loadModelViewerModule()
+          .then(() => {
+            viewer.hidden = false;
+            return waitForModel();
+          })
+          .then(() => {
+            stage.classList.remove('is-loading');
+            stage.classList.add('is-ready');
+            stage.setAttribute('aria-busy', 'false');
+            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';
+            window.trackEvent?.('tool_interaction', {
+              interaction_type: 'load_3d_preview',
+              tool_name: <%- JSON.stringify(toolPage.slug) %>
+            });
+            return viewer;
+          })
+          .catch((error) => {
+            viewerReadyPromise = null;
+            viewer.hidden = true;
+            viewer.removeAttribute('src');
+            stage.classList.remove('is-loading');
+            stage.classList.add('is-error');
+            stage.setAttribute('aria-busy', 'false');
+            if (loadPreview) loadPreview.querySelector('span').textContent = 'Retry interactive 3D';
+            status.textContent = 'The fast preview is still available. Retry 3D or open the full editor.';
+            throw error;
+          });
+
+        return viewerReadyPromise;
+      };
 
       const hexFactor = (hex) => {
         const value = parseInt(String(hex).replace('#', ''), 16);
@@ -338,22 +433,32 @@
         status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';
       };
 
+      loadPreview?.addEventListener('click', () => {
+        ensureViewerReady().catch(() => {});
+      });
+
       document.querySelectorAll('.tool-color-swatch').forEach((button) => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));
-          button.classList.add('active');
-          applyColor(button.dataset.color);
+        button.addEventListener('click', async () => {
+          try {
+            await ensureViewerReady();
+            document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));
+            button.classList.add('active');
+            applyColor(button.dataset.color);
+          } catch (_) {}
         });
       });
 
       document.querySelectorAll('.tool-angle-controls button').forEach((button) => {
-        button.addEventListener('click', () => {
-          document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));
-          button.classList.add('active');
-          viewer.removeAttribute('auto-rotate');
-          viewer.cameraOrbit = button.dataset.orbit;
-          viewer.jumpCameraToGoal?.();
-          status.textContent = `${button.textContent} view selected.`;
+        button.addEventListener('click', async () => {
+          try {
+            await ensureViewerReady();
+            document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));
+            button.classList.add('active');
+            viewer.removeAttribute('auto-rotate');
+            viewer.cameraOrbit = button.dataset.orbit;
+            viewer.jumpCameraToGoal?.();
+            status.textContent = `${button.textContent} view selected.`;
+          } catch (_) {}
         });
       });
 
@@ -377,6 +482,10 @@
             status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';
             return;
           }
+          window.trackEvent?.('begin_design', {
+            design_entry: 'tool_artwork_upload',
+            tool_name: <%- JSON.stringify(toolPage.slug) %>
+          });
           window.location.href = preview.dataset.editorHref;
         };
         reader.readAsDataURL(file);
@@ -385,7 +494,8 @@
       download?.addEventListener('click', async () => {
         try {
           status.textContent = isBulkTool ? 'Rendering four garment colorways...' : 'Preparing transparent preview...';
-          await customElements.whenDefined('model-viewer');
+          await ensureViewerReady();
+          status.textContent = isBulkTool ? 'Rendering four garment colorways...' : 'Preparing transparent preview...';
           if (isBulkTool) {
             const colors = ['#f7f7f5', '#171717', '#506b5d', '#a54b43'];
             const snapshots = [];
@@ -428,6 +538,11 @@
             link.click();
             link.remove();
             status.textContent = 'Four-color T-shirt mockup sheet downloaded.';
+            window.trackEvent?.('design_export', {
+              export_format: 'png',
+              export_type: 'colorway_sheet',
+              tool_name: <%- JSON.stringify(toolPage.slug) %>
+            });
             return;
           }
           const dataUrl = viewer.toDataURL?.('image/png');
@@ -439,6 +554,11 @@
           link.click();
           link.remove();
           status.textContent = 'Transparent PNG downloaded.';
+          window.trackEvent?.('design_export', {
+            export_format: 'png',
+            export_type: 'transparent_preview',
+            tool_name: <%- JSON.stringify(toolPage.slug) %>
+          });
         } catch (error) {
           status.textContent = 'Open the full editor to export this model.';
         }

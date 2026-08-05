@@ -140,3 +140,260 @@
     transition: none;
   }
 }
+
+/* Accessible contrast for small editorial labels and secondary actions. */
+.generator-eyebrow {
+  color: #0064c8;
+}
+
+.page-header .category-breadcrumbs > span,
+.category-hero-meta span,
+.generator-steps .generator-step > span,
+.generator-category-card small {
+  color: #5f5f64;
+}
+
+.page-header .btn-secondary,
+.generator-section-header .btn-secondary {
+  color: #005db8;
+}
+
+.pattern-design-cta .pattern-design-cta-inner p {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* The first hero garment is the mobile LCP; render it immediately. */
+.home-hero-model-1 {
+  animation: none;
+}
+
+/* Model detail: show the optimized cover before starting WebGL. */
+.model-3d-viewer > .model-detail-poster {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  padding: clamp(18px, 4vw, 44px);
+  object-fit: contain;
+  filter: brightness(0.98) contrast(1.06);
+}
+
+.model-viewer-load {
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  z-index: 3;
+  display: grid;
+  gap: 2px;
+  min-width: min(280px, calc(100% - 32px));
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(29, 29, 31, 0.14);
+  box-shadow: 0 12px 34px rgba(29, 29, 31, 0.12);
+  transform: translateX(-50%);
+  backdrop-filter: blur(16px);
+}
+
+.model-viewer-load span {
+  font-size: 14px;
+  font-weight: 750;
+}
+
+.model-viewer-load small {
+  color: #5f5f64;
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.model-viewer-load-status {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 4px;
+  z-index: 3;
+  margin: 0;
+  color: #5f5f64;
+  font-size: 11px;
+  text-align: center;
+}
+
+.model-3d-viewer.is-loading .model-viewer-load {
+  cursor: wait;
+  opacity: 0.82;
+}
+
+.model-3d-viewer.is-ready > .model-detail-poster,
+.model-3d-viewer.is-ready > .model-viewer-load {
+  display: none;
+}
+
+.model-side-stage {
+  position: relative;
+}
+
+.model-side-stage > .showcase-side-viewer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.model-side-stage.is-ready > .model-side-poster {
+  display: none;
+}
+
+/* Tool preview: keep the heavy WebGL viewer and GLB out of the critical path. */
+.tool-model-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  min-height: 380px;
+  overflow: hidden;
+  border: 1px solid rgba(17, 17, 17, 0.1);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 50% 44%, rgba(255, 255, 255, 0.96), rgba(245, 245, 239, 0.78) 56%, rgba(232, 232, 224, 0.92));
+}
+
+.tool-model-stage > .tool-hero-model-poster,
+.tool-model-stage > .tool-hero-model-viewer {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
+}
+
+.tool-model-stage > .tool-hero-model-poster {
+  aspect-ratio: auto;
+  border: 0;
+  border-radius: 0;
+  object-fit: contain;
+  background: transparent;
+  box-shadow: none;
+}
+
+.tool-model-load {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  z-index: 2;
+  display: grid;
+  gap: 2px;
+  min-width: min(260px, calc(100% - 32px));
+  padding: 11px 20px;
+  border-color: rgba(17, 17, 17, 0.16);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 32px rgba(17, 17, 17, 0.12);
+  transform: translateX(-50%);
+  backdrop-filter: blur(14px);
+}
+
+.tool-model-load span {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.tool-model-load small {
+  color: var(--color-secondary);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+}
+
+.tool-model-stage.is-loading .tool-model-load {
+  cursor: wait;
+  opacity: 0.82;
+}
+
+.tool-model-stage.is-ready .tool-hero-model-poster,
+.tool-model-stage.is-ready .tool-model-load {
+  display: none;
+}
+
+.tool-model-stage.is-error .tool-model-load {
+  border-color: rgba(165, 75, 67, 0.28);
+}
+
+@media (max-width: 640px) {
+  .tool-detail-hero .category-breadcrumbs {
+    justify-content: flex-start;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .tool-detail-hero .category-breadcrumbs span:last-child {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .tool-detail-hero .tool-trust-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    overflow: hidden;
+  }
+
+  .tool-detail-hero .tool-trust-row span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .tool-live-preview .tool-quick-editor {
+    min-width: 0;
+    padding-right: var(--spacing-md);
+  }
+
+  .tool-live-preview .tool-angle-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: 100%;
+    min-width: 0;
+  }
+
+  .tool-live-preview .tool-angle-controls button,
+  .tool-live-preview .tool-preview-actions,
+  .tool-live-preview .tool-preview-actions .btn {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .tool-model-stage,
+  .tool-model-stage > .tool-hero-model-poster,
+  .tool-model-stage > .tool-hero-model-viewer {
+    min-height: 340px;
+  }
+
+  .tool-model-stage > .tool-hero-model-viewer {
+    width: 112%;
+  }
+}
+
+/* Model detail accessibility: retain the quiet palette at WCAG AA contrast. */
+.model-detail-hero .model-breadcrumb,
+.model-detail-hero .spec-label {
+  color: #5f6065;
+}
+
+.model-detail-hero .tag-free {
+  color: #006b35;
+}
+
+.model-detail-hero .model-actions .btn-secondary {
+  color: #005ebd;
+}
+
+.model-detail-hero .model-keyword-list span {
+  color: #55565b;
+}
+
+.model-description h2,
+.model-specs h2 {
+  margin-bottom: var(--spacing-sm);
+  font-size: 16px;
+  font-weight: 600;
+}

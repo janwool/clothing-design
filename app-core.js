@@ -20,6 +20,10 @@ const DEFAULT_SOCIAL_IMAGE = 'https://cdn.cloz-design.com/site/icon.png';
 const CDN_BASE_URL = 'https://cdn.cloz-design.com';
 const JSON_BODY_LIMIT_BYTES = 14 * 1024 * 1024;
 
+function shouldNoindexPath(value) {
+  return /^(?:\/admin(?:\/|$)|\/auth(?:\/|$)|\/api(?:\/|$)|\/thickness-test\.html$)/.test(String(value || ''));
+}
+
 function requireLocalOnly(moduleName) {
   const nodeRequire = eval('require');
   return nodeRequire(moduleName);
@@ -343,10 +347,17 @@ app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   res.locals.canonicalUrl = canonicalUrl(req.path || '/');
   res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;
+  res.locals.defaultMetaRobots = shouldNoindexPath(req.path) ? 'noindex, nofollow, noarchive' : 'max-image-preview:large';
   next();
 });
 
 app.use((req, res, next) => {
+  const hostname = String(req.hostname || '').toLowerCase();
+  const privatePath = shouldNoindexPath(req.path);
+  if (hostname.endsWith('.workers.dev') || privatePath) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  }
+
   const originalEnd = res.end;
   res.end = function patchedSeoEnd(...args) {
     if (!res.headersSent && res.statusCode >= 400) {
@@ -380,7 +391,15 @@ if (isWorkerRuntime) {
 }
 
 if (!isWorkerRuntime) {
-  app.use(express.static(path.join(appRootDir, 'public')));
+  const publicDir = path.join(appRootDir, 'public');
+  app.use(express.static(publicDir, {
+    setHeaders(res, filePath) {
+      const relativePath = path.relative(publicDir, filePath).split(path.sep).join('/');
+      if (/^(css|js|images|materials|uploads\/preview)\//.test(relativePath) || /^favicon\.(?:ico|svg)$/.test(relativePath)) {
+        res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+      }
+    }
+  }));
 }
 
 if (isWorkerRuntime) {
