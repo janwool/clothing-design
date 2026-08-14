@@ -2061,6 +2061,10 @@ img {
   transition: all var(--transition-fast);
 }
 
+.viewer-btn[hidden] {
+  display: none;
+}
+
 .viewer-btn:hover,
 .viewer-btn.active {
   background-color: var(--color-primary);
@@ -4179,8 +4183,8 @@ img {
   grid-area: canvas;
   background-color: var(--color-light);
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   padding: var(--spacing-lg);
   overflow: auto;
   min-height: 0;
@@ -4194,9 +4198,12 @@ img {
   max-height: 100%;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  background-color: var(--color-white);
+  background-color: #fff;
   cursor: default;
   display: block;
+  flex: none;
+  margin: auto;
+  overflow: visible;
   touch-action: none;
   user-select: none;
 }
@@ -4253,8 +4260,12 @@ img {
   word-break: break-word;
   overflow: hidden;
   outline: none;
-  cursor: text;
-  user-select: text;
+  cursor: move;
+  user-select: none;
+}
+
+.texture-element[data-type="text"] .texture-content {
+  pointer-events: all;
 }
 
 .texture-text-box.is-editing {
@@ -4262,6 +4273,8 @@ img {
   min-height: 100%;
   background: rgba(255, 255, 255, 0.86);
   box-shadow: inset 0 0 0 1px var(--color-accent);
+  cursor: text;
+  user-select: text;
 }
 
 .editor-ui {
@@ -4291,6 +4304,46 @@ img {
 
 .element-toolbar.visible {
   display: inline-flex;
+}
+
+.element-toolbar.is-surface-toolbar {
+  min-height: 48px;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.2);
+}
+
+.surface-toolbar-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.surface-toolbar-icon {
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+  border: 1.5px solid currentColor;
+  border-radius: 3px;
+  background: linear-gradient(135deg, transparent 44%, currentColor 45%, currentColor 55%, transparent 56%);
+  opacity: 0.75;
+}
+
+.surface-color-control {
+  gap: 7px;
+  padding-left: 12px;
+  border-left: 1px solid var(--color-border);
+}
+
+.surface-color-value {
+  min-width: 58px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
 }
 
 .element-toolbar-control {
@@ -4838,6 +4891,125 @@ body {
 
 .models-grid {
   gap: 18px;
+}
+
+.catalog-pagination-shell {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  margin: 42px auto 8px;
+}
+
+.catalog-pagination-summary {
+  margin: 0;
+  color: var(--color-secondary);
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+.catalog-pagination-summary strong {
+  color: var(--color-primary);
+  font-weight: 650;
+}
+
+.catalog-pagination {
+  display: grid;
+  grid-template-columns: minmax(104px, auto) auto minmax(104px, auto);
+  align-items: center;
+  gap: 14px;
+  padding: 7px;
+  border: 1px solid rgba(29, 29, 31, 0.08);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 32px rgba(29, 29, 31, 0.06);
+}
+
+.catalog-page-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.catalog-page-number,
+.catalog-page-direction,
+.catalog-page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: var(--radius-full);
+  color: var(--color-secondary);
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+}
+
+.catalog-page-number,
+.catalog-page-direction {
+  transition: color var(--transition-base), background-color var(--transition-base), transform var(--transition-fast);
+}
+
+.catalog-page-direction {
+  gap: 6px;
+  padding: 0 13px;
+  white-space: nowrap;
+}
+
+.catalog-page-number:hover,
+.catalog-page-direction:hover {
+  background: rgba(29, 29, 31, 0.065);
+  color: var(--color-primary);
+}
+
+.catalog-page-number:focus-visible,
+.catalog-page-direction:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.catalog-page-number.is-current {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.catalog-page-direction.is-disabled {
+  color: rgba(110, 110, 115, 0.42);
+  cursor: default;
+}
+
+@media (max-width: 620px) {
+  .catalog-pagination-shell {
+    margin-top: 30px;
+  }
+
+  .catalog-pagination {
+    width: 100%;
+    grid-template-columns: 42px 1fr 42px;
+    gap: 4px;
+    border-radius: var(--radius-lg);
+  }
+
+  .catalog-page-direction {
+    min-width: 38px;
+    padding: 0;
+  }
+
+  .catalog-page-direction span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .catalog-page-number,
+  .catalog-page-ellipsis {
+    min-width: 36px;
+    min-height: 36px;
+  }
 }
 
 .model-card,

@@ -1,0 +1,62 @@
+{
+  "version": "basic-short-sleeve-tshirt-v1",
+  "referenceModel": "basic-short-sleeve-tshirt-3d-model",
+  "output": {
+    "width": 1200,
+    "height": 1500,
+    "background": "#F4F5F7",
+    "format": "webp",
+    "quality": 92
+  },
+  "camera": {
+    "direction": [-0.42, -1.0, 0.16],
+    "distanceScale": 2.3,
+    "orthographicScale": 1.18,
+    "webOrbit": "-48deg 72deg 142%",
+    "webFieldOfView": "28deg",
+    "webTarget": "auto auto auto"
+  },
+  "colorManagement": {
+    "viewTransform": "Standard",
+    "look": "Medium High Contrast",
+    "exposure": 0.8
+  },
+  "ambient": {
+    "color": [0.82, 0.85, 0.9],
+    "strength": 0.22
+  },
+  "lightingNormalization": {
+    "referenceBounds": 70.54,
+    "energyMultiplier": 100.0
+  },
+  "lights": [
+    {
+      "name": "Key",
+      "positionScale": [-1.4, -1.7, 2.2],
+      "energy": 1500,
+      "sizeScale": 1.7,
+      "color": [1.0, 0.93, 0.84]
+    },
+    {
+      "name": "Fill",
+      "positionScale": [1.5, -1.25, 1.15],
+      "energy": 650,
+      "sizeScale": 2.5,
+      "color": [0.82, 0.9, 1.0]
+    },
+    {
+      "name": "Rim",
+      "positionScale": [0.4, 1.8, 1.7],
+      "energy": 620,
+      "sizeScale": 1.8,
+      "color": [0.88, 0.93, 1.0]
+    }
+  ],
+  "web": {
+    "environmentImage": "neutral",
+    "shadowIntensity": 1.7,
+    "shadowSoftness": 0.48,
+    "exposure": 0.78,
+    "toneMapping": "aces"
+  }
+}

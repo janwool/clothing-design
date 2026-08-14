@@ -43,6 +43,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -110,6 +113,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -215,6 +221,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -296,6 +305,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -409,6 +421,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -662,6 +677,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -777,6 +795,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -912,6 +933,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -976,6 +1000,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -999,7 +1026,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260805-core-split\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260805\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260813-plain-uv\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260805\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },
@@ -1046,6 +1073,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1126,6 +1156,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1241,6 +1274,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1332,6 +1368,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1417,6 +1456,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1504,6 +1546,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1742,6 +1787,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -1849,6 +1897,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2188,6 +2239,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2309,6 +2363,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2327,6 +2384,12 @@ title = __locals.title,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
     ; __append( include('partials/header') )
+    ; __append("\n")
+    ;  const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination ? catalogPagination : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] }; 
+    ; __append("\n")
+    ;  const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length; 
+    ; __append("\n")
+    ;  const mockupPageHref = function(pageNumber) { return pageNumber === 1 ? '/mockups#free-3d-models' : `/mockups?page=${pageNumber}#free-3d-models`; }; 
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <div class=\"category-breadcrumbs\">\n      <a href=\"/\">Home</a>\n      <span>/</span>\n      <span>")
     ; __append(escapeFn( t('design3d.pageTitle') ))
     ; __append("</span>\n    </div>\n    <h1 class=\"page-title\">")
@@ -2334,7 +2397,7 @@ title = __locals.title,
     ; __append("</h1>\n    <p class=\"page-subtitle\">")
     ; __append(escapeFn( t('design3d.pageSubtitle') ))
     ; __append("</p>\n    <div class=\"category-hero-meta mockup-library-meta\">\n      <span>")
-    ; __append(escapeFn( models && models.length ? `${models.length} free 3D models` : 'Free 3D model library' ))
+    ; __append(escapeFn( mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library' ))
     ; __append("</span>\n      <span>Browser-based customization</span>\n      <span>Transparent PNG export</span>\n    </div>\n    <div class=\"category-hero-actions\">\n      <a href=\"#free-3d-models\" class=\"btn btn-primary\">Browse free models</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary\">Open 3D mockup generator</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <nav class=\"mockup-intent-links\" aria-label=\"Popular 3D clothing mockup searches\">\n      <a href=\"/mockups/jacket\">Jacket 3D models</a>\n      <a href=\"/mockups/pants\">3D pants design models</a>\n      <a href=\"/mockups/dress\">Free dress mockups</a>\n      <a href=\"/mockups/shirt\">Shirt 3D models</a>\n      <a href=\"/tools/dress-designer\">Online dress designer</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockups</a>\n    </nav>\n\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/mockups\" class=\"filter-btn active\">\n          ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n          <span>")
@@ -2379,8 +2442,58 @@ title = __locals.title,
     ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <p>No 3D models available yet.</p>\n        </div>\n      ")
     ;  } 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ; __append( include('partials/generator-sections', { landingContent, categories, models }) )
+    ; __append("\n    </div>\n\n    ")
+    ;  if (mockupPagination.pageCount > 1) { 
+    ; __append("\n      <div class=\"catalog-pagination-shell\">\n        <p class=\"catalog-pagination-summary\">\n          Showing <strong>")
+    ; __append(escapeFn( mockupPagination.start ))
+    ; __append("–")
+    ; __append(escapeFn( mockupPagination.end ))
+    ; __append("</strong> of <strong>")
+    ; __append(escapeFn( mockupPagination.total ))
+    ; __append("</strong> models\n        </p>\n        <nav class=\"catalog-pagination\" aria-label=\"3D model pages\">\n          ")
+    ;  if (mockupPagination.page > 1) { 
+    ; __append("\n            <a class=\"catalog-page-direction\" href=\"")
+    ; __append(escapeFn( mockupPageHref(mockupPagination.page - 1) ))
+    ; __append("\" rel=\"prev\" aria-label=\"Previous page\">← <span>Previous</span></a>\n          ")
+    ;  } else { 
+    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\">← <span>Previous</span></span>\n          ")
+    ;  } 
+    ; __append("\n          <div class=\"catalog-page-numbers\">\n            ")
+    ;  mockupPagination.pages.forEach(function(pageNumber) { 
+    ; __append("\n              ")
+    ;  if (pageNumber === null) { 
+    ; __append("\n                <span class=\"catalog-page-ellipsis\" aria-hidden=\"true\">…</span>\n              ")
+    ;  } else if (pageNumber === mockupPagination.page) { 
+    ; __append("\n                <span class=\"catalog-page-number is-current\" aria-current=\"page\">")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("</span>\n              ")
+    ;  } else { 
+    ; __append("\n                <a class=\"catalog-page-number\" href=\"")
+    ; __append(escapeFn( mockupPageHref(pageNumber) ))
+    ; __append("\" aria-label=\"Page ")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("\">")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("</a>\n              ")
+    ;  } 
+    ; __append("\n            ")
+    ;  }); 
+    ; __append("\n          </div>\n          ")
+    ;  if (mockupPagination.page < mockupPagination.pageCount) { 
+    ; __append("\n            <a class=\"catalog-page-direction\" href=\"")
+    ; __append(escapeFn( mockupPageHref(mockupPagination.page + 1) ))
+    ; __append("\" rel=\"next\" aria-label=\"Next page\"><span>Next</span> →</a>\n          ")
+    ;  } else { 
+    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\"><span>Next</span> →</span>\n          ")
+    ;  } 
+    ; __append("\n        </nav>\n      </div>\n    ")
+    ;  } 
+    ; __append("\n  </div>\n</section>\n\n")
+    ;  if (mockupPagination.page === 1) { 
+    ; __append("\n  ")
+    ; __append( include('partials/generator-sections', { landingContent, categories, models: (typeof catalogModels !== 'undefined' ? catalogModels : models) }) )
+    ; __append("\n")
+    ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -2430,6 +2543,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2521,6 +2637,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2587,6 +2706,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2658,6 +2780,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2877,6 +3002,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -2921,7 +3049,11 @@ title = __locals.title,
     ;  const modelMockupProfile = modelMockupProfiles[model.slug] || null; 
     ; __append("\n")
     ;  const supportsOnModelMockup = Boolean(modelMockupProfile); 
-    ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer\" id=\"model3dViewer\">\n          ")
+    ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer")
+    ; __append(escapeFn( previewModelFileUrl ? ' is-loading' : '' ))
+    ; __append("\" id=\"model3dViewer\" aria-busy=\"")
+    ; __append(escapeFn( previewModelFileUrl ? 'true' : 'false' ))
+    ; __append("\">\n          ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <img\n              class=\"model-detail-poster\"\n              src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2933,7 +3065,7 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls \n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary model-viewer-load\" id=\"modelViewerLoad\">\n              <span>Load interactive 3D</span>\n              <small>Rotate and inspect the garment</small>\n            </button>\n            <p class=\"model-viewer-load-status\" id=\"modelViewerLoadStatus\" aria-live=\"polite\"></p>\n          ")
+    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary model-viewer-load\" id=\"modelViewerLoad\" hidden>\n              <span>Retry interactive 3D</span>\n            </button>\n            <p class=\"model-viewer-load-status\" id=\"modelViewerLoadStatus\" aria-live=\"polite\">Loading interactive 3D…</p>\n          ")
     ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2941,7 +3073,7 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  } 
-    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
+    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\" type=\"button\" aria-pressed=\"false\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fabricMotionBtn\" type=\"button\" aria-pressed=\"false\" hidden>\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7\"/>\n              <path d=\"M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0\"/>\n              <path d=\"M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0\"/>\n            </svg>\n            Fabric Motion\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">")
     ; __append(escapeFn( model.category_label || model.category ))
@@ -3167,13 +3299,13 @@ title = __locals.title,
     ;  if (supportsOnModelMockup) { 
     ; __append("\n          <button class=\"btn btn-secondary btn-small design-model-mockup-button\" id=\"designModelMockupBtn\" type=\"button\">\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5\"/>\n              <path d=\"M9 4.5a3.7 3.7 0 0 0 6 0\"/>\n            </svg>\n            <span>Model mockup</span>\n          </button>\n        ")
     ;  } 
-    ; __append("\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\">\n          <span class=\"apply-label-desktop\">Apply design</span>\n          <span class=\"apply-label-mobile\">Apply</span>\n        </button>\n        <button class=\"design-modal-close\" id=\"designModalClose\" type=\"button\" aria-label=\"Close Design Studio\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6L6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- Editor Tool Rail -->\n        <div class=\"designer-toolbar\" aria-label=\"Design tools\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n              <span>Select</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolPan\" title=\"Move\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20\"/>\n              </svg>\n              <span>Move</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDraw\" title=\"Draw\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M12 20h9\"/>\n                <path d=\"M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z\"/>\n              </svg>\n              <span>Draw</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n              <span>Text</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n              <span>Image</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n              <span>Shape</span>\n            </button>\n          </div>\n          <div class=\"toolbar-group toolbar-history\">\n            <button class=\"toolbar-btn\" id=\"toolUndo\" title=\"Undo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 7v6h6\"/>\n                <path d=\"M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13\"/>\n              </svg>\n              <span>Undo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolRedo\" title=\"Redo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 7v6h-6\"/>\n                <path d=\"M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13\"/>\n              </svg>\n              <span>Redo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDelete\" title=\"Delete\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 6h18\"/>\n                <path d=\"M8 6V4h8v2\"/>\n                <path d=\"M19 6l-1 14H6L5 6\"/>\n              </svg>\n              <span>Delete</span>\n            </button>\n          </div>\n        </div>\n\n        <!-- Main Texture Design Area -->\n        <div class=\"texture-canvas-area\">\n          <div class=\"canvas-context\">\n            <strong>Texture layout</strong>\n            <span>Select a garment panel to edit</span>\n          </div>\n          <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\">\n            <defs>\n              <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n            </defs>\n            <rect id=\"textureWhiteBase\" fill=\"#ffffff\"/>\n            <!-- Model SVG Texture Background -->\n            ")
+    ; __append("\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\">\n          <span class=\"apply-label-desktop\">Apply design</span>\n          <span class=\"apply-label-mobile\">Apply</span>\n        </button>\n        <button class=\"design-modal-close\" id=\"designModalClose\" type=\"button\" aria-label=\"Close Design Studio\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6L6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- Editor Tool Rail -->\n        <div class=\"designer-toolbar\" aria-label=\"Design tools\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n              <span>Select</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolPan\" title=\"Pan Canvas\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20\"/>\n              </svg>\n              <span>Pan</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDraw\" title=\"Draw\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M12 20h9\"/>\n                <path d=\"M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z\"/>\n              </svg>\n              <span>Draw</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n              <span>Text</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n              <span>Image</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n              <span>Shape</span>\n            </button>\n          </div>\n          <div class=\"toolbar-group toolbar-history\">\n            <button class=\"toolbar-btn\" id=\"toolUndo\" title=\"Undo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 7v6h6\"/>\n                <path d=\"M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13\"/>\n              </svg>\n              <span>Undo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolRedo\" title=\"Redo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 7v6h-6\"/>\n                <path d=\"M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13\"/>\n              </svg>\n              <span>Redo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDelete\" title=\"Delete\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 6h18\"/>\n                <path d=\"M8 6V4h8v2\"/>\n                <path d=\"M19 6l-1 14H6L5 6\"/>\n              </svg>\n              <span>Delete</span>\n            </button>\n          </div>\n        </div>\n\n        <!-- Main Texture Design Area -->\n        <div class=\"texture-canvas-area\">\n          <div class=\"canvas-context\">\n            <strong>Texture layout</strong>\n            <span>Select a garment panel to edit</span>\n          </div>\n          <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\">\n            <defs>\n              <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n            </defs>\n            <rect id=\"textureWhiteBase\" fill=\"transparent\"/>\n            <!-- Model SVG Texture Background -->\n            ")
     ;  if (model.texture_url) { 
     ; __append("\n              <image id=\"textureBg\" href=\"")
     ; __append(escapeFn( model.texture_url ))
     ; __append("\" preserveAspectRatio=\"none\"/>\n              <g id=\"textureTemplateLayer\"></g>\n            ")
     ;  } else { 
-    ; __append("\n              <rect id=\"textureBg\" fill=\"#ffffff\"/>\n              <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n            ")
+    ; __append("\n              <rect id=\"textureBg\" fill=\"transparent\"/>\n              <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n            ")
     ;  } 
     ; __append("\n            <rect id=\"texturePattern\" fill=\"none\"/>\n            <g id=\"textureElements\"></g>\n            <g id=\"selectionLayer\" class=\"editor-ui\"></g>\n          </svg>\n          <div class=\"canvas-zoom-controls\" aria-label=\"Canvas zoom controls\">\n            <button id=\"canvasZoomOut\" type=\"button\" aria-label=\"Zoom out\">−</button>\n            <span id=\"canvasZoomLabel\">100%</span>\n            <button id=\"canvasZoomIn\" type=\"button\" aria-label=\"Zoom in\">+</button>\n            <span class=\"canvas-zoom-divider\" aria-hidden=\"true\"></span>\n            <button id=\"canvasZoomFit\" type=\"button\" aria-label=\"Fit canvas\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" aria-hidden=\"true\">\n                <path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <!-- 3D Preview and Material Inspector -->\n        <div class=\"preview-3d-panel\">\n          <section class=\"design-inspector-card design-preview-card\">\n            <div class=\"inspector-card-header\">\n              <div>\n                <h3>3D Preview</h3>\n              </div>\n              <span class=\"preview-live-indicator\">Live</span>\n            </div>\n            <div class=\"preview-model-stage\">\n              ")
     ;  if (previewModelFileUrl) { 
@@ -3183,7 +3315,7 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n                  alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  auto-rotate\n                  shadow-intensity=\"1.55\"\n                  shadow-softness=\"0.52\"\n                  exposure=\"0.66\"\n                  environment-image=\"neutral\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n              ")
+    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  shadow-intensity=\"1.55\"\n                  shadow-softness=\"0.52\"\n                  exposure=\"0.66\"\n                  environment-image=\"neutral\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n              ")
     ;  } else { 
     ; __append("\n                <div class=\"designer-placeholder\">\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -3191,9 +3323,11 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n                </div>\n              ")
     ;  } 
-    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Choose material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fullscreenBtn = document.getElementById('fullscreenBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelViewerLoad = document.getElementById('modelViewerLoad');\nconst modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');\nconst modelViewerPromises = new WeakMap();\nlet modelViewerModulePromise = null;\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (element.loaded || element.model) return Promise.resolve(element);\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const promise = loadModelViewerModule().then(() => {\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    if (element.loaded || element.model) return element;\n    return withModelViewerTimeout(new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.src = element.dataset.modelSrc;\n    }), 45000, '3D model timed out');\n  }).then((readyViewer) => {\n    readyViewer.dismissPoster?.();\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    element.hidden = true;\n    element.removeAttribute('src');\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  if (modelViewerLoad) modelViewerLoad.querySelector('span').textContent = 'Loading interactive 3D…';\n  if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: 'load_model_detail_3d',\n      item_id: ")
+    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Choose material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst fullscreenBtn = document.getElementById('fullscreenBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelViewerLoad = document.getElementById('modelViewerLoad');\nconst modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');\nconst modelViewerPromises = new WeakMap();\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (element.loaded && element.model) return Promise.resolve(element);\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const promise = loadModelViewerModule().then(() => {\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    if (element.loaded && element.model) return element;\n    return withModelViewerTimeout(new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.src = element.dataset.modelSrc;\n    }), 45000, '3D model timed out');\n  }).then((readyViewer) => {\n    readyViewer.dismissPoster?.();\n    configureGarmentSoftnessAnimation(readyViewer);\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    element.hidden = true;\n    element.removeAttribute('src');\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  if (modelViewerLoad) modelViewerLoad.hidden = true;\n  if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-error');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoad) modelViewerLoad.hidden = false;\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available.';\n    throw error;\n  }\n}\n\nmodelViewerLoad?.addEventListener('click', () => {\n  window.trackEvent?.('tool_interaction', {\n    interaction_type: 'retry_model_detail_3d',\n    item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
-    ; __append("\n    });\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-error');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoad) modelViewerLoad.querySelector('span').textContent = 'Retry interactive 3D';\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available. Retry when ready.';\n    throw error;\n  }\n}\n\nmodelViewerLoad?.addEventListener('click', () => ensureDetailViewer().catch(() => {}));\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active');\n  });\n}\n\nif (fullscreenBtn && viewer) {\n  fullscreenBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (readyViewer?.requestFullscreen) {\n      readyViewer.requestFullscreen();\n    }\n  });\n}\n\nconst sideViewer = document.querySelector('.showcase-side-viewer');\nconst sideStage = sideViewer?.closest('.model-side-stage');\nif (sideViewer && sideStage && 'IntersectionObserver' in window) {\n  const sideObserver = new IntersectionObserver((entries) => {\n    if (!entries.some((entry) => entry.isIntersecting)) return;\n    sideObserver.disconnect();\n    loadModelViewerElement(sideViewer)\n      .then(() => sideStage.classList.add('is-ready'))\n      .catch(() => sideStage.classList.add('is-error'));\n  }, { rootMargin: '240px 0px' });\n  sideObserver.observe(sideStage);\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
+    ; __append("\n  });\n  ensureDetailViewer().catch(() => {});\n});\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
+    ; __append( JSON.stringify(model.slug || '') )
+    ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (fullscreenBtn && viewer) {\n  fullscreenBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (readyViewer?.requestFullscreen) {\n      readyViewer.requestFullscreen();\n    }\n  });\n}\n\nconst sideViewer = document.querySelector('.showcase-side-viewer');\nconst sideStage = sideViewer?.closest('.model-side-stage');\nif (sideViewer && sideStage && 'IntersectionObserver' in window) {\n  const sideObserver = new IntersectionObserver((entries) => {\n    if (!entries.some((entry) => entry.isIntersecting)) return;\n    sideObserver.disconnect();\n    loadModelViewerElement(sideViewer)\n      .then(() => sideStage.classList.add('is-ready'))\n      .catch(() => sideStage.classList.add('is-error'));\n  }, { rootMargin: '240px 0px' });\n  sideObserver.observe(sideStage);\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
     ; __append(",\n  currentModelCategory: ")
     ; __append( JSON.stringify(model.category || model.category_label || model.category_slug || '') )
@@ -3211,7 +3345,7 @@ title = __locals.title,
     ; __append( JSON.stringify(model.slug || '') )
     ; __append(",\n  modelName: ")
     ; __append( JSON.stringify(model.name || '') )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('downloadRenderBtn'),\n    document.getElementById('customizationInquiryBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260805-lazy';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const existing = document.querySelector('script[data-model-designer-runtime]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/model-designer.js?v=20260805-runtime-lazy';\n      script.dataset.modelDesignerRuntime = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design Studio runtime failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'downloadRenderBtn') {\n        await window.downloadDesignedModelRender?.();\n      } else if (entryId === 'customizationInquiryBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  if (window.location.hash === '#design' || hasPendingArtwork) {\n    loadModelDesignerRuntime().catch((error) => console.error(error));\n  }\n  window.addEventListener('hashchange', () => {\n    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));\n  });\n})();\n</script>\n")
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('downloadRenderBtn'),\n    document.getElementById('customizationInquiryBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260805-lazy';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-edit-v3',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260815-text-edit-v3',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'downloadRenderBtn') {\n        await window.downloadDesignedModelRender?.();\n      } else if (entryId === 'customizationInquiryBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  if (window.location.hash === '#design' || hasPendingArtwork) {\n    loadModelDesignerRuntime().catch((error) => console.error(error));\n  }\n  window.addEventListener('hashchange', () => {\n    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));\n  });\n})();\n</script>\n")
     ;  if (supportsOnModelMockup) { 
     ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260805';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260805-on-model-studio-lazy';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
     ;  } 
@@ -3264,6 +3398,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -3394,6 +3531,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -3460,6 +3600,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -3699,6 +3842,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -3777,7 +3923,7 @@ title = __locals.title,
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
     ;  } 
-    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClothingDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260805-core-split\">\n  ")
+    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClothingDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260815-text-edit-v3\">\n  ")
     ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; 
     ; __append("\n  ")
     ;  headPageStyles.forEach(function(stylesheet) { 
@@ -3785,7 +3931,7 @@ title = __locals.title,
     ; __append(escapeFn( stylesheet ))
     ; __append("\">\n  ")
     ;  }); 
-    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260805-accessibility-lcp\">\n</head>\n<body>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
+    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260806-auto-3d\">\n</head>\n<body>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          ")
     ; __append(escapeFn( t('nav.design3d') ))
@@ -3890,6 +4036,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -3964,6 +4113,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -4031,6 +4183,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,
@@ -4369,6 +4524,9 @@ title = __locals.title,
   items = __locals.items,
   categories = __locals.categories,
   models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
   landingContent = __locals.landingContent,
   category = __locals.category,
   resourceType = __locals.resourceType,

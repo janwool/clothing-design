@@ -1,4 +1,7 @@
 <%- include('partials/header') %>
+<% const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination ? catalogPagination : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] }; %>
+<% const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length; %>
+<% const mockupPageHref = function(pageNumber) { return pageNumber === 1 ? '/mockups#free-3d-models' : `/mockups?page=${pageNumber}#free-3d-models`; }; %>
 
 <section class="page-header">
   <div class="container">
@@ -10,7 +13,7 @@
     <h1 class="page-title"><%= t('design3d.pageTitle') %></h1>
     <p class="page-subtitle"><%= t('design3d.pageSubtitle') %></p>
     <div class="category-hero-meta mockup-library-meta">
-      <span><%= models && models.length ? `${models.length} free 3D models` : 'Free 3D model library' %></span>
+      <span><%= mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library' %></span>
       <span>Browser-based customization</span>
       <span>Transparent PNG export</span>
     </div>
@@ -85,9 +88,42 @@
         </div>
       <% } %>
     </div>
+
+    <% if (mockupPagination.pageCount > 1) { %>
+      <div class="catalog-pagination-shell">
+        <p class="catalog-pagination-summary">
+          Showing <strong><%= mockupPagination.start %>–<%= mockupPagination.end %></strong> of <strong><%= mockupPagination.total %></strong> models
+        </p>
+        <nav class="catalog-pagination" aria-label="3D model pages">
+          <% if (mockupPagination.page > 1) { %>
+            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page - 1) %>" rel="prev" aria-label="Previous page">← <span>Previous</span></a>
+          <% } else { %>
+            <span class="catalog-page-direction is-disabled" aria-disabled="true">← <span>Previous</span></span>
+          <% } %>
+          <div class="catalog-page-numbers">
+            <% mockupPagination.pages.forEach(function(pageNumber) { %>
+              <% if (pageNumber === null) { %>
+                <span class="catalog-page-ellipsis" aria-hidden="true">…</span>
+              <% } else if (pageNumber === mockupPagination.page) { %>
+                <span class="catalog-page-number is-current" aria-current="page"><%= pageNumber %></span>
+              <% } else { %>
+                <a class="catalog-page-number" href="<%= mockupPageHref(pageNumber) %>" aria-label="Page <%= pageNumber %>"><%= pageNumber %></a>
+              <% } %>
+            <% }); %>
+          </div>
+          <% if (mockupPagination.page < mockupPagination.pageCount) { %>
+            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page + 1) %>" rel="next" aria-label="Next page"><span>Next</span> →</a>
+          <% } else { %>
+            <span class="catalog-page-direction is-disabled" aria-disabled="true"><span>Next</span> →</span>
+          <% } %>
+        </nav>
+      </div>
+    <% } %>
   </div>
 </section>
 
-<%- include('partials/generator-sections', { landingContent, categories, models }) %>
+<% if (mockupPagination.page === 1) { %>
+  <%- include('partials/generator-sections', { landingContent, categories, models: (typeof catalogModels !== 'undefined' ? catalogModels : models) }) %>
+<% } %>
 
 <%- include('partials/footer') %>

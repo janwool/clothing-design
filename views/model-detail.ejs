@@ -20,7 +20,7 @@
     <div class="model-detail-grid">
       <!-- Left: 3D Viewer -->
       <div class="model-viewer-section">
-        <div class="model-3d-viewer" id="model3dViewer">
+        <div class="model-3d-viewer<%= previewModelFileUrl ? ' is-loading' : '' %>" id="model3dViewer" aria-busy="<%= previewModelFileUrl ? 'true' : 'false' %>">
           <% if (previewModelFileUrl) { %>
             <img
               class="model-detail-poster"
@@ -38,8 +38,7 @@
               alt="<%= model.name %> interactive 3D clothing model and apparel mockup"
               loading="eager"
               reveal="auto"
-              camera-controls 
-              auto-rotate
+              camera-controls
               shadow-intensity="1.55"
               shadow-softness="0.52"
               exposure="0.66"
@@ -47,11 +46,10 @@
               style="width: 100%; height: 100%;"
               hidden
             ></model-viewer>
-            <button type="button" class="btn btn-secondary model-viewer-load" id="modelViewerLoad">
-              <span>Load interactive 3D</span>
-              <small>Rotate and inspect the garment</small>
+            <button type="button" class="btn btn-secondary model-viewer-load" id="modelViewerLoad" hidden>
+              <span>Retry interactive 3D</span>
             </button>
-            <p class="model-viewer-load-status" id="modelViewerLoadStatus" aria-live="polite"></p>
+            <p class="model-viewer-load-status" id="modelViewerLoadStatus" aria-live="polite">Loading interactive 3D…</p>
           <% } else { %>
             <div class="model-viewer-placeholder">
               <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-preview-img">
@@ -59,12 +57,20 @@
           <% } %>
         </div>
         <div class="model-viewer-controls">
-          <button class="viewer-btn" id="rotateBtn">
+          <button class="viewer-btn" id="rotateBtn" type="button" aria-pressed="false">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
               <path d="M21 3v5h-5"/>
             </svg>
             Auto Rotate
+          </button>
+          <button class="viewer-btn" id="fabricMotionBtn" type="button" aria-pressed="false" hidden>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7"/>
+              <path d="M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0"/>
+              <path d="M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0"/>
+            </svg>
+            Fabric Motion
           </button>
           <button class="viewer-btn" id="fullscreenBtn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -687,11 +693,11 @@
               </svg>
               <span>Select</span>
             </button>
-            <button class="toolbar-btn" id="toolPan" title="Move" type="button">
+            <button class="toolbar-btn" id="toolPan" title="Pan Canvas" type="button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/>
               </svg>
-              <span>Move</span>
+              <span>Pan</span>
             </button>
             <button class="toolbar-btn" id="toolDraw" title="Draw" type="button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -766,13 +772,13 @@
                 <circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.3"/>
               </pattern>
             </defs>
-            <rect id="textureWhiteBase" fill="#ffffff"/>
+            <rect id="textureWhiteBase" fill="transparent"/>
             <!-- Model SVG Texture Background -->
             <% if (model.texture_url) { %>
               <image id="textureBg" href="<%= model.texture_url %>" preserveAspectRatio="none"/>
               <g id="textureTemplateLayer"></g>
             <% } else { %>
-              <rect id="textureBg" fill="#ffffff"/>
+              <rect id="textureBg" fill="transparent"/>
               <text id="textureBgText" text-anchor="middle" fill="#adb5bd" font-size="18" font-family="Arial, sans-serif">No texture available for this model</text>
             <% } %>
             <rect id="texturePattern" fill="none"/>
@@ -811,7 +817,6 @@
                   alt="<%= model.name %>"
                   loading="lazy"
                   camera-controls
-                  auto-rotate
                   shadow-intensity="1.55"
                   shadow-softness="0.52"
                   exposure="0.66"
@@ -852,6 +857,7 @@
 <script>
 // Viewer controls
 const rotateBtn = document.getElementById('rotateBtn');
+const fabricMotionBtn = document.getElementById('fabricMotionBtn');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 const viewer = document.querySelector('#model3dViewer model-viewer');
 const modelViewerStage = document.getElementById('model3dViewer');
@@ -859,6 +865,46 @@ const modelViewerLoad = document.getElementById('modelViewerLoad');
 const modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');
 const modelViewerPromises = new WeakMap();
 let modelViewerModulePromise = null;
+let fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+let fabricMotionResumeTimer = null;
+
+function setFabricMotionState(element, shouldPlay) {
+  if (!element?.availableAnimations?.length) return false;
+  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))
+    || element.availableAnimations[0];
+  element.animationName = preferredAnimation;
+  element.timeScale = 0.72;
+  if (shouldPlay && !document.hidden) {
+    element.play?.({ repetitions: Infinity });
+  } else {
+    element.pause?.();
+  }
+  fabricMotionBtn?.classList.toggle('active', shouldPlay);
+  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));
+  return true;
+}
+
+function configureGarmentSoftnessAnimation(element) {
+  if (!element || element.dataset.softnessAnimationReady === 'true') return;
+  if (!element.availableAnimations?.length) return;
+  element.dataset.softnessAnimationReady = 'true';
+  if (fabricMotionBtn) fabricMotionBtn.hidden = false;
+  setFabricMotionState(element, fabricMotionEnabled);
+
+  const pauseDuringInteraction = () => {
+    window.clearTimeout(fabricMotionResumeTimer);
+    element.pause?.();
+  };
+  const resumeAfterInteraction = () => {
+    window.clearTimeout(fabricMotionResumeTimer);
+    fabricMotionResumeTimer = window.setTimeout(() => {
+      setFabricMotionState(element, fabricMotionEnabled);
+    }, 650);
+  };
+  element.addEventListener('pointerdown', pauseDuringInteraction);
+  window.addEventListener('pointerup', resumeAfterInteraction);
+  element.addEventListener('pointercancel', resumeAfterInteraction);
+}
 
 function withModelViewerTimeout(promise, milliseconds, message) {
   return Promise.race([
@@ -886,14 +932,14 @@ function loadModelViewerModule() {
 
 function loadModelViewerElement(element) {
   if (!element) return Promise.reject(new Error('3D viewer unavailable'));
-  if (element.loaded || element.model) return Promise.resolve(element);
+  if (element.loaded && element.model) return Promise.resolve(element);
   if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);
 
   const promise = loadModelViewerModule().then(() => {
     element.hidden = false;
     element.setAttribute('loading', 'eager');
     element.setAttribute('reveal', 'auto');
-    if (element.loaded || element.model) return element;
+    if (element.loaded && element.model) return element;
     return withModelViewerTimeout(new Promise((resolve, reject) => {
       element.addEventListener('load', () => resolve(element), { once: true });
       element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });
@@ -901,6 +947,7 @@ function loadModelViewerElement(element) {
     }), 45000, '3D model timed out');
   }).then((readyViewer) => {
     readyViewer.dismissPoster?.();
+    configureGarmentSoftnessAnimation(readyViewer);
     return readyViewer;
   }).catch((error) => {
     modelViewerPromises.delete(element);
@@ -921,7 +968,7 @@ async function ensureDetailViewer() {
   modelViewerStage.classList.remove('is-error');
   modelViewerStage.classList.add('is-loading');
   modelViewerStage.setAttribute('aria-busy', 'true');
-  if (modelViewerLoad) modelViewerLoad.querySelector('span').textContent = 'Loading interactive 3D…';
+  if (modelViewerLoad) modelViewerLoad.hidden = true;
   if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';
   try {
     const readyViewer = await loadModelViewerElement(viewer);
@@ -929,31 +976,53 @@ async function ensureDetailViewer() {
     modelViewerStage.classList.add('is-ready');
     modelViewerStage.setAttribute('aria-busy', 'false');
     if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';
-    window.trackEvent?.('tool_interaction', {
-      interaction_type: 'load_model_detail_3d',
-      item_id: <%- JSON.stringify(model.slug || '') %>
-    });
     return readyViewer;
   } catch (error) {
     modelViewerStage.classList.remove('is-loading');
     modelViewerStage.classList.add('is-error');
     modelViewerStage.setAttribute('aria-busy', 'false');
-    if (modelViewerLoad) modelViewerLoad.querySelector('span').textContent = 'Retry interactive 3D';
-    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available. Retry when ready.';
+    if (modelViewerLoad) modelViewerLoad.hidden = false;
+    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available.';
     throw error;
   }
 }
 
-modelViewerLoad?.addEventListener('click', () => ensureDetailViewer().catch(() => {}));
+modelViewerLoad?.addEventListener('click', () => {
+  window.trackEvent?.('tool_interaction', {
+    interaction_type: 'retry_model_detail_3d',
+    item_id: <%- JSON.stringify(model.slug || '') %>
+  });
+  ensureDetailViewer().catch(() => {});
+});
+ensureDetailViewer().catch(() => {});
 
 if (rotateBtn && viewer) {
   rotateBtn.addEventListener('click', async () => {
     const readyViewer = await ensureDetailViewer().catch(() => null);
     if (!readyViewer) return;
     readyViewer.autoRotate = !readyViewer.autoRotate;
-    rotateBtn.classList.toggle('active');
+    rotateBtn.classList.toggle('active', readyViewer.autoRotate);
+    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));
   });
 }
+
+if (fabricMotionBtn && viewer) {
+  fabricMotionBtn.addEventListener('click', async () => {
+    const readyViewer = await ensureDetailViewer().catch(() => null);
+    if (!readyViewer) return;
+    fabricMotionEnabled = !fabricMotionEnabled;
+    setFabricMotionState(readyViewer, fabricMotionEnabled);
+    window.trackEvent?.('tool_interaction', {
+      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',
+      item_id: <%- JSON.stringify(model.slug || '') %>
+    });
+  });
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (!viewer?.availableAnimations?.length) return;
+  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);
+});
 
 if (fullscreenBtn && viewer) {
   fullscreenBtn.addEventListener('click', async () => {
@@ -1040,21 +1109,37 @@ window.ModelDesignerConfig = Object.freeze({
 
   function loadDesignerRuntimeFile() {
     if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();
-    const existing = document.querySelector('script[data-model-designer-runtime]');
-    if (existing) {
+    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {
+      if (ready()) return Promise.resolve();
+      const existing = document.querySelector(selector);
+      if (existing) {
+        return new Promise((resolve, reject) => {
+          existing.addEventListener('load', resolve, { once: true });
+          existing.addEventListener('error', reject, { once: true });
+        });
+      }
       return new Promise((resolve, reject) => {
-        existing.addEventListener('load', resolve, { once: true });
-        existing.addEventListener('error', reject, { once: true });
+        const script = document.createElement('script');
+        script.src = src;
+        script.dataset[dataset] = 'true';
+        script.addEventListener('load', resolve, { once: true });
+        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });
+        document.body.appendChild(script);
       });
-    }
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = '/js/model-designer.js?v=20260805-runtime-lazy';
-      script.dataset.modelDesignerRuntime = 'true';
-      script.addEventListener('load', resolve, { once: true });
-      script.addEventListener('error', () => reject(new Error('Design Studio runtime failed to load')), { once: true });
-      document.body.appendChild(script);
-    });
+    };
+    return loadScript({
+      selector: 'script[data-editor-transform-runtime]',
+      src: '/js/editor-transform.js?v=20260815-text-edit-v3',
+      dataset: 'editorTransformRuntime',
+      ready: () => Boolean(window.ModelDesignerTransforms),
+      errorMessage: 'Editor transform helpers failed to load'
+    }).then(() => loadScript({
+      selector: 'script[data-model-designer-runtime]',
+      src: '/js/model-designer.js?v=20260815-text-edit-v3',
+      dataset: 'modelDesignerRuntime',
+      ready: () => typeof window.initializeModelDesigner === 'function',
+      errorMessage: 'Design Studio runtime failed to load'
+    }));
   }
 
   function loadModelDesignerRuntime() {

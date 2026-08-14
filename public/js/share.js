@@ -58,7 +58,7 @@
     const isModelDetail = pathParts[0] === '3d-models' && pathParts.length >= 2 && pathParts.length <= 3;
     if (!isModelDetail || document.querySelector('[data-growth-share]')) return;
 
-    const footer = document.querySelector('footer');
+    const footer = document.querySelector('footer.footer');
     if (!footer) return;
 
     const modelName = document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim() || 'this 3D model';

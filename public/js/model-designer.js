@@ -55,11 +55,37 @@ window.initializeModelDesigner = () => {
   const defaultTextContent = modelDesignerConfig.defaultTextContent || 'Text';
   const currentModelCategory = modelDesignerConfig.currentModelCategory || '';
   const minSize = 12;
+  const editorTransforms = window.ModelDesignerTransforms;
+  if (!editorTransforms) throw new Error('Editor transform helpers are unavailable');
+  const {
+    clampRectToBounds,
+    placeRectAtFixedAnchor,
+    resizeCursor,
+    resizeFromPointer
+  } = editorTransforms;
+  const defaultRenderStandard = {
+    camera: {
+      webOrbit: '-48deg 72deg 142%',
+      webFieldOfView: '28deg',
+      webTarget: 'auto auto auto'
+    },
+    web: {
+      environmentImage: 'neutral',
+      shadowIntensity: 1.7,
+      shadowSoftness: 0.48,
+      exposure: 0.78,
+      toneMapping: 'aces'
+    }
+  };
+  const renderStandardPromise = fetch('/config/design3d-render-standard.json')
+    .then((response) => response.ok ? response.json() : defaultRenderStandard)
+    .catch(() => defaultRenderStandard);
   const state = {
     tool: 'select',
     selected: null,
     selectedTemplatePath: null,
     active: null,
+    textClickCandidate: null,
     elementCounter: 0,
     history: [],
     historyIndex: -1,
@@ -70,7 +96,10 @@ window.initializeModelDesigner = () => {
     textureLoadPromise: null,
     textureUpdateTimer: null,
     textureUpdateId: 0,
-    lastTextClick: { element: null, time: 0 },
+    hoverTextureTimer: null,
+    hoverTextureUpdateId: 0,
+    hoveredTemplatePath: null,
+    hoverMaterialSnapshot: null,
     textEditor: null,
     colorPicker: null,
     selectedMaterial: null,
@@ -114,7 +143,7 @@ window.initializeModelDesigner = () => {
     textureSvg.style.maxWidth = 'none';
     textureSvg.style.maxHeight = 'none';
     if (canvasZoomLabel) canvasZoomLabel.textContent = `${Math.round(zoom * 100)}%`;
-    requestAnimationFrame(() => positionElementToolbar());
+    requestAnimationFrame(() => renderSelection());
   }
 
   function fitCanvasZoom() {
@@ -192,6 +221,23 @@ window.initializeModelDesigner = () => {
     return false;
   }
 
+  function resetArtworkTextureTransform(textureInfo) {
+    const sampler = textureInfo?.texture?.sampler;
+    if (!sampler) return;
+    // Fabric maps in the source GLB may intentionally tile. A designed UV image is
+    // already a complete atlas, so it must always use the model's UVs one-to-one.
+    sampler.setRotation?.(null);
+    sampler.setScale?.(null);
+    sampler.setOffset?.(null);
+  }
+
+  function hasEditableArtwork() {
+    return Boolean(
+      textureElements?.children.length > 0 ||
+      textureSvg?.querySelector('.texture-template-fill[data-persistent="true"]')
+    );
+  }
+
   async function loadMaterialMaps(viewerElement, material, options = {}) {
     const maps = {};
     const mapNames = options.includeBaseColorMap
@@ -258,7 +304,7 @@ window.initializeModelDesigner = () => {
       .find(items => items.length > 0) || [];
     materialSwatchGrid.innerHTML = '';
     if (materialCount) materialCount.textContent = String(materials.length);
-    materials.forEach((material, index) => {
+    materials.forEach((material) => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'material-swatch';
@@ -271,10 +317,6 @@ window.initializeModelDesigner = () => {
       button.querySelector('.material-ball').style.background = material.sphere;
       button.addEventListener('click', () => applyMaterialPreset(material));
       materialSwatchGrid.appendChild(button);
-      if (index === 0) {
-        state.selectedMaterial = material;
-        button.classList.add('active');
-      }
     });
   }
 
@@ -305,7 +347,10 @@ window.initializeModelDesigner = () => {
       state.textureLoadPromise = Promise.resolve();
       return state.textureLoadPromise;
     }
-    const svgFetchUrl = `/api/texture-svg?url=${encodeURIComponent(textureUrl)}`;
+    const proxyTextureUrl = textureUrl.startsWith('/uploads/texture/')
+      ? textureUrl.split(/[?#]/, 1)[0]
+      : textureUrl;
+    const svgFetchUrl = `/api/texture-svg?url=${encodeURIComponent(proxyTextureUrl)}`;
 
     // Method 1: Try to get dimensions from SVG text content directly
     state.textureLoadPromise = fetch(svgFetchUrl)
@@ -395,7 +440,7 @@ window.initializeModelDesigner = () => {
       textureBgText.setAttribute('y', height / 2);
     }
     renderSelection();
-    scheduleTexturePreviewUpdate();
+    scheduleTexturePreviewUpdate({ requireArtwork: true });
     requestAnimationFrame(() => {
       if (state.zoomMode === 'fit') fitCanvasZoom();
       else applyCanvasZoom(state.zoom);
@@ -502,10 +547,11 @@ window.initializeModelDesigner = () => {
         node.setAttribute('stroke-width', layer.getAttribute('stroke-width'));
       }
     });
-    scheduleTexturePreviewUpdate();
+    scheduleTexturePreviewUpdate({ requireArtwork: true });
   }
 
   function closeModal() {
+    clearHoveredTemplatePreview();
     designModal.classList.remove('active');
     designModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -522,6 +568,7 @@ window.initializeModelDesigner = () => {
 
   function setTool(tool) {
     state.tool = tool;
+    state.textClickCandidate = null;
     Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
     if (toolButtons[tool]) toolButtons[tool].classList.add('active');
     textureSvg.classList.toggle('is-drawing', tool === 'draw');
@@ -559,6 +606,7 @@ window.initializeModelDesigner = () => {
   function getTextureSvgDataUrl(options = {}) {
     const includeSelectionHighlight = options.includeSelectionHighlight !== false;
     const includeTemplateGuides = options.includeTemplateGuides === true;
+    const includeTemplateHighlight = options.includeTemplateHighlight === true;
     const exportSvg = textureSvg.cloneNode(true);
     exportSvg.querySelector('#selectionLayer')?.remove();
     exportSvg.querySelectorAll('.texture-element.selected').forEach((element) => {
@@ -571,9 +619,11 @@ window.initializeModelDesigner = () => {
       exportSvg.querySelectorAll('.texture-template-path.hover-template-path').forEach((element) => {
         element.classList.remove('hover-template-path');
       });
-      exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
-        element.remove();
-      });
+      if (!includeTemplateHighlight) {
+        exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
+          element.remove();
+        });
+      }
       if (includeTemplateGuides) {
         exportSvg.querySelectorAll('.texture-template-path[data-area-empty="true"]').forEach((element) => {
           if (element.dataset.color) return;
@@ -594,9 +644,11 @@ window.initializeModelDesigner = () => {
       exportSvg.querySelectorAll('.texture-template-path').forEach((element) => {
         element.remove();
       });
-      exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
-        element.remove();
-      });
+      if (!includeTemplateHighlight) {
+        exportSvg.querySelectorAll('.texture-template-fill:not([data-persistent="true"])').forEach((element) => {
+          element.remove();
+        });
+      }
     }
     exportSvg.querySelectorAll('[contenteditable]').forEach((element) => {
       element.removeAttribute('contenteditable');
@@ -622,8 +674,11 @@ window.initializeModelDesigner = () => {
       canvas.width = Math.max(1, Math.round(width));
       canvas.height = Math.max(1, Math.round(height));
       const ctx = canvas.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (options.backgroundColor) {
+        ctx.fillStyle = options.backgroundColor;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
 
       const img = new Image();
       img.onload = () => {
@@ -635,7 +690,14 @@ window.initializeModelDesigner = () => {
     });
   }
 
-  async function applyTextureToViewer(viewerElement, textureUrl) {
+  function rasterizeModelTexture(options = {}) {
+    // The editable/exported UV artwork is transparent by default. model-viewer's
+    // OPAQUE glTF materials do not blend PNG alpha with the previous base map, so
+    // the live 3D texture gets an explicit neutral backing layer.
+    return rasterizeTexture({ ...options, backgroundColor: '#ffffff' });
+  }
+
+  async function applyTextureToViewer(viewerElement, textureUrl, options = {}) {
     if (!viewerElement || !textureUrl) return;
     try {
       await viewerElement.updateComplete;
@@ -649,25 +711,29 @@ window.initializeModelDesigner = () => {
         : {};
       materials.forEach((material) => {
         const pbr = material.pbrMetallicRoughness;
-        if (pbr?.setBaseColorFactor) {
+        if (!options.preserveMaterial && pbr?.setBaseColorFactor) {
           pbr.setBaseColorFactor(getSelectedMaterialFactor());
         }
-        if (state.selectedMaterial) {
+        if (!options.preserveMaterial && state.selectedMaterial) {
           pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
           pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
         }
-        if (pbr?.baseColorTexture?.setTexture) {
-          pbr.baseColorTexture.setTexture(texture);
+        const baseColorTexture = pbr?.baseColorTexture;
+        if (baseColorTexture?.setTexture) {
+          baseColorTexture.setTexture(texture);
         } else if (pbr?.setBaseColorTexture) {
           pbr.setBaseColorTexture(texture);
         }
-        setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
-        material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
-        if (materialMaps.roughness) {
-          setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
+        resetArtworkTextureTransform(baseColorTexture);
+        if (!options.preserveMaterial) {
+          setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
+          material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
+          if (materialMaps.roughness) {
+            setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
+          }
         }
       });
-      state.appliedTextureUrl = textureUrl;
+      if (options.trackApplied !== false) state.appliedTextureUrl = textureUrl;
     } catch (error) {
       console.warn('Failed to update 3D texture preview:', error);
     }
@@ -677,11 +743,75 @@ window.initializeModelDesigner = () => {
     return applyTextureToViewer(designerViewer, textureUrl);
   }
 
-  function scheduleTexturePreviewUpdate() {
+  function copySamplerVector(value) {
+    if (!value || !Number.isFinite(value.u) || !Number.isFinite(value.v)) return null;
+    return { u: value.u, v: value.v };
+  }
+
+  function captureViewerBaseColorTextures(viewerElement) {
+    return (viewerElement?.model?.materials || []).map((material) => {
+      const textureInfo = material.pbrMetallicRoughness?.baseColorTexture;
+      const sampler = textureInfo?.texture?.sampler;
+      return {
+        textureInfo,
+        texture: textureInfo?.texture || null,
+        rotation: sampler?.rotation ?? null,
+        scale: copySamplerVector(sampler?.scale),
+        offset: copySamplerVector(sampler?.offset)
+      };
+    });
+  }
+
+  function restoreViewerBaseColorTextures(snapshot) {
+    (snapshot || []).forEach((entry) => {
+      if (!entry.textureInfo?.setTexture) return;
+      entry.textureInfo.setTexture(entry.texture);
+      const sampler = entry.textureInfo.texture?.sampler;
+      sampler?.setRotation?.(entry.rotation);
+      sampler?.setScale?.(entry.scale);
+      sampler?.setOffset?.(entry.offset);
+    });
+  }
+
+  function previewHoveredTemplatePath(path) {
+    state.hoveredTemplatePath = path;
+    clearTimeout(state.hoverTextureTimer);
+    const updateId = ++state.hoverTextureUpdateId;
+    state.hoverTextureTimer = setTimeout(async () => {
+      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) return;
+      state.hoverMaterialSnapshot ||= captureViewerBaseColorTextures(designerViewer);
+      const textureUrl = await rasterizeModelTexture({ includeTemplateHighlight: true });
+      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) return;
+      await applyTextureToViewer(designerViewer, textureUrl, {
+        preserveMaterial: true,
+        trackApplied: false
+      });
+      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) {
+        restoreViewerBaseColorTextures(state.hoverMaterialSnapshot);
+        state.hoverMaterialSnapshot = null;
+      }
+    }, 60);
+  }
+
+  function clearHoveredTemplatePreview(path = state.hoveredTemplatePath) {
+    if (path && state.hoveredTemplatePath && path !== state.hoveredTemplatePath) return;
+    state.hoveredTemplatePath = null;
+    clearTimeout(state.hoverTextureTimer);
+    state.hoverTextureUpdateId++;
+    if (state.hoverMaterialSnapshot) {
+      restoreViewerBaseColorTextures(state.hoverMaterialSnapshot);
+      state.hoverMaterialSnapshot = null;
+    }
+  }
+
+  function scheduleTexturePreviewUpdate(options = {}) {
+    // Initial template/model loading must not replace the GLB's original fabric
+    // texture with an empty white canvas. Later edits may intentionally clear it.
+    if (options.requireArtwork && !hasEditableArtwork()) return;
     clearTimeout(state.textureUpdateTimer);
     state.textureUpdateTimer = setTimeout(async () => {
       const updateId = ++state.textureUpdateId;
-      const textureUrl = await rasterizeTexture();
+      const textureUrl = await rasterizeModelTexture();
       if (updateId === state.textureUpdateId) {
         applyTextureToModel(textureUrl);
       }
@@ -691,7 +821,7 @@ window.initializeModelDesigner = () => {
   async function saveDesignAndClose() {
     state.textEditor?.commit();
     setDesignSaveStatus('Applying…');
-    const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
+    const textureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
     state.finalTextureUrl = textureUrl;
     await Promise.all(getLoadedDesignViewers().map((viewerElement) => applyTextureToViewer(viewerElement, textureUrl)));
     setDesignSaveStatus('Saved');
@@ -723,8 +853,7 @@ window.initializeModelDesigner = () => {
   function hasDesignedTexture() {
     return Boolean(
       state.finalTextureUrl ||
-      textureElements.children.length > 0 ||
-      textureSvg.querySelector('.texture-template-fill[data-persistent="true"]')
+      hasEditableArtwork()
     );
   }
 
@@ -782,7 +911,7 @@ window.initializeModelDesigner = () => {
     if (!hasDesignedTexture()) {
       return null;
     }
-    const textureUrl = await rasterizeTexture({ includeSelectionHighlight: false });
+    const textureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
     state.finalTextureUrl = textureUrl;
     await Promise.all(getLoadedDesignViewers().map((viewerElement) => applyTextureToViewer(viewerElement, textureUrl)));
     return textureUrl;
@@ -797,11 +926,11 @@ window.initializeModelDesigner = () => {
     rotateBtn?.classList.remove('active');
   }
 
-  async function frameCoverExportViewer(viewerElement) {
+  async function frameCoverExportViewer(viewerElement, renderStandard = defaultRenderStandard) {
     if (!viewerElement) return;
-    const coverCameraOrbit = '-48deg 72deg 142%';
-    viewerElement.cameraTarget = 'auto auto auto';
-    viewerElement.fieldOfView = '28deg';
+    const coverCameraOrbit = renderStandard.camera?.webOrbit || defaultRenderStandard.camera.webOrbit;
+    viewerElement.cameraTarget = renderStandard.camera?.webTarget || defaultRenderStandard.camera.webTarget;
+    viewerElement.fieldOfView = renderStandard.camera?.webFieldOfView || defaultRenderStandard.camera.webFieldOfView;
     viewerElement.cameraOrbit = coverCameraOrbit;
     if (typeof viewerElement.updateFraming === 'function') {
       await viewerElement.updateFraming();
@@ -854,29 +983,63 @@ window.initializeModelDesigner = () => {
     }
   }
 
-  function copyViewerCamera(sourceViewer, targetViewer) {
-    if (!sourceViewer || !targetViewer) return;
-    ['cameraOrbit', 'cameraTarget', 'fieldOfView', 'minCameraOrbit', 'maxCameraOrbit'].forEach((prop) => {
-      if (sourceViewer[prop] !== undefined && sourceViewer[prop] !== null) {
-        targetViewer[prop] = sourceViewer[prop];
-      }
-    });
+  function getActiveRenderViewer() {
+    if (designModal.classList.contains('active') && designerViewer?.model) return designerViewer;
+    if (detailViewer?.model) return detailViewer;
+    if (designerViewer?.model) return designerViewer;
+    return null;
   }
 
-  function createCoverExportViewer(options = {}) {
+  function captureViewerCamera(viewerElement = getActiveRenderViewer()) {
+    if (!viewerElement?.model) return null;
+    try {
+      const orbit = viewerElement.getCameraOrbit?.();
+      const target = viewerElement.getCameraTarget?.();
+      const fieldOfView = viewerElement.getFieldOfView?.();
+      const hasOrbit = orbit && [orbit.theta, orbit.phi, orbit.radius].every(Number.isFinite);
+      const hasTarget = target && [target.x, target.y, target.z].every(Number.isFinite);
+      const hasFieldOfView = Number.isFinite(fieldOfView);
+      if (!hasOrbit && !hasTarget && !hasFieldOfView) return null;
+      return {
+        cameraOrbit: hasOrbit ? `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m` : null,
+        cameraTarget: hasTarget ? `${target.x}m ${target.y}m ${target.z}m` : null,
+        fieldOfView: hasFieldOfView ? `${fieldOfView}deg` : null
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async function applyViewerCamera(viewerElement, cameraSnapshot) {
+    if (!viewerElement || !cameraSnapshot) return false;
+    if (cameraSnapshot.cameraTarget) viewerElement.cameraTarget = cameraSnapshot.cameraTarget;
+    if (cameraSnapshot.fieldOfView) viewerElement.fieldOfView = cameraSnapshot.fieldOfView;
+    if (cameraSnapshot.cameraOrbit) viewerElement.cameraOrbit = cameraSnapshot.cameraOrbit;
+    await viewerElement.updateComplete;
+    if (typeof viewerElement.jumpCameraToGoal === 'function') {
+      viewerElement.jumpCameraToGoal();
+    }
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    return true;
+  }
+
+  function createCoverExportViewer(options = {}, renderStandard = defaultRenderStandard) {
+    const isVisibleCapture = options.visibleCapture === true;
+    const webStandard = { ...defaultRenderStandard.web, ...(renderStandard.web || {}) };
     const exportViewer = document.createElement('model-viewer');
     exportViewer.src = modelDesignerConfig.previewModelFileUrl || '';
     exportViewer.alt = modelDesignerConfig.modelName || 'Designed 3D model';
     exportViewer.setAttribute('loading', 'eager');
     exportViewer.setAttribute('reveal', 'auto');
     exportViewer.setAttribute('interaction-prompt', 'none');
-    exportViewer.setAttribute('environment-image', 'neutral');
-    exportViewer.setAttribute('shadow-intensity', '1.7');
-    exportViewer.setAttribute('shadow-softness', '0.48');
-    exportViewer.setAttribute('exposure', '0.78');
-    exportViewer.setAttribute('tone-mapping', 'aces');
+    exportViewer.setAttribute('environment-image', webStandard.environmentImage);
+    exportViewer.setAttribute('shadow-intensity', String(webStandard.shadowIntensity));
+    exportViewer.setAttribute('shadow-softness', String(webStandard.shadowSoftness));
+    exportViewer.setAttribute('exposure', String(webStandard.exposure));
+    exportViewer.setAttribute('tone-mapping', webStandard.toneMapping);
     exportViewer.autoRotate = false;
     exportViewer.removeAttribute('auto-rotate');
+    exportViewer.setAttribute('aria-hidden', 'true');
     exportViewer.id = 'coverExportViewer';
     exportViewer.style.setProperty('--poster-color', 'transparent');
     exportViewer.style.position = 'absolute';
@@ -889,23 +1052,27 @@ window.initializeModelDesigner = () => {
     exportViewer.style.cursor = 'none';
     exportViewer.style.outline = 'none';
     exportViewer.style.border = '0';
-    exportViewer.style.opacity = '1';
+    // Keep the WebGL surface measurable and renderable for toDataURL(), but do not
+    // let the high-resolution export viewer flash over the detail page.
+    exportViewer.style.opacity = isVisibleCapture ? '1' : '0';
     exportViewer.style.zIndex = options.zIndex || '2147483647';
     exportViewer.style.transform = 'none';
     exportViewer.style.transformOrigin = 'top left';
     exportViewer.style.display = 'block';
     exportViewer.style.visibility = 'visible';
-    copyViewerCamera(designModal.classList.contains('active') ? designerViewer : detailViewer, exportViewer);
     return exportViewer;
   }
 
   async function renderDesignedModelImage(textureUrl, options = {}) {
-    const exportViewer = createCoverExportViewer({ zIndex: options.viewerZIndex });
+    const renderStandard = await renderStandardPromise;
+    const exportViewer = createCoverExportViewer({ zIndex: options.viewerZIndex }, renderStandard);
     document.body.appendChild(exportViewer);
 
     try {
       await waitForModelViewerReady(exportViewer);
-      await frameCoverExportViewer(exportViewer);
+      if (!await applyViewerCamera(exportViewer, options.cameraSnapshot)) {
+        await frameCoverExportViewer(exportViewer, renderStandard);
+      }
       exportViewer.autoRotate = false;
       if (textureUrl) {
         await applyTextureToViewer(exportViewer, textureUrl);
@@ -921,13 +1088,16 @@ window.initializeModelDesigner = () => {
     }
   }
 
-  async function renderDesignedModelImages(textureUrl, formatOptions = []) {
-    const exportViewer = createCoverExportViewer();
+  async function renderDesignedModelImages(textureUrl, formatOptions = [], options = {}) {
+    const renderStandard = await renderStandardPromise;
+    const exportViewer = createCoverExportViewer({}, renderStandard);
     document.body.appendChild(exportViewer);
 
     try {
       await waitForModelViewerReady(exportViewer);
-      await frameCoverExportViewer(exportViewer);
+      if (!await applyViewerCamera(exportViewer, options.cameraSnapshot)) {
+        await frameCoverExportViewer(exportViewer, renderStandard);
+      }
       exportViewer.autoRotate = false;
       if (textureUrl) {
         await applyTextureToViewer(exportViewer, textureUrl);
@@ -954,6 +1124,7 @@ window.initializeModelDesigner = () => {
 
   async function prepareDesignedModelCoverCapture() {
     stopModelRotation();
+    const cameraSnapshot = captureViewerCamera();
     const textureUrl = await createFinalRenderTexture();
     cleanupDesignedModelCoverCapture();
     state.coverCaptureHidden = [];
@@ -972,13 +1143,16 @@ window.initializeModelDesigner = () => {
     captureStage.style.zIndex = '2147483647';
     captureStage.style.visibility = 'visible';
     captureStage.style.pointerEvents = 'none';
-    const exportViewer = createCoverExportViewer();
+    const renderStandard = await renderStandardPromise;
+    const exportViewer = createCoverExportViewer({ visibleCapture: true }, renderStandard);
     document.documentElement.style.background = 'transparent';
     document.body.style.background = 'transparent';
     captureStage.appendChild(exportViewer);
     document.body.appendChild(captureStage);
     await waitForModelViewerReady(exportViewer);
-    await frameCoverExportViewer(exportViewer);
+    if (!await applyViewerCamera(exportViewer, cameraSnapshot)) {
+      await frameCoverExportViewer(exportViewer, renderStandard);
+    }
     if (textureUrl) {
       await applyTextureToViewer(exportViewer, textureUrl);
     } else if (state.selectedMaterial) {
@@ -1022,8 +1196,13 @@ window.initializeModelDesigner = () => {
     try {
       await loadModelViewerModule();
       stopModelRotation();
+      const cameraSnapshot = captureViewerCamera();
       const textureUrl = await createFinalRenderTexture();
-      const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, { mimeType: 'image/png', quality: 0.95 });
+      const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, {
+        mimeType: 'image/png',
+        quality: 0.95,
+        cameraSnapshot
+      });
       downloadDataUrl(renderUrl, `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-hd-render.png`);
       setRenderStatus('HD render downloaded.');
       window.trackEvent?.('design_export', {
@@ -1084,7 +1263,7 @@ window.initializeModelDesigner = () => {
     try {
       await loadTextureDimensions();
       state.textEditor?.commit();
-      const textureForModel = await rasterizeTexture({ includeSelectionHighlight: false });
+      const textureForModel = await rasterizeModelTexture({ includeSelectionHighlight: false });
       const [snapshot2d, snapshot3d] = await Promise.all([
         rasterizeTexture({
           includeSelectionHighlight: false,
@@ -1203,17 +1382,20 @@ window.initializeModelDesigner = () => {
   window.exportDesignedModelCover = async function exportDesignedModelCover(options = {}) {
     await loadModelViewerModule();
     stopModelRotation();
+    const cameraSnapshot = captureViewerCamera();
     const textureUrl = await createFinalRenderTexture();
     return renderDesignedModelImageWithFallback(textureUrl, {
       mimeType: options.mimeType || 'image/webp',
-      quality: options.quality ?? 0.95
+      quality: options.quality ?? 0.95,
+      cameraSnapshot
     });
   };
   window.exportDesignedModelCoverFormats = async function exportDesignedModelCoverFormats(formatOptions = []) {
     await loadModelViewerModule();
     stopModelRotation();
+    const cameraSnapshot = captureViewerCamera();
     const textureUrl = await createFinalRenderTexture();
-    return renderDesignedModelImages(textureUrl, formatOptions);
+    return renderDesignedModelImages(textureUrl, formatOptions, { cameraSnapshot });
   };
   window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;
   window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;
@@ -1272,6 +1454,15 @@ window.initializeModelDesigner = () => {
     renderElementContent(group);
   }
 
+  function constrainToCanvas(data) {
+    return clampRectToBounds(data, {
+      x: 0,
+      y: 0,
+      width: state.svgWidth,
+      height: state.svgHeight
+    });
+  }
+
   function renderElementContent(group) {
     const data = getData(group);
     const content = group.querySelector('.texture-content');
@@ -1289,6 +1480,7 @@ window.initializeModelDesigner = () => {
     } else if (type === 'rect' || type === 'image') {
       content.setAttribute('width', data.width);
       content.setAttribute('height', data.height);
+      if (type === 'image') content.setAttribute('preserveAspectRatio', 'none');
     } else if (type === 'arrow') {
       const line = group.querySelector('line.texture-content');
       const head = group.querySelector('polygon');
@@ -1328,6 +1520,7 @@ window.initializeModelDesigner = () => {
       const fillPath = getTemplateFillPath(group, true, true);
       fillPath.setAttribute('fill', getSvgPaint(group, color, 'fill'));
       fillPath.setAttribute('fill-opacity', '1');
+      getTemplateFillPath(group, false, false)?.remove();
       group.dataset.areaEmpty = 'false';
       return;
     }
@@ -1592,7 +1785,7 @@ window.initializeModelDesigner = () => {
         x: 0,
         y: 0,
         href: options.src,
-        preserveAspectRatio: 'xMidYMid meet'
+        preserveAspectRatio: 'none'
       });
     } else if (type === 'arrow') {
       const line = createSvg('line', {
@@ -1625,6 +1818,13 @@ window.initializeModelDesigner = () => {
   }
 
   function selectElement(element) {
+    if (element !== state.selected) {
+      closeColorPopover();
+      state.textClickCandidate = null;
+    }
+    if (element?.classList?.contains('texture-template-path')) {
+      clearHoveredTemplatePreview();
+    }
     state.selected?.classList.remove('selected');
     restoreTemplatePathPreview(state.selectedTemplatePath);
     state.selectedTemplatePath?.classList.remove('selected-template-path');
@@ -1648,11 +1848,16 @@ window.initializeModelDesigner = () => {
     if (!group || group.dataset.type !== 'text') return;
     const textBox = group.querySelector('.texture-text-box');
     if (!textBox) return;
-    selectElement(group);
+
+    if (state.textEditor?.group === group && textBox.getAttribute('contenteditable') === 'true') {
+      textBox.focus({ preventScroll: true });
+      return;
+    }
 
     if (state.textEditor) {
       state.textEditor.commit();
     }
+    selectElement(group);
 
     textBox.setAttribute('contenteditable', 'true');
     textBox.classList.add('is-editing');
@@ -1671,6 +1876,10 @@ window.initializeModelDesigner = () => {
       if (isDone) return;
       syncTextHeight();
       isDone = true;
+      textBox.removeEventListener('keydown', handleKeydown);
+      textBox.removeEventListener('input', handleInput);
+      textBox.removeEventListener('pointerdown', handlePointerDown);
+      textBox.removeEventListener('blur', handleBlur);
       if (commit) {
         textBox.textContent = textBox.innerText.trim() || defaultTextContent;
         textBox.style.height = '100%';
@@ -1702,35 +1911,30 @@ window.initializeModelDesigner = () => {
     textBox.addEventListener('pointerdown', handlePointerDown);
     textBox.addEventListener('blur', handleBlur);
     state.textEditor = {
+      group,
       commit: () => closeEditor(true),
       cancel: () => closeEditor(false)
     };
     requestAnimationFrame(() => {
       const selection = window.getSelection();
       const range = document.createRange();
-      textBox.focus();
+      textBox.focus({ preventScroll: true });
       range.selectNodeContents(textBox);
-      range.collapse(false);
       selection.removeAllRanges();
       selection.addRange(range);
       syncTextHeight();
     });
   }
 
-  function isTextDoubleClick(target) {
-    if (!target || target.dataset.type !== 'text') return false;
-    const now = Date.now();
-    const isDouble = state.lastTextClick.element === target && now - state.lastTextClick.time < 420;
-    state.lastTextClick = { element: target, time: now };
-    return isDouble;
-  }
-
   function buildElementToolbar(group) {
+    elementToolbar.classList.toggle('is-surface-toolbar', group.classList?.contains('texture-template-path'));
     if (group.classList?.contains('texture-template-path')) {
       elementToolbar.innerHTML = '';
+      const title = document.createElement('span');
+      title.className = 'surface-toolbar-title';
+      title.innerHTML = '<span class="surface-toolbar-icon" aria-hidden="true"></span> Surface color';
       const control = document.createElement('label');
-      control.className = 'element-toolbar-control';
-      control.textContent = 'Area';
+      control.className = 'element-toolbar-control surface-color-control';
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'color-chip';
@@ -1739,7 +1943,14 @@ window.initializeModelDesigner = () => {
       button.dataset.colorValue = value;
       button.style.background = colorToCss(value);
       button.setAttribute('aria-label', 'Area color');
+      button.setAttribute('aria-haspopup', 'dialog');
+      button.setAttribute('aria-expanded', String(colorPopover.classList.contains('visible')));
+      const valueLabel = document.createElement('span');
+      valueLabel.className = 'surface-color-value';
+      valueLabel.textContent = parseColorState(value).start.toUpperCase();
       control.appendChild(button);
+      control.appendChild(valueLabel);
+      elementToolbar.appendChild(title);
       elementToolbar.appendChild(control);
       positionElementToolbar(group);
       return;
@@ -1803,24 +2014,35 @@ window.initializeModelDesigner = () => {
       elementToolbar.classList.remove('visible');
       return;
     }
-    const svgRect = textureSvg.getBoundingClientRect();
     const areaRect = textureCanvasArea.getBoundingClientRect();
-    const data = getData(group);
-    const scaleX = svgRect.width / state.svgWidth;
-    const scaleY = svgRect.height / state.svgHeight;
     elementToolbar.classList.add('visible');
     const toolbarWidth = elementToolbar.offsetWidth || 320;
     const toolbarHeight = elementToolbar.offsetHeight || 44;
-    const left = svgRect.left - areaRect.left + (data.x + data.width / 2) * scaleX - toolbarWidth / 2;
-    const top = svgRect.top - areaRect.top + data.y * scaleY - toolbarHeight - 12;
-    elementToolbar.style.left = `${Math.max(8, Math.min(areaRect.width - toolbarWidth - 8, left))}px`;
-    elementToolbar.style.top = `${Math.max(8, top)}px`;
+    const outlineRect = selectionLayer.querySelector('.selection-outline')?.getBoundingClientRect()
+      || group.getBoundingClientRect();
+    const selectionRect = selectionLayer.querySelector('.selection-box')?.getBoundingClientRect()
+      || outlineRect;
+    const visibleLeft = textureCanvasArea.scrollLeft + 8;
+    const visibleTop = textureCanvasArea.scrollTop + 8;
+    const visibleRight = textureCanvasArea.scrollLeft + textureCanvasArea.clientWidth - 8;
+    const visibleBottom = textureCanvasArea.scrollTop + textureCanvasArea.clientHeight - 8;
+    const left = outlineRect.left - areaRect.left + textureCanvasArea.scrollLeft
+      + outlineRect.width / 2 - toolbarWidth / 2;
+    let top = selectionRect.top - areaRect.top + textureCanvasArea.scrollTop - toolbarHeight - 10;
+    if (top < visibleTop) {
+      top = selectionRect.bottom - areaRect.top + textureCanvasArea.scrollTop + 10;
+    }
+    elementToolbar.style.left = `${Math.max(visibleLeft, Math.min(visibleRight - toolbarWidth, left))}px`;
+    elementToolbar.style.top = `${Math.max(visibleTop, Math.min(visibleBottom - toolbarHeight, top))}px`;
   }
 
   function closeColorPopover() {
     colorPopover.classList.remove('visible');
     colorPopover.innerHTML = '';
     state.colorPicker = null;
+    elementToolbar.querySelectorAll('[data-color-prop]').forEach((button) => {
+      button.setAttribute('aria-expanded', 'false');
+    });
   }
 
   function openColorPopover(button) {
@@ -1869,9 +2091,21 @@ window.initializeModelDesigner = () => {
       <label class="color-field">HEX <input data-color-field="hex" value="${current.start}" maxlength="7"></label>
       <div class="color-preview"></div>
     `;
-    colorPopover.style.left = `${Math.max(8, buttonRect.left - areaRect.left)}px`;
-    colorPopover.style.top = `${Math.max(8, buttonRect.bottom - areaRect.top + 8)}px`;
     colorPopover.classList.add('visible');
+    const popoverWidth = colorPopover.offsetWidth || 260;
+    const popoverHeight = colorPopover.offsetHeight || 420;
+    const visibleLeft = textureCanvasArea.scrollLeft + 8;
+    const visibleTop = textureCanvasArea.scrollTop + 8;
+    const visibleRight = textureCanvasArea.scrollLeft + textureCanvasArea.clientWidth - 8;
+    const visibleBottom = textureCanvasArea.scrollTop + textureCanvasArea.clientHeight - 8;
+    const left = buttonRect.left - areaRect.left + textureCanvasArea.scrollLeft;
+    let top = buttonRect.bottom - areaRect.top + textureCanvasArea.scrollTop + 8;
+    if (top + popoverHeight > visibleBottom) {
+      top = buttonRect.top - areaRect.top + textureCanvasArea.scrollTop - popoverHeight - 8;
+    }
+    colorPopover.style.left = `${Math.max(visibleLeft, Math.min(visibleRight - popoverWidth, left))}px`;
+    colorPopover.style.top = `${Math.max(visibleTop, Math.min(visibleBottom - popoverHeight, top))}px`;
+    button.setAttribute('aria-expanded', 'true');
     renderColorPopover();
   }
 
@@ -1920,6 +2154,12 @@ window.initializeModelDesigner = () => {
       button.dataset.colorValue = value;
       button.style.background = value;
     });
+    const surfaceValue = elementToolbar.querySelector('.surface-color-value');
+    if (surfaceValue) {
+      surfaceValue.textContent = state.colorPicker.mode === 'gradient'
+        ? 'Gradient'
+        : state.colorPicker.start.toUpperCase();
+    }
   }
 
   function setActiveColorFromHex(hex) {
@@ -1986,6 +2226,14 @@ window.initializeModelDesigner = () => {
       return;
     }
     const data = getData(state.selected);
+    const svgRect = textureSvg.getBoundingClientRect();
+    const selectionScale = Math.max(0.001, Math.min(
+      svgRect.width / state.svgWidth,
+      svgRect.height / state.svgHeight
+    ));
+    const screenUnit = 1 / selectionScale;
+    const handleSize = 10 * screenUnit;
+    const handleRadius = 2 * screenUnit;
     const box = createSvg('g', {
       class: 'selection-box',
       transform: `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`
@@ -2008,18 +2256,19 @@ window.initializeModelDesigner = () => {
           class: 'selection-handle',
           'data-action': 'resize',
           'data-handle': handle,
-          x: x - 5,
-          y: y - 5,
-          width: 10,
-          height: 10,
-          rx: 2
+          x: x - handleSize / 2,
+          y: y - handleSize / 2,
+          width: handleSize,
+          height: handleSize,
+          rx: handleRadius,
+          style: `cursor:${resizeCursor(handle, data.rotate)}`
         }));
       });
 
       box.appendChild(createSvg('line', {
         class: 'selection-rotate-line',
         x1: data.width / 2,
-        y1: -30,
+        y1: -30 * screenUnit,
         x2: data.width / 2,
         y2: 0
       }));
@@ -2027,8 +2276,8 @@ window.initializeModelDesigner = () => {
         class: 'selection-rotate-handle',
         'data-action': 'rotate',
         cx: data.width / 2,
-        cy: -38,
-        r: 8
+        cy: -38 * screenUnit,
+        r: 8 * screenUnit
       }));
     }
     selectionLayer.appendChild(box);
@@ -2044,8 +2293,24 @@ window.initializeModelDesigner = () => {
 
   function importArtworkDataUrl(dataUrl) {
     if (!/^data:image\//i.test(String(dataUrl || ''))) return false;
-    createElement('image', { src: dataUrl, width: 190, height: 142 });
-    setTool('select');
+    const artworkImage = new Image();
+    let imported = false;
+    const createArtwork = (naturalWidth = 190, naturalHeight = 142) => {
+      if (imported) return;
+      imported = true;
+      const safeWidth = Math.max(1, naturalWidth);
+      const safeHeight = Math.max(1, naturalHeight);
+      const fitScale = Math.min(190 / safeWidth, 142 / safeHeight);
+      const width = Math.max(minSize, safeWidth * fitScale);
+      const height = Math.max(minSize, safeHeight * fitScale);
+      createElement('image', { src: dataUrl, width, height });
+      setTool('select');
+    };
+    artworkImage.addEventListener('load', () => {
+      createArtwork(artworkImage.naturalWidth, artworkImage.naturalHeight);
+    }, { once: true });
+    artworkImage.addEventListener('error', () => createArtwork(), { once: true });
+    artworkImage.src = dataUrl;
     return true;
   }
 
@@ -2065,14 +2330,6 @@ window.initializeModelDesigner = () => {
     };
     input.click();
   });
-
-  function localVector(dx, dy, angle) {
-    const rad = -angle * Math.PI / 180;
-    return {
-      x: dx * Math.cos(rad) - dy * Math.sin(rad),
-      y: dx * Math.sin(rad) + dy * Math.cos(rad)
-    };
-  }
 
   function startDraw(event) {
     const point = svgPoint(event);
@@ -2162,21 +2419,24 @@ window.initializeModelDesigner = () => {
       event.preventDefault();
       selectElement(templatePath);
       scheduleTexturePreviewUpdate();
+      requestAnimationFrame(() => {
+        const surfaceColorButton = elementToolbar.querySelector('[data-color-prop="color"]');
+        if (surfaceColorButton && state.selected === templatePath) {
+          openColorPopover(surfaceColorButton);
+        }
+      });
       return;
     }
     if (target) {
       event.preventDefault();
-      if (isTextDoubleClick(target)) {
-        state.active = null;
-        selectElement(target);
-        editTextElement(target);
-        return;
-      }
       textureSvg.setPointerCapture(event.pointerId);
       selectElement(target);
       state.active = {
         mode: 'move',
         startPoint: svgPoint(event),
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        moved: false,
         startData: getData(target)
       };
     } else {
@@ -2186,14 +2446,20 @@ window.initializeModelDesigner = () => {
 
   textureSvg.addEventListener('pointerover', (event) => {
     const templatePath = event.target.closest('.texture-template-path');
-    if (!templatePath || templatePath === state.selectedTemplatePath) return;
-    setTemplatePathPreview(templatePath, 'hover');
+    if (!templatePath) return;
+    if (templatePath !== state.selectedTemplatePath) {
+      setTemplatePathPreview(templatePath, 'hover');
+    }
+    previewHoveredTemplatePath(templatePath);
   });
 
   textureSvg.addEventListener('pointerout', (event) => {
     const templatePath = event.target.closest('.texture-template-path');
-    if (!templatePath || templatePath === state.selectedTemplatePath) return;
-    restoreTemplatePathPreview(templatePath);
+    if (!templatePath) return;
+    if (templatePath !== state.selectedTemplatePath) {
+      restoreTemplatePathPreview(templatePath);
+    }
+    clearHoveredTemplatePreview(templatePath);
   });
 
   textureSvg.addEventListener('dblclick', (event) => {
@@ -2227,52 +2493,50 @@ window.initializeModelDesigner = () => {
     const dy = point.y - start.y;
 
     if (state.active.mode === 'move') {
-      setData(state.selected, { x: data.x + dx, y: data.y + dy });
+      if (Math.hypot(
+        event.clientX - state.active.startClientX,
+        event.clientY - state.active.startClientY
+      ) > 4) {
+        state.active.moved = true;
+      }
+      setData(state.selected, constrainToCanvas({ ...data, x: data.x + dx, y: data.y + dy }));
     } else if (state.active.mode === 'resize') {
-      const local = localVector(dx, dy, data.rotate);
       const isText = state.selected.dataset.type === 'text';
-      let x = data.x;
-      let y = data.y;
-      let width = data.width;
-      let height = data.height;
+      const isImage = state.selected.dataset.type === 'image';
       const handle = state.active.handle;
-
-      if (handle.includes('e')) width = data.width + local.x;
-      if (handle.includes('s')) height = data.height + local.y;
-      if (handle.includes('w')) {
-        width = data.width - local.x;
-        x = data.x + dx;
-      }
-      if (handle.includes('n')) {
-        height = data.height - local.y;
-        y = data.y + dy;
-      }
-      if (event.shiftKey || (isText && handle.length === 2)) {
-        const aspect = data.width / data.height;
-        if (Math.abs(local.x) > Math.abs(local.y)) height = width / aspect;
-        else width = height * aspect;
-      }
-      const patch = { x, y, width, height };
+      const isCorner = handle.length === 2;
+      const patch = resizeFromPointer(data, handle, dx, dy, {
+        minSize,
+        lockAspect: event.shiftKey || (isImage && isCorner) || (isText && isCorner)
+      });
       if (isText) {
-        const widthScale = width / Math.max(minSize, data.width);
-        const heightScale = height / Math.max(minSize, data.height);
-        const scale = handle.length === 2
-          ? Math.max(widthScale, heightScale)
-          : handle.includes('e') || handle.includes('w')
-            ? widthScale
-            : heightScale;
-        patch.fontSize = Math.max(8, data.fontSize * scale);
+        patch.fontSize = isCorner
+          ? Math.max(8, data.fontSize * patch.scale)
+          : data.fontSize;
       }
-      setData(state.selected, patch);
-      if (isText && !state.active.handle.includes('n') && !state.active.handle.includes('s')) {
-        autoFitTextHeight(state.selected);
+      setData(state.selected, constrainToCanvas({ ...data, ...patch }));
+      if (isText && (handle === 'e' || handle === 'w')) {
+        const textBox = state.selected.querySelector('.texture-text-box');
+        if (textBox) {
+          const previousHeight = textBox.style.height;
+          textBox.style.height = 'auto';
+          const fittedHeight = Math.max(minSize, Math.ceil(textBox.scrollHeight));
+          textBox.style.height = previousHeight || '100%';
+          setData(state.selected, constrainToCanvas({
+            ...placeRectAtFixedAnchor(data, handle, patch.width, fittedHeight),
+            fontSize: data.fontSize
+          }));
+        }
       }
     } else if (state.active.mode === 'rotate') {
       const cx = data.x + data.width / 2;
       const cy = data.y + data.height / 2;
       const startAngle = Math.atan2(start.y - cy, start.x - cx);
       const currentAngle = Math.atan2(point.y - cy, point.x - cx);
-      setData(state.selected, { rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI });
+      setData(state.selected, constrainToCanvas({
+        ...data,
+        rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI
+      }));
     }
     renderSelection();
     scheduleTexturePreviewUpdate();
@@ -2280,7 +2544,27 @@ window.initializeModelDesigner = () => {
 
   function endInteraction(event) {
     if (!state.active) return;
-    const mode = state.active.mode;
+    const active = state.active;
+    const mode = active.mode;
+    const clickedText = mode === 'move' && !active.moved && state.selected?.dataset.type === 'text'
+      ? state.selected
+      : null;
+    let shouldEditText = false;
+    if (clickedText) {
+      const now = Number(event.timeStamp) || performance.now();
+      const previous = state.textClickCandidate;
+      const closeInTime = previous && now - previous.time <= 500;
+      const closeOnScreen = previous && Math.hypot(
+        event.clientX - previous.clientX,
+        event.clientY - previous.clientY
+      ) <= 8;
+      shouldEditText = Boolean(previous?.group === clickedText && closeInTime && closeOnScreen);
+      state.textClickCandidate = shouldEditText
+        ? null
+        : { group: clickedText, time: now, clientX: event.clientX, clientY: event.clientY };
+    } else if (mode === 'move') {
+      state.textClickCandidate = null;
+    }
     if (mode === 'draw') {
       finishDraw();
     } else if (mode !== 'pan') {
@@ -2293,6 +2577,7 @@ window.initializeModelDesigner = () => {
     if (event.pointerId !== undefined && textureSvg.hasPointerCapture(event.pointerId)) {
       textureSvg.releasePointerCapture(event.pointerId);
     }
+    if (shouldEditText) requestAnimationFrame(() => editTextElement(clickedText));
   }
 
   textureSvg.addEventListener('pointerup', endInteraction);
@@ -2468,7 +2753,8 @@ window.initializeModelDesigner = () => {
     if (!designModal.classList.contains('active')) return;
     if (event.key === 'Escape') {
       event.preventDefault();
-      closeModal();
+      if (colorPopover.classList.contains('visible')) closeColorPopover();
+      else closeModal();
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
       event.shiftKey ? redo() : undo();
@@ -2482,7 +2768,7 @@ window.initializeModelDesigner = () => {
     if (state.selectedMaterial) {
       applyMaterialToViewer(designerViewer, state.selectedMaterial);
     }
-    scheduleTexturePreviewUpdate();
+    scheduleTexturePreviewUpdate({ requireArtwork: true });
   });
   detailViewer?.addEventListener('load', () => {
     const designedTexture = state.finalTextureUrl || state.appliedTextureUrl;

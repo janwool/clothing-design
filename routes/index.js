@@ -36,6 +36,25 @@ const MOCKUP_USE_CASE_IMAGES = [
   siteImage('use-cases/pod-merch-listing-images.webp')
 ];
 
+const MOCKUP_PAGE_SIZE = 48;
+
+function normalizeMockupPage(value) {
+  const page = Number.parseInt(value, 10);
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
+function buildMockupPageNumbers(page, pageCount) {
+  if (pageCount <= 7) return Array.from({ length: pageCount }, (_, index) => index + 1);
+  const visible = new Set([1, pageCount, page - 1, page, page + 1]);
+  const pages = [...visible].filter(value => value >= 1 && value <= pageCount).sort((a, b) => a - b);
+  const output = [];
+  pages.forEach((value, index) => {
+    if (index > 0 && value - pages[index - 1] > 1) output.push(null);
+    output.push(value);
+  });
+  return output;
+}
+
 function getDefaultLandingContent(name = '3D clothing models', resourceType = '3d-models') {
   return buildModelCategoryLandingContent(name);
 }
@@ -1800,11 +1819,18 @@ router.get('/mockups', async (req, res) => {
         ${getModelCategorySelect()}
         WHERE m.status = ?
         ${getModelCategoryGroupBy()}
-        ORDER BY m.created_at DESC
+        ORDER BY
+          COALESCE(primary_category.sort_order, legacy_category.sort_order, 2147483647) ASC,
+          COALESCE(primary_category.name, legacy_category.name, m.category, '') ASC,
+          m.id ASC
       `, ['active']),
       getActive3dCategories()
     ]);
     const normalizedModels = normalize3dModels(models);
+    const total = normalizedModels.length;
+    const pageCount = Math.max(1, Math.ceil(total / MOCKUP_PAGE_SIZE));
+    const page = Math.min(normalizeMockupPage(req.query.page), pageCount);
+    const offset = (page - 1) * MOCKUP_PAGE_SIZE;
     const categoryCounts = normalizedModels.reduce((counts, model) => {
       (model.category_slugs || [model.category_slug || model.category]).forEach(slug => {
         counts[slug] = (counts[slug] || 0) + 1;
@@ -1818,19 +1844,30 @@ router.get('/mockups', async (req, res) => {
         .slice(0, 2)
     )).slice(0, 12);
     const recentModels = normalizedModels.slice(0, 24);
-    const displayModels = normalizedModels.slice(0, 48);
+    const displayModels = normalizedModels.slice(offset, offset + MOCKUP_PAGE_SIZE);
+    const pagination = {
+      page,
+      pageCount,
+      pageSize: MOCKUP_PAGE_SIZE,
+      total,
+      start: total ? offset + 1 : 0,
+      end: Math.min(offset + displayModels.length, total),
+      pages: buildMockupPageNumbers(page, pageCount)
+    };
     const description = 'Browse free 3D clothing models and apparel mockups for shirts, jackets, pants, dresses and hoodies. Customize online and export transparent PNG renders.';
     const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
+    const collectionPath = page > 1 ? `/mockups?page=${page}` : '/mockups';
+    res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
     
     res.render('design-3d', { 
-      title: req.t('design3d.title'),
+      title: page > 1 ? `${req.t('design3d.title')} — Page ${page}` : req.t('design3d.title'),
       metaDescription: description,
       metaImage: collectionImage,
       structuredData: buildCollectionStructuredData(req, {
         name: 'Free 3D Clothing Models and Apparel Mockups',
         description,
-        path: '/mockups',
-        items: normalizedModels,
+        path: collectionPath,
+        items: displayModels,
         itemListName: 'Free 3D clothing model and apparel mockup library',
         breadcrumbs: [
           { name: 'Home', url: '/' },
@@ -1840,6 +1877,9 @@ router.get('/mockups', async (req, res) => {
       }),
       page: 'design-3d',
       models: displayModels,
+      catalogModels: normalizedModels,
+      catalogTotal: total,
+      catalogPagination: pagination,
       featuredModels,
       recentModels,
       categoryCounts,
@@ -1865,6 +1905,9 @@ router.get('/mockups', async (req, res) => {
       }),
       page: 'design-3d',
       models: [],
+      catalogModels: [],
+      catalogTotal: 0,
+      catalogPagination: { page: 1, pageCount: 1, pageSize: MOCKUP_PAGE_SIZE, total: 0, start: 0, end: 0, pages: [1] },
       featuredModels: [],
       recentModels: [],
       categoryCounts: {},

@@ -10,6 +10,13 @@ function runShareScript(pathname) {
   let domReady;
   let mountedPanel = null;
   let insertedContainer = null;
+  let insertedIntoCustomizationForm = null;
+
+  const customizationFormFooter = {
+    before(container) {
+      insertedIntoCustomizationForm = container;
+    }
+  };
 
   const footer = {
     before(container) {
@@ -37,7 +44,8 @@ function runShareScript(pathname) {
     },
     querySelector(selector) {
       if (selector === '[data-growth-share]') return mountedPanel;
-      if (selector === 'footer') return footer;
+      if (selector === 'footer') return customizationFormFooter;
+      if (selector === 'footer.footer') return footer;
       if (selector === 'h1') return { textContent: ' Hoodie 3D Model 01 ' };
       return null;
     },
@@ -62,13 +70,14 @@ function runShareScript(pathname) {
   });
   domReady();
 
-  return { insertedContainer, mountedPanel };
+  return { insertedContainer, insertedIntoCustomizationForm, mountedPanel };
 }
 
 test('mounts a tracked share panel on categorized 3D model detail pages', () => {
-  const { insertedContainer, mountedPanel } = runShareScript('/3d-models/hoodie-mockup/hoodie-model-01');
+  const { insertedContainer, insertedIntoCustomizationForm, mountedPanel } = runShareScript('/3d-models/hoodie-mockup/hoodie-model-01');
 
   assert.equal(insertedContainer.className, 'container');
+  assert.equal(insertedIntoCustomizationForm, null);
   assert.equal(mountedPanel.dataset.shareSurface, 'model-detail');
   assert.equal(mountedPanel.dataset.shareTitle, 'Hoodie 3D Model 01');
   assert.equal(mountedPanel['aria-label'], 'Share Hoodie 3D Model 01');
@@ -82,4 +91,3 @@ test('does not mount the model share panel on unrelated pages', () => {
   assert.equal(insertedContainer, null);
   assert.equal(mountedPanel, null);
 });
-

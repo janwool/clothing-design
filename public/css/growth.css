@@ -195,15 +195,13 @@
   backdrop-filter: blur(16px);
 }
 
+.model-viewer-load[hidden] {
+  display: none;
+}
+
 .model-viewer-load span {
   font-size: 14px;
   font-weight: 750;
-}
-
-.model-viewer-load small {
-  color: #5f5f64;
-  font-size: 10px;
-  font-weight: 650;
 }
 
 .model-viewer-load-status {
