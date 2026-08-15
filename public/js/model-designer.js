@@ -1894,6 +1894,7 @@ window.initializeModelDesigner = () => {
       textBox.removeAttribute('contenteditable');
       textBox.classList.remove('is-editing');
       state.textEditor = null;
+      renderSelection();
       scheduleTexturePreviewUpdate();
     };
 
@@ -1915,6 +1916,7 @@ window.initializeModelDesigner = () => {
       commit: () => closeEditor(true),
       cancel: () => closeEditor(false)
     };
+    renderSelection();
     requestAnimationFrame(() => {
       const selection = window.getSelection();
       const range = document.createRange();
@@ -2234,6 +2236,8 @@ window.initializeModelDesigner = () => {
     const screenUnit = 1 / selectionScale;
     const handleSize = 10 * screenUnit;
     const handleRadius = 2 * screenUnit;
+    const isEditingText = state.selected.dataset.type === 'text'
+      && state.textEditor?.group === state.selected;
     const box = createSvg('g', {
       class: 'selection-box',
       transform: `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`
@@ -2246,7 +2250,18 @@ window.initializeModelDesigner = () => {
       height: data.height
     }));
 
-    if (!state.selected.classList?.contains('texture-template-path')) {
+    if (state.selected.dataset.type === 'text' && !isEditingText) {
+      box.appendChild(createSvg('rect', {
+        class: 'selection-text-hit-area',
+        'data-action': 'move',
+        x: 0,
+        y: 0,
+        width: data.width,
+        height: data.height
+      }));
+    }
+
+    if (!state.selected.classList?.contains('texture-template-path') && !isEditingText) {
       [
         ['nw', 0, 0], ['n', data.width / 2, 0], ['ne', data.width, 0],
         ['e', data.width, data.height / 2], ['se', data.width, data.height],
@@ -2408,6 +2423,9 @@ window.initializeModelDesigner = () => {
         mode: actionTarget.dataset.action,
         handle: actionTarget.dataset.handle,
         startPoint: svgPoint(event),
+        startClientX: event.clientX,
+        startClientY: event.clientY,
+        moved: false,
         startData: getData(state.selected)
       };
       return;
@@ -2463,7 +2481,8 @@ window.initializeModelDesigner = () => {
   });
 
   textureSvg.addEventListener('dblclick', (event) => {
-    const target = event.target.closest('.texture-element');
+    const target = event.target.closest('.texture-element')
+      || (event.target.closest('.selection-text-hit-area') ? state.selected : null);
     if (!target || target.dataset.type !== 'text') return;
     event.preventDefault();
     event.stopPropagation();

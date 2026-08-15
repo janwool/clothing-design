@@ -1129,13 +1129,13 @@ window.ModelDesignerConfig = Object.freeze({
     };
     return loadScript({
       selector: 'script[data-editor-transform-runtime]',
-      src: '/js/editor-transform.js?v=20260815-text-edit-v3',
+      src: '/js/editor-transform.js?v=20260815-text-selection-v4',
       dataset: 'editorTransformRuntime',
       ready: () => Boolean(window.ModelDesignerTransforms),
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260815-text-edit-v3',
+      src: '/js/model-designer.js?v=20260815-text-selection-v4',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

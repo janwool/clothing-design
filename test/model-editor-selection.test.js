@@ -39,6 +39,19 @@ test('reuses the active text editor and removes its event listeners on close', (
   assert.doesNotMatch(runtime, /range\.collapse\(false\)/);
 });
 
+test('makes the selected text box itself movable and editable', () => {
+  assert.match(runtime, /class: 'selection-text-hit-area',[\s\S]*?'data-action': 'move'/);
+  assert.match(runtime, /event\.target\.closest\('\.selection-text-hit-area'\) \? state\.selected : null/);
+  assert.match(runtime, /state\.selected\.dataset\.type === 'text'[\s\S]*?state\.textEditor\?\.group === state\.selected/);
+  assert.match(styles, /\.selection-text-hit-area \{[\s\S]*?pointer-events: all;[\s\S]*?cursor: move;/);
+});
+
+test('removes selection controls while text editing and restores them after close', () => {
+  assert.match(runtime, /&& !isEditingText\) \{/);
+  assert.match(runtime, /state\.textEditor = null;\s*renderSelection\(\);/);
+  assert.match(runtime, /state\.textEditor = \{[\s\S]*?renderSelection\(\);\s*requestAnimationFrame/);
+});
+
 test('redraws selection controls when canvas zoom changes', () => {
   const zoomFunction = runtime.match(/function applyCanvasZoom[\s\S]*?\n  \}/)?.[0] || '';
   assert.match(zoomFunction, /requestAnimationFrame\(\(\) => renderSelection\(\)\)/);

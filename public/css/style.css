@@ -4569,6 +4569,12 @@ img {
   pointer-events: none;
 }
 
+.selection-text-hit-area {
+  fill: transparent;
+  pointer-events: all;
+  cursor: move;
+}
+
 .selection-handle {
   fill: var(--color-white);
   stroke: var(--color-accent);
