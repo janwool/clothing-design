@@ -3,18 +3,21 @@
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 GENERATED_ROOT = Path.home() / ".codex/generated_images/01a005f4-466e-7cd3-81b5-25e0fecaf393"
 OUTPUT_ROOT = PROJECT_ROOT / "public/images/editorial"
+HERO_OUTPUT_ROOT = PROJECT_ROOT / "public/images/hero"
 
 ASSETS = {
     "exec-42f29003-399a-4cc1-a46c-a5832eb8d9db.png": "apparel-designer-studio.webp",
     "exec-f02d63b7-c465-46bb-82dd-cd8da1490127.png": "pod-studio-review.webp",
     "exec-42350f4b-c704-4f4d-864d-046fae7505b7.png": "garment-team-review.webp",
 }
+
+HERO_ASSET = "exec-940763c5-e305-4dff-95ad-64aff8b37ea1.png"
 
 
 def build_brand_icon() -> None:
@@ -43,6 +46,14 @@ def main() -> None:
         output_path = OUTPUT_ROOT / output_name
         image.save(output_path, "WEBP", quality=88, method=6)
         print(f"{output_path.relative_to(PROJECT_ROOT)} {image.width}x{image.height}")
+
+    HERO_OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
+    hero = Image.open(GENERATED_ROOT / HERO_ASSET).convert("RGB")
+    hero = ImageOps.fit(hero, (1120, 1400), method=Image.Resampling.LANCZOS)
+    hero_path = HERO_OUTPUT_ROOT / "apparel-design-hero-v3.webp"
+    hero.save(hero_path, "WEBP", quality=90, method=6)
+    print(f"{hero_path.relative_to(PROJECT_ROOT)} {hero.width}x{hero.height}")
+
     build_brand_icon()
     print("public/images/icon.png 1024x1024")
 

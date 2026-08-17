@@ -92,3 +92,13 @@ test('ships web-ready editorial images and uses them for homepage use cases', ()
     assert.match(routes, new RegExp(`/images/editorial/${filename.replace('.', '\\.')}`));
   });
 });
+
+test('uses a generated commercial hero photograph instead of a simulated product UI', () => {
+  const homeView = fs.readFileSync(path.join(projectRoot, 'views/index.ejs'), 'utf8');
+  const heroPath = path.join(projectRoot, 'public/images/hero/apparel-design-hero-v3.webp');
+
+  assert.deepEqual(webpDimensions(heroPath), { width: 1120, height: 1400 });
+  assert.ok(fs.statSync(heroPath).size > 80_000, 'hero should be a real photographic asset');
+  assert.match(homeView, /\/images\/hero\/apparel-design-hero-v3\.webp/);
+  assert.doesNotMatch(homeView, /home-studio-preview|home-artwork-zone|home-view-switcher/);
+});
