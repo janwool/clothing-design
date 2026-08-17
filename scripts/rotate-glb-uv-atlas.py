@@ -8,6 +8,7 @@ import importlib.util
 import json
 import math
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import bpy
@@ -60,6 +61,25 @@ def rotate_uv_atlas(objects: list[bpy.types.Object], degrees: float) -> int:
     return changed
 
 
+def rotate_existing_svg(source: Path, destination: Path, degrees: float, size: int) -> int:
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
+    tree = ET.parse(source)
+    root = tree.getroot()
+    namespace = root.tag.partition("}")[0] + "}" if root.tag.startswith("{") else ""
+    wrapper = ET.Element(
+        f"{namespace}g",
+        {"transform": f"rotate({degrees:g} {size / 2:g} {size / 2:g})"},
+    )
+    children = list(root)
+    for child in children:
+        root.remove(child)
+        wrapper.append(child)
+    root.append(wrapper)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    tree.write(destination, encoding="utf-8", xml_declaration=False)
+    return sum(1 for node in root.iter() if node.tag.rsplit("}", 1)[-1] == "path")
+
+
 def main() -> None:
     argv = sys.argv[sys.argv.index("--") + 1 :] if "--" in sys.argv else sys.argv[1:]
     parser = argparse.ArgumentParser()
@@ -67,6 +87,7 @@ def main() -> None:
     parser.add_argument("output_glb", type=Path)
     parser.add_argument("output_svg", type=Path)
     parser.add_argument("--degrees", type=float, default=180.0)
+    parser.add_argument("--source-svg", type=Path)
     parser.add_argument("--report", type=Path)
     parser.add_argument("--position-quantization", type=int, default=14)
     parser.add_argument("--size", type=int, default=1024)
@@ -90,14 +111,17 @@ def main() -> None:
 
     args.output_glb.parent.mkdir(parents=True, exist_ok=True)
     args.output_svg.parent.mkdir(parents=True, exist_ok=True)
-    svg_paths = helper.export_svg(
-        args.output_svg,
-        objects,
-        args.size,
-        args.min_svg_area,
-        outer_contours_only=True,
-        min_span=args.min_svg_span,
-    )
+    if args.source_svg:
+        svg_paths = rotate_existing_svg(args.source_svg, args.output_svg, args.degrees, args.size)
+    else:
+        svg_paths = helper.export_svg(
+            args.output_svg,
+            objects,
+            args.size,
+            args.min_svg_area,
+            outer_contours_only=True,
+            min_span=args.min_svg_span,
+        )
     helper.export_glb(args.output_glb, args.position_quantization)
 
     report = {
@@ -110,6 +134,7 @@ def main() -> None:
         "uv_bounds_before": before,
         "uv_bounds_after": after,
         "svg_paths": svg_paths,
+        "source_svg": str(args.source_svg.resolve()) if args.source_svg else None,
         "geometry_changed": False,
     }
     if args.report:
