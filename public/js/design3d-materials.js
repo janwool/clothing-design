@@ -195,34 +195,54 @@
   ];
 
   const surfaceTuning = {
-    'cotton-jersey': { normalScale: 0.12 },
-    'rib-knit': { normalScale: 0.18 },
-    'french-terry': { normalScale: 0.16 },
-    fleece: { normalScale: 0.09 },
-    poplin: { normalScale: 0.07 },
+    'cotton-jersey': { normalScale: 0.08 },
+    'rib-knit': { normalScale: 0.10 },
+    'french-terry': { normalScale: 0.10 },
+    fleece: { normalScale: 0.07 },
+    poplin: { normalScale: 0.05 },
     'oxford-cloth': { normalScale: 0.1 },
-    linen: { normalScale: 0.14 },
-    denim: { normalScale: 0.16 },
-    twill: { normalScale: 0.13 },
-    'wool-blend': { normalScale: 0.1 },
-    'nylon-ripstop': { normalScale: 0.07 },
+    linen: { normalScale: 0.09 },
+    denim: { normalScale: 0.09 },
+    twill: { normalScale: 0.08 },
+    'wool-blend': { normalScale: 0.07 },
+    'nylon-ripstop': { normalScale: 0.05 },
     leather: { normalScale: 0.11 },
-    'satin-silk': { normalScale: 0.04 },
-    velvet: { normalScale: 0.06 },
+    'satin-silk': { normalScale: 0.03 },
+    velvet: { normalScale: 0.04 },
     'modal-stretch': { normalScale: 0.06 },
     'wool-felt': { normalScale: 0.08 }
   };
 
-  const materials = rawMaterials.map((material) => ({
-    ...material,
-    ...(surfaceTuning[material.id] || {}),
-    maps: {
-      baseColor: `/materials/${material.id}/basecolor.png`,
-      normal: `/materials/${material.id}/normal.png`,
-      roughness: `/materials/${material.id}/roughness.png`,
-      height: `/materials/${material.id}/height.png`
-    }
-  }));
+  const generatedMaterialV2 = new Set([
+    'cotton-jersey',
+    'rib-knit',
+    'french-terry',
+    'fleece',
+    'poplin',
+    'linen',
+    'denim',
+    'twill',
+    'wool-blend',
+    'nylon-ripstop',
+    'satin-silk',
+    'velvet'
+  ]);
+
+  const generatedMaterialRoot = 'https://cdn.cloz-design.com/materials-v2';
+
+  const materials = rawMaterials.map((material) => {
+    const materialRoot = generatedMaterialV2.has(material.id) ? generatedMaterialRoot : '/materials';
+    return {
+      ...material,
+      ...(surfaceTuning[material.id] || {}),
+      maps: {
+        baseColor: `${materialRoot}/${material.id}/basecolor.${generatedMaterialV2.has(material.id) ? 'webp' : 'png'}`,
+        normal: `${materialRoot}/${material.id}/normal.${generatedMaterialV2.has(material.id) ? 'webp' : 'png'}`,
+        roughness: `${materialRoot}/${material.id}/roughness.png`,
+        height: `${materialRoot}/${material.id}/height.png`
+      }
+    };
+  });
 
   const allowedByCategory = {
     't-shirt': ['cotton-jersey', 'rib-knit', 'french-terry', 'modal-stretch', 'nylon-ripstop'],

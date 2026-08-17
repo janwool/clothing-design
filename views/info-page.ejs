@@ -1,0 +1,28 @@
+<%- include('partials/header') %>
+
+<section class="utility-page-hero">
+  <div class="container utility-page-grid">
+    <div>
+      <span class="generator-eyebrow"><%= eyebrow %></span>
+      <h1><%= heading %></h1>
+    </div>
+    <p><%= intro %></p>
+  </div>
+</section>
+
+<section class="utility-page-content">
+  <div class="container utility-card-grid">
+    <% sections.forEach(function(section, index) { %>
+      <article class="utility-card">
+        <span><%= String(index + 1).padStart(2, '0') %></span>
+        <h2><%= section.title %></h2>
+        <p><%= section.body %></p>
+        <% if (section.href && section.label) { %>
+          <a class="btn <%= index === 0 ? 'btn-primary' : 'btn-secondary' %>" href="<%= section.href %>"><%= section.label %></a>
+        <% } %>
+      </article>
+    <% }); %>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

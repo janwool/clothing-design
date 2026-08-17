@@ -1,7 +1,15 @@
 <%- include('partials/header') %>
 <% const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination ? catalogPagination : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] }; %>
 <% const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length; %>
-<% const mockupPageHref = function(pageNumber) { return pageNumber === 1 ? '/mockups#free-3d-models' : `/mockups?page=${pageNumber}#free-3d-models`; }; %>
+<% const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total; %>
+<% const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' }; %>
+<% const mockupPageHref = function(pageNumber) {
+  const params = [];
+  if (pageNumber > 1) params.push(`page=${pageNumber}`);
+  if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
+  if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
+  return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
+}; %>
 
 <section class="page-header">
   <div class="container">
@@ -26,6 +34,26 @@
 
 <section class="content-section">
   <div class="container">
+    <form class="catalog-toolbar" action="/mockups#free-3d-models" method="get" role="search">
+      <label class="catalog-search-field">
+        <span>Find a garment</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input type="search" name="q" value="<%= mockupQuery.q %>" placeholder="Try hoodie, V-neck, coat…" autocomplete="off">
+      </label>
+      <label class="catalog-sort-field">
+        <span>Sort</span>
+        <select name="sort" onchange="this.form.submit()">
+          <option value="featured" <%= mockupQuery.sort === 'featured' ? 'selected' : '' %>>Category order</option>
+          <option value="name" <%= mockupQuery.sort === 'name' ? 'selected' : '' %>>Name A–Z</option>
+          <option value="newest" <%= mockupQuery.sort === 'newest' ? 'selected' : '' %>>Recently updated</option>
+        </select>
+      </label>
+      <button class="btn btn-primary" type="submit">Search models</button>
+      <% if (mockupQuery.q || mockupQuery.sort !== 'featured') { %>
+        <a class="catalog-clear" href="/mockups#free-3d-models">Clear</a>
+      <% } %>
+    </form>
+
     <nav class="mockup-intent-links" aria-label="Popular 3D clothing mockup searches">
       <a href="/mockups/jacket">Jacket 3D models</a>
       <a href="/mockups/pants">3D pants design models</a>
@@ -54,9 +82,9 @@
     <div class="mockup-library-heading" id="free-3d-models">
       <div>
         <span class="generator-eyebrow">3D mockup clothing library</span>
-        <h2>Choose a free 3D clothing model</h2>
+        <h2><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'Choose a free 3D clothing model' %></h2>
       </div>
-      <p>Open a garment to inspect its 3D shape, test colors and artwork placement, and create an apparel mockup for ecommerce, print-on-demand, or design review.</p>
+      <p><strong><%= mockupResultTotal %></strong> <%= mockupResultTotal === 1 ? 'model' : 'models' %>. Open a garment to inspect its shape, test artwork placement, and create a mockup for ecommerce, print-on-demand, or design review.</p>
     </div>
 
     <!-- 3D Models Grid -->
@@ -84,7 +112,9 @@
         <% }); %>
       <% } else { %>
         <div class="empty-state">
-          <p>No 3D models available yet.</p>
+          <strong>No garments match this search.</strong>
+          <p>Try a broader garment type or clear the current filters.</p>
+          <a class="btn btn-secondary" href="/mockups#free-3d-models">Clear search</a>
         </div>
       <% } %>
     </div>
@@ -122,7 +152,7 @@
   </div>
 </section>
 
-<% if (mockupPagination.page === 1) { %>
+<% if (mockupPagination.page === 1 && !mockupQuery.q) { %>
   <%- include('partials/generator-sections', { landingContent, categories, models: (typeof catalogModels !== 'undefined' ? catalogModels : models) }) %>
 <% } %>
 

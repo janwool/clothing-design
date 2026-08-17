@@ -31,9 +31,9 @@ const MOCKUP_WORKFLOW_IMAGES = [
 ];
 
 const MOCKUP_USE_CASE_IMAGES = [
-  siteImage('use-cases/print-placement-previews.webp'),
-  siteImage('use-cases/product-page-mockups.webp'),
-  siteImage('use-cases/pod-merch-listing-images.webp')
+  '/images/editorial/garment-team-review.webp',
+  '/images/editorial/apparel-designer-studio.webp',
+  '/images/editorial/pod-studio-review.webp'
 ];
 
 const MOCKUP_PAGE_SIZE = 48;
@@ -252,6 +252,17 @@ function compactText(value, maxLength = 160) {
   return `${clipped.slice(0, lastSpace > 80 ? lastSpace : maxLength - 1).trim()}…`;
 }
 
+function sanitizePublicModelDescription(value) {
+  return String(value || '')
+    .replace(/\bGEO-friendly model descriptions?\.?/gi, '')
+    .replace(/\bSEO-friendly model descriptions?\.?/gi, '')
+    .replace(/transparent WebP image/gi, 'transparent PNG image')
+    .replace(/production-ready render/gi, 'review-ready render')
+    .replace(/\s+([.,;:])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
 function buildModelMetaDescription(modelName, searchPhrase) {
   const candidates = [
     `${modelName} is a free editable ${searchPhrase}. Customize colors and artwork online, then export a transparent PNG render.`,
@@ -348,7 +359,7 @@ function withCategoryImages(categories = []) {
 
 const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'shirt', 'hoodie-mockup', 'dress'];
 const HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY = {
-  't-shirt-mockup': 'classic-crew-neck-t-shirt-3d-model',
+  't-shirt-mockup': 'basic-short-sleeve-tshirt-3d-model',
   shirt: 'tailored-long-sleeve-shirt-3d-model',
   'hoodie-mockup': 'tailored-pullover-hoodie-3d-model',
   dress: 'classic-one-piece-dress-3d-model'
@@ -1827,7 +1838,22 @@ router.get('/mockups', async (req, res) => {
       getActive3dCategories()
     ]);
     const normalizedModels = normalize3dModels(models);
-    const total = normalizedModels.length;
+    const libraryTotal = normalizedModels.length;
+    const catalogQuery = String(req.query.q || '').trim().slice(0, 80);
+    const catalogSort = ['featured', 'name', 'newest'].includes(req.query.sort) ? req.query.sort : 'featured';
+    const queryNeedle = catalogQuery.toLowerCase();
+    const filteredModels = normalizedModels.filter(model => {
+      if (!queryNeedle) return true;
+      return [model.name, model.category_label, model.category, model.description]
+        .filter(Boolean)
+        .some(value => String(value).toLowerCase().includes(queryNeedle));
+    });
+    if (catalogSort === 'name') {
+      filteredModels.sort((a, b) => String(a.name).localeCompare(String(b.name), 'en'));
+    } else if (catalogSort === 'newest') {
+      filteredModels.sort((a, b) => new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0));
+    }
+    const total = filteredModels.length;
     const pageCount = Math.max(1, Math.ceil(total / MOCKUP_PAGE_SIZE));
     const page = Math.min(normalizeMockupPage(req.query.page), pageCount);
     const offset = (page - 1) * MOCKUP_PAGE_SIZE;
@@ -1844,7 +1870,7 @@ router.get('/mockups', async (req, res) => {
         .slice(0, 2)
     )).slice(0, 12);
     const recentModels = normalizedModels.slice(0, 24);
-    const displayModels = normalizedModels.slice(offset, offset + MOCKUP_PAGE_SIZE);
+    const displayModels = filteredModels.slice(offset, offset + MOCKUP_PAGE_SIZE);
     const pagination = {
       page,
       pageCount,
@@ -1856,7 +1882,11 @@ router.get('/mockups', async (req, res) => {
     };
     const description = 'Browse free 3D clothing models and apparel mockups for shirts, jackets, pants, dresses and hoodies. Customize online and export transparent PNG renders.';
     const collectionImage = firstImage(req, normalizedModels.map(model => model.image_url));
-    const collectionPath = page > 1 ? `/mockups?page=${page}` : '/mockups';
+    const collectionParams = new URLSearchParams();
+    if (page > 1) collectionParams.set('page', String(page));
+    if (catalogQuery) collectionParams.set('q', catalogQuery);
+    if (catalogSort !== 'featured') collectionParams.set('sort', catalogSort);
+    const collectionPath = collectionParams.size ? `/mockups?${collectionParams.toString()}` : '/mockups';
     res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
     
     res.render('design-3d', { 
@@ -1878,7 +1908,9 @@ router.get('/mockups', async (req, res) => {
       page: 'design-3d',
       models: displayModels,
       catalogModels: normalizedModels,
-      catalogTotal: total,
+      catalogTotal: libraryTotal,
+      catalogResultTotal: total,
+      catalogQuery: { q: catalogQuery, sort: catalogSort },
       catalogPagination: pagination,
       featuredModels,
       recentModels,
@@ -1907,6 +1939,8 @@ router.get('/mockups', async (req, res) => {
       models: [],
       catalogModels: [],
       catalogTotal: 0,
+      catalogResultTotal: 0,
+      catalogQuery: { q: '', sort: 'featured' },
       catalogPagination: { page: 1, pageCount: 1, pageSize: MOCKUP_PAGE_SIZE, total: 0, start: 0, end: 0, pages: [1] },
       featuredModels: [],
       recentModels: [],
@@ -2151,14 +2185,14 @@ router.get('/blog/:slug', (req, res) => {
 
 // Pricing
 router.get('/pricing', (req, res) => {
-  const description = 'Compare ClothingDesign plans for 3D clothing models, apparel mockups, high-resolution exports, and team workflows.';
+  const description = 'ClothingDesign is free during public beta. Browse 3D clothing models, customize apparel artwork, and export transparent PNG mockups in your browser.';
   res.render('pricing', { 
-    title: req.t('pricing.title'),
+    title: 'Free Beta Access - ClothingDesign',
     metaDescription: description,
     metaImage: firstImage(req),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'WebPage',
-      name: 'ClothingDesign Plans',
+      name: 'ClothingDesign Free Beta Access',
       description,
       path: '/pricing',
       breadcrumbs: [
@@ -2167,15 +2201,75 @@ router.get('/pricing', (req, res) => {
       ],
       mainEntity: {
         '@type': 'OfferCatalog',
-        name: 'ClothingDesign plans',
+        name: 'ClothingDesign public beta access',
         itemListElement: [
-          { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Pro', price: '29', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Enterprise', price: '99', priceCurrency: 'USD' }
+          { '@type': 'Offer', name: 'Free public beta', price: '0', priceCurrency: 'USD' }
         ]
       }
     }),
     page: 'pricing'
+  });
+});
+
+router.get('/contact', (req, res) => {
+  res.render('info-page', {
+    title: 'Contact - ClothingDesign',
+    metaDescription: 'Get help with ClothingDesign mockups or request customization for a 3D garment model.',
+    metaRobots: 'noindex,follow',
+    page: 'contact',
+    eyebrow: 'Contact',
+    heading: 'Get help with a clothing mockup',
+    intro: 'Choose the path that matches what you are trying to make. Product-specific requests work best when they start from the garment model itself.',
+    sections: [
+      {
+        title: 'Request garment customization',
+        body: 'Open a model, choose Request customization, and attach your design details. The selected garment and current artwork will travel with the request.',
+        href: '/mockups',
+        label: 'Choose a garment model'
+      },
+      {
+        title: 'Start a mockup',
+        body: 'Use the guided T-shirt workflow to test a color, upload artwork, and prepare a transparent product image.',
+        href: '/tools/t-shirt-mockup-generator',
+        label: 'Open the T-shirt workflow'
+      }
+    ]
+  });
+});
+
+router.get('/privacy', (req, res) => {
+  res.render('legal', {
+    title: 'Privacy - ClothingDesign',
+    metaDescription: 'How ClothingDesign handles account and customization-request information.',
+    metaRobots: 'noindex,follow',
+    page: 'privacy',
+    eyebrow: 'Privacy',
+    heading: 'Privacy overview',
+    updatedAt: 'August 15, 2026',
+    sections: [
+      { title: 'Information you provide', body: 'When you create an account, we receive the name and email address you submit. A customization request can also include quantity, requirements, and the design previews you choose to send.' },
+      { title: 'How it is used', body: 'Account information is used to provide sign-in access. Customization-request information is used to review and respond to that specific request.' },
+      { title: 'Browser-based design data', body: 'The public editor can be used before registration. Applying a design updates the current browser session; it does not currently create a cloud project in your account.' },
+      { title: 'Questions', body: 'For a product-specific question, open the relevant garment and use its Request customization action, or visit the contact page for the available support paths.' }
+    ]
+  });
+});
+
+router.get('/terms', (req, res) => {
+  res.render('legal', {
+    title: 'Terms - ClothingDesign',
+    metaDescription: 'Basic terms for using the ClothingDesign public beta.',
+    metaRobots: 'noindex,follow',
+    page: 'terms',
+    eyebrow: 'Terms',
+    heading: 'Public beta terms',
+    updatedAt: 'August 15, 2026',
+    sections: [
+      { title: 'Beta service', body: 'ClothingDesign is currently offered as a public beta. Features, models, export behavior, and availability may change as the product develops.' },
+      { title: 'Your artwork', body: 'Only upload artwork you have permission to use. You remain responsible for the images, logos, text, and other content you add to a design.' },
+      { title: 'Mockup outputs', body: 'Exports are visual mockups for review and presentation. Check dimensions, placement, color, and production requirements with your manufacturer before using a mockup as a production reference.' },
+      { title: 'Acceptable use', body: 'Do not use the service to violate rights, distribute malicious content, or interfere with the service or other users.' }
+    ]
   });
 });
 
@@ -2436,7 +2530,10 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     }
 
     if (redirectToCanonical3dModel(req, res, model, true)) return;
-    const normalizedModel = normalize3dModel(model);
+    const normalizedModel = {
+      ...normalize3dModel(model),
+      description: sanitizePublicModelDescription(model.description)
+    };
     const categorySlug = normalizedModel.category_slug || normalizedModel.category || req.params.category;
     const description = `Customize ${normalizedModel.name} in the ClothingDesign browser-based 3D apparel designer and export a high-resolution clothing mockup render.`;
     
@@ -2509,7 +2606,10 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       LIMIT 4
     `, [model.id, 'active', model.category, model.id]);
     
-    const normalizedModel = normalize3dModel(model);
+    const normalizedModel = {
+      ...normalize3dModel(model),
+      description: sanitizePublicModelDescription(model.description)
+    };
     const normalizedRelated = normalize3dModels(related);
     const modelDetailContent = buildModelDetailContent(normalizedModel, normalizedRelated, req);
 

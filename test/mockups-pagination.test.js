@@ -7,13 +7,14 @@ const root = path.join(__dirname, '..');
 const route = fs.readFileSync(path.join(root, 'routes', 'index.js'), 'utf8');
 const template = fs.readFileSync(path.join(root, 'views', 'design-3d.ejs'), 'utf8');
 const styles = fs.readFileSync(path.join(root, 'public', 'css', 'style.css'), 'utf8');
+const refreshStyles = fs.readFileSync(path.join(root, 'public', 'css', 'product-refresh.css'), 'utf8');
 
 test('paginates the All model library without hiding the total catalog size', () => {
   assert.match(route, /const MOCKUP_PAGE_SIZE = 48;/);
   assert.match(route, /const pageCount = Math\.max\(1, Math\.ceil\(total \/ MOCKUP_PAGE_SIZE\)\);/);
   assert.match(route, /const page = Math\.min\(normalizeMockupPage\(req\.query\.page\), pageCount\);/);
-  assert.match(route, /normalizedModels\.slice\(offset, offset \+ MOCKUP_PAGE_SIZE\)/);
-  assert.match(route, /catalogTotal: total/);
+  assert.match(route, /filteredModels\.slice\(offset, offset \+ MOCKUP_PAGE_SIZE\)/);
+  assert.match(route, /catalogTotal: libraryTotal/);
   assert.match(template, /mockupTotal \? `\$\{mockupTotal\} free 3D models`/);
 });
 
@@ -34,7 +35,17 @@ test('renders accessible previous, numbered, and next page navigation', () => {
 });
 
 test('gives paginated result pages their own canonical URL', () => {
-  assert.match(route, /const collectionPath = page > 1 \? `\/mockups\?page=\$\{page\}` : '\/mockups';/);
+  assert.match(route, /if \(page > 1\) collectionParams\.set\('page', String\(page\)\);/);
+  assert.match(route, /if \(catalogQuery\) collectionParams\.set\('q', catalogQuery\);/);
   assert.match(route, /res\.locals\.canonicalUrl = toAbsoluteUrl\(req, collectionPath\);/);
   assert.match(route, /items: displayModels/);
+});
+
+test('supports searchable and sortable model results', () => {
+  assert.match(route, /const catalogQuery = String\(req\.query\.q \|\| ''\)/);
+  assert.match(route, /\['featured', 'name', 'newest'\]\.includes\(req\.query\.sort\)/);
+  assert.match(template, /role="search"/);
+  assert.match(template, /name="q"/);
+  assert.match(template, /name="sort"/);
+  assert.match(refreshStyles, /\.catalog-toolbar \{/);
 });

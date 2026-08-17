@@ -13,6 +13,10 @@ function clearStaleOverlays() {
   document.querySelectorAll('.mobile-menu.active').forEach(menu => {
     menu.classList.remove('active');
   });
+  document.querySelectorAll('.mobile-toggle[aria-expanded="true"]').forEach(toggle => {
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.setAttribute('aria-label', 'Open menu');
+  });
 }
 
 // Mobile menu toggle
@@ -23,8 +27,19 @@ document.addEventListener('DOMContentLoaded', function() {
   const mobileMenu = document.querySelector('.mobile-menu');
 
   if (mobileToggle && mobileMenu) {
+    const setMobileMenuOpen = (isOpen) => {
+      mobileMenu.classList.toggle('active', isOpen);
+      mobileToggle.setAttribute('aria-expanded', String(isOpen));
+      mobileToggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+      mobileToggle.classList.toggle('is-open', isOpen);
+    };
+
     mobileToggle.addEventListener('click', function() {
-      mobileMenu.classList.toggle('active');
+      setMobileMenuOpen(!mobileMenu.classList.contains('active'));
+    });
+
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => setMobileMenuOpen(false));
     });
   }
 
@@ -66,6 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mobileMenu && mobileMenu.classList.contains('active')) {
       if (!mobileMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
         mobileMenu.classList.remove('active');
+        mobileToggle.setAttribute('aria-expanded', 'false');
+        mobileToggle.setAttribute('aria-label', 'Open menu');
+        mobileToggle.classList.remove('is-open');
       }
     }
 
@@ -79,6 +97,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
   document.addEventListener('keydown', function(e) {
     if (e.key !== 'Escape') return;
+
+    if (mobileMenu?.classList.contains('active')) {
+      mobileMenu.classList.remove('active');
+      mobileToggle?.setAttribute('aria-expanded', 'false');
+      mobileToggle?.setAttribute('aria-label', 'Open menu');
+      mobileToggle?.classList.remove('is-open');
+      mobileToggle?.focus();
+    }
 
     navDropdowns.forEach(dropdown => {
       dropdown.classList.remove('is-open');

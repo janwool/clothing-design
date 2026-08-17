@@ -281,7 +281,7 @@ window.initializeModelDesigner = () => {
 
   async function applyMaterialPreset(material) {
     state.selectedMaterial = material;
-    setDesignSaveStatus('Unsaved changes', true);
+    setDesignSaveStatus('Unapplied changes', true);
     materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
       button.classList.toggle('active', button.dataset.materialId === material.id);
     });
@@ -824,7 +824,7 @@ window.initializeModelDesigner = () => {
     const textureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
     state.finalTextureUrl = textureUrl;
     await Promise.all(getLoadedDesignViewers().map((viewerElement) => applyTextureToViewer(viewerElement, textureUrl)));
-    setDesignSaveStatus('Saved');
+    setDesignSaveStatus('Applied');
     closeModal();
   }
 
@@ -2715,7 +2715,7 @@ window.initializeModelDesigner = () => {
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push(snapshot);
     state.historyIndex++;
-    if (hadHistory) setDesignSaveStatus('Unsaved changes', true);
+    if (hadHistory) setDesignSaveStatus('Unapplied changes', true);
     scheduleTexturePreviewUpdate();
   }
 
@@ -2726,7 +2726,7 @@ window.initializeModelDesigner = () => {
       .map(element => parseInt((element.id || '').replace('element-', ''), 10))
       .filter(Number.isFinite);
     state.elementCounter = Math.max(state.elementCounter, 0, ...ids);
-    setDesignSaveStatus('Unsaved changes', true);
+    setDesignSaveStatus('Unapplied changes', true);
     scheduleTexturePreviewUpdate();
   }
 

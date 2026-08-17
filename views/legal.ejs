@@ -1,0 +1,25 @@
+<%- include('partials/header') %>
+
+<section class="utility-page-hero utility-page-hero-compact">
+  <div class="container utility-page-grid">
+    <div>
+      <span class="generator-eyebrow"><%= eyebrow %></span>
+      <h1><%= heading %></h1>
+    </div>
+    <p>Last updated <%= updatedAt %></p>
+  </div>
+</section>
+
+<section class="utility-page-content">
+  <div class="container legal-copy">
+    <% sections.forEach(function(section) { %>
+      <section>
+        <h2><%= section.title %></h2>
+        <p><%= section.body %></p>
+      </section>
+    <% }); %>
+    <p class="legal-contact-note">Need a product-specific path? <a href="/contact">Visit contact options</a>.</p>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

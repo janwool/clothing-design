@@ -40,7 +40,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /id="modelDesignerRuntimeSource"/);
   assert.doesNotMatch(template, /<script\s+src="\/js\/design3d-materials\.js/);
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
-  assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260805-lazy'/);
+  assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260817-r2-materials'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
   assert.match(template, /src: '\/js\/model-designer\.js\?v=20260815-text-selection-v4'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);

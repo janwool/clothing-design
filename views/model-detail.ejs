@@ -105,33 +105,32 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
             </svg>
-            Design Now
+            Customize this model
           </button>
+          <div class="model-secondary-actions">
           <% if (previewModelFileUrl) { %>
             <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
               </svg>
-              Download HD Render
+              Export transparent PNG
             </button>
           <% } %>
-          <button type="button" class="btn btn-consult btn-large" id="customizationInquiryBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-              <path d="M21 15a4 4 0 01-4 4H8l-5 3V7a4 4 0 014-4h10a4 4 0 014 4v8z"/>
-              <path d="M8 9h8M8 13h5"/>
-            </svg>
-            Request Customization
-          </button>
           <% if (supportsOnModelMockup) { %>
             <button type="button" class="btn btn-secondary btn-large" id="modelMockupBtn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <path d="M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5"/>
                 <path d="M9 4.5a3.7 3.7 0 0 0 6 0M10 11h4M10 14h4"/>
               </svg>
-              Model mockup
+              Preview on a model
             </button>
           <% } %>
+          </div>
+          <button type="button" class="model-consult-link" id="customizationInquiryBtn">
+            Need a custom garment or production quantity? <strong>Request customization →</strong>
+          </button>
           <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
+          <p class="model-action-note">Free during public beta · PNG export · no payment details required</p>
         </div>
 
         <div class="model-description">
@@ -379,7 +378,7 @@
       <div>
         <span class="generator-eyebrow">Design 3D</span>
         <h2><%= detailCta.title || ('Customize ' + model.name) %></h2>
-        <p><%= detailCta.text || 'Open the 3D design studio, apply artwork, and export a production-ready render.' %></p>
+        <p><%= detailCta.text || 'Open the 3D design studio, apply artwork, and export a review-ready transparent PNG.' %></p>
       </div>
       <button class="btn btn-primary btn-large" id="designCtaBtn">Start Designing</button>
     </div>
@@ -659,7 +658,7 @@
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
           <path d="M20 6L9 17l-5-5"/>
         </svg>
-        <span id="designSaveStatusText">Saved</span>
+        <span id="designSaveStatusText">Ready</span>
       </div>
       <div class="design-modal-actions">
         <% if (supportsOnModelMockup) { %>
@@ -1099,7 +1098,7 @@ window.ModelDesignerConfig = Object.freeze({
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = '/js/design3d-materials.js?v=20260805-lazy';
+      script.src = '/js/design3d-materials.js?v=20260817-r2-materials';
       script.dataset.designMaterials = 'true';
       script.addEventListener('load', resolve, { once: true });
       script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });

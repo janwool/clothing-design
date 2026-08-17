@@ -26,8 +26,8 @@ if (!isWorkerRuntime) {
 function buildAuthPageData(req, page, title) {
   const path = page === 'register' ? '/auth/register' : '/auth/login';
   const description = page === 'register'
-    ? 'Create a ClothingDesign account to save apparel mockups, manage 3D clothing designs, and access design resources.'
-    : 'Sign in to ClothingDesign to manage saved apparel mockups, 3D clothing designs, and account resources.';
+    ? 'Create a ClothingDesign account for sign-in access while the browser mockup workspace is in public beta.'
+    : 'Sign in to ClothingDesign, or continue into the public browser mockup workspace without an account.';
 
   return {
     title,
@@ -79,7 +79,7 @@ router.post('/login', async (req, res) => {
           email: user.email,
           name: user.name
         };
-        res.redirect('/');
+        res.redirect('/tools/t-shirt-mockup-generator');
       } else {
         res.render('auth/login', { 
           ...buildAuthPageData(req, 'login', req.t('auth.login')),
@@ -99,6 +99,18 @@ router.post('/login', async (req, res) => {
 router.post('/register', async (req, res) => {
   try {
     const { email, password, name } = req.body;
+    if (String(name || '').trim().length < 2) {
+      return res.render('auth/register', {
+        ...buildAuthPageData(req, 'register', req.t('auth.register')),
+        error: 'Please enter your name.'
+      });
+    }
+    if (String(password || '').length < 8) {
+      return res.render('auth/register', {
+        ...buildAuthPageData(req, 'register', req.t('auth.register')),
+        error: 'Use a password with at least 8 characters.'
+      });
+    }
     
     bcrypt.hash(password, 10, async (err, hash) => {
       if (err) {
@@ -118,7 +130,7 @@ router.post('/register', async (req, res) => {
           email,
           name
         };
-        res.redirect('/');
+        res.redirect('/tools/t-shirt-mockup-generator');
       } catch (err) {
         res.render('auth/register', { 
           ...buildAuthPageData(req, 'register', req.t('auth.register')),

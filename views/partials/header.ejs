@@ -75,8 +75,10 @@
     <link rel="stylesheet" href="<%= stylesheet %>">
   <% }); %>
   <link rel="stylesheet" href="/css/growth.css?v=20260806-auto-3d">
+  <link rel="stylesheet" href="/css/product-refresh.css?v=20260815-product-loop-v2">
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav class="navbar">
     <div class="navbar-container">
       <!-- Logo -->
@@ -87,10 +89,10 @@
       <!-- Desktop Navigation -->
       <div class="navbar-menu">
         <a href="/mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' %>">
-          <%= t('nav.design3d') %>
+          3D Models
         </a>
         <a href="/blog" class="nav-link <%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">
-          Blog
+          Guides
         </a>
         <!-- Tools Dropdown -->
         <div class="nav-dropdown">
@@ -185,9 +187,8 @@
               </div>
             </button>
             <div class="user-menu">
-              <a href="/dashboard/designs" class="user-item"><%= t('nav.myDesigns') %></a>
-              <a href="/dashboard/assets" class="user-item"><%= t('nav.myAssets') %></a>
-              <a href="/dashboard/settings" class="user-item"><%= t('nav.settings') %></a>
+              <a href="/tools/t-shirt-mockup-generator" class="user-item">Start a new mockup</a>
+              <a href="/mockups" class="user-item">Browse garment models</a>
               <div class="user-divider"></div>
               <a href="/auth/logout" class="user-item"><%= t('nav.signOut') %></a>
             </div>
@@ -195,11 +196,11 @@
         <% } else { %>
           <!-- Auth Buttons -->
           <a href="/auth/login" class="btn btn-ghost"><%= t('nav.signIn') %></a>
-          <a href="/auth/register" class="btn btn-primary"><%= t('nav.startFree') %></a>
+          <a href="/tools/t-shirt-mockup-generator" class="btn btn-primary">Start designing</a>
         <% } %>
 
         <!-- Mobile Menu Toggle -->
-        <button class="mobile-toggle" aria-label="Menu">
+        <button class="mobile-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNavigation">
           <span></span>
           <span></span>
           <span></span>
@@ -208,21 +209,20 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu">
-      <a href="/mockups" class="mobile-link"><%= t('nav.design3d') %></a>
-      <a href="/blog" class="mobile-link">Blog</a>
+    <div class="mobile-menu" id="mobileNavigation">
+      <a href="/mockups" class="mobile-link">3D Models</a>
+      <a href="/blog" class="mobile-link">Guides</a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>
       <% if (user) { %>
-        <a href="/dashboard/designs" class="mobile-link"><%= t('nav.myDesigns') %></a>
-        <a href="/dashboard/assets" class="mobile-link"><%= t('nav.myAssets') %></a>
-        <a href="/dashboard/settings" class="mobile-link"><%= t('nav.settings') %></a>
+        <a href="/tools/t-shirt-mockup-generator" class="mobile-link">Start a new mockup</a>
+        <a href="/mockups" class="mobile-link">Browse garment models</a>
         <a href="/auth/logout" class="mobile-link"><%= t('nav.signOut') %></a>
       <% } else { %>
         <a href="/auth/login" class="mobile-link"><%= t('nav.signIn') %></a>
-        <a href="/auth/register" class="mobile-link btn btn-primary"><%= t('nav.startFree') %></a>
+        <a href="/tools/t-shirt-mockup-generator" class="mobile-link btn btn-primary">Start designing</a>
       <% } %>
     </div>
   </nav>
 
-  <main>
+  <main id="main-content">

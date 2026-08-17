@@ -310,6 +310,24 @@ def path_span_svg_pixels(points: list[tuple[int, int]], size: int, precision: in
     return min(max(xs) - min(xs), max(ys) - min(ys)) * scale
 
 
+def path_effective_thickness_svg_pixels(
+    points: list[tuple[int, int]],
+    size: int,
+    precision: int = 6,
+) -> float:
+    """Reject long doubled seam lines whose bounding boxes look like large panels."""
+    if len(points) < 3:
+        return 0.0
+    scale = size / (10**precision)
+    perimeter = sum(
+        math.hypot(b[0] - a[0], b[1] - a[1]) * scale
+        for a, b in zip(points, points[1:] + points[:1])
+    )
+    if perimeter <= 0:
+        return 0.0
+    return 2.0 * polygon_area_svg_pixels(points, size, precision) / perimeter
+
+
 def path_to_d(points: list[tuple[int, int]], size: int) -> str:
     coords = [point_to_svg(point, size) for point in points]
     if not coords:
@@ -363,6 +381,7 @@ def export_svg(
                             and island_path[0] == island_path[-1]
                             and polygon_area_svg_pixels(island_path, size) >= min_area
                             and path_span_svg_pixels(island_path, size) >= min_span
+                            and path_effective_thickness_svg_pixels(island_path, size) >= min_span
                         )
                     ]
                     if closed_paths:
@@ -400,6 +419,7 @@ def export_svg(
             and path[0] == path[-1]
             and polygon_area_svg_pixels(path, size) >= min_area
             and path_span_svg_pixels(path, size) >= min_span
+            and path_effective_thickness_svg_pixels(path, size) >= min_span
         )
     ]
     paths.sort(key=polygon_area, reverse=True)

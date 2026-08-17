@@ -23,10 +23,25 @@ test('removes collapsed and open UV fragments while retaining garment panels', (
   assert.doesNotMatch(result.output, /300\.2/);
 });
 
+test('removes a long doubled seam even when its bounding box and area are large', () => {
+  const source = [
+    '<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">',
+    '<path d="M 10,10 L 410,10 L 410,410 L 10,410 Z"/>',
+    '<path d="M 951.06,71.20 L 951.06,48.38 L 606.01,367.13 L 606.26,367.13 L 951.56,48.38 L 951.56,71.20 L 951.06,71.20 Z"/>',
+    '</svg>',
+  ].join('');
+  const result = cleanSvg(source);
+  assert.equal(result.inputPaths, 2);
+  assert.equal(result.outputPaths, 1);
+  assert.equal(result.removedThin, 1);
+  assert.doesNotMatch(result.output, /951\.06/);
+});
+
 test('the Blender exporter compares minimum area in rendered SVG pixels', () => {
   const exporter = fs.readFileSync(path.join(root, 'scripts', 'repack-glb-uv-and-export-svg.py'), 'utf8');
   assert.match(exporter, /def polygon_area_svg_pixels/);
   assert.match(exporter, /polygon_area_svg_pixels\(path, size\) >= min_area/);
   assert.match(exporter, /path_span_svg_pixels\(path, size\) >= min_span/);
+  assert.match(exporter, /path_effective_thickness_svg_pixels\(path, size\) >= min_span/);
   assert.match(exporter, /--min-svg-area", type=float, default=50\.0/);
 });

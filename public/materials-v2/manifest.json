@@ -1,0 +1,98 @@
+[
+  {
+    "material": "cotton-jersey",
+    "source": "assets/material-sources-v2/cotton-jersey.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.8600347511587336
+  },
+  {
+    "material": "rib-knit",
+    "source": "assets/material-sources-v2/rib-knit.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.8798151590985814
+  },
+  {
+    "material": "french-terry",
+    "source": "assets/material-sources-v2/french-terry.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.9097691761454954
+  },
+  {
+    "material": "fleece",
+    "source": "assets/material-sources-v2/fleece.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.9598957835067461
+  },
+  {
+    "material": "poplin",
+    "source": "assets/material-sources-v2/poplin.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.7399851439176652
+  },
+  {
+    "material": "linen",
+    "source": "assets/material-sources-v2/linen.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.9300498942396591
+  },
+  {
+    "material": "denim",
+    "source": "assets/material-sources-v2/denim.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.780001524250727
+  },
+  {
+    "material": "twill",
+    "source": "assets/material-sources-v2/twill.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.8099994861346129
+  },
+  {
+    "material": "nylon-ripstop",
+    "source": "assets/material-sources-v2/nylon-ripstop.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.4599801827419826
+  },
+  {
+    "material": "satin-silk",
+    "source": "assets/material-sources-v2/satin-silk.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.2699937429992837
+  },
+  {
+    "material": "velvet",
+    "source": "assets/material-sources-v2/velvet.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.880025440096565
+  },
+  {
+    "material": "wool-blend",
+    "source": "assets/material-sources-v2/wool-blend.webp",
+    "size": 512,
+    "basecolor_seam_error": 0.0,
+    "height_seam_error": 0.0,
+    "roughness_mean": 0.8999899948218075
+  }
+]
