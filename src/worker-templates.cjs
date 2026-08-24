@@ -137,9 +137,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Categories</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Category</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Categories</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search categories...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Slug</th>\n              <th>Resource Type</th>\n              <th>Sort</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -165,11 +165,11 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n            <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n          </svg>\n          <h3>No categories yet</h3>\n          <p>Add your first category to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Category</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"categoryForm\">\n        <input type=\"hidden\" id=\"categoryId\">\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Name</label>\n            <input type=\"text\" class=\"form-input\" id=\"categoryName\" required>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Slug</label>\n            <input type=\"text\" class=\"form-input\" id=\"categorySlug\" required placeholder=\"e.g. t-shirts\">\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Resource Type</label>\n            <select class=\"form-select\" id=\"categoryResourceType\" required>\n              <option value=\"3d-models\">3D Models</option>\n              <option value=\"2d-templates\">2D Templates</option>\n              <option value=\"gallery\">Gallery</option>\n              <option value=\"tools\">Tools</option>\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Sort Order</label>\n            <input type=\"number\" class=\"form-input\" id=\"categorySortOrder\" value=\"0\" min=\"0\">\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Status</label>\n          <select class=\"form-select\" id=\"categoryStatus\">\n            <option value=\"active\">Active</option>\n            <option value=\"inactive\">Inactive</option>\n          </select>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"categoryDescription\" rows=\"2\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Title (SEO)</label>\n          <input type=\"text\" class=\"form-input\" id=\"categoryMetaTitle\" placeholder=\"Page title for search engines\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Meta Description (SEO)</label>\n          <textarea class=\"form-textarea\" id=\"categoryMetaDescription\" rows=\"2\" placeholder=\"Page description for search engines\"></textarea>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Landing Content JSON</label>\n          <textarea class=\"form-textarea\" id=\"categoryLandingContent\" rows=\"10\" placeholder='{\"workflow\":{\"title\":\"...\"},\"faq\":{\"items\":[{\"question\":\"...\",\"answer\":\"...\"}]}}'></textarea>\n          <small style=\"display:block;margin-top:6px;color:var(--gray-500);line-height:1.5;\">\n            Optional. Controls the Workflow, Popular categories, Built for apparel output, Library, FAQ, and CTA sections on category pages.\n          </small>\n          <button type=\"button\" class=\"btn btn-ghost btn-small\" style=\"margin-top:8px;\" onclick=\"insertLandingContentTemplate()\">Insert template</button>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveCategory()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst categoryForm = document.getElementById('categoryForm');\nconst categoriesData = ")
     ; __append( JSON.stringify(items || []).replace(/</g, '\\u003c') )
     ; __append(";\nconst landingContentTemplate = {\n  workflow: {\n    eyebrow: 'Workflow',\n    title: 'From blank model to finished apparel mockup',\n    description: 'Use the same browser-based flow to select a garment, place your artwork, preview the result, and prepare visuals for review.',\n    steps: [\n      { title: 'Select a garment', body: 'Choose the 3D clothing model that matches the silhouette you want to present.' },\n      { title: 'Add your design', body: 'Apply colors, artwork, logos, and surface directions to the selected model.' },\n      { title: 'Preview the mockup', body: 'Rotate the model and check artwork scale, placement, and color balance.' },\n      { title: 'Export visuals', body: 'Save presentation-ready mockups for stores, launch decks, and approvals.' }\n    ]\n  },\n  output: {\n    eyebrow: 'Built for apparel output',\n    title: 'Use 3D clothing models across every apparel workflow',\n    cards: [\n      { title: 'Online product pages', body: 'Create consistent visuals for ecommerce listings and product detail pages.' },\n      { title: 'Campaign and launch decks', body: 'Show garment concepts in context before samples or photoshoots are ready.' },\n      { title: 'Client and team approvals', body: 'Review color, placement, and scale with a more realistic apparel preview.' }\n    ]\n  },\n  faq: {\n    eyebrow: 'FAQ',\n    title: '3D clothing model questions',\n    items: [\n      { question: 'Can I use these 3D models for apparel mockups?', answer: 'Yes. Choose a model, open the designer, and use it to preview graphics, colorways, and garment presentation angles.' }\n    ]\n  }\n};\n\nfunction insertLandingContentTemplate() {\n  document.getElementById('categoryLandingContent').value = JSON.stringify(landingContentTemplate, null, 2);\n}\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Category';\n  categoryForm.reset();\n  document.getElementById('categoryId').value = '';\n  document.getElementById('categoryLandingContent').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editCategory(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  const category = categoriesData.find(item => String(item.id) === String(id));\n  if (!row || !category) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('categoryId').value = id;\n  document.getElementById('categoryName').value = category.name || '';\n  document.getElementById('categorySlug').value = category.slug || '';\n  document.getElementById('categoryResourceType').value = category.resource_type || '3d-models';\n  document.getElementById('categorySortOrder').value = category.sort_order || 0;\n  document.getElementById('categoryStatus').value = category.status || 'active';\n  document.getElementById('categoryDescription').value = category.description || '';\n  document.getElementById('categoryMetaTitle').value = category.meta_title || '';\n  document.getElementById('categoryMetaDescription').value = category.meta_description || '';\n  document.getElementById('categoryLandingContent').value = category.landing_content || '';\n\n  modalTitle.textContent = 'Edit Category';\n  modal.style.display = 'flex';\n}\n\nasync function saveCategory() {\n  const id = document.getElementById('categoryId').value;\n  const landingContent = document.getElementById('categoryLandingContent').value.trim();\n  if (landingContent) {\n    try {\n      JSON.parse(landingContent);\n    } catch (err) {\n      alert('Landing Content JSON is invalid.');\n      return;\n    }\n  }\n  const data = {\n    name: document.getElementById('categoryName').value,\n    slug: document.getElementById('categorySlug').value,\n    resource_type: document.getElementById('categoryResourceType').value,\n    description: document.getElementById('categoryDescription').value,\n    meta_title: document.getElementById('categoryMetaTitle').value,\n    meta_description: document.getElementById('categoryMetaDescription').value,\n    landing_content: landingContent,\n    sort_order: document.getElementById('categorySortOrder').value,\n    status: document.getElementById('categoryStatus').value\n  };\n\n  const url = id ? '/admin/categories/' + id : '/admin/categories';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving category');\n  }\n}\n\nasync function deleteCategory(id) {\n  if (!confirm('Are you sure you want to delete this category?')) return;\n\n  try {\n    const response = await fetch('/admin/categories/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting category');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editCategory(id);\n  } else if (action === 'delete') {\n    deleteCategory(id);\n  }\n});\n</script>\n\n")
@@ -329,9 +329,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Gallery</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Item</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Items</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search gallery...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Title</th>\n              <th>Author</th>\n              <th>Category</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -355,23 +355,23 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n            <polyline points=\"21 15 16 10 5 21\"/>\n          </svg>\n          <h3>No gallery items yet</h3>\n          <p>Add your first gallery item to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Gallery Item</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"galleryForm\">\n        <input type=\"hidden\" id=\"galleryId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Title</label>\n          <input type=\"text\" class=\"form-input\" id=\"galleryTitle\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Author</label>\n            <input type=\"text\" class=\"form-input\" id=\"galleryAuthor\">\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"galleryCategory\">\n              <option value=\"\">Select...</option>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"galleryStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"galleryTags\" placeholder=\"e.g. Casual, Street\">\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveGalleryItem()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst galleryForm = document.getElementById('galleryForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Gallery Item';\n  galleryForm.reset();\n  document.getElementById('galleryId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editGalleryItem(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('galleryId').value = id;\n  document.getElementById('galleryTitle').value = cells[1].textContent;\n  document.getElementById('galleryAuthor').value = cells[2].textContent === '-' ? '' : cells[2].textContent;\n  document.getElementById('galleryCategory').value = cells[3].textContent === '-' ? '' : cells[3].textContent;\n  document.getElementById('galleryTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('galleryStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit Gallery Item';\n  modal.style.display = 'flex';\n}\n\nasync function saveGalleryItem() {\n  const id = document.getElementById('galleryId').value;\n  const data = {\n    title: document.getElementById('galleryTitle').value,\n    author: document.getElementById('galleryAuthor').value,\n    category: document.getElementById('galleryCategory').value,\n    status: document.getElementById('galleryStatus').value,\n    tags: document.getElementById('galleryTags').value\n  };\n\n  const url = id ? '/admin/gallery/' + id : '/admin/gallery';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving gallery item');\n  }\n}\n\nasync function deleteGalleryItem(id) {\n  if (!confirm('Are you sure you want to delete this item?')) return;\n\n  try {\n    const response = await fetch('/admin/gallery/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting gallery item');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editGalleryItem(id);\n  } else if (action === 'delete') {\n    deleteGalleryItem(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -701,9 +701,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">2D Templates</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Template</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Templates</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search templates...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Category</th>\n              <th>Format</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -727,25 +727,25 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n            <line x1=\"3\" y1=\"9\" x2=\"21\" y2=\"9\"/>\n            <line x1=\"9\" y1=\"21\" x2=\"9\" y2=\"9\"/>\n          </svg>\n          <h3>No templates yet</h3>\n          <p>Add your first 2D template to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add 2D Template</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"templateForm\">\n        <input type=\"hidden\" id=\"templateId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"templateName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"templateCategory\" required>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Format</label>\n            <select class=\"form-select\" id=\"templateFormat\">\n              <option value=\"svg\">SVG</option>\n              <option value=\"ai\">AI</option>\n              <option value=\"psd\">PSD</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"templateStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"templateTags\" placeholder=\"e.g. Free, Vector\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"templateDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveTemplate()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst templateForm = document.getElementById('templateForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add 2D Template';\n  templateForm.reset();\n  document.getElementById('templateId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editTemplate(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('templateId').value = id;\n  document.getElementById('templateName').value = cells[1].textContent;\n  document.getElementById('templateCategory').value = cells[2].textContent;\n  document.getElementById('templateFormat').value = cells[3].textContent;\n  document.getElementById('templateTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('templateStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit 2D Template';\n  modal.style.display = 'flex';\n}\n\nasync function saveTemplate() {\n  const id = document.getElementById('templateId').value;\n  const data = {\n    name: document.getElementById('templateName').value,\n    category: document.getElementById('templateCategory').value,\n    format: document.getElementById('templateFormat').value,\n    status: document.getElementById('templateStatus').value,\n    tags: document.getElementById('templateTags').value,\n    description: document.getElementById('templateDescription').value\n  };\n\n  const url = id ? '/admin/models-2d/' + id : '/admin/models-2d';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving template');\n  }\n}\n\nasync function deleteTemplate(id) {\n  if (!confirm('Are you sure you want to delete this template?')) return;\n\n  try {\n    const response = await fetch('/admin/models-2d/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting template');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editTemplate(id);\n  } else if (action === 'delete') {\n    deleteTemplate(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -819,9 +819,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">3D Models</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Model</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Models</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search models...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Preview</th>\n              <th>Name</th>\n              <th>Slug</th>\n              <th>Category</th>\n              <th>Files</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\" data-item='")
@@ -829,15 +829,15 @@ title = __locals.title,
     ; __append("'>\n                <td>#")
     ; __append(escapeFn( item.id ))
     ; __append("</td>\n                <td>\n                  ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                    <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name ))
     ; __append("\" class=\"table-preview\" style=\"width: 48px; height: 48px; object-fit: cover; border-radius: 6px;\">\n                  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                    <div class=\"table-preview-placeholder\" style=\"width: 48px; height: 48px; background: var(--gray-100); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: var(--gray-400);\">\n                      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                        <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                        <path d=\"M21 15l-5-5L5 21\"/>\n                      </svg>\n                    </div>\n                  ")
-    ;  }
+    ;  } 
     ; __append("\n                </td>\n                <td>")
     ; __append(escapeFn( item.name ))
     ; __append("</td>\n                <td><code>")
@@ -845,13 +845,13 @@ title = __locals.title,
     ; __append("</code></td>\n                <td>")
     ; __append(escapeFn( item.category_names || item.category ))
     ; __append("</td>\n                <td>\n                  <div class=\"file-badges\">\n                    ")
-    ;  if (item.file_url) {
+    ;  if (item.file_url) { 
     ; __append("\n                      <span class=\"file-badge glb\">GLB</span>\n                    ")
-    ;  }
+    ;  } 
     ; __append("\n                    ")
-    ;  if (item.texture_url) {
+    ;  if (item.texture_url) { 
     ; __append("\n                      <span class=\"file-badge svg\">SVG</span>\n                    ")
-    ;  }
+    ;  } 
     ; __append("\n                  </div>\n                </td>\n                <td>\n                  <span class=\"status-badge status-")
     ; __append(escapeFn( item.status ))
     ; __append("\">")
@@ -863,15 +863,15 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"/>\n          </svg>\n          <h3>No models yet</h3>\n          <p>Add your first 3D model to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\" style=\"max-width: 640px;\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add 3D Model</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"modelForm\" enctype=\"multipart/form-data\">\n        <input type=\"hidden\" id=\"modelId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"modelName\" required>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Slug <span class=\"label-hint\">(URL path)</span></label>\n          <input type=\"text\" class=\"form-input\" id=\"modelSlug\" placeholder=\"long-sleeved-t-shirt\">\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Categories <span class=\"label-hint\">(first selected becomes primary)</span></label>\n            <select class=\"form-select\" id=\"modelCategory\" multiple required size=\"6\">\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.id ))
     ; __append("\" data-name=\"")
@@ -879,11 +879,11 @@ title = __locals.title,
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"modelStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"modelTags\" placeholder=\"e.g. Free, 4K\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"modelDescription\" rows=\"3\"></textarea>\n        </div>\n\n        <!-- File Uploads -->\n        <div class=\"form-section\">\n          <h4 class=\"form-section-title\">Files</h4>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">GLB File <span class=\"label-hint\">(3D Model)</span></label>\n            <div class=\"file-upload\" id=\"glbUpload\">\n              <input type=\"file\" name=\"glbFile\" id=\"glbFile\" accept=\".glb\" class=\"file-input\" onchange=\"handleFileSelect(this, 'glbPreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/>\n                  <polyline points=\"17 8 12 3 7 8\"/>\n                  <line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload GLB file</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"glbPreview\" style=\"display: none;\">\n                <span class=\"file-name\"></span>\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('glbFile', 'glbPreview')\">×</button>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">Preview Image <span class=\"label-hint\">(PNG, JPG)</span></label>\n            <div class=\"file-upload\" id=\"previewUpload\">\n              <input type=\"file\" name=\"previewImage\" id=\"previewImage\" accept=\"image/*\" class=\"file-input\" onchange=\"handleFileSelect(this, 'previewPreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                  <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                  <path d=\"M21 15l-5-5L5 21\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload preview image</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"previewPreview\" style=\"display: none;\">\n                <img class=\"file-preview-img\" src=\"\" alt=\"Preview\">\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('previewImage', 'previewPreview')\">×</button>\n              </div>\n            </div>\n          </div>\n\n          <div class=\"form-group\">\n            <label class=\"form-label\">Texture SVG <span class=\"label-hint\">(Optional)</span></label>\n            <div class=\"file-upload\" id=\"textureUpload\">\n              <input type=\"file\" name=\"textureSvg\" id=\"textureSvg\" accept=\".svg\" class=\"file-input\" onchange=\"handleFileSelect(this, 'texturePreview')\">\n              <div class=\"file-upload-content\">\n                <svg width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                  <path d=\"M12 2L2 7l10 5 10-5-10-5z\"/>\n                  <path d=\"M2 17l10 5 10-5\"/>\n                  <path d=\"M2 12l10 5 10-5\"/>\n                </svg>\n                <span class=\"file-upload-text\">Click to upload texture SVG</span>\n                <span class=\"file-upload-hint\">or drag and drop</span>\n              </div>\n              <div class=\"file-preview\" id=\"texturePreview\" style=\"display: none;\">\n                <span class=\"file-name\"></span>\n                <button type=\"button\" class=\"file-remove\" onclick=\"removeFile('textureSvg', 'texturePreview')\">×</button>\n              </div>\n            </div>\n          </div>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveModel()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<style>\n.file-badges {\n  display: flex;\n  gap: 0.375rem;\n}\n.file-badge {\n  font-size: 0.625rem;\n  font-weight: 600;\n  padding: 0.125rem 0.5rem;\n  border-radius: 4px;\n  text-transform: uppercase;\n  letter-spacing: 0.025em;\n}\n.file-badge.glb {\n  background: #dbeafe;\n  color: #1e40af;\n}\n.file-badge.svg {\n  background: #dcfce7;\n  color: #166534;\n}\n\n.form-section {\n  margin-top: 1.5rem;\n  padding-top: 1.5rem;\n  border-top: 1px solid var(--gray-200);\n}\n.form-section-title {\n  font-size: 0.875rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 1rem;\n}\n\n#modelCategory {\n  min-height: 132px;\n}\n\n.label-hint {\n  font-weight: 400;\n  color: var(--gray-500);\n  font-size: 0.75rem;\n}\n\n.file-upload {\n  position: relative;\n  border: 2px dashed var(--gray-300);\n  border-radius: 8px;\n  padding: 1.25rem;\n  text-align: center;\n  transition: border-color 0.2s, background 0.2s;\n  cursor: pointer;\n}\n.file-upload:hover {\n  border-color: var(--primary);\n  background: var(--gray-50);\n}\n.file-upload.has-file {\n  border-style: solid;\n  border-color: var(--gray-300);\n  background: var(--gray-50);\n}\n.file-input {\n  position: absolute;\n  inset: 0;\n  width: 100%;\n  height: 100%;\n  opacity: 0;\n  cursor: pointer;\n}\n.file-upload-content {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 0.375rem;\n  color: var(--gray-500);\n}\n.file-upload-content svg {\n  color: var(--gray-400);\n  margin-bottom: 0.25rem;\n}\n.file-upload-text {\n  font-size: 0.875rem;\n  font-weight: 500;\n  color: var(--gray-700);\n}\n.file-upload-hint {\n  font-size: 0.75rem;\n  color: var(--gray-500);\n}\n.file-preview {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 0.75rem;\n  padding: 0.5rem 0.75rem;\n  background: var(--white);\n  border-radius: 6px;\n}\n.file-preview-img {\n  width: 40px;\n  height: 40px;\n  object-fit: cover;\n  border-radius: 4px;\n}\n.file-name {\n  font-size: 0.875rem;\n  color: var(--gray-700);\n  word-break: break-all;\n  flex: 1;\n}\n.file-remove {\n  width: 24px;\n  height: 24px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: none;\n  background: var(--gray-200);\n  color: var(--gray-600);\n  border-radius: 4px;\n  cursor: pointer;\n  font-size: 1rem;\n  line-height: 1;\n}\n.file-remove:hover {\n  background: var(--gray-300);\n  color: var(--gray-900);\n}\n</style>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst modelForm = document.getElementById('modelForm');\nconst modelNameInput = document.getElementById('modelName');\nconst modelSlugInput = document.getElementById('modelSlug');\nlet slugTouched = false;\n\nfunction slugify(value) {\n  return String(value || '')\n    .toLowerCase()\n    .trim()\n    .replace(/[^a-z0-9]+/g, '-')\n    .replace(/^-+|-+$/g, '');\n}\n\nfunction syncSlugFromName(force = false) {\n  if (!force && slugTouched) return;\n  modelSlugInput.value = slugify(modelNameInput.value);\n}\n\nfunction getSelectedCategoryIds() {\n  return Array.from(document.getElementById('modelCategory').selectedOptions)\n    .map(option => option.value)\n    .filter(Boolean);\n}\n\nfunction setSelectedCategoryIds(categoryIds, fallbackCategoryName = '') {\n  const select = document.getElementById('modelCategory');\n  const selected = new Set((categoryIds || []).map(String));\n  Array.from(select.options).forEach(option => {\n    option.selected = selected.has(option.value);\n  });\n\n  if (selected.size === 0 && fallbackCategoryName) {\n    const fallbackOption = Array.from(select.options).find(option => option.dataset.name === fallbackCategoryName);\n    if (fallbackOption) fallbackOption.selected = true;\n  }\n\n  if (getSelectedCategoryIds().length === 0 && select.options.length > 0) {\n    select.options[0].selected = true;\n  }\n}\n\nfunction openModal() {\n  modalTitle.textContent = 'Add 3D Model';\n  modelForm.reset();\n  document.getElementById('modelId').value = '';\n  slugTouched = false;\n  setSelectedCategoryIds([]);\n  resetFilePreviews();\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction resetFilePreviews() {\n  ['glbPreview', 'previewPreview', 'texturePreview'].forEach(id => {\n    document.getElementById(id).style.display = 'none';\n  });\n  ['glbUpload', 'previewUpload', 'textureUpload'].forEach(id => {\n    document.getElementById(id).classList.remove('has-file');\n  });\n}\n\nfunction handleFileSelect(input, previewId) {\n  const file = input.files[0];\n  if (!file) return;\n\n  const preview = document.getElementById(previewId);\n  const uploadBox = input.closest('.file-upload');\n  uploadBox.classList.add('has-file');\n  preview.style.display = 'flex';\n\n  if (previewId === 'previewPreview') {\n    const img = preview.querySelector('.file-preview-img');\n    img.src = URL.createObjectURL(file);\n  } else {\n    preview.querySelector('.file-name').textContent = file.name;\n  }\n}\n\nfunction removeFile(inputId, previewId) {\n  document.getElementById(inputId).value = '';\n  document.getElementById(previewId).style.display = 'none';\n  document.getElementById(inputId).closest('.file-upload').classList.remove('has-file');\n}\n\nfunction getFileNameFromUrl(url, fallback) {\n  try {\n    const pathname = new URL(url).pathname;\n    return decodeURIComponent(pathname.split('/').pop()) || fallback;\n  } catch (err) {\n    return fallback;\n  }\n}\n\nfunction showExistingFile(inputId, previewId, url, fallback) {\n  if (!url) return;\n  const input = document.getElementById(inputId);\n  const preview = document.getElementById(previewId);\n  const uploadBox = input.closest('.file-upload');\n  uploadBox.classList.add('has-file');\n  preview.style.display = 'flex';\n\n  const previewImage = preview.querySelector('.file-preview-img');\n  const fileName = preview.querySelector('.file-name');\n  if (previewImage) {\n    previewImage.src = url;\n  }\n  if (fileName) {\n    fileName.textContent = getFileNameFromUrl(url, fallback);\n  }\n}\n\nfunction editModel(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const itemData = row.getAttribute('data-item');\n  let item;\n  try {\n    item = JSON.parse(itemData);\n  } catch (e) {\n    return;\n  }\n\n  document.getElementById('modelId').value = id;\n  document.getElementById('modelName').value = item.name || '';\n  document.getElementById('modelSlug').value = item.slug || '';\n  const categoryIds = String(item.category_ids || '')\n    .split(',')\n    .map(value => value.trim())\n    .filter(Boolean);\n  setSelectedCategoryIds(categoryIds, item.category || '');\n  document.getElementById('modelTags').value = item.tags || '';\n  document.getElementById('modelDescription').value = item.description || '';\n  document.getElementById('modelStatus').value = item.status || 'active';\n  slugTouched = Boolean(item.slug);\n  syncSlugFromName();\n\n  resetFilePreviews();\n  showExistingFile('glbFile', 'glbPreview', item.file_url, 'Current GLB file');\n  showExistingFile('previewImage', 'previewPreview', item.image_url, 'Current preview image');\n  showExistingFile('textureSvg', 'texturePreview', item.texture_url, 'Current texture SVG');\n  modalTitle.textContent = 'Edit 3D Model';\n  modal.style.display = 'flex';\n}\n\nasync function getUploadToken(filename, contentType, folder) {\n  const response = await fetch('/admin/upload-token', {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ filename, contentType, folder })\n  });\n  const result = await response.json();\n  if (!result.success) {\n    throw new Error(result.error || 'Failed to get upload token');\n  }\n  return result;\n}\n\nasync function uploadFileToR2(file, folder) {\n  const uploadContentType = file.type || 'application/octet-stream';\n  const token = await getUploadToken(file.name, uploadContentType, folder);\n\n  const response = await fetch(token.signedUrl, {\n    method: 'PUT',\n    headers: {\n      'Content-Type': uploadContentType,\n    },\n    body: file\n  });\n\n  if (!response.ok) {\n    throw new Error('Upload failed: ' + response.statusText);\n  }\n\n  return token.publicUrl;\n}\n\nasync function saveModel() {\n  const id = document.getElementById('modelId').value;\n\n  const glbFile = document.getElementById('glbFile').files[0];\n  const previewImage = document.getElementById('previewImage').files[0];\n  const textureSvg = document.getElementById('textureSvg').files[0];\n\n  const data = {\n    name: document.getElementById('modelName').value,\n    slug: slugify(document.getElementById('modelSlug').value),\n    category_ids: getSelectedCategoryIds(),\n    tags: document.getElementById('modelTags').value,\n    description: document.getElementById('modelDescription').value,\n    status: document.getElementById('modelStatus').value\n  };\n\n  if (data.category_ids.length === 0) {\n    alert('Please select at least one category.');\n    return;\n  }\n\n  try {\n    if (glbFile) {\n      data.file_url = await uploadFileToR2(glbFile, 'd3');\n    }\n    if (previewImage) {\n      data.image_url = await uploadFileToR2(previewImage, 'image');\n    }\n    if (textureSvg) {\n      data.texture_url = await uploadFileToR2(textureSvg, 'd2');\n    }\n  } catch (err) {\n    alert('Upload error: ' + err.message);\n    return;\n  }\n\n  const url = id ? '/admin/models-3d/' + id : '/admin/models-3d';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving model');\n  }\n}\n\nmodelNameInput.addEventListener('input', function() {\n  syncSlugFromName();\n});\n\nmodelSlugInput.addEventListener('input', function() {\n  slugTouched = this.value.trim() !== '';\n});\n\nmodelSlugInput.addEventListener('blur', function() {\n  this.value = slugify(this.value);\n});\n\nasync function deleteModel(id) {\n  if (!confirm('Are you sure you want to delete this model?')) return;\n\n  try {\n    const response = await fetch('/admin/models-3d/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting model');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editModel(id);\n  } else if (action === 'delete') {\n    deleteModel(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1180,9 +1180,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Tools</h1>\n      <div class=\"admin-actions\">\n        <button class=\"btn btn-primary\" onclick=\"openModal()\">+ Add Tool</button>\n      </div>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Tools</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search tools...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Name</th>\n              <th>Type</th>\n              <th>URL</th>\n              <th>Tags</th>\n              <th>Status</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -1206,25 +1206,25 @@ title = __locals.title,
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/>\n          </svg>\n          <h3>No tools yet</h3>\n          <p>Add your first tool to get started.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<!-- Modal -->\n<div class=\"modal-overlay\" id=\"modal\" style=\"display: none;\">\n  <div class=\"modal-content\">\n    <div class=\"modal-header\">\n      <h3 class=\"modal-title\" id=\"modalTitle\">Add Tool</h3>\n      <button class=\"modal-close\" onclick=\"closeModal()\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"18\" y1=\"6\" x2=\"6\" y2=\"18\"/>\n          <line x1=\"6\" y1=\"6\" x2=\"18\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n    <div class=\"modal-body\">\n      <form id=\"toolForm\">\n        <input type=\"hidden\" id=\"toolId\">\n        <div class=\"form-group\">\n          <label class=\"form-label\">Name</label>\n          <input type=\"text\" class=\"form-input\" id=\"toolName\" required>\n        </div>\n        <div class=\"form-row\">\n          <div class=\"form-group\">\n            <label class=\"form-label\">Category</label>\n            <select class=\"form-select\" id=\"toolType\" required>\n              ")
-    ;  if (categories && categories.length > 0) {
+    ;  if (categories && categories.length > 0) { 
     ; __append("\n                ")
-    ;  categories.forEach(cat => {
+    ;  categories.forEach(cat => { 
     ; __append("\n                  <option value=\"")
     ; __append(escapeFn( cat.name ))
     ; __append("\">")
     ; __append(escapeFn( cat.name ))
     ; __append("</option>\n                ")
-    ;  })
+    ;  }) 
     ; __append("\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <option value=\"\">No categories available</option>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </select>\n          </div>\n          <div class=\"form-group\">\n            <label class=\"form-label\">Status</label>\n            <select class=\"form-select\" id=\"toolStatus\">\n              <option value=\"active\">Active</option>\n              <option value=\"inactive\">Inactive</option>\n            </select>\n          </div>\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">URL</label>\n          <input type=\"url\" class=\"form-input\" id=\"toolUrl\" placeholder=\"https://...\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Tags</label>\n          <input type=\"text\" class=\"form-input\" id=\"toolTags\" placeholder=\"e.g. Free, Tutorial\">\n        </div>\n        <div class=\"form-group\">\n          <label class=\"form-label\">Description</label>\n          <textarea class=\"form-textarea\" id=\"toolDescription\" rows=\"3\"></textarea>\n        </div>\n      </form>\n    </div>\n    <div class=\"modal-footer\">\n      <button class=\"btn btn-ghost\" onclick=\"closeModal()\">Cancel</button>\n      <button class=\"btn btn-primary\" onclick=\"saveTool()\">Save</button>\n    </div>\n  </div>\n</div>\n\n<script>\nconst modal = document.getElementById('modal');\nconst modalTitle = document.getElementById('modalTitle');\nconst toolForm = document.getElementById('toolForm');\n\nfunction openModal() {\n  modalTitle.textContent = 'Add Tool';\n  toolForm.reset();\n  document.getElementById('toolId').value = '';\n  modal.style.display = 'flex';\n}\n\nfunction closeModal() {\n  modal.style.display = 'none';\n}\n\nfunction editTool(id) {\n  const row = document.querySelector('tr[data-id=\"' + id + '\"]');\n  if (!row) return;\n\n  const cells = row.querySelectorAll('td');\n  document.getElementById('toolId').value = id;\n  document.getElementById('toolName').value = cells[1].textContent;\n  document.getElementById('toolType').value = cells[2].textContent;\n  document.getElementById('toolUrl').value = cells[3].textContent === '-' ? '' : cells[3].textContent;\n  document.getElementById('toolTags').value = cells[4].textContent === '-' ? '' : cells[4].textContent;\n\n  const statusBadge = cells[5].querySelector('.status-badge');\n  document.getElementById('toolStatus').value = statusBadge ? statusBadge.textContent.trim() : 'active';\n\n  modalTitle.textContent = 'Edit Tool';\n  modal.style.display = 'flex';\n}\n\nasync function saveTool() {\n  const id = document.getElementById('toolId').value;\n  const data = {\n    name: document.getElementById('toolName').value,\n    type: document.getElementById('toolType').value,\n    status: document.getElementById('toolStatus').value,\n    url: document.getElementById('toolUrl').value,\n    tags: document.getElementById('toolTags').value,\n    description: document.getElementById('toolDescription').value\n  };\n\n  const url = id ? '/admin/tools/' + id : '/admin/tools';\n  const method = id ? 'PUT' : 'POST';\n\n  try {\n    const response = await fetch(url, {\n      method,\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify(data)\n    });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error saving tool');\n  }\n}\n\nasync function deleteTool(id) {\n  if (!confirm('Are you sure you want to delete this tool?')) return;\n\n  try {\n    const response = await fetch('/admin/tools/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting tool');\n  }\n}\n\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Close modal on overlay click\nmodal.addEventListener('click', function(e) {\n  if (e.target === modal) closeModal();\n});\n\n// Event delegation for edit/delete buttons\ndocument.querySelector('.data-table tbody').addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'edit') {\n    editTool(id);\n  } else if (action === 'delete') {\n    deleteTool(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1298,9 +1298,9 @@ title = __locals.title,
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Users</h1>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Users</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">\n                <td>#")
@@ -1314,11 +1314,11 @@ title = __locals.title,
     ; __append("</td>\n                <td>\n                  <div class=\"table-actions\">\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
-    ;  })
+    ;  }) 
     ; __append("\n          </tbody>\n        </table>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          <h3>No users yet</h3>\n          <p>Users will appear here once they register.</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </main>\n</div>\n\n<script>\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Delete user\nasync function deleteUser(id) {\n  if (!confirm('Are you sure you want to delete this user?')) return;\n\n  try {\n    const response = await fetch('/admin/users/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting user');\n  }\n}\n\n// Event delegation for delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'delete') {\n    deleteUser(id);\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1392,11 +1392,11 @@ title = __locals.title,
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
     ; __append("</h1>\n      <p class=\"auth-intro\">Sign in to your ClothingDesign account, or start a public mockup without an account.</p>\n      \n      ")
-    ;  if (typeof error !== 'undefined') {
+    ;  if (typeof error !== 'undefined') { 
     ; __append("\n        <div class=\"auth-error\">")
     ; __append(escapeFn( error ))
     ; __append("</div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n\n      <form action=\"/auth/login\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.email') ))
     ; __append("</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-input\" autocomplete=\"email\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"password\" class=\"form-label\">")
@@ -1480,11 +1480,11 @@ title = __locals.title,
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
     ; __append("</h1>\n      <p class=\"auth-intro\">Create an account for sign-in access. The public mockup editor can also be used without registering.</p>\n      \n      ")
-    ;  if (typeof error !== 'undefined') {
+    ;  if (typeof error !== 'undefined') { 
     ; __append("\n        <div class=\"auth-error\">")
     ; __append(escapeFn( error ))
     ; __append("</div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n\n      <form action=\"/auth/register\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"name\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.name') ))
     ; __append("</label>\n          <input type=\"text\" id=\"name\" name=\"name\" class=\"form-input\" autocomplete=\"name\" minlength=\"2\" maxlength=\"100\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
@@ -1593,25 +1593,25 @@ title = __locals.title,
       sharePrompt: 'Know a designer, POD seller, or apparel team working through this problem? Send them the useful part.'
     }) )
     ; __append("\n  </div>\n\n  <div class=\"container article-layout\">\n    <aside class=\"article-toc\">\n      <span>In this guide</span>\n      <ol>\n        <li><a href=\"#direct-answer\">Direct answer</a></li>\n        ")
-    ;  article.sections.forEach(function(section) {
+    ;  article.sections.forEach(function(section) { 
     ; __append("\n          <li><a href=\"#")
     ; __append(escapeFn( section.id ))
     ; __append("\">")
     ; __append(escapeFn( section.title ))
     ; __append("</a></li>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n        <li><a href=\"#free-resources\">Free tools and models</a></li>\n        <li><a href=\"#faq\">FAQ</a></li>\n        <li><a href=\"#research-signals\">Research signals</a></li>\n      </ol>\n    </aside>\n\n    <div class=\"article-content\">\n      <section class=\"article-answer\" id=\"direct-answer\">\n        <span>Direct answer</span>\n        <p>")
     ; __append(escapeFn( article.answer ))
     ; __append("</p>\n      </section>\n\n      <section class=\"article-takeaways\" aria-labelledby=\"takeaways-title\">\n        <h2 id=\"takeaways-title\">Key takeaways</h2>\n        <ul>\n          ")
-    ;  article.takeaways.forEach(function(item) {
+    ;  article.takeaways.forEach(function(item) { 
     ; __append("\n            <li>")
     ; __append(escapeFn( item ))
     ; __append("</li>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </ul>\n      </section>\n\n      ")
-    ;  if (resources && resources.length) {
+    ;  if (resources && resources.length) { 
     ; __append("\n        <section class=\"article-resource-section\" id=\"free-resources\">\n          <span class=\"blog-card-category\">Continue in ClothingDesign</span>\n          <h2>Free tools and 3D models for this workflow</h2>\n          <div class=\"article-resource-grid\">\n            ")
-    ;  resources.forEach(function(resource) {
+    ;  resources.forEach(function(resource) { 
     ; __append("\n              <a href=\"")
     ; __append(escapeFn( resource.href ))
     ; __append("\" class=\"article-resource-card\">\n                <small>")
@@ -1621,35 +1621,35 @@ title = __locals.title,
     ; __append("</h3>\n                <p>")
     ; __append(escapeFn( resource.body ))
     ; __append("</p>\n                <span>Open resource <span aria-hidden=\"true\">→</span></span>\n              </a>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          </div>\n        </section>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n\n      ")
-    ;  article.sections.forEach(function(section) {
+    ;  article.sections.forEach(function(section) { 
     ; __append("\n        <section class=\"article-section\" id=\"")
     ; __append(escapeFn( section.id ))
     ; __append("\">\n          <h2>")
     ; __append(escapeFn( section.title ))
     ; __append("</h2>\n\n          ")
-    ;  (section.paragraphs || []).forEach(function(paragraph) {
+    ;  (section.paragraphs || []).forEach(function(paragraph) { 
     ; __append("\n            <p>")
     ; __append(escapeFn( paragraph ))
     ; __append("</p>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n\n          ")
-    ;  if (section.bullets) {
+    ;  if (section.bullets) { 
     ; __append("\n            <ul>\n              ")
-    ;  section.bullets.forEach(function(item) {
+    ;  section.bullets.forEach(function(item) { 
     ; __append("\n                <li>")
     ; __append(escapeFn( item ))
     ; __append("</li>\n              ")
-    ;  });
+    ;  }); 
     ; __append("\n            </ul>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n\n          ")
-    ;  if (section.steps) {
+    ;  if (section.steps) { 
     ; __append("\n            <ol class=\"article-steps\">\n              ")
-    ;  section.steps.forEach(function(step, index) {
+    ;  section.steps.forEach(function(step, index) { 
     ; __append("\n                <li>\n                  <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n                  <div>\n                    <h3>")
@@ -1657,21 +1657,21 @@ title = __locals.title,
     ; __append("</h3>\n                    <p>")
     ; __append(escapeFn( step.body ))
     ; __append("</p>\n                  </div>\n                </li>\n              ")
-    ;  });
+    ;  }); 
     ; __append("\n            </ol>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n\n          ")
-    ;  if (section.table) {
+    ;  if (section.table) { 
     ; __append("\n            <div class=\"article-table-wrap\">\n              <table>\n                <thead>\n                  <tr>\n                    ")
-    ;  section.table.headers.forEach(function(header) {
+    ;  section.table.headers.forEach(function(header) { 
     ; __append("\n                      <th scope=\"col\">")
     ; __append(escapeFn( header ))
     ; __append("</th>\n                    ")
-    ;  });
+    ;  }); 
     ; __append("\n                  </tr>\n                </thead>\n                <tbody>\n                  ")
-    ;  section.table.rows.forEach(function(row) {
+    ;  section.table.rows.forEach(function(row) { 
     ; __append("\n                    <tr>\n                      ")
-    ;  row.forEach(function(cell, index) {
+    ;  row.forEach(function(cell, index) { 
     ; __append("\n                        <")
     ; __append(escapeFn( index === 0 ? 'th scope="row"' : 'td' ))
     ; __append(">")
@@ -1679,19 +1679,19 @@ title = __locals.title,
     ; __append("</")
     ; __append(escapeFn( index === 0 ? 'th' : 'td' ))
     ; __append(">\n                      ")
-    ;  });
+    ;  }); 
     ; __append("\n                    </tr>\n                  ")
-    ;  });
+    ;  }); 
     ; __append("\n                </tbody>\n              </table>\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n\n          ")
-    ;  if (section.callout) {
+    ;  if (section.callout) { 
     ; __append("\n            <blockquote>")
     ; __append(escapeFn( section.callout ))
     ; __append("</blockquote>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </section>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n\n      <section class=\"article-tool-cta\">\n        <span>Put it into practice</span>\n        <h2>")
     ; __append(escapeFn( article.cta.title ))
     ; __append("</h2>\n        <p>")
@@ -1701,7 +1701,7 @@ title = __locals.title,
     ; __append("\">")
     ; __append(escapeFn( article.cta.label ))
     ; __append("</a>\n      </section>\n\n      <section class=\"article-faq\" id=\"faq\">\n        <span class=\"blog-card-category\">FAQ</span>\n        <h2>Questions people ask next</h2>\n        ")
-    ;  article.faq.forEach(function(item, index) {
+    ;  article.faq.forEach(function(item, index) { 
     ; __append("\n          <details ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n            <summary>")
@@ -1709,9 +1709,9 @@ title = __locals.title,
     ; __append("</summary>\n            <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n          </details>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </section>\n\n      <section class=\"article-sources\" id=\"research-signals\">\n        <span class=\"blog-card-category\">Research signals</span>\n        <h2>Community discussions behind this guide</h2>\n        <p>These Reddit threads helped identify the questions and failure modes covered above. Community comments are treated as qualitative research signals, not as manufacturing specifications.</p>\n        <ul>\n          ")
-    ;  article.redditSources.forEach(function(source) {
+    ;  article.redditSources.forEach(function(source) { 
     ; __append("\n            <li>\n              <a href=\"")
     ; __append(escapeFn( source.url ))
     ; __append("\" rel=\"nofollow noopener\" target=\"_blank\">")
@@ -1719,9 +1719,9 @@ title = __locals.title,
     ; __append("</a>\n              <span>")
     ; __append(escapeFn( source.community ))
     ; __append("</span>\n            </li>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </ul>\n      </section>\n    </div>\n  </div>\n</article>\n\n<section class=\"article-related\">\n  <div class=\"container\">\n    <div class=\"blog-section-heading\">\n      <div>\n        <span class=\"blog-card-category\">Keep building</span>\n        <h2>Related guides</h2>\n      </div>\n      <a href=\"/blog\" class=\"blog-card-link\">View all guides <span aria-hidden=\"true\">→</span></a>\n    </div>\n    <div class=\"blog-grid blog-grid-related\">\n      ")
-    ;  related.forEach(function(item) {
+    ;  related.forEach(function(item) { 
     ; __append("\n        <article class=\"blog-card\">\n          <a class=\"blog-card-media\" href=\"/blog/")
     ; __append(escapeFn( item.slug ))
     ; __append("\">\n            <img src=\"")
@@ -1737,7 +1737,7 @@ title = __locals.title,
     ; __append("</a></h3>\n            <a class=\"blog-card-link\" href=\"/blog/")
     ; __append(escapeFn( item.slug ))
     ; __append("\">Read guide <span aria-hidden=\"true\">→</span></a>\n          </div>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1811,7 +1811,7 @@ title = __locals.title,
     ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
     ; __append(escapeFn( articles.length ))
     ; __append(" practical guides</span>\n    </div>\n    <h1>Apparel mockup and 3D clothing design guides.</h1>\n    <p>Practical answers for T-shirts, hoodies, jackets, pants, dresses, vests, leggings, knitwear, print-on-demand workflows, and streetwear launches—shaped by the problems designers repeatedly ask about.</p>\n  </div>\n</section>\n\n<section class=\"blog-featured\">\n  <div class=\"container\">\n    ")
-    ;  const featured = articles[0];
+    ;  const featured = articles[0]; 
     ; __append("\n    <a class=\"blog-featured-card\" href=\"/blog/")
     ; __append(escapeFn( featured.slug ))
     ; __append("\">\n      <div class=\"blog-featured-media\">\n        <img src=\"")
@@ -1827,7 +1827,7 @@ title = __locals.title,
     ; __append("</p>\n        <div class=\"blog-card-meta\">\n          <span>")
     ; __append(escapeFn( featured.readingTime ))
     ; __append(" min read</span>\n          <span>Start here <span aria-hidden=\"true\">↗</span></span>\n        </div>\n      </div>\n    </a>\n  </div>\n</section>\n\n<section class=\"blog-library\">\n  <div class=\"container\">\n    <div class=\"blog-section-heading\">\n      <div>\n        <span class=\"blog-card-category\">The library</span>\n        <h2>Answers you can use before the next sample.</h2>\n      </div>\n      <p>Each guide opens with a direct answer, then adds measured steps, decision tables, FAQs, and community research signals.</p>\n    </div>\n\n    <div class=\"blog-grid\">\n      ")
-    ;  articles.slice(1).forEach(function(article, index) {
+    ;  articles.slice(1).forEach(function(article, index) { 
     ; __append("\n        <article class=\"blog-card\">\n          <a class=\"blog-card-media\" href=\"/blog/")
     ; __append(escapeFn( article.slug ))
     ; __append("\">\n            <img src=\"")
@@ -1847,7 +1847,7 @@ title = __locals.title,
     ; __append("</p>\n            <a class=\"blog-card-link\" href=\"/blog/")
     ; __append(escapeFn( article.slug ))
     ; __append("\">\n              Read the guide <span aria-hidden=\"true\">→</span>\n            </a>\n          </div>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"blog-method\">\n  <div class=\"container\">\n    <div class=\"blog-method-inner\">\n      <div>\n        <span class=\"blog-card-category\">Editorial method</span>\n        <h2>Built from real workflow friction.</h2>\n      </div>\n      <p>We look for recurring questions in apparel communities, separate opinions from production constraints, test each topic against a real mockup workflow, and cite the community discussions that shaped the guide.</p>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -1917,17 +1917,19 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ; __append( include('partials/header') )
+    ; __append( include('partials/header', { bodyClass: resourceType === '3d-models' ? 'category-catalog-page' : '' }) )
     ; __append("\n\n")
-    ;  if (resourceType === '3d-models') {
+    ;  if (resourceType === '3d-models') { 
     ; __append("\n  ")
-    ;
+    ; 
     const categoryModelCount = items && items.length ? items.length : 0;
-    const categoryOutputCards = landingContent && landingContent.output && landingContent.output.cards ? landingContent.output.cards.slice(0, 3) : [];
-    const categoryWorkflow = landingContent && landingContent.workflow ? landingContent.workflow : {};
-    const firstModel = items && items.length ? items[0] : null;
     const categoryLabel = category.name || 'apparel';
     const categoryLower = categoryLabel.toLowerCase();
+    const categoryCatalogSteps = [
+      { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
+      { title: 'Inspect & customize', body: 'Rotate, zoom, and explore details and settings.' },
+      { title: 'Open in workspace', body: 'Launch the 3D mockup workspace and start designing.' }
+    ];
     const categoryToolMap = {
       't-shirt-mockup': [
         ['/tools/t-shirt-mockup-generator', 'Free T-shirt mockup generator'],
@@ -1993,53 +1995,37 @@ title = __locals.title,
       ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
       ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
     ];
-
-    ; __append("\n  <section class=\"page-header category-page-header\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/mockups\">")
-    ; __append(escapeFn( resourceTypeLabel ))
-    ; __append("</a>\n        <span>/</span>\n        <span>")
+  
+    ; __append("\n  <header class=\"category-catalog-header\">\n    <div class=\"category-catalog-shell\">\n      <span class=\"category-catalog-kicker\">3D model library</span>\n      <div class=\"category-catalog-heading\">\n        <h1>")
     ; __append(escapeFn( category.name ))
-    ; __append("</span>\n      </div>\n      <span class=\"category-page-eyebrow\">Free ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" mockups</span>\n      <h1 class=\"page-title\">")
-    ; __append(escapeFn( category.meta_title || category.name ))
-    ; __append("</h1>\n      ")
-    ;  if (category.description) {
-    ; __append("\n        <p class=\"page-subtitle category-seo-copy\">")
-    ; __append(escapeFn( category.description ))
-    ; __append("</p>\n      ")
-    ;  }
-    ; __append("\n      <div class=\"category-hero-meta\">\n        <span>")
-    ; __append(escapeFn( categoryModelCount ? `${categoryModelCount} free models` : 'Free mockup category' ))
-    ; __append("</span>\n        <span>3D garment mockups</span>\n        <span>Transparent render workflow</span>\n      </div>\n      <div class=\"category-hero-actions\">\n        <a href=\"#free-models\" class=\"btn btn-primary\">Browse free ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" models</a>\n        ")
-    ;  if (firstModel) {
-    ; __append("\n          <a href=\"/3d-models/")
-    ; __append(escapeFn( firstModel.category_slug || category.slug ))
-    ; __append("/")
-    ; __append(escapeFn( firstModel.slug ))
-    ; __append("\" class=\"btn btn-secondary\">Open first mockup model</a>\n        ")
-    ;  }
-    ; __append("\n      </div>\n      <div class=\"category-hero-filters\" aria-label=\"Mockup categories\">\n        <span class=\"category-hero-filter-label\">Categories</span>\n        <div class=\"filter-group\">\n          <a href=\"/mockups\" class=\"filter-btn\">\n            ")
+    ; __append(" 3D models</h1>\n        <p>Choose a garment, inspect its shape, and open the browser-based 3D mockup workspace.</p>\n        <span>")
+    ; __append(escapeFn( categoryModelCount ))
+    ; __append(" free ")
+    ; __append(escapeFn( categoryModelCount === 1 ? 'model' : 'models' ))
+    ; __append("</span>\n      </div>\n    </div>\n  </header>\n\n  <nav class=\"category-catalog-family\" aria-label=\"Garment categories\">\n    <div class=\"category-catalog-family-shell\">\n      <button class=\"category-family-control category-family-control-prev\" type=\"button\" aria-label=\"Scroll categories left\" disabled>\n        <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m10 3-5 5 5 5\"/></svg>\n      </button>\n      <div class=\"category-catalog-family-viewport\" tabindex=\"0\">\n        <div class=\"category-catalog-family-track\">\n          <a href=\"/mockups\">\n            ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n          </a>\n          ")
-    ;  (categories || []).forEach(function(cat) {
+    ;  (categories || []).forEach(function(cat) { 
     ; __append("\n            <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
-    ; __append("\" class=\"filter-btn ")
+    ; __append("\" class=\"")
     ; __append(escapeFn( cat.slug === category.slug ? 'active' : '' ))
-    ; __append("\">\n              ")
+    ; __append("\" ")
+    ; __append(escapeFn( cat.slug === category.slug ? 'aria-current="page"' : '' ))
+    ; __append(">\n              ")
     ; __append( include('partials/category-icon', { slug: cat.slug, name: cat.name }) )
     ; __append("\n              <span>")
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n            </a>\n          ")
-    ;  });
-    ; __append("\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"content-section category-models-section\">\n    <div class=\"container\">\n      <div id=\"free-models\" class=\"category-models-anchor\" aria-hidden=\"true\"></div>\n\n      <div class=\"models-grid\">\n        ")
-    ;  if (items && items.length > 0) {
+    ;  }); 
+    ; __append("\n        </div>\n      </div>\n      <button class=\"category-family-control category-family-control-next\" type=\"button\" aria-label=\"Scroll categories right\">\n        <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m6 3 5 5-5 5\"/></svg>\n      </button>\n    </div>\n  </nav>\n\n  <section class=\"category-catalog-workspace\">\n    <div class=\"category-catalog-shell category-catalog-results\">\n        <div id=\"free-models\" class=\"category-models-anchor\" aria-hidden=\"true\"></div>\n        <div class=\"models-grid\">\n        ")
+    ;  if (items && items.length > 0) { 
     ; __append("\n          ")
-    ;  items.forEach(function(model) {
+    ;  items.forEach(function(model) { 
+    ; __append("\n            ")
+    ;  const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); 
     ; __append("\n            <a href=\"/3d-models/")
     ; __append(escapeFn( category.slug ))
     ; __append("/")
@@ -2047,7 +2033,7 @@ title = __locals.title,
     ; __append("\" class=\"model-card\" data-category=\"")
     ; __append(escapeFn( category.slug ))
     ; __append("\">\n              <div class=\"model-preview-3d\">\n                ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
@@ -2055,79 +2041,37 @@ title = __locals.title,
     ; __append(" free ")
     ; __append(escapeFn( categoryLower ))
     ; __append(" 3D model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <div class=\"model-placeholder\">\n                    <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n                  </div>\n                ")
-    ;  }
-    ; __append("\n              </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
-    ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">")
-    ; __append(escapeFn( categoryLabel ))
-    ; __append(" 3D mockup</span>\n                </div>\n              </div>\n            </a>\n          ")
-    ;  });
+    ;  } 
+    ; __append("\n              </div>\n              <div class=\"model-info\">\n                <div>\n                  <h3 class=\"model-name\">")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append("</h3>\n                  <span class=\"category-model-status\">Free</span>\n                </div>\n                <span class=\"category-model-action\">Open model <span aria-hidden=\"true\">›</span></span>\n              </div>\n            </a>\n          ")
+    ;  }); 
     ; __append("\n        ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n          <div class=\"empty-state model-empty-state\">\n            <svg class=\"empty-state-illustration\" width=\"120\" height=\"96\" viewBox=\"0 0 120 96\" fill=\"none\" aria-hidden=\"true\">\n              <rect x=\"24\" y=\"18\" width=\"72\" height=\"58\" rx=\"6\" fill=\"#f5f5f5\" stroke=\"#d4d4d4\" stroke-width=\"2\"/>\n              <path d=\"M43 18c2.8 9.2 31.2 9.2 34 0\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n              <path d=\"M24 31 13 43l13 13M96 31l11 12-11 13\" stroke=\"#d4d4d4\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n              <path d=\"M43 52h34M49 62h22\" stroke=\"#b8b8b8\" stroke-width=\"2\" stroke-linecap=\"round\"/>\n              <circle cx=\"91\" cy=\"74\" r=\"12\" fill=\"#ffffff\" stroke=\"#111111\" stroke-width=\"2\"/>\n              <path d=\"m99 82 8 8\" stroke=\"#111111\" stroke-width=\"2.5\" stroke-linecap=\"round\"/>\n            </svg>\n            <h3>No ")
     ; __append(escapeFn( category.name ))
     ; __append(" models yet</h3>\n            <p>There are no active 3D models in this category right now.</p>\n          </div>\n        ")
-    ;  }
-    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"generator-section category-tool-links-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Create with these models</span>\n        <h2>Free ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" mockup tools</h2>\n      </div>\n      <div class=\"tool-picker-grid\">\n        ")
-    ;  categoryToolLinks.forEach(function(link) {
-    ; __append("\n          <a href=\"")
-    ; __append(escapeFn( link[0] ))
-    ; __append("\">")
-    ; __append(escapeFn( link[1] ))
-    ; __append("</a>\n        ")
-    ;  });
-    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"generator-section category-guide-links-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Practical guides</span>\n        <h2>Learn the ")
-    ; __append(escapeFn( categoryLower ))
-    ; __append(" 3D mockup workflow</h2>\n        <p>Use these guides to improve model choice, artwork placement, product angles, and ecommerce presentation.</p>\n      </div>\n      <div class=\"tool-picker-grid\">\n        ")
-    ;  categoryGuideLinks.forEach(function(link) {
-    ; __append("\n          <a href=\"")
-    ; __append(escapeFn( link[0] ))
-    ; __append("\">")
-    ; __append(escapeFn( link[1] ))
-    ; __append("</a>\n        ")
-    ;  });
-    ; __append("\n      </div>\n    </div>\n  </section>\n\n  ")
-    ;  if (categoryOutputCards.length) {
-    ; __append("\n    <section class=\"category-intent-section category-intent-section-top\">\n      <div class=\"container\">\n        <div class=\"category-section-kicker\">\n          <span class=\"generator-eyebrow\">")
-    ; __append(escapeFn( landingContent.output.eyebrow || 'Use cases' ))
-    ; __append("</span>\n          <h2>")
-    ; __append(escapeFn( landingContent.output.title || `Free ${categoryLabel} mockups for product visuals` ))
-    ; __append("</h2>\n          ")
-    ;  if (categoryWorkflow.description) {
-    ; __append("\n            <p>")
-    ; __append(escapeFn( categoryWorkflow.description ))
-    ; __append("</p>\n          ")
-    ;  }
-    ; __append("\n        </div>\n        <div class=\"category-intent-grid\">\n          ")
-    ;  categoryOutputCards.forEach(function(card) {
-    ; __append("\n            <article class=\"category-intent-item ")
-    ; __append(escapeFn( card.image_url ? 'category-intent-item-with-media' : '' ))
-    ; __append("\">\n              ")
-    ;  if (card.image_url) {
-    ; __append("\n                <div class=\"category-intent-media\">\n                  <img src=\"")
-    ; __append(escapeFn( card.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( card.title ))
-    ; __append(" apparel mockup use case\" loading=\"lazy\">\n                </div>\n              ")
-    ;  }
-    ; __append("\n              <h3>")
-    ; __append(escapeFn( card.title ))
-    ; __append("</h3>\n              <p>")
-    ; __append(escapeFn( card.body ))
-    ; __append("</p>\n            </article>\n          ")
-    ;  });
-    ; __append("\n        </div>\n      </div>\n    </section>\n  ")
-    ;  }
-    ; __append("\n\n  ")
-    ; __append( include('partials/generator-sections', { landingContent, categories, models, skipOutput: true }) )
-    ; __append("\n")
-    ;  } else {
+    ;  } 
+    ; __append("\n        </div>\n    </div>\n  </section>\n\n  <section class=\"category-field-guide\" id=\"category-field-guide\">\n    <div class=\"category-catalog-shell\">\n      <div class=\"category-field-guide-panel\">\n        <div class=\"category-field-guide-intro\">\n          <h2>From model to mockup</h2>\n          <p>Open any 3D model and start creating realistic apparel mockups in minutes.</p>\n        </div>\n        <ol class=\"category-field-guide-steps\">\n          ")
+    ;  categoryCatalogSteps.forEach(function(step, index) { 
+    ; __append("\n            <li>\n              <span>")
+    ; __append(escapeFn( index + 1 ))
+    ; __append("</span>\n              <div>\n                <h3>")
+    ; __append(escapeFn( step.title ))
+    ; __append("</h3>\n                <p>")
+    ; __append(escapeFn( step.body ))
+    ; __append("</p>\n              </div>\n            </li>\n          ")
+    ;  }); 
+    ; __append("\n        </ol>\n        <nav class=\"category-field-guide-links\" aria-label=\"Related resources\">\n          <a href=\"")
+    ; __append(escapeFn( categoryToolLinks[0][0] ))
+    ; __append("\">Tools <span aria-hidden=\"true\">›</span></a>\n          <a href=\"")
+    ; __append(escapeFn( categoryGuideLinks[0][0] ))
+    ; __append("\">Guides <span aria-hidden=\"true\">›</span></a>\n        </nav>\n      </div>\n    </div>\n  </section>\n  <script>\n    (function () {\n      var viewport = document.querySelector('.category-catalog-family-viewport');\n      var previous = document.querySelector('.category-family-control-prev');\n      var next = document.querySelector('.category-family-control-next');\n      if (!viewport || !previous || !next) return;\n\n      function updateControls() {\n        var maximum = viewport.scrollWidth - viewport.clientWidth;\n        previous.disabled = viewport.scrollLeft <= 2;\n        next.disabled = viewport.scrollLeft >= maximum - 2 || maximum <= 2;\n      }\n\n      function move(direction) {\n        viewport.scrollBy({ left: direction * Math.max(280, viewport.clientWidth * 0.72), behavior: 'smooth' });\n      }\n\n      previous.addEventListener('click', function () { move(-1); });\n      next.addEventListener('click', function () { move(1); });\n      viewport.addEventListener('scroll', updateControls, { passive: true });\n      window.addEventListener('resize', updateControls);\n      updateControls();\n    }());\n  </script>\n")
+    ;  } else { 
     ; __append("\n  <section class=\"category-hero\">\n    <div class=\"container\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/")
     ; __append(escapeFn( resourceType ))
     ; __append("\">")
@@ -2137,60 +2081,60 @@ title = __locals.title,
     ; __append("</span>\n      </div>\n      <h1 class=\"category-title\">")
     ; __append(escapeFn( category.name ))
     ; __append("</h1>\n      ")
-    ;  if (category.description) {
+    ;  if (category.description) { 
     ; __append("\n        <p class=\"category-description\">")
     ; __append(escapeFn( category.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </section>\n\n  <section class=\"category-content\">\n    <div class=\"container\">\n      ")
-    ;  if (items && items.length > 0) {
+    ;  if (items && items.length > 0) { 
     ; __append("\n        <div class=\"resource-grid\">\n          ")
-    ;  items.forEach(item => {
+    ;  items.forEach(item => { 
     ; __append("\n            <div class=\"resource-card\">\n              <div class=\"resource-image\">\n                ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n                  <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.name || item.title ))
     ; __append("\">\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <div class=\"resource-placeholder\">\n                    <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\">\n                      <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                      <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                      <path d=\"M21 15l-5-5L5 21\"/>\n                    </svg>\n                  </div>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n              <div class=\"resource-info\">\n                <h3 class=\"resource-name\">")
     ; __append(escapeFn( item.name || item.title ))
     ; __append("</h3>\n                ")
-    ;  if (item.description) {
+    ;  if (item.description) { 
     ; __append("\n                  <p class=\"resource-desc\">")
     ; __append(escapeFn( item.description ))
     ; __append("</p>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n                ")
-    ;  if (item.tags) {
+    ;  if (item.tags) { 
     ; __append("\n                  <div class=\"resource-tags\">\n                    ")
-    ;  item.tags.split(',').forEach(tag => {
+    ;  item.tags.split(',').forEach(tag => { 
     ; __append("\n                      <span class=\"tag\">")
     ; __append(escapeFn( tag.trim() ))
     ; __append("</span>\n                    ")
-    ;  })
+    ;  }) 
     ; __append("\n                  </div>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n            </div>\n          ")
-    ;  })
+    ;  }) 
     ; __append("\n        </div>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"64\" height=\"64\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\">\n            <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n            <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n          </svg>\n          <h3>No items yet</h3>\n          <p>Check back soon for new ")
     ; __append(escapeFn( category.name.toLowerCase() ))
     ; __append(".</p>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </section>\n  ")
-    ;  if (landingContent) {
+    ;  if (landingContent) { 
     ; __append("\n    ")
     ; __append( include('partials/generator-sections', { landingContent, categories, items, resourceType }) )
     ; __append("\n  ")
-    ;  }
+    ;  } 
     ; __append("\n")
-    ;  }
-    ; __append("\n\n<style>\n.category-page-header .category-breadcrumbs {\n  justify-content: flex-start;\n}\n\n.category-seo-copy {\n  max-width: 760px;\n  margin-left: auto;\n  margin-right: auto;\n}\n\n@media (max-width: 768px) {\n  .category-page-header .container {\n    width: 100%;\n    max-width: 100%;\n    padding-left: 24px;\n    padding-right: 24px;\n    text-align: left;\n  }\n\n  .category-page-header .page-title,\n  .category-page-header .category-seo-copy {\n    width: 100%;\n    max-width: 342px;\n    margin-left: 0;\n    margin-right: auto;\n    overflow-wrap: break-word;\n  }\n\n  .category-page-header .page-title {\n    font-size: 34px;\n    line-height: 1.08;\n  }\n\n  .category-page-header .category-seo-copy {\n    font-size: 16px;\n    line-height: 1.45;\n  }\n\n  .category-hero-meta {\n    justify-content: flex-start;\n    flex-wrap: nowrap;\n    overflow-x: auto;\n    max-width: 100%;\n    padding-bottom: 2px;\n    -webkit-overflow-scrolling: touch;\n  }\n\n	  .category-hero-meta span {\n	    flex: 0 0 auto;\n	  }\n\n	  .category-hero-actions {\n	    width: 100%;\n	    justify-content: flex-start;\n	  }\n\n	  .category-hero-actions .btn {\n	    width: 100%;\n	    max-width: 300px;\n	    justify-content: center;\n	  }\n\n	  .category-section-kicker,\n	  .category-models-header {\n	    max-width: 342px;\n	    margin-left: 0;\n	    text-align: left;\n	  }\n\n	  .category-section-kicker h2,\n	  .category-models-header h2 {\n	    font-size: 30px;\n	    line-height: 1.1;\n	    letter-spacing: 0;\n	  }\n\n	  .category-section-kicker p,\n	  .category-models-header p {\n	    font-size: 15px;\n	  }\n	}\n\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
+    ;  } 
+    ; __append("\n\n<style>\n.model-empty-state {\n  grid-column: 1 / -1;\n  width: min(520px, 100%);\n  margin: var(--spacing-xl) auto;\n  padding: var(--spacing-3xl) var(--spacing-xl);\n  border: 1px solid var(--color-border);\n  border-radius: var(--radius-lg);\n  background-color: var(--color-white);\n}\n\n.empty-state-illustration {\n  margin-bottom: var(--spacing-lg);\n}\n\n.model-empty-state h3 {\n  margin-bottom: var(--spacing-sm);\n  color: var(--color-primary);\n  font-size: 20px;\n  font-weight: 600;\n}\n\n.model-empty-state p {\n  color: var(--color-secondary);\n  font-size: 14px;\n}\n\n.category-hero {\n  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);\n  padding: 3rem 0 2rem;\n  border-bottom: 1px solid var(--gray-200);\n}\n\n.category-title {\n  font-size: 2.5rem;\n  font-weight: 700;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.category-description {\n  font-size: 1.125rem;\n  color: var(--gray-600);\n  max-width: 600px;\n  line-height: 1.6;\n}\n\n.category-content {\n  padding: 3rem 0;\n}\n\n.resource-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));\n  gap: 1.5rem;\n}\n\n.resource-card {\n  background: var(--white);\n  border-radius: 12px;\n  overflow: hidden;\n  border: 1px solid var(--gray-200);\n  transition: box-shadow 0.2s, transform 0.2s;\n}\n\n.resource-card:hover {\n  box-shadow: 0 8px 24px rgba(0,0,0,0.08);\n  transform: translateY(-2px);\n}\n\n.resource-image {\n  aspect-ratio: 4/3;\n  background: var(--gray-100);\n  overflow: hidden;\n}\n\n.resource-image img {\n  width: 100%;\n  height: 100%;\n  object-fit: cover;\n}\n\n.resource-placeholder {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: var(--gray-400);\n}\n\n.resource-info {\n  padding: 1.25rem;\n}\n\n.resource-name {\n  font-size: 1rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.5rem;\n}\n\n.resource-desc {\n  font-size: 0.875rem;\n  color: var(--gray-600);\n  line-height: 1.5;\n  margin-bottom: 0.75rem;\n}\n\n.resource-tags {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 0.5rem;\n}\n\n.tag {\n  font-size: 0.75rem;\n  padding: 0.25rem 0.625rem;\n  background: var(--gray-100);\n  color: var(--gray-600);\n  border-radius: 9999px;\n}\n\n.empty-state {\n  text-align: center;\n  padding: 4rem 2rem;\n  color: var(--gray-400);\n}\n\n.empty-state h3 {\n  color: var(--gray-600);\n  margin: 1rem 0 0.5rem;\n}\n\n.empty-state p {\n  color: var(--gray-500);\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2383,67 +2327,74 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ; __append( include('partials/header') )
+    ; __append( include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) )
     ; __append("\n")
-    ;  const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination ? catalogPagination : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] };
-    ; __append("\n")
-    ;  const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length;
-    ; __append("\n")
-    ;  const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total;
-    ; __append("\n")
-    ;  const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' };
-    ; __append("\n")
-    ;  const mockupPageHref = function(pageNumber) {
-  const params = [];
-  if (pageNumber > 1) params.push(`page=${pageNumber}`);
-  if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
-  if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
-  return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
-};
-    ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <div class=\"category-breadcrumbs\">\n      <a href=\"/\">Home</a>\n      <span>/</span>\n      <span>")
-    ; __append(escapeFn( t('design3d.pageTitle') ))
-    ; __append("</span>\n    </div>\n    <h1 class=\"page-title\">")
-    ; __append(escapeFn( t('design3d.pageTitle') ))
-    ; __append("</h1>\n    <p class=\"page-subtitle\">")
-    ; __append(escapeFn( t('design3d.pageSubtitle') ))
-    ; __append("</p>\n    <div class=\"category-hero-meta mockup-library-meta\">\n      <span>")
-    ; __append(escapeFn( mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library' ))
-    ; __append("</span>\n      <span>Browser-based customization</span>\n      <span>Transparent PNG export</span>\n    </div>\n    <div class=\"category-hero-actions\">\n      <a href=\"#free-3d-models\" class=\"btn btn-primary\">Browse free models</a>\n      <a href=\"/tools/3d-clothing-mockup-generator\" class=\"btn btn-secondary\">Open 3D mockup generator</a>\n    </div>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <form class=\"catalog-toolbar\" action=\"/mockups#free-3d-models\" method=\"get\" role=\"search\">\n      <label class=\"catalog-search-field\">\n        <span>Find a garment</span>\n        <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg>\n        <input type=\"search\" name=\"q\" value=\"")
-    ; __append(escapeFn( mockupQuery.q ))
-    ; __append("\" placeholder=\"Try hoodie, V-neck, coat…\" autocomplete=\"off\">\n      </label>\n      <label class=\"catalog-sort-field\">\n        <span>Sort</span>\n        <select name=\"sort\" onchange=\"this.form.submit()\">\n          <option value=\"featured\" ")
-    ; __append(escapeFn( mockupQuery.sort === 'featured' ? 'selected' : '' ))
-    ; __append(">Category order</option>\n          <option value=\"name\" ")
-    ; __append(escapeFn( mockupQuery.sort === 'name' ? 'selected' : '' ))
-    ; __append(">Name A–Z</option>\n          <option value=\"newest\" ")
-    ; __append(escapeFn( mockupQuery.sort === 'newest' ? 'selected' : '' ))
-    ; __append(">Recently updated</option>\n        </select>\n      </label>\n      <button class=\"btn btn-primary\" type=\"submit\">Search models</button>\n      ")
-    ;  if (mockupQuery.q || mockupQuery.sort !== 'featured') {
-    ; __append("\n        <a class=\"catalog-clear\" href=\"/mockups#free-3d-models\">Clear</a>\n      ")
-    ;  }
-    ; __append("\n    </form>\n\n    <nav class=\"mockup-intent-links\" aria-label=\"Popular 3D clothing mockup searches\">\n      <a href=\"/mockups/jacket\">Jacket 3D models</a>\n      <a href=\"/mockups/pants\">3D pants design models</a>\n      <a href=\"/mockups/dress\">Free dress mockups</a>\n      <a href=\"/mockups/shirt\">Shirt 3D models</a>\n      <a href=\"/tools/dress-designer\">Online dress designer</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockups</a>\n    </nav>\n\n    <!-- Filters -->\n    <div class=\"filters-bar\">\n      <div class=\"filter-group\">\n        <a href=\"/mockups\" class=\"filter-btn active\">\n          ")
+    ; 
+  const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination
+    ? catalogPagination
+    : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] };
+  const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length;
+  const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total;
+  const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' };
+  const mockupPageHref = function(pageNumber) {
+    const params = [];
+    if (pageNumber > 1) params.push(`page=${pageNumber}`);
+    if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
+    if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
+    return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
+  };
+  const allModelCountLabel = mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library';
+  const allCatalogCountLabel = mockupTotal ? `${mockupTotal} free models` : 'Free model library';
+  const allCatalogSteps = [
+    { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
+    { title: 'Inspect & customize', body: 'Rotate, zoom, and explore details and settings.' },
+    { title: 'Open in workspace', body: 'Launch the 3D mockup workspace and start designing.' }
+  ];
+
+    ; __append("\n\n<header class=\"category-catalog-header\">\n  <div class=\"category-catalog-shell\">\n    <span class=\"category-catalog-kicker\">3D model library</span>\n    <div class=\"category-catalog-heading\">\n      <h1>All 3D models</h1>\n      <p>Browse the complete garment library, inspect each shape, and open the browser-based 3D mockup workspace.</p>\n      <span aria-label=\"")
+    ; __append(escapeFn( allModelCountLabel ))
+    ; __append("\">")
+    ; __append(escapeFn( allCatalogCountLabel ))
+    ; __append("</span>\n    </div>\n  </div>\n</header>\n\n<nav class=\"category-catalog-family\" aria-label=\"Garment categories\">\n  <div class=\"category-catalog-family-shell\">\n    <button class=\"category-family-control category-family-control-prev\" type=\"button\" aria-label=\"Scroll categories left\" disabled>\n      <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m10 3-5 5 5 5\"/></svg>\n    </button>\n    <div class=\"category-catalog-family-viewport\" tabindex=\"0\">\n      <div class=\"category-catalog-family-track\">\n        <a href=\"/mockups\" class=\"active\" aria-current=\"page\">\n          ")
     ; __append( include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) )
     ; __append("\n          <span>")
     ; __append(escapeFn( t('design3d.filterAll') ))
     ; __append("</span>\n        </a>\n        ")
-    ;  categories.forEach(function(cat) {
+    ;  categories.forEach(function(cat) { 
     ; __append("\n          <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
-    ; __append("\" class=\"filter-btn\">\n            ")
+    ; __append("\">\n            ")
     ; __append( include('partials/category-icon', { slug: cat.slug, name: cat.name }) )
     ; __append("\n            <span>")
     ; __append(escapeFn( cat.name ))
     ; __append("</span>\n          </a>\n        ")
-    ;  });
-    ; __append("\n      </div>\n    </div>\n\n    <div class=\"mockup-library-heading\" id=\"free-3d-models\">\n      <div>\n        <span class=\"generator-eyebrow\">3D mockup clothing library</span>\n        <h2>")
-    ; __append(escapeFn( mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'Choose a free 3D clothing model' ))
-    ; __append("</h2>\n      </div>\n      <p><strong>")
-    ; __append(escapeFn( mockupResultTotal ))
-    ; __append("</strong> ")
-    ; __append(escapeFn( mockupResultTotal === 1 ? 'model' : 'models' ))
-    ; __append(". Open a garment to inspect its shape, test artwork placement, and create a mockup for ecommerce, print-on-demand, or design review.</p>\n    </div>\n\n    <!-- 3D Models Grid -->\n    <div class=\"models-grid\">\n      ")
-    ;  if (models && models.length > 0) {
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n    <button class=\"category-family-control category-family-control-next\" type=\"button\" aria-label=\"Scroll categories right\">\n      <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"m6 3 5 5-5 5\"/></svg>\n    </button>\n  </div>\n</nav>\n\n<main class=\"category-catalog-workspace all-catalog-workspace\" id=\"free-3d-models\">\n  <div class=\"category-catalog-shell category-catalog-results\">\n    <div class=\"all-catalog-toolbar-row\">\n      <div class=\"all-catalog-result-copy\" aria-live=\"polite\">\n        <strong>")
+    ; __append(escapeFn( mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'All garments' ))
+    ; __append("</strong>\n        <span>\n          ")
+    ;  if (mockupPagination.total) { 
+    ; __append("\n            Showing ")
+    ; __append(escapeFn( mockupPagination.start ))
+    ; __append("–")
+    ; __append(escapeFn( mockupPagination.end ))
+    ; __append(" of ")
+    ; __append(escapeFn( mockupPagination.total ))
+    ; __append("\n          ")
+    ;  } else { 
+    ; __append("\n            No matching models\n          ")
+    ;  } 
+    ; __append("\n        </span>\n      </div>\n\n      <form class=\"catalog-toolbar all-catalog-sort-toolbar\" action=\"/mockups#free-3d-models\" method=\"get\">\n        <label class=\"catalog-sort-field\">\n          <span class=\"sr-only\">Sort models</span>\n          <select name=\"sort\" onchange=\"this.form.submit()\" aria-label=\"Sort models\">\n            <option value=\"featured\" ")
+    ; __append(escapeFn( mockupQuery.sort === 'featured' ? 'selected' : '' ))
+    ; __append(">Featured</option>\n            <option value=\"name\" ")
+    ; __append(escapeFn( mockupQuery.sort === 'name' ? 'selected' : '' ))
+    ; __append(">Name A–Z</option>\n            <option value=\"newest\" ")
+    ; __append(escapeFn( mockupQuery.sort === 'newest' ? 'selected' : '' ))
+    ; __append(">Newest</option>\n          </select>\n        </label>\n      </form>\n    </div>\n\n    <div class=\"models-grid\">\n      ")
+    ;  if (models && models.length > 0) { 
     ; __append("\n        ")
-    ;  models.forEach(function(model) {
+    ;  models.forEach(function(model) { 
+    ; __append("\n          ")
+    ;  const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); 
     ; __append("\n          <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -2451,27 +2402,27 @@ title = __locals.title,
     ; __append("\" class=\"model-card\" data-category=\"")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">\n            <div class=\"model-preview-3d\">\n              ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n                <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( model.name ))
     ; __append(" 3D clothing model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n              ")
-    ;  } else {
-    ; __append("\n                <div class=\"model-placeholder\">\n                  <span>")
+    ;  } else { 
+    ; __append("\n                <div class=\"model-placeholder\"><span>")
     ; __append(escapeFn( model.name.charAt(0) ))
-    ; __append("</span>\n                </div>\n              ")
-    ;  }
-    ; __append("\n            </div>\n              <div class=\"model-info\">\n                <h3 class=\"model-name\">")
-    ; __append(escapeFn( model.name ))
-    ; __append("</h3>\n                <div class=\"model-tags\">\n                  <span class=\"tag tag-free\">Free</span>\n                  <span class=\"tag\">3D mockup</span>\n                </div>\n              </div>\n            </a>\n        ")
-    ;  });
+    ; __append("</span></div>\n              ")
+    ;  } 
+    ; __append("\n            </div>\n            <div class=\"model-info\">\n              <div>\n                <h3 class=\"model-name\">")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append("</h3>\n                <span class=\"category-model-status\">Free</span>\n              </div>\n              <span class=\"category-model-action\">Open model <span aria-hidden=\"true\">›</span></span>\n            </div>\n          </a>\n        ")
+    ;  }); 
     ; __append("\n      ")
-    ;  } else {
-    ; __append("\n        <div class=\"empty-state\">\n          <strong>No garments match this search.</strong>\n          <p>Try a broader garment type or clear the current filters.</p>\n          <a class=\"btn btn-secondary\" href=\"/mockups#free-3d-models\">Clear search</a>\n        </div>\n      ")
-    ;  }
+    ;  } else { 
+    ; __append("\n        <div class=\"empty-state all-catalog-empty-state\">\n          <strong>No garments match this search.</strong>\n          <p>Try a broader garment type or clear the current filters.</p>\n          <a class=\"btn btn-secondary\" href=\"/mockups#free-3d-models\">Clear search</a>\n        </div>\n      ")
+    ;  } 
     ; __append("\n    </div>\n\n    ")
-    ;  if (mockupPagination.pageCount > 1) {
+    ;  if (mockupPagination.pageCount > 1) { 
     ; __append("\n      <div class=\"catalog-pagination-shell\">\n        <p class=\"catalog-pagination-summary\">\n          Showing <strong>")
     ; __append(escapeFn( mockupPagination.start ))
     ; __append("–")
@@ -2479,23 +2430,23 @@ title = __locals.title,
     ; __append("</strong> of <strong>")
     ; __append(escapeFn( mockupPagination.total ))
     ; __append("</strong> models\n        </p>\n        <nav class=\"catalog-pagination\" aria-label=\"3D model pages\">\n          ")
-    ;  if (mockupPagination.page > 1) {
+    ;  if (mockupPagination.page > 1) { 
     ; __append("\n            <a class=\"catalog-page-direction\" href=\"")
     ; __append(escapeFn( mockupPageHref(mockupPagination.page - 1) ))
-    ; __append("\" rel=\"prev\" aria-label=\"Previous page\">← <span>Previous</span></a>\n          ")
-    ;  } else {
-    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\">← <span>Previous</span></span>\n          ")
-    ;  }
+    ; __append("\" rel=\"prev\" aria-label=\"Previous page\">‹ <span>Previous</span></a>\n          ")
+    ;  } else { 
+    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\">‹ <span>Previous</span></span>\n          ")
+    ;  } 
     ; __append("\n          <div class=\"catalog-page-numbers\">\n            ")
-    ;  mockupPagination.pages.forEach(function(pageNumber) {
+    ;  mockupPagination.pages.forEach(function(pageNumber) { 
     ; __append("\n              ")
-    ;  if (pageNumber === null) {
+    ;  if (pageNumber === null) { 
     ; __append("\n                <span class=\"catalog-page-ellipsis\" aria-hidden=\"true\">…</span>\n              ")
-    ;  } else if (pageNumber === mockupPagination.page) {
+    ;  } else if (pageNumber === mockupPagination.page) { 
     ; __append("\n                <span class=\"catalog-page-number is-current\" aria-current=\"page\">")
     ; __append(escapeFn( pageNumber ))
     ; __append("</span>\n              ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                <a class=\"catalog-page-number\" href=\"")
     ; __append(escapeFn( mockupPageHref(pageNumber) ))
     ; __append("\" aria-label=\"Page ")
@@ -2503,26 +2454,34 @@ title = __locals.title,
     ; __append("\">")
     ; __append(escapeFn( pageNumber ))
     ; __append("</a>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          </div>\n          ")
-    ;  if (mockupPagination.page < mockupPagination.pageCount) {
+    ;  if (mockupPagination.page < mockupPagination.pageCount) { 
     ; __append("\n            <a class=\"catalog-page-direction\" href=\"")
     ; __append(escapeFn( mockupPageHref(mockupPagination.page + 1) ))
-    ; __append("\" rel=\"next\" aria-label=\"Next page\"><span>Next</span> →</a>\n          ")
-    ;  } else {
-    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\"><span>Next</span> →</span>\n          ")
-    ;  }
+    ; __append("\" rel=\"next\" aria-label=\"Next page\"><span>Next</span> ›</a>\n          ")
+    ;  } else { 
+    ; __append("\n            <span class=\"catalog-page-direction is-disabled\" aria-disabled=\"true\"><span>Next</span> ›</span>\n          ")
+    ;  } 
     ; __append("\n        </nav>\n      </div>\n    ")
-    ;  }
-    ; __append("\n  </div>\n</section>\n\n")
-    ;  if (mockupPagination.page === 1 && !mockupQuery.q) {
-    ; __append("\n  ")
-    ; __append( include('partials/generator-sections', { landingContent, categories, models: (typeof catalogModels !== 'undefined' ? catalogModels : models) }) )
-    ; __append("\n")
-    ;  }
-    ; __append("\n\n")
+    ;  } 
+    ; __append("\n  </div>\n</main>\n\n")
+    ;  if (mockupPagination.page === 1 && !mockupQuery.q) { 
+    ; __append("\n  <section class=\"category-field-guide all-catalog-field-guide\">\n    <div class=\"category-catalog-shell\">\n      <div class=\"category-field-guide-panel\">\n        <div class=\"category-field-guide-intro\">\n          <h2>From model to mockup</h2>\n          <p>Open any 3D model and start creating realistic apparel mockups in minutes.</p>\n        </div>\n        <ol class=\"category-field-guide-steps\">\n          ")
+    ;  allCatalogSteps.forEach(function(step, index) { 
+    ; __append("\n            <li>\n              <span>")
+    ; __append(escapeFn( index + 1 ))
+    ; __append("</span>\n              <div><h3>")
+    ; __append(escapeFn( step.title ))
+    ; __append("</h3><p>")
+    ; __append(escapeFn( step.body ))
+    ; __append("</p></div>\n            </li>\n          ")
+    ;  }); 
+    ; __append("\n        </ol>\n        <nav class=\"category-field-guide-links\" aria-label=\"Related resources\">\n          <a href=\"/tools/3d-clothing-mockup-generator\">Tools <span aria-hidden=\"true\">›</span></a>\n          <a href=\"/blog/3d-apparel-mockup-workflow\">Guides <span aria-hidden=\"true\">›</span></a>\n        </nav>\n      </div>\n    </div>\n  </section>\n")
+    ;  } 
+    ; __append("\n\n<script>\n  (function () {\n    var viewport = document.querySelector('.category-catalog-family-viewport');\n    var previous = document.querySelector('.category-family-control-prev');\n    var next = document.querySelector('.category-family-control-next');\n    if (!viewport || !previous || !next) return;\n\n    function updateControls() {\n      var maximum = viewport.scrollWidth - viewport.clientWidth;\n      previous.disabled = viewport.scrollLeft <= 2;\n      next.disabled = viewport.scrollLeft >= maximum - 2 || maximum <= 2;\n    }\n\n    function move(direction) {\n      viewport.scrollBy({ left: direction * Math.max(280, viewport.clientWidth * 0.72), behavior: 'smooth' });\n    }\n\n    previous.addEventListener('click', function () { move(-1); });\n    next.addEventListener('click', function () { move(1); });\n    viewport.addEventListener('scroll', updateControls, { passive: true });\n    window.addEventListener('resize', updateControls);\n    updateControls();\n  }());\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2593,7 +2552,7 @@ title = __locals.title,
   sharePrompt = __locals.sharePrompt;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;  const previewModelFileUrl = model.file_url;
+    ;  const previewModelFileUrl = model.file_url; 
     ; __append("\n\n<section class=\"designer-page\">\n  <div class=\"designer-toolbar\">\n    <div class=\"designer-toolbar-left\">\n      <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -2601,19 +2560,19 @@ title = __locals.title,
     ; __append("\" class=\"btn btn-ghost btn-small\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M19 12H5M12 19l-7-7 7-7\"/>\n        </svg>\n        Back\n      </a>\n      <h1 class=\"designer-title\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n        <model-viewer \n          class=\"model-viewer-natural\"\n          id=\"designerViewer\"\n          src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n          alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\"\n          camera-controls\n          auto-rotate\n          shadow-intensity=\"1.55\"\n          shadow-softness=\"0.52\"\n          exposure=\"0.66\"\n          environment-image=\"neutral\"\n          style=\"width: 100%; height: 100%;\"\n        ></model-viewer>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <div class=\"designer-placeholder\">\n          <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\">\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    // Apply color to model (if material is accessible)\n    if (viewer && viewer.model) {\n      const color = btn.dataset.color;\n      // Note: Actual material manipulation requires model materials to be exposed\n      console.log('Apply color:', color, 'to', target);\n    }\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    console.log('Apply pattern:', btn.dataset.pattern);\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n  });\n}\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n  });\n}\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', () => {\n    if (viewer && viewer.toDataURL) {\n      const link = document.createElement('a');\n      link.download = '")
     ; __append(escapeFn( model.slug ))
     ; __append("-design.png';\n      link.href = viewer.toDataURL('image/png');\n      link.click();\n    } else {\n      alert('Render download is not available for this model.');\n    }\n  });\n}\n</script>\n\n")
@@ -2830,45 +2789,45 @@ title = __locals.title,
   sharePrompt = __locals.sharePrompt;
     ; __append( include('partials/header') )
     ; __append("\n")
-    ;  const content = homeContent || {};
+    ;  const content = homeContent || {}; 
     ; __append("\n")
-    ;  const heroImages = content.heroImages || [];
+    ;  const heroImages = content.heroImages || []; 
     ; __append("\n")
-    ;  const stats = content.stats || [];
+    ;  const stats = content.stats || []; 
     ; __append("\n")
-    ;  const workflow = content.workflow || [];
+    ;  const workflow = content.workflow || []; 
     ; __append("\n")
-    ;  const useCases = content.useCases || [];
+    ;  const useCases = content.useCases || []; 
     ; __append("\n")
-    ;  const faq = content.faq || [];
+    ;  const faq = content.faq || []; 
     ; __append("\n")
-    ;  const featuredModels = content.featuredModels || [];
+    ;  const featuredModels = content.featuredModels || []; 
     ; __append("\n")
-    ;  const featuredCategories = content.featuredCategories || [];
+    ;  const featuredCategories = content.featuredCategories || []; 
     ; __append("\n\n<section class=\"home-hero\">\n  <div class=\"container home-hero-container\">\n    <div class=\"home-hero-content\">\n      <span class=\"generator-eyebrow home-hero-reveal\">Free browser apparel studio</span>\n      <h1 class=\"home-hero-reveal\">Put your artwork on a real garment shape.</h1>\n      <p class=\"home-hero-reveal\">\n        Choose a 3D garment, place a graphic, check front and back views,\n        then export a transparent PNG for product pages, POD listings, and review.\n      </p>\n      <div class=\"hero-actions home-hero-reveal\">\n        <a href=\"/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design\" class=\"btn btn-primary btn-large\" data-analytics-event=\"home_hero_mockup_tool_click\">Start with a T-shirt</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\" data-analytics-event=\"home_hero_models_click\">Choose another garment</a>\n      </div>\n      ")
-    ;  if (stats.length) {
+    ;  if (stats.length) { 
     ; __append("\n        <dl class=\"home-hero-stats home-hero-reveal\">\n          ")
-    ;  stats.forEach(function(stat) {
+    ;  stats.forEach(function(stat) { 
     ; __append("\n            <div>\n              <dt>")
     ; __append(escapeFn( stat.value ))
     ; __append("</dt>\n              <dd>")
     ; __append(escapeFn( stat.label ))
     ; __append("</dd>\n            </div>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </dl>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <figure class=\"home-hero-visual home-hero-reveal\">\n      <img src=\"/images/hero/apparel-design-hero-v3.webp\" alt=\"Oversized cotton T-shirt with an original screen-print design\" width=\"1120\" height=\"1400\" decoding=\"async\" fetchpriority=\"high\">\n    </figure>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClothingDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-tshirt-cluster home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Popular T-shirt workflow</span>\n      <h2 class=\"home-copy-reveal\">Create a free T-shirt mockup from the right starting point</h2>\n      <p class=\"home-copy-reveal\">Choose the generator for a guided workflow, browse every T-shirt fit, or open the classic crew-neck model directly.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      <a class=\"generator-output-card home-reveal-card\" href=\"/tools/t-shirt-mockup-generator\" data-analytics-event=\"home_tshirt_generator_click\">\n        <h3 class=\"home-copy-reveal\">T-shirt mockup generator</h3>\n        <p class=\"home-copy-reveal\">Test garment colors, artwork placement, viewing angles, and product-image direction in one workflow.</p>\n        <strong>Start a T-shirt mockup →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/mockups/t-shirt-mockup\" data-analytics-event=\"home_tshirt_models_click\">\n        <h3 class=\"home-copy-reveal\">Free T-shirt 3D models</h3>\n        <p class=\"home-copy-reveal\">Compare classic, oversized, polo, and long-sleeve models before choosing a blank.</p>\n        <strong>Browse T-shirt models →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design\" data-analytics-event=\"home_tshirt_classic_model_click\">\n        <h3 class=\"home-copy-reveal\">Basic short-sleeve T-shirt</h3>\n        <p class=\"home-copy-reveal\">Open a familiar blank directly in the design studio for chest logos, front graphics, back prints, and POD listings.</p>\n        <strong>Customize this T-shirt →</strong>\n      </a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
-    ;  workflow.forEach(function(step, index) {
+    ;  workflow.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
     ; __append(" home-reveal-card\">\n          ")
-    ;  if (step.image_url) {
+    ;  if (step.image_url) { 
     ; __append("\n            <div class=\"generator-step-media\">\n              <img src=\"")
     ; __append(escapeFn( step.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( step.title ))
     ; __append(" apparel mockup workflow step\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3 class=\"home-copy-reveal\">")
@@ -2876,11 +2835,11 @@ title = __locals.title,
     ; __append("</h3>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( step.text ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (featuredCategories.length) {
+    ;  if (featuredCategories.length) { 
     ; __append("\n<section class=\"generator-section generator-section-muted home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free model categories</span>\n      <h2 class=\"home-copy-reveal\">Browse 3D clothing models by garment type</h2>\n      <p class=\"home-copy-reveal\">Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models for mockup and print placement work.</p>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
-    ;  featuredCategories.forEach(function(category) {
+    ;  featuredCategories.forEach(function(category) { 
     ; __append("\n        <a href=\"/mockups/")
     ; __append(escapeFn( category.slug ))
     ; __append("\" class=\"generator-category-card home-reveal-card\" data-analytics-event=\"home_category_")
@@ -2890,23 +2849,23 @@ title = __locals.title,
     ; __append("\" data-analytics-category=\"")
     ; __append(escapeFn( category.slug ))
     ; __append("\">\n          ")
-    ;  if (category.image_url) {
+    ;  if (category.image_url) { 
     ; __append("\n            <div class=\"generator-category-media\">\n              <img src=\"")
     ; __append(escapeFn( category.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( category.name ))
     ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <div class=\"generator-category-copy\">\n            <small class=\"home-copy-reveal\">Free mockup category</small>\n            <strong class=\"home-copy-reveal\">")
     ; __append(escapeFn( category.name ))
     ; __append("</strong>\n          </div>\n          <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M5 12h14\"/>\n            <path d=\"m12 5 7 7-7 7\"/>\n          </svg>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section home-tool-links home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Free mockup tools</span>\n      <h2 class=\"home-copy-reveal\">Start with the garment you actually need</h2>\n      <p class=\"home-copy-reveal\">Open a live 3D garment, test colors and views, upload artwork, then export a transparent apparel mockup.</p>\n    </div>\n    <div class=\"tool-picker-grid home-reveal-card\">\n      <a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockup generator</a>\n      <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockup</a>\n      <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt mockup</a>\n      <a href=\"/tools/dress-designer\">Online dress designer</a>\n      <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockup generator</a>\n      <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long sleeve shirt mockup</a>\n      <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockup</a>\n      <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel mockup</a>\n      <a href=\"/tools/print-on-demand-mockup-generator\">POD clothing mockup generator</a>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (featuredModels.length) {
+    ;  if (featuredModels.length) { 
     ; __append("\n<section class=\"home-featured-models home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Featured models</span>\n      <h2 class=\"home-copy-reveal\">Popular free 3D apparel models for mockups</h2>\n      <p class=\"home-copy-reveal\">Open a model detail page to view the garment, plan artwork placement, customize colors, and export a clean transparent product image.</p>\n    </div>\n    <div class=\"models-grid\">\n      ")
-    ;  featuredModels.forEach(function(model) {
+    ;  featuredModels.forEach(function(model) { 
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("/")
@@ -2918,45 +2877,45 @@ title = __locals.title,
     ; __append("\" data-analytics-category=\"")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">\n          <div class=\"model-preview-3d\">\n            ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-img\">\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <div class=\"model-placeholder\">\n                <span>")
     ; __append(escapeFn( model.name.charAt(0) ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n          <div class=\"model-info\">\n            <h3 class=\"model-name home-copy-reveal\">")
     ; __append(escapeFn( model.name ))
     ; __append("</h3>\n            <p class=\"model-meta home-copy-reveal\">")
     ; __append(escapeFn( model.category_label || model.category ))
     ; __append("</p>\n          </div>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section generator-section-muted home-reveal\" id=\"use-cases\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Use cases</span>\n      <h2 class=\"home-copy-reveal\">Built for apparel mockups, not generic 3D downloads</h2>\n      <p class=\"home-copy-reveal\">Use ClothingDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  useCases.forEach(function(item) {
+    ;  useCases.forEach(function(item) { 
     ; __append("\n        <article class=\"generator-output-card ")
     ; __append(escapeFn( item.image_url ? 'generator-output-card-with-media' : '' ))
     ; __append(" home-reveal-card\">\n          ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n            <div class=\"generator-output-media\">\n              <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.title ))
     ; __append(" apparel mockup use case\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <h3 class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.title ))
     ; __append("</h3>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.text ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">FAQ</span>\n      <h2 class=\"home-copy-reveal\">Free 3D clothing model questions</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
-    ;  faq.forEach(function(item, index) {
+    ;  faq.forEach(function(item, index) { 
     ; __append("\n        <details class=\"generator-faq-item home-reveal-card\" data-analytics-event=\"home_faq_")
     ; __append(escapeFn( index + 1 ))
     ; __append("_toggle\" data-analytics-item=\"")
@@ -2968,7 +2927,7 @@ title = __locals.title,
     ; __append("</summary>\n          <p class=\"home-copy-reveal\">")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta home-reveal\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Start designing</span>\n        <h2 class=\"home-copy-reveal\">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>\n        <p class=\"home-copy-reveal\">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>\n      </div>\n      <div class=\"generator-final-actions\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary\" data-analytics-event=\"home_bottom_models_click\">Start a guided mockup</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3046,7 +3005,7 @@ title = __locals.title,
     ; __append("</h1>\n    </div>\n    <p>")
     ; __append(escapeFn( intro ))
     ; __append("</p>\n  </div>\n</section>\n\n<section class=\"utility-page-content\">\n  <div class=\"container utility-card-grid\">\n    ")
-    ;  sections.forEach(function(section, index) {
+    ;  sections.forEach(function(section, index) { 
     ; __append("\n      <article class=\"utility-card\">\n        <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n        <h2>")
@@ -3054,7 +3013,7 @@ title = __locals.title,
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( section.body ))
     ; __append("</p>\n        ")
-    ;  if (section.href && section.label) {
+    ;  if (section.href && section.label) { 
     ; __append("\n          <a class=\"btn ")
     ; __append(escapeFn( index === 0 ? 'btn-primary' : 'btn-secondary' ))
     ; __append("\" href=\"")
@@ -3062,9 +3021,9 @@ title = __locals.title,
     ; __append("\">")
     ; __append(escapeFn( section.label ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </article>\n    ")
-    ;  });
+    ;  }); 
     ; __append("\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3142,13 +3101,13 @@ title = __locals.title,
     ; __append("</h1>\n    </div>\n    <p>Last updated ")
     ; __append(escapeFn( updatedAt ))
     ; __append("</p>\n  </div>\n</section>\n\n<section class=\"utility-page-content\">\n  <div class=\"container legal-copy\">\n    ")
-    ;  sections.forEach(function(section) {
+    ;  sections.forEach(function(section) { 
     ; __append("\n      <section>\n        <h2>")
     ; __append(escapeFn( section.title ))
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( section.body ))
     ; __append("</p>\n      </section>\n    ")
-    ;  });
+    ;  }); 
     ; __append("\n    <p class=\"legal-contact-note\">Need a product-specific path? <a href=\"/contact\">Visit contact options</a>.</p>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3218,39 +3177,37 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ; __append( include('partials/header') )
+    ; __append( include('partials/header', { bodyClass: 'category-catalog-page model-product-page' }) )
     ; __append("\n")
-    ;  const detailContent = modelDetailContent || {};
+    ;  const detailContent = modelDetailContent || {}; 
     ; __append("\n")
-    ;  const previewModelFileUrl = model.file_url;
+    ;  const previewModelFileUrl = model.file_url; 
     ; __append("\n")
-    ;  const howToSteps = detailContent.howToSteps || [];
+    ;  const howToSteps = detailContent.howToSteps || []; 
     ; __append("\n")
-    ;  const applications = detailContent.applications || [];
+    ;  const applications = detailContent.applications || []; 
     ; __append("\n")
-    ;  const faqItems = detailContent.faqItems || [];
+    ;  const faqItems = detailContent.faqItems || []; 
     ; __append("\n")
-    ;  const relatedLinks = detailContent.relatedLinks || [];
+    ;  const relatedLinks = detailContent.relatedLinks || []; 
     ; __append("\n")
-    ;  const detailCta = detailContent.cta || {};
+    ;  const detailCta = detailContent.cta || {}; 
     ; __append("\n")
-    ;  const howToIcons = ['open', 'inspect', 'simulate', 'download'];
+    ;  const howToIcons = ['open', 'inspect', 'simulate', 'download']; 
     ; __append("\n")
-    ;  const modelMockupProfiles = {
-  'classic-crew-neck-t-shirt-3d-model': {
-    assetBase: '/images/mockups/on-model/tshirt-vneck-male-front'
-  }
-};
+    ;  const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; 
     ; __append("\n")
-    ;  const modelMockupProfile = modelMockupProfiles[model.slug] || null;
+    ;  const supportsOnModelMockup = Boolean(modelMockupProfile); 
     ; __append("\n")
-    ;  const supportsOnModelMockup = Boolean(modelMockupProfile);
+    ;  const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); 
+    ; __append("\n")
+    ;  const modelCategoryName = model.category_label || model.category || 'Apparel'; 
     ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer")
     ; __append(escapeFn( previewModelFileUrl ? ' is-loading' : '' ))
     ; __append("\" id=\"model3dViewer\" aria-busy=\"")
     ; __append(escapeFn( previewModelFileUrl ? 'true' : 'false' ))
     ; __append("\">\n          ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n            <img\n              class=\"model-detail-poster\"\n              src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n              alt=\"")
@@ -3262,99 +3219,101 @@ title = __locals.title,
     ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary model-viewer-load\" id=\"modelViewerLoad\" hidden>\n              <span>Retry interactive 3D</span>\n            </button>\n            <p class=\"model-viewer-load-status\" id=\"modelViewerLoadStatus\" aria-live=\"polite\">Loading interactive 3D…</p>\n          ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
-    ;  }
-    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\" type=\"button\" aria-pressed=\"false\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fabricMotionBtn\" type=\"button\" aria-pressed=\"false\" hidden>\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7\"/>\n              <path d=\"M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0\"/>\n              <path d=\"M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0\"/>\n            </svg>\n            Fabric Motion\n          </button>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
+    ;  } 
+    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\" type=\"button\" aria-pressed=\"false\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fabricMotionBtn\" type=\"button\" aria-pressed=\"false\" hidden>\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7\"/>\n              <path d=\"M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0\"/>\n              <path d=\"M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0\"/>\n            </svg>\n            Fabric Motion\n          </button>\n          <div class=\"model-view-angle-group\" role=\"group\" aria-label=\"Model viewing angle\">\n            <button class=\"viewer-btn model-view-angle active\" type=\"button\" data-orbit=\"0deg\" aria-pressed=\"true\">Front</button>\n            <button class=\"viewer-btn model-view-angle\" type=\"button\" data-orbit=\"90deg\" aria-pressed=\"false\">Side</button>\n            <button class=\"viewer-btn model-view-angle\" type=\"button\" data-orbit=\"180deg\" aria-pressed=\"false\">Back</button>\n          </div>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\" role=\"region\" aria-label=\"Model details and specifications\" tabindex=\"0\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
     ; __append(escapeFn( model.category_slug || model.category ))
     ; __append("\">")
     ; __append(escapeFn( model.category_label || model.category ))
     ; __append("</a>\n          <span>/</span>\n          <span>")
     ; __append(escapeFn( model.name ))
-    ; __append("</span>\n        </div>\n        \n        <h1 class=\"model-detail-title\">")
-    ; __append(escapeFn( model.name ))
+    ; __append("</span>\n        </div>\n        \n        <span class=\"model-product-kicker\">")
+    ; __append(escapeFn( modelCategoryName ))
+    ; __append(" 3D model</span>\n        <h1 class=\"model-detail-title\">")
+    ; __append(escapeFn( modelDisplayName ))
     ; __append("</h1>\n        \n        <div class=\"model-detail-meta\">\n          <span class=\"tag tag-free\">Free</span>\n          ")
-    ;  if (model.poly_count) {
+    ;  if (model.poly_count) { 
     ; __append("\n            <span class=\"meta-item\">")
     ; __append(escapeFn( model.poly_count ))
     ; __append("</span>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Customize this model\n          </button>\n          <div class=\"model-secondary-actions\">\n          ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Export transparent PNG\n            </button>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          ")
-    ;  if (supportsOnModelMockup) {
+    ;  if (supportsOnModelMockup) { 
     ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"modelMockupBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5\"/>\n                <path d=\"M9 4.5a3.7 3.7 0 0 0 6 0M10 11h4M10 14h4\"/>\n              </svg>\n              Preview on a model\n            </button>\n          ")
-    ;  }
-    ; __append("\n          </div>\n          <button type=\"button\" class=\"model-consult-link\" id=\"customizationInquiryBtn\">\n            Need a custom garment or production quantity? <strong>Request customization →</strong>\n          </button>\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n          <p class=\"model-action-note\">Free during public beta · PNG export · no payment details required</p>\n        </div>\n\n        <div class=\"model-description\">\n          <h2>Description</h2>\n          <p>")
+    ;  } 
+    ; __append("\n          </div>\n          <button type=\"button\" class=\"model-consult-link\" id=\"customizationInquiryBtn\">\n            Need a custom garment or production quantity? <strong>Request customization →</strong>\n          </button>\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n          <p class=\"model-action-note\">Free during public beta · PNG export · no payment details required</p>\n        </div>\n\n        <div class=\"model-description model-product-description\">\n          <h2>Description</h2>\n          <p>")
     ; __append(escapeFn( model.description || 'No description available.' ))
     ; __append("</p>\n        </div>\n\n        ")
-    ;  if (detailContent.searchIntentSummary) {
+    ;  if (detailContent.searchIntentSummary) { 
     ; __append("\n          <div class=\"model-description model-search-summary\">\n            <h2>Mockup workflow</h2>\n            <p>")
     ; __append(escapeFn( detailContent.searchIntentSummary ))
     ; __append("</p>\n          </div>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n        <div class=\"model-specs\">\n          <h2>Specifications</h2>\n          <div class=\"specs-grid\">\n            ")
-    ;  (detailContent.formatNotes || []).forEach(function(note) {
+    ;  (detailContent.formatNotes || []).forEach(function(note) { 
     ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">")
     ; __append(escapeFn( note.label ))
     ; __append("</span>\n                <span class=\"spec-value\">")
     ; __append(escapeFn( note.value ))
     ; __append("</span>\n              </div>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n            ")
-    ;  if (model.file_size) {
+    ;  if (model.file_size) { 
     ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">File Size</span>\n                <span class=\"spec-value\">")
     ; __append(escapeFn( model.file_size ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n          </div>\n        </div>\n\n        ")
-    ;  if (detailContent.tagList && detailContent.tagList.length) {
+    ;  if (detailContent.tagList && detailContent.tagList.length) { 
     ; __append("\n          <div class=\"model-keyword-list\" aria-label=\"Related model topics\">\n            ")
-    ;  detailContent.tagList.forEach(function(tag) {
+    ;  detailContent.tagList.forEach(function(tag) { 
     ; __append("\n              <span>")
     ; __append(escapeFn( tag ))
     ; __append("</span>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          </div>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n        ")
-    ;  if (relatedLinks.length) {
+    ;  if (relatedLinks.length) { 
     ; __append("\n          <nav class=\"model-intent-links\" aria-label=\"Related 3D clothing resources\">\n            ")
-    ;  relatedLinks.forEach(function(link) {
+    ;  relatedLinks.forEach(function(link) { 
     ; __append("\n              <a href=\"")
     ; __append(escapeFn( link.href ))
     ; __append("\">")
     ; __append(escapeFn( link.label ))
     ; __append("</a>\n            ")
-    ;  });
+    ;  }); 
     ; __append("\n          </nav>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Searchable model assets -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">")
     ; __append(escapeFn( model.name ))
     ; __append(" model views</h2>\n    <p class=\"section-subtitle\">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>\n    \n    <div class=\"showcase-grid\">\n      ")
-    ;  if (model.image_url) {
+    ;  if (model.image_url) { 
     ; __append("\n        <div class=\"showcase-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append(" front 3D apparel mockup preview\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">Garment preview</span>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      ")
-    ;  if (model.texture_url) {
+    ;  if (model.texture_url) { 
     ; __append("\n        <div class=\"showcase-item showcase-texture-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
     ; __append(escapeFn( model.texture_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append(" UV texture and artwork placement layout\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">UV artwork layout</span>\n        </div>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      <div class=\"showcase-item\">\n          <div class=\"showcase-image model-side-stage\">\n            ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n              <img class=\"model-side-poster\" src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
@@ -3366,69 +3325,65 @@ title = __locals.title,
     ; __append("\"\n                alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append(" side silhouette 3D view\"\n              loading=\"lazy\"\n              reveal=\"interaction\"\n              camera-controls\n              camera-orbit=\"90deg 75deg 112%\"\n              shadow-intensity=\"1.2\"\n                exposure=\"0.72\"\n                environment-image=\"neutral\"\n                hidden\n              ></model-viewer>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n        </div>\n        <span class=\"showcase-label\">Side silhouette</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) {
+    ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { 
     ; __append("\n<section class=\"model-seo-section generator-section\">\n  <div class=\"container\">\n    ")
-    ;  if (howToSteps.length) {
-    ; __append("\n      <div class=\"model-seo-block model-howto-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Design workflow</span>\n          <h2>How to design ")
-    ; __append(escapeFn( model.name ))
-    ; __append("</h2>\n          <p>Use the browser-based Design3D studio to customize the model, review the garment preview, and export a high-resolution render.</p>\n        </div>\n        <div class=\"pattern-step-card-grid\">\n          ")
-    ;  howToSteps.forEach(function(step, index) {
+    ;  if (howToSteps.length) { 
+    ; __append("\n      <div class=\"model-seo-block model-howto-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Design workflow</span>\n          <h2>From model to finished mockup</h2>\n          <p>Customize the garment, inspect every angle, and export a presentation-ready visual.</p>\n        </div>\n        <div class=\"pattern-step-card-grid\">\n          ")
+    ;  howToSteps.forEach(function(step, index) { 
     ; __append("\n            ")
-    ;  const icon = howToIcons[index] || 'inspect';
+    ;  const icon = howToIcons[index] || 'inspect'; 
     ; __append("\n            ")
-    ;  const stepTitle = step.name || step.title;
+    ;  const stepTitle = step.name || step.title; 
     ; __append("\n            ")
-    ;  const stepText = step.text || step.body;
+    ;  const stepText = step.text || step.body; 
     ; __append("\n            <article class=\"pattern-step-card\">\n              <div class=\"pattern-step-media pattern-step-media-")
     ; __append(escapeFn( icon ))
     ; __append("\">\n                <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n                ")
-    ;  if (icon === 'download') {
+    ;  if (icon === 'download') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"16\" y=\"14\" width=\"52\" height=\"56\" rx=\"6\"/>\n                    <path d=\"M40 22v25\"/>\n                    <path d=\"m29 38 11 11 11-11\"/>\n                    <path d=\"M27 59h26\"/>\n                  </svg>\n                ")
-    ;  } else if (icon === 'open') {
+    ;  } else if (icon === 'open') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <rect x=\"12\" y=\"18\" width=\"56\" height=\"44\" rx=\"6\"/>\n                    <path d=\"M12 31h56\"/>\n                    <path d=\"M27 49h16\"/>\n                    <path d=\"M47 41l10 8-10 8\"/>\n                  </svg>\n                ")
-    ;  } else if (icon === 'simulate') {
+    ;  } else if (icon === 'simulate') { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M19 55c8-22 20-31 37-31\"/>\n                    <path d=\"M51 19h11v11\"/>\n                    <circle cx=\"24\" cy=\"56\" r=\"6\"/>\n                    <circle cx=\"55\" cy=\"25\" r=\"6\"/>\n                    <path d=\"M35 56h22\"/>\n                  </svg>\n                ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n                  <svg viewBox=\"0 0 80 80\" aria-hidden=\"true\">\n                    <path d=\"M18 18h20v20H18z\"/>\n                    <path d=\"M42 18h20v20H42z\"/>\n                    <path d=\"M18 42h20v20H18z\"/>\n                    <path d=\"M42 42h20v20H42z\"/>\n                    <path d=\"M25 28h6M49 28h6M25 52h6M49 52h6\"/>\n                  </svg>\n                ")
-    ;  }
+    ;  } 
     ; __append("\n              </div>\n              <div class=\"pattern-step-copy\">\n                <h3>")
     ; __append(escapeFn( stepTitle ))
     ; __append("</h3>\n                <p>")
     ; __append(escapeFn( stepText ))
     ; __append("</p>\n              </div>\n            </article>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (detailContent.geoSummary) {
+    ;  if (detailContent.geoSummary) { 
     ; __append("\n      <div class=\"model-seo-block model-geo-summary\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">AI overview</span>\n          <h2>")
     ; __append(escapeFn( model.name ))
     ; __append(" summary</h2>\n          <p>")
     ; __append(escapeFn( detailContent.geoSummary ))
     ; __append("</p>\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (applications.length) {
-    ; __append("\n      <div class=\"model-seo-block\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Applications</span>\n          <h2>Where this model works best</h2>\n        </div>\n        <div class=\"generator-output-grid model-application-grid\">\n          ")
-    ;  applications.forEach(function(application) {
+    ;  if (applications.length) { 
+    ; __append("\n      <div class=\"model-seo-block model-applications-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">Applications</span>\n          <h2>Built for real apparel decisions</h2>\n        </div>\n        <div class=\"generator-output-grid model-application-grid\">\n          ")
+    ;  applications.forEach(function(application) { 
     ; __append("\n            <article class=\"generator-output-card\">\n              <h3>")
     ; __append(escapeFn( application.title ))
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( application.text || application.body ))
     ; __append("</p>\n            </article>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n\n    ")
-    ;  if (faqItems.length) {
-    ; __append("\n      <div class=\"model-seo-block model-faq-section generator-faq-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">FAQ</span>\n          <h2>")
-    ; __append(escapeFn( model.name ))
-    ; __append(" questions</h2>\n        </div>\n        <div class=\"generator-faq-list\">\n          ")
-    ;  faqItems.forEach(function(item, index) {
+    ;  if (faqItems.length) { 
+    ; __append("\n      <div class=\"model-seo-block model-faq-section generator-faq-section\">\n        <div class=\"generator-section-header\">\n          <span class=\"generator-eyebrow\">FAQ</span>\n          <h2>Questions about this model</h2>\n        </div>\n        <div class=\"generator-faq-list\">\n          ")
+    ;  faqItems.forEach(function(item, index) { 
     ; __append("\n            <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n              <summary>")
@@ -3436,92 +3391,140 @@ title = __locals.title,
     ; __append("</summary>\n              <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n            </details>\n          ")
-    ;  });
+    ;  }); 
     ; __append("\n        </div>\n      </div>\n    ")
-    ;  }
+    ;  } 
     ; __append("\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<!-- Related Models -->\n")
-    ;  if (related && related.length > 0) {
+    ;  if (related && related.length > 0) { 
     ; __append("\n<section class=\"related-models-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">Related ")
-    ; __append(escapeFn( model.category_label || model.category ))
-    ; __append(" 3D Models</h2>\n    \n    <div class=\"models-grid\">\n      ")
-    ;  related.forEach(function(item) {
+    ; __append(escapeFn( modelCategoryName ))
+    ; __append(" models</h2>\n    \n    <div class=\"models-grid\">\n      ")
+    ;  related.forEach(function(item) { 
+    ; __append("\n        ")
+    ;  const relatedDisplayName = String(item.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); 
     ; __append("\n        <a href=\"/3d-models/")
     ; __append(escapeFn( item.category_slug || item.category ))
     ; __append("/")
     ; __append(escapeFn( item.slug ))
     ; __append("\" class=\"model-card\">\n          <div class=\"model-preview-3d\">\n            ")
-    ;  if (item.image_url) {
+    ;  if (item.image_url) { 
     ; __append("\n              <img src=\"")
     ; __append(escapeFn( item.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( item.name ))
     ; __append(" 3D model and apparel mockup\" class=\"model-img\" loading=\"lazy\">\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <div class=\"model-placeholder\">\n                <span>")
     ; __append(escapeFn( item.name.charAt(0) ))
     ; __append("</span>\n              </div>\n            ")
-    ;  }
-    ; __append("\n          </div>\n          <div class=\"model-info\">\n            <h3 class=\"model-name\">")
-    ; __append(escapeFn( item.name ))
-    ; __append("</h3>\n            <div class=\"model-tags\">\n              <span class=\"tag tag-free\">Free</span>\n            </div>\n          </div>\n        </a>\n      ")
-    ;  });
+    ;  } 
+    ; __append("\n          </div>\n          <div class=\"model-info\">\n            <div>\n              <h3 class=\"model-name\">")
+    ; __append(escapeFn( relatedDisplayName ))
+    ; __append("</h3>\n              <span class=\"category-model-status\">Free</span>\n            </div>\n            <span class=\"category-model-action\">Open model <span aria-hidden=\"true\">›</span></span>\n          </div>\n        </a>\n      ")
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n")
-    ;  if (detailCta.title || detailCta.text) {
-    ; __append("\n<section class=\"model-detail-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>")
-    ; __append(escapeFn( detailCta.title || ('Customize ' + model.name) ))
-    ; __append("</h2>\n        <p>")
-    ; __append(escapeFn( detailCta.text || 'Open the 3D design studio, apply artwork, and export a review-ready transparent PNG.' ))
-    ; __append("</p>\n      </div>\n      <button class=\"btn btn-primary btn-large\" id=\"designCtaBtn\">Start Designing</button>\n    </div>\n  </div>\n</section>\n")
-    ;  }
+    ;  if (detailCta.title || detailCta.text) { 
+    ; __append("\n<section class=\"model-detail-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>Ready to make it yours?</h2>\n        <p>Customize this model, test your ideas, and create a review-ready mockup.</p>\n      </div>\n      <button class=\"btn btn-primary btn-large\" id=\"designCtaBtn\">Start Designing</button>\n    </div>\n  </div>\n</section>\n")
+    ;  } 
     ; __append("\n\n<!-- Customization Inquiry Modal -->\n<div class=\"customization-modal\" id=\"customizationInquiryModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"customizationInquiryTitle\" aria-hidden=\"true\">\n  <button class=\"customization-modal-overlay\" id=\"customizationInquiryOverlay\" type=\"button\" aria-label=\"Close customization request\"></button>\n  <div class=\"customization-modal-content\">\n    <header class=\"customization-modal-header\">\n      <div>\n        <span>Production inquiry</span>\n        <h2 id=\"customizationInquiryTitle\">Request customization</h2>\n        <p>Tell us how to reach you and the quantity you need. Your current design will be attached automatically.</p>\n      </div>\n      <button class=\"customization-modal-close\" id=\"customizationInquiryClose\" type=\"button\" aria-label=\"Close customization request\">\n        <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n          <path d=\"M18 6L6 18M6 6l12 12\"/>\n        </svg>\n      </button>\n    </header>\n\n    <div class=\"customization-modal-body\">\n      <form class=\"customization-form\" id=\"customizationInquiryForm\">\n        <div class=\"customization-form-grid\">\n          <label class=\"customization-field\">\n            <span>Contact name <b>*</b></span>\n            <input type=\"text\" name=\"name\" autocomplete=\"name\" maxlength=\"100\" required placeholder=\"Your name\">\n          </label>\n          <label class=\"customization-field\">\n            <span>Email <b>*</b></span>\n            <input type=\"email\" name=\"email\" autocomplete=\"email\" maxlength=\"180\" required placeholder=\"you@example.com\">\n          </label>\n          <label class=\"customization-field customization-field-quantity\">\n            <span>Customization quantity <b>*</b></span>\n            <input type=\"number\" name=\"quantity\" min=\"1\" max=\"1000000\" step=\"1\" inputmode=\"numeric\" required placeholder=\"e.g. 500\">\n          </label>\n          <label class=\"customization-field customization-field-wide\">\n            <span>Requirements</span>\n            <textarea name=\"notes\" maxlength=\"3000\" rows=\"4\" placeholder=\"Tell us about fabric, colors, sizes, delivery market, timeline, or other production requirements.\"></textarea>\n          </label>\n          <label class=\"customization-honeypot\" aria-hidden=\"true\">\n            <span>Website</span>\n            <input type=\"text\" name=\"website\" tabindex=\"-1\" autocomplete=\"off\">\n          </label>\n        </div>\n\n        <section class=\"customization-attachments\" aria-labelledby=\"customizationAttachmentsTitle\">\n          <div class=\"customization-section-heading\">\n            <div>\n              <span>Design attachments</span>\n              <h3 id=\"customizationAttachmentsTitle\">Current 3D and 2D design</h3>\n            </div>\n            <button type=\"button\" class=\"customization-refresh\" id=\"customizationRefreshSnapshots\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M20 11a8 8 0 10-2.34 5.66M20 4v7h-7\"/>\n              </svg>\n              Refresh\n            </button>\n          </div>\n          <div class=\"customization-preview-grid\">\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview3d\" alt=\"Current 3D clothing design screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview3dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Rendering 3D view…</span>\n                </div>\n              </div>\n              <figcaption><strong>3D design</strong><span>High-resolution garment view</span></figcaption>\n            </figure>\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview2d\" alt=\"Current 2D texture layout screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview2dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Capturing 2D layout…</span>\n                </div>\n              </div>\n              <figcaption><strong>2D design</strong><span>Artwork and panel layout</span></figcaption>\n            </figure>\n          </div>\n        </section>\n\n        <p class=\"customization-form-status\" id=\"customizationInquiryStatus\" role=\"alert\" aria-live=\"polite\"></p>\n        <footer class=\"customization-form-actions\">\n          <p>We use these details only to respond to this customization request.</p>\n          <div>\n            <button type=\"button\" class=\"btn btn-secondary\" id=\"customizationInquiryCancel\">Cancel</button>\n            <button type=\"submit\" class=\"btn btn-primary\" id=\"customizationInquirySubmit\" disabled>\n              <span>Submit request</span>\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M5 12h14M13 6l6 6-6 6\"/>\n              </svg>\n            </button>\n          </div>\n        </footer>\n      </form>\n\n      <section class=\"customization-success\" id=\"customizationInquirySuccess\" hidden>\n        <div class=\"customization-success-icon\">\n          <svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n            <path d=\"M20 6L9 17l-5-5\"/>\n          </svg>\n        </div>\n        <span>Request received</span>\n        <h3>Thank you — we’ll be in touch.</h3>\n        <p>Our team will reply within <strong>3 business days</strong>. Please watch your email messages.</p>\n        <div class=\"customization-reference\">\n          <span>Reference</span>\n          <strong id=\"customizationInquiryReference\">—</strong>\n        </div>\n        <button type=\"button\" class=\"btn btn-primary\" id=\"customizationInquiryDone\">Done</button>\n      </section>\n    </div>\n  </div>\n</div>\n\n")
-    ;  if (supportsOnModelMockup) {
-    ; __append("\n<!-- On-model T-shirt Mockup Studio -->\n<div\n  class=\"model-mockup-modal\"\n  id=\"modelMockupModal\"\n  hidden\n  role=\"dialog\"\n  aria-modal=\"true\"\n  aria-labelledby=\"modelMockupTitle\"\n  aria-hidden=\"true\"\n  data-base-image=\"")
-    ; __append(escapeFn( modelMockupProfile.assetBase ))
-    ; __append("-base.png\"\n  data-mask-image=\"")
-    ; __append(escapeFn( modelMockupProfile.assetBase ))
-    ; __append("-mask.png\"\n  data-depth-image=\"")
-    ; __append(escapeFn( modelMockupProfile.assetBase ))
-    ; __append("-depth.png\"\n>\n  <div class=\"model-mockup-shell\">\n    <header class=\"model-mockup-header\">\n      <div class=\"model-mockup-heading\">\n        <span class=\"model-mockup-mark\" aria-hidden=\"true\">M</span>\n        <div>\n          <span>On-model studio</span>\n          <h2 id=\"modelMockupTitle\">T-shirt depth mockup</h2>\n        </div>\n      </div>\n      <div class=\"model-mockup-pipeline\" aria-label=\"Mockup rendering pipeline\">\n        <span><i></i> Garment mask</span>\n        <span><i></i> Fold depth</span>\n        <span><i></i> Live composite</span>\n      </div>\n      <div class=\"model-mockup-header-actions\">\n        <button type=\"button\" class=\"model-mockup-quiet-button\" id=\"modelMockupReset\">Reset</button>\n        <button type=\"button\" class=\"btn btn-primary\" id=\"modelMockupDownload\" disabled>\n          <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/>\n          </svg>\n          Download mockup\n        </button>\n        <button type=\"button\" class=\"model-mockup-close\" id=\"modelMockupClose\" aria-label=\"Close on-model mockup studio\">\n          <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6 6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </header>\n\n    <div class=\"model-mockup-body\">\n      <aside class=\"model-mockup-controls\">\n        <div class=\"model-mockup-intro\">\n          <span>01 / Artwork</span>\n          <h3>Place your design</h3>\n          <p>Upload a PNG, JPG, or WebP. Transparent PNG artwork gives the cleanest result.</p>\n        </div>\n\n        <label class=\"model-mockup-upload\" id=\"modelMockupUploadZone\">\n          <input type=\"file\" id=\"modelMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"model-mockup-upload-icon\">\n            <svg width=\"23\" height=\"23\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\">\n              <path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/>\n            </svg>\n          </span>\n          <span>\n            <strong id=\"modelMockupUploadLabel\">Upload artwork</strong>\n            <small>or drop an image here · max 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"model-mockup-control-section\">\n          <div class=\"model-mockup-section-label\">\n            <span>02 / Placement</span>\n            <button type=\"button\" id=\"modelMockupCenter\">Center</button>\n          </div>\n          <label class=\"model-mockup-range\">\n            <span><b>Scale</b><output for=\"modelMockupScale\">54%</output></span>\n            <input type=\"range\" id=\"modelMockupScale\" min=\"20\" max=\"105\" value=\"54\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Horizontal</b><output for=\"modelMockupX\">0</output></span>\n            <input type=\"range\" id=\"modelMockupX\" min=\"-100\" max=\"100\" value=\"0\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Vertical</b><output for=\"modelMockupY\">0</output></span>\n            <input type=\"range\" id=\"modelMockupY\" min=\"-100\" max=\"100\" value=\"0\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Rotation</b><output for=\"modelMockupRotation\">0°</output></span>\n            <input type=\"range\" id=\"modelMockupRotation\" min=\"-25\" max=\"25\" value=\"0\">\n          </label>\n        </div>\n\n        <div class=\"model-mockup-control-section\">\n          <div class=\"model-mockup-section-label\">\n            <span>03 / Fabric response</span>\n            <em>Depth mapped</em>\n          </div>\n          <label class=\"model-mockup-range\">\n            <span><b>Fold warp</b><output for=\"modelMockupWarp\">42%</output></span>\n            <input type=\"range\" id=\"modelMockupWarp\" min=\"0\" max=\"100\" value=\"42\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Print opacity</b><output for=\"modelMockupOpacity\">96%</output></span>\n            <input type=\"range\" id=\"modelMockupOpacity\" min=\"20\" max=\"100\" value=\"96\">\n          </label>\n        </div>\n\n        <div class=\"model-mockup-map-switcher\" role=\"group\" aria-label=\"Preview technical maps\">\n          <button type=\"button\" class=\"active\" data-map-view=\"result\">Result</button>\n          <button type=\"button\" data-map-view=\"mask\">Mask</button>\n          <button type=\"button\" data-map-view=\"depth\">Depth</button>\n        </div>\n\n        <p class=\"model-mockup-status\" id=\"modelMockupStatus\" role=\"status\" aria-live=\"polite\">Preparing garment maps…</p>\n      </aside>\n\n      <main class=\"model-mockup-preview\">\n        <div class=\"model-mockup-preview-meta\">\n          <div>\n            <span>Live preview</span>\n            <strong>")
+    ;  if (supportsOnModelMockup) { 
+    ; __append("\n<!-- On-model Garment Mockup Studio -->\n<div\n  class=\"model-mockup-modal\"\n  id=\"modelMockupModal\"\n  hidden\n  role=\"dialog\"\n  aria-modal=\"true\"\n  aria-labelledby=\"modelMockupTitle\"\n  aria-hidden=\"true\"\n  data-base-image=\"")
+    ; __append(escapeFn( modelMockupProfile.base_image_url ))
+    ; __append("\"\n  data-mask-image=\"")
+    ; __append(escapeFn( modelMockupProfile.mask_image_url ))
+    ; __append("?v=commercial-refine-v4\"\n  data-depth-image=\"")
+    ; __append(escapeFn( modelMockupProfile.depth_image_url ))
+    ; __append("?v=commercial-refine-v4\"\n  data-garment-type=\"")
+    ; __append(escapeFn( modelMockupProfile.garment_type ))
+    ; __append("\"\n  data-export-slug=\"")
+    ; __append(escapeFn( modelMockupProfile.export_slug ))
+    ; __append("\"\n  data-canvas-width=\"")
+    ; __append(escapeFn( modelMockupProfile.canvas_width ))
+    ; __append("\"\n  data-canvas-height=\"")
+    ; __append(escapeFn( modelMockupProfile.canvas_height ))
+    ; __append("\"\n  data-artwork-center-x=\"")
+    ; __append(escapeFn( modelMockupProfile.artwork_center_x ))
+    ; __append("\"\n  data-artwork-center-y=\"")
+    ; __append(escapeFn( modelMockupProfile.artwork_center_y ))
+    ; __append("\"\n  data-artwork-base-width=\"")
+    ; __append(escapeFn( modelMockupProfile.artwork_base_width ))
+    ; __append("\"\n  data-artwork-max-height=\"")
+    ; __append(escapeFn( modelMockupProfile.artwork_max_height ))
+    ; __append("\"\n  data-render-left=\"")
+    ; __append(escapeFn( modelMockupProfile.render_left ))
+    ; __append("\"\n  data-render-top=\"")
+    ; __append(escapeFn( modelMockupProfile.render_top ))
+    ; __append("\"\n  data-render-right=\"")
+    ; __append(escapeFn( modelMockupProfile.render_right ))
+    ; __append("\"\n  data-render-bottom=\"")
+    ; __append(escapeFn( modelMockupProfile.render_bottom ))
+    ; __append("\"\n  data-default-scale=\"")
+    ; __append(escapeFn( modelMockupProfile.default_scale ))
+    ; __append("\"\n  data-default-warp=\"")
+    ; __append(escapeFn( modelMockupProfile.default_warp ))
+    ; __append("\"\n>\n  <div class=\"model-mockup-shell\">\n    <header class=\"model-mockup-header\">\n      <div class=\"model-mockup-heading\">\n        <span class=\"model-mockup-mark\" aria-hidden=\"true\">M</span>\n        <div>\n          <span>On-model studio</span>\n          <h2 id=\"modelMockupTitle\">")
+    ; __append(escapeFn( modelMockupProfile.title ))
+    ; __append("</h2>\n        </div>\n      </div>\n      <div class=\"model-mockup-pipeline\" aria-label=\"Mockup rendering pipeline\">\n        <span><i></i> Garment mask</span>\n        <span><i></i> Fold depth</span>\n        <span><i></i> Live composite</span>\n      </div>\n      <div class=\"model-mockup-header-actions\">\n        <button type=\"button\" class=\"model-mockup-quiet-button\" id=\"modelMockupReset\">Reset</button>\n        <button type=\"button\" class=\"btn btn-primary\" id=\"modelMockupDownload\" disabled>\n          <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/>\n          </svg>\n          Download mockup\n        </button>\n        <button type=\"button\" class=\"model-mockup-close\" id=\"modelMockupClose\" aria-label=\"Close on-model mockup studio\">\n          <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6 6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </header>\n\n    <div class=\"model-mockup-body\">\n      <aside class=\"model-mockup-controls\">\n        <div class=\"model-mockup-intro\">\n          <span>01 / Artwork</span>\n          <h3>Place your design</h3>\n          <p>Upload a PNG, JPG, or WebP. Transparent PNG artwork gives the cleanest result.</p>\n        </div>\n\n        <label class=\"model-mockup-upload\" id=\"modelMockupUploadZone\">\n          <input type=\"file\" id=\"modelMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"model-mockup-upload-icon\">\n            <svg width=\"23\" height=\"23\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\">\n              <path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/>\n            </svg>\n          </span>\n          <span>\n            <strong id=\"modelMockupUploadLabel\">Upload artwork</strong>\n            <small>or drop an image here · max 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"model-mockup-control-section\">\n          <div class=\"model-mockup-section-label\">\n            <span>02 / Placement</span>\n            <button type=\"button\" id=\"modelMockupCenter\">Center</button>\n          </div>\n          <label class=\"model-mockup-range\">\n            <span><b>Scale</b><output for=\"modelMockupScale\">")
+    ; __append(escapeFn( modelMockupProfile.default_scale ))
+    ; __append("%</output></span>\n            <input type=\"range\" id=\"modelMockupScale\" min=\"20\" max=\"105\" value=\"")
+    ; __append(escapeFn( modelMockupProfile.default_scale ))
+    ; __append("\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Horizontal</b><output for=\"modelMockupX\">0</output></span>\n            <input type=\"range\" id=\"modelMockupX\" min=\"-100\" max=\"100\" value=\"0\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Vertical</b><output for=\"modelMockupY\">0</output></span>\n            <input type=\"range\" id=\"modelMockupY\" min=\"-100\" max=\"100\" value=\"0\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Rotation</b><output for=\"modelMockupRotation\">0°</output></span>\n            <input type=\"range\" id=\"modelMockupRotation\" min=\"-25\" max=\"25\" value=\"0\">\n          </label>\n        </div>\n\n        <div class=\"model-mockup-control-section\">\n          <div class=\"model-mockup-section-label\">\n            <span>03 / Fabric response</span>\n            <em>Depth mapped</em>\n          </div>\n          <label class=\"model-mockup-range\">\n            <span><b>Fold warp</b><output for=\"modelMockupWarp\">")
+    ; __append(escapeFn( modelMockupProfile.default_warp ))
+    ; __append("%</output></span>\n            <input type=\"range\" id=\"modelMockupWarp\" min=\"0\" max=\"100\" value=\"")
+    ; __append(escapeFn( modelMockupProfile.default_warp ))
+    ; __append("\">\n          </label>\n          <label class=\"model-mockup-range\">\n            <span><b>Print opacity</b><output for=\"modelMockupOpacity\">96%</output></span>\n            <input type=\"range\" id=\"modelMockupOpacity\" min=\"20\" max=\"100\" value=\"96\">\n          </label>\n        </div>\n\n        <div class=\"model-mockup-map-switcher\" role=\"group\" aria-label=\"Preview technical maps\">\n          <button type=\"button\" class=\"active\" data-map-view=\"result\">Result</button>\n          <button type=\"button\" data-map-view=\"mask\">Mask</button>\n          <button type=\"button\" data-map-view=\"depth\">Depth</button>\n        </div>\n\n        <p class=\"model-mockup-status\" id=\"modelMockupStatus\" role=\"status\" aria-live=\"polite\">Preparing garment maps…</p>\n      </aside>\n\n      <main class=\"model-mockup-preview\">\n        <div class=\"model-mockup-preview-meta\">\n          <div>\n            <span>Live preview</span>\n            <strong>")
     ; __append(escapeFn( model.name ))
-    ; __append("</strong>\n          </div>\n          <div class=\"model-mockup-render-badges\">\n            <span>1024 × 1536</span>\n            <span>Client-side render</span>\n          </div>\n        </div>\n        <div class=\"model-mockup-stage\" id=\"modelMockupStage\">\n          <canvas id=\"modelMockupCanvas\" width=\"1024\" height=\"1536\" aria-label=\"T-shirt model mockup preview\"></canvas>\n          <div class=\"model-mockup-empty\" id=\"modelMockupEmpty\">\n            <span>Blank T-shirt ready</span>\n            <strong>Upload artwork to build the mockup</strong>\n            <button type=\"button\" id=\"modelMockupEmptyUpload\">Choose image</button>\n          </div>\n          <div class=\"model-mockup-loading\" id=\"modelMockupLoading\">\n            <i aria-hidden=\"true\"></i>\n            <span>Loading mask and depth data</span>\n          </div>\n        </div>\n        <div class=\"model-mockup-preview-note\">\n          <span><i></i> Artwork is clipped to the detected shirt silhouette.</span>\n          <span>Depth gradients bend the print around folds and torso curvature.</span>\n        </div>\n      </main>\n    </div>\n  </div>\n</div>\n")
-    ;  }
+    ; __append("</strong>\n          </div>\n          <div class=\"model-mockup-render-badges\">\n            <span>")
+    ; __append(escapeFn( modelMockupProfile.canvas_width ))
+    ; __append(" × ")
+    ; __append(escapeFn( modelMockupProfile.canvas_height ))
+    ; __append("</span>\n            <span>Client-side render</span>\n          </div>\n        </div>\n        <div class=\"model-mockup-stage\" id=\"modelMockupStage\">\n          <canvas id=\"modelMockupCanvas\" width=\"")
+    ; __append(escapeFn( modelMockupProfile.canvas_width ))
+    ; __append("\" height=\"")
+    ; __append(escapeFn( modelMockupProfile.canvas_height ))
+    ; __append("\" aria-label=\"")
+    ; __append(escapeFn( modelMockupProfile.title ))
+    ; __append(" preview\"></canvas>\n          <div class=\"model-mockup-empty\" id=\"modelMockupEmpty\">\n            <span>Blank ")
+    ; __append(escapeFn( modelMockupProfile.garment_type.replace(/-/g, ' ') ))
+    ; __append(" ready</span>\n            <strong>Upload artwork to build the mockup</strong>\n            <button type=\"button\" id=\"modelMockupEmptyUpload\">Choose image</button>\n          </div>\n          <div class=\"model-mockup-loading\" id=\"modelMockupLoading\">\n            <i aria-hidden=\"true\"></i>\n            <span>Loading mask and depth data</span>\n          </div>\n        </div>\n        <div class=\"model-mockup-preview-note\">\n          <span><i></i> Artwork is clipped to the detected garment silhouette.</span>\n          <span>Depth gradients bend the print around folds and torso curvature.</span>\n        </div>\n      </main>\n    </div>\n  </div>\n</div>\n")
+    ;  } 
     ; __append("\n\n<!-- Design Modal -->\n<div class=\"design-modal\" id=\"designModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"designModalTitle\" aria-hidden=\"true\">\n  <div class=\"design-modal-overlay\" id=\"designModalOverlay\"></div>\n  <div class=\"design-modal-content\">\n    <div class=\"design-modal-header\">\n      <div class=\"design-modal-heading\">\n        <h2 id=\"designModalTitle\">Design Studio</h2>\n        <span class=\"design-modal-title-divider\" aria-hidden=\"true\">/</span>\n        <p>")
     ; __append(escapeFn( model.name ))
     ; __append("</p>\n      </div>\n      <div class=\"design-save-status\" id=\"designSaveStatus\" role=\"status\" aria-live=\"polite\">\n        <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\">\n          <path d=\"M20 6L9 17l-5-5\"/>\n        </svg>\n        <span id=\"designSaveStatusText\">Ready</span>\n      </div>\n      <div class=\"design-modal-actions\">\n        ")
-    ;  if (supportsOnModelMockup) {
+    ;  if (supportsOnModelMockup) { 
     ; __append("\n          <button class=\"btn btn-secondary btn-small design-model-mockup-button\" id=\"designModelMockupBtn\" type=\"button\">\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5\"/>\n              <path d=\"M9 4.5a3.7 3.7 0 0 0 6 0\"/>\n            </svg>\n            <span>Model mockup</span>\n          </button>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\">\n          <span class=\"apply-label-desktop\">Apply design</span>\n          <span class=\"apply-label-mobile\">Apply</span>\n        </button>\n        <button class=\"design-modal-close\" id=\"designModalClose\" type=\"button\" aria-label=\"Close Design Studio\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6L6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- Editor Tool Rail -->\n        <div class=\"designer-toolbar\" aria-label=\"Design tools\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n              <span>Select</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolPan\" title=\"Pan Canvas\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20\"/>\n              </svg>\n              <span>Pan</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDraw\" title=\"Draw\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M12 20h9\"/>\n                <path d=\"M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z\"/>\n              </svg>\n              <span>Draw</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n              <span>Text</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n              <span>Image</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n              <span>Shape</span>\n            </button>\n          </div>\n          <div class=\"toolbar-group toolbar-history\">\n            <button class=\"toolbar-btn\" id=\"toolUndo\" title=\"Undo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 7v6h6\"/>\n                <path d=\"M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13\"/>\n              </svg>\n              <span>Undo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolRedo\" title=\"Redo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 7v6h-6\"/>\n                <path d=\"M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13\"/>\n              </svg>\n              <span>Redo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDelete\" title=\"Delete\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 6h18\"/>\n                <path d=\"M8 6V4h8v2\"/>\n                <path d=\"M19 6l-1 14H6L5 6\"/>\n              </svg>\n              <span>Delete</span>\n            </button>\n          </div>\n        </div>\n\n        <!-- Main Texture Design Area -->\n        <div class=\"texture-canvas-area\">\n          <div class=\"canvas-context\">\n            <strong>Texture layout</strong>\n            <span>Select a garment panel to edit</span>\n          </div>\n          <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\">\n            <defs>\n              <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n            </defs>\n            <rect id=\"textureWhiteBase\" fill=\"transparent\"/>\n            <!-- Model SVG Texture Background -->\n            ")
-    ;  if (model.texture_url) {
+    ;  if (model.texture_url) { 
     ; __append("\n              <image id=\"textureBg\" href=\"")
     ; __append(escapeFn( model.texture_url ))
     ; __append("\" preserveAspectRatio=\"none\"/>\n              <g id=\"textureTemplateLayer\"></g>\n            ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n              <rect id=\"textureBg\" fill=\"transparent\"/>\n              <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <rect id=\"texturePattern\" fill=\"none\"/>\n            <g id=\"textureElements\"></g>\n            <g id=\"selectionLayer\" class=\"editor-ui\"></g>\n          </svg>\n          <div class=\"canvas-zoom-controls\" aria-label=\"Canvas zoom controls\">\n            <button id=\"canvasZoomOut\" type=\"button\" aria-label=\"Zoom out\">−</button>\n            <span id=\"canvasZoomLabel\">100%</span>\n            <button id=\"canvasZoomIn\" type=\"button\" aria-label=\"Zoom in\">+</button>\n            <span class=\"canvas-zoom-divider\" aria-hidden=\"true\"></span>\n            <button id=\"canvasZoomFit\" type=\"button\" aria-label=\"Fit canvas\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" aria-hidden=\"true\">\n                <path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <!-- 3D Preview and Material Inspector -->\n        <div class=\"preview-3d-panel\">\n          <section class=\"design-inspector-card design-preview-card\">\n            <div class=\"inspector-card-header\">\n              <div>\n                <h3>3D Preview</h3>\n              </div>\n              <span class=\"preview-live-indicator\">Live</span>\n            </div>\n            <div class=\"preview-model-stage\">\n              ")
-    ;  if (previewModelFileUrl) {
+    ;  if (previewModelFileUrl) { 
     ; __append("\n                <model-viewer\n                  class=\"model-viewer-natural\"\n                  id=\"designerViewer\"\n                  data-model-src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\"\n                  poster=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n                  alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  shadow-intensity=\"1.55\"\n                  shadow-softness=\"0.52\"\n                  exposure=\"0.66\"\n                  environment-image=\"neutral\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n              ")
-    ;  } else {
+    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  shadow-intensity=\"0.58\"\n                  shadow-softness=\"0.94\"\n                  exposure=\"0.96\"\n                  environment-image=\"neutral\"\n                  tone-mapping=\"neutral\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n              ")
+    ;  } else { 
     ; __append("\n                <div class=\"designer-placeholder\">\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\">\n                </div>\n              ")
-    ;  }
+    ;  } 
     ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Choose material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst fullscreenBtn = document.getElementById('fullscreenBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelViewerLoad = document.getElementById('modelViewerLoad');\nconst modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');\nconst modelViewerPromises = new WeakMap();\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (element.loaded && element.model) return Promise.resolve(element);\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const promise = loadModelViewerModule().then(() => {\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    if (element.loaded && element.model) return element;\n    return withModelViewerTimeout(new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.src = element.dataset.modelSrc;\n    }), 45000, '3D model timed out');\n  }).then((readyViewer) => {\n    readyViewer.dismissPoster?.();\n    configureGarmentSoftnessAnimation(readyViewer);\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    element.hidden = true;\n    element.removeAttribute('src');\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  if (modelViewerLoad) modelViewerLoad.hidden = true;\n  if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-error');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoad) modelViewerLoad.hidden = false;\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available.';\n    throw error;\n  }\n}\n\nmodelViewerLoad?.addEventListener('click', () => {\n  window.trackEvent?.('tool_interaction', {\n    interaction_type: 'retry_model_detail_3d',\n    item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
-    ; __append("\n  });\n  ensureDetailViewer().catch(() => {});\n});\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
+    ; __append("\n  });\n  ensureDetailViewer().catch(() => {});\n});\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = `${button.dataset.orbit} 75deg 105%`;\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
     ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (fullscreenBtn && viewer) {\n  fullscreenBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (readyViewer?.requestFullscreen) {\n      readyViewer.requestFullscreen();\n    }\n  });\n}\n\nconst sideViewer = document.querySelector('.showcase-side-viewer');\nconst sideStage = sideViewer?.closest('.model-side-stage');\nif (sideViewer && sideStage && 'IntersectionObserver' in window) {\n  const sideObserver = new IntersectionObserver((entries) => {\n    if (!entries.some((entry) => entry.isIntersecting)) return;\n    sideObserver.disconnect();\n    loadModelViewerElement(sideViewer)\n      .then(() => sideStage.classList.add('is-ready'))\n      .catch(() => sideStage.classList.add('is-error'));\n  }, { rootMargin: '240px 0px' });\n  sideObserver.observe(sideStage);\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
@@ -3541,10 +3544,10 @@ title = __locals.title,
     ; __append( JSON.stringify(model.slug || '') )
     ; __append(",\n  modelName: ")
     ; __append( JSON.stringify(model.name || '') )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('downloadRenderBtn'),\n    document.getElementById('customizationInquiryBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260817-r2-materials';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260815-text-selection-v4',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'downloadRenderBtn') {\n        await window.downloadDesignedModelRender?.();\n      } else if (entryId === 'customizationInquiryBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  if (window.location.hash === '#design' || hasPendingArtwork) {\n    loadModelDesignerRuntime().catch((error) => console.error(error));\n  }\n  window.addEventListener('hashchange', () => {\n    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));\n  });\n})();\n</script>\n")
-    ;  if (supportsOnModelMockup) {
-    ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260805';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260805-on-model-studio-lazy';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
-    ;  }
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('downloadRenderBtn'),\n    document.getElementById('customizationInquiryBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260819-fabric-softness-v2',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'downloadRenderBtn') {\n        await window.downloadDesignedModelRender?.();\n      } else if (entryId === 'customizationInquiryBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  if (window.location.hash === '#design' || hasPendingArtwork) {\n    loadModelDesignerRuntime().catch((error) => console.error(error));\n  }\n  window.addEventListener('hashchange', () => {\n    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));\n  });\n})();\n</script>\n")
+    ;  if (supportsOnModelMockup) { 
+    ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260821-database-profiles';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
+    ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -3614,7 +3617,7 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ;
+    ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
   const iconName = Object.prototype.hasOwnProperty.call(iconLocals, 'name') ? iconLocals.name : (typeof name !== 'undefined' ? name : '');
@@ -3641,45 +3644,45 @@ title = __locals.title,
   else if (key.includes('top')) iconType = 'top';
 
     ; __append("\n<svg class=\"category-filter-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\" focusable=\"false\">\n  ")
-    ;  if (iconType === 'all') {
+    ;  if (iconType === 'all') { 
     ; __append("\n    <rect x=\"4\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"13.5\" y=\"4\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"4\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n    <rect x=\"13.5\" y=\"13.5\" width=\"6.5\" height=\"6.5\" rx=\"1.5\"/>\n  ")
-    ;  } else if (iconType === 'shirt') {
+    ;  } else if (iconType === 'shirt') { 
     ; __append("\n    <path d=\"M9 4.5c1.6 1.2 4.4 1.2 6 0l4 2.4 1.5 4.1-3.1 1.3-1.2-2.1v8.3H7.8v-8.3l-1.2 2.1L3.5 11 5 6.9l4-2.4Z\"/>\n    <path d=\"M9 4.5c.8 2 5.2 2 6 0\"/>\n  ")
-    ;  } else if (iconType === 'hoodie') {
+    ;  } else if (iconType === 'hoodie') { 
     ; __append("\n    <path d=\"M8 8.5c.4-2.7 2-4.5 4-4.5s3.6 1.8 4 4.5\"/>\n    <path d=\"M7.2 8.2 4.5 10l1 3.6 2.1-1.1v7h8.8v-7l2.1 1.1 1-3.6-2.7-1.8\"/>\n    <path d=\"M10 4.8c.8 1.9 3.2 1.9 4 0M12 9v10.5\"/>\n  ")
-    ;  } else if (iconType === 'pants') {
+    ;  } else if (iconType === 'pants') { 
     ; __append("\n    <path d=\"M8 4.5h8l1.2 15h-4.1L12 11l-1.1 8.5H6.8L8 4.5Z\"/>\n    <path d=\"M8.3 8h7.4M12 4.5V11\"/>\n  ")
-    ;  } else if (iconType === 'outerwear') {
+    ;  } else if (iconType === 'outerwear') { 
     ; __append("\n    <path d=\"M8.5 4.5h7L19 8v11.5h-5.1L12 13l-1.9 6.5H5V8l3.5-3.5Z\"/>\n    <path d=\"M8.5 4.5c.8 2 6.2 2 7 0M12 7v6M7.5 10h2M14.5 10h2\"/>\n  ")
-    ;  } else if (iconType === 'dress') {
+    ;  } else if (iconType === 'dress') { 
     ; __append("\n    <path d=\"M9.2 4.5h5.6l1.2 5 3 10H5l3-10 1.2-5Z\"/>\n    <path d=\"M9.2 4.5c.8 1.8 4.8 1.8 5.6 0M8 10h8\"/>\n  ")
-    ;  } else if (iconType === 'skirt') {
+    ;  } else if (iconType === 'skirt') { 
     ; __append("\n    <path d=\"M8 5h8l2.5 14H5.5L8 5Z\"/>\n    <path d=\"M7.3 9h9.4M10 9l-1.2 10M14 9l1.2 10\"/>\n  ")
-    ;  } else if (iconType === 'hat') {
+    ;  } else if (iconType === 'hat') { 
     ; __append("\n    <path d=\"M7 12.5c.4-4.1 2.2-6.5 5-6.5s4.6 2.4 5 6.5\"/>\n    <path d=\"M4 14.5c4.8 1.4 11.2 1.4 16 0\"/>\n    <path d=\"M7 12.5h10\"/>\n  ")
-    ;  } else if (iconType === 'bag') {
+    ;  } else if (iconType === 'bag') { 
     ; __append("\n    <path d=\"M7 9h10l1 10H6L7 9Z\"/>\n    <path d=\"M9 9V7.5C9 5.6 10.3 4.5 12 4.5s3 1.1 3 3V9\"/>\n    <path d=\"M9.5 12.5h5\"/>\n  ")
-    ;  } else if (iconType === 'backpack') {
+    ;  } else if (iconType === 'backpack') { 
     ; __append("\n    <path d=\"M8 8c0-2.2 1.6-3.5 4-3.5s4 1.3 4 3.5v11.5H8V8Z\"/>\n    <path d=\"M8 10H6.5v6.5M16 10h1.5v6.5M9.5 12.5h5M10 16h4\"/>\n  ")
-    ;  } else if (iconType === 'waist-bag') {
+    ;  } else if (iconType === 'waist-bag') { 
     ; __append("\n    <path d=\"M6.5 10h11l1.5 3-1.8 5H6.8L5 13l1.5-3Z\"/>\n    <path d=\"M6.5 10 4 8M17.5 10 20 8M8.5 13h7\"/>\n  ")
-    ;  } else if (iconType === 'swimwear') {
+    ;  } else if (iconType === 'swimwear') { 
     ; __append("\n    <path d=\"M9 5.5c1.4 1.2 4.6 1.2 6 0l2.5 13h-4.2L12 14l-1.3 4.5H6.5L9 5.5Z\"/>\n    <path d=\"M8.2 10h7.6M10.2 5.2 12 14l1.8-8.8\"/>\n  ")
-    ;  } else if (iconType === 'tie') {
+    ;  } else if (iconType === 'tie') { 
     ; __append("\n    <path d=\"M10 4.5h4l1 3-3 3-3-3 1-3Z\"/>\n    <path d=\"m12 10.5 3 3.5-3 5.5L9 14l3-3.5Z\"/>\n  ")
-    ;  } else if (iconType === 'gloves') {
+    ;  } else if (iconType === 'gloves') { 
     ; __append("\n    <path d=\"M8.5 19.5H5.8V11c0-1 .7-1.8 1.7-1.8S9.2 10 9.2 11v2.5\"/>\n    <path d=\"M9.2 13.5V7.8c0-1 .7-1.8 1.7-1.8s1.7.8 1.7 1.8v5.7\"/>\n    <path d=\"M12.6 13.5V8.8c0-1 .7-1.8 1.7-1.8s1.7.8 1.7 1.8v6.7l1.3-1.7c.6-.8 1.7-.9 2.4-.3.7.6.8 1.6.3 2.4l-2.7 3.6h-8\"/>\n  ")
-    ;  } else if (iconType === 'cloak') {
+    ;  } else if (iconType === 'cloak') { 
     ; __append("\n    <path d=\"M10 4.5h4l3.5 15H6.5L10 4.5Z\"/>\n    <path d=\"M10 4.5c.5 1.7 3.5 1.7 4 0M12 6.5v13\"/>\n  ")
-    ;  } else if (iconType === 'underwear') {
+    ;  } else if (iconType === 'underwear') { 
     ; __append("\n    <path d=\"M5.5 7.5h13l-1 8.5c-.2 1.6-1.4 2.8-3 3l-2.5-5-2.5 5c-1.6-.2-2.8-1.4-3-3l-1-8.5Z\"/>\n    <path d=\"M5.8 10h12.4M12 10v4\"/>\n  ")
-    ;  } else if (iconType === 'jumpsuit') {
+    ;  } else if (iconType === 'jumpsuit') { 
     ; __append("\n    <path d=\"M8.5 4.5h7l1.5 6-2 2.5 1.3 6.5h-3.5L12 14l-.8 5.5H7.7L9 13l-2-2.5 1.5-6Z\"/>\n    <path d=\"M8.5 4.5c.8 1.8 6.2 1.8 7 0M12 7v7\"/>\n  ")
-    ;  } else if (iconType === 'top') {
+    ;  } else if (iconType === 'top') { 
     ; __append("\n    <path d=\"M8.8 4.5h6.4L17 9v10.5H7V9l1.8-4.5Z\"/>\n    <path d=\"M8.8 4.5c.8 1.8 5.6 1.8 6.4 0M8 9h8\"/>\n  ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n    <path d=\"M9 4.5h6l3 3v12H6v-12l3-3Z\"/>\n    <path d=\"M9 4.5c.8 1.8 5.2 1.8 6 0M8.5 10h7\"/>\n  ")
-    ;  }
+    ;  } 
     ; __append("\n</svg>\n")
   return __output;
 
@@ -3747,7 +3750,7 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=20260805-overlay-fix\"></script>\n  <script src=\"/js/share.js?v=20260805-stable-events\" defer></script>\n</body>\n</html>\n")
   return __output;
@@ -3816,45 +3819,45 @@ title = __locals.title,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
   sharePrompt = __locals.sharePrompt;
-    ;  const content = landingContent || {};
+    ;  const content = landingContent || {}; 
     ; __append("\n")
-    ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] };
+    ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
     ; __append("\n")
-    ;  const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] };
+    ;  const categorySection = content.categories || { eyebrow: 'Categories', title: 'Browse related 3D model categories', description: '', cards: [] }; 
     ; __append("\n")
-    ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] };
+    ;  const output = content.output || { eyebrow: 'Use cases', title: '3D models for apparel mockups', cards: [] }; 
     ; __append("\n")
-    ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] };
+    ;  const faq = content.faq || { eyebrow: 'FAQ', title: '3D clothing model questions', items: [] }; 
     ; __append("\n")
-    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' };
+    ;  const cta = content.cta || { eyebrow: 'Start creating', title: 'Open a model and create your next apparel mockup.', description: '', primaryLabel: 'Browse 3D Models', primaryHref: '/mockups' }; 
     ; __append("\n")
-    ;  const sectionCategories = categories || [];
+    ;  const sectionCategories = categories || []; 
     ; __append("\n")
-    ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : []));
+    ;  const sectionModels = (typeof models !== 'undefined' ? models : (typeof items !== 'undefined' ? items : [])); 
     ; __append("\n")
-    ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false;
+    ;  const skipOutputSection = typeof skipOutput !== 'undefined' ? skipOutput : false; 
     ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( workflow.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( workflow.title ))
     ; __append("</h2>\n      ")
-    ;  if (workflow.description) {
+    ;  if (workflow.description) { 
     ; __append("\n        <p>")
     ; __append(escapeFn( workflow.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <div class=\"generator-steps\">\n      ")
-    ;  (workflow.steps || []).forEach(function(step, index) {
+    ;  (workflow.steps || []).forEach(function(step, index) { 
     ; __append("\n        <div class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
     ; __append("\">\n          ")
-    ;  if (step.image_url) {
+    ;  if (step.image_url) { 
     ; __append("\n            <div class=\"generator-step-media\">\n              <img src=\"")
     ; __append(escapeFn( step.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( step.title ))
     ; __append(" apparel mockup workflow step\" loading=\"lazy\">\n            </div>\n          ")
-    ;  }
+    ;  } 
     ; __append("\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
@@ -3862,41 +3865,41 @@ title = __locals.title,
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( step.body ))
     ; __append("</p>\n        </div>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header generator-section-header-row\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( categorySection.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( categorySection.title ))
     ; __append("</h2>\n      </div>\n      ")
-    ;  if (categorySection.description) {
+    ;  if (categorySection.description) { 
     ; __append("\n        <p>")
     ; __append(escapeFn( categorySection.description ))
     ; __append("</p>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      ")
-    ;  if (categorySection.buttonLabel && categorySection.buttonHref) {
+    ;  if (categorySection.buttonLabel && categorySection.buttonHref) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( categorySection.buttonHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( categorySection.buttonLabel ))
     ; __append("</a>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n\n    <div class=\"generator-category-grid\">\n      ")
-    ;  if (sectionCategories.length > 0) {
+    ;  if (sectionCategories.length > 0) { 
     ; __append("\n        ")
-    ;  sectionCategories.slice(0, 6).forEach(function(cat) {
+    ;  sectionCategories.slice(0, 6).forEach(function(cat) { 
     ; __append("\n          ")
-    ;  const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length;
+    ;  const categoryCount = sectionModels.filter(function(model) { return (model.category_slugs || []).includes(cat.slug) || (model.category_slug || model.category) === cat.slug || model.category === cat.name; }).length; 
     ; __append("\n          <a href=\"/mockups/")
     ; __append(escapeFn( cat.slug ))
     ; __append("\" class=\"generator-category-card\">\n            ")
-    ;  if (cat.image_url) {
+    ;  if (cat.image_url) { 
     ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
     ; __append(escapeFn( cat.image_url ))
     ; __append("\" alt=\"Free ")
     ; __append(escapeFn( cat.name ))
     ; __append(" 3D clothing model mockup category\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
     ; __append(escapeFn( categoryCount || '3D models' ))
     ; __append(" ")
@@ -3904,93 +3907,93 @@ title = __locals.title,
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( cat.name ))
     ; __append("</strong>\n            </div>\n            <svg class=\"generator-category-arrow\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <path d=\"M5 12h14\"/>\n              <path d=\"m12 5 7 7-7 7\"/>\n            </svg>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        ")
-    ;  (categorySection.cards || []).forEach(function(card) {
+    ;  (categorySection.cards || []).forEach(function(card) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( card.href || categorySection.buttonHref || '#' ))
     ; __append("\" class=\"generator-category-card\">\n            ")
-    ;  if (card.image_url) {
+    ;  if (card.image_url) { 
     ; __append("\n              <div class=\"generator-category-media\">\n                <img src=\"")
     ; __append(escapeFn( card.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
     ; __append(" mockup category\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <div class=\"generator-category-copy\">\n              <small>")
     ; __append(escapeFn( card.meta || '3D models' ))
     ; __append("</small>\n              <strong>")
     ; __append(escapeFn( card.title ))
     ; __append("</strong>\n            </div>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (!skipOutputSection) {
+    ;  if (!skipOutputSection) { 
     ; __append("\n  <section class=\"generator-section generator-section-muted\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( output.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( output.title ))
     ; __append("</h2>\n      </div>\n\n      <div class=\"generator-output-grid\">\n        ")
-    ;  (output.cards || []).forEach(function(card) {
+    ;  (output.cards || []).forEach(function(card) { 
     ; __append("\n          <div class=\"generator-output-card ")
     ; __append(escapeFn( card.image_url ? 'generator-output-card-with-media' : '' ))
     ; __append("\">\n            ")
-    ;  if (card.image_url) {
+    ;  if (card.image_url) { 
     ; __append("\n              <div class=\"generator-output-media\">\n                <img src=\"")
     ; __append(escapeFn( card.image_url ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( card.title ))
     ; __append(" apparel mockup use case\" loading=\"lazy\">\n              </div>\n            ")
-    ;  }
+    ;  } 
     ; __append("\n            <h3>")
     ; __append(escapeFn( card.title ))
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( card.body ))
     ; __append("</p>\n          </div>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( faq.eyebrow ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( faq.title ))
     ; __append("</h2>\n    </div>\n\n    <div class=\"generator-faq-list\">\n      ")
-    ;  (faq.items || []).forEach(function(item) {
+    ;  (faq.items || []).forEach(function(item) { 
     ; __append("\n        <details class=\"generator-faq-item\">\n          <summary>")
     ; __append(escapeFn( item.question ))
     ; __append("</summary>\n          <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-final-cta\">\n  <div class=\"container\">\n    <div class=\"generator-final-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( cta.eyebrow ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( cta.title ))
     ; __append("</h2>\n        ")
-    ;  if (cta.description) {
+    ;  if (cta.description) { 
     ; __append("\n          <p>")
     ; __append(escapeFn( cta.description ))
     ; __append("</p>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n      <div class=\"generator-final-actions\">\n        ")
-    ;  if (cta.primaryLabel && cta.primaryHref) {
+    ;  if (cta.primaryLabel && cta.primaryHref) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( cta.primaryHref ))
     ; __append("\" class=\"btn btn-primary\">")
     ; __append(escapeFn( cta.primaryLabel ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n        ")
-    ;  if (cta.secondaryLabel && cta.secondaryHref) {
+    ;  if (cta.secondaryLabel && cta.secondaryHref) { 
     ; __append("\n          <a href=\"")
     ; __append(escapeFn( cta.secondaryHref ))
     ; __append("\" class=\"btn btn-secondary\">")
     ; __append(escapeFn( cta.secondaryLabel ))
     ; __append("</a>\n        ")
-    ;  }
+    ;  } 
     ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n")
   return __output;
 
@@ -4063,42 +4066,42 @@ title = __locals.title,
     ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta name=\"description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  ")
     ;  const headMetaRobots = typeof metaRobots !== 'undefined' && metaRobots
     ? (String(metaRobots).includes('max-image-preview:') ? metaRobots : `${metaRobots}, max-image-preview:large`)
-    : (typeof defaultMetaRobots !== 'undefined' && defaultMetaRobots ? defaultMetaRobots : 'max-image-preview:large');
+    : (typeof defaultMetaRobots !== 'undefined' && defaultMetaRobots ? defaultMetaRobots : 'max-image-preview:large'); 
     ; __append("\n  <meta name=\"robots\" content=\"")
     ; __append(escapeFn( headMetaRobots ))
     ; __append("\">\n  ")
-    ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : '';
+    ;  const headCanonicalUrl = typeof canonicalUrl !== 'undefined' && canonicalUrl ? canonicalUrl : ''; 
     ; __append("\n  ")
-    ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png');
+    ;  const headMetaImage = typeof metaImage !== 'undefined' && metaImage ? metaImage : (typeof defaultMetaImage !== 'undefined' ? defaultMetaImage : 'https://cdn.cloz-design.com/site/icon.png'); 
 
     ; __append("\n  ")
-    ;  if (headCanonicalUrl) {
+    ;  if (headCanonicalUrl) { 
     ; __append("\n    <link rel=\"canonical\" href=\"")
     ; __append(escapeFn( headCanonicalUrl ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta property=\"og:type\" content=\"website\">\n  <meta property=\"og:title\" content=\"")
     ; __append(escapeFn( title ))
     ; __append("\">\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta property=\"og:description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  ")
-    ;  if (headCanonicalUrl) {
+    ;  if (headCanonicalUrl) { 
     ; __append("\n    <meta property=\"og:url\" content=\"")
     ; __append(escapeFn( headCanonicalUrl ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta property=\"og:image\" content=\"")
     ; __append(escapeFn( headMetaImage ))
     ; __append("\">\n  <meta property=\"og:image:alt\" content=\"")
@@ -4106,30 +4109,34 @@ title = __locals.title,
     ; __append("\">\n  <meta name=\"twitter:card\" content=\"summary_large_image\">\n  <meta name=\"twitter:title\" content=\"")
     ; __append(escapeFn( title ))
     ; __append("\">\n  ")
-    ;  if (typeof metaDescription !== 'undefined' && metaDescription) {
+    ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
     ; __append("\n    <meta name=\"twitter:description\" content=\"")
     ; __append(escapeFn( metaDescription ))
     ; __append("\">\n  ")
-    ;  }
+    ;  } 
     ; __append("\n  <meta name=\"twitter:image\" content=\"")
     ; __append(escapeFn( headMetaImage ))
     ; __append("\">\n  ")
-    ;  if (typeof structuredData !== 'undefined' && structuredData) {
+    ;  if (typeof structuredData !== 'undefined' && structuredData) { 
     ; __append("\n    <script type=\"application/ld+json\">")
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
-    ;  }
-    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClothingDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260815-text-selection-v4\">\n  ")
-    ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : [];
+    ;  } 
+    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClothingDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260819-fabric-softness-v2\">\n  ")
+    ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; 
     ; __append("\n  ")
-    ;  headPageStyles.forEach(function(stylesheet) {
+    ;  headPageStyles.forEach(function(stylesheet) { 
     ; __append("\n    <link rel=\"stylesheet\" href=\"")
     ; __append(escapeFn( stylesheet ))
     ; __append("\">\n  ")
-    ;  });
-    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260806-auto-3d\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260817-ui-deai-v1\">\n</head>\n<body>\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
+    ;  }); 
+    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260806-auto-3d\">\n    <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260819-model-detail-split-scroll-v4\">\n</head>\n<body class=\"")
+    ; __append(escapeFn( typeof bodyClass !== 'undefined' && bodyClass ? bodyClass : '' ))
+    ; __append("\">\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
-    ; __append("\">\n          3D Models\n        </a>\n        <a href=\"/blog\" class=\"nav-link ")
+    ; __append("\">\n          3D Models\n        </a>\n        <a href=\"/white-mockups\" class=\"nav-link ")
+    ; __append(escapeFn( typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' ))
+    ; __append("\">\n          White Mockups\n        </a>\n        <a href=\"/blog\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'blog' ? 'active' : '' ))
     ; __append("\">\n          Guides\n        </a>\n        <!-- Tools Dropdown -->\n        <div class=\"nav-dropdown\">\n          <button class=\"nav-link dropdown-toggle ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'tools' ? 'active' : '' ))
@@ -4142,29 +4149,29 @@ title = __locals.title,
     ; __append("</span>\n                    <small>Explore dress design directions.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/mockups\" class=\"dropdown-item\">\n                    <span>Free 3D Models</span>\n                    <small>Browse editable garment models.</small>\n                  </a>\n                  <a href=\"/tools/2d-mockup\" class=\"dropdown-item\">\n                    <span>")
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockups</span>\n                    <small>Design across garment categories.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
-    ;  if (user) {
+    ;  if (user) { 
     ; __append("\n          <!-- User Menu -->\n          <div class=\"user-dropdown\">\n            <button class=\"user-toggle\">\n              <div class=\"user-avatar\">\n                ")
     ; __append(escapeFn( user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() ))
     ; __append("\n              </div>\n            </button>\n            <div class=\"user-menu\">\n              <a href=\"/tools/t-shirt-mockup-generator\" class=\"user-item\">Start a new mockup</a>\n              <a href=\"/mockups\" class=\"user-item\">Browse garment models</a>\n              <div class=\"user-divider\"></div>\n              <a href=\"/auth/logout\" class=\"user-item\">")
     ; __append(escapeFn( t('nav.signOut') ))
     ; __append("</a>\n            </div>\n          </div>\n        ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n          <!-- Auth Buttons -->\n          <a href=\"/auth/login\" class=\"btn btn-ghost\">")
     ; __append(escapeFn( t('nav.signIn') ))
     ; __append("</a>\n          <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary\">Start designing</a>\n        ")
-    ;  }
-    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" type=\"button\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobileNavigation\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\" id=\"mobileNavigation\">\n      <a href=\"/mockups\" class=\"mobile-link\">3D Models</a>\n      <a href=\"/blog\" class=\"mobile-link\">Guides</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
+    ;  } 
+    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" type=\"button\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobileNavigation\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\" id=\"mobileNavigation\">\n      <a href=\"/mockups\" class=\"mobile-link\">3D Models</a>\n      <a href=\"/white-mockups\" class=\"mobile-link\">White Mockups</a>\n      <a href=\"/blog\" class=\"mobile-link\">Guides</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("</a>\n      <div class=\"mobile-divider\"></div>\n      ")
-    ;  if (user) {
+    ;  if (user) { 
     ; __append("\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"mobile-link\">Start a new mockup</a>\n        <a href=\"/mockups\" class=\"mobile-link\">Browse garment models</a>\n        <a href=\"/auth/logout\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.signOut') ))
     ; __append("</a>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <a href=\"/auth/login\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.signIn') ))
     ; __append("</a>\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"mobile-link btn btn-primary\">Start designing</a>\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </nav>\n\n  <main id=\"main-content\">\n")
   return __output;
 
@@ -4389,11 +4396,11 @@ title = __locals.title,
     ; __append("</h1>\n      <p>")
     ; __append(escapeFn( toolPage.subtitle ))
     ; __append("</p>\n      <div class=\"tool-trust-row\" aria-label=\"Mockup planning highlights\">\n        ")
-    ;  (toolPage.outputHighlights || ['No Photoshop needed', 'Model-based apparel previews', 'Product visual planning']).forEach(function(item) {
+    ;  (toolPage.outputHighlights || ['No Photoshop needed', 'Model-based apparel previews', 'Product visual planning']).forEach(function(item) { 
     ; __append("\n          <span>")
     ; __append(escapeFn( item ))
     ; __append("</span>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n      <div class=\"hero-actions\">\n        <a href=\"")
     ; __append(escapeFn( toolPage.editorHref || toolPage.cta.href ))
     ; __append("\" class=\"btn btn-primary btn-large\">")
@@ -4403,7 +4410,7 @@ title = __locals.title,
     ; __append("\" class=\"btn btn-secondary btn-large\">")
     ; __append(escapeFn( toolPage.secondaryCtaLabel || 'Browse Mockup Models' ))
     ; __append("</a>\n      </div>\n    </div>\n    <div class=\"tool-detail-visual\">\n      ")
-    ;  if (toolPage.heroModel && toolPage.heroModel.src) {
+    ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
     ; __append("\n        <div class=\"tool-live-preview\" data-editor-href=\"")
     ; __append(escapeFn( toolPage.editorHref ))
     ; __append("\">\n          <div class=\"tool-model-stage\" id=\"toolModelStage\" aria-busy=\"false\">\n            <img\n              class=\"tool-hero-model-poster\"\n              src=\"")
@@ -4417,7 +4424,7 @@ title = __locals.title,
     ; __append("\"\n              camera-controls\n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              aria-label=\"")
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
     ; __append("\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary tool-model-load\" id=\"toolLoadPreview\">\n              <span>Load interactive 3D</span>\n              <small>Loads only when you need it</small>\n            </button>\n          </div>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
-    ;  ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) {
+    ;  ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) { 
     ; __append("\n                <button type=\"button\" class=\"tool-color-swatch")
     ; __append(escapeFn( index === 0 ? ' active' : '' ))
     ; __append("\" data-color=\"")
@@ -4427,17 +4434,17 @@ title = __locals.title,
     ; __append("\" aria-label=\"Set garment color ")
     ; __append(escapeFn( color ))
     ; __append("\"></button>\n              ")
-    ;  });
+    ;  }); 
     ; __append("\n            </div>\n            <div class=\"tool-control-group tool-angle-controls\" aria-label=\"Model view\">\n              <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n              <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n              <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n            </div>\n            <div class=\"tool-preview-actions\">\n              <label class=\"btn btn-primary tool-upload-button\">\n                Upload artwork\n                <input id=\"toolArtworkUpload\" type=\"file\" accept=\"image/png,image/jpeg,image/webp,image/svg+xml\" hidden>\n              </label>\n              <button type=\"button\" class=\"btn btn-secondary\" id=\"toolDownloadPreview\">")
     ; __append(escapeFn( toolPage.slug === 'bulk-t-shirt-mockup-generator' ? 'Download colorway sheet' : 'Download PNG' ))
     ; __append("</button>\n            </div>\n            <p class=\"tool-preview-status\" id=\"toolPreviewStatus\" aria-live=\"polite\">View the fast preview, or load 3D to rotate and export it.</p>\n          </div>\n        </div>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <img src=\"")
     ; __append(escapeFn( toolPage.image ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( toolPage.title ))
     ; __append(" preview image\">\n      ")
-    ;  }
+    ;  } 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<div class=\"container\">\n  ")
     ; __append( include('partials/share-panel', {
     shareSurface: 'tool',
@@ -4446,7 +4453,7 @@ title = __locals.title,
     sharePrompt: 'Share this free workflow with a designer, merch team, or print-on-demand seller who can use it.'
   }) )
     ; __append("\n</div>\n\n")
-    ;  if (toolPage.visualGallery && toolPage.visualGallery.length) {
+    ;  if (toolPage.visualGallery && toolPage.visualGallery.length) { 
     ; __append("\n  <section class=\"generator-section tool-visual-section\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.examplesEyebrow || 'Examples' ))
     ; __append("</span>\n        <h2>")
@@ -4454,7 +4461,7 @@ title = __locals.title,
     ; __append("</h2>\n        <p>")
     ; __append(escapeFn( toolPage.examplesSubtitle || 'Show the garment, artwork placement, and product framing clearly before you print, sample, or publish.' ))
     ; __append("</p>\n      </div>\n      <div class=\"tool-visual-grid\">\n        ")
-    ;  toolPage.visualGallery.forEach(function(item) {
+    ;  toolPage.visualGallery.forEach(function(item) { 
     ; __append("\n          <article class=\"tool-visual-card\">\n            <img src=\"")
     ; __append(escapeFn( item.image ))
     ; __append("\" alt=\"")
@@ -4464,9 +4471,9 @@ title = __locals.title,
     ; __append("</h3>\n              <p>")
     ; __append(escapeFn( item.caption ))
     ; __append("</p>\n            </div>\n          </article>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"tool-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.planningEyebrow || 'Plan faster' ))
     ; __append("</span>\n        <h2>")
@@ -4474,9 +4481,9 @@ title = __locals.title,
     ; __append("</h2>\n      </div>\n      <p>")
     ; __append(escapeFn( toolPage.intent ))
     ; __append("</p>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) {
+    ;  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) { 
     ; __append("\n  <section class=\"generator-section tool-model-starters\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Choose a T-shirt model</span>\n        <h2>Start your T-shirt mockup with the right fit</h2>\n        <p>Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.</p>\n      </div>\n      <div class=\"generator-output-grid\">\n        ")
-    ;  toolPage.modelStarters.forEach(function(model) {
+    ;  toolPage.modelStarters.forEach(function(model) { 
     ; __append("\n          <a class=\"generator-output-card\" href=\"")
     ; __append(escapeFn( model.href ))
     ; __append("\">\n            <h3>")
@@ -4484,9 +4491,9 @@ title = __locals.title,
     ; __append("</h3>\n            <p>")
     ; __append(escapeFn( model.body ))
     ; __append("</p>\n            <strong>Open free 3D model →</strong>\n          </a>\n        ")
-    ;  });
+    ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.benefitsEyebrow || 'Why teams use it' ))
     ; __append("</span>\n      <h2>")
@@ -4494,13 +4501,13 @@ title = __locals.title,
     ; __append("</h2>\n      <p>")
     ; __append(escapeFn( toolPage.benefitsSubtitle || 'Use ClothingDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' ))
     ; __append("</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  toolPage.competitorInsights.forEach(function(insight) {
+    ;  toolPage.competitorInsights.forEach(function(insight) { 
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
     ; __append(escapeFn( insight.title || 'Why it helps' ))
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( insight.body || insight ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ;  const pickerLinks = [
   ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
@@ -4516,7 +4523,7 @@ title = __locals.title,
   ['/tools/streetwear-hoodie-mockup-generator', 'Streetwear hoodie'],
   ['/tools/transparent-apparel-mockup-generator', 'Transparent PNG'],
   ['/mockups', 'All 3D models']
-].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; });
+].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); 
     ; __append("\n")
     ;  const toolGuideMap = {
   'dress-designer': [
@@ -4544,39 +4551,39 @@ title = __locals.title,
     ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide'],
     ['/blog/white-background-vs-lifestyle-apparel-images', 'White background vs lifestyle images']
   ]
-};
+}; 
     ; __append("\n")
     ;  const toolGuideLinks = toolGuideMap[toolPage.slug] || [
   ['/blog/how-to-choose-a-3d-clothing-model', 'How to choose a 3D clothing model'],
   ['/blog/3d-apparel-mockup-workflow', '3D apparel mockup workflow'],
   ['/blog/apparel-ecommerce-catalog-image-guide', 'Apparel ecommerce image guide']
-];
+]; 
     ; __append("\n<section class=\"generator-section tool-picker-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.pickerEyebrow || 'Choose a starting point' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.pickerTitle || 'Pick the mockup path that matches your product' ))
     ; __append("</h2>\n    </div>\n    <div class=\"tool-picker-grid\">\n      ")
-    ;  pickerLinks.forEach(function(link) {
+    ;  pickerLinks.forEach(function(link) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( link[0] ))
     ; __append("\">")
     ; __append(escapeFn( link[1] ))
     ; __append("</a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section tool-guide-links-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">Learn the workflow</span>\n      <h2>Guides for better apparel mockups</h2>\n      <p>Use practical checks for model choice, artwork placement, export quality, and product presentation.</p>\n    </div>\n    <div class=\"tool-picker-grid\">\n      ")
-    ;  toolGuideLinks.forEach(function(link) {
+    ;  toolGuideLinks.forEach(function(link) { 
     ; __append("\n        <a href=\"")
     ; __append(escapeFn( link[0] ))
     ; __append("\">")
     ; __append(escapeFn( link[1] ))
     ; __append("</a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.workflowEyebrow || 'Workflow' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.workflowTitle || 'From blank garment to clearer product direction' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-steps\">\n      ")
-    ;  toolPage.steps.forEach(function(step, index) {
+    ;  toolPage.steps.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step\">\n          <span>")
     ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
     ; __append("</span>\n          <h3>")
@@ -4584,25 +4591,25 @@ title = __locals.title,
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( step.body || step ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.useCasesEyebrow || 'Use it for' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.useCasesTitle || 'Mockup planning before a photoshoot' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
-    ;  toolPage.useCases.forEach(function(useCase, index) {
+    ;  toolPage.useCases.forEach(function(useCase, index) { 
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
     ; __append(escapeFn( useCase ))
     ; __append("</h3>\n          <p>")
     ; __append(escapeFn( toolPage.useCaseDetails && toolPage.useCaseDetails[index] ? toolPage.useCaseDetails[index] : 'Use this workflow when you need a fast, free apparel design starting point without committing to paid design software.' ))
     ; __append("</p>\n        </article>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-faq-section\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.faqEyebrow || 'FAQ' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.faqTitle || `${toolPage.title} questions` ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-faq-list\">\n      ")
-    ;  toolPage.faq.forEach(function(item, index) {
+    ;  toolPage.faq.forEach(function(item, index) { 
     ; __append("\n        <details class=\"generator-faq-item\" ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n          <summary>")
@@ -4610,13 +4617,13 @@ title = __locals.title,
     ; __append("</summary>\n          <p>")
     ; __append(escapeFn( item.answer ))
     ; __append("</p>\n        </details>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.relatedEyebrow || 'Related free tools' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.relatedTitle || 'Continue with another mockup workflow' ))
     ; __append("</h2>\n    </div>\n    <div class=\"generator-category-grid\">\n      ")
-    ;  toolPage.related.forEach(function(item) {
+    ;  toolPage.related.forEach(function(item) { 
     ; __append("\n        <a href=\"/tools/")
     ; __append(escapeFn( item.slug ))
     ; __append("\" class=\"generator-category-card\">\n          <small>")
@@ -4624,7 +4631,7 @@ title = __locals.title,
     ; __append("</small>\n          <strong>")
     ; __append(escapeFn( item.title ))
     ; __append("</strong>\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M5 12h14\"/>\n            <path d=\"m12 5 7 7-7 7\"/>\n          </svg>\n        </a>\n      ")
-    ;  });
+    ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n\n<section class=\"pattern-design-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.finalCtaEyebrow || 'Start now' ))
     ; __append("</span>\n        <h2>")
@@ -4636,7 +4643,7 @@ title = __locals.title,
     ; __append("\" class=\"btn btn-primary\">")
     ; __append(escapeFn( toolPage.cta.label ))
     ; __append("</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (toolPage.heroModel && toolPage.heroModel.src) {
+    ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
     ; __append("\n  <script>\n    (() => {\n      const viewer = document.getElementById('toolHeroModelViewer');\n      const stage = document.getElementById('toolModelStage');\n      const loadPreview = document.getElementById('toolLoadPreview');\n      const preview = document.querySelector('.tool-live-preview');\n      const upload = document.getElementById('toolArtworkUpload');\n      const download = document.getElementById('toolDownloadPreview');\n      const status = document.getElementById('toolPreviewStatus');\n      const isBulkTool = ")
     ; __append( JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') )
     ; __append(";\n      const modelViewerSrc = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n      let viewerReadyPromise = null;\n      if (!viewer || !stage || !preview) return;\n\n      const withTimeout = (promise, milliseconds, message) => Promise.race([\n        promise,\n        new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n      ]);\n\n      const loadModelViewerModule = () => {\n        if (customElements.get('model-viewer')) return Promise.resolve();\n        const existing = document.querySelector('script[data-tool-model-viewer]');\n        const scriptReady = existing\n          ? new Promise((resolve, reject) => {\n              existing.addEventListener('load', resolve, { once: true });\n              existing.addEventListener('error', reject, { once: true });\n            })\n          : new Promise((resolve, reject) => {\n              const script = document.createElement('script');\n              script.type = 'module';\n              script.src = modelViewerSrc;\n              script.dataset.toolModelViewer = 'true';\n              script.addEventListener('load', resolve, { once: true });\n              script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n              document.head.appendChild(script);\n            });\n        return withTimeout(scriptReady, 15000, '3D viewer timed out')\n          .then(() => withTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n      };\n\n      const waitForModel = () => {\n        if (viewer.loaded) return Promise.resolve();\n        return withTimeout(new Promise((resolve, reject) => {\n          viewer.addEventListener('load', resolve, { once: true });\n          viewer.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n          viewer.src = viewer.dataset.modelSrc;\n        }), 45000, '3D model timed out');\n      };\n\n      const ensureViewerReady = () => {\n        if (viewer.loaded && customElements.get('model-viewer')) return Promise.resolve(viewer);\n        if (viewerReadyPromise) return viewerReadyPromise;\n\n        stage.classList.remove('is-error');\n        stage.classList.add('is-loading');\n        stage.setAttribute('aria-busy', 'true');\n        if (loadPreview) loadPreview.querySelector('span').textContent = 'Loading 3D preview…';\n        status.textContent = 'Loading the interactive garment only once…';\n\n        viewerReadyPromise = loadModelViewerModule()\n          .then(() => {\n            viewer.hidden = false;\n            return waitForModel();\n          })\n          .then(() => {\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-ready');\n            stage.setAttribute('aria-busy', 'false');\n            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';\n            window.trackEvent?.('tool_interaction', {\n              interaction_type: 'load_3d_preview',\n              tool_name: ")
@@ -4650,7 +4657,7 @@ title = __locals.title,
     ; __append("-preview.png';\n          document.body.appendChild(link);\n          link.click();\n          link.remove();\n          status.textContent = 'Transparent PNG downloaded.';\n          window.trackEvent?.('design_export', {\n            export_format: 'png',\n            export_type: 'transparent_preview',\n            tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
     ; __append("\n          });\n        } catch (error) {\n          status.textContent = 'Open the full editor to export this model.';\n        }\n      });\n    })();\n  </script>\n")
-    ;  }
+    ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
@@ -4740,6 +4747,359 @@ title = __locals.title,
     ; __append("</h3>\n        <ul>\n          <li><a href=\"/blog/how-to-choose-a-3d-clothing-model\">Choose a 3D Clothing Model</a></li>\n          <li><a href=\"/blog/3d-apparel-mockup-workflow\">3D Apparel Mockup Workflow</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <!-- Popular Tools Section -->\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">")
     ; __append(escapeFn( t('tools.popularTools') ))
     ; __append("</h2>\n      <div class=\"popular-grid\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png\" alt=\"T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>T-Shirt Mockup Generator</h4>\n            <p>Start from T-shirt models and plan product-page mockups</p>\n          </div>\n        </a>\n        <a href=\"/tools/hoodie-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png\" alt=\"Hoodie Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Hoodie Mockup Generator</h4>\n            <p>Preview streetwear fits and hoodie artwork zones</p>\n          </div>\n        </a>\n        <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png\" alt=\"Bulk T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Bulk T-Shirt Mockup Generator</h4>\n            <p>Compare POD colorways and product variants</p>\n          </div>\n        </a>\n        <a href=\"/tools/print-on-demand-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png\" alt=\"Print-on-Demand Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Print-on-Demand Mockup Generator</h4>\n            <p>Plan listing visuals for Shopify and Etsy drafts</p>\n          </div>\n        </a>\n      </div>\n    </div>\n\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">Free garment-specific mockup tools</h2>\n      <div class=\"tool-picker-grid\">\n        <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockups</a>\n        <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt views</a>\n        <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockups</a>\n        <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long-sleeve shirt mockups</a>\n        <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockups</a>\n        <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel PNGs</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "white-mockup-detail.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt;
+    ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) )
+    ; __append("\n")
+    ; 
+  const cleanRelatedTitle = function(item) {
+    return String(item.title || item.asset_name || 'White garment mockup')
+      .replace(/^Model\s+\d+\s+/i, '')
+      .replace(/\s+From3d(?:\s+V\d+)?/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+
+    ; __append("\n\n<div class=\"white-detail-main\">\n  <div class=\"white-detail-shell\">\n    <nav class=\"white-detail-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/\">Home</a><span aria-hidden=\"true\">›</span>\n      <a href=\"/white-mockups\">White Mockups</a><span aria-hidden=\"true\">›</span>\n      <span aria-current=\"page\">")
+    ; __append(escapeFn( displayTitle ))
+    ; __append("</span>\n    </nav>\n\n    <section\n      class=\"white-detail-product\"\n      id=\"whiteMockupEditor\"\n      data-base-image=\"")
+    ; __append(escapeFn( asset.base_image_url ))
+    ; __append("\"\n      data-mask-image=\"")
+    ; __append(escapeFn( asset.mask_image_url ))
+    ; __append("?v=commercial-refine-v4\"\n      data-depth-image=\"")
+    ; __append(escapeFn( asset.depth_image_url ))
+    ; __append("?v=commercial-refine-v4\"\n      data-asset-name=\"")
+    ; __append(escapeFn( asset.asset_name ))
+    ; __append("\"\n      data-garment-type=\"")
+    ; __append(escapeFn( asset.garment_type ))
+    ; __append("\"\n      data-canvas-width=\"")
+    ; __append(escapeFn( asset.canvas_width ))
+    ; __append("\"\n      data-canvas-height=\"")
+    ; __append(escapeFn( asset.canvas_height ))
+    ; __append("\"\n      data-artwork-center-x=\"")
+    ; __append(escapeFn( asset.artwork_center_x ))
+    ; __append("\"\n      data-artwork-center-y=\"")
+    ; __append(escapeFn( asset.artwork_center_y ))
+    ; __append("\"\n      data-artwork-base-width=\"")
+    ; __append(escapeFn( asset.artwork_base_width ))
+    ; __append("\"\n      data-artwork-max-height=\"")
+    ; __append(escapeFn( asset.artwork_max_height ))
+    ; __append("\"\n      data-render-left=\"")
+    ; __append(escapeFn( asset.render_left ))
+    ; __append("\"\n      data-render-top=\"")
+    ; __append(escapeFn( asset.render_top ))
+    ; __append("\"\n      data-render-right=\"")
+    ; __append(escapeFn( asset.render_right ))
+    ; __append("\"\n      data-render-bottom=\"")
+    ; __append(escapeFn( asset.render_bottom ))
+    ; __append("\"\n      data-default-scale=\"")
+    ; __append(escapeFn( asset.default_scale ))
+    ; __append("\"\n      data-default-warp=\"")
+    ; __append(escapeFn( asset.default_warp ))
+    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <canvas\n            id=\"whiteMockupCanvas\"\n            width=\"")
+    ; __append(escapeFn( asset.canvas_width ))
+    ; __append("\"\n            height=\"")
+    ; __append(escapeFn( asset.canvas_height ))
+    ; __append("\"\n            tabindex=\"0\"\n            aria-label=\"Customize ")
+    ; __append(escapeFn( displayTitle ))
+    ; __append(" white mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate.\"\n          ></canvas>\n          <button type=\"button\" class=\"white-detail-stage-reset\" id=\"whiteMockupReset\" hidden>Reset artwork</button>\n          <button type=\"button\" class=\"white-detail-empty\" id=\"whiteMockupEmptyUpload\">\n            <span>Place your artwork directly on the garment</span>\n            <strong>Upload a design to begin</strong>\n          </button>\n          <div class=\"white-detail-loading\" id=\"whiteMockupLoading\" aria-live=\"polite\">\n            <i aria-hidden=\"true\"></i><span>Preparing your mockup</span>\n          </div>\n          <p class=\"white-detail-gesture-hint\" id=\"whiteMockupGestureHint\" hidden>Drag to move · corners to scale · top handle to rotate</p>\n        </div>\n      </div>\n\n      <aside class=\"white-detail-purchase\" aria-labelledby=\"whiteMockupTitle\">\n        <span class=\"white-detail-eyebrow\">On-model white mockup</span>\n        <h1 id=\"whiteMockupTitle\">")
+    ; __append(escapeFn( displayTitle ))
+    ; __append(" White Mockup</h1>\n        <p class=\"white-detail-description\">Preview artwork on a natural ")
+    ; __append(escapeFn( typeName ))
+    ; __append(" fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>\n\n        <label class=\"white-detail-upload\" id=\"whiteMockupUploadZone\">\n          <input type=\"file\" id=\"whiteMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"white-detail-upload-icon\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/></svg>\n          </span>\n          <span>\n            <strong id=\"whiteMockupUploadLabel\">Upload your design</strong>\n            <small>PNG, JPG or WebP · up to 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"white-detail-garment-colors\">\n          <div class=\"white-detail-control-label\">\n            <span>Garment color</span>\n            <small id=\"whiteMockupGarmentColorLabel\">Original white</small>\n          </div>\n          <div class=\"white-detail-garment-swatches\" role=\"group\" aria-label=\"Choose garment color\">\n            <button type=\"button\" class=\"active\" data-garment-color=\"#ffffff\" data-label=\"Original white\" aria-label=\"White garment\" aria-pressed=\"true\"><i style=\"--swatch:#ffffff\"></i></button>\n            <button type=\"button\" data-garment-color=\"#e2d5c2\" data-label=\"Natural ecru\" aria-label=\"Natural ecru garment\" aria-pressed=\"false\"><i style=\"--swatch:#e2d5c2\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a9b5a4\" data-label=\"Soft sage\" aria-label=\"Soft sage garment\" aria-pressed=\"false\"><i style=\"--swatch:#a9b5a4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#9db3c4\" data-label=\"Dusty blue\" aria-label=\"Dusty blue garment\" aria-pressed=\"false\"><i style=\"--swatch:#9db3c4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a8493f\" data-label=\"Brick red\" aria-label=\"Brick red garment\" aria-pressed=\"false\"><i style=\"--swatch:#a8493f\"></i></button>\n            <button type=\"button\" data-garment-color=\"#27384d\" data-label=\"Deep navy\" aria-label=\"Deep navy garment\" aria-pressed=\"false\"><i style=\"--swatch:#27384d\"></i></button>\n            <button type=\"button\" data-garment-color=\"#252523\" data-label=\"Black\" aria-label=\"Black garment\" aria-pressed=\"false\"><i style=\"--swatch:#252523\"></i></button>\n            <label class=\"white-detail-custom-swatch white-detail-garment-custom-swatch\" aria-label=\"Choose a custom garment color\">\n              <input type=\"color\" id=\"whiteMockupGarmentColor\" value=\"#c9b7a2\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <div class=\"white-detail-backgrounds\">\n          <div class=\"white-detail-control-label\">\n            <span>Change background</span>\n            <small id=\"whiteMockupBackgroundLabel\">Original studio</small>\n          </div>\n          <div class=\"white-detail-swatches\" role=\"group\" aria-label=\"Choose mockup background\">\n            <button type=\"button\" class=\"active\" data-background=\"studio\" data-label=\"Original studio\" aria-label=\"Original studio background\" aria-pressed=\"true\"><i class=\"studio\"></i></button>\n            <button type=\"button\" data-background=\"#f7f7f4\" data-label=\"Soft white\" aria-label=\"Soft white background\" aria-pressed=\"false\"><i style=\"--swatch:#f7f7f4\"></i></button>\n            <button type=\"button\" data-background=\"#d9d3c9\" data-label=\"Warm stone\" aria-label=\"Warm stone background\" aria-pressed=\"false\"><i style=\"--swatch:#d9d3c9\"></i></button>\n            <button type=\"button\" data-background=\"#a8b4a6\" data-label=\"Muted sage\" aria-label=\"Muted sage background\" aria-pressed=\"false\"><i style=\"--swatch:#a8b4a6\"></i></button>\n            <button type=\"button\" data-background=\"#b8c7d0\" data-label=\"Cool gray\" aria-label=\"Cool gray background\" aria-pressed=\"false\"><i style=\"--swatch:#b8c7d0\"></i></button>\n            <button type=\"button\" data-background=\"#242522\" data-label=\"Charcoal\" aria-label=\"Charcoal background\" aria-pressed=\"false\"><i style=\"--swatch:#242522\"></i></button>\n            <label class=\"white-detail-custom-swatch\" aria-label=\"Choose a custom background color\">\n              <input type=\"color\" id=\"whiteMockupBackgroundColor\" value=\"#d6d3cb\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <button type=\"button\" class=\"white-detail-download\" id=\"whiteMockupDownload\" disabled>\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n          Download PNG\n        </button>\n        <p class=\"white-detail-status\" id=\"whiteMockupStatus\" role=\"status\" aria-live=\"polite\">Ready for your design.</p>\n\n        <ul class=\"white-detail-trust\" aria-label=\"Mockup benefits\">\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z\"/></svg>\n            <span>Free to use</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3\"/></svg>\n            <span>Private in your browser</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/></svg>\n            <span>High-resolution export</span>\n          </li>\n        </ul>\n      </aside>\n    </section>\n\n    <section class=\"white-detail-benefits\" aria-label=\"White mockup features\">\n      <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>\n      <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>\n      <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>\n    </section>\n\n    <section class=\"white-detail-about\">\n      <div class=\"white-detail-section-heading\">\n        <span>About this mockup</span>\n        <h2>A commercial ")
+    ; __append(escapeFn( typeName ))
+    ; __append(" mockup built around the garment.</h2>\n      </div>\n      <div class=\"white-detail-about-copy\">\n        <p>The ")
+    ; __append(escapeFn( displayTitle ))
+    ; __append(" white mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>\n        <p>Upload your design and position it directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a ")
+    ; __append(escapeFn( asset.canvas_width ))
+    ; __append(" × ")
+    ; __append(escapeFn( asset.canvas_height ))
+    ; __append(" PNG without installing design software.</p>\n      </div>\n      <ol class=\"white-detail-steps\">\n        <li><span>1</span><div><h3>Upload artwork</h3><p>Use a transparent PNG for the cleanest apparel graphic result.</p></div></li>\n        <li><span>2</span><div><h3>Place it on the garment</h3><p>Drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>\n        <li><span>3</span><div><h3>Set garment and background colors</h3><p>Build a product colorway, then match the setting to a catalog, campaign board, presentation, or store draft.</p></div></li>\n        <li><span>4</span><div><h3>Download the PNG</h3><p>Export the finished on-model mockup at its full source dimensions.</p></div></li>\n      </ol>\n    </section>\n\n    <section class=\"white-detail-faq\">\n      <div class=\"white-detail-section-heading\">\n        <span>FAQ</span>\n        <h2>Using this white mockup</h2>\n      </div>\n      <div class=\"white-detail-faq-list\">\n        ")
+    ;  faqItems.forEach(function(item, index) { 
+    ; __append("\n          <details ")
+    ; __append(escapeFn( index === 0 ? 'open' : '' ))
+    ; __append(">\n            <summary>")
+    ; __append(escapeFn( item.question ))
+    ; __append("<span aria-hidden=\"true\">+</span></summary>\n            <p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p>\n          </details>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </section>\n\n    ")
+    ;  if (relatedAssets.length) { 
+    ; __append("\n      <section class=\"white-detail-related\">\n        <div class=\"white-detail-related-heading\">\n          <div><span>Continue browsing</span><h2>Related ")
+    ; __append(escapeFn( typeLabel.toLowerCase() ))
+    ; __append(" white mockups</h2></div>\n          <a href=\"/white-mockups?type=")
+    ; __append(escapeFn( asset.garment_type ))
+    ; __append("\">View all <span aria-hidden=\"true\">›</span></a>\n        </div>\n        <div class=\"white-detail-related-grid\">\n          ")
+    ;  relatedAssets.forEach(function(item) { 
+    ; __append("\n            <a href=\"/white-mockups/")
+    ; __append(escapeFn( item.asset_name ))
+    ; __append("\">\n              <figure><img src=\"")
+    ; __append(escapeFn( item.base_image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( cleanRelatedTitle(item) ))
+    ; __append(" white mockup\" loading=\"lazy\" width=\"")
+    ; __append(escapeFn( item.canvas_width ))
+    ; __append("\" height=\"")
+    ; __append(escapeFn( item.canvas_height ))
+    ; __append("\"></figure>\n              <h3>")
+    ; __append(escapeFn( cleanRelatedTitle(item) ))
+    ; __append("</h3>\n              <span>Open mockup ›</span>\n            </a>\n          ")
+    ;  }); 
+    ; __append("\n        </div>\n      </section>\n    ")
+    ;  } 
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260824-commercial-v5\" defer></script>\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "white-mockups.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt;
+    ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-library-page' }) )
+    ; __append("\n")
+    ; 
+  const typeLabels = Object.fromEntries(categories.map(category => [category.slug, category.label]));
+  const cleanAssetTitle = function(asset) {
+    return String(asset.title || asset.asset_name || 'White garment mockup')
+      .replace(/^Model\s+\d+\s+/i, '')
+      .replace(/\s+From3d(?:\s+V\d+)?/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+  };
+  const pageHref = function(pageNumber) {
+    const params = [];
+    if (activeType) params.push(`type=${encodeURIComponent(activeType)}`);
+    if (pageNumber > 1) params.push(`page=${pageNumber}`);
+    return `/white-mockups${params.length ? `?${params.join('&')}` : ''}#white-mockup-library`;
+  };
+
+    ; __append("\n\n<header class=\"white-library-hero\">\n  <div class=\"category-catalog-shell white-library-hero-grid\">\n    <div class=\"white-library-title\">\n      <span class=\"category-catalog-kicker\">On-model white library</span>\n      <h1>")
+    ; __append(escapeFn( activeCategory ? `${activeCategory.label}, in white.` : 'See the garment before the graphic.' ))
+    ; __append("</h1>\n      <p>Compare silhouette, fit, pose and drape on clean white garments. Choose a look, place your artwork directly on the garment, and create a product-ready visual.</p>\n    </div>\n    <dl class=\"white-library-stats\" aria-label=\"White mockup library summary\">\n      <div><dt>")
+    ; __append(escapeFn( assetSummary.total ))
+    ; __append("</dt><dd>white mockups</dd></div>\n      <div><dt>")
+    ; __append(escapeFn( assetSummary.mappedModels ))
+    ; __append("</dt><dd>curated profiles</dd></div>\n      <div><dt>")
+    ; __append(escapeFn( categories.filter(category => category.count > 0).length ))
+    ; __append("</dt><dd>garment groups</dd></div>\n    </dl>\n  </div>\n</header>\n\n<nav class=\"white-library-categories\" aria-label=\"White mockup categories\">\n  <div class=\"category-catalog-shell white-library-category-track\">\n    <a href=\"/white-mockups#white-mockup-library\" class=\"")
+    ; __append(escapeFn( !activeType ? 'active' : '' ))
+    ; __append("\" ")
+    ; __append(escapeFn( !activeType ? 'aria-current="page"' : '' ))
+    ; __append(">\n      <span>All garments</span><small>")
+    ; __append(escapeFn( assetSummary.total ))
+    ; __append("</small>\n    </a>\n    ")
+    ;  categories.forEach(function(category) { 
+    ; __append("\n      <a href=\"/white-mockups?type=")
+    ; __append(escapeFn( category.slug ))
+    ; __append("#white-mockup-library\" class=\"")
+    ; __append(escapeFn( activeType === category.slug ? 'active' : '' ))
+    ; __append("\" ")
+    ; __append(escapeFn( activeType === category.slug ? 'aria-current="page"' : '' ))
+    ; __append(">\n        <span>")
+    ; __append(escapeFn( category.label ))
+    ; __append("</span><small>")
+    ; __append(escapeFn( category.count ))
+    ; __append("</small>\n      </a>\n    ")
+    ;  }); 
+    ; __append("\n  </div>\n</nav>\n\n<main class=\"white-library-main\" id=\"white-mockup-library\">\n  <div class=\"category-catalog-shell\">\n    <div class=\"white-library-results-heading\">\n      <div>\n        <span>")
+    ; __append(escapeFn( activeCategory ? activeCategory.description : 'Full on-model collection' ))
+    ; __append("</span>\n        <strong>")
+    ; __append(escapeFn( pagination.total ? `Showing ${pagination.start}–${pagination.end} of ${pagination.total}` : 'No white mockups in this group' ))
+    ; __append("</strong>\n      </div>\n      <p>Upload · place · export</p>\n    </div>\n\n    ")
+    ;  if (assets.length) { 
+    ; __append("\n      <div class=\"white-library-grid\">\n        ")
+    ;  assets.forEach(function(asset) { 
+    ; __append("\n          <a class=\"white-mockup-card\" href=\"/white-mockups/")
+    ; __append(escapeFn( asset.asset_name ))
+    ; __append("\" aria-label=\"Open ")
+    ; __append(escapeFn( cleanAssetTitle(asset) ))
+    ; __append(" white mockup\">\n            <figure class=\"white-mockup-image\">\n              <img src=\"")
+    ; __append(escapeFn( asset.base_image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( cleanAssetTitle(asset) ))
+    ; __append(" white garment mockup\" loading=\"lazy\" width=\"")
+    ; __append(escapeFn( asset.canvas_width ))
+    ; __append("\" height=\"")
+    ; __append(escapeFn( asset.canvas_height ))
+    ; __append("\">\n              <span class=\"white-mockup-type\">")
+    ; __append(escapeFn( typeLabels[asset.garment_type] || 'Garment' ))
+    ; __append("</span>\n              <span class=\"white-mockup-ready\">Customize</span>\n            </figure>\n            <div class=\"white-mockup-meta\">\n              <div>\n                <h2>")
+    ; __append(escapeFn( cleanAssetTitle(asset) ))
+    ; __append("</h2>\n                <span>Customize online</span>\n              </div>\n              <span class=\"white-mockup-card-action\">Open mockup ›</span>\n            </div>\n          </a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    ")
+    ;  } else { 
+    ; __append("\n      <div class=\"white-library-empty\">\n        <strong>No white mockups found.</strong>\n        <p>Choose another garment group to continue browsing.</p>\n        <a class=\"btn btn-secondary\" href=\"/white-mockups\">View all white mockups</a>\n      </div>\n    ")
+    ;  } 
+    ; __append("\n\n    ")
+    ;  if (pagination.pageCount > 1) { 
+    ; __append("\n      <nav class=\"white-library-pagination\" aria-label=\"White mockup pages\">\n        ")
+    ;  if (pagination.page > 1) { 
+    ; __append("\n          <a class=\"white-page-direction\" href=\"")
+    ; __append(escapeFn( pageHref(pagination.page - 1) ))
+    ; __append("\" rel=\"prev\">← Previous</a>\n        ")
+    ;  } else { 
+    ; __append("\n          <span class=\"white-page-direction disabled\" aria-disabled=\"true\">← Previous</span>\n        ")
+    ;  } 
+    ; __append("\n        <div>\n          ")
+    ;  pagination.pages.forEach(function(pageNumber) { 
+    ; __append("\n            ")
+    ;  if (pageNumber === null) { 
+    ; __append("\n              <span aria-hidden=\"true\">…</span>\n            ")
+    ;  } else if (pageNumber === pagination.page) { 
+    ; __append("\n              <span class=\"current\" aria-current=\"page\">")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("</span>\n            ")
+    ;  } else { 
+    ; __append("\n              <a href=\"")
+    ; __append(escapeFn( pageHref(pageNumber) ))
+    ; __append("\" aria-label=\"Page ")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("\">")
+    ; __append(escapeFn( pageNumber ))
+    ; __append("</a>\n            ")
+    ;  } 
+    ; __append("\n          ")
+    ;  }); 
+    ; __append("\n        </div>\n        ")
+    ;  if (pagination.page < pagination.pageCount) { 
+    ; __append("\n          <a class=\"white-page-direction\" href=\"")
+    ; __append(escapeFn( pageHref(pagination.page + 1) ))
+    ; __append("\" rel=\"next\">Next →</a>\n        ")
+    ;  } else { 
+    ; __append("\n          <span class=\"white-page-direction disabled\" aria-disabled=\"true\">Next →</span>\n        ")
+    ;  } 
+    ; __append("\n      </nav>\n    ")
+    ;  } 
+    ; __append("\n  </div>\n</main>\n\n<section class=\"white-library-note\">\n  <div class=\"category-catalog-shell\">\n    <span>Built for apparel</span>\n    <div>\n      <h2>More useful than a flat template.</h2>\n      <p>Each white mockup gives you a believable pose, garment shape, and commercial composition before you add artwork. Open a look, customize it directly, and export a clean visual for review or product-page planning.</p>\n    </div>\n    <a href=\"/mockups\">Browse 3D Models <span aria-hidden=\"true\">↗</span></a>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

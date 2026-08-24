@@ -41,11 +41,10 @@ test('gives paginated result pages their own canonical URL', () => {
   assert.match(route, /items: displayModels/);
 });
 
-test('supports searchable and sortable model results', () => {
-  assert.match(route, /const catalogQuery = String\(req\.query\.q \|\| ''\)/);
+test('keeps sorting available without rendering a catalog search control', () => {
   assert.match(route, /\['featured', 'name', 'newest'\]\.includes\(req\.query\.sort\)/);
-  assert.match(template, /role="search"/);
-  assert.match(template, /name="q"/);
   assert.match(template, /name="sort"/);
+  assert.doesNotMatch(template, /type="search"/);
+  assert.doesNotMatch(template, /name="q"/);
   assert.match(refreshStyles, /\.catalog-toolbar \{/);
 });

@@ -1,117 +1,112 @@
-<%- include('partials/header') %>
-<% const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination ? catalogPagination : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] }; %>
-<% const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length; %>
-<% const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total; %>
-<% const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' }; %>
-<% const mockupPageHref = function(pageNumber) {
-  const params = [];
-  if (pageNumber > 1) params.push(`page=${pageNumber}`);
-  if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
-  if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
-  return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
-}; %>
+<%- include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) %>
+<%
+  const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination
+    ? catalogPagination
+    : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] };
+  const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length;
+  const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total;
+  const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' };
+  const mockupPageHref = function(pageNumber) {
+    const params = [];
+    if (pageNumber > 1) params.push(`page=${pageNumber}`);
+    if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
+    if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
+    return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
+  };
+  const allModelCountLabel = mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library';
+  const allCatalogCountLabel = mockupTotal ? `${mockupTotal} free models` : 'Free model library';
+  const allCatalogSteps = [
+    { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
+    { title: 'Inspect & customize', body: 'Rotate, zoom, and explore details and settings.' },
+    { title: 'Open in workspace', body: 'Launch the 3D mockup workspace and start designing.' }
+  ];
+%>
 
-<section class="page-header">
-  <div class="container">
-    <div class="category-breadcrumbs">
-      <a href="/">Home</a>
-      <span>/</span>
-      <span><%= t('design3d.pageTitle') %></span>
-    </div>
-    <h1 class="page-title"><%= t('design3d.pageTitle') %></h1>
-    <p class="page-subtitle"><%= t('design3d.pageSubtitle') %></p>
-    <div class="category-hero-meta mockup-library-meta">
-      <span><%= mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library' %></span>
-      <span>Browser-based customization</span>
-      <span>Transparent PNG export</span>
-    </div>
-    <div class="category-hero-actions">
-      <a href="#free-3d-models" class="btn btn-primary">Browse free models</a>
-      <a href="/tools/3d-clothing-mockup-generator" class="btn btn-secondary">Open 3D mockup generator</a>
+<header class="category-catalog-header">
+  <div class="category-catalog-shell">
+    <span class="category-catalog-kicker">3D model library</span>
+    <div class="category-catalog-heading">
+      <h1>All 3D models</h1>
+      <p>Browse the complete garment library, inspect each shape, and open the browser-based 3D mockup workspace.</p>
+      <span aria-label="<%= allModelCountLabel %>"><%= allCatalogCountLabel %></span>
     </div>
   </div>
-</section>
+</header>
 
-<section class="content-section">
-  <div class="container">
-    <form class="catalog-toolbar" action="/mockups#free-3d-models" method="get" role="search">
-      <label class="catalog-search-field">
-        <span>Find a garment</span>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        <input type="search" name="q" value="<%= mockupQuery.q %>" placeholder="Try hoodie, V-neck, coat…" autocomplete="off">
-      </label>
-      <label class="catalog-sort-field">
-        <span>Sort</span>
-        <select name="sort" onchange="this.form.submit()">
-          <option value="featured" <%= mockupQuery.sort === 'featured' ? 'selected' : '' %>>Category order</option>
-          <option value="name" <%= mockupQuery.sort === 'name' ? 'selected' : '' %>>Name A–Z</option>
-          <option value="newest" <%= mockupQuery.sort === 'newest' ? 'selected' : '' %>>Recently updated</option>
-        </select>
-      </label>
-      <button class="btn btn-primary" type="submit">Search models</button>
-      <% if (mockupQuery.q || mockupQuery.sort !== 'featured') { %>
-        <a class="catalog-clear" href="/mockups#free-3d-models">Clear</a>
-      <% } %>
-    </form>
-
-    <nav class="mockup-intent-links" aria-label="Popular 3D clothing mockup searches">
-      <a href="/mockups/jacket">Jacket 3D models</a>
-      <a href="/mockups/pants">3D pants design models</a>
-      <a href="/mockups/dress">Free dress mockups</a>
-      <a href="/mockups/shirt">Shirt 3D models</a>
-      <a href="/tools/dress-designer">Online dress designer</a>
-      <a href="/tools/transparent-apparel-mockup-generator">Transparent apparel mockups</a>
-    </nav>
-
-    <!-- Filters -->
-    <div class="filters-bar">
-      <div class="filter-group">
-        <a href="/mockups" class="filter-btn active">
+<nav class="category-catalog-family" aria-label="Garment categories">
+  <div class="category-catalog-family-shell">
+    <button class="category-family-control category-family-control-prev" type="button" aria-label="Scroll categories left" disabled>
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m10 3-5 5 5 5"/></svg>
+    </button>
+    <div class="category-catalog-family-viewport" tabindex="0">
+      <div class="category-catalog-family-track">
+        <a href="/mockups" class="active" aria-current="page">
           <%- include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) %>
           <span><%= t('design3d.filterAll') %></span>
         </a>
         <% categories.forEach(function(cat) { %>
-          <a href="/mockups/<%= cat.slug %>" class="filter-btn">
+          <a href="/mockups/<%= cat.slug %>">
             <%- include('partials/category-icon', { slug: cat.slug, name: cat.name }) %>
             <span><%= cat.name %></span>
           </a>
         <% }); %>
       </div>
     </div>
+    <button class="category-family-control category-family-control-next" type="button" aria-label="Scroll categories right">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg>
+    </button>
+  </div>
+</nav>
 
-    <div class="mockup-library-heading" id="free-3d-models">
-      <div>
-        <span class="generator-eyebrow">3D mockup clothing library</span>
-        <h2><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'Choose a free 3D clothing model' %></h2>
+<main class="category-catalog-workspace all-catalog-workspace" id="free-3d-models">
+  <div class="category-catalog-shell category-catalog-results">
+    <div class="all-catalog-toolbar-row">
+      <div class="all-catalog-result-copy" aria-live="polite">
+        <strong><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'All garments' %></strong>
+        <span>
+          <% if (mockupPagination.total) { %>
+            Showing <%= mockupPagination.start %>–<%= mockupPagination.end %> of <%= mockupPagination.total %>
+          <% } else { %>
+            No matching models
+          <% } %>
+        </span>
       </div>
-      <p><strong><%= mockupResultTotal %></strong> <%= mockupResultTotal === 1 ? 'model' : 'models' %>. Open a garment to inspect its shape, test artwork placement, and create a mockup for ecommerce, print-on-demand, or design review.</p>
+
+      <form class="catalog-toolbar all-catalog-sort-toolbar" action="/mockups#free-3d-models" method="get">
+        <label class="catalog-sort-field">
+          <span class="sr-only">Sort models</span>
+          <select name="sort" onchange="this.form.submit()" aria-label="Sort models">
+            <option value="featured" <%= mockupQuery.sort === 'featured' ? 'selected' : '' %>>Featured</option>
+            <option value="name" <%= mockupQuery.sort === 'name' ? 'selected' : '' %>>Name A–Z</option>
+            <option value="newest" <%= mockupQuery.sort === 'newest' ? 'selected' : '' %>>Newest</option>
+          </select>
+        </label>
+      </form>
     </div>
 
-    <!-- 3D Models Grid -->
     <div class="models-grid">
       <% if (models && models.length > 0) { %>
         <% models.forEach(function(model) { %>
+          <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
           <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || model.category %>">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
                 <img src="<%= model.image_url %>" alt="Free <%= model.name %> 3D clothing model and apparel mockup" class="model-img" loading="lazy">
               <% } else { %>
-                <div class="model-placeholder">
-                  <span><%= model.name.charAt(0) %></span>
-                </div>
+                <div class="model-placeholder"><span><%= model.name.charAt(0) %></span></div>
               <% } %>
             </div>
-              <div class="model-info">
-                <h3 class="model-name"><%= model.name %></h3>
-                <div class="model-tags">
-                  <span class="tag tag-free">Free</span>
-                  <span class="tag">3D mockup</span>
-                </div>
+            <div class="model-info">
+              <div>
+                <h3 class="model-name"><%= modelDisplayName %></h3>
+                <span class="category-model-status">Free</span>
               </div>
-            </a>
+              <span class="category-model-action">Open model <span aria-hidden="true">›</span></span>
+            </div>
+          </a>
         <% }); %>
       <% } else { %>
-        <div class="empty-state">
+        <div class="empty-state all-catalog-empty-state">
           <strong>No garments match this search.</strong>
           <p>Try a broader garment type or clear the current filters.</p>
           <a class="btn btn-secondary" href="/mockups#free-3d-models">Clear search</a>
@@ -126,9 +121,9 @@
         </p>
         <nav class="catalog-pagination" aria-label="3D model pages">
           <% if (mockupPagination.page > 1) { %>
-            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page - 1) %>" rel="prev" aria-label="Previous page">← <span>Previous</span></a>
+            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page - 1) %>" rel="prev" aria-label="Previous page">‹ <span>Previous</span></a>
           <% } else { %>
-            <span class="catalog-page-direction is-disabled" aria-disabled="true">← <span>Previous</span></span>
+            <span class="catalog-page-direction is-disabled" aria-disabled="true">‹ <span>Previous</span></span>
           <% } %>
           <div class="catalog-page-numbers">
             <% mockupPagination.pages.forEach(function(pageNumber) { %>
@@ -142,18 +137,64 @@
             <% }); %>
           </div>
           <% if (mockupPagination.page < mockupPagination.pageCount) { %>
-            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page + 1) %>" rel="next" aria-label="Next page"><span>Next</span> →</a>
+            <a class="catalog-page-direction" href="<%= mockupPageHref(mockupPagination.page + 1) %>" rel="next" aria-label="Next page"><span>Next</span> ›</a>
           <% } else { %>
-            <span class="catalog-page-direction is-disabled" aria-disabled="true"><span>Next</span> →</span>
+            <span class="catalog-page-direction is-disabled" aria-disabled="true"><span>Next</span> ›</span>
           <% } %>
         </nav>
       </div>
     <% } %>
   </div>
-</section>
+</main>
 
 <% if (mockupPagination.page === 1 && !mockupQuery.q) { %>
-  <%- include('partials/generator-sections', { landingContent, categories, models: (typeof catalogModels !== 'undefined' ? catalogModels : models) }) %>
+  <section class="category-field-guide all-catalog-field-guide">
+    <div class="category-catalog-shell">
+      <div class="category-field-guide-panel">
+        <div class="category-field-guide-intro">
+          <h2>From model to mockup</h2>
+          <p>Open any 3D model and start creating realistic apparel mockups in minutes.</p>
+        </div>
+        <ol class="category-field-guide-steps">
+          <% allCatalogSteps.forEach(function(step, index) { %>
+            <li>
+              <span><%= index + 1 %></span>
+              <div><h3><%= step.title %></h3><p><%= step.body %></p></div>
+            </li>
+          <% }); %>
+        </ol>
+        <nav class="category-field-guide-links" aria-label="Related resources">
+          <a href="/tools/3d-clothing-mockup-generator">Tools <span aria-hidden="true">›</span></a>
+          <a href="/blog/3d-apparel-mockup-workflow">Guides <span aria-hidden="true">›</span></a>
+        </nav>
+      </div>
+    </div>
+  </section>
 <% } %>
+
+<script>
+  (function () {
+    var viewport = document.querySelector('.category-catalog-family-viewport');
+    var previous = document.querySelector('.category-family-control-prev');
+    var next = document.querySelector('.category-family-control-next');
+    if (!viewport || !previous || !next) return;
+
+    function updateControls() {
+      var maximum = viewport.scrollWidth - viewport.clientWidth;
+      previous.disabled = viewport.scrollLeft <= 2;
+      next.disabled = viewport.scrollLeft >= maximum - 2 || maximum <= 2;
+    }
+
+    function move(direction) {
+      viewport.scrollBy({ left: direction * Math.max(280, viewport.clientWidth * 0.72), behavior: 'smooth' });
+    }
+
+    previous.addEventListener('click', function () { move(-1); });
+    next.addEventListener('click', function () { move(1); });
+    viewport.addEventListener('scroll', updateControls, { passive: true });
+    window.addEventListener('resize', updateControls);
+    updateControls();
+  }());
+</script>
 
 <%- include('partials/footer') %>

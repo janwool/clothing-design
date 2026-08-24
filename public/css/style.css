@@ -5957,8 +5957,21 @@ body {
   height: auto;
   margin-top: 8px;
   border-radius: 10px;
-  background: transparent;
+  background:
+    radial-gradient(circle at 30% 20%, #fff 0%, rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 82% 78%, rgba(247, 242, 232, 0.52), rgba(247, 242, 232, 0) 45%),
+    linear-gradient(155deg, #fff 0%, #faf9f6 100%);
   overflow: hidden;
+}
+
+.preview-model-stage::before {
+  content: "";
+  position: absolute;
+  inset: 8% 10% 11%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0) 70%);
+  filter: blur(14px);
+  pointer-events: none;
 }
 
 .preview-model-stage::after {
@@ -5966,11 +5979,11 @@ body {
   position: absolute;
   left: 28%;
   right: 28%;
-  bottom: 7%;
-  height: 10%;
+  bottom: 8%;
+  height: 8%;
   border-radius: 50%;
-  background: rgba(29, 29, 31, 0.08);
-  filter: blur(10px);
+  background: rgba(54, 48, 40, 0.04);
+  filter: blur(16px);
   pointer-events: none;
 }
 
@@ -6014,47 +6027,103 @@ body {
 }
 
 .design-modal .material-swatch-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 6px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 82px;
+  grid-template-columns: none;
+  gap: 10px;
+  padding: 2px 2px 9px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+  scrollbar-color: rgba(29, 29, 31, 0.24) transparent;
+  scrollbar-width: thin;
+}
+
+.design-modal .material-swatch-grid::-webkit-scrollbar {
+  height: 4px;
+}
+
+.design-modal .material-swatch-grid::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(29, 29, 31, 0.22);
 }
 
 .design-modal .material-swatch {
   min-width: 0;
-  min-height: 86px;
-  padding: 7px 3px 6px;
-  grid-template-rows: 43px auto;
-  gap: 5px;
-  border-color: transparent;
-  border-radius: 10px;
-  background: #fafafa;
+  min-height: 0;
+  padding: 0;
+  grid-template-rows: 58px auto;
+  gap: 7px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  scroll-snap-align: start;
 }
 
 .design-modal .material-swatch:hover {
-  transform: translateY(-1px);
-  border-color: rgba(29, 29, 31, 0.12);
+  transform: none;
+  border-color: transparent;
   box-shadow: none;
 }
 
 .design-modal .material-swatch.active {
-  border-color: var(--color-accent);
-  background: #fff;
-  box-shadow: 0 0 0 1px rgba(0, 113, 227, 0.1);
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
-.design-modal .material-ball {
-  width: 43px;
-  height: 43px;
-  box-shadow:
-    inset -10px -11px 16px rgba(0, 0, 0, 0.2),
-    inset 7px 8px 12px rgba(255, 255, 255, 0.34),
-    0 5px 11px rgba(17, 24, 39, 0.14);
+.design-modal .material-swatch-preview {
+  width: 82px;
+  height: 58px;
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border: 1px solid rgba(29, 29, 31, 0.13);
+  border-radius: 7px;
+  background-position: center;
+  background-repeat: repeat;
+  background-size: 82px 82px;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.design-modal .material-swatch:hover .material-swatch-preview {
+  border-color: rgba(29, 29, 31, 0.42);
+}
+
+.design-modal .material-swatch.active .material-swatch-preview {
+  border-color: #1d1d1f;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #1d1d1f;
+}
+
+.design-modal .material-swatch.active .material-swatch-preview::after {
+  content: "\2713";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #1d1d1f;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .design-modal .material-swatch-name {
-  min-height: 24px;
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1.15;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  color: #3a3a3c;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .design-modal .material-readout {
@@ -6102,13 +6171,13 @@ body {
   }
 
   .design-modal .material-swatch {
-    min-height: 75px;
-    grid-template-rows: 36px auto;
+    min-height: 0;
+    grid-template-rows: 50px auto;
   }
 
-  .design-modal .material-ball {
-    width: 36px;
-    height: 36px;
+  .design-modal .material-swatch-preview {
+    width: 74px;
+    height: 50px;
   }
 }
 
@@ -6122,9 +6191,12 @@ body {
     padding-right: 8px;
   }
 
-  .design-modal .material-ball {
-    width: 38px;
-    height: 38px;
+  .design-modal .material-swatch-grid {
+    grid-auto-columns: 74px;
+  }
+
+  .design-modal .material-swatch-preview {
+    width: 74px;
   }
 }
 
@@ -6276,27 +6348,27 @@ body {
   }
 
   .design-modal .material-swatch-grid {
-    display: flex;
-    gap: 6px;
+    display: grid;
+    grid-auto-columns: 74px;
+    gap: 9px;
     overflow-x: auto;
-    padding-bottom: 3px;
+    padding: 2px 2px 7px;
   }
 
   .design-modal .material-swatch {
-    flex: 0 0 62px;
-    min-height: 70px;
-    grid-template-rows: 34px auto;
-    padding: 4px 2px;
+    min-height: 0;
+    grid-template-rows: 48px auto;
+    padding: 0;
   }
 
-  .design-modal .material-ball {
-    width: 34px;
-    height: 34px;
+  .design-modal .material-swatch-preview {
+    width: 74px;
+    height: 48px;
   }
 
   .design-modal .material-swatch-name {
-    min-height: 22px;
-    font-size: 8px;
+    min-height: 0;
+    font-size: 9px;
   }
 
   .design-modal .material-readout {

@@ -44,16 +44,23 @@ def uv_bounds(objects: list[bpy.types.Object]) -> dict[str, float]:
     }
 
 
-def rotate_uv_atlas(objects: list[bpy.types.Object], degrees: float) -> int:
+def transform_uv_atlas(
+    objects: list[bpy.types.Object],
+    degrees: float,
+    flip_u: bool = False,
+    flip_v: bool = False,
+) -> int:
     radians = math.radians(degrees)
     cosine = math.cos(radians)
     sine = math.sin(radians)
+    u_sign = -1.0 if flip_u else 1.0
+    v_sign = -1.0 if flip_v else 1.0
     changed = 0
     for obj in objects:
         for layer in obj.data.uv_layers:
             for item in layer.data:
-                x = item.uv.x - 0.5
-                y = item.uv.y - 0.5
+                x = (item.uv.x - 0.5) * u_sign
+                y = (item.uv.y - 0.5) * v_sign
                 item.uv.x = 0.5 + x * cosine - y * sine
                 item.uv.y = 0.5 + x * sine + y * cosine
                 changed += 1
@@ -61,14 +68,39 @@ def rotate_uv_atlas(objects: list[bpy.types.Object], degrees: float) -> int:
     return changed
 
 
-def rotate_existing_svg(source: Path, destination: Path, degrees: float, size: int) -> int:
+def svg_transform_matrix(degrees: float, flip_u: bool, flip_v: bool, size: int) -> str:
+    """Convert the centered UV transform into SVG's downward-positive Y axis."""
+    radians = math.radians(degrees)
+    cosine = math.cos(radians)
+    sine = math.sin(radians)
+    u_sign = -1.0 if flip_u else 1.0
+    v_sign = -1.0 if flip_v else 1.0
+    a = cosine * u_sign
+    b = -sine * u_sign
+    c = sine * v_sign
+    d = cosine * v_sign
+    center = size / 2.0
+    e = center - a * center - c * center
+    f = center - b * center - d * center
+    values = (a, b, c, d, e, f)
+    return "matrix(" + " ".join(f"{value:.9g}" for value in values) + ")"
+
+
+def transform_existing_svg(
+    source: Path,
+    destination: Path,
+    degrees: float,
+    flip_u: bool,
+    flip_v: bool,
+    size: int,
+) -> int:
     ET.register_namespace("", "http://www.w3.org/2000/svg")
     tree = ET.parse(source)
     root = tree.getroot()
     namespace = root.tag.partition("}")[0] + "}" if root.tag.startswith("{") else ""
     wrapper = ET.Element(
         f"{namespace}g",
-        {"transform": f"rotate({degrees:g} {size / 2:g} {size / 2:g})"},
+        {"transform": svg_transform_matrix(degrees, flip_u, flip_v, size)},
     )
     children = list(root)
     for child in children:
@@ -87,6 +119,8 @@ def main() -> None:
     parser.add_argument("output_glb", type=Path)
     parser.add_argument("output_svg", type=Path)
     parser.add_argument("--degrees", type=float, default=180.0)
+    parser.add_argument("--flip-u", action="store_true")
+    parser.add_argument("--flip-v", action="store_true")
     parser.add_argument("--source-svg", type=Path)
     parser.add_argument("--report", type=Path)
     parser.add_argument("--position-quantization", type=int, default=14)
@@ -103,7 +137,7 @@ def main() -> None:
         raise RuntimeError("Imported GLB has no mesh objects")
 
     before = uv_bounds(objects)
-    changed = rotate_uv_atlas(objects, args.degrees)
+    changed = transform_uv_atlas(objects, args.degrees, args.flip_u, args.flip_v)
     after = uv_bounds(objects)
     tolerance = 1e-5
     if min(after.values()) < -tolerance or max(after.values()) > 1.0 + tolerance:
@@ -112,7 +146,14 @@ def main() -> None:
     args.output_glb.parent.mkdir(parents=True, exist_ok=True)
     args.output_svg.parent.mkdir(parents=True, exist_ok=True)
     if args.source_svg:
-        svg_paths = rotate_existing_svg(args.source_svg, args.output_svg, args.degrees, args.size)
+        svg_paths = transform_existing_svg(
+            args.source_svg,
+            args.output_svg,
+            args.degrees,
+            args.flip_u,
+            args.flip_v,
+            args.size,
+        )
     else:
         svg_paths = helper.export_svg(
             args.output_svg,
@@ -129,6 +170,8 @@ def main() -> None:
         "output_glb": str(args.output_glb.resolve()),
         "output_svg": str(args.output_svg.resolve()),
         "degrees": args.degrees,
+        "flip_u": args.flip_u,
+        "flip_v": args.flip_v,
         "mesh_objects": len(objects),
         "uv_loops_changed": changed,
         "uv_bounds_before": before,

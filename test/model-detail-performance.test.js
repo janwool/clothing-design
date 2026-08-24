@@ -40,9 +40,9 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /id="modelDesignerRuntimeSource"/);
   assert.doesNotMatch(template, /<script\s+src="\/js\/design3d-materials\.js/);
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
-  assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260817-r2-materials'/);
+  assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260815-text-selection-v4'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -93,7 +93,9 @@ test('opens a surface color toolbar when a UV path is selected', () => {
 
 test('keeps on-model mockup code, styles, and image maps behind its launch action', () => {
   assert.match(template, /id="modelMockupModal"\s+hidden/s);
-  assert.match(template, /link\.href = '\/css\/on-model-mockup\.css\?v=20260805'/);
-  assert.match(template, /script\.src = '\/js\/on-model-mockup\.js\?v=20260805-on-model-studio-lazy'/);
+  assert.match(template, /data-base-image="<%= modelMockupProfile\.base_image_url %>"/);
+  assert.match(template, /data-artwork-center-x="<%= modelMockupProfile\.artwork_center_x %>"/);
+  assert.match(template, /link\.href = '\/css\/on-model-mockup\.css\?v=20260821'/);
+  assert.match(template, /script\.src = '\/js\/on-model-mockup\.js\?v=20260821-database-profiles'/);
   assert.match(template, /button\.addEventListener\('click', openStudio\)/);
 });

@@ -195,22 +195,22 @@
   ];
 
   const surfaceTuning = {
-    'cotton-jersey': { normalScale: 0.08 },
-    'rib-knit': { normalScale: 0.10 },
-    'french-terry': { normalScale: 0.10 },
-    fleece: { normalScale: 0.07 },
-    poplin: { normalScale: 0.05 },
-    'oxford-cloth': { normalScale: 0.1 },
-    linen: { normalScale: 0.09 },
-    denim: { normalScale: 0.09 },
-    twill: { normalScale: 0.08 },
-    'wool-blend': { normalScale: 0.07 },
-    'nylon-ripstop': { normalScale: 0.05 },
-    leather: { normalScale: 0.11 },
-    'satin-silk': { normalScale: 0.03 },
-    velvet: { normalScale: 0.04 },
-    'modal-stretch': { normalScale: 0.06 },
-    'wool-felt': { normalScale: 0.08 }
+    'cotton-jersey': { normalScale: 0.32, textureRepeat: 7, sheenRoughness: 0.82, specular: 0.42 },
+    'rib-knit': { normalScale: 0.44, textureRepeat: 5.5, sheenRoughness: 0.78, specular: 0.4 },
+    'french-terry': { normalScale: 0.4, textureRepeat: 6, sheenRoughness: 0.88, specular: 0.36 },
+    fleece: { normalScale: 0.34, textureRepeat: 7, sheenRoughness: 0.94, specular: 0.3 },
+    poplin: { normalScale: 0.24, textureRepeat: 8, sheenRoughness: 0.68, specular: 0.48 },
+    'oxford-cloth': { normalScale: 0.34, textureRepeat: 7, sheenRoughness: 0.76, specular: 0.42 },
+    linen: { normalScale: 0.38, textureRepeat: 6, sheenRoughness: 0.86, specular: 0.34 },
+    denim: { normalScale: 0.34, textureRepeat: 6, sheenRoughness: 0.8, specular: 0.38 },
+    twill: { normalScale: 0.32, textureRepeat: 7, sheenRoughness: 0.78, specular: 0.4 },
+    'wool-blend': { normalScale: 0.32, textureRepeat: 6, sheenRoughness: 0.9, specular: 0.34 },
+    'nylon-ripstop': { normalScale: 0.22, textureRepeat: 8, sheenRoughness: 0.44, specular: 0.62 },
+    leather: { normalScale: 0.38, textureRepeat: 4, sheenRoughness: 0.42, specular: 0.72 },
+    'satin-silk': { normalScale: 0.16, textureRepeat: 5, sheenRoughness: 0.22, specular: 0.86 },
+    velvet: { normalScale: 0.28, textureRepeat: 6, sheenRoughness: 0.68, specular: 0.46 },
+    'modal-stretch': { normalScale: 0.26, textureRepeat: 8, sheenRoughness: 0.54, specular: 0.56 },
+    'wool-felt': { normalScale: 0.34, textureRepeat: 7, sheenRoughness: 0.94, specular: 0.3 }
   };
 
   const generatedMaterialV2 = new Set([
@@ -228,12 +228,15 @@
     'velvet'
   ]);
 
-  const generatedMaterialRoot = 'https://cdn.cloz-design.com/materials-v2';
+  // Keep runtime textures same-origin. model-viewer creates WebGL textures through
+  // fetch/ImageBitmap, so the public R2 hostname cannot be used without CORS headers.
+  const generatedMaterialRoot = '/materials-v2';
 
   const materials = rawMaterials.map((material) => {
     const materialRoot = generatedMaterialV2.has(material.id) ? generatedMaterialRoot : '/materials';
     return {
       ...material,
+      generated: generatedMaterialV2.has(material.id),
       ...(surfaceTuning[material.id] || {}),
       maps: {
         baseColor: `${materialRoot}/${material.id}/basecolor.${generatedMaterialV2.has(material.id) ? 'webp' : 'png'}`,
@@ -263,6 +266,7 @@
 
   const fallback = ['cotton-jersey', 'twill', 'nylon-ripstop', 'wool-blend'];
   const index = new Map(materials.map(material => [material.id, material]));
+  const generatedMaterials = materials.filter(material => material.generated);
 
   function normalizeCategory(value) {
     return String(value || '')
@@ -283,6 +287,7 @@
     materials,
     allowedByCategory,
     getMaterialsForCategory,
+    getGeneratedMaterials: () => [...generatedMaterials],
     getMaterial: id => index.get(id) || index.get(fallback[0])
   };
 })(window);

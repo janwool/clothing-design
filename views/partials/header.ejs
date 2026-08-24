@@ -69,15 +69,15 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png?v=20260719">
   <link rel="alternate" type="application/rss+xml" title="ClothingDesign apparel mockup guides" href="/feed.xml">
-  <link rel="stylesheet" href="/css/style.css?v=20260815-text-selection-v4">
+  <link rel="stylesheet" href="/css/style.css?v=20260819-fabric-softness-v2">
   <% const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; %>
   <% headPageStyles.forEach(function(stylesheet) { %>
     <link rel="stylesheet" href="<%= stylesheet %>">
   <% }); %>
   <link rel="stylesheet" href="/css/growth.css?v=20260806-auto-3d">
-  <link rel="stylesheet" href="/css/product-refresh.css?v=20260817-ui-deai-v1">
+    <link rel="stylesheet" href="/css/product-refresh.css?v=20260819-model-detail-split-scroll-v4">
 </head>
-<body>
+<body class="<%= typeof bodyClass !== 'undefined' && bodyClass ? bodyClass : '' %>">
   <a class="skip-link" href="#main-content">Skip to main content</a>
   <nav class="navbar">
     <div class="navbar-container">
@@ -90,6 +90,9 @@
       <div class="navbar-menu">
         <a href="/mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' %>">
           3D Models
+        </a>
+        <a href="/white-mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' %>">
+          White Mockups
         </a>
         <a href="/blog" class="nav-link <%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">
           Guides
@@ -211,6 +214,7 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileNavigation">
       <a href="/mockups" class="mobile-link">3D Models</a>
+      <a href="/white-mockups" class="mobile-link">White Mockups</a>
       <a href="/blog" class="mobile-link">Guides</a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>

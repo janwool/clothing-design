@@ -55,6 +55,25 @@ def tune_fabric_materials(objects: list[bpy.types.Object]) -> None:
                 bsdf.inputs["Specular"].default_value = 0.28
 
 
+def set_base_color_image(objects: list[bpy.types.Object], image_path: Path) -> None:
+    image = bpy.data.images.load(str(image_path.resolve()), check_existing=True)
+    for obj in objects:
+        for material in obj.data.materials:
+            if not material:
+                continue
+            material.use_nodes = True
+            nodes = material.node_tree.nodes
+            links = material.node_tree.links
+            bsdf = next((node for node in nodes if node.type == "BSDF_PRINCIPLED"), None)
+            if not bsdf:
+                continue
+            texture = nodes.new("ShaderNodeTexImage")
+            texture.name = "QA direction texture"
+            texture.image = image
+            texture.interpolation = "Linear"
+            links.new(texture.outputs["Color"], bsdf.inputs["Base Color"])
+
+
 def bounds(objects: list[bpy.types.Object]) -> tuple[Vector, Vector, Vector]:
     mins = Vector((math.inf, math.inf, math.inf))
     maxs = Vector((-math.inf, -math.inf, -math.inf))
@@ -170,6 +189,7 @@ def main() -> None:
     frame = next((int(arg.split("=", 1)[1]) for arg in argv if arg.startswith("--frame=")), 1)
     view_only = next((arg.split("=", 1)[1] for arg in argv if arg.startswith("--view=")), None)
     target_local_arg = next((arg.split("=", 1)[1] for arg in argv if arg.startswith("--target-local=")), None)
+    base_color_image_arg = next((arg.split("=", 1)[1] for arg in argv if arg.startswith("--base-color-image=")), None)
     target_scale = next((float(arg.split("=", 1)[1]) for arg in argv if arg.startswith("--target-scale=")), 0.08)
     light_multiplier = next(
         (float(arg.split("=", 1)[1]) for arg in argv if arg.startswith("--light-multiplier=")),
@@ -183,6 +203,7 @@ def main() -> None:
         and not arg.startswith("--target-local=")
         and not arg.startswith("--target-scale=")
         and not arg.startswith("--light-multiplier=")
+        and not arg.startswith("--base-color-image=")
     ]
     glb = Path(argv[0])
     output = Path(argv[1]) if len(argv) > 1 else Path("/tmp/glb-qa-views")
@@ -196,6 +217,8 @@ def main() -> None:
         set_clay_material(objects)
     else:
         tune_fabric_materials(objects)
+    if base_color_image_arg:
+        set_base_color_image(objects, Path(base_color_image_arg))
     center, largest = setup_scene(objects, keep_material, light_multiplier)
 
     if target_local_arg is not None:

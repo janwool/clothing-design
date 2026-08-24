@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header', { bodyClass: 'category-catalog-page model-product-page' }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.file_url; %>
 <% const howToSteps = detailContent.howToSteps || []; %>
@@ -7,13 +7,10 @@
 <% const relatedLinks = detailContent.relatedLinks || []; %>
 <% const detailCta = detailContent.cta || {}; %>
 <% const howToIcons = ['open', 'inspect', 'simulate', 'download']; %>
-<% const modelMockupProfiles = {
-  'classic-crew-neck-t-shirt-3d-model': {
-    assetBase: '/images/mockups/on-model/tshirt-vneck-male-front'
-  }
-}; %>
-<% const modelMockupProfile = modelMockupProfiles[model.slug] || null; %>
+<% const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; %>
 <% const supportsOnModelMockup = Boolean(modelMockupProfile); %>
+<% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
+<% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
 
 <section class="model-detail-hero">
   <div class="container">
@@ -72,6 +69,11 @@
             </svg>
             Fabric Motion
           </button>
+          <div class="model-view-angle-group" role="group" aria-label="Model viewing angle">
+            <button class="viewer-btn model-view-angle active" type="button" data-orbit="0deg" aria-pressed="true">Front</button>
+            <button class="viewer-btn model-view-angle" type="button" data-orbit="90deg" aria-pressed="false">Side</button>
+            <button class="viewer-btn model-view-angle" type="button" data-orbit="180deg" aria-pressed="false">Back</button>
+          </div>
           <button class="viewer-btn" id="fullscreenBtn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
@@ -82,7 +84,7 @@
       </div>
 
       <!-- Right: Model Info -->
-      <div class="model-info-section">
+      <div class="model-info-section" role="region" aria-label="Model details and specifications" tabindex="0">
         <div class="model-breadcrumb">
           <a href="/mockups">3D Models</a>
           <span>/</span>
@@ -91,7 +93,8 @@
           <span><%= model.name %></span>
         </div>
         
-        <h1 class="model-detail-title"><%= model.name %></h1>
+        <span class="model-product-kicker"><%= modelCategoryName %> 3D model</span>
+        <h1 class="model-detail-title"><%= modelDisplayName %></h1>
         
         <div class="model-detail-meta">
           <span class="tag tag-free">Free</span>
@@ -133,7 +136,7 @@
           <p class="model-action-note">Free during public beta · PNG export · no payment details required</p>
         </div>
 
-        <div class="model-description">
+        <div class="model-description model-product-description">
           <h2>Description</h2>
           <p><%= model.description || 'No description available.' %></p>
         </div>
@@ -240,8 +243,8 @@
       <div class="model-seo-block model-howto-section">
         <div class="generator-section-header">
           <span class="generator-eyebrow">Design workflow</span>
-          <h2>How to design <%= model.name %></h2>
-          <p>Use the browser-based Design3D studio to customize the model, review the garment preview, and export a high-resolution render.</p>
+          <h2>From model to finished mockup</h2>
+          <p>Customize the garment, inspect every angle, and export a presentation-ready visual.</p>
         </div>
         <div class="pattern-step-card-grid">
           <% howToSteps.forEach(function(step, index) { %>
@@ -304,10 +307,10 @@
     <% } %>
 
     <% if (applications.length) { %>
-      <div class="model-seo-block">
+      <div class="model-seo-block model-applications-section">
         <div class="generator-section-header">
           <span class="generator-eyebrow">Applications</span>
-          <h2>Where this model works best</h2>
+          <h2>Built for real apparel decisions</h2>
         </div>
         <div class="generator-output-grid model-application-grid">
           <% applications.forEach(function(application) { %>
@@ -324,7 +327,7 @@
       <div class="model-seo-block model-faq-section generator-faq-section">
         <div class="generator-section-header">
           <span class="generator-eyebrow">FAQ</span>
-          <h2><%= model.name %> questions</h2>
+          <h2>Questions about this model</h2>
         </div>
         <div class="generator-faq-list">
           <% faqItems.forEach(function(item, index) { %>
@@ -344,10 +347,11 @@
 <% if (related && related.length > 0) { %>
 <section class="related-models-section">
   <div class="container">
-    <h2 class="section-title">Related <%= model.category_label || model.category %> 3D Models</h2>
+    <h2 class="section-title">Related <%= modelCategoryName %> models</h2>
     
     <div class="models-grid">
       <% related.forEach(function(item) { %>
+        <% const relatedDisplayName = String(item.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
         <a href="/3d-models/<%= item.category_slug || item.category %>/<%= item.slug %>" class="model-card">
           <div class="model-preview-3d">
             <% if (item.image_url) { %>
@@ -359,10 +363,11 @@
             <% } %>
           </div>
           <div class="model-info">
-            <h3 class="model-name"><%= item.name %></h3>
-            <div class="model-tags">
-              <span class="tag tag-free">Free</span>
+            <div>
+              <h3 class="model-name"><%= relatedDisplayName %></h3>
+              <span class="category-model-status">Free</span>
             </div>
+            <span class="category-model-action">Open model <span aria-hidden="true">›</span></span>
           </div>
         </a>
       <% }); %>
@@ -377,8 +382,8 @@
     <div class="pattern-design-cta-inner">
       <div>
         <span class="generator-eyebrow">Design 3D</span>
-        <h2><%= detailCta.title || ('Customize ' + model.name) %></h2>
-        <p><%= detailCta.text || 'Open the 3D design studio, apply artwork, and export a review-ready transparent PNG.' %></p>
+        <h2>Ready to make it yours?</h2>
+        <p>Customize this model, test your ideas, and create a review-ready mockup.</p>
       </div>
       <button class="btn btn-primary btn-large" id="designCtaBtn">Start Designing</button>
     </div>
@@ -500,7 +505,7 @@
 </div>
 
 <% if (supportsOnModelMockup) { %>
-<!-- On-model T-shirt Mockup Studio -->
+<!-- On-model Garment Mockup Studio -->
 <div
   class="model-mockup-modal"
   id="modelMockupModal"
@@ -509,9 +514,23 @@
   aria-modal="true"
   aria-labelledby="modelMockupTitle"
   aria-hidden="true"
-  data-base-image="<%= modelMockupProfile.assetBase %>-base.png"
-  data-mask-image="<%= modelMockupProfile.assetBase %>-mask.png"
-  data-depth-image="<%= modelMockupProfile.assetBase %>-depth.png"
+  data-base-image="<%= modelMockupProfile.base_image_url %>"
+  data-mask-image="<%= modelMockupProfile.mask_image_url %>?v=commercial-refine-v4"
+  data-depth-image="<%= modelMockupProfile.depth_image_url %>?v=commercial-refine-v4"
+  data-garment-type="<%= modelMockupProfile.garment_type %>"
+  data-export-slug="<%= modelMockupProfile.export_slug %>"
+  data-canvas-width="<%= modelMockupProfile.canvas_width %>"
+  data-canvas-height="<%= modelMockupProfile.canvas_height %>"
+  data-artwork-center-x="<%= modelMockupProfile.artwork_center_x %>"
+  data-artwork-center-y="<%= modelMockupProfile.artwork_center_y %>"
+  data-artwork-base-width="<%= modelMockupProfile.artwork_base_width %>"
+  data-artwork-max-height="<%= modelMockupProfile.artwork_max_height %>"
+  data-render-left="<%= modelMockupProfile.render_left %>"
+  data-render-top="<%= modelMockupProfile.render_top %>"
+  data-render-right="<%= modelMockupProfile.render_right %>"
+  data-render-bottom="<%= modelMockupProfile.render_bottom %>"
+  data-default-scale="<%= modelMockupProfile.default_scale %>"
+  data-default-warp="<%= modelMockupProfile.default_warp %>"
 >
   <div class="model-mockup-shell">
     <header class="model-mockup-header">
@@ -519,7 +538,7 @@
         <span class="model-mockup-mark" aria-hidden="true">M</span>
         <div>
           <span>On-model studio</span>
-          <h2 id="modelMockupTitle">T-shirt depth mockup</h2>
+          <h2 id="modelMockupTitle"><%= modelMockupProfile.title %></h2>
         </div>
       </div>
       <div class="model-mockup-pipeline" aria-label="Mockup rendering pipeline">
@@ -570,8 +589,8 @@
             <button type="button" id="modelMockupCenter">Center</button>
           </div>
           <label class="model-mockup-range">
-            <span><b>Scale</b><output for="modelMockupScale">54%</output></span>
-            <input type="range" id="modelMockupScale" min="20" max="105" value="54">
+            <span><b>Scale</b><output for="modelMockupScale"><%= modelMockupProfile.default_scale %>%</output></span>
+            <input type="range" id="modelMockupScale" min="20" max="105" value="<%= modelMockupProfile.default_scale %>">
           </label>
           <label class="model-mockup-range">
             <span><b>Horizontal</b><output for="modelMockupX">0</output></span>
@@ -593,8 +612,8 @@
             <em>Depth mapped</em>
           </div>
           <label class="model-mockup-range">
-            <span><b>Fold warp</b><output for="modelMockupWarp">42%</output></span>
-            <input type="range" id="modelMockupWarp" min="0" max="100" value="42">
+            <span><b>Fold warp</b><output for="modelMockupWarp"><%= modelMockupProfile.default_warp %>%</output></span>
+            <input type="range" id="modelMockupWarp" min="0" max="100" value="<%= modelMockupProfile.default_warp %>">
           </label>
           <label class="model-mockup-range">
             <span><b>Print opacity</b><output for="modelMockupOpacity">96%</output></span>
@@ -618,14 +637,14 @@
             <strong><%= model.name %></strong>
           </div>
           <div class="model-mockup-render-badges">
-            <span>1024 × 1536</span>
+            <span><%= modelMockupProfile.canvas_width %> × <%= modelMockupProfile.canvas_height %></span>
             <span>Client-side render</span>
           </div>
         </div>
         <div class="model-mockup-stage" id="modelMockupStage">
-          <canvas id="modelMockupCanvas" width="1024" height="1536" aria-label="T-shirt model mockup preview"></canvas>
+          <canvas id="modelMockupCanvas" width="<%= modelMockupProfile.canvas_width %>" height="<%= modelMockupProfile.canvas_height %>" aria-label="<%= modelMockupProfile.title %> preview"></canvas>
           <div class="model-mockup-empty" id="modelMockupEmpty">
-            <span>Blank T-shirt ready</span>
+            <span>Blank <%= modelMockupProfile.garment_type.replace(/-/g, ' ') %> ready</span>
             <strong>Upload artwork to build the mockup</strong>
             <button type="button" id="modelMockupEmptyUpload">Choose image</button>
           </div>
@@ -635,7 +654,7 @@
           </div>
         </div>
         <div class="model-mockup-preview-note">
-          <span><i></i> Artwork is clipped to the detected shirt silhouette.</span>
+          <span><i></i> Artwork is clipped to the detected garment silhouette.</span>
           <span>Depth gradients bend the print around folds and torso curvature.</span>
         </div>
       </main>
@@ -816,10 +835,11 @@
                   alt="<%= model.name %>"
                   loading="lazy"
                   camera-controls
-                  shadow-intensity="1.55"
-                  shadow-softness="0.52"
-                  exposure="0.66"
+                  shadow-intensity="0.58"
+                  shadow-softness="0.94"
+                  exposure="0.96"
                   environment-image="neutral"
+                  tone-mapping="neutral"
                   style="width: 100%; height: 100%;"
                   hidden
                 ></model-viewer>
@@ -1005,6 +1025,23 @@ if (rotateBtn && viewer) {
   });
 }
 
+document.querySelectorAll('.model-view-angle').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const readyViewer = await ensureDetailViewer().catch(() => null);
+    if (!readyViewer) return;
+    readyViewer.autoRotate = false;
+    rotateBtn?.classList.remove('active');
+    rotateBtn?.setAttribute('aria-pressed', 'false');
+    readyViewer.cameraOrbit = `${button.dataset.orbit} 75deg 105%`;
+    readyViewer.jumpCameraToGoal?.();
+    document.querySelectorAll('.model-view-angle').forEach((item) => {
+      const isActive = item === button;
+      item.classList.toggle('active', isActive);
+      item.setAttribute('aria-pressed', String(isActive));
+    });
+  });
+});
+
 if (fabricMotionBtn && viewer) {
   fabricMotionBtn.addEventListener('click', async () => {
     const readyViewer = await ensureDetailViewer().catch(() => null);
@@ -1098,7 +1135,7 @@ window.ModelDesignerConfig = Object.freeze({
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = '/js/design3d-materials.js?v=20260817-r2-materials';
+      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';
       script.dataset.designMaterials = 'true';
       script.addEventListener('load', resolve, { once: true });
       script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });
@@ -1134,7 +1171,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260815-text-selection-v4',
+      src: '/js/model-designer.js?v=20260819-fabric-softness-v2',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1235,7 +1272,7 @@ window.ModelDesignerConfig = Object.freeze({
       return new Promise((resolve, reject) => {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
-        link.href = '/css/on-model-mockup.css?v=20260805';
+        link.href = '/css/on-model-mockup.css?v=20260821';
         link.dataset.onModelStudio = 'true';
         link.addEventListener('load', resolve, { once: true });
         link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });
@@ -1247,7 +1284,7 @@ window.ModelDesignerConfig = Object.freeze({
       if (window.ModelMockupStudio) return Promise.resolve();
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = '/js/on-model-mockup.js?v=20260805-on-model-studio-lazy';
+        script.src = '/js/on-model-mockup.js?v=20260821-database-profiles';
         script.dataset.onModelStudio = 'true';
         script.addEventListener('load', resolve, { once: true });
         script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });

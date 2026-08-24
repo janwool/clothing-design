@@ -38,6 +38,21 @@
     depth: modal.dataset.depthImage
   };
 
+  const template = {
+    garmentType: modal.dataset.garmentType || 'garment',
+    exportSlug: modal.dataset.exportSlug || 'garment',
+    centerX: Number(modal.dataset.artworkCenterX) || canvas.width / 2,
+    centerY: Number(modal.dataset.artworkCenterY) || canvas.height * 0.47,
+    baseWidth: Number(modal.dataset.artworkBaseWidth) || 620,
+    maxHeight: Number(modal.dataset.artworkMaxHeight) || 650,
+    renderLeft: Number(modal.dataset.renderLeft) || 0,
+    renderTop: Number(modal.dataset.renderTop) || 0,
+    renderRight: Number(modal.dataset.renderRight) || canvas.width,
+    renderBottom: Number(modal.dataset.renderBottom) || canvas.height,
+    defaultScale: Number(modal.dataset.defaultScale) || 54,
+    defaultWarp: Number(modal.dataset.defaultWarp) || 42
+  };
+
   const state = {
     ready: false,
     loading: false,
@@ -75,6 +90,7 @@
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.decoding = 'async';
+      image.crossOrigin = 'anonymous';
       image.onload = () => resolve(image);
       image.onerror = () => reject(new Error(`Unable to load mockup asset: ${url}`));
       image.src = url;
@@ -143,11 +159,11 @@
     if (!state.artworkImage) return null;
 
     const scale = Number(controls.scale.value) / 100;
-    const targetWidth = 620 * scale;
+    const targetWidth = template.baseWidth * scale;
     const aspectRatio = state.artworkImage.naturalHeight / Math.max(1, state.artworkImage.naturalWidth);
-    const targetHeight = Math.min(650, targetWidth * aspectRatio);
-    const centerX = 512 + Number(controls.x.value) * 2.35;
-    const centerY = 720 + Number(controls.y.value) * 2.75;
+    const targetHeight = Math.min(template.maxHeight, targetWidth * aspectRatio);
+    const centerX = template.centerX + Number(controls.x.value) * 2.35;
+    const centerY = template.centerY + Number(controls.y.value) * 2.75;
     const rotation = Number(controls.rotation.value) * Math.PI / 180;
 
     artworkContext.save();
@@ -176,10 +192,10 @@
     const depthPixels = state.depthPixels;
     const warpStrength = Number(controls.warp.value) / 100;
     const opacity = Number(controls.opacity.value) / 100;
-    const xStart = 185;
-    const xEnd = 865;
-    const yStart = 370;
-    const yEnd = 1245;
+    const xStart = Math.max(0, template.renderLeft);
+    const xEnd = Math.min(width, template.renderRight);
+    const yStart = Math.max(0, template.renderTop);
+    const yEnd = Math.min(height, template.renderBottom);
 
     for (let y = yStart; y < yEnd; y += 1) {
       for (let x = xStart; x < xEnd; x += 1) {
@@ -260,7 +276,7 @@
     emptyState.hidden = true;
     downloadButton.disabled = false;
     setMapView('result');
-    setStatus('Artwork mapped to the shirt silhouette and folds.', 'ready');
+    setStatus(`Artwork mapped to the ${template.garmentType.replace(/-/g, ' ')} silhouette and folds.`, 'ready');
     scheduleRender();
   }
 
@@ -295,11 +311,11 @@
 
   function resetPlacement() {
     const defaults = {
-      scale: 54,
+      scale: template.defaultScale,
       x: 0,
       y: 0,
       rotation: 0,
-      warp: 42,
+      warp: template.defaultWarp,
       opacity: 96
     };
     Object.entries(defaults).forEach(([key, value]) => {
@@ -353,12 +369,12 @@
         .replace(/^-+|-+$/g, '') || 'artwork';
       const objectUrl = URL.createObjectURL(blob);
       link.href = objectUrl;
-      link.download = `${safeName}-on-model-tshirt-mockup.png`;
+      link.download = `${safeName}-on-model-${template.exportSlug}-mockup.png`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-      setStatus('Mockup downloaded as a 1024 × 1536 PNG.', 'ready');
+      setStatus(`Mockup downloaded as a ${canvas.width} × ${canvas.height} PNG.`, 'ready');
       window.trackEvent?.('design_export', {
         export_format: 'png',
         export_type: 'on_model_mockup',

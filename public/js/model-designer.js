@@ -71,10 +71,10 @@ window.initializeModelDesigner = () => {
     },
     web: {
       environmentImage: 'neutral',
-      shadowIntensity: 1.7,
-      shadowSoftness: 0.48,
-      exposure: 0.78,
-      toneMapping: 'aces'
+      shadowIntensity: 0.58,
+      shadowSoftness: 0.94,
+      exposure: 0.96,
+      toneMapping: 'neutral'
     }
   };
   const renderStandardPromise = fetch('/config/design3d-render-standard.json')
@@ -162,6 +162,7 @@ window.initializeModelDesigner = () => {
     document.body.style.overflow = 'hidden';
     loadTextureDimensions();
     renderSelection();
+    renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
     window.loadClothingModelViewer?.(designerViewer).catch((error) => {
       console.warn('Failed to load the design preview:', error);
     });
@@ -221,6 +222,31 @@ window.initializeModelDesigner = () => {
     return false;
   }
 
+  function setFabricTextureRepeat(textureInfo, repeat = 1) {
+    const sampler = textureInfo?.texture?.sampler;
+    if (!sampler || !Number.isFinite(repeat) || repeat <= 0) return;
+    sampler.setScale?.({ u: repeat, v: repeat });
+  }
+
+  function applyFabricSurfaceResponse(modelMaterial, material) {
+    const sheenStrength = Math.max(0, Math.min(1, material.sheen ?? 0.2));
+    const sheenColor = [sheenStrength, sheenStrength, sheenStrength];
+    modelMaterial.setSheenColorFactor?.(sheenColor);
+    modelMaterial.setSheenRoughnessFactor?.(material.sheenRoughness ?? 0.8);
+    modelMaterial.setSpecularFactor?.(material.specular ?? 0.42);
+    modelMaterial.setSpecularColorFactor?.([1, 1, 1]);
+  }
+
+  function applyFabricLighting(viewerElement, renderStandard = defaultRenderStandard) {
+    if (!viewerElement) return;
+    const webStandard = renderStandard.web || defaultRenderStandard.web;
+    viewerElement.setAttribute('environment-image', webStandard.environmentImage || 'neutral');
+    viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.58));
+    viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.94));
+    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.96));
+    viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'neutral');
+  }
+
   function resetArtworkTextureTransform(textureInfo) {
     const sampler = textureInfo?.texture?.sampler;
     if (!sampler) return;
@@ -240,7 +266,7 @@ window.initializeModelDesigner = () => {
 
   async function loadMaterialMaps(viewerElement, material, options = {}) {
     const maps = {};
-    const mapNames = options.includeBaseColorMap
+    const mapNames = options.includeBaseColorMap !== false
       ? ['baseColor', 'normal', 'roughness']
       : ['normal', 'roughness'];
     await Promise.all(mapNames.map(async (mapName) => {
@@ -254,24 +280,28 @@ window.initializeModelDesigner = () => {
     try {
       await waitForModelViewerReady(viewerElement);
       const materials = viewerElement.model?.materials || [];
-      const colorFactor = [...hexToRgbUnit(material.color), 1];
       const maps = await loadMaterialMaps(viewerElement, material, {
-        includeBaseColorMap: options.includeBaseColorMap === true
+        includeBaseColorMap: options.includeBaseColorMap !== false
       });
+      const colorFactor = maps.baseColor ? [1, 1, 1, 1] : [...hexToRgbUnit(material.color), 1];
       materials.forEach((modelMaterial) => {
         const pbr = modelMaterial.pbrMetallicRoughness;
         pbr?.setBaseColorFactor?.(colorFactor);
         pbr?.setMetallicFactor?.(material.metalness ?? 0);
         pbr?.setRoughnessFactor?.(material.roughness ?? 0.8);
+        applyFabricSurfaceResponse(modelMaterial, material);
         if (maps.baseColor) {
           if (!setMaterialTextureSlot(pbr?.baseColorTexture, maps.baseColor)) {
             pbr?.setBaseColorTexture?.(maps.baseColor);
           }
+          setFabricTextureRepeat(pbr?.baseColorTexture, material.textureRepeat);
         }
         setMaterialTextureSlot(modelMaterial.normalTexture, maps.normal);
         modelMaterial.normalTexture?.setScale?.(material.normalScale ?? 0.1);
+        setFabricTextureRepeat(modelMaterial.normalTexture, material.textureRepeat);
         if (maps.roughness) {
           setMaterialTextureSlot(pbr?.metallicRoughnessTexture, maps.roughness);
+          setFabricTextureRepeat(pbr?.metallicRoughnessTexture, material.textureRepeat);
         }
       });
     } catch (error) {
@@ -283,7 +313,9 @@ window.initializeModelDesigner = () => {
     state.selectedMaterial = material;
     setDesignSaveStatus('Unapplied changes', true);
     materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
-      button.classList.toggle('active', button.dataset.materialId === material.id);
+      const isActive = button.dataset.materialId === material.id;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
     });
     const loadedViewers = getLoadedDesignViewers();
     await Promise.all(loadedViewers.map((viewerElement) => applyMaterialToViewer(viewerElement, material)));
@@ -299,9 +331,13 @@ window.initializeModelDesigner = () => {
       modelDesignerConfig.categorySlug || '',
       modelDesignerConfig.categoryLabel || ''
     ];
-    const materials = categoryInputs
+    const categoryMaterials = categoryInputs
       .map(value => window.Design3DMaterials.getMaterialsForCategory(value))
       .find(items => items.length > 0) || [];
+    const generatedMaterials = window.Design3DMaterials.getGeneratedMaterials?.()
+      || window.Design3DMaterials.materials.filter(material => material.generated);
+    const materials = [...categoryMaterials.filter(material => material.generated), ...generatedMaterials]
+      .filter((material, index, items) => items.findIndex(item => item.id === material.id) === index);
     materialSwatchGrid.innerHTML = '';
     if (materialCount) materialCount.textContent = String(materials.length);
     materials.forEach((material) => {
@@ -309,12 +345,15 @@ window.initializeModelDesigner = () => {
       button.type = 'button';
       button.className = 'material-swatch';
       button.dataset.materialId = material.id;
+      button.setAttribute('aria-pressed', 'false');
       button.title = `${material.name}: ${material.weave}`;
       button.innerHTML = `
-        <span class="material-ball" aria-hidden="true"></span>
+        <span class="material-swatch-preview" aria-hidden="true"></span>
         <span class="material-swatch-name">${material.name}</span>
       `;
-      button.querySelector('.material-ball').style.background = material.sphere;
+      const preview = button.querySelector('.material-swatch-preview');
+      preview.style.backgroundColor = material.color;
+      preview.style.backgroundImage = `url("${material.maps.baseColor}")`;
       button.addEventListener('click', () => applyMaterialPreset(material));
       materialSwatchGrid.appendChild(button);
     });
@@ -717,6 +756,7 @@ window.initializeModelDesigner = () => {
         if (!options.preserveMaterial && state.selectedMaterial) {
           pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
           pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
+          applyFabricSurfaceResponse(material, state.selectedMaterial);
         }
         const baseColorTexture = pbr?.baseColorTexture;
         if (baseColorTexture?.setTexture) {
@@ -728,8 +768,10 @@ window.initializeModelDesigner = () => {
         if (!options.preserveMaterial) {
           setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
           material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
+          setFabricTextureRepeat(material.normalTexture, state.selectedMaterial?.textureRepeat);
           if (materialMaps.roughness) {
             setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
+            setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial?.textureRepeat);
           }
         }
       });
@@ -2784,6 +2826,7 @@ window.initializeModelDesigner = () => {
   });
 
   designerViewer?.addEventListener('load', () => {
+    renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
     if (state.selectedMaterial) {
       applyMaterialToViewer(designerViewer, state.selectedMaterial);
     }

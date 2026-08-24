@@ -54,9 +54,9 @@
   ],
   "web": {
     "environmentImage": "neutral",
-    "shadowIntensity": 1.7,
-    "shadowSoftness": 0.48,
-    "exposure": 0.78,
-    "toneMapping": "aces"
+    "shadowIntensity": 0.58,
+    "shadowSoftness": 0.94,
+    "exposure": 0.96,
+    "toneMapping": "neutral"
   }
 }

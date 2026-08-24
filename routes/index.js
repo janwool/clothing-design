@@ -4,6 +4,13 @@ const fs = require('fs');
 const path = require('path');
 const db = require('../lib/db');
 const { getModelSlug, normalize3dModel, normalize3dModels } = require('../lib/slug');
+const {
+  findOnModelMockupAsset,
+  findOnModelMockupProfile,
+  findRelatedOnModelMockupAssets,
+  getOnModelMockupAssetSummary,
+  listOnModelMockupAssets
+} = require('../lib/on-model-mockups');
 const { shouldIndexModel } = require('../lib/seo-priority');
 const {
   buildModelCategoryLandingContent,
@@ -37,6 +44,36 @@ const MOCKUP_USE_CASE_IMAGES = [
 ];
 
 const MOCKUP_PAGE_SIZE = 48;
+const WHITE_MOCKUP_PAGE_SIZE = 30;
+const WHITE_MOCKUP_CATEGORIES = [
+  { slug: 'upper', label: 'Tops', description: 'Tees, shirts, jackets and layered tops' },
+  { slug: 'lower', label: 'Bottoms', description: 'Pants, shorts and skirts' },
+  { slug: 'full', label: 'Full looks', description: 'Dresses, suits and one-piece garments' },
+  { slug: 'head', label: 'Headwear', description: 'Hats and head pieces' },
+  { slug: 'accessory', label: 'Accessories', description: 'Garment-adjacent styling pieces' }
+];
+
+function formatWhiteMockupTitle(value) {
+  return String(value || 'On-model garment')
+    .replace(/^Model\s+\d+\s+/i, '')
+    .replace(/\s+From3d(?:\s+V\d+)?/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getWhiteMockupTypeLabel(garmentType) {
+  return WHITE_MOCKUP_CATEGORIES.find(category => category.slug === garmentType)?.label || 'Garment';
+}
+
+function getWhiteMockupTypeName(garmentType) {
+  return {
+    upper: 'top',
+    lower: 'bottom',
+    full: 'full-look garment',
+    head: 'headwear style',
+    accessory: 'accessory'
+  }[garmentType] || 'garment';
+}
 
 function normalizeMockupPage(value) {
   const page = Number.parseInt(value, 10);
@@ -1821,6 +1858,158 @@ router.get('/design-3d', (req, res) => {
   res.redirect(301, '/mockups');
 });
 
+router.get('/white-mockups', async (req, res) => {
+  const requestedType = String(req.query.type || '').trim().toLowerCase();
+  const activeType = WHITE_MOCKUP_CATEGORIES.some(category => category.slug === requestedType)
+    ? requestedType
+    : '';
+  try {
+    await ensureModelCategoryTable();
+    const [library, summary] = await Promise.all([
+      listOnModelMockupAssets({
+        garmentType: activeType,
+        page: normalizeMockupPage(req.query.page),
+        pageSize: WHITE_MOCKUP_PAGE_SIZE
+      }),
+      getOnModelMockupAssetSummary()
+    ]);
+    const params = new URLSearchParams();
+    if (activeType) params.set('type', activeType);
+    if (library.page > 1) params.set('page', String(library.page));
+    const collectionPath = params.size ? `/white-mockups?${params.toString()}` : '/white-mockups';
+    const activeCategory = WHITE_MOCKUP_CATEGORIES.find(category => category.slug === activeType) || null;
+    const description = 'Browse customizable on-model white garment mockups by clothing type. Review pose, fit and silhouette, upload artwork, change the background, and export a clean PNG.';
+    res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
+    res.render('white-mockups', {
+      title: activeCategory
+        ? `${activeCategory.label} White Mockups | ClothingDesign`
+        : 'On-Model White Mockup Library | ClothingDesign',
+      metaDescription: description,
+      metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
+      page: 'white-mockups',
+      pageStyles: ['/css/white-mockups.css?v=20260823'],
+      assets: library.assets,
+      assetSummary: summary,
+      activeType,
+      activeCategory,
+      categories: WHITE_MOCKUP_CATEGORIES.map(category => ({
+        ...category,
+        count: summary.counts[category.slug] || 0
+      })),
+      pagination: {
+        ...library,
+        pages: buildMockupPageNumbers(library.page, library.pageCount)
+      }
+    });
+  } catch (err) {
+    console.error('Error loading white mockup library:', err);
+    res.status(500).render('white-mockups', {
+      title: 'On-Model White Mockup Library | ClothingDesign',
+      metaDescription: 'Browse customizable on-model white garment mockups by clothing type.',
+      page: 'white-mockups',
+      pageStyles: ['/css/white-mockups.css?v=20260823'],
+      assets: [],
+      assetSummary: { total: 0, mappedModels: 0, counts: {} },
+      activeType: '',
+      activeCategory: null,
+      categories: WHITE_MOCKUP_CATEGORIES.map(category => ({ ...category, count: 0 })),
+      pagination: { page: 1, pageCount: 1, total: 0, start: 0, end: 0, pages: [1] }
+    });
+  }
+});
+
+router.get('/white-mockups/:assetName', async (req, res) => {
+  try {
+    const asset = await findOnModelMockupAsset(req.params.assetName);
+    if (!asset) {
+      return res.status(404).render('404', { title: 'Not Found', page: '' });
+    }
+
+    const relatedAssets = await findRelatedOnModelMockupAssets(asset);
+    const displayTitle = formatWhiteMockupTitle(asset.title || asset.asset_name);
+    const typeLabel = getWhiteMockupTypeLabel(asset.garment_type);
+    const typeName = getWhiteMockupTypeName(asset.garment_type);
+    const path = `/white-mockups/${asset.asset_name}`;
+    const description = `Customize the ${displayTitle} on-model white mockup online. Upload artwork, position it directly on the garment, change garment and background colors, and download a high-resolution PNG.`;
+    const faqItems = [
+      {
+        question: `How do I customize this ${typeName} white mockup?`,
+        answer: 'Upload a PNG, JPG, or WebP design, then drag it directly on the garment. Use the corner handles to resize it and the top handle to rotate it.'
+      },
+      {
+        question: 'Can I change the garment and mockup background colors?',
+        answer: 'Yes. Garment colors and background colors are controlled independently, so you can build a product colorway and then choose a setting for product pages, campaign boards, or apparel presentations.'
+      },
+      {
+        question: 'Does my artwork leave the browser?',
+        answer: 'No. Artwork placement and image compositing happen in your browser for a private, immediate preview.'
+      },
+      {
+        question: 'What file will I download?',
+        answer: `The editor exports a ${asset.canvas_width} × ${asset.canvas_height} PNG using the current artwork placement and selected background.`
+      }
+    ];
+
+    res.locals.canonicalUrl = toAbsoluteUrl(req, path);
+    res.render('white-mockup-detail', {
+      title: `${displayTitle} White Mockup Editor | ClothingDesign`,
+      metaDescription: description,
+      metaImage: firstImage(req, [asset.base_image_url]),
+      structuredData: [
+        ...pageStructuredData(req, {
+          type: 'WebPage',
+          name: `${displayTitle} On-Model White Mockup`,
+          description,
+          path,
+          image: asset.base_image_url,
+          breadcrumbs: [
+            { name: 'Home', url: '/' },
+            { name: 'White Mockups', url: '/white-mockups' },
+            { name: displayTitle, url: path }
+          ],
+          mainEntity: {
+            '@type': 'SoftwareApplication',
+            name: `${displayTitle} White Mockup Editor`,
+            applicationCategory: 'DesignApplication',
+            operatingSystem: 'Web browser',
+            image: firstImage(req, [asset.base_image_url]),
+            featureList: [
+              'Direct artwork placement',
+              'On-canvas scale and rotation',
+              'Garment color selection',
+              'Background selection',
+              'High-resolution PNG export'
+            ]
+          }
+        }),
+        {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faqItems.map(item => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: { '@type': 'Answer', text: item.answer }
+          }))
+        }
+      ],
+      page: 'white-mockups',
+      pageStyles: [
+        '/css/white-mockups.css?v=20260823',
+        '/css/white-mockup-detail.css?v=20260823-commercial-v2'
+      ],
+      asset,
+      displayTitle,
+      typeLabel,
+      typeName,
+      relatedAssets,
+      faqItems
+    });
+  } catch (err) {
+    console.error('Error loading white mockup detail:', err);
+    res.status(500).render('404', { title: 'Error', page: '' });
+  }
+});
+
 // Mockups
 router.get('/mockups', async (req, res) => {
   try {
@@ -2612,6 +2801,7 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     };
     const normalizedRelated = normalize3dModels(related);
     const modelDetailContent = buildModelDetailContent(normalizedModel, normalizedRelated, req);
+    const onModelMockupProfile = await findOnModelMockupProfile(normalizedModel.id);
 
     res.render('model-detail', {
       title: modelDetailContent.pageTitle,
@@ -2623,6 +2813,7 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       pageStyles: [],
       model: normalizedModel,
       modelDetailContent,
+      onModelMockupProfile,
       related: normalizedRelated,
       useLocalModelAssets: shouldUseLocalModelAssets(req)
     });
