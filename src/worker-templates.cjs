@@ -62,7 +62,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"error-section\">\n  <div class=\"container\">\n    <div class=\"error-content\">\n      <h1 class=\"error-code\">404</h1>\n      <h2 class=\"error-title\">Page Not Found</h2>\n      <p class=\"error-message\">The page you are looking for does not exist or has been moved.</p>\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n    </div>\n  </div>\n</section>\n\n<style>\n.error-section {\n  min-height: 70vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  padding: 4rem 0;\n}\n\n.error-code {\n  font-size: 6rem;\n  font-weight: 800;\n  color: var(--gray-200);\n  line-height: 1;\n  margin-bottom: 1rem;\n}\n\n.error-title {\n  font-size: 1.5rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.error-message {\n  color: var(--gray-600);\n  margin-bottom: 2rem;\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
@@ -132,7 +143,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -240,7 +262,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -324,7 +357,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -440,7 +484,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -696,7 +751,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -814,7 +880,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -952,7 +1029,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("  </main>\n</div>\n\n<script>\n// Admin sidebar toggle for mobile\nconst sidebarToggle = document.querySelector('.sidebar-toggle');\nconst adminSidebar = document.querySelector('.admin-sidebar');\n\nif (sidebarToggle) {\n  sidebarToggle.addEventListener('click', () => {\n    adminSidebar.classList.toggle('active');\n  });\n}\n\n// Close modal function\nfunction closeModal() {\n  const modal = document.querySelector('.modal-overlay');\n  if (modal) {\n    modal.remove();\n  }\n}\n\n// Delete confirmation\ndocument.querySelectorAll('.btn-delete').forEach(btn => {\n  btn.addEventListener('click', (e) => {\n    if (!confirm('Are you sure you want to delete this item?')) {\n      e.preventDefault();\n    }\n  });\n});\n</script>\n\n</body>\n</html>\n")
   return __output;
 
@@ -1019,7 +1107,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next ? i18next.language : 'en' ))
     ; __append("\" dir=\"")
@@ -1092,7 +1191,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("<aside class=\"admin-sidebar\">\n  <div class=\"sidebar-header\">\n    <a href=\"/admin\" class=\"sidebar-logo\">ClothingDesign</a>\n    <span class=\"sidebar-badge\">Admin</span>\n  </div>\n  \n  <nav class=\"sidebar-nav\">\n    <a href=\"/admin\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/>\n        <rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/>\n      </svg>\n      Dashboard\n    </a>\n    \n    <div class=\"sidebar-section\">Resources</div>\n    \n    <a href=\"/admin/models-3d\" class=\"sidebar-link ")
@@ -1175,7 +1285,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1293,7 +1414,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1387,7 +1519,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
@@ -1475,7 +1618,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
@@ -1565,7 +1719,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<article class=\"blog-article\">\n  <header class=\"article-hero\">\n    <div class=\"container\">\n      <nav class=\"article-breadcrumbs\" aria-label=\"Breadcrumb\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/blog\">Blog</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( article.category ))
@@ -1806,7 +1971,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
     ; __append(escapeFn( articles.length ))
@@ -1916,7 +2092,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header', { bodyClass: resourceType === '3d-models' ? 'category-catalog-page' : '' }) )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') { 
@@ -2202,7 +2389,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('design2d.pageTitle') ))
@@ -2326,7 +2524,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) )
     ; __append("\n")
     ; 
@@ -2549,7 +2758,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const previewModelFileUrl = model.file_url; 
@@ -2643,7 +2863,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title || 'Error' ))
     ; __append("</title>\n  <style>\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      background: #f8fafc;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 100vh;\n      padding: 2rem;\n    }\n    .error-container {\n      text-align: center;\n      max-width: 480px;\n    }\n    .error-code {\n      font-size: 6rem;\n      font-weight: 700;\n      color: #1e293b;\n      line-height: 1;\n      margin-bottom: 1rem;\n    }\n    .error-title {\n      font-size: 1.5rem;\n      color: #334155;\n      margin-bottom: 0.75rem;\n    }\n    .error-message {\n      color: #64748b;\n      margin-bottom: 2rem;\n      line-height: 1.6;\n    }\n    .error-actions {\n      display: flex;\n      gap: 1rem;\n      justify-content: center;\n    }\n    .btn {\n      padding: 0.75rem 1.5rem;\n      border-radius: 8px;\n      text-decoration: none;\n      font-weight: 500;\n      transition: all 0.2s;\n    }\n    .btn-primary {\n      background: #2563eb;\n      color: white;\n    }\n    .btn-primary:hover {\n      background: #1d4ed8;\n    }\n    .btn-ghost {\n      background: white;\n      color: #64748b;\n      border: 1px solid #e2e8f0;\n    }\n    .btn-ghost:hover {\n      background: #f1f5f9;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"error-container\">\n    <div class=\"error-code\">500</div>\n    <h1 class=\"error-title\">Something went wrong</h1>\n    <p class=\"error-message\">We're sorry, but something went wrong on our end. Please try again later.</p>\n    <div class=\"error-actions\">\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n      <a href=\"javascript:history.back()\" class=\"btn btn-ghost\">Go Back</a>\n    </div>\n  </div>\n</body>\n</html>\n")
@@ -2712,7 +2943,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('gallery.pageTitle') ))
@@ -2786,7 +3028,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const content = homeContent || {}; 
@@ -2996,7 +3249,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -3092,7 +3356,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero utility-page-hero-compact\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -3176,7 +3451,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page model-product-page' }) )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {}; 
@@ -3616,7 +3902,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
@@ -3749,7 +4046,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=20260805-overlay-fix\"></script>\n  <script src=\"/js/share.js?v=20260805-stable-events\" defer></script>\n</body>\n</html>\n")
@@ -3818,7 +4126,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ;  const content = landingContent || {}; 
     ; __append("\n")
     ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
@@ -4060,7 +4379,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
     ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
@@ -4238,7 +4568,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append("<aside\n  class=\"growth-share-panel\"\n  data-growth-share\n  data-share-surface=\"")
     ; __append(escapeFn( shareSurface ))
     ; __append("\"\n  data-share-title=\"")
@@ -4315,7 +4656,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"beta-access-hero\">\n  <div class=\"container beta-access-grid\">\n    <div class=\"beta-access-copy\">\n      <span class=\"generator-eyebrow\">Public beta access</span>\n      <h1>Design first.<br>Pay nothing.</h1>\n      <p>ClothingDesign is free while the browser mockup workflow is in public beta. Choose a garment, place artwork, review the shape, and export a transparent PNG.</p>\n      <div class=\"hero-actions\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary btn-large\">Start a T-shirt mockup</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">Browse all models</a>\n      </div>\n    </div>\n    <aside class=\"beta-access-card\" aria-label=\"Free beta access details\">\n      <div class=\"beta-access-price\"><strong>$0</strong><span>during public beta</span></div>\n      <ul>\n        <li><span>01</span> Browse the complete public 3D garment library</li>\n        <li><span>02</span> Test garment color and artwork placement</li>\n        <li><span>03</span> Review front, side, and back presentation angles</li>\n        <li><span>04</span> Export a transparent PNG mockup</li>\n      </ul>\n      <p>No payment details are requested. Cloud project storage, collaboration, and paid team plans are not currently offered.</p>\n    </aside>\n  </div>\n</section>\n\n<section class=\"beta-access-note\">\n  <div class=\"container beta-access-note-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">Clear expectations</span>\n      <h2>Mockup-ready, not production-spec CAD.</h2>\n    </div>\n    <p>Use exports for product-page drafts, POD planning, client review, and launch decks. Confirm dimensions, fabric behavior, and manufacturing requirements with your production partner.</p>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
@@ -4385,7 +4737,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"tool-detail-hero\">\n  <div class=\"container tool-detail-hero-grid\">\n    <div class=\"tool-detail-copy\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/tools\">Tools</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( toolPage.title ))
@@ -4726,7 +5089,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('tools.pageTitle') ))
@@ -4814,7 +5188,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) )
     ; __append("\n")
     ; 
@@ -4881,7 +5266,7 @@ title = __locals.title,
     ; __append(" × ")
     ; __append(escapeFn( asset.canvas_height ))
     ; __append(" PNG without installing design software.</p>\n      </div>\n      <ol class=\"white-detail-steps\">\n        <li><span>1</span><div><h3>Upload artwork</h3><p>Use a transparent PNG for the cleanest apparel graphic result.</p></div></li>\n        <li><span>2</span><div><h3>Place it on the garment</h3><p>Drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>\n        <li><span>3</span><div><h3>Set garment and background colors</h3><p>Build a product colorway, then match the setting to a catalog, campaign board, presentation, or store draft.</p></div></li>\n        <li><span>4</span><div><h3>Download the PNG</h3><p>Export the finished on-model mockup at its full source dimensions.</p></div></li>\n      </ol>\n    </section>\n\n    <section class=\"white-detail-faq\">\n      <div class=\"white-detail-section-heading\">\n        <span>FAQ</span>\n        <h2>Using this white mockup</h2>\n      </div>\n      <div class=\"white-detail-faq-list\">\n        ")
-    ;  faqItems.forEach(function(item, index) { 
+    ;  whiteFaqItems.forEach(function(item, index) { 
     ; __append("\n          <details ")
     ; __append(escapeFn( index === 0 ? 'open' : '' ))
     ; __append(">\n            <summary>")
@@ -4982,7 +5367,18 @@ title = __locals.title,
   shareSurface = __locals.shareSurface,
   shareTitle = __locals.shareTitle,
   shareKicker = __locals.shareKicker,
-  sharePrompt = __locals.sharePrompt;
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-library-page' }) )
     ; __append("\n")
     ; 

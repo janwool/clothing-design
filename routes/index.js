@@ -2002,7 +2002,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       typeLabel,
       typeName,
       relatedAssets,
-      faqItems
+      whiteFaqItems: faqItems
     });
   } catch (err) {
     console.error('Error loading white mockup detail:', err);

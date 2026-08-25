@@ -166,7 +166,7 @@
         <h2>Using this white mockup</h2>
       </div>
       <div class="white-detail-faq-list">
-        <% faqItems.forEach(function(item, index) { %>
+        <% whiteFaqItems.forEach(function(item, index) { %>
           <details <%= index === 0 ? 'open' : '' %>>
             <summary><%= item.question %><span aria-hidden="true">+</span></summary>
             <p><%= item.answer %></p>

@@ -46,7 +46,18 @@ const templateLocals = [
   'shareSurface',
   'shareTitle',
   'shareKicker',
-  'sharePrompt'
+  'sharePrompt',
+  'assets',
+  'assetSummary',
+  'activeType',
+  'activeCategory',
+  'pagination',
+  'asset',
+  'displayTitle',
+  'typeLabel',
+  'typeName',
+  'relatedAssets',
+  'whiteFaqItems'
 ];
 
 function walk(dir, predicate) {
