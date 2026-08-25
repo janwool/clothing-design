@@ -4,26 +4,34 @@
   "output": {
     "width": 1200,
     "height": 1500,
-    "background": "#F4F5F7",
+    "background": "transparent",
     "format": "webp",
-    "quality": 92
+    "quality": 92,
+    "alphaQuality": 100
   },
   "camera": {
     "direction": [-0.42, -1.0, 0.16],
     "distanceScale": 2.3,
-    "orthographicScale": 1.18,
+    "orthographicScale": 1.16,
     "webOrbit": "-48deg 72deg 142%",
     "webFieldOfView": "28deg",
     "webTarget": "auto auto auto"
   },
   "colorManagement": {
-    "viewTransform": "Standard",
-    "look": "Medium High Contrast",
-    "exposure": 0.8
+    "viewTransform": "AgX",
+    "look": "AgX - Medium High Contrast",
+    "exposure": 0.95
+  },
+  "samples": 64,
+  "material": {
+    "baseColor": [0.92, 0.92, 0.9],
+    "roughness": 0.68,
+    "specularIorLevel": 0.3,
+    "sheenWeight": 0.18
   },
   "ambient": {
     "color": [0.82, 0.85, 0.9],
-    "strength": 0.22
+    "strength": 0.3
   },
   "lightingNormalization": {
     "referenceBounds": 70.54,
@@ -40,14 +48,14 @@
     {
       "name": "Fill",
       "positionScale": [1.5, -1.25, 1.15],
-      "energy": 650,
+      "energy": 900,
       "sizeScale": 2.5,
       "color": [0.82, 0.9, 1.0]
     },
     {
       "name": "Rim",
       "positionScale": [0.4, 1.8, 1.7],
-      "energy": 620,
+      "energy": 700,
       "sizeScale": 1.8,
       "color": [0.88, 0.93, 1.0]
     }
