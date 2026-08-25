@@ -5299,7 +5299,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260824-commercial-v5\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260825-commercial-v6\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

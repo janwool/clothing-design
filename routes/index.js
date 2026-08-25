@@ -1887,7 +1887,7 @@ router.get('/white-mockups', async (req, res) => {
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260823'],
+      pageStyles: ['/css/white-mockups.css?v=20260825-commercial-v6'],
       assets: library.assets,
       assetSummary: summary,
       activeType,
@@ -1907,7 +1907,7 @@ router.get('/white-mockups', async (req, res) => {
       title: 'On-Model White Mockup Library | ClothingDesign',
       metaDescription: 'Browse customizable on-model white garment mockups by clothing type.',
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260823'],
+      pageStyles: ['/css/white-mockups.css?v=20260825-commercial-v6'],
       assets: [],
       assetSummary: { total: 0, mappedModels: 0, counts: {} },
       activeType: '',
@@ -1994,8 +1994,8 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       ],
       page: 'white-mockups',
       pageStyles: [
-        '/css/white-mockups.css?v=20260823',
-        '/css/white-mockup-detail.css?v=20260823-commercial-v2'
+        '/css/white-mockups.css?v=20260825-commercial-v6',
+        '/css/white-mockup-detail.css?v=20260825-commercial-v6'
       ],
       asset,
       displayTitle,

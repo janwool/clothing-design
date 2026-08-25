@@ -55,3 +55,13 @@ test('offers garment colorways without flattening the mockup shading', () => {
   assert.match(detailEditor, /globalCompositeOperation = 'multiply'/);
   assert.match(detailEditor, /setGarmentColor\(value\)/);
 });
+
+test('cache-busts commercial white mockup assets consistently', () => {
+  const libraryVersions = [...route.matchAll(/\/css\/white-mockups\.css\?v=([^'"\]]+)/g)]
+    .map(match => match[1]);
+  assert.ok(libraryVersions.length >= 3);
+  assert.equal(new Set(libraryVersions).size, 1);
+  assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
+  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260825-commercial-v6/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260825-commercial-v6/);
+});
