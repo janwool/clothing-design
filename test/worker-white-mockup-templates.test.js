@@ -25,6 +25,7 @@ test('renders the white mockup library with the Worker template runtime', () => 
 
   assert.match(html, /On-model white library/);
   assert.match(html, /No white mockups found/);
+  assert.match(html, /<body class="category-catalog-page white-mockup-library-page">/);
 });
 
 test('renders a white mockup detail page with the Worker template runtime', () => {
@@ -58,4 +59,15 @@ test('renders a white mockup detail page with the Worker template runtime', () =
 
   assert.match(html, /Crew-neck T-shirt White Mockup/);
   assert.match(html, /whiteMockupCanvas/);
+  assert.match(html, /<body class="category-catalog-page white-mockup-detail-page">/);
+});
+
+test('compiles model detail locals needed by the Worker-only render path', () => {
+  const generatedSource = require('node:fs').readFileSync(
+    require('node:path').join(__dirname, '..', 'src', 'worker-templates.cjs'),
+    'utf8'
+  );
+
+  assert.match(generatedSource, /bodyClass = __locals\.bodyClass/);
+  assert.match(generatedSource, /onModelMockupProfile = __locals\.onModelMockupProfile/);
 });
