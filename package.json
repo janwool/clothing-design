@@ -13,6 +13,7 @@
     "materials:upload": "node scripts/upload-materials-r2.js",
     "mockups:on-model:seed": "node scripts/seed-on-model-mockups.js",
     "mockups:on-model:refine": "python3 scripts/refine-on-model-mockup-masks.py --apply",
+    "mockups:on-model:d1-seed": "node scripts/generate-on-model-mockup-d1-seed.js",
     "mockups:on-model:upload": "node scripts/upload-on-model-mockups-r2.js",
     "mockups:on-model:validate": "node scripts/validate-on-model-mockup-assets.js",
     "content:seed": "node scripts/seed-category-landing-content.js",

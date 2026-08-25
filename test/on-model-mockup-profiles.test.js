@@ -11,6 +11,7 @@ const runtime = fs.readFileSync(path.join(root, 'public', 'js', 'on-model-mockup
 const whiteMockupRuntime = fs.readFileSync(path.join(root, 'public', 'js', 'white-mockup-editor.js'), 'utf8');
 const assetData = fs.readFileSync(path.join(root, 'lib', 'on-model-mockups.js'), 'utf8');
 const assetUploader = fs.readFileSync(path.join(root, 'scripts', 'upload-on-model-mockups-r2.js'), 'utf8');
+const d1SeedGenerator = fs.readFileSync(path.join(root, 'scripts', 'generate-on-model-mockup-d1-seed.js'), 'utf8');
 const manifest = JSON.parse(
   fs.readFileSync(path.join(root, 'public', 'config', 'on-model-mockup-assets.json'), 'utf8')
 );
@@ -104,4 +105,12 @@ test('serves generated mockup maps from their verified R2 asset path', () => {
   assert.match(assetUploader, /HeadObjectCommand/);
   assert.match(assetUploader, /Remote verification failed/);
   assert.match(assetUploader, /socketTimeout: 60_000/);
+});
+
+test('builds an idempotent production D1 seed using model slugs instead of local ids', () => {
+  assert.match(d1SeedGenerator, /SELECT id FROM models_3d WHERE slug=/);
+  assert.match(d1SeedGenerator, /ON CONFLICT\(asset_name\) DO UPDATE SET/);
+  assert.match(d1SeedGenerator, /ON CONFLICT\(model_id\) DO UPDATE SET/);
+  assert.match(d1SeedGenerator, /migrations.*0002_on_model_mockup_profiles\.sql/);
+  assert.match(d1SeedGenerator, /migrations.*0003_on_model_mockup_assets\.sql/);
 });
