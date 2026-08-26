@@ -5281,7 +5281,7 @@ title = __locals.title,
       .trim();
   };
   const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
-  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v5`;
+  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v6`;
 
     ; __append("\n\n<div class=\"white-detail-main\">\n  <div class=\"white-detail-shell\">\n    <nav class=\"white-detail-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/\">Home</a><span aria-hidden=\"true\">›</span>\n      <a href=\"/white-mockups\">White Mockups</a><span aria-hidden=\"true\">›</span>\n      <span aria-current=\"page\">")
     ; __append(escapeFn( displayTitle ))
@@ -5289,9 +5289,9 @@ title = __locals.title,
     ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n      data-mask-image=\"")
     ; __append(escapeFn( asset.mask_image_url ))
-    ; __append("?v=commercial-refine-v5\"\n      data-depth-image=\"")
+    ; __append("?v=commercial-refine-v6\"\n      data-depth-image=\"")
     ; __append(escapeFn( asset.depth_image_url ))
-    ; __append("?v=commercial-refine-v5\"\n      data-asset-name=\"")
+    ; __append("?v=commercial-refine-v6\"\n      data-asset-name=\"")
     ; __append(escapeFn( asset.asset_name ))
     ; __append("\"\n      data-garment-type=\"")
     ; __append(escapeFn( asset.garment_type ))

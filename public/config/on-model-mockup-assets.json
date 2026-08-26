@@ -409,16 +409,16 @@
       ],
       "render": [
         234,
-        259,
+        260,
         752,
-        769
+        768
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.118878,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
+      "coverage": 0.118909,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5+commercial-refine-v6",
       "preferredForModel": true
     },
     {

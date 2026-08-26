@@ -12,6 +12,7 @@ const whiteMockupRuntime = fs.readFileSync(path.join(root, 'public', 'js', 'whit
 const assetData = fs.readFileSync(path.join(root, 'lib', 'on-model-mockups.js'), 'utf8');
 const assetUploader = fs.readFileSync(path.join(root, 'scripts', 'upload-on-model-mockups-r2.js'), 'utf8');
 const d1SeedGenerator = fs.readFileSync(path.join(root, 'scripts', 'generate-on-model-mockup-d1-seed.js'), 'utf8');
+const maskRefinement = fs.readFileSync(path.join(root, 'scripts', 'refine-on-model-mockup-masks.py'), 'utf8');
 const manifest = JSON.parse(
   fs.readFileSync(path.join(root, 'public', 'config', 'on-model-mockup-assets.json'), 'utf8')
 );
@@ -74,6 +75,11 @@ test('keeps soft mask edges inside the garment to prevent color spill', () => {
   assert.match(whiteMockupRuntime, /\(alpha - 0\.14\) \/ 0\.70/);
   assert.match(whiteMockupRuntime, /normalized \* normalized \* \(3 - 2 \* normalized\)/);
   assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
+});
+
+test('feathers refined mask contours enough to remove raster stair steps', () => {
+  assert.match(maskRefinement, /sigmaX=1\.5/);
+  assert.match(maskRefinement, /commercial-refine-v6/);
 });
 
 test('indexes every generated image set while keeping one preferred profile per 3D model', () => {

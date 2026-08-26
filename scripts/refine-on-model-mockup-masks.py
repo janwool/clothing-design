@@ -492,7 +492,11 @@ def refine_mask(base, mask, record, person_alpha=None):
         refined = np.where(
             recovery_guard & (bright_fabric | collar_fabric), 255, refined
         ).astype(np.uint8)
-        refined = cv2.GaussianBlur(refined, (0, 0), sigmaX=0.55)
+        # A 1.5px subpixel feather removes the stair-step contour left by the
+        # segmentation raster without moving the semantic garment boundary.
+        # The editor's inward opacity curve then discards the faint outer tail,
+        # so arm gaps and exposed skin stay untouched.
+        refined = cv2.GaussianBlur(refined, (0, 0), sigmaX=1.5)
     refined[refined < 3] = 0
     original_area = int(np.count_nonzero(original >= 128))
     refined_area = int(np.count_nonzero(refined >= 128))
@@ -530,8 +534,8 @@ def update_record(record, mask):
             min(width, int(xs.max()) + 1 + padding), min(height, int(ys.max()) + 1 + padding),
         ]
     method = str(record.get("method", "existing"))
-    if "commercial-refine-v5" not in method:
-        updated["method"] = f"{method}+commercial-refine-v5"
+    if "commercial-refine-v6" not in method:
+        updated["method"] = f"{method}+commercial-refine-v6"
     return updated
 
 
@@ -548,7 +552,7 @@ def main():
     parser.add_argument("--apply", action="store_true")
     parser.add_argument(
         "--force", action="store_true",
-        help="Reprocess masks already marked commercial-refine-v5.",
+        help="Reprocess masks already marked commercial-refine-v6.",
     )
     parser.add_argument(
         "--asset", action="append", default=[],
@@ -591,7 +595,7 @@ def main():
         if args.asset and record["assetName"] not in args.asset:
             updated_assets.append(record)
             continue
-        if "commercial-refine-v5" in str(record.get("method", "")) and not args.force:
+        if "commercial-refine-v6" in str(record.get("method", "")) and not args.force:
             updated_assets.append(record)
             print(
                 f"[{index:03d}/{len(manifest['assets']):03d}] {record['assetName']}: "
