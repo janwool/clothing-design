@@ -8,7 +8,7 @@
       .trim();
   };
   const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
-  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v8`;
+  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v9`;
 %>
 
 <div class="white-detail-main">
@@ -23,8 +23,8 @@
       class="white-detail-product"
       id="whiteMockupEditor"
       data-base-image="<%= editorBaseImageUrl %>"
-      data-mask-image="<%= asset.mask_image_url %>?v=commercial-refine-v8"
-      data-depth-image="<%= asset.depth_image_url %>?v=commercial-refine-v8"
+      data-mask-image="<%= asset.mask_image_url %>?v=commercial-refine-v9"
+      data-depth-image="<%= asset.depth_image_url %>?v=commercial-refine-v9"
       data-asset-name="<%= asset.asset_name %>"
       data-garment-type="<%= asset.garment_type %>"
       data-canvas-width="<%= asset.canvas_width %>"

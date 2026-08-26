@@ -25,37 +25,6 @@ GRABCUT_PANEL_ASSETS = {
 BRIGHT_GARMENT_GUARD_ASSETS = {
     "open-front-blazer-female-front",
 }
-GUIDED_CUTOUTS = {
-    # Reviewed against the full-resolution source photograph. These strokes
-    # identify definite studio background, while GrabCut follows the real
-    # photographic garment edges inside the surrounding search corridors.
-    "model-004-roll-sleeve-henley-from3d-v1": {
-        "referenceSize": (1024, 1536),
-        "searchPolygons": [
-            [
-                (300, 355), (312, 395), (325, 435), (338, 475), (344, 520),
-                (338, 565), (325, 610), (308, 655), (286, 700), (270, 750),
-                (300, 750), (316, 705), (330, 660), (345, 615), (358, 570),
-                (365, 525), (360, 475), (348, 430), (332, 390), (316, 360),
-            ],
-            [
-                (610, 415), (613, 460), (617, 510), (621, 560), (627, 610),
-                (633, 660), (638, 710), (640, 755), (685, 730), (677, 680),
-                (669, 630), (661, 580), (652, 530), (642, 480), (631, 435),
-            ],
-        ],
-        "backgroundStrokes": [
-            [
-                (312, 380), (320, 410), (330, 450), (337, 490), (337, 530),
-                (330, 570), (318, 610), (304, 650), (288, 690), (278, 730),
-            ],
-            [
-                (621, 440), (625, 475), (630, 515), (634, 555), (638, 595),
-                (642, 635), (647, 675), (652, 710), (657, 730),
-            ],
-        ],
-    },
-}
 
 
 @dataclass
@@ -394,72 +363,6 @@ def trim_semantic_overflow(selected, neutral, region, name):
     return selected, removed
 
 
-def apply_reviewed_cutouts(refined, base_rgb, name):
-    """Remove reviewed negative space while following photographic edges."""
-    correction = GUIDED_CUTOUTS.get(name)
-    if correction is None:
-        return refined, 0
-    height, width = refined.shape
-    reference_width, reference_height = correction["referenceSize"]
-    scale_points = lambda points: np.asarray([
-        (
-            round(x * width / reference_width),
-            round(y * height / reference_height),
-        )
-        for x, y in points
-    ], dtype=np.int32)
-    search_polygons = [
-        scale_points(polygon) for polygon in correction["searchPolygons"]
-    ]
-    background_strokes = [
-        scale_points(stroke) for stroke in correction["backgroundStrokes"]
-    ]
-
-    source = refined >= 12
-    hsv = cv2.cvtColor(base_rgb, cv2.COLOR_RGB2HSV)
-    grabcut_mask = np.full(refined.shape, cv2.GC_BGD, dtype=np.uint8)
-    grabcut_mask[source] = cv2.GC_PR_FGD
-    bright_fabric = source & (hsv[:, :, 1] <= 22) & (hsv[:, :, 2] >= 230)
-    grabcut_mask[bright_fabric] = cv2.GC_FGD
-    stroke_width = max(5, round(min(width, height) / 114))
-    cv2.polylines(
-        grabcut_mask,
-        background_strokes,
-        False,
-        cv2.GC_BGD,
-        thickness=stroke_width,
-    )
-    background_model = np.zeros((1, 65), dtype=np.float64)
-    foreground_model = np.zeros((1, 65), dtype=np.float64)
-    cv2.grabCut(
-        cv2.cvtColor(base_rgb, cv2.COLOR_RGB2BGR),
-        grabcut_mask,
-        None,
-        background_model,
-        foreground_model,
-        8,
-        cv2.GC_INIT_WITH_MASK,
-    )
-    foreground = np.isin(grabcut_mask, (cv2.GC_FGD, cv2.GC_PR_FGD))
-    search = np.zeros(refined.shape, dtype=np.uint8)
-    cv2.fillPoly(search, search_polygons, 255)
-    cutout = (search > 0) & ~foreground
-    # Bridge small foreground notches inside an otherwise continuous studio
-    # channel. A roughly 2% kernel removes isolated bright reflections without
-    # shifting either of the two long photographic garment edges.
-    close_size = max(7, round(min(width, height) / 49))
-    if close_size % 2 == 0:
-        close_size += 1
-    cutout = cv2.morphologyEx(
-        cutout.astype(np.uint8),
-        cv2.MORPH_CLOSE,
-        cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (close_size, close_size)),
-    ) > 0
-    before = int(np.count_nonzero(refined))
-    refined[cutout] = 0
-    return refined, before - int(np.count_nonzero(refined))
-
-
 def refine_mask(base, mask, record, person_alpha=None):
     width, height = mask.size
     scale = min(1.0, 512 / max(width, height))
@@ -589,16 +492,11 @@ def refine_mask(base, mask, record, person_alpha=None):
         refined = np.where(
             recovery_guard & (bright_fabric | collar_fabric), 255, refined
         ).astype(np.uint8)
-        refined, manual_cutout_pixels_removed = apply_reviewed_cutouts(
-            refined, base_rgb, record["assetName"].lower()
-        )
         # A 1.5px subpixel feather removes the stair-step contour left by the
         # segmentation raster without moving the semantic garment boundary.
         # The editor's inward opacity curve then discards the faint outer tail,
         # so arm gaps and exposed skin stay untouched.
         refined = cv2.GaussianBlur(refined, (0, 0), sigmaX=1.5)
-    else:
-        manual_cutout_pixels_removed = 0
     refined[refined < 3] = 0
     original_area = int(np.count_nonzero(original >= 128))
     refined_area = int(np.count_nonzero(refined >= 128))
@@ -617,7 +515,6 @@ def refine_mask(base, mask, record, person_alpha=None):
         "photographicBoundaryPixelsRemovedAtWorkingSize": photographic_boundary_pixels_removed,
         "holePixelsFilledAtWorkingSize": hole_pixels_filled,
         "semanticPixelsRemovedAtWorkingSize": semantic_pixels_removed,
-        "manualCutoutPixelsRemovedAtExportSize": manual_cutout_pixels_removed,
         "originalCoverage": original_area / (width * height),
         "refinedCoverage": refined_area / (width * height),
         "removedFractionOfMask": max(0, original_area - refined_area) / max(1, original_area),
@@ -637,8 +534,8 @@ def update_record(record, mask):
             min(width, int(xs.max()) + 1 + padding), min(height, int(ys.max()) + 1 + padding),
         ]
     method = str(record.get("method", "existing"))
-    if "commercial-refine-v8" not in method:
-        updated["method"] = f"{method}+commercial-refine-v8"
+    if "commercial-refine-v9" not in method:
+        updated["method"] = f"{method}+commercial-refine-v9"
     return updated
 
 
@@ -655,7 +552,7 @@ def main():
     parser.add_argument("--apply", action="store_true")
     parser.add_argument(
         "--force", action="store_true",
-        help="Reprocess masks already marked commercial-refine-v8.",
+        help="Reprocess masks already marked commercial-refine-v9.",
     )
     parser.add_argument(
         "--asset", action="append", default=[],
@@ -698,7 +595,7 @@ def main():
         if args.asset and record["assetName"] not in args.asset:
             updated_assets.append(record)
             continue
-        if "commercial-refine-v8" in str(record.get("method", "")) and not args.force:
+        if "commercial-refine-v9" in str(record.get("method", "")) and not args.force:
             updated_assets.append(record)
             print(
                 f"[{index:03d}/{len(manifest['assets']):03d}] {record['assetName']}: "
