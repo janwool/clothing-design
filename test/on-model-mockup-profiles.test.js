@@ -79,13 +79,15 @@ test('keeps soft mask edges inside the garment to prevent color spill', () => {
 
 test('feathers refined mask contours enough to remove raster stair steps', () => {
   assert.match(maskRefinement, /sigmaX=1\.5/);
-  assert.match(maskRefinement, /commercial-refine-v7/);
+  assert.match(maskRefinement, /commercial-refine-v8/);
 });
 
-test('removes reviewed negative-space channels instead of tinting between sleeves and torso', () => {
+test('follows photographic edges when removing reviewed sleeve-to-torso channels', () => {
   assert.match(maskRefinement, /model-004-roll-sleeve-henley-from3d-v1/);
-  assert.match(maskRefinement, /def apply_reviewed_cutouts\(refined, name\)/);
-  assert.match(maskRefinement, /cv2\.fillPoly\(refined, polygons, 0\)/);
+  assert.match(maskRefinement, /def apply_reviewed_cutouts\(refined, base_rgb, name\)/);
+  assert.match(maskRefinement, /cv2\.polylines\(/);
+  assert.match(maskRefinement, /cv2\.grabCut\(/);
+  assert.match(maskRefinement, /cv2\.fillPoly\(search, search_polygons, 255\)/);
 });
 
 test('indexes every generated image set while keeping one preferred profile per 3D model', () => {
