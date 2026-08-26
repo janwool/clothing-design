@@ -5289,9 +5289,9 @@ title = __locals.title,
     ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n      data-mask-image=\"")
     ; __append(escapeFn( asset.mask_image_url ))
-    ; __append("?v=commercial-refine-v4\"\n      data-depth-image=\"")
+    ; __append("?v=commercial-refine-v5\"\n      data-depth-image=\"")
     ; __append(escapeFn( asset.depth_image_url ))
-    ; __append("?v=commercial-refine-v4\"\n      data-asset-name=\"")
+    ; __append("?v=commercial-refine-v5\"\n      data-asset-name=\"")
     ; __append(escapeFn( asset.asset_name ))
     ; __append("\"\n      data-garment-type=\"")
     ; __append(escapeFn( asset.garment_type ))
@@ -5379,7 +5379,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260826-commercial-v7\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260826-commercial-v8\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

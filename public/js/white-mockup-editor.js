@@ -111,10 +111,12 @@
 
   function maskOpacityAt(index) {
     const alpha = state.maskPixels[index] / 255;
-    if (alpha <= 0.06) return 0;
-    // Reject faint segmentation residue outside the garment, then strengthen
-    // the trusted photographic edge enough to avoid a pale source-color halo.
-    return Math.min(1, (alpha - 0.06) / 0.34);
+    if (alpha <= 0.14) return 0;
+    // Keep the antialiased edge inside the garment. The previous curve turned
+    // a partially transparent studio-edge pixel fully opaque, which made color
+    // spill visible around collars, cuffs, hands, and sleeve gaps.
+    const normalized = Math.min(1, (alpha - 0.14) / 0.70);
+    return normalized * normalized * (3 - 2 * normalized);
   }
 
   function buildGarmentMask() {

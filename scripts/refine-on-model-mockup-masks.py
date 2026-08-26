@@ -182,6 +182,55 @@ def recover_missing_white_panels(selected, rgb, neutral, skin, region, name):
     return recovered_selected, recovered
 
 
+def refine_white_garment_boundary(selected, rgb, neutral, skin, region, name):
+    """Use the source photograph to reject studio pixels inside a coarse mask.
+
+    Generated white garments can be separated reliably from the neutral studio
+    when the existing semantic mask supplies the region and bright fabric
+    supplies definite foreground seeds. This removes background wedges between
+    sleeves and the torso as well as the pale fringe outside cuffs and collars.
+    """
+    if region != "upper" or not np.any(selected):
+        return selected, 0
+    source = selected > 0
+    source_area = int(np.count_nonzero(source))
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+    outer_guard = cv2.dilate(source.astype(np.uint8), kernel, iterations=2) > 0
+    inner_core = cv2.erode(source.astype(np.uint8), kernel, iterations=2) > 0
+    brightness = rgb.astype(np.float32).mean(axis=2)
+    strong_fabric = inner_core & neutral & ~skin & (brightness >= 172)
+    if np.count_nonzero(strong_fabric) < max(32, round(source_area * 0.08)):
+        return selected, 0
+
+    grabcut_mask = np.full(selected.shape, cv2.GC_BGD, dtype=np.uint8)
+    grabcut_mask[outer_guard] = cv2.GC_PR_BGD
+    grabcut_mask[source] = cv2.GC_PR_FGD
+    grabcut_mask[strong_fabric] = cv2.GC_FGD
+    grabcut_mask[skin] = cv2.GC_BGD
+    background_model = np.zeros((1, 65), dtype=np.float64)
+    foreground_model = np.zeros((1, 65), dtype=np.float64)
+    cv2.grabCut(
+        cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR),
+        grabcut_mask,
+        None,
+        background_model,
+        foreground_model,
+        6,
+        cv2.GC_INIT_WITH_MASK,
+    )
+    candidate = np.isin(grabcut_mask, (cv2.GC_FGD, cv2.GC_PR_FGD)) & source
+    candidate_components = connected_components(candidate, neutral, skin)
+    retained, _ = select_components(candidate_components, region, name)
+    cleaned = component_mask(selected.shape, retained)
+    cleaned_area = int(np.count_nonzero(cleaned))
+    removed = source_area - cleaned_area
+    # A photographic refinement should trim a boundary, never replace a large
+    # part of the semantic garment. Fall back when the color model is uncertain.
+    if cleaned_area < round(source_area * 0.84):
+        return selected, 0
+    return cleaned, removed
+
+
 def fill_non_skin_holes(selected, neutral, skin):
     """Restore enclosed pocket/fold gaps while preserving skin and true cutouts."""
     background_components = connected_components(selected == 0, neutral, skin)
@@ -314,18 +363,27 @@ def trim_semantic_overflow(selected, neutral, region, name):
     return selected, removed
 
 
-def refine_mask(base, mask, record):
+def refine_mask(base, mask, record, person_alpha=None):
     width, height = mask.size
     scale = min(1.0, 512 / max(width, height))
     size = max(64, round(width * scale)), max(64, round(height * scale))
     rgb = np.asarray(base.convert("RGB").resize(size, Image.Resampling.LANCZOS))
     source = np.asarray(mask.convert("L").resize(size, Image.Resampling.BILINEAR))
+    if person_alpha is not None:
+        person_work = np.asarray(
+            person_alpha.convert("L").resize(size, Image.Resampling.BILINEAR),
+            dtype=np.uint8,
+        )
+        source = np.minimum(source, person_work)
     neutral, skin = color_classes(rgb)
     components = connected_components(source >= 128, neutral, skin)
     region = infer_region(record)
     retained, removed = select_components(components, region, record["assetName"].lower())
     selected = component_mask(source.shape, retained)
     selected, recovered_white_pixels = recover_missing_white_panels(
+        selected, rgb, neutral, skin, region, record["assetName"].lower()
+    )
+    selected, photographic_boundary_pixels_removed = refine_white_garment_boundary(
         selected, rgb, neutral, skin, region, record["assetName"].lower()
     )
 
@@ -374,9 +432,9 @@ def refine_mask(base, mask, record):
     )
     selected_image = Image.fromarray(selected, "L")
     selected_image = selected_image.filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
-    # Restore the original photographic antialiasing inside a one-pixel safety
-    # margin. Bilinear upscaling prevents block steps at 2K export resolution.
-    selected_image = selected_image.filter(ImageFilter.MaxFilter(3))
+    # Bilinear upscaling restores a soft photographic edge. Do not dilate the
+    # working mask here: one working pixel becomes several export pixels and
+    # creates the visible color fringe this pass is intended to remove.
     limiter = selected_image.resize((width, height), Image.Resampling.BILINEAR)
     limiter = limiter.filter(ImageFilter.GaussianBlur(radius=max(0.45, min(width, height) / 2200)))
     original = np.asarray(mask.convert("L"), dtype=np.uint8)
@@ -384,6 +442,57 @@ def refine_mask(base, mask, record):
     refined = np.minimum(original, limiter_pixels)
     if recovered_white_pixels:
         refined = np.where(original >= 3, refined, limiter_pixels).astype(np.uint8)
+    person_full = None
+    if person_alpha is not None:
+        person_full = np.asarray(
+            person_alpha.convert("L").resize((width, height), Image.Resampling.BILINEAR),
+            dtype=np.uint8,
+        )
+        refined = np.minimum(refined, person_full)
+
+    fragile_edge = any(
+        token in record["assetName"].lower()
+        for token in ("strap", "tie", "scarf", "fringe", "cami", "spaghetti")
+    )
+    if region in {"upper", "lower", "full"} and not fragile_edge:
+        # Pull the semantic edge one export pixel inside the garment, then
+        # recover only bright neutral fabric immediately beside it. This keeps
+        # white collar and cuff pixels while rejecting gray studio wedges and
+        # skin around the hands and neckline.
+        edge_kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        refined = cv2.erode(refined, edge_kernel, iterations=1)
+        base_rgb = np.asarray(base.convert("RGB"))
+        hsv = cv2.cvtColor(base_rgb, cv2.COLOR_RGB2HSV)
+        ycrcb = cv2.cvtColor(base_rgb, cv2.COLOR_RGB2YCrCb)
+        full_skin = (
+            (ycrcb[:, :, 1] >= 132) & (ycrcb[:, :, 1] <= 182)
+            & (ycrcb[:, :, 2] >= 74) & (ycrcb[:, :, 2] <= 138)
+            & (hsv[:, :, 1] >= 42) & (hsv[:, :, 2] >= 48)
+        )
+        skin_guard = cv2.dilate(full_skin.astype(np.uint8), edge_kernel, iterations=1) > 0
+        near_skin = cv2.dilate(
+            full_skin.astype(np.uint8),
+            cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (13, 13)),
+            iterations=1,
+        ) > 0
+        person_guard = person_full >= 96 if person_full is not None else np.ones_like(full_skin)
+        bright_fabric = (
+            (hsv[:, :, 1] <= 70) & (hsv[:, :, 2] >= 170)
+            & person_guard & ~skin_guard
+        )
+        collar_fabric = (
+            (hsv[:, :, 1] <= 45) & (hsv[:, :, 2] >= 205)
+            & near_skin & ~full_skin
+        )
+        recovery_guard = cv2.dilate(
+            (refined >= 96).astype(np.uint8),
+            cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (11, 11)),
+            iterations=1,
+        ) > 0
+        refined = np.where(
+            recovery_guard & (bright_fabric | collar_fabric), 255, refined
+        ).astype(np.uint8)
+        refined = cv2.GaussianBlur(refined, (0, 0), sigmaX=0.55)
     refined[refined < 3] = 0
     original_area = int(np.count_nonzero(original >= 128))
     refined_area = int(np.count_nonzero(refined >= 128))
@@ -399,6 +508,7 @@ def refine_mask(base, mask, record):
         "thinOverflowPixelsRemovedAtWorkingSize": thin_overflow_pixels_removed,
         "neutralStudioPixelsRemovedAtWorkingSize": neutral_studio_pixels_removed,
         "whitePanelPixelsRecoveredAtWorkingSize": recovered_white_pixels,
+        "photographicBoundaryPixelsRemovedAtWorkingSize": photographic_boundary_pixels_removed,
         "holePixelsFilledAtWorkingSize": hole_pixels_filled,
         "semanticPixelsRemovedAtWorkingSize": semantic_pixels_removed,
         "originalCoverage": original_area / (width * height),
@@ -420,8 +530,8 @@ def update_record(record, mask):
             min(width, int(xs.max()) + 1 + padding), min(height, int(ys.max()) + 1 + padding),
         ]
     method = str(record.get("method", "existing"))
-    if "commercial-refine-v4" not in method:
-        updated["method"] = f"{method}+commercial-refine-v4"
+    if "commercial-refine-v5" not in method:
+        updated["method"] = f"{method}+commercial-refine-v5"
     return updated
 
 
@@ -438,7 +548,7 @@ def main():
     parser.add_argument("--apply", action="store_true")
     parser.add_argument(
         "--force", action="store_true",
-        help="Reprocess masks already marked commercial-refine-v4.",
+        help="Reprocess masks already marked commercial-refine-v5.",
     )
     parser.add_argument(
         "--asset", action="append", default=[],
@@ -451,7 +561,24 @@ def main():
     parser.add_argument("--start-index", type=int, default=1)
     parser.add_argument("--end-index", type=int)
     parser.add_argument("--report", type=Path)
+    parser.add_argument(
+        "--foreground-model",
+        default="u2net_human_seg",
+        help="Human segmentation model used to preserve true arm and body cutouts; pass none to disable.",
+    )
     args = parser.parse_args()
+    remove_background = None
+    foreground_session = None
+    if args.foreground_model.lower() != "none":
+        try:
+            from rembg import new_session, remove
+        except ImportError as error:
+            raise SystemExit(
+                "Foreground-aware mask refinement requires rembg and onnxruntime. "
+                "Install requirements-on-model-mockups.txt or pass --foreground-model none."
+            ) from error
+        foreground_session = new_session(args.foreground_model)
+        remove_background = remove
     manifest = json.loads(args.manifest.read_text())
     reports, updated_assets = [], []
     for index, record in enumerate(manifest["assets"], start=1):
@@ -464,7 +591,7 @@ def main():
         if args.asset and record["assetName"] not in args.asset:
             updated_assets.append(record)
             continue
-        if "commercial-refine-v4" in str(record.get("method", "")) and not args.force:
+        if "commercial-refine-v5" in str(record.get("method", "")) and not args.force:
             updated_assets.append(record)
             print(
                 f"[{index:03d}/{len(manifest['assets']):03d}] {record['assetName']}: "
@@ -474,7 +601,17 @@ def main():
         base_path = args.asset_dir / Path(record["baseImageUrl"]).name
         mask_path = args.asset_dir / Path(record["maskImageUrl"]).name
         depth_path = args.asset_dir / Path(record["depthImageUrl"]).name
-        refined, report = refine_mask(Image.open(base_path), Image.open(mask_path), record)
+        base_image = Image.open(base_path)
+        person_alpha = None
+        if remove_background is not None:
+            person_alpha = remove_background(
+                base_image.convert("RGB"), session=foreground_session, only_mask=True
+            )
+            if not isinstance(person_alpha, Image.Image):
+                person_alpha = Image.fromarray(np.asarray(person_alpha, dtype=np.uint8))
+        refined, report = refine_mask(
+            base_image, Image.open(mask_path), record, person_alpha=person_alpha
+        )
         reports.append(report)
         updated_assets.append(update_record(record, refined))
         if args.apply:

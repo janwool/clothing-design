@@ -18,6 +18,9 @@ const publicBaseUrl = (process.env.R2_PUBLIC_URL || 'https://cdn.cloz-design.com
 const dryRun = process.argv.includes('--dry-run');
 const verifyOnly = process.argv.includes('--verify-only');
 const force = process.argv.includes('--force');
+const mapsOnly = process.argv.includes('--maps-only');
+const assetArgumentIndex = process.argv.indexOf('--asset');
+const selectedAsset = assetArgumentIndex >= 0 ? process.argv[assetArgumentIndex + 1] : null;
 const concurrency = Math.min(12, Math.max(1, Number.parseInt(process.env.R2_UPLOAD_CONCURRENCY, 10) || 6));
 
 function required(name) {
@@ -60,6 +63,7 @@ async function loadAssets() {
       filename: entry.name,
       filePath: path.join(assetDir, entry.name),
       key: objectKey(entry.name),
+      kind: match[2],
       size: stat.size
     });
     const kinds = groups.get(match[1]) || new Set();
@@ -75,7 +79,10 @@ async function loadAssets() {
   if (files.length !== groups.size * 3) {
     throw new Error(`Expected three files per asset set; found ${files.length} files for ${groups.size} sets`);
   }
-  return files.sort((left, right) => left.filename.localeCompare(right.filename));
+  return files
+    .filter(file => !mapsOnly || file.kind === 'mask' || file.kind === 'depth')
+    .filter(file => !selectedAsset || file.filename.startsWith(`${selectedAsset}-`))
+    .sort((left, right) => left.filename.localeCompare(right.filename));
 }
 
 async function remoteSize(client, file) {
@@ -139,8 +146,10 @@ async function main() {
     dryRun,
     verifyOnly,
     force,
+    mapsOnly,
+    selectedAsset,
     bucket,
-    assetSets: files.length / 3,
+    assetSets: mapsOnly ? files.length / 2 : files.length / 3,
     fileCount: files.length,
     totalBytes,
     concurrency,

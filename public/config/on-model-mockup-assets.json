@@ -18,17 +18,17 @@
         336
       ],
       "render": [
-        270,
-        243,
-        785,
-        883
+        277,
+        245,
+        777,
+        881
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.144835,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.139266,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -49,7 +49,7 @@
       ],
       "render": [
         151,
-        375,
+        373,
         873,
         1241
       ],
@@ -57,8 +57,8 @@
         48,
         34
       ],
-      "coverage": 0.306679,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.30541,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -79,16 +79,16 @@
       ],
       "render": [
         277,
-        519,
-        753,
-        1190
+        520,
+        755,
+        1192
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.149609,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.149097,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -108,17 +108,17 @@
         448
       ],
       "render": [
-        180,
-        387,
-        864,
-        1227
+        185,
+        386,
+        863,
+        1226
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.242366,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.240591,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -138,17 +138,17 @@
         272
       ],
       "render": [
-        140,
-        325,
+        141,
+        334,
         705,
-        795
+        794
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.106989,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.105351,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -168,17 +168,17 @@
         363
       ],
       "render": [
-        260,
-        585,
+        259,
+        586,
         816,
-        1205
+        1207
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.156441,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.157244,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -198,17 +198,17 @@
         276
       ],
       "render": [
-        294,
-        301,
-        720,
-        798
+        295,
+        299,
+        719,
+        797
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.099486,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.098924,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -228,17 +228,17 @@
         309
       ],
       "render": [
-        288,
-        265,
-        763,
+        289,
+        271,
+        765,
         1064
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.142778,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.140848,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -258,17 +258,17 @@
         308
       ],
       "render": [
-        270,
-        286,
-        744,
-        1051
+        271,
+        289,
+        743,
+        1049
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.16445,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.162416,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -288,8 +288,8 @@
         455
       ],
       "render": [
-        168,
-        390,
+        169,
+        392,
         863,
         1229
       ],
@@ -297,8 +297,8 @@
         48,
         34
       ],
-      "coverage": 0.290049,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.288045,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -318,17 +318,17 @@
         246
       ],
       "render": [
-        274,
-        289,
-        725,
-        898
+        275,
+        288,
+        724,
+        895
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.062702,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.059652,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -348,17 +348,17 @@
         294
       ],
       "render": [
-        321,
-        258,
-        775,
-        798
+        325,
+        278,
+        771,
+        797
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.113824,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.110235,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -378,17 +378,17 @@
         328
       ],
       "render": [
-        349,
-        248,
-        855,
-        787
+        351,
+        254,
+        852,
+        784
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.102619,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.099174,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -408,17 +408,17 @@
         339
       ],
       "render": [
-        233,
-        258,
-        753,
-        768
+        234,
+        259,
+        752,
+        769
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.12143,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.118878,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -438,17 +438,17 @@
         300
       ],
       "render": [
-        266,
-        266,
-        728,
-        795
+        274,
+        272,
+        725,
+        791
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.09744,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.094707,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -468,17 +468,17 @@
         266
       ],
       "render": [
-        321,
-        248,
-        731,
+        328,
+        269,
+        729,
         763
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.092536,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.090133,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -498,17 +498,17 @@
         310
       ],
       "render": [
-        269,
-        228,
-        747,
-        777
+        271,
+        260,
+        744,
+        776
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.099255,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.096855,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -528,17 +528,17 @@
         262
       ],
       "render": [
-        304,
-        283,
-        709,
-        744
+        310,
+        292,
+        703,
+        736
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.075394,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.07373,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -558,17 +558,17 @@
         247
       ],
       "render": [
-        414,
-        221,
-        798,
-        744
+        416,
+        223,
+        794,
+        735
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087139,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.082728,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -588,17 +588,17 @@
         352
       ],
       "render": [
-        253,
-        182,
-        795,
-        787
+        257,
+        194,
+        793,
+        781
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.125602,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.122168,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -618,17 +618,17 @@
         255
       ],
       "render": [
-        349,
-        215,
-        723,
-        722
+        352,
+        229,
+        720,
+        715
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.072154,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.068942,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -648,17 +648,17 @@
         273
       ],
       "render": [
-        284,
-        276,
-        703,
-        774
+        289,
+        278,
+        699,
+        749
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.096172,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.09145,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -678,17 +678,17 @@
         297
       ],
       "render": [
-        271,
-        230,
-        712,
-        810
+        276,
+        232,
+        690,
+        801
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.112169,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.106501,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -708,17 +708,17 @@
         291
       ],
       "render": [
-        322,
-        235,
-        740,
-        681
+        325,
+        247,
+        736,
+        674
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.080587,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.077557,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -738,17 +738,17 @@
         332
       ],
       "render": [
-        244,
-        228,
-        755,
-        762
+        253,
+        242,
+        754,
+        758
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.106763,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.103484,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -768,17 +768,17 @@
         298
       ],
       "render": [
-        296,
-        198,
-        755,
-        816
+        299,
+        250,
+        750,
+        809
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.108665,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.104832,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -798,17 +798,17 @@
         427
       ],
       "render": [
-        307,
-        339,
-        890,
-        933
+        309,
+        442,
+        885,
+        929
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.114617,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.109873,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -828,17 +828,17 @@
         247
       ],
       "render": [
-        323,
-        195,
-        706,
-        689
+        325,
+        215,
+        700,
+        688
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.07928,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.077341,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -858,17 +858,17 @@
         292
       ],
       "render": [
-        269,
-        228,
-        719,
-        786
+        273,
+        238,
+        705,
+        785
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087585,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.080002,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -888,17 +888,17 @@
         323
       ],
       "render": [
-        362,
-        277,
-        859,
-        792
+        364,
+        283,
+        853,
+        783
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.102509,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.098419,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -919,16 +919,16 @@
       ],
       "render": [
         168,
-        359,
-        934,
-        1061
+        360,
+        932,
+        1053
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.179609,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.172465,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -948,17 +948,17 @@
         335
       ],
       "render": [
-        261,
+        264,
         249,
-        775,
-        903
+        772,
+        822
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.133569,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.126035,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -978,17 +978,17 @@
         310
       ],
       "render": [
-        279,
-        165,
-        700,
-        927
+        280,
+        275,
+        683,
+        899
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.11998,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.112674,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1008,17 +1008,17 @@
         406
       ],
       "render": [
-        171,
-        248,
-        708,
-        815
+        172,
+        251,
+        693,
+        760
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.104937,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.097268,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1038,17 +1038,17 @@
         348
       ],
       "render": [
-        236,
-        294,
-        763,
-        732
+        241,
+        313,
+        757,
+        727
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.077751,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.074866,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1068,17 +1068,17 @@
         245
       ],
       "render": [
-        326,
-        272,
-        744,
-        687
+        343,
+        275,
+        741,
+        677
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.070365,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.064803,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1098,17 +1098,17 @@
         281
       ],
       "render": [
-        282,
-        192,
-        714,
-        753
+        289,
+        203,
+        711,
+        749
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.086665,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.083218,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1128,17 +1128,17 @@
         231
       ],
       "render": [
-        381,
-        155,
-        741,
-        708
+        384,
+        218,
+        740,
+        700
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.068772,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.065483,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1158,17 +1158,17 @@
         231
       ],
       "render": [
-        394,
-        209,
-        741,
-        667
+        405,
+        215,
+        740,
+        663
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.062731,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.061553,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1188,17 +1188,17 @@
         275
       ],
       "render": [
-        296,
-        260,
-        720,
-        783
+        301,
+        261,
+        717,
+        776
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.080849,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.07911,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1218,17 +1218,17 @@
         252
       ],
       "render": [
-        369,
-        207,
-        761,
-        785
+        372,
+        216,
+        756,
+        782
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.104886,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.101489,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1248,17 +1248,17 @@
         370
       ],
       "render": [
-        281,
-        166,
-        839,
-        771
+        287,
+        224,
+        837,
+        767
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.105613,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.101011,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1278,17 +1278,17 @@
         237
       ],
       "render": [
-        379,
-        222,
-        748,
+        382,
+        224,
+        745,
         753
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.083375,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.080304,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1308,17 +1308,17 @@
         278
       ],
       "render": [
-        361,
-        163,
-        793,
-        755
+        360,
+        172,
+        792,
+        751
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.115008,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.112667,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1338,17 +1338,17 @@
         359
       ],
       "render": [
-        304,
-        184,
-        793,
-        766
+        306,
+        189,
+        789,
+        762
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.117744,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.11317,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1368,17 +1368,17 @@
         267
       ],
       "render": [
-        351,
+        353,
         478,
-        813,
-        1361
+        816,
+        1364
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.084784,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.083404,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1398,17 +1398,17 @@
         285
       ],
       "render": [
-        329,
-        489,
-        746,
-        1338
+        331,
+        492,
+        741,
+        1335
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.124398,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.122583,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1429,7 +1429,7 @@
       ],
       "render": [
         163,
-        590,
+        593,
         746,
         1381
       ],
@@ -1437,8 +1437,8 @@
         48,
         34
       ],
-      "coverage": 0.113059,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.112538,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1458,17 +1458,17 @@
         408
       ],
       "render": [
-        161,
-        612,
+        163,
+        615,
         1069,
-        1272
+        1269
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.165342,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.164531,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1488,17 +1488,17 @@
         322
       ],
       "render": [
-        279,
-        546,
-        744,
-        1467
+        284,
+        550,
+        743,
+        1463
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.110136,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.107684,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1518,17 +1518,17 @@
         327
       ],
       "render": [
-        171,
-        511,
-        783,
-        1324
+        176,
+        512,
+        771,
+        1323
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.093002,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.090364,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1548,17 +1548,17 @@
         343
       ],
       "render": [
-        264,
-        561,
-        783,
-        1427
+        274,
+        565,
+        782,
+        1426
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.126844,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.123959,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1578,17 +1578,17 @@
         439
       ],
       "render": [
-        166,
-        584,
-        924,
+        167,
+        588,
+        923,
         1236
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.142286,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.140029,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1608,17 +1608,17 @@
         239
       ],
       "render": [
-        304,
-        672,
-        894,
-        1231
+        305,
+        676,
+        893,
+        1230
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087241,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.085373,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1639,16 +1639,16 @@
       ],
       "render": [
         421,
-        535,
-        758,
-        1310
+        536,
+        756,
+        1309
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.09828,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.096148,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1668,17 +1668,17 @@
         239
       ],
       "render": [
-        376,
-        535,
-        748,
-        1327
+        377,
+        539,
+        747,
+        1323
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.112132,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.110228,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1698,17 +1698,17 @@
         504
       ],
       "render": [
-        241,
-        491,
-        936,
-        1305
+        243,
+        495,
+        931,
+        1301
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.149474,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.146925,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1728,17 +1728,17 @@
         331
       ],
       "render": [
-        277,
-        597,
-        786,
-        1457
+        278,
+        601,
+        785,
+        1456
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.121375,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.118579,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1758,17 +1758,17 @@
         307
       ],
       "render": [
-        304,
-        532,
-        904,
-        1341
+        305,
+        533,
+        903,
+        1340
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.10522,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.102083,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1788,17 +1788,17 @@
         377
       ],
       "render": [
-        296,
+        297,
         549,
-        871,
+        869,
         1376
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.124347,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.12378,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1818,17 +1818,17 @@
         323
       ],
       "render": [
-        284,
-        491,
-        874,
-        1321
+        286,
+        495,
+        867,
+        1318
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.11798,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.116017,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1848,17 +1848,17 @@
         356
       ],
       "render": [
-        51,
-        595,
-        991,
-        1291
+        52,
+        596,
+        988,
+        1288
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.17275,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.170825,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1878,17 +1878,17 @@
         267
       ],
       "render": [
-        366,
+        367,
         511,
-        780,
-        1381
+        778,
+        1384
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.114849,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.113255,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1908,17 +1908,17 @@
         262
       ],
       "render": [
-        268,
-        565,
-        793,
-        1334
+        270,
+        566,
+        791,
+        1333
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.137653,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.135114,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1938,17 +1938,17 @@
         201
       ],
       "render": [
-        446,
-        489,
-        727,
-        744
+        448,
+        492,
+        723,
+        739
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.031279,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.030218,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -1968,17 +1968,17 @@
         254
       ],
       "render": [
-        466,
-        475,
-        746,
-        768
+        467,
+        479,
+        742,
+        764
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.034948,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.033175,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -1998,17 +1998,17 @@
         339
       ],
       "render": [
-        83,
-        565,
-        1019,
-        1261
+        84,
+        569,
+        1018,
+        1256
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.118896,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.116336,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2028,17 +2028,17 @@
         220
       ],
       "render": [
-        316,
-        546,
-        691,
-        902
+        317,
+        547,
+        689,
+        901
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.041134,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.03899,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2058,17 +2058,17 @@
         283
       ],
       "render": [
-        379,
-        527,
-        861,
-        946
+        380,
+        531,
+        860,
+        945
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.064116,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.063219,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2088,17 +2088,17 @@
         252
       ],
       "render": [
-        326,
-        609,
-        702,
-        1338
+        328,
+        613,
+        698,
+        1336
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.074796,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.072974,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2118,17 +2118,17 @@
         293
       ],
       "render": [
-        290,
-        237,
-        742,
-        765
+        292,
+        245,
+        738,
+        764
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.089228,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.084131,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2148,17 +2148,17 @@
         298
       ],
       "render": [
-        283,
-        255,
-        813,
-        777
+        287,
+        268,
+        810,
+        773
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.076253,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.071554,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2178,17 +2178,17 @@
         292
       ],
       "render": [
-        178,
-        190,
-        996,
-        683
+        186,
+        191,
+        995,
+        675
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.079164,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.07324,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2208,17 +2208,17 @@
         224
       ],
       "render": [
-        155,
-        212,
-        1046,
-        689
+        178,
+        216,
+        967,
+        664
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.084087,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.070638,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2238,17 +2238,17 @@
         224
       ],
       "render": [
-        374,
-        174,
-        803,
-        552
+        376,
+        183,
+        797,
+        549
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.049329,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.045311,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2268,17 +2268,17 @@
         291
       ],
       "render": [
-        290,
-        273,
-        739,
-        762
+        293,
+        291,
+        735,
+        755
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.05713,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.050714,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2298,17 +2298,17 @@
         297
       ],
       "render": [
-        282,
-        213,
-        739,
-        756
+        287,
+        217,
+        736,
+        749
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.092159,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.087565,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2328,17 +2328,17 @@
         310
       ],
       "render": [
-        193,
-        201,
-        994,
-        733
+        199,
+        213,
+        992,
+        713
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.119541,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.110587,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2358,17 +2358,17 @@
         260
       ],
       "render": [
-        318,
-        231,
-        720,
-        831
+        322,
+        246,
+        716,
+        827
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.104233,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.098941,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2388,17 +2388,17 @@
         291
       ],
       "render": [
-        336,
-        212,
-        786,
-        787
+        342,
+        224,
+        785,
+        782
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.096301,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.087696,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2418,17 +2418,17 @@
         261
       ],
       "render": [
-        294,
-        138,
-        885,
-        568
+        301,
+        151,
+        876,
+        562
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.058468,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.051311,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2448,17 +2448,17 @@
         279
       ],
       "render": [
-        341,
-        253,
-        924,
-        708
+        344,
+        325,
+        912,
+        705
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.064013,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.058344,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2478,17 +2478,17 @@
         273
       ],
       "render": [
-        349,
-        209,
-        881,
-        735
+        351,
+        218,
+        873,
+        730
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.08348,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.078358,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2508,17 +2508,17 @@
         262
       ],
       "render": [
-        374,
-        196,
-        796,
-        593
+        377,
+        203,
+        794,
+        584
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.06854,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.06155,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2538,17 +2538,17 @@
         342
       ],
       "render": [
-        415,
-        232,
-        871,
-        724
+        417,
+        248,
+        869,
+        719
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.091325,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.089204,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2568,17 +2568,17 @@
         322
       ],
       "render": [
-        301,
-        213,
-        795,
-        936
+        306,
+        225,
+        790,
+        927
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.126849,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.122443,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2598,17 +2598,17 @@
         338
       ],
       "render": [
-        247,
-        211,
-        766,
-        915
+        249,
+        273,
+        754,
+        903
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.145249,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.128647,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2628,17 +2628,17 @@
         359
       ],
       "render": [
-        252,
-        211,
-        802,
-        894
+        259,
+        216,
+        798,
+        890
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.15211,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.146021,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2659,16 +2659,16 @@
       ],
       "render": [
         271,
-        211,
-        810,
-        903
+        224,
+        807,
+        881
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.115821,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.109999,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2688,17 +2688,17 @@
         308
       ],
       "render": [
-        219,
-        241,
-        761,
-        762
+        220,
+        244,
+        759,
+        760
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.112687,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.108825,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2718,17 +2718,17 @@
         353
       ],
       "render": [
-        211,
-        133,
-        736,
-        626
+        216,
+        205,
+        734,
+        622
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.07589,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.070966,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2748,17 +2748,17 @@
         363
       ],
       "render": [
-        266,
-        233,
-        821,
-        777
+        271,
+        242,
+        819,
+        772
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.099648,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.096119,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2778,17 +2778,17 @@
         248
       ],
       "render": [
-        236,
-        133,
-        889,
-        497
+        239,
+        136,
+        884,
+        491
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.080096,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.074667,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2808,17 +2808,17 @@
         320
       ],
       "render": [
-        254,
-        133,
-        861,
-        549
+        257,
+        131,
+        857,
+        543
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.081247,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.076918,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2838,17 +2838,17 @@
         355
       ],
       "render": [
-        209,
-        163,
-        843,
-        705
+        210,
+        220,
+        842,
+        702
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087853,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.082276,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2868,17 +2868,17 @@
         307
       ],
       "render": [
-        296,
-        163,
-        886,
-        697
+        303,
+        167,
+        885,
+        688
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.094852,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.090048,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2898,17 +2898,17 @@
         352
       ],
       "render": [
-        359,
-        133,
-        901,
-        757
+        362,
+        196,
+        890,
+        748
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.123249,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.112139,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2928,17 +2928,17 @@
         315
       ],
       "render": [
-        269,
-        231,
-        753,
-        774
+        277,
+        247,
+        750,
+        765
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.116355,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.110364,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -2958,17 +2958,17 @@
         291
       ],
       "render": [
-        279,
-        187,
-        728,
-        810
+        283,
+        223,
+        723,
+        809
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.117015,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.112719,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -2988,17 +2988,17 @@
         281
       ],
       "render": [
-        331,
-        182,
-        766,
-        708
+        335,
+        196,
+        765,
+        703
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.108289,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.104671,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3018,17 +3018,17 @@
         422
       ],
       "render": [
-        239,
-        133,
-        886,
-        1231
+        241,
+        131,
+        885,
+        1227
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.191236,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.188006,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3049,16 +3049,16 @@
       ],
       "render": [
         244,
-        180,
-        744,
-        1512
+        182,
+        743,
+        1514
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.251202,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.24902,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3078,17 +3078,17 @@
         306
       ],
       "render": [
-        329,
-        246,
-        801,
-        1381
+        330,
+        247,
+        800,
+        1384
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.22637,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.224286,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3108,17 +3108,17 @@
         435
       ],
       "render": [
-        319,
-        272,
-        979,
-        1286
+        320,
+        274,
+        977,
+        1281
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.253849,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.251671,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3138,17 +3138,17 @@
         309
       ],
       "render": [
-        312,
-        227,
-        788,
-        1482
+        313,
+        230,
+        787,
+        1481
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.245155,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.242964,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3168,17 +3168,17 @@
         344
       ],
       "render": [
-        419,
-        209,
-        939,
-        1042
+        418,
+        219,
+        933,
+        1039
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.086708,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.081609,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3198,17 +3198,17 @@
         224
       ],
       "render": [
-        386,
-        163,
-        673,
-        1101
+        393,
+        187,
+        666,
+        1103
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.071338,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.067706,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3228,17 +3228,17 @@
         314
       ],
       "render": [
-        409,
-        241,
-        894,
+        410,
+        242,
+        893,
         1209
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.159826,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.158771,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3258,17 +3258,17 @@
         279
       ],
       "render": [
-        296,
-        255,
-        722,
-        1284
+        298,
+        257,
+        721,
+        1280
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.162723,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.161823,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3288,17 +3288,17 @@
         398
       ],
       "render": [
-        227,
-        277,
-        835,
-        1504
+        229,
+        278,
+        834,
+        1505
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.248181,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.246788,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3318,17 +3318,17 @@
         352
       ],
       "render": [
-        279,
-        277,
-        788,
-        1410
+        280,
+        278,
+        787,
+        1406
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.194536,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.192984,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3348,17 +3348,17 @@
         393
       ],
       "render": [
-        227,
-        171,
+        229,
+        196,
         1024,
-        1457
+        1456
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.346003,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.343587,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3378,17 +3378,17 @@
         459
       ],
       "render": [
-        169,
-        206,
-        871,
-        1359
+        172,
+        208,
+        870,
+        1360
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.25576,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.252611,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3408,17 +3408,17 @@
         246
       ],
       "render": [
-        323,
-        148,
-        687,
-        1138
+        325,
+        149,
+        686,
+        1139
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.111378,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.109922,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3438,17 +3438,17 @@
         246
       ],
       "render": [
-        346,
-        204,
-        687,
-        1185
+        347,
+        206,
+        686,
+        1184
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.112966,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.111221,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3468,17 +3468,17 @@
         406
       ],
       "render": [
-        197,
-        189,
-        887,
-        879
+        199,
+        195,
+        885,
+        877
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.129536,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.127244,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3498,17 +3498,17 @@
         385
       ],
       "render": [
-        231,
-        196,
-        1001,
-        862
+        232,
+        197,
+        998,
+        860
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.139957,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.137522,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3528,17 +3528,17 @@
         429
       ],
       "render": [
-        143,
-        244,
-        818,
-        1344
+        144,
+        245,
+        817,
+        1343
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.237562,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.23695,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3567,8 +3567,8 @@
         48,
         34
       ],
-      "coverage": 0.25794,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.257441,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3588,17 +3588,17 @@
         365
       ],
       "render": [
-        281,
-        192,
-        841,
-        985
+        285,
+        195,
+        840,
+        978
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.176021,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.173895,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3618,17 +3618,17 @@
         523
       ],
       "render": [
-        198,
-        251,
-        996,
-        1006
+        199,
+        252,
+        994,
+        1003
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.213038,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.210941,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3648,17 +3648,17 @@
         473
       ],
       "render": [
-        163,
-        226,
-        885,
-        1249
+        164,
+        227,
+        884,
+        1247
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.167109,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.164758,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3678,17 +3678,17 @@
         428
       ],
       "render": [
-        185,
-        187,
-        826,
-        1089
+        186,
+        192,
+        824,
+        1085
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.144503,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.142337,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3708,17 +3708,17 @@
         436
       ],
       "render": [
-        299,
-        187,
-        966,
+        300,
+        192,
+        964,
         1184
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.248439,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.245731,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3738,17 +3738,17 @@
         368
       ],
       "render": [
-        216,
-        134,
-        781,
-        1294
+        217,
+        136,
+        780,
+        1290
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.250856,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.248561,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3768,17 +3768,17 @@
         306
       ],
       "render": [
-        356,
-        133,
-        828,
-        1297
+        357,
+        135,
+        827,
+        1289
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.232103,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.229567,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -3799,16 +3799,16 @@
       ],
       "render": [
         208,
-        242,
-        858,
-        934
+        253,
+        851,
+        926
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.175171,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.168295,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3828,17 +3828,17 @@
         470
       ],
       "render": [
-        166,
-        169,
-        886,
-        1056
+        167,
+        178,
+        884,
+        1055
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.173495,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.170307,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3858,17 +3858,17 @@
         381
       ],
       "render": [
-        242,
-        133,
-        826,
-        1031
+        243,
+        134,
+        824,
+        1027
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.148981,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.145674,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3888,17 +3888,17 @@
         511
       ],
       "render": [
-        205,
-        148,
-        924,
-        1155
+        206,
+        149,
+        921,
+        1153
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.226782,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.223966,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3918,17 +3918,17 @@
         251
       ],
       "render": [
-        369,
-        240,
-        639,
-        548
+        375,
+        249,
+        635,
+        547
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.025475,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.024456,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3948,17 +3948,17 @@
         224
       ],
       "render": [
-        401,
-        217,
-        655,
-        694
+        404,
+        231,
+        652,
+        691
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.046021,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.045138,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -3978,17 +3978,17 @@
         389
       ],
       "render": [
-        307,
-        133,
-        808,
-        1381
+        309,
+        134,
+        807,
+        1384
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.248472,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.245602,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4008,17 +4008,17 @@
         302
       ],
       "render": [
-        273,
-        139,
-        741,
-        1224
+        271,
+        140,
+        739,
+        1225
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.199659,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.19818,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4038,17 +4038,17 @@
         361
       ],
       "render": [
-        230,
-        211,
-        783,
-        1374
+        232,
+        220,
+        782,
+        1373
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.245593,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.243423,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4068,17 +4068,17 @@
         555
       ],
       "render": [
-        259,
-        196,
-        1014,
+        261,
+        197,
+        1013,
         1343
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.245616,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.242317,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4098,17 +4098,17 @@
         305
       ],
       "render": [
-        245,
-        236,
-        714,
-        1344
+        248,
+        238,
+        713,
+        1343
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.161947,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.159675,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4128,17 +4128,17 @@
         285
       ],
       "render": [
-        344,
-        212,
-        785,
-        1379
+        345,
+        210,
+        783,
+        1378
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.181896,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.178736,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4158,17 +4158,17 @@
         269
       ],
       "render": [
-        216,
-        256,
-        828,
-        1375
+        219,
+        254,
+        827,
+        1374
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.140261,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.139061,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4188,17 +4188,17 @@
         246
       ],
       "render": [
-        352,
-        237,
-        672,
-        1492
+        355,
+        242,
+        667,
+        1490
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.157389,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.155745,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4218,17 +4218,17 @@
         246
       ],
       "render": [
-        341,
-        299,
-        690,
-        897
+        344,
+        298,
+        689,
+        898
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.083524,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.083353,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4249,16 +4249,16 @@
       ],
       "render": [
         406,
-        320,
-        675,
-        915
+        321,
+        673,
+        912
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.065169,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.064898,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4278,17 +4278,17 @@
         340
       ],
       "render": [
-        334,
-        522,
-        684,
-        873
+        335,
+        523,
+        686,
+        872
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.055195,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.054414,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4308,17 +4308,17 @@
         236
       ],
       "render": [
-        399,
-        461,
-        666,
-        815
+        400,
+        464,
+        665,
+        811
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.041475,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.040858,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4338,17 +4338,17 @@
         246
       ],
       "render": [
-        339,
-        504,
-        688,
-        1127
+        343,
+        508,
+        684,
+        1124
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.083378,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.082764,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4368,17 +4368,17 @@
         224
       ],
       "render": [
-        398,
-        466,
-        691,
-        1016
+        402,
+        467,
+        687,
+        1014
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.058155,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.056763,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4398,17 +4398,17 @@
         344
       ],
       "render": [
-        243,
-        472,
-        773,
-        1379
+        246,
+        476,
+        772,
+        1381
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.17743,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.176018,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4428,17 +4428,17 @@
         550
       ],
       "render": [
-        41,
-        531,
-        931,
-        1424
+        42,
+        532,
+        930,
+        1423
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.294395,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.292955,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4458,17 +4458,17 @@
         260
       ],
       "render": [
-        302,
-        516,
-        684,
-        985
+        305,
+        520,
+        683,
+        983
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.061713,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.060705,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4488,17 +4488,17 @@
         301
       ],
       "render": [
-        247,
-        525,
-        701,
-        1059
+        248,
+        526,
+        651,
+        1057
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.058791,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.056983,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4518,17 +4518,17 @@
         246
       ],
       "render": [
-        385,
-        525,
-        764,
-        870
+        386,
+        529,
+        762,
+        868
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.056774,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.05546,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4548,17 +4548,17 @@
         262
       ],
       "render": [
-        329,
-        212,
-        736,
-        776
+        331,
+        229,
+        731,
+        771
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.076299,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.072133,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4578,17 +4578,17 @@
         277
       ],
       "render": [
-        354,
+        361,
         211,
-        783,
-        779
+        781,
+        773
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.076326,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.07254,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4608,17 +4608,17 @@
         247
       ],
       "render": [
-        304,
-        219,
-        736,
-        792
+        310,
+        227,
+        733,
+        791
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087722,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.083998,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4638,17 +4638,17 @@
         355
       ],
       "render": [
-        247,
-        219,
-        791,
-        858
+        250,
+        226,
+        788,
+        854
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.119819,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.11663,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4668,17 +4668,17 @@
         290
       ],
       "render": [
-        324,
-        232,
-        770,
-        815
+        325,
+        241,
+        767,
+        812
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.123426,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.11885,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4698,17 +4698,17 @@
         290
       ],
       "render": [
-        274,
-        236,
-        720,
-        831
+        280,
+        238,
+        716,
+        824
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.100698,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.096518,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4728,17 +4728,17 @@
         323
       ],
       "render": [
-        253,
-        177,
-        880,
-        1134
+        254,
+        181,
+        879,
+        1131
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.111275,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.107755,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4758,17 +4758,17 @@
         273
       ],
       "render": [
-        282,
-        217,
-        703,
-        1416
+        283,
+        224,
+        705,
+        1412
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.156764,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.153882,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4788,17 +4788,17 @@
         290
       ],
       "render": [
-        349,
-        159,
-        798,
-        998
+        350,
+        162,
+        796,
+        995
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.107112,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.104932,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4818,17 +4818,17 @@
         353
       ],
       "render": [
-        219,
-        239,
-        761,
-        1119
+        220,
+        246,
+        759,
+        1115
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.154922,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.152587,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4848,17 +4848,17 @@
         250
       ],
       "render": [
-        374,
-        194,
-        763,
-        1056
+        375,
+        197,
+        761,
+        1052
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.142372,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.140173,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4878,17 +4878,17 @@
         376
       ],
       "render": [
-        211,
-        188,
-        861,
-        1129
+        213,
+        191,
+        860,
+        1126
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.158745,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.155703,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4908,17 +4908,17 @@
         404
       ],
       "render": [
-        364,
-        134,
-        914,
+        367,
+        140,
+        912,
         1341
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.179209,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.176712,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4938,17 +4938,17 @@
         258
       ],
       "render": [
-        326,
-        173,
-        517,
-        1326
+        328,
+        178,
+        516,
+        1325
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.090413,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.088722,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -4968,17 +4968,17 @@
         310
       ],
       "render": [
-        309,
-        179,
-        788,
-        1101
+        311,
+        184,
+        783,
+        1103
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.200783,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.195535,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -4999,7 +4999,7 @@
       ],
       "render": [
         226,
-        58,
+        59,
         746,
         513
       ],
@@ -5007,8 +5007,8 @@
         48,
         34
       ],
-      "coverage": 0.012878,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.012555,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5031,14 +5031,14 @@
         357,
         31,
         716,
-        513
+        511
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.013103,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.012763,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5067,8 +5067,8 @@
         48,
         34
       ],
-      "coverage": 0.005717,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.00565,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5097,8 +5097,8 @@
         48,
         34
       ],
-      "coverage": 0.009702,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.009634,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5120,15 +5120,15 @@
       "render": [
         364,
         76,
-        698,
-        280
+        697,
+        278
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.011021,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.010681,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5148,17 +5148,17 @@
         224
       ],
       "render": [
-        419,
+        420,
         41,
         756,
-        434
+        431
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.009395,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.009086,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5180,15 +5180,15 @@
       "render": [
         434,
         76,
-        793,
+        792,
         513
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.008197,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.008033,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5208,17 +5208,17 @@
         224
       ],
       "render": [
-        436,
+        437,
         48,
-        773,
+        771,
         513
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.007608,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.007371,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5238,7 +5238,7 @@
         245
       ],
       "render": [
-        359,
+        360,
         253,
         715,
         746
@@ -5247,8 +5247,8 @@
         48,
         34
       ],
-      "coverage": 0.05,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.049232,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5270,15 +5270,15 @@
       "render": [
         364,
         48,
-        761,
+        760,
         513
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.045137,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.044764,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5300,15 +5300,15 @@
       "render": [
         314,
         38,
-        698,
+        697,
         513
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.042161,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.041866,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5328,17 +5328,17 @@
         224
       ],
       "render": [
-        472,
+        475,
         53,
         691,
-        402
+        401
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.016243,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.016017,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5358,17 +5358,17 @@
         246
       ],
       "render": [
-        333,
-        220,
-        725,
-        786
+        339,
+        225,
+        697,
+        780
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.086458,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.080946,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5388,17 +5388,17 @@
         236
       ],
       "render": [
-        403,
-        211,
-        663,
-        535
+        405,
+        217,
+        654,
+        532
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.028033,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.027702,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5418,17 +5418,17 @@
         243
       ],
       "render": [
-        352,
-        226,
-        627,
-        591
+        356,
+        277,
+        623,
+        592
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.025889,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.024741,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5448,17 +5448,17 @@
         221
       ],
       "render": [
-        361,
-        171,
-        680,
-        538
+        363,
+        224,
+        671,
+        535
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.041628,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.040181,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5478,17 +5478,17 @@
         222
       ],
       "render": [
-        367,
-        243,
-        713,
-        612
+        372,
+        245,
+        712,
+        606
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.054332,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.053103,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5508,17 +5508,17 @@
         277
       ],
       "render": [
-        306,
-        213,
-        697,
-        792
+        313,
+        217,
+        660,
+        785
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.064131,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.05836,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5538,17 +5538,17 @@
         224
       ],
       "render": [
-        322,
-        212,
-        758,
-        831
+        325,
+        214,
+        757,
+        827
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.04408,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.042611,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": true
     },
     {
@@ -5568,17 +5568,17 @@
         260
       ],
       "render": [
-        334,
-        277,
-        736,
-        780
+        337,
+        284,
+        733,
+        767
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.098108,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.094327,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5598,17 +5598,17 @@
         255
       ],
       "render": [
-        329,
-        246,
-        717,
-        747
+        337,
+        256,
+        716,
+        743
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.076543,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.066123,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5628,17 +5628,17 @@
         263
       ],
       "render": [
-        296,
-        285,
-        703,
-        801
+        298,
+        293,
+        701,
+        795
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.087982,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.085732,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5658,17 +5658,17 @@
         398
       ],
       "render": [
-        247,
+        248,
         291,
-        886,
-        1210
+        888,
+        1209
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.211823,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.210206,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5689,16 +5689,16 @@
       ],
       "render": [
         272,
-        327,
-        753,
-        1236
+        328,
+        754,
+        1238
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.201392,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.201187,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5718,17 +5718,17 @@
         246
       ],
       "render": [
-        289,
-        286,
-        730,
-        783
+        292,
+        284,
+        723,
+        779
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.080442,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.079447,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5750,15 +5750,15 @@
       "render": [
         307,
         273,
-        732,
-        784
+        731,
+        783
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.088313,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.087497,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5778,7 +5778,7 @@
         447
       ],
       "render": [
-        180,
+        181,
         376,
         862,
         1223
@@ -5787,8 +5787,8 @@
         48,
         34
       ],
-      "coverage": 0.241198,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.239613,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5808,8 +5808,8 @@
         273
       ],
       "render": [
-        245,
-        301,
+        249,
+        304,
         769,
         784
       ],
@@ -5817,8 +5817,8 @@
         48,
         34
       ],
-      "coverage": 0.110993,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.110373,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5838,17 +5838,17 @@
         533
       ],
       "render": [
-        87,
-        321,
-        934,
-        1275
+        94,
+        330,
+        927,
+        1274
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.406956,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.398387,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5868,17 +5868,17 @@
         475
       ],
       "render": [
-        150,
-        351,
+        151,
+        355,
         874,
-        1221
+        1220
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.298801,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.298525,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5898,17 +5898,17 @@
         308
       ],
       "render": [
-        250,
-        259,
-        724,
-        765
+        254,
+        268,
+        720,
+        761
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.105661,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.103043,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5928,17 +5928,17 @@
         374
       ],
       "render": [
-        200,
-        304,
-        772,
-        1032
+        253,
+        312,
+        771,
+        1031
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.158334,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.144323,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5958,17 +5958,17 @@
         291
       ],
       "render": [
-        444,
-        294,
-        893,
-        867
+        447,
+        317,
+        891,
+        863
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.104652,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.097478,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -5988,17 +5988,17 @@
         382
       ],
       "render": [
-        321,
-        148,
-        906,
-        948
+        323,
+        145,
+        903,
+        931
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.143983,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.13374,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6018,17 +6018,17 @@
         261
       ],
       "render": [
-        311,
-        613,
-        714,
-        1430
+        310,
+        614,
+        713,
+        1429
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.147369,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.146207,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6048,17 +6048,17 @@
         246
       ],
       "render": [
-        324,
-        264,
-        754,
-        831
+        337,
+        271,
+        749,
+        827
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.092249,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.083544,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6078,17 +6078,17 @@
         246
       ],
       "render": [
-        346,
-        657,
+        347,
+        661,
         732,
-        1380
+        1379
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.088584,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.087346,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6109,16 +6109,16 @@
       ],
       "render": [
         335,
-        636,
-        712,
-        1374
+        637,
+        711,
+        1375
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.115033,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.114756,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6138,17 +6138,17 @@
         282
       ],
       "render": [
-        295,
-        394,
-        730,
-        1097
+        293,
+        395,
+        732,
+        1096
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.146154,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.145693,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6170,15 +6170,15 @@
       "render": [
         372,
         250,
-        758,
+        757,
         705
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.073987,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.07303,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6198,17 +6198,17 @@
         327
       ],
       "render": [
-        256,
+        257,
         286,
         758,
-        1170
+        1172
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.207731,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.207474,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6228,17 +6228,17 @@
         288
       ],
       "render": [
-        291,
-        273,
-        734,
-        804
+        298,
+        278,
+        727,
+        803
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.116222,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.111985,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6258,17 +6258,17 @@
         286
       ],
       "render": [
-        301,
-        288,
-        743,
-        1021
+        302,
+        287,
+        741,
+        1022
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.149378,
-      "method": "manual-profile-v1+commercial-refine-v3",
+      "coverage": 0.149197,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6288,8 +6288,8 @@
         452
       ],
       "render": [
-        161,
-        388,
+        163,
+        390,
         850,
         1243
       ],
@@ -6297,8 +6297,8 @@
         48,
         34
       ],
-      "coverage": 0.290581,
-      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.288876,
+      "method": "manual-profile-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6318,17 +6318,17 @@
         263
       ],
       "render": [
-        324,
-        570,
-        691,
-        963
+        326,
+        574,
+        687,
+        959
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.061752,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.060966,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6348,17 +6348,17 @@
         246
       ],
       "render": [
-        337,
-        228,
-        712,
-        762
+        340,
+        241,
+        710,
+        758
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.071151,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.068247,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6378,17 +6378,17 @@
         273
       ],
       "render": [
-        310,
-        228,
-        731,
-        774
+        313,
+        277,
+        728,
+        770
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.073651,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.068549,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6408,17 +6408,17 @@
         270
       ],
       "render": [
-        310,
-        222,
-        717,
-        714
+        313,
+        269,
+        711,
+        713
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.085386,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.082278,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6438,17 +6438,17 @@
         297
       ],
       "render": [
-        304,
-        549,
-        750,
-        1451
+        308,
+        553,
+        749,
+        1448
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.105117,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.10265,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6468,17 +6468,17 @@
         312
       ],
       "render": [
-        296,
-        291,
-        775,
-        816
+        299,
+        297,
+        771,
+        812
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.109879,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.10627,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6498,17 +6498,17 @@
         331
       ],
       "render": [
-        236,
-        183,
-        744,
-        768
+        239,
+        235,
+        738,
+        761
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.088809,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.08334,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6528,17 +6528,17 @@
         261
       ],
       "render": [
-        329,
-        525,
-        733,
-        1158
+        331,
+        529,
+        732,
+        1154
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.116193,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.115346,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6558,17 +6558,17 @@
         346
       ],
       "render": [
-        222,
-        244,
-        945,
-        1190
+        223,
+        249,
+        944,
+        1187
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.220271,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.218413,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6588,17 +6588,17 @@
         285
       ],
       "render": [
-        301,
-        162,
-        733,
-        768
+        304,
+        274,
+        732,
+        761
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.102481,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.098343,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6618,17 +6618,17 @@
         294
       ],
       "render": [
+        280,
         277,
-        207,
-        731,
-        786
+        726,
+        773
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.113595,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.108498,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6648,17 +6648,17 @@
         398
       ],
       "render": [
-        266,
-        272,
-        875,
-        1417
+        268,
+        274,
+        874,
+        1419
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.201351,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.198566,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6678,17 +6678,17 @@
         263
       ],
       "render": [
-        307,
-        263,
-        709,
-        867
+        310,
+        272,
+        705,
+        866
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.114741,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.111935,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6708,17 +6708,17 @@
         344
       ],
       "render": [
-        285,
-        525,
-        813,
-        1232
+        286,
+        529,
+        812,
+        1231
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.145967,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.144552,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6739,16 +6739,16 @@
       ],
       "render": [
         310,
-        255,
-        709,
-        735
+        257,
+        705,
+        733
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.076255,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.075597,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6768,17 +6768,17 @@
         246
       ],
       "render": [
-        348,
-        222,
-        673,
-        720
+        366,
+        239,
+        654,
+        718
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.061715,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.053524,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6798,17 +6798,17 @@
         289
       ],
       "render": [
-        307,
-        252,
-        744,
-        813
+        311,
+        250,
+        741,
+        806
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.071014,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.067722,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6828,17 +6828,17 @@
         246
       ],
       "render": [
-        420,
-        268,
-        662,
-        594
+        423,
+        274,
+        660,
+        584
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.027637,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.027192,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6858,17 +6858,17 @@
         309
       ],
       "render": [
-        260,
+        263,
         297,
-        733,
-        853
+        722,
+        828
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.123699,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.115884,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6888,17 +6888,17 @@
         266
       ],
       "render": [
-        318,
-        247,
-        728,
-        1176
+        319,
+        250,
+        726,
+        1174
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.16472,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.162916,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6919,16 +6919,16 @@
       ],
       "render": [
         304,
-        213,
-        764,
-        729
+        218,
+        761,
+        727
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.103179,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.099919,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6948,17 +6948,17 @@
         356
       ],
       "render": [
-        332,
-        555,
-        851,
-        1223
+        333,
+        559,
+        849,
+        1220
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.14865,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.146826,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -6978,17 +6978,17 @@
         263
       ],
       "render": [
-        285,
-        255,
-        692,
-        751
+        289,
+        284,
+        688,
+        745
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.082013,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.079033,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -7008,17 +7008,17 @@
         285
       ],
       "render": [
-        279,
-        180,
-        719,
-        990
+        282,
+        242,
+        714,
+        986
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.149144,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.143204,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -7038,17 +7038,17 @@
         253
       ],
       "render": [
-        355,
-        231,
-        717,
-        657
+        361,
+        250,
+        714,
+        644
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.059896,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.056143,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -7068,17 +7068,17 @@
         299
       ],
       "render": [
-        339,
-        531,
-        780,
-        1416
+        344,
+        535,
+        779,
+        1414
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.131676,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.128989,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -7098,17 +7098,17 @@
         246
       ],
       "render": [
-        345,
-        300,
-        657,
-        1124
+        346,
+        302,
+        656,
+        1121
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.119991,
-      "method": "automatic-white-garment-v1+commercial-refine-v3",
+      "coverage": 0.118742,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v5",
       "preferredForModel": false
     },
     {
@@ -7128,17 +7128,17 @@
         313
       ],
       "render": [
+        277,
         274,
-        249,
-        755,
-        789
+        754,
+        782
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.109242,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4",
+      "coverage": 0.104952,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5",
       "preferredForModel": false
     }
   ]

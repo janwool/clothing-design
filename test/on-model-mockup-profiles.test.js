@@ -68,10 +68,11 @@ test('uses database-provided placement and export settings at render time', () =
   assert.doesNotMatch(runtime, /on-model-tshirt-mockup\.png/);
 });
 
-test('strengthens soft mask edges to avoid pale garment color halos', () => {
+test('keeps soft mask edges inside the garment to prevent color spill', () => {
   assert.match(whiteMockupRuntime, /function maskOpacityAt\(index\)/);
-  assert.match(whiteMockupRuntime, /alpha <= 0\.06/);
-  assert.match(whiteMockupRuntime, /\(alpha - 0\.06\) \/ 0\.34/);
+  assert.match(whiteMockupRuntime, /alpha <= 0\.14/);
+  assert.match(whiteMockupRuntime, /\(alpha - 0\.14\) \/ 0\.70/);
+  assert.match(whiteMockupRuntime, /normalized \* normalized \* \(3 - 2 \* normalized\)/);
   assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
 });
 
@@ -105,6 +106,7 @@ test('serves generated mockup maps from their verified R2 asset path', () => {
   assert.match(assetUploader, /HeadObjectCommand/);
   assert.match(assetUploader, /Remote verification failed/);
   assert.match(assetUploader, /socketTimeout: 60_000/);
+  assert.match(assetUploader, /mapsOnly/);
 });
 
 test('builds an idempotent production D1 seed using model slugs instead of local ids', () => {
