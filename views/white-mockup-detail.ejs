@@ -7,6 +7,8 @@
       .replace(/\s+/g, ' ')
       .trim();
   };
+  const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
+  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v5`;
 %>
 
 <div class="white-detail-main">
@@ -20,7 +22,7 @@
     <section
       class="white-detail-product"
       id="whiteMockupEditor"
-      data-base-image="<%= asset.base_image_url %>"
+      data-base-image="<%= editorBaseImageUrl %>"
       data-mask-image="<%= asset.mask_image_url %>?v=commercial-refine-v4"
       data-depth-image="<%= asset.depth_image_url %>?v=commercial-refine-v4"
       data-asset-name="<%= asset.asset_name %>"
@@ -42,7 +44,8 @@
         <div class="white-detail-stage" id="whiteMockupStage">
           <img
             class="white-detail-stage-poster"
-            src="<%= asset.base_image_url %>"
+            crossorigin="anonymous"
+            src="<%= editorBaseImageUrl %>"
             alt="<%= displayTitle %> white mockup preview"
             width="<%= asset.canvas_width %>"
             height="<%= asset.canvas_height %>"

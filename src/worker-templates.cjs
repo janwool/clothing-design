@@ -5280,11 +5280,13 @@ title = __locals.title,
       .replace(/\s+/g, ' ')
       .trim();
   };
+  const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
+  const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v5`;
 
     ; __append("\n\n<div class=\"white-detail-main\">\n  <div class=\"white-detail-shell\">\n    <nav class=\"white-detail-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/\">Home</a><span aria-hidden=\"true\">›</span>\n      <a href=\"/white-mockups\">White Mockups</a><span aria-hidden=\"true\">›</span>\n      <span aria-current=\"page\">")
     ; __append(escapeFn( displayTitle ))
     ; __append("</span>\n    </nav>\n\n    <section\n      class=\"white-detail-product\"\n      id=\"whiteMockupEditor\"\n      data-base-image=\"")
-    ; __append(escapeFn( asset.base_image_url ))
+    ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n      data-mask-image=\"")
     ; __append(escapeFn( asset.mask_image_url ))
     ; __append("?v=commercial-refine-v4\"\n      data-depth-image=\"")
@@ -5317,8 +5319,8 @@ title = __locals.title,
     ; __append(escapeFn( asset.default_scale ))
     ; __append("\"\n      data-default-warp=\"")
     ; __append(escapeFn( asset.default_warp ))
-    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <img\n            class=\"white-detail-stage-poster\"\n            src=\"")
-    ; __append(escapeFn( asset.base_image_url ))
+    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <img\n            class=\"white-detail-stage-poster\"\n            crossorigin=\"anonymous\"\n            src=\"")
+    ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n            alt=\"")
     ; __append(escapeFn( displayTitle ))
     ; __append(" white mockup preview\"\n            width=\"")

@@ -66,5 +66,8 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260826-commercial-v7/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
+  assert.match(detailView, /crossorigin="anonymous"/);
+  assert.match(detailView, /data-base-image="<%= editorBaseImageUrl %>"/);
+  assert.match(detailView, /src="<%= editorBaseImageUrl %>"/);
   assert.match(detailEditor, /stage\.classList\.add\('is-ready'\)/);
 });
