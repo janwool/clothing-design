@@ -4,6 +4,7 @@
   const editor = document.getElementById('whiteMockupEditor');
   if (!editor) return;
 
+  const stage = document.getElementById('whiteMockupStage');
   const canvas = document.getElementById('whiteMockupCanvas');
   const context = canvas.getContext('2d', { willReadFrequently: true });
   const input = document.getElementById('whiteMockupArtworkInput');
@@ -421,13 +422,15 @@
       baseContext.drawImage(baseImage, 0, 0, baseCanvas.width, baseCanvas.height);
       buildForegroundCutout();
       state.ready = true;
+      render({ forceQuality: true });
+      stage.classList.add('is-ready');
       loading.hidden = true;
       setStatus('Ready for your design.');
-      scheduleRender();
     } catch (error) {
       console.error(error);
+      stage.classList.add('is-error');
       loading.hidden = true;
-      setStatus('This mockup could not be prepared. Refresh the page and try again.', true);
+      setStatus('The preview is available, but editing controls could not be prepared. Refresh the page and try again.', true);
     }
   }
 

@@ -40,6 +40,15 @@
     >
       <div class="white-detail-stage-column">
         <div class="white-detail-stage" id="whiteMockupStage">
+          <img
+            class="white-detail-stage-poster"
+            src="<%= asset.base_image_url %>"
+            alt="<%= displayTitle %> white mockup preview"
+            width="<%= asset.canvas_width %>"
+            height="<%= asset.canvas_height %>"
+            fetchpriority="high"
+            decoding="async"
+          >
           <canvas
             id="whiteMockupCanvas"
             width="<%= asset.canvas_width %>"
@@ -195,5 +204,5 @@
   </div>
 </div>
 
-<script src="/js/white-mockup-editor.js?v=20260825-commercial-v6" defer></script>
+<script src="/js/white-mockup-editor.js?v=20260826-commercial-v7" defer></script>
 <%- include('partials/footer') %>

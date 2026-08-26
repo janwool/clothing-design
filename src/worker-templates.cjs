@@ -5317,7 +5317,15 @@ title = __locals.title,
     ; __append(escapeFn( asset.default_scale ))
     ; __append("\"\n      data-default-warp=\"")
     ; __append(escapeFn( asset.default_warp ))
-    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <canvas\n            id=\"whiteMockupCanvas\"\n            width=\"")
+    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <img\n            class=\"white-detail-stage-poster\"\n            src=\"")
+    ; __append(escapeFn( asset.base_image_url ))
+    ; __append("\"\n            alt=\"")
+    ; __append(escapeFn( displayTitle ))
+    ; __append(" white mockup preview\"\n            width=\"")
+    ; __append(escapeFn( asset.canvas_width ))
+    ; __append("\"\n            height=\"")
+    ; __append(escapeFn( asset.canvas_height ))
+    ; __append("\"\n            fetchpriority=\"high\"\n            decoding=\"async\"\n          >\n          <canvas\n            id=\"whiteMockupCanvas\"\n            width=\"")
     ; __append(escapeFn( asset.canvas_width ))
     ; __append("\"\n            height=\"")
     ; __append(escapeFn( asset.canvas_height ))
@@ -5369,7 +5377,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260825-commercial-v6\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260826-commercial-v7\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

@@ -67,6 +67,29 @@
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.24);
 }
 
+.white-detail-stage-poster,
+#whiteMockupCanvas {
+  grid-area: 1 / 1;
+}
+
+.white-detail-stage-poster {
+  position: relative;
+  z-index: 0;
+  width: auto;
+  max-width: 100%;
+  height: min(820px, calc(100vh - 136px));
+  max-height: 100%;
+  display: block;
+  object-fit: contain;
+  opacity: 1;
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.white-detail-stage.is-ready .white-detail-stage-poster {
+  visibility: hidden;
+  opacity: 0;
+}
+
 #whiteMockupCanvas {
   position: relative;
   z-index: 1;
@@ -156,7 +179,10 @@
   justify-content: center;
   gap: 9px;
   color: #5d5d58;
-  background: #e3e1dc;
+  pointer-events: none;
+  background: rgba(227, 225, 220, 0.42);
+  -webkit-backdrop-filter: blur(1.5px);
+  backdrop-filter: blur(1.5px);
   font-size: 11px;
   letter-spacing: 0.02em;
 }

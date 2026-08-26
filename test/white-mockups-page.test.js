@@ -62,6 +62,9 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
   assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
-  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260825-commercial-v6/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260825-commercial-v6/);
+  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260826-commercial-v7/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260826-commercial-v7/);
+  assert.match(detailView, /class="white-detail-stage-poster"/);
+  assert.match(detailView, /fetchpriority="high"/);
+  assert.match(detailEditor, /stage\.classList\.add\('is-ready'\)/);
 });

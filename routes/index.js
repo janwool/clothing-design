@@ -1995,7 +1995,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       page: 'white-mockups',
       pageStyles: [
         '/css/white-mockups.css?v=20260825-commercial-v6',
-        '/css/white-mockup-detail.css?v=20260825-commercial-v6'
+        '/css/white-mockup-detail.css?v=20260826-commercial-v7'
       ],
       asset,
       displayTitle,
