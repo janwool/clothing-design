@@ -25,6 +25,25 @@ GRABCUT_PANEL_ASSETS = {
 BRIGHT_GARMENT_GUARD_ASSETS = {
     "open-front-blazer-female-front",
 }
+VISUAL_SOFT_ALPHA_STROKES = {
+    # This generated photograph has an unusually deep fold where the right
+    # sleeve overlaps the body. Keep the fabric colored, but reduce tint inside
+    # the fold so it reads as depth instead of a solid blue strip. Coordinates
+    # are normalized to keep the correction resolution-independent.
+    "model-004-roll-sleeve-henley-from3d-v1": ({
+        "points": (
+            (0.6045, 0.2930),
+            (0.6035, 0.3320),
+            (0.6065, 0.3710),
+            (0.6115, 0.3970),
+            (0.6175, 0.4245),
+        ),
+        "radius": 0.0042,
+        "strength": 0.52,
+        "dark_start": 224,
+        "dark_full": 92,
+    },),
+}
 
 
 @dataclass
@@ -363,6 +382,53 @@ def trim_semantic_overflow(selected, neutral, region, name):
     return selected, removed
 
 
+def apply_visual_soft_alpha_strokes(refined, rgb, name):
+    """Apply reviewed, feathered opacity corrections without binary cutouts.
+
+    These strokes are reserved for photographic folds whose meaning is clear
+    visually but ambiguous to semantic segmentation. Each stroke sets a soft
+    upper bound on alpha, so rerunning refinement is idempotent and can never
+    turn a garment panel into a hard white hole.
+    """
+    strokes = VISUAL_SOFT_ALPHA_STROKES.get(name)
+    if not strokes:
+        return refined, 0
+    height, width = refined.shape
+    luminance = cv2.cvtColor(rgb, cv2.COLOR_RGB2GRAY).astype(np.float32)
+    output = refined.copy()
+    changed = np.zeros_like(refined, dtype=bool)
+    for stroke in strokes:
+        centerline = np.zeros_like(refined, dtype=np.uint8)
+        points = np.asarray([
+            (round(x * width), round(y * height)) for x, y in stroke["points"]
+        ], dtype=np.int32)
+        radius = max(2, round(stroke["radius"] * min(width, height)))
+        cv2.polylines(
+            centerline,
+            [points],
+            isClosed=False,
+            color=255,
+            thickness=max(1, radius),
+            lineType=cv2.LINE_AA,
+        )
+        feather = cv2.GaussianBlur(
+            centerline.astype(np.float32) / 255.0,
+            (0, 0),
+            sigmaX=max(1.0, radius * 0.82),
+        )
+        maximum = float(feather.max())
+        if maximum > 0:
+            feather /= maximum
+        dark_range = max(1, stroke["dark_start"] - stroke["dark_full"])
+        tone = np.clip((stroke["dark_start"] - luminance) / dark_range, 0.0, 1.0)
+        reduction = float(stroke["strength"]) * feather * tone
+        target = np.rint(255.0 * (1.0 - reduction)).astype(np.uint8)
+        updated = np.minimum(output, target)
+        changed |= updated != output
+        output = updated
+    return output, int(np.count_nonzero(changed))
+
+
 def refine_mask(base, mask, record, person_alpha=None):
     width, height = mask.size
     scale = min(1.0, 512 / max(width, height))
@@ -497,6 +563,11 @@ def refine_mask(base, mask, record, person_alpha=None):
         # The editor's inward opacity curve then discards the faint outer tail,
         # so arm gaps and exposed skin stay untouched.
         refined = cv2.GaussianBlur(refined, (0, 0), sigmaX=1.5)
+    refined, visually_softened_pixels = apply_visual_soft_alpha_strokes(
+        refined,
+        np.asarray(base.convert("RGB")),
+        record["assetName"].lower(),
+    )
     refined[refined < 3] = 0
     original_area = int(np.count_nonzero(original >= 128))
     refined_area = int(np.count_nonzero(refined >= 128))
@@ -515,6 +586,7 @@ def refine_mask(base, mask, record, person_alpha=None):
         "photographicBoundaryPixelsRemovedAtWorkingSize": photographic_boundary_pixels_removed,
         "holePixelsFilledAtWorkingSize": hole_pixels_filled,
         "semanticPixelsRemovedAtWorkingSize": semantic_pixels_removed,
+        "visuallySoftenedPixels": visually_softened_pixels,
         "originalCoverage": original_area / (width * height),
         "refinedCoverage": refined_area / (width * height),
         "removedFractionOfMask": max(0, original_area - refined_area) / max(1, original_area),
@@ -534,8 +606,8 @@ def update_record(record, mask):
             min(width, int(xs.max()) + 1 + padding), min(height, int(ys.max()) + 1 + padding),
         ]
     method = str(record.get("method", "existing"))
-    if "commercial-refine-v9" not in method:
-        updated["method"] = f"{method}+commercial-refine-v9"
+    if "commercial-refine-v10" not in method:
+        updated["method"] = f"{method}+commercial-refine-v10"
     return updated
 
 
@@ -552,7 +624,7 @@ def main():
     parser.add_argument("--apply", action="store_true")
     parser.add_argument(
         "--force", action="store_true",
-        help="Reprocess masks already marked commercial-refine-v9.",
+        help="Reprocess masks already marked commercial-refine-v10.",
     )
     parser.add_argument(
         "--asset", action="append", default=[],
@@ -595,7 +667,7 @@ def main():
         if args.asset and record["assetName"] not in args.asset:
             updated_assets.append(record)
             continue
-        if "commercial-refine-v9" in str(record.get("method", "")) and not args.force:
+        if "commercial-refine-v10" in str(record.get("method", "")) and not args.force:
             updated_assets.append(record)
             print(
                 f"[{index:03d}/{len(manifest['assets']):03d}] {record['assetName']}: "

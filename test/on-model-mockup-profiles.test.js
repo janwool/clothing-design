@@ -79,8 +79,15 @@ test('keeps soft mask edges inside the garment to prevent color spill', () => {
 
 test('feathers refined mask contours enough to remove raster stair steps', () => {
   assert.match(maskRefinement, /sigmaX=1\.5/);
-  assert.match(maskRefinement, /commercial-refine-v9/);
+  assert.match(maskRefinement, /commercial-refine-v10/);
   assert.doesNotMatch(maskRefinement, /GUIDED_CUTOUTS|apply_reviewed_cutouts/);
+});
+
+test('uses reviewed grayscale strokes instead of hard cutouts for ambiguous folds', () => {
+  assert.match(maskRefinement, /VISUAL_SOFT_ALPHA_STROKES/);
+  assert.match(maskRefinement, /strength.*0\.52/);
+  assert.match(maskRefinement, /target = np\.rint\(255\.0 \* \(1\.0 - reduction\)\)/);
+  assert.match(maskRefinement, /updated = np\.minimum\(output, target\)/);
 });
 
 test('indexes every generated image set while keeping one preferred profile per 3D model', () => {

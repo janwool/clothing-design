@@ -417,8 +417,8 @@
         48,
         34
       ],
-      "coverage": 0.118909,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5+commercial-refine-v6+commercial-refine-v9",
+      "coverage": 0.118907,
+      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5+commercial-refine-v6+commercial-refine-v9+commercial-refine-v10",
       "preferredForModel": true
     },
     {
