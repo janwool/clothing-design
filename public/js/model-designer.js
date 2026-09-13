@@ -1012,11 +1012,41 @@ window.initializeModelDesigner = () => {
     });
   }
 
+  function getModelTextureBackingPaint() {
+    const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
+    // A single-panel edit must not spill into untouched panels. Once every
+    // editable island has a fill, however, any unlisted UVs belong to hidden
+    // construction surfaces (for example a collar facing or garment reverse)
+    // and should inherit the dominant garment paint instead of staying white.
+    if (!paths.length || paths.some((path) => !path.dataset.color)) return '#ffffff';
+
+    const paintWeights = new Map();
+    paths.forEach((path) => {
+      let weight = 1;
+      try {
+        const bounds = path.getBBox();
+        weight = Math.max(1, bounds.width * bounds.height);
+      } catch (error) {
+        // Detached SVG geometry can briefly lack a measurable bounding box.
+      }
+      const paint = path.dataset.color;
+      paintWeights.set(paint, (paintWeights.get(paint) || 0) + weight);
+    });
+    const dominantPaint = [...paintWeights.entries()].sort((left, right) => right[1] - left[1])[0]?.[0];
+    // Canvas fillStyle cannot consume the editor's CSS linear-gradient string.
+    // Its leading color is a stable backing for small hidden/reverse regions.
+    return dominantPaint ? parseColorState(dominantPaint).start : '#ffffff';
+  }
+
   function rasterizeModelTexture(options = {}) {
     // The editable/exported UV artwork is transparent by default. model-viewer's
-    // OPAQUE glTF materials do not blend PNG alpha with the previous base map, so
-    // the live 3D texture gets an explicit neutral backing layer.
-    return rasterizeTexture({ ...options, backgroundColor: '#ffffff' });
+    // OPAQUE glTF materials do not blend PNG alpha with the previous base map.
+    // Use the garment's dominant fill after a whole-garment color pass so hidden
+    // reverse/facing UVs do not render white; partial panel edits remain neutral.
+    return rasterizeTexture({
+      ...options,
+      backgroundColor: options.backgroundColor || getModelTextureBackingPaint()
+    });
   }
 
   function getViewerTextureUrl(textureUrl) {

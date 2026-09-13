@@ -98,7 +98,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260913-legacy-project-state-v41'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260914-reverse-surface-color-v43'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -221,7 +221,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260913-legacy-project-state-v41/);
+  assert.match(template, /model-designer\.js\?v=20260914-reverse-surface-color-v43/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -307,12 +307,16 @@ test('keeps appearance colors visible after selecting a material preset', () => 
   assert.doesNotMatch(designerRuntime, /setBaseColorFactor\(getSelectedMaterialFactor\(\)\)/);
 });
 
-test('keeps the UV artwork transparent without blackening opaque GLB materials', () => {
+test('backs opaque GLB textures with the whole garment color without spilling partial panel edits', () => {
   assert.match(template, /id="textureWhiteBase" fill="transparent"/);
   assert.match(designerRuntime, /ctx\.clearRect\(0, 0, canvas\.width, canvas\.height\)/);
   assert.match(designerRuntime, /if \(options\.backgroundColor\)/);
+  assert.match(designerRuntime, /function getModelTextureBackingPaint\(\)/);
+  assert.match(designerRuntime, /paths\.some\(\(path\) => !path\.dataset\.color\)\) return '#ffffff'/);
+  assert.match(designerRuntime, /bounds\.width \* bounds\.height/);
+  assert.match(designerRuntime, /return dominantPaint \? parseColorState\(dominantPaint\)\.start : '#ffffff'/);
   assert.match(designerRuntime, /function rasterizeModelTexture\(options = \{\}\)/);
-  assert.match(designerRuntime, /rasterizeTexture\(\{ \.\.\.options, backgroundColor: '#ffffff' \}\)/);
+  assert.match(designerRuntime, /backgroundColor: options\.backgroundColor \|\| getModelTextureBackingPaint\(\)/);
   assert.match(designerRuntime, /const textureUrl = await rasterizeModelTexture\(\)/);
   assert.match(designerRuntime, /const textureForModel = await rasterizeModelTexture/);
 });
