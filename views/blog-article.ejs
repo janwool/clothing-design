@@ -16,14 +16,14 @@
           <h1><%= article.title %></h1>
           <p class="article-dek"><%= article.dek %></p>
           <div class="article-byline">
-            <span>ClothingDesign Editorial</span>
+            <span>ClozDesign Editorial</span>
             <span><time datetime="<%= article.updatedAt %>">Updated <%= new Date(article.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) %></time></span>
             <span><%= article.readingTime %> min read</span>
           </div>
         </div>
         <div class="article-hero-media">
           <img src="<%= article.image %>" alt="<%= article.imageAlt %>">
-          <span class="article-image-caption">ClothingDesign workflow reference</span>
+          <span class="article-image-caption">ClozDesign workflow reference</span>
         </div>
       </div>
     </div>
@@ -69,7 +69,7 @@
 
       <% if (resources && resources.length) { %>
         <section class="article-resource-section" id="free-resources">
-          <span class="blog-card-category">Continue in ClothingDesign</span>
+          <span class="blog-card-category">Continue in ClozDesign</span>
           <h2>Free tools and 3D models for this workflow</h2>
           <div class="article-resource-grid">
             <% resources.forEach(function(resource) { %>

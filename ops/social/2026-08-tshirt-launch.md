@@ -34,6 +34,6 @@ Destination: https://www.cloz-design.com/tools/t-shirt-mockup-generator?utm_sour
 
 ## LinkedIn / X
 
-Post: A flat T-shirt template can show placement, but it cannot show how artwork reads around a garment shape. ClothingDesign lets apparel teams choose a 3D T-shirt model, test colors and artwork, rotate the garment, and export a transparent preview before photography or sampling.
+Post: A flat T-shirt template can show placement, but it cannot show how artwork reads around a garment shape. ClozDesign lets apparel teams choose a 3D T-shirt model, test colors and artwork, rotate the garment, and export a transparent preview before photography or sampling.
 
 Destination: https://www.cloz-design.com/tools/t-shirt-mockup-generator?utm_source=linkedin&utm_medium=organic-social&utm_campaign=august-tshirt&utm_content=post-01

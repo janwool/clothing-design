@@ -14,7 +14,7 @@ Title: Free 3D Hoodie Mockup — Customize Color, Artwork & Export PNG
 
 Description: Create a hoodie mockup in your browser with a free editable 3D garment. Rotate the hoodie, compare colorways, add front or back artwork, inspect the hood and sleeves from multiple angles, and export a transparent PNG for streetwear concepts, print-on-demand listings, ecommerce previews, or design approval.
 
-Alt text: Cream, black, and orange editorial poster showing the actual white Hoodie 3D Model 01 exported from ClothingDesign, with the words Design Your Hoodie in 3D, Rotate 360 Degrees, Add Artwork, and Export PNG.
+Alt text: Cream, black, and orange editorial poster showing the actual white Hoodie 3D Model 01 exported from ClozDesign, with the words Design Your Hoodie in 3D, Rotate 360 Degrees, Add Artwork, and Export PNG.
 
 Destination: https://www.cloz-design.com/3d-models/hoodie-mockup/hoodie-mockup-3d-model-01-82ceee9b?utm_source=pinterest&utm_medium=organic-social&utm_campaign=august-hoodie&utm_content=pin-03#design
 
@@ -34,4 +34,4 @@ Hashtags: #hoodiedesign #hoodiemockup #streetweardesign #printondemand #3dclothi
 
 ## LinkedIn / X
 
-Post: Hoodie artwork can look balanced on a flat template and fail once the hood, sleeves, and garment volume enter the picture. ClothingDesign's free Hoodie 3D Model lets apparel teams rotate the garment, compare colors, place artwork, and export a transparent PNG before sampling or photography.
+Post: Hoodie artwork can look balanced on a flat template and fail once the hood, sleeves, and garment volume enter the picture. ClozDesign's free Hoodie 3D Model lets apparel teams rotate the garment, compare colors, place artwork, and export a transparent PNG before sampling or photography.

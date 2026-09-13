@@ -35,6 +35,7 @@
   const assetUrls = {
     base: modal.dataset.baseImage,
     mask: modal.dataset.maskImage,
+    maskFallback: modal.dataset.maskFallback,
     depth: modal.dataset.depthImage
   };
 
@@ -93,8 +94,20 @@
       image.crossOrigin = 'anonymous';
       image.onload = () => resolve(image);
       image.onerror = () => reject(new Error(`Unable to load mockup asset: ${url}`));
-      image.src = url;
+      image.src = /^https:\/\//i.test(url)
+        ? `/api/mockup-asset?url=${encodeURIComponent(url)}`
+        : url;
     });
+  }
+
+  async function loadRealtimeMask() {
+    try {
+      return await loadImage(assetUrls.mask);
+    } catch (error) {
+      if (!assetUrls.maskFallback || assetUrls.maskFallback === assetUrls.mask) throw error;
+      console.warn('SVG garment mask failed to load; using the raster fallback.', error);
+      return loadImage(assetUrls.maskFallback);
+    }
   }
 
   function readMapPixels(image) {
@@ -112,7 +125,7 @@
     try {
       const [baseImage, maskImage, depthImage] = await Promise.all([
         loadImage(assetUrls.base),
-        loadImage(assetUrls.mask),
+        loadRealtimeMask(),
         loadImage(assetUrls.depth)
       ]);
       state.baseImage = baseImage;
@@ -294,7 +307,7 @@
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setStatus('Artwork must be smaller than 10 MB.', 'error');
+      setStatus('Artwork must be no larger than 10 MB.', 'error');
       return;
     }
 
@@ -332,6 +345,43 @@
       updateControlOutput(key);
     });
     scheduleRender();
+  }
+
+  async function setTemplate(nextTemplate = {}) {
+    assetUrls.base = nextTemplate.baseImage || assetUrls.base;
+    assetUrls.mask = nextTemplate.maskImage || assetUrls.mask;
+    assetUrls.maskFallback = nextTemplate.maskFallback || assetUrls.maskFallback;
+    assetUrls.depth = nextTemplate.depthImage || assetUrls.depth;
+    Object.assign(template, {
+      garmentType: nextTemplate.garmentType || template.garmentType,
+      exportSlug: nextTemplate.exportSlug || template.exportSlug,
+      centerX: Number(nextTemplate.centerX) || template.centerX,
+      centerY: Number(nextTemplate.centerY) || template.centerY,
+      baseWidth: Number(nextTemplate.baseWidth) || template.baseWidth,
+      maxHeight: Number(nextTemplate.maxHeight) || template.maxHeight,
+      renderLeft: Number.isFinite(Number(nextTemplate.renderLeft)) ? Number(nextTemplate.renderLeft) : template.renderLeft,
+      renderTop: Number.isFinite(Number(nextTemplate.renderTop)) ? Number(nextTemplate.renderTop) : template.renderTop,
+      renderRight: Number(nextTemplate.renderRight) || template.renderRight,
+      renderBottom: Number(nextTemplate.renderBottom) || template.renderBottom,
+      defaultScale: Number(nextTemplate.defaultScale) || template.defaultScale,
+      defaultWarp: Number(nextTemplate.defaultWarp) || template.defaultWarp
+    });
+
+    const width = Number(nextTemplate.canvasWidth) || canvas.width;
+    const height = Number(nextTemplate.canvasHeight) || canvas.height;
+    [canvas, artworkCanvas, warpedCanvas, mapCanvas].forEach((item) => {
+      item.width = width;
+      item.height = height;
+    });
+    state.ready = false;
+    state.loading = false;
+    state.baseImage = null;
+    state.maskImage = null;
+    state.depthImage = null;
+    state.maskPixels = null;
+    state.depthPixels = null;
+    resetPlacement();
+    await ensureAssets();
   }
 
   function openModal() {
@@ -434,6 +484,7 @@
     open: openModal,
     close: closeModal,
     loadArtworkDataUrl,
-    reset: resetPlacement
+    reset: resetPlacement,
+    setTemplate
   };
 })();

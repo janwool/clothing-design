@@ -69,6 +69,16 @@ test('uses database-provided placement and export settings at render time', () =
   assert.doesNotMatch(runtime, /on-model-tshirt-mockup\.png/);
 });
 
+test('uses editable SVG garment masks for live rendering with a raster fallback', () => {
+  assert.match(assetData, /result\.live_mask_url = result\.svg_mask_url \|\| result\.mask_image_url/);
+  assert.match(runtime, /maskFallback: modal\.dataset\.maskFallback/);
+  assert.match(runtime, /function loadRealtimeMask\(\)/);
+  assert.match(runtime, /loadRealtimeMask\(\)/);
+  assert.match(whiteMockupRuntime, /maskFallback: editor\.dataset\.maskFallback/);
+  assert.match(whiteMockupRuntime, /function loadRealtimeMask\(\)/);
+  assert.match(whiteMockupRuntime, /loadRealtimeMask\(\)/);
+});
+
 test('keeps soft mask edges inside the garment to prevent color spill', () => {
   assert.match(whiteMockupRuntime, /function maskOpacityAt\(index\)/);
   assert.match(whiteMockupRuntime, /alpha <= 0\.14/);
@@ -105,7 +115,7 @@ test('indexes every generated image set while keeping one preferred profile per 
     assert.equal(asset.render.length, 4);
     assert.match(asset.maskImageUrl, /-mask\.png$/);
     assert.match(asset.depthImageUrl, /-depth\.png$/);
-    assert.match(asset.method, /commercial-refine-v3/);
+    assert.match(asset.method, /commercial-refine-v3|manual-registration-v1/);
     assert.ok(asset.coverage > 0 && asset.coverage < 0.85);
   });
   assert.match(seed, /on_model_mockup_assets/);
@@ -121,12 +131,16 @@ test('serves generated mockup maps from their verified R2 asset path', () => {
   assert.match(assetUploader, /Remote verification failed/);
   assert.match(assetUploader, /socketTimeout: 60_000/);
   assert.match(assetUploader, /mapsOnly/);
+  assert.match(assetUploader, /if \(\/\\\.svg\$\/i\.test\(entry\.name\)\) continue/);
 });
 
 test('builds an idempotent production D1 seed using model slugs instead of local ids', () => {
   assert.match(d1SeedGenerator, /SELECT id FROM models_3d WHERE slug=/);
   assert.match(d1SeedGenerator, /ON CONFLICT\(asset_name\) DO UPDATE SET/);
   assert.match(d1SeedGenerator, /ON CONFLICT\(model_id\) DO UPDATE SET/);
+  assert.match(d1SeedGenerator, /INSERT INTO on_model_mockup_svg_masks/);
+  assert.match(d1SeedGenerator, /svgQueue\.items\.map\(svgMaskStatement\)/);
   assert.match(d1SeedGenerator, /migrations.*0002_on_model_mockup_profiles\.sql/);
   assert.match(d1SeedGenerator, /migrations.*0003_on_model_mockup_assets\.sql/);
+  assert.match(d1SeedGenerator, /migrations.*0004_on_model_mockup_svg_masks\.sql/);
 });

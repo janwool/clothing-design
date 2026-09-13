@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "node scripts/build-worker.js",
+    "build": "node scripts/sync-model-viewer-vendor.js && node scripts/build-worker.js",
     "sitemap": "node scripts/generate-sitemap.js",
     "indexnow": "node scripts/submit-indexnow.js",
     "assets:upload": "node scripts/upload-site-images-r2.js",
@@ -19,6 +19,10 @@
     "content:seed": "node scripts/seed-category-landing-content.js",
     "content:3d-categories": "node scripts/refresh-3d-category-pages.js",
     "content:repair-taxonomy": "node scripts/repair-3d-model-taxonomy.js --apply",
+    "sync:production-models": "node scripts/sync-production-models-to-local.js --apply",
+    "sync:production-models:with-assets": "node scripts/sync-production-models-to-local.js --apply --download-assets",
+    "models:approved:publish": "node scripts/deploy-approved-model-library.js --publish",
+    "models:approved:repair-svg": "node scripts/deploy-approved-model-library.js --upload --apply --svg-only",
     "campaign:url": "node scripts/build-campaign-url.js",
     "test": "node --test",
     "deploy": "npm run build && npx --yes wrangler deploy",
@@ -37,6 +41,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1057.0",
     "@aws-sdk/s3-request-presigner": "^3.1057.0",
+    "@google/model-viewer": "4.3.1",
     "@smithy/node-http-handler": "^4.7.5",
     "bcryptjs": "^2.4.3",
     "dotenv": "^17.4.2",

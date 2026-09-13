@@ -29,7 +29,8 @@
       else window.addEventListener('load', schedule, { once: true });
     })();
   </script>
-  <script src="/js/analytics.js?v=20260805-stable-events" defer></script>
+  <script src="/js/analytics.js?v=20260907-render-current-view" defer></script>
+  <script src="/js/user-projects.js?v=20260913-upload-timeout-v3" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -68,14 +69,14 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="48x48">
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png?v=20260719">
-  <link rel="alternate" type="application/rss+xml" title="ClothingDesign apparel mockup guides" href="/feed.xml">
-  <link rel="stylesheet" href="/css/style.css?v=20260819-fabric-softness-v2">
+  <link rel="alternate" type="application/rss+xml" title="ClozDesign apparel mockup guides" href="/feed.xml">
+  <link rel="stylesheet" href="/css/style.css?v=20260913-responsive-upload-v16">
+  <link rel="stylesheet" href="/css/growth.css?v=20260913-loading-spinner-v2">
+  <link rel="stylesheet" href="/css/product-refresh.css?v=20260913-navbar-type-v9">
   <% const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; %>
   <% headPageStyles.forEach(function(stylesheet) { %>
     <link rel="stylesheet" href="<%= stylesheet %>">
   <% }); %>
-  <link rel="stylesheet" href="/css/growth.css?v=20260806-auto-3d">
-    <link rel="stylesheet" href="/css/product-refresh.css?v=20260819-model-detail-split-scroll-v4">
 </head>
 <body class="<%= typeof bodyClass !== 'undefined' && bodyClass ? bodyClass : '' %>">
   <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -83,7 +84,7 @@
     <div class="navbar-container">
       <!-- Logo -->
       <a href="/" class="navbar-logo">
-        <span class="logo-text">ClothingDesign</span>
+        <span class="logo-text">ClozDesign</span>
       </a>
 
       <!-- Desktop Navigation -->
@@ -182,20 +183,7 @@
       <!-- Right Side -->
       <div class="navbar-actions">
         <% if (user) { %>
-          <!-- User Menu -->
-          <div class="user-dropdown">
-            <button class="user-toggle">
-              <div class="user-avatar">
-                <%= user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() %>
-              </div>
-            </button>
-            <div class="user-menu">
-              <a href="/tools/t-shirt-mockup-generator" class="user-item">Start a new mockup</a>
-              <a href="/mockups" class="user-item">Browse garment models</a>
-              <div class="user-divider"></div>
-              <a href="/auth/logout" class="user-item"><%= t('nav.signOut') %></a>
-            </div>
-          </div>
+          <a href="/account" class="btn btn-primary navbar-workbench-link">Workbench</a>
         <% } else { %>
           <!-- Auth Buttons -->
           <a href="/auth/login" class="btn btn-ghost"><%= t('nav.signIn') %></a>
@@ -219,6 +207,7 @@
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>
       <% if (user) { %>
+        <a href="/account" class="mobile-link">Workbench</a>
         <a href="/tools/t-shirt-mockup-generator" class="mobile-link">Start a new mockup</a>
         <a href="/mockups" class="mobile-link">Browse garment models</a>
         <a href="/auth/logout" class="mobile-link"><%= t('nav.signOut') %></a>

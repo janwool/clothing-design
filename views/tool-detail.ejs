@@ -51,6 +51,7 @@
               hidden
             ></model-viewer>
             <button type="button" class="btn btn-secondary tool-model-load" id="toolLoadPreview">
+              <i class="tool-model-spinner" aria-hidden="true"></i>
               <span>Load interactive 3D</span>
               <small>Loads only when you need it</small>
             </button>
@@ -154,7 +155,7 @@
     <div class="generator-section-header">
       <span class="generator-eyebrow"><%= toolPage.benefitsEyebrow || 'Why teams use it' %></span>
       <h2><%= toolPage.benefitsTitle || 'Preview the product before you spend on samples' %></h2>
-      <p><%= toolPage.benefitsSubtitle || 'Use ClothingDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' %></p>
+      <p><%= toolPage.benefitsSubtitle || 'Use ClozDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' %></p>
     </div>
     <div class="generator-output-grid">
       <% toolPage.competitorInsights.forEach(function(insight) { %>
@@ -465,8 +466,8 @@
       upload?.addEventListener('change', () => {
         const file = upload.files?.[0];
         if (!file) return;
-        if (file.size > 8 * 1024 * 1024) {
-          status.textContent = 'Choose an artwork file smaller than 8 MB.';
+        if (file.size > 10 * 1024 * 1024) {
+          status.textContent = 'Choose an artwork file no larger than 10 MB.';
           upload.value = '';
           return;
         }

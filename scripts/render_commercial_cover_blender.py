@@ -14,6 +14,7 @@ import sys
 from pathlib import Path
 
 import bpy
+import bmesh
 from mathutils import Vector
 
 
@@ -67,30 +68,117 @@ def _look_at(obj: bpy.types.Object, target: Vector) -> None:
     obj.rotation_euler = (target - obj.location).to_track_quat("-Z", "Y").to_euler()
 
 
-def _commercial_material(objects: list[bpy.types.Object], standard: dict) -> None:
+def _tune_commercial_materials(objects: list[bpy.types.Object], standard: dict) -> None:
     config = standard.get("material", {})
-    material = bpy.data.materials.new("Commercial neutral fabric")
-    material.use_nodes = True
-    material.use_backface_culling = False
-    bsdf = material.node_tree.nodes.get("Principled BSDF")
-    if bsdf is None:
-        raise RuntimeError("Principled BSDF node is unavailable")
-
     base = config.get("baseColor", [0.82, 0.83, 0.84])
-    bsdf.inputs["Base Color"].default_value = (*map(float, base), 1.0)
-    bsdf.inputs["Roughness"].default_value = float(config.get("roughness", 0.68))
-    if "Specular IOR Level" in bsdf.inputs:
-        bsdf.inputs["Specular IOR Level"].default_value = float(config.get("specularIorLevel", 0.3))
-    elif "Specular" in bsdf.inputs:
-        bsdf.inputs["Specular"].default_value = float(config.get("specularIorLevel", 0.3))
-    if "Sheen Weight" in bsdf.inputs:
-        bsdf.inputs["Sheen Weight"].default_value = float(config.get("sheenWeight", 0.18))
-    elif "Sheen" in bsdf.inputs:
-        bsdf.inputs["Sheen"].default_value = float(config.get("sheenWeight", 0.18))
-
+    seen: set[int] = set()
     for obj in objects:
-        obj.data.materials.clear()
-        obj.data.materials.append(material)
+        for material in obj.data.materials:
+            if material is None or material.as_pointer() in seen:
+                continue
+            seen.add(material.as_pointer())
+            material.use_nodes = True
+            material.use_backface_culling = False
+            bsdf = next(
+                (node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"),
+                None,
+            )
+            if bsdf is None:
+                continue
+            # Catalog covers use a neutral fabric color while retaining the
+            # imported roughness, normal, alpha, and material-slot semantics.
+            # This prevents a few source GLBs with blue/tan color maps from
+            # breaking the otherwise consistent white storefront grid.
+            if config.get("neutralizeBaseColor", False):
+                for link in list(bsdf.inputs["Base Color"].links):
+                    material.node_tree.links.remove(link)
+                bsdf.inputs["Base Color"].default_value = (*map(float, base), 1.0)
+            elif not bsdf.inputs["Base Color"].is_linked:
+                bsdf.inputs["Base Color"].default_value = (*map(float, base), 1.0)
+            if not bsdf.inputs["Roughness"].is_linked:
+                bsdf.inputs["Roughness"].default_value = float(config.get("roughness", 0.68))
+            if "Specular IOR Level" in bsdf.inputs:
+                bsdf.inputs["Specular IOR Level"].default_value = float(config.get("specularIorLevel", 0.3))
+            elif "Specular" in bsdf.inputs:
+                bsdf.inputs["Specular"].default_value = float(config.get("specularIorLevel", 0.3))
+            if "Sheen Weight" in bsdf.inputs:
+                bsdf.inputs["Sheen Weight"].default_value = float(config.get("sheenWeight", 0.18))
+            elif "Sheen" in bsdf.inputs:
+                bsdf.inputs["Sheen"].default_value = float(config.get("sheenWeight", 0.18))
+            normal_multiplier = float(config.get("normalStrengthMultiplier", 1.0))
+            normal_max = float(config.get("normalStrengthMax", 1.0))
+            for node in material.node_tree.nodes:
+                if node.type != "NORMAL_MAP":
+                    continue
+                current = float(node.inputs["Strength"].default_value)
+                if current > 0.0:
+                    node.inputs["Strength"].default_value = min(current * normal_multiplier, normal_max)
+
+
+def _brighten_bottom_thickness(
+    objects: list[bpy.types.Object],
+    standard: dict,
+    min_z: float,
+    largest: float,
+) -> int:
+    config = standard.get("bottomEdge", {})
+    if not config.get("enabled", False):
+        return 0
+
+    threshold = min_z + largest * float(config.get("heightRatio", 0.018))
+    if config.get("mode") == "hide-thickness":
+        changed = 0
+        for obj in objects:
+            if obj.data.users > 1:
+                obj.data = obj.data.copy()
+            mesh = bmesh.new()
+            mesh.from_mesh(obj.data)
+            faces = [
+                face
+                for face in mesh.faces
+                if (obj.matrix_world @ face.calc_center_median()).z <= threshold
+            ]
+            changed += len(faces)
+            if faces:
+                bmesh.ops.delete(mesh, geom=faces, context="FACES")
+                mesh.to_mesh(obj.data)
+                obj.data.update()
+            mesh.free()
+        return changed
+
+    base_color = config.get("baseColor", [0.98, 0.98, 0.97])
+    emission_strength = float(config.get("emissionStrength", 0.08))
+    changed = 0
+    for obj in objects:
+        if obj.data.users > 1:
+            obj.data = obj.data.copy()
+        material_map: dict[int, int] = {}
+        for polygon in obj.data.polygons:
+            world_center = obj.matrix_world @ polygon.center
+            if world_center.z > threshold:
+                continue
+            source_index = min(polygon.material_index, max(len(obj.data.materials) - 1, 0))
+            if source_index not in material_map:
+                source = obj.data.materials[source_index] if obj.data.materials else None
+                material = source.copy() if source else bpy.data.materials.new("Bright bottom thickness")
+                material.name = f"{source.name if source else 'Fabric'} - bright bottom thickness"
+                material.use_nodes = True
+                bsdf = next(
+                    (node for node in material.node_tree.nodes if node.type == "BSDF_PRINCIPLED"),
+                    None,
+                )
+                if bsdf:
+                    if not bsdf.inputs["Base Color"].is_linked:
+                        bsdf.inputs["Base Color"].default_value = (*map(float, base_color), 1.0)
+                    if "Emission Color" in bsdf.inputs:
+                        bsdf.inputs["Emission Color"].default_value = (*map(float, base_color), 1.0)
+                    if "Emission Strength" in bsdf.inputs:
+                        bsdf.inputs["Emission Strength"].default_value = emission_strength
+                obj.data.materials.append(material)
+                material_map[source_index] = len(obj.data.materials) - 1
+            polygon.material_index = material_map[source_index]
+            changed += 1
+    return changed
 
 
 def _setup_scene(standard: dict, center: Vector, largest: float) -> None:
@@ -98,7 +186,8 @@ def _setup_scene(standard: dict, center: Vector, largest: float) -> None:
     output = standard["output"]
     color = standard["colorManagement"]
 
-    scene.render.engine = "BLENDER_EEVEE"
+    engine = standard.get("engine", "BLENDER_EEVEE")
+    scene.render.engine = engine
     scene.render.resolution_x = int(output["width"])
     scene.render.resolution_y = int(output["height"])
     scene.render.resolution_percentage = 100
@@ -108,7 +197,31 @@ def _setup_scene(standard: dict, center: Vector, largest: float) -> None:
     scene.render.image_settings.color_depth = "8"
     scene.render.image_settings.compression = 30
 
-    if hasattr(scene, "eevee") and hasattr(scene.eevee, "taa_render_samples"):
+    if engine == "CYCLES":
+        cycles_addon = bpy.context.preferences.addons.get("cycles")
+        requested_device = standard.get("cyclesDevice", "CPU")
+        if cycles_addon and requested_device == "GPU":
+            preferences = cycles_addon.preferences
+            try:
+                preferences.compute_device_type = "METAL"
+                preferences.get_devices()
+                for device in preferences.devices:
+                    device.use = device.type == "METAL"
+                scene.cycles.device = "GPU"
+            except Exception:
+                scene.cycles.device = "CPU"
+        else:
+            scene.cycles.device = "CPU"
+        scene.cycles.samples = int(standard.get("samples", 32))
+        scene.cycles.use_adaptive_sampling = True
+        scene.cycles.adaptive_threshold = float(standard.get("adaptiveThreshold", 0.035))
+        scene.cycles.use_denoising = True
+        scene.cycles.max_bounces = 6
+        scene.cycles.diffuse_bounces = 2
+        scene.cycles.glossy_bounces = 3
+        scene.cycles.transparent_max_bounces = 4
+        bpy.context.view_layer.cycles.use_denoising = True
+    elif hasattr(scene, "eevee") and hasattr(scene.eevee, "taa_render_samples"):
         scene.eevee.taa_render_samples = int(standard.get("samples", 64))
 
     try:
@@ -146,6 +259,151 @@ def _setup_scene(standard: dict, center: Vector, largest: float) -> None:
         data.color = tuple(map(float, config["color"]))
         data.use_shadow = True
         _look_at(light, center)
+
+
+def _add_soft_contact_shadow(
+    standard: dict,
+    center: Vector,
+    size: Vector,
+    min_z: float,
+) -> bpy.types.Object | None:
+    config = standard.get("shadow", {})
+    if not config.get("enabled", True):
+        return None
+
+    largest = max(size)
+    if config.get("mode") == "cycles-shadow-catcher":
+        bpy.ops.mesh.primitive_plane_add(
+            size=2.0,
+            location=(
+                center.x,
+                center.y + size.y * float(config.get("backOffset", 0.08)),
+                min_z - largest * float(config.get("heightOffset", 0.006)),
+            ),
+        )
+        shadow = bpy.context.active_object
+        shadow.name = "Commercial Cycles shadow catcher"
+        shadow.scale = (largest * 1.8, largest * 1.8, 1.0)
+        shadow.is_shadow_catcher = True
+        material = bpy.data.materials.new("Commercial shadow catcher surface")
+        material.use_nodes = True
+        bsdf = material.node_tree.nodes.get("Principled BSDF")
+        if bsdf:
+            surface_color = config.get("surfaceColor", [0.95, 0.95, 0.95])
+            bsdf.inputs["Base Color"].default_value = (*map(float, surface_color), 1.0)
+            bsdf.inputs["Roughness"].default_value = 1.0
+        shadow.data.materials.append(material)
+        return shadow
+
+    bpy.ops.mesh.primitive_circle_add(
+        vertices=128,
+        radius=1.0,
+        fill_type="NGON",
+        location=(
+            center.x,
+            center.y + size.y * float(config.get("backOffset", 0.18)),
+            min_z - largest * float(config.get("heightOffset", 0.006)),
+        ),
+    )
+    shadow = bpy.context.active_object
+    shadow.name = "Commercial soft contact shadow"
+    shadow.scale = (
+        max(size.x * float(config.get("widthScale", 0.66)), largest * 0.18),
+        max(size.y * float(config.get("depthScale", 0.66)), largest * 0.13),
+        1.0,
+    )
+
+    material = bpy.data.materials.new("Commercial transparent contact shadow")
+    material.use_nodes = True
+    material.use_backface_culling = False
+    if hasattr(material, "surface_render_method"):
+        material.surface_render_method = "DITHERED"
+    elif hasattr(material, "blend_method"):
+        material.blend_method = "BLEND"
+
+    nodes = material.node_tree.nodes
+    links = material.node_tree.links
+    for node in list(nodes):
+        nodes.remove(node)
+    output = nodes.new("ShaderNodeOutputMaterial")
+    principled = nodes.new("ShaderNodeBsdfPrincipled")
+    principled.inputs["Base Color"].default_value = (0.02, 0.025, 0.035, 1.0)
+    principled.inputs["Roughness"].default_value = 1.0
+    texcoord = nodes.new("ShaderNodeTexCoord")
+    distance = nodes.new("ShaderNodeVectorMath")
+    distance.operation = "DISTANCE"
+    distance.inputs[1].default_value = (0.5, 0.5, 0.5)
+    ramp = nodes.new("ShaderNodeValToRGB")
+    ramp.color_ramp.interpolation = "EASE"
+    ramp.color_ramp.elements[0].position = float(config.get("coreRadius", 0.08))
+    ramp.color_ramp.elements[0].color = (1.0, 1.0, 1.0, float(config.get("opacity", 0.2)))
+    ramp.color_ramp.elements[1].position = 0.5
+    ramp.color_ramp.elements[1].color = (1.0, 1.0, 1.0, 0.0)
+    links.new(texcoord.outputs["Generated"], distance.inputs[0])
+    links.new(distance.outputs["Value"], ramp.inputs["Fac"])
+    links.new(ramp.outputs["Color"], principled.inputs["Base Color"])
+    links.new(ramp.outputs["Alpha"], principled.inputs["Alpha"])
+    links.new(principled.outputs["BSDF"], output.inputs["Surface"])
+    shadow.data.materials.append(material)
+    return shadow
+
+
+def _setup_shadow_compositor(standard: dict) -> None:
+    config = standard.get("shadow", {})
+    if not config.get("enabled") or config.get("mode") != "cycles-shadow-catcher":
+        return
+
+    scene = bpy.context.scene
+    bpy.context.view_layer.use_pass_object_index = True
+    scene.use_nodes = True
+    tree = getattr(scene, "node_tree", None) or scene.compositing_node_group
+    if tree is None:
+        tree = bpy.data.node_groups.new("Commercial shadow compositor", "CompositorNodeTree")
+        scene.compositing_node_group = tree
+    if not any(
+        item.item_type == "SOCKET" and item.in_out == "OUTPUT" and item.name == "Image"
+        for item in tree.interface.items_tree
+    ):
+        tree.interface.new_socket(name="Image", in_out="OUTPUT", socket_type="NodeSocketColor")
+    nodes = tree.nodes
+    links = tree.links
+    for node in list(nodes):
+        nodes.remove(node)
+
+    render_layers = nodes.new("CompositorNodeRLayers")
+    object_mask = nodes.new("CompositorNodeIDMask")
+    if "Index" in object_mask.inputs:
+        object_mask.inputs["Index"].default_value = 1
+    if "Anti-Alias" in object_mask.inputs:
+        object_mask.inputs["Anti-Alias"].default_value = True
+
+    cutoff = nodes.new("ShaderNodeMath")
+    cutoff.operation = "SUBTRACT"
+    cutoff.use_clamp = True
+    cutoff.inputs[1].default_value = float(config.get("alphaCutoff", 0.015))
+
+    shadow_opacity = nodes.new("ShaderNodeMath")
+    shadow_opacity.operation = "MULTIPLY"
+    shadow_opacity.use_clamp = True
+    shadow_opacity.inputs[1].default_value = float(config.get("opacity", 0.18))
+
+    merged_alpha = nodes.new("ShaderNodeMath")
+    merged_alpha.operation = "MAXIMUM"
+    merged_alpha.use_clamp = True
+
+    set_alpha = nodes.new("CompositorNodeSetAlpha")
+    if hasattr(set_alpha, "mode"):
+        set_alpha.mode = "REPLACE_ALPHA"
+    group_output = nodes.new("NodeGroupOutput")
+
+    links.new(render_layers.outputs["IndexOB"], object_mask.inputs["ID value"])
+    links.new(render_layers.outputs["Alpha"], cutoff.inputs[0])
+    links.new(cutoff.outputs[0], shadow_opacity.inputs[0])
+    links.new(object_mask.outputs["Alpha"], merged_alpha.inputs[0])
+    links.new(shadow_opacity.outputs[0], merged_alpha.inputs[1])
+    links.new(render_layers.outputs["Image"], set_alpha.inputs["Image"])
+    links.new(merged_alpha.outputs[0], set_alpha.inputs["Alpha"])
+    links.new(set_alpha.outputs["Image"], group_output.inputs["Image"])
 
 
 def _setup_camera(
@@ -200,11 +458,16 @@ def render_cover(
     if not objects:
         raise RuntimeError(f"No mesh objects in {glb_path}")
 
-    _commercial_material(objects, standard)
+    _tune_commercial_materials(objects, standard)
+    for obj in objects:
+        obj.pass_index = 1
     corners = _world_corners(objects)
     center, size = _bounds(corners)
+    min_z = min(corner.z for corner in corners)
     largest = max(size)
+    brightened_bottom_faces = _brighten_bottom_thickness(objects, standard, min_z, largest)
     _setup_scene(standard, center, largest)
+    _add_soft_contact_shadow(standard, center, size, min_z)
     camera, projected = _setup_camera(standard, corners, center, largest)
 
     bpy.context.scene.render.filepath = str(output_png)
@@ -221,6 +484,7 @@ def render_cover(
         "engine": bpy.context.scene.render.engine,
         "viewTransform": bpy.context.scene.view_settings.view_transform,
         "look": bpy.context.scene.view_settings.look,
+        "brightenedBottomFaces": brightened_bottom_faces,
     }
     print(json.dumps(result, ensure_ascii=False))
     return result

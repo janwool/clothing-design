@@ -58,15 +58,16 @@
     const isModelDetail = pathParts[0] === '3d-models' && pathParts.length >= 2 && pathParts.length <= 3;
     if (!isModelDetail || document.querySelector('[data-growth-share]')) return;
 
+    const mount = document.querySelector('[data-model-share-mount]');
     const footer = document.querySelector('footer.footer');
-    if (!footer) return;
+    if (!mount && !footer) return;
 
     const modelName = document.querySelector('h1')?.textContent?.replace(/\s+/g, ' ').trim() || 'this 3D model';
-    const container = document.createElement('div');
-    container.className = 'container';
+    const container = mount || document.createElement('div');
+    if (!mount) container.className = 'container';
 
     const panel = document.createElement('aside');
-    panel.className = 'growth-share-panel';
+    panel.className = 'growth-share-panel model-detail-share-panel';
     panel.dataset.growthShare = '';
     panel.dataset.shareSurface = 'model-detail';
     panel.dataset.shareTitle = modelName;
@@ -78,19 +79,20 @@
         <p>Know a designer who needs this editable garment? Send them the model.</p>
       </div>
       <div class="growth-share-actions" aria-label="Share options">
-        <button type="button" class="growth-share-action growth-share-action-primary" data-share-platform="native">
-          <span aria-hidden="true">↗</span> Share
+        <button type="button" class="growth-share-action growth-share-action-primary" data-share-platform="native" aria-label="Share this model">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 10.5 13.5 4M9 4h4.5v4.5M13 10v5H4V6h5"/></svg>
+          <span>Share</span>
         </button>
-        <a href="#" class="growth-share-action" data-share-platform="pinterest" target="_blank" rel="noopener noreferrer">Pinterest</a>
-        <a href="#" class="growth-share-action" data-share-platform="x" target="_blank" rel="noopener noreferrer">X</a>
-        <a href="#" class="growth-share-action" data-share-platform="linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <button type="button" class="growth-share-action" data-share-platform="copy">Copy link</button>
+        <a href="#" class="growth-share-action" data-share-platform="pinterest" target="_blank" rel="noopener noreferrer" aria-label="Share on Pinterest"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="8"/><path d="M8.5 15.5c.8-2 1.2-3.2 1.7-5.6-.7-1.5.1-4 2-4 1.5 0 2.1 1.2 2.1 2.4 0 1.8-1.1 4.4-2.8 4.4-.9 0-1.5-.8-1.3-1.8M7.6 13.5c-1.3-.8-2.1-2.3-2.1-4.1 0-2.8 2.1-5 5.2-5 2.7 0 4.6 2 4.6 4.4 0 3.1-1.7 5.4-4.2 5.4"/></svg><span>Pinterest</span></a>
+        <a href="#" class="growth-share-action" data-share-platform="x" target="_blank" rel="noopener noreferrer" aria-label="Share on X"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 3.5 12 13M15.5 3.5l-11 13"/></svg><span>X</span></a>
+        <a href="#" class="growth-share-action" data-share-platform="linkedin" target="_blank" rel="noopener noreferrer" aria-label="Share on LinkedIn"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="2.5" width="15" height="15"/><path d="M6 8v6M6 5.8v.1M9.3 14v-3.4c0-1.5.9-2.6 2.3-2.6 1.5 0 2.4 1 2.4 2.6V14M9.3 8.3V14"/></svg><span>LinkedIn</span></a>
+        <button type="button" class="growth-share-action" data-share-platform="copy" aria-label="Copy model link"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m8.2 11.8 3.6-3.6M6.2 13.8l-1 1a3.2 3.2 0 0 1-4.5-4.5l3.1-3.1a3.2 3.2 0 0 1 4.5 0M13.8 6.2l1-1a3.2 3.2 0 1 1 4.5 4.5l-3.1 3.1a3.2 3.2 0 0 1-4.5 0"/></svg><span>Copy link</span></button>
       </div>
       <p class="growth-share-status" data-share-status role="status" aria-live="polite"></p>
     `;
 
     container.appendChild(panel);
-    footer.before(container);
+    if (!mount) footer.before(container);
   }
 
   document.addEventListener('DOMContentLoaded', function () {

@@ -1,0 +1,33 @@
+{
+  "version": "20260829-semantic-uv-preserved-v2",
+  "models": [
+    {"id": 1, "slug": "oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit", "actualType": "oversized crew-neck short-sleeve T-shirt", "excludeObjects": ["design"], "nonEditableObjects": ["matshape"], "maxSvgPaths": 20},
+    {"id": 79, "slug": "minimal-one-piece-dress-3d-model", "actualType": "hooded poncho cape", "maxSvgPaths": 19},
+    {"id": 85, "slug": "modern-fashion-bag-3d-model", "actualType": "bandeau and brief underwear set", "maxSvgPaths": 4},
+    {"id": 86, "slug": "relaxed-long-coat-3d-model", "actualType": "blouse and harem-pants outfit", "maxSvgPaths": 28},
+    {"id": 87, "slug": "longline-long-coat-3d-model", "actualType": "short-sleeve utility jumpsuit", "maxSvgPaths": 23},
+    {"id": 88, "slug": "modern-one-piece-dress-3d-model", "actualType": "fitted bodysuit jumpsuit", "maxSvgPaths": 46},
+    {"id": 89, "slug": "relaxed-one-piece-dress-3d-model", "actualType": "wrap-front wide-leg jumpsuit", "maxSvgPaths": 10},
+    {"id": 90, "slug": "modern-skirt-3d-model", "actualType": "fitted romper with shorts", "maxSvgPaths": 30},
+    {"id": 91, "slug": "lightweight-underwear-base-garment-3d-model", "actualType": "short straight skirt", "maxSvgPaths": 8},
+    {"id": 93, "slug": "classic-skirt-3d-model", "actualType": "wide-leg culottes", "maxSvgPaths": 10},
+    {"id": 95, "slug": "relaxed-fashion-top-3d-model", "actualType": "side-pleated wrap skirt", "maxSvgPaths": 21},
+    {"id": 96, "slug": "structured-fashion-top-3d-model", "actualType": "ruffled short skirt", "maxSvgPaths": 22},
+    {"id": 97, "slug": "relaxed-loose-woven-top-panel-layout-3d-model", "actualType": "single-button blazer and vest", "maxSvgPaths": 16},
+    {"id": 102, "slug": "tailored-loose-woven-top-3d-model", "actualType": "knee-length double-lapel trench coat", "maxSvgPaths": 25},
+    {"id": 103, "slug": "classic-long-coat-3d-model", "actualType": "long coat and separate trousers set", "maxSvgPaths": 24},
+    {"id": 104, "slug": "classic-long-coat-panel-layout-3d-model", "actualType": "classic long coat", "maxSvgPaths": 16},
+    {"id": 107, "slug": "minimal-skirt-3d-model", "actualType": "full-length quilted puffer coat", "maxSvgPaths": 44, "wholeIslandUnwrap": true},
+    {"id": 108, "slug": "relaxed-fashion-bag-3d-model", "actualType": "bucket hat", "maxSvgPaths": 4},
+    {"id": 109, "slug": "tailored-fashion-bag-3d-model", "actualType": "flared handkerchief skirt", "maxSvgPaths": 4},
+    {"id": 111, "slug": "structured-fashion-bag-3d-model", "actualType": "bucket hat with brim", "maxSvgPaths": 10},
+    {"id": 112, "slug": "lightweight-fashion-bag-3d-model", "actualType": "flat-crown wide-brim hat", "maxSvgPaths": 5},
+    {"id": 114, "slug": "relaxed-cap-and-hat-3d-model", "actualType": "soft elongated pouch clutch", "maxSvgPaths": 12},
+    {"id": 116, "slug": "structured-cap-and-hat-3d-model", "actualType": "structured sling chest bag", "maxSvgPaths": 12},
+    {"id": 117, "slug": "longline-skirt-3d-model", "actualType": "hood and wrap scarf accessory", "maxSvgPaths": 8},
+    {"id": 118, "slug": "layered-skirt-3d-model", "actualType": "tied layered head scarf", "maxSvgPaths": 4},
+    {"id": 119, "slug": "tailored-sleeveless-tank-top-3d-model", "actualType": "sleeveless utility vest", "maxSvgPaths": 24},
+    {"id": 123, "slug": "modern-long-coat-3d-model", "actualType": "hooded sleeveless quilted puffer vest", "maxSvgPaths": 12},
+    {"id": 124, "slug": "modern-underwear-base-garment-3d-model", "actualType": "cropped tailored blazer", "maxSvgPaths": 24}
+  ]
+}

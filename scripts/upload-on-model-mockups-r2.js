@@ -56,6 +56,9 @@ async function loadAssets() {
 
   for (const entry of entries) {
     if (!entry.isFile()) continue;
+    // SVG masks are seeded into D1 by the deployment seed generator. This
+    // uploader owns only the base/mask/depth PNG triplets stored in R2.
+    if (/\.svg$/i.test(entry.name)) continue;
     const match = entry.name.match(/^(.*)-(base|mask|depth)\.png$/);
     if (!match) throw new Error(`Unexpected file in generated asset directory: ${entry.name}`);
     const stat = await fs.stat(path.join(assetDir, entry.name));

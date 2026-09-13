@@ -9,6 +9,7 @@ const {
   findOnModelMockupProfile,
   findRelatedOnModelMockupAssets,
   getOnModelMockupAssetSummary,
+  getOnModelMockupSvgMask,
   listOnModelMockupAssets
 } = require('../lib/on-model-mockups');
 const { shouldIndexModel } = require('../lib/seo-priority');
@@ -29,6 +30,7 @@ const {
 const { modelCover, siteImage } = require('../lib/site-assets');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
 const { targetForLegacyPattern, targetForLegacyPatternId } = require('../lib/legacy-patterns');
+const svgMaskQueueManifest = require('../public/config/on-model-svg-mask-queue.json');
 
 const MOCKUP_WORKFLOW_IMAGES = [
   siteImage('workflow/choose-garment-model.webp'),
@@ -134,6 +136,27 @@ function enrichMockupLandingImages(content = {}) {
 function shouldUseLocalModelAssets(req) {
   const host = (req.get('host') || '').toLowerCase();
   return (host.startsWith('localhost') || host.startsWith('127.0.0.1')) && process.env.USE_REMOTE_MODEL_ASSETS !== 'true';
+}
+
+function getPreviewModelFileUrl(model, req) {
+  const remoteUrl = String(model?.file_url || '');
+  if (!remoteUrl || !shouldUseLocalModelAssets(req)) return remoteUrl;
+
+  const filenames = [];
+  try {
+    filenames.push(path.basename(new URL(remoteUrl, 'http://localhost').pathname));
+  } catch (error) {
+    // Fall through to the canonical slug filename below.
+  }
+  if (model?.slug) filenames.push(`${model.slug}.glb`);
+
+  for (const filename of [...new Set(filenames)]) {
+    if (!/^[a-z0-9][a-z0-9._-]*\.glb$/i.test(filename)) continue;
+    const localFile = path.join(__dirname, '..', 'public', 'uploads', 'glb', filename);
+    if (fs.existsSync(localFile)) return `/uploads/glb/${filename}`;
+  }
+
+  return remoteUrl;
 }
 
 function getLandingContent(category, resourceType = '3d-models') {
@@ -490,7 +513,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
   const faq = [
     {
       question: 'Can I download free 3D clothing models?',
-      answer: 'Yes. ClothingDesign focuses on free 3D garment models that can be opened online, reviewed on detail pages, and used as starting points for apparel mockups.'
+      answer: 'Yes. ClozDesign focuses on free 3D garment models that can be opened online, reviewed on detail pages, and used as starting points for apparel mockups.'
     },
     {
       question: 'Can I create apparel mockups in the browser?',
@@ -511,14 +534,14 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'ClothingDesign',
+      name: 'ClozDesign',
       url: pageUrl,
       logo: firstImage(req)
     },
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: 'ClothingDesign',
+      name: 'ClozDesign',
       url: pageUrl,
       image: primaryImage,
       potentialAction: {
@@ -537,7 +560,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
       primaryImageOfPage: imageObject(req, primaryImage),
       mainEntity: {
         '@type': 'SoftwareApplication',
-        name: 'ClothingDesign Design3D',
+        name: 'ClozDesign Design3D',
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
         description: 'Free browser-based 3D clothing model library and apparel mockup generator for print placement previews, garment colorways, and transparent product images.',
@@ -650,7 +673,7 @@ function buildSimplePageStructuredData(req, options = {}) {
 function buildCategoryStructuredData(req, category, items = [], resourceType, resourceTypeLabel) {
   const basePath = resourceType === '3d-models' ? `/mockups/${category.slug}` : `/${resourceType}/${category.slug}`;
   const collectionPath = resourceType === '3d-models' ? '/mockups' : `/${resourceType}`;
-  const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClothingDesign.`;
+  const description = category.meta_description || category.description || `Browse ${category.name} ${resourceTypeLabel} on ClozDesign.`;
   const normalizedItems = resourceType === '3d-models' ? normalize3dModels(items, category.slug) : items;
   const image = firstImage(req, [category.image_url, ...normalizedItems.map(item => item.image_url)]);
 
@@ -702,9 +725,9 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Plan product-page imagery', body: 'Build a clearer direction for white tees, black tees, oversized fits, logo tees, and graphic tee listings.' },
       { title: 'Reduce PSD dependency', body: 'Use browser-based apparel previews when you need a quick mockup reference without opening a Photoshop template.' }
     ],
-    freePositioning: 'ClothingDesign keeps the T-shirt mockup workflow focused on free browser-based apparel visuals, so creators can test product ideas before buying PSD packs, booking photography, or ordering samples.',
+    freePositioning: 'ClozDesign keeps the T-shirt mockup workflow focused on free browser-based apparel visuals, so creators can test product ideas before buying PSD packs, booking photography, or ordering samples.',
     steps: [
-      { title: 'Choose a T-shirt model', body: 'Start from a T-shirt or top model in the ClothingDesign 3D model library.' },
+      { title: 'Choose a T-shirt model', body: 'Start from a T-shirt or top model in the ClozDesign 3D model library.' },
       { title: 'Place the artwork direction', body: 'Apply a logo, chest print, back graphic, color direction, or streetwear artwork concept.' },
       { title: 'Review scale and contrast', body: 'Check artwork scale, fabric color, front-view balance, and product angle before committing.' },
       { title: 'Prepare the product preview', body: 'Use the finished preview as a product-page, print-on-demand, or internal review reference.' }
@@ -718,23 +741,35 @@ const TOOL_PAGE_CONTENT = {
     modelStarters: [
       {
         title: 'Basic short-sleeve T-shirt',
+        shortTitle: 'Basic',
         body: 'Start with the highest-interest short-sleeve blank for chest logos, front graphics, back prints, and everyday product listings.',
-        href: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model'
+        href: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model',
+        image: 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/basic-short-sleeve-tshirt-3d-model.webp',
+        modelSrc: 'https://cdn.cloz-design.com/d3/6588/basic-short-sleeve-tshirt-3d-model.glb?v=uv-original-20260606'
       },
       {
         title: 'Oversized drop-shoulder T-shirt',
+        shortTitle: 'Oversized',
         body: 'Use a relaxed streetwear silhouette when artwork scale, shoulder position, and garment volume matter.',
-        href: '/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit'
+        href: '/3d-models/t-shirt-mockup/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit',
+        image: 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit.webp',
+        modelSrc: 'https://cdn.cloz-design.com/d3/1780135797659-346004243.glb'
       },
       {
         title: 'Short-sleeve polo shirt',
+        shortTitle: 'Polo',
         body: 'Choose a collared model for teamwear, uniforms, embroidered logos, and smart-casual product previews.',
-        href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model'
+        href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model',
+        image: 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/short-sleeve-polo-shirt-3d-model.webp',
+        modelSrc: 'https://cdn.cloz-design.com/d3/6588/short-sleeve-polo-shirt-3d-model.glb?v=uv-original-20260606'
       },
       {
         title: 'Long-sleeve crewneck shirt',
+        shortTitle: 'Long sleeve',
         body: 'Plan front, back, and sleeve artwork on a long-sleeve model before creating the final product set.',
-        href: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model'
+        href: '/3d-models/t-shirt-mockup/long-sleeve-crewneck-shirt-3d-model',
+        image: 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/long-sleeve-crewneck-shirt-3d-model.webp',
+        modelSrc: 'https://cdn.cloz-design.com/d3/6588/long-sleeve-crewneck-shirt-3d-model.glb?v=uv-original-20260606'
       }
     ],
     visualGallery: [
@@ -797,9 +832,9 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Support streetwear planning', body: 'Compare oversized pullover directions before moving into samples, photoshoots, or final listing assets.' },
       { title: 'Prepare approval visuals', body: 'Give teams, clubs, schools, and buyers a clearer hoodie preview before production decisions.' }
     ],
-    freePositioning: 'ClothingDesign gives hoodie creators a free apparel-first mockup path: start from real hoodie model previews, test artwork scale, then move into product presentation.',
+    freePositioning: 'ClozDesign gives hoodie creators a free apparel-first mockup path: start from real hoodie model previews, test artwork scale, then move into product presentation.',
     steps: [
-      { title: 'Open a hoodie model', body: 'Start from a structured hoodie model in the ClothingDesign 3D library.' },
+      { title: 'Open a hoodie model', body: 'Start from a structured hoodie model in the ClozDesign 3D library.' },
       { title: 'Plan the graphic zones', body: 'Choose a base color and map front print, back artwork, chest logo, or sleeve placement.' },
       { title: 'Check hoodie proportions', body: 'Review hood volume, pocket position, cuff balance, artwork scale, and product angle.' },
       { title: 'Use it for approval', body: 'Turn the hoodie preview into a streetwear planning, POD draft, ecommerce, or team approval visual.' }
@@ -870,7 +905,7 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Show shape, not just art', body: 'Use 3D model previews to communicate garment form, product angle, and category fit better than flat templates.' },
       { title: 'Build collection context', body: 'Prepare product-page, launch-deck, portfolio, and approval references across a full apparel range.' }
     ],
-    freePositioning: 'ClothingDesign positions mockups around apparel categories first, so designers can choose the right model family before testing graphics, colorways, and product renders.',
+    freePositioning: 'ClozDesign positions mockups around apparel categories first, so designers can choose the right model family before testing graphics, colorways, and product renders.',
     steps: [
       { title: 'Pick the garment category', body: 'Choose the clothing category that matches your product idea and visual planning need.' },
       { title: 'Select a 3D model preview', body: 'Start from a T-shirt, hoodie, jacket, dress, accessory, or another apparel model.' },
@@ -895,7 +930,7 @@ const TOOL_PAGE_CONTENT = {
     planningTitle: 'Explore apparel mockups across garment categories',
     benefitsEyebrow: 'Why use it',
     benefitsTitle: 'Plan apparel mockups across more than one garment type',
-    benefitsSubtitle: 'Use ClothingDesign when a flat template is not enough and you need T-shirts, hoodies, dresses, jackets, and accessories to feel part of one product system.',
+    benefitsSubtitle: 'Use ClozDesign when a flat template is not enough and you need T-shirts, hoodies, dresses, jackets, and accessories to feel part of one product system.',
     pickerEyebrow: 'Choose a focused workflow',
     pickerTitle: 'Start broad, then move into the garment mockup you need',
     workflowEyebrow: '3D apparel workflow',
@@ -920,7 +955,7 @@ const TOOL_PAGE_CONTENT = {
     faq: [
       { question: 'What is a 3D clothing mockup generator?', answer: 'It is a browser-based workflow for creating apparel visuals from 3D garment model previews instead of editing flat PSD templates.' },
       { question: 'Can I design clothing online for free?', answer: 'Yes. Choose a free 3D garment model, test colors and viewing angles, upload artwork, and export a transparent apparel preview in the browser.' },
-      { question: 'Which clothing categories can I mock up?', answer: 'Use ClothingDesign for T-shirts, hoodies, shirts, jackets, dresses, bottoms, bags, hats, and other apparel or accessory categories.' },
+      { question: 'Which clothing categories can I mock up?', answer: 'Use ClozDesign for T-shirts, hoodies, shirts, jackets, dresses, bottoms, bags, hats, and other apparel or accessory categories.' },
       { question: 'Is this only for fashion designers?', answer: 'No. It is useful for POD sellers, ecommerce teams, agencies, merch creators, streetwear brands, students, and product teams.' },
       { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
     ],
@@ -944,7 +979,7 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Keep catalog framing consistent', body: 'Use the same visual direction across Shopify, Etsy, Amazon Merch, and internal ecommerce drafts.' },
       { title: 'Reduce repetitive planning', body: 'Review contrast, readability, and variant logic before rebuilding each listing image by hand.' }
     ],
-    freePositioning: 'ClothingDesign does not treat bulk mockups as a spreadsheet-only task. The goal is to create a visual colorway matrix that still feels apparel-specific and brand-ready.',
+    freePositioning: 'ClozDesign does not treat bulk mockups as a spreadsheet-only task. The goal is to create a visual colorway matrix that still feels apparel-specific and brand-ready.',
     steps: [
       { title: 'Start with one T-shirt design', body: 'Use a T-shirt model and one artwork direction as the source for the batch.' },
       { title: 'Choose colorway groups', body: 'Select multiple product colors, neutral bases, seasonal shades, or variant groups.' },
@@ -1017,7 +1052,7 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Keep POD products consistent', body: 'Plan T-shirt and hoodie mockups with repeatable framing for catalogs, launch pages, and marketplace drafts.' },
       { title: 'Review before the store goes live', body: 'Preview colorways and product composition before publishing to Shopify, Etsy, Amazon Merch, or campaign pages.' }
     ],
-    freePositioning: 'ClothingDesign supports the product-image step in a POD workflow: choose a garment, test artwork, generate visual direction, and move toward store-ready listings.',
+    freePositioning: 'ClozDesign supports the product-image step in a POD workflow: choose a garment, test artwork, generate visual direction, and move toward store-ready listings.',
     steps: [
       { title: 'Choose the POD product', body: 'Start with a T-shirt, hoodie, sweatshirt, jacket, or another apparel model.' },
       { title: 'Set artwork and colorways', body: 'Apply the artwork direction and decide the first product colors for the listing.' },
@@ -1085,7 +1120,7 @@ const TOOL_PAGE_CONTENT = {
       'Preview print placement and color contrast on a garment shape instead of judging artwork on a blank canvas.',
       'Use free mockup exports when you need clean apparel images before photography or production.'
     ],
-    freePositioning: 'ClothingDesign keeps the T-shirt mockup step free, so you can test designs, compare colorways, and prepare review images without paying for a mockup subscription.',
+    freePositioning: 'ClozDesign keeps the T-shirt mockup step free, so you can test designs, compare colorways, and prepare review images without paying for a mockup subscription.',
     steps: [
       'Choose a T-shirt model that matches your fit and product direction.',
       'Add your logo, print idea, text layout, or color direction.',
@@ -1117,7 +1152,7 @@ const TOOL_PAGE_CONTENT = {
       'Review artwork scale across a bulkier garment where print size and placement are harder to judge.',
       'Export visuals for early sales pages, social posts, buyer decks, or internal line reviews.'
     ],
-    freePositioning: 'Use ClothingDesign as a free hoodie mockup step before you commit to print files, product photography, or a paid mockup library.',
+    freePositioning: 'Use ClozDesign as a free hoodie mockup step before you commit to print files, product photography, or a paid mockup library.',
     steps: [
       'Open a hoodie or outerwear model from the Design3D library.',
       'Choose the base color and plan front, back, chest, or sleeve artwork.',
@@ -1155,7 +1190,7 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Preview color and artwork', body: 'Use the live 3D model to communicate color, artwork scale, surface direction, and product presentation.' },
       { title: 'Export a reusable mockup', body: 'Create a transparent dress image for boutique planning, collection reviews, product drafts, or client presentations.' }
     ],
-    freePositioning: 'ClothingDesign gives dress designers a free starting point for visual planning, especially when a flat sketch is not enough and a full CAD workflow is too much.',
+    freePositioning: 'ClozDesign gives dress designers a free starting point for visual planning, especially when a flat sketch is not enough and a full CAD workflow is too much.',
     steps: [
       { title: 'Open the 3D dress model', body: 'Rotate the garment and review the one-piece silhouette from front, side, and back views.' },
       { title: 'Choose a dress color', body: 'Compare neutral, dark, seasonal, and accent colors directly on the garment.' },
@@ -1198,7 +1233,7 @@ const TOOL_PAGE_CONTENT = {
       'Use flat views for production notes, line sheets, vendor communication, and simple approvals.',
       'Move from 2D planning to 3D mockups when shape, drape, or product photography matters.'
     ],
-    freePositioning: 'ClothingDesign keeps the early flat mockup stage free and connects it to category-specific 3D models when your design needs more realism.',
+    freePositioning: 'ClozDesign keeps the early flat mockup stage free and connects it to category-specific 3D models when your design needs more realism.',
     steps: [
       'Choose a garment category and collect a clear flat reference.',
       'Plan text, artwork, seams, and placement notes.',
@@ -1230,7 +1265,7 @@ const TOOL_PAGE_CONTENT = {
       'Use flat templates for fast briefs, then switch to 3D models when realistic presentation matters.',
       'Keep flat templates and category-specific 3D mockups connected in one free apparel workflow.'
     ],
-    freePositioning: 'ClothingDesign treats templates as the start of a real apparel workflow, not a dead-end download page.',
+    freePositioning: 'ClozDesign treats templates as the start of a real apparel workflow, not a dead-end download page.',
     steps: [
       'Pick the apparel category you want to mock up.',
       'Use a flat apparel template for early planning.',
@@ -1245,7 +1280,7 @@ const TOOL_PAGE_CONTENT = {
     ],
     faq: [
       { question: 'What are clothing templates used for?', answer: 'They help you plan garment layouts, artwork placement, colorways, construction notes, and early collection ideas before creating final product visuals.' },
-      { question: 'Are these templates free to start with?', answer: 'Yes. ClothingDesign focuses on free entry points for apparel design planning and 3D mockups.' },
+      { question: 'Are these templates free to start with?', answer: 'Yes. ClozDesign focuses on free entry points for apparel design planning and 3D mockups.' },
       { question: 'Should I use a template or a 3D model?', answer: 'Use templates for quick flat planning. Use a 3D model when you need shape, drape, angle, and presentation-ready renders.' }
     ],
     cta: { label: 'Browse Free 3D Models', href: '/mockups' }
@@ -1721,6 +1756,22 @@ function isAllowedTextureUrl(rawUrl) {
   }
 }
 
+function isAllowedMockupAssetUrl(rawUrl) {
+  try {
+    const url = new URL(rawUrl);
+    const allowedHosts = new Set(['cdn.cloz-design.com']);
+    if (process.env.R2_PUBLIC_URL) {
+      allowedHosts.add(new URL(process.env.R2_PUBLIC_URL).hostname);
+    }
+    return url.protocol === 'https:'
+      && allowedHosts.has(url.hostname)
+      && url.pathname.startsWith('/image/mockups/on-model/')
+      && /\.(?:png|jpe?g|webp)$/i.test(url.pathname);
+  } catch (err) {
+    return false;
+  }
+}
+
 async function findActive3dModelBySlug(slug) {
   await ensureModelCategoryTable();
   const model = await db.get(`
@@ -1809,6 +1860,37 @@ router.get('/api/texture-svg', async (req, res) => {
   }
 });
 
+router.get('/api/mockup-asset', async (req, res) => {
+  const assetUrl = req.query.url;
+  if (!assetUrl || !isAllowedMockupAssetUrl(assetUrl)) {
+    return res.status(400).json({ error: 'Invalid mockup asset URL' });
+  }
+
+  try {
+    const response = await fetch(assetUrl);
+    if (!response.ok) {
+      return res.status(response.status).json({ error: 'Failed to load mockup asset' });
+    }
+    const contentType = response.headers.get('content-type') || '';
+    if (!/^image\/(?:png|jpeg|webp)(?:;|$)/i.test(contentType)) {
+      return res.status(415).json({ error: 'Unsupported mockup asset type' });
+    }
+    const contentLength = Number(response.headers.get('content-length'));
+    if (Number.isFinite(contentLength) && contentLength > 15 * 1024 * 1024) {
+      return res.status(413).json({ error: 'Mockup asset is too large' });
+    }
+    const imageBuffer = Buffer.from(await response.arrayBuffer());
+    if (imageBuffer.length > 15 * 1024 * 1024) {
+      return res.status(413).json({ error: 'Mockup asset is too large' });
+    }
+    res.set('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+    return res.type(contentType).send(imageBuffer);
+  } catch (err) {
+    console.error('Error proxying mockup asset:', err);
+    return res.status(502).json({ error: 'Failed to proxy mockup asset' });
+  }
+});
+
 // Home page
 router.get('/', async (req, res) => {
   try {
@@ -1882,8 +1964,8 @@ router.get('/white-mockups', async (req, res) => {
     res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
     res.render('white-mockups', {
       title: activeCategory
-        ? `${activeCategory.label} White Mockups | ClothingDesign`
-        : 'On-Model White Mockup Library | ClothingDesign',
+        ? `${activeCategory.label} White Mockups | ClozDesign`
+        : 'On-Model White Mockup Library | ClozDesign',
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
@@ -1904,7 +1986,7 @@ router.get('/white-mockups', async (req, res) => {
   } catch (err) {
     console.error('Error loading white mockup library:', err);
     res.status(500).render('white-mockups', {
-      title: 'On-Model White Mockup Library | ClothingDesign',
+      title: 'On-Model White Mockup Library | ClozDesign',
       metaDescription: 'Browse customizable on-model white garment mockups by clothing type.',
       page: 'white-mockups',
       pageStyles: ['/css/white-mockups.css?v=20260825-commercial-v6'],
@@ -1952,7 +2034,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
 
     res.locals.canonicalUrl = toAbsoluteUrl(req, path);
     res.render('white-mockup-detail', {
-      title: `${displayTitle} White Mockup Editor | ClothingDesign`,
+      title: `${displayTitle} White Mockup Editor | ClozDesign`,
       metaDescription: description,
       metaImage: firstImage(req, [asset.base_image_url]),
       structuredData: [
@@ -1995,7 +2077,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       page: 'white-mockups',
       pageStyles: [
         '/css/white-mockups.css?v=20260825-commercial-v6',
-        '/css/white-mockup-detail.css?v=20260826-commercial-v7'
+        '/css/white-mockup-detail.css?v=20260907-user-projects-v8'
       ],
       asset,
       displayTitle,
@@ -2175,7 +2257,7 @@ router.get('/patterns/:slug', (req, res) => {
 
 // Get Inspired (Gallery)
 router.get('/gallery', (req, res) => {
-  const description = 'Explore apparel design inspiration, clothing mockup ideas, and garment presentation examples from ClothingDesign.';
+  const description = 'Explore apparel design inspiration, clothing mockup ideas, and garment presentation examples from ClozDesign.';
   res.render('gallery', { 
     title: req.t('gallery.title'),
     metaDescription: description,
@@ -2212,7 +2294,7 @@ router.get('/tools', (req, res) => {
       ],
       mainEntity: {
         '@type': 'ItemList',
-        name: 'ClothingDesign tools',
+        name: 'ClozDesign tools',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'T-Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/t-shirt-mockup-generator') },
           { '@type': 'ListItem', position: 2, name: 'Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/hoodie-mockup-generator') },
@@ -2238,7 +2320,7 @@ function buildBlogIndexStructuredData(req) {
   return [
     ...buildSimplePageStructuredData(req, {
       type: 'CollectionPage',
-      name: 'ClothingDesign Blog',
+      name: 'ClozDesign Blog',
       description,
       path: '/blog',
       breadcrumbs: [
@@ -2277,12 +2359,12 @@ function buildBlogArticleStructuredData(req, article) {
       url: articleUrl,
       author: {
         '@type': 'Organization',
-        name: 'ClothingDesign Editorial',
+        name: 'ClozDesign Editorial',
         url: toAbsoluteUrl(req, '/blog')
       },
       publisher: {
         '@type': 'Organization',
-        name: 'ClothingDesign',
+        name: 'ClozDesign',
         url: toAbsoluteUrl(req, '/'),
         logo: {
           '@type': 'ImageObject',
@@ -2329,7 +2411,7 @@ function buildBlogArticleStructuredData(req, article) {
 router.get('/blog', (req, res) => {
   const description = 'Apparel mockup and 3D clothing design guides for T-shirts, hoodies, jackets, pants, dresses, vests, leggings, knitwear, and streetwear production.';
   res.render('blog-index', {
-    title: 'Apparel Mockup & 3D Clothing Design Guides | ClothingDesign',
+    title: 'Apparel Mockup & 3D Clothing Design Guides | ClozDesign',
     metaDescription: description,
     metaImage: firstImage(req, [blogArticles[0]?.image]),
     structuredData: buildBlogIndexStructuredData(req),
@@ -2360,7 +2442,7 @@ router.get('/blog/:slug', (req, res) => {
   }
 
   res.render('blog-article', {
-    title: buildSeoTitle(article.seoTitle || article.title, 'ClothingDesign'),
+    title: buildSeoTitle(article.seoTitle || article.title, 'ClozDesign'),
     metaDescription: article.description,
     metaImage: firstImage(req, [article.image]),
     structuredData: buildBlogArticleStructuredData(req, article),
@@ -2374,14 +2456,14 @@ router.get('/blog/:slug', (req, res) => {
 
 // Pricing
 router.get('/pricing', (req, res) => {
-  const description = 'ClothingDesign is free during public beta. Browse 3D clothing models, customize apparel artwork, and export transparent PNG mockups in your browser.';
+  const description = 'ClozDesign is free during public beta. Browse 3D clothing models, customize apparel artwork, and export transparent PNG mockups in your browser.';
   res.render('pricing', { 
-    title: 'Free Beta Access - ClothingDesign',
+    title: 'Free Beta Access - ClozDesign',
     metaDescription: description,
     metaImage: firstImage(req),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'WebPage',
-      name: 'ClothingDesign Free Beta Access',
+      name: 'ClozDesign Free Beta Access',
       description,
       path: '/pricing',
       breadcrumbs: [
@@ -2390,7 +2472,7 @@ router.get('/pricing', (req, res) => {
       ],
       mainEntity: {
         '@type': 'OfferCatalog',
-        name: 'ClothingDesign public beta access',
+        name: 'ClozDesign public beta access',
         itemListElement: [
           { '@type': 'Offer', name: 'Free public beta', price: '0', priceCurrency: 'USD' }
         ]
@@ -2402,8 +2484,8 @@ router.get('/pricing', (req, res) => {
 
 router.get('/contact', (req, res) => {
   res.render('info-page', {
-    title: 'Contact - ClothingDesign',
-    metaDescription: 'Get help with ClothingDesign mockups or request customization for a 3D garment model.',
+    title: 'Contact - ClozDesign',
+    metaDescription: 'Get help with ClozDesign mockups or request customization for a 3D garment model.',
     metaRobots: 'noindex,follow',
     page: 'contact',
     eyebrow: 'Contact',
@@ -2428,17 +2510,17 @@ router.get('/contact', (req, res) => {
 
 router.get('/privacy', (req, res) => {
   res.render('legal', {
-    title: 'Privacy - ClothingDesign',
-    metaDescription: 'How ClothingDesign handles account and customization-request information.',
+    title: 'Privacy - ClozDesign',
+    metaDescription: 'How ClozDesign handles account and customization-request information.',
     metaRobots: 'noindex,follow',
     page: 'privacy',
     eyebrow: 'Privacy',
     heading: 'Privacy overview',
-    updatedAt: 'August 15, 2026',
+    updatedAt: 'September 13, 2026',
     sections: [
-      { title: 'Information you provide', body: 'When you create an account, we receive the name and email address you submit. A customization request can also include quantity, requirements, and the design previews you choose to send.' },
-      { title: 'How it is used', body: 'Account information is used to provide sign-in access. Customization-request information is used to review and respond to that specific request.' },
-      { title: 'Browser-based design data', body: 'The public editor can be used before registration. Applying a design updates the current browser session; it does not currently create a cloud project in your account.' },
+      { title: 'Information you provide', body: 'When you create an account with email or Google, we receive your name and verified email address. Google sign-in does not give ClozDesign your Google password. A customization request can also include quantity, requirements, and the design previews you choose to send.' },
+      { title: 'How it is used', body: 'Account information is used to provide sign-in access and associate saved projects with your Workbench. Customization-request information is used to review and respond to that specific request.' },
+      { title: 'Browser-based design data', body: 'Public models can be explored before registration. Signed-in editing stores project settings and uploaded artwork with your account so work can be reopened later.' },
       { title: 'Questions', body: 'For a product-specific question, open the relevant garment and use its Request customization action, or visit the contact page for the available support paths.' }
     ]
   });
@@ -2446,15 +2528,15 @@ router.get('/privacy', (req, res) => {
 
 router.get('/terms', (req, res) => {
   res.render('legal', {
-    title: 'Terms - ClothingDesign',
-    metaDescription: 'Basic terms for using the ClothingDesign public beta.',
+    title: 'Terms - ClozDesign',
+    metaDescription: 'Basic terms for using the ClozDesign public beta.',
     metaRobots: 'noindex,follow',
     page: 'terms',
     eyebrow: 'Terms',
     heading: 'Public beta terms',
     updatedAt: 'August 15, 2026',
     sections: [
-      { title: 'Beta service', body: 'ClothingDesign is currently offered as a public beta. Features, models, export behavior, and availability may change as the product develops.' },
+      { title: 'Beta service', body: 'ClozDesign is currently offered as a public beta. Features, models, export behavior, and availability may change as the product develops.' },
       { title: 'Your artwork', body: 'Only upload artwork you have permission to use. You remain responsible for the images, logos, text, and other content you add to a design.' },
       { title: 'Mockup outputs', body: 'Exports are visual mockups for review and presentation. Check dimensions, placement, color, and production requirements with your manufacturer before using a mockup as a production reference.' },
       { title: 'Acceptable use', body: 'Do not use the service to violate rights, distribute malicious content, or interfere with the service or other users.' }
@@ -2531,7 +2613,7 @@ router.get('/mockups/:slug', async (req, res) => {
     const categoryFaqItems = landingContent.faq?.items || [];
     
     res.render('category-landing', {
-      title: buildSeoTitle(seoTitle, 'ClothingDesign', 65),
+      title: buildSeoTitle(seoTitle, 'ClozDesign', 65),
       metaDescription: description,
       metaImage: categoryImage,
       structuredData: [
@@ -2591,7 +2673,7 @@ router.get('/gallery/:slug', async (req, res) => {
     const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
     res.render('category-landing', {
-      title: buildSeoTitle(category.meta_title || `${category.name} Gallery`, 'ClothingDesign'),
+      title: buildSeoTitle(category.meta_title || `${category.name} Gallery`, 'ClozDesign'),
       metaDescription: description,
       metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, items || [], 'gallery', 'Gallery'),
@@ -2659,22 +2741,76 @@ router.get('/tools/2d-mockup', (req, res) => {
   res.redirect(301, '/mockups');
 });
 
+router.get('/tools/svg-mask-editor', async (req, res) => {
+  const maskQueue = svgMaskQueueManifest.items || [];
+  const requestedMask = String(req.query.mask || 'model-004-roll-sleeve-henley-from3d-v1');
+  const requestedIndex = maskQueue.findIndex(item => item.id === requestedMask);
+  const maskIndex = requestedIndex >= 0 ? requestedIndex : 0;
+  const currentMask = maskQueue[maskIndex];
+  if (!currentMask) return res.status(404).render('404', { title: 'Mask queue not found', page: '' });
+  const defaultMaskName = path.basename(currentMask.svgMask);
+  const storedMask = await getOnModelMockupSvgMask(currentMask.id);
+  const defaultMaskRevision = storedMask?.updated_at || '';
+  let defaultMaskSvg = storedMask?.svg_data || '';
+  if (!defaultMaskSvg) {
+    try {
+      defaultMaskSvg = fs.readFileSync(
+        path.join(__dirname, '..', 'public', 'images', 'mockups', 'on-model', 'generated', defaultMaskName),
+        'utf8'
+      );
+    } catch (error) {
+      return res.status(503).render('error', { title: 'SVG mask unavailable', page: '' });
+    }
+  }
+  res.render('svg-mask-editor', {
+    title: 'SVG Garment Mask Editor | ClozDesign',
+    metaDescription: 'Draw precise garment mask regions by hand and export editable SVG or pixel-aligned PNG mask files.',
+    metaRobots: 'noindex,nofollow',
+    page: 'tools',
+      pageStyles: ['/css/svg-mask-editor.css?v=20260901-overlay-opacity-v14'],
+    defaultImage: currentMask.baseImage,
+    defaultMaskName,
+    defaultMaskSvg,
+    defaultMaskRevision,
+    maskKey: currentMask.id,
+    maskQueue,
+    maskIndex
+  });
+});
+
 // Tools Category Route
 router.get('/tools/:slug', async (req, res) => {
   const toolPage = getToolPage(req.params.slug);
   if (toolPage) {
+    const isTshirtGenerator = req.params.slug === 't-shirt-mockup-generator';
+    const renderedToolPage = isTshirtGenerator && shouldUseLocalModelAssets(req)
+      ? {
+          ...toolPage,
+          modelStarters: (toolPage.modelStarters || []).map(model => {
+            const slug = String(model.href || '').split('/').filter(Boolean).pop();
+            const filename = `${slug}.glb`;
+            const localFile = path.join(__dirname, '..', 'public', 'uploads', 'glb', filename);
+            return fs.existsSync(localFile)
+              ? { ...model, modelSrc: `/uploads/glb/${filename}` }
+              : model;
+          })
+        }
+      : toolPage;
     const isIndexableTool = Boolean(
       TOOL_VARIANT_CONTENT[req.params.slug]
       || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
     );
-    return res.render('tool-detail', {
-      title: buildSeoTitle(toolPage.title, 'ClothingDesign'),
+    const viewName = isTshirtGenerator
+      ? 'tshirt-generator-landing'
+      : 'tool-detail';
+    return res.render(viewName, {
+      title: buildSeoTitle(toolPage.title, 'ClozDesign'),
       metaDescription: compactText(toolPage.subtitle, 160),
       metaImage: firstImage(req, [toolPage.image]),
       structuredData: buildToolStructuredData(req, toolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
-      toolPage
+      toolPage: renderedToolPage
     });
   }
 
@@ -2694,7 +2830,7 @@ router.get('/tools/:slug', async (req, res) => {
     const categoryImage = firstImage(req, (items || []).map(item => item.image_url));
     
     res.render('category-landing', {
-      title: buildSeoTitle(category.meta_title || `${category.name} Tools`, 'ClothingDesign'),
+      title: buildSeoTitle(category.meta_title || `${category.name} Tools`, 'ClozDesign'),
       metaDescription: description,
       metaImage: categoryImage,
       structuredData: buildCategoryStructuredData(req, category, items || [], 'tools', 'Tools'),
@@ -2723,8 +2859,9 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
       ...normalize3dModel(model),
       description: sanitizePublicModelDescription(model.description)
     };
+    normalizedModel.preview_file_url = getPreviewModelFileUrl(normalizedModel, req);
     const categorySlug = normalizedModel.category_slug || normalizedModel.category || req.params.category;
-    const description = `Customize ${normalizedModel.name} in the ClothingDesign browser-based 3D apparel designer and export a high-resolution clothing mockup render.`;
+    const description = `Customize ${normalizedModel.name} in the ClozDesign browser-based 3D apparel designer and export a high-resolution clothing mockup render.`;
     
     res.render('designer-3d', {
       title: `Design - ${model.name}`,
@@ -2746,7 +2883,7 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
         ],
         mainEntity: {
           '@type': 'SoftwareApplication',
-          name: 'ClothingDesign 3D Designer',
+          name: 'ClozDesign 3D Designer',
           applicationCategory: 'DesignApplication',
           operatingSystem: 'Web browser',
           image: firstImage(req, [normalizedModel.image_url])
@@ -2799,9 +2936,23 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       ...normalize3dModel(model),
       description: sanitizePublicModelDescription(model.description)
     };
+    normalizedModel.preview_file_url = getPreviewModelFileUrl(normalizedModel, req);
     const normalizedRelated = normalize3dModels(related);
     const modelDetailContent = buildModelDetailContent(normalizedModel, normalizedRelated, req);
     const onModelMockupProfile = await findOnModelMockupProfile(normalizedModel.id);
+    let aiTryOnModels = [];
+    if (onModelMockupProfile?.garment_type) {
+      try {
+        const catalog = await listOnModelMockupAssets({
+          garmentType: onModelMockupProfile.garment_type,
+          page: 1,
+          pageSize: 9
+        });
+        aiTryOnModels = catalog.assets;
+      } catch (error) {
+        console.error('Error loading AI try-on models:', error);
+      }
+    }
 
     res.render('model-detail', {
       title: modelDetailContent.pageTitle,
@@ -2810,10 +2961,11 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
-      pageStyles: [],
+      pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30'],
       model: normalizedModel,
       modelDetailContent,
       onModelMockupProfile,
+      aiTryOnModels,
       related: normalizedRelated,
       useLocalModelAssets: shouldUseLocalModelAssets(req)
     });

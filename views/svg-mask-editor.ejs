@@ -1,0 +1,353 @@
+<%- include('partials/header', { bodyClass: 'svg-mask-editor-page' }) %>
+
+<section
+  class="mask-studio"
+  id="svgMaskEditor"
+  data-default-image="<%= defaultImage %>"
+  data-default-mask-name="<%= defaultMaskName %>"
+  data-mask-key="<%= maskKey %>"
+  data-mask-revision="<%= defaultMaskRevision %>"
+  aria-label="SVG garment mask editor"
+>
+  <header class="mask-command-bar">
+    <div class="mask-brand-lockup">
+      <span class="mask-brand-index">MASK / 01</span>
+      <div>
+        <strong>Contour Studio</strong>
+        <small>Manual SVG garment masks</small>
+      </div>
+    </div>
+
+    <div class="mask-command-group" aria-label="Document controls">
+      <label class="mask-command-button mask-command-primary" title="Open an image">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V7h6l2-2h8v14H4Zm0-9h16M12 12v5m-2.5-2.5h5"/></svg>
+        <span>Open image</span>
+        <input id="maskImageInput" type="file" accept="image/png,image/jpeg,image/webp,image/avif" hidden>
+      </label>
+      <label class="mask-command-button" title="Import an SVG created by this editor">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h10l4 4v14H5V3Zm9 0v5h5M9 14h6m-3-3v6"/></svg>
+        <span>Import SVG</span>
+        <input id="maskSvgInput" type="file" accept="image/svg+xml,.svg" hidden>
+      </label>
+      <button class="mask-command-button" id="maskNewDocument" type="button" title="Clear all regions">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h12v16H6V4Zm3 4h6M9 12h6"/></svg>
+        <span>Clear</span>
+      </button>
+    </div>
+
+    <div class="mask-history-controls" aria-label="History controls">
+      <button id="maskUndo" type="button" title="Undo (⌘/Ctrl Z)" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 7-5 5 5 5M5 12h8a6 6 0 0 1 6 6"/></svg>
+      </button>
+      <button id="maskRedo" type="button" title="Redo (⌘/Ctrl Shift Z)" disabled>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 7 5 5-5 5m4-5h-8a6 6 0 0 0-6 6"/></svg>
+      </button>
+    </div>
+
+    <div class="mask-command-spacer"></div>
+
+    <div class="mask-save-state" id="maskSaveState" aria-live="polite">
+      <i></i>
+      <span>Local draft ready</span>
+    </div>
+    <button class="mask-command-button" id="maskCopySvg" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8h10v12H9V8Zm-4 8H3V4h10v2"/></svg>
+      <span>Copy SVG</span>
+    </button>
+    <button class="mask-command-button" id="maskExportPng" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16v16H4V4Zm3 12 3-4 2 2 2-3 3 5H7Z"/></svg>
+      <span>PNG mask</span>
+    </button>
+    <button class="mask-command-button mask-command-apply" id="maskSaveApply" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5 9.5 17 19 7.5M4 4h16v16H4V4Z"/></svg>
+      <span>Save &amp; Apply</span>
+    </button>
+    <button class="mask-command-button mask-command-export" id="maskExportSvg" type="button">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
+      <span>Export SVG</span>
+    </button>
+  </header>
+
+  <div class="mask-studio-grid">
+    <aside class="mask-tool-rail" aria-label="Drawing tools">
+      <div class="mask-tool-stack" role="toolbar" aria-label="Mask drawing tools">
+        <button class="mask-tool is-active" type="button" data-tool="select" title="Select and edit nodes (V)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 3 12 9-7 1.5L8 20 6 3Z"/></svg>
+          <span>Select</span><kbd>V</kbd>
+        </button>
+        <button class="mask-tool" type="button" data-tool="pen" title="Place contour points (P)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 4 6 6-9 9H5v-6l9-9Zm-6 13 4 4M14 4l2-2 6 6-2 2"/></svg>
+          <span>Pen</span><kbd>P</kbd>
+        </button>
+        <button class="mask-tool" type="button" data-tool="freehand" title="Draw a closed contour (B)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19c4-1 4-5 7-6s5 1 7-2 0-7 0-7M4 19c0 1 1 2 3 1"/></svg>
+          <span>Trace</span><kbd>B</kbd>
+        </button>
+        <button class="mask-tool" type="button" data-tool="pan" title="Pan the canvas (H or Space)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 11V6a2 2 0 0 1 4 0v4-6a2 2 0 1 1 4 0v7-4a2 2 0 1 1 4 0v7c0 5-3 8-8 8-3 0-5-1-7-4l-3-5a2 2 0 0 1 3-2l3 3"/></svg>
+          <span>Pan</span><kbd>H</kbd>
+        </button>
+      </div>
+
+      <div class="mask-rail-divider"></div>
+
+      <div class="mask-operation-picker" role="group" aria-label="Region operation">
+        <button class="is-active" type="button" data-kind="add" title="Add white mask area (A)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Add</span>
+        </button>
+        <button type="button" data-kind="subtract" title="Cut a hole from the mask (S)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg>
+          <span>Cut</span>
+        </button>
+      </div>
+
+      <div class="mask-rail-divider"></div>
+
+      <div class="mask-zoom-stack" aria-label="Canvas zoom">
+        <button id="maskZoomIn" type="button" title="Zoom in"><span>+</span></button>
+        <button id="maskFitView" type="button" title="Fit image (0)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5"/></svg>
+        </button>
+        <button id="maskZoomOut" type="button" title="Zoom out"><span>−</span></button>
+      </div>
+    </aside>
+
+    <section class="mask-workspace" id="maskWorkspace" aria-label="Mask drawing canvas">
+      <div class="mask-workspace-head">
+      <div class="mask-document-name">
+        <i></i>
+        <select id="maskModelSelect" aria-label="Choose mask model" hidden>
+          <% maskQueue.forEach(function(item, index) { %>
+            <option value="<%= item.id %>" data-label="<%= String(index + 1).padStart(3, '0') %> · <%= item.label %>" <%= index === maskIndex ? 'selected' : '' %>><%= String(index + 1).padStart(3, '0') %> · <%= item.label %></option>
+          <% }) %>
+        </select>
+        <button
+          class="mask-model-switch-trigger"
+          id="maskQuickSwitchTrigger"
+          type="button"
+          aria-haspopup="dialog"
+          aria-controls="maskQuickSwitchPanel"
+          aria-expanded="false"
+          title="Quick switch model (⌘/Ctrl K)"
+        >
+          <span id="maskQuickSwitchLabel"><%= String(maskIndex + 1).padStart(3, '0') %> · <%= maskQueue[maskIndex].label %></span>
+          <kbd>⌘K</kbd>
+        </button>
+        <span class="mask-queue-progress" id="maskQueueProgress"><%= maskIndex + 1 %> / <%= maskQueue.length %></span>
+        <span id="maskDocumentName" hidden><%= defaultMaskName %></span>
+        <div class="mask-queue-navigation">
+          <button id="maskPreviousModel" type="button" data-mask-id="<%= maskQueue[maskIndex - 1]?.id || '' %>" <%= maskIndex === 0 ? 'disabled' : '' %> aria-label="Previous model">←</button>
+          <button id="maskNextModel" type="button" data-mask-id="<%= maskQueue[maskIndex + 1]?.id || '' %>" <%= maskIndex === maskQueue.length - 1 ? 'disabled' : '' %> aria-label="Next model">→</button>
+        </div>
+        <button class="mask-reviewed-button" id="maskMarkReviewed" type="button">Mark reviewed</button>
+      </div>
+        <div class="mask-quick-switch-panel" id="maskQuickSwitchPanel" role="dialog" aria-modal="false" aria-label="Quick switch model" hidden>
+          <div class="mask-quick-switch-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+            <input id="maskQuickSwitchSearch" type="search" autocomplete="off" spellcheck="false" placeholder="Search model number, name, or slug…" aria-controls="maskQuickSwitchList">
+            <kbd>ESC</kbd>
+          </div>
+          <div class="mask-quick-switch-meta">
+            <span>Model registry</span>
+            <output id="maskQuickSwitchCount"><%= maskQueue.length %> models</output>
+          </div>
+          <div class="mask-quick-switch-list" id="maskQuickSwitchList" role="listbox" aria-label="Matching models"></div>
+          <footer>
+            <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+            <span><kbd>↵</kbd> Open</span>
+            <span>Current draft saves before switching</span>
+          </footer>
+        </div>
+        <div class="mask-preview-switcher" role="group" aria-label="Preview mode">
+          <button class="is-active" type="button" data-preview="overlay">Overlay</button>
+          <button type="button" data-preview="mask">Mask</button>
+          <button type="button" data-preview="outline">Outline</button>
+        </div>
+        <div class="mask-workspace-hint" id="maskWorkspaceHint">Double-click or Shift-click a contour to add a node</div>
+      </div>
+
+      <div class="mask-canvas-viewport" id="maskCanvasViewport">
+        <div class="mask-canvas-drop" id="maskCanvasDrop" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 17v3h16v-3"/></svg>
+          <strong>Drop an image or SVG</strong>
+          <span>Images start a new document · SVG restores mask regions</span>
+        </div>
+
+        <svg
+          id="maskEditorSvg"
+          class="mask-editor-svg"
+          viewBox="0 0 1024 1536"
+          preserveAspectRatio="xMidYMid meet"
+          role="application"
+          aria-label="Editable mask canvas"
+          tabindex="0"
+        >
+          <defs>
+            <pattern id="maskChecker" width="32" height="32" patternUnits="userSpaceOnUse">
+              <rect width="32" height="32" fill="#25282c"/>
+              <path d="M0 0h16v16H0zm16 16h16v16H16z" fill="#2d3035"/>
+            </pattern>
+          </defs>
+          <rect id="maskCanvasBackground" x="0" y="0" width="1024" height="1536" fill="url(#maskChecker)"/>
+          <image id="maskBaseImage" x="0" y="0" width="1024" height="1536" preserveAspectRatio="none"/>
+          <rect id="maskBlackPreview" x="0" y="0" width="1024" height="1536" fill="#050607" hidden/>
+          <g id="maskAddRegions" class="mask-region-group mask-region-add"></g>
+          <g id="maskSubtractRegions" class="mask-region-group mask-region-subtract"></g>
+          <g id="maskDraftLayer"></g>
+          <g id="maskNodeLayer"></g>
+        </svg>
+
+        <div class="mask-empty-note" id="maskEmptyNote">
+          <span>Start a contour</span>
+          <strong>Choose Pen for precise points or Trace for a freehand outline.</strong>
+          <small>Close with Enter, double-click, or click the first point.</small>
+        </div>
+      </div>
+
+      <footer class="mask-status-bar">
+        <span id="maskCanvasDimensions">1024 × 1536 px</span>
+        <span id="maskCursorPosition">X — &nbsp; Y —</span>
+        <span id="maskZoomLabel">100%</span>
+        <span class="mask-status-spacer"></span>
+        <span id="maskRegionSummary">0 add · 0 cut</span>
+        <span class="mask-status-message" id="maskStatusMessage" role="status" aria-live="polite">Ready</span>
+      </footer>
+    </section>
+
+    <aside class="mask-inspector" aria-label="Mask inspector">
+      <div class="mask-inspector-title">
+        <span>Inspector</span>
+        <small id="maskSelectionLabel">No selection</small>
+      </div>
+
+      <section class="mask-inspector-section mask-color-proof-section" aria-labelledby="maskColorProofTitle">
+        <div class="mask-section-heading mask-color-proof-heading">
+          <span id="maskColorProofTitle">Color proof</span>
+          <small><i></i> Live mask</small>
+        </div>
+        <div class="mask-color-preview-frame">
+          <svg
+            id="maskColorPreview"
+            class="mask-color-preview"
+            viewBox="0 0 1024 1536"
+            preserveAspectRatio="xMidYMid meet"
+            role="img"
+            aria-label="Live garment color preview"
+          >
+            <defs>
+              <mask id="maskColorPreviewMask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse">
+                <rect id="maskColorPreviewClear" x="0" y="0" width="1024" height="1536" fill="#000000"/>
+                <g id="maskColorPreviewAdd" fill="#ffffff"></g>
+                <g id="maskColorPreviewCut" fill="#000000"></g>
+              </mask>
+            </defs>
+            <rect id="maskColorPreviewBackdrop" x="0" y="0" width="1024" height="1536" fill="#d7d5d0"/>
+            <image id="maskColorPreviewImage" x="0" y="0" width="1024" height="1536" preserveAspectRatio="none"/>
+            <rect id="maskColorPreviewTint" class="mask-color-preview-tint" x="0" y="0" width="1024" height="1536" fill="#c43d32" mask="url(#maskColorPreviewMask)"/>
+          </svg>
+          <div class="mask-color-preview-empty" id="maskColorPreviewEmpty">
+            <span>NO ACTIVE MASK</span>
+            <small>Draw an Add region to preview color</small>
+          </div>
+          <span class="mask-color-preview-tag">Proof / RGB</span>
+        </div>
+        <div class="mask-color-control">
+          <label for="maskPreviewColor">
+            <input id="maskPreviewColor" type="color" value="#c43d32" aria-label="Choose preview garment color">
+            <span>Garment color</span>
+          </label>
+          <output id="maskPreviewColorValue" for="maskPreviewColor">#C43D32</output>
+        </div>
+        <div class="mask-color-swatches" id="maskColorSwatches" role="group" aria-label="Preview color presets">
+          <button type="button" data-preview-color="#f2efe6" style="--swatch: #f2efe6" aria-label="Ivory"></button>
+          <button type="button" data-preview-color="#1c2028" style="--swatch: #1c2028" aria-label="Ink"></button>
+          <button type="button" data-preview-color="#244b8f" style="--swatch: #244b8f" aria-label="Cobalt"></button>
+          <button class="is-active" type="button" data-preview-color="#c43d32" style="--swatch: #c43d32" aria-label="Vermilion"></button>
+          <button type="button" data-preview-color="#3f745b" style="--swatch: #3f745b" aria-label="Forest"></button>
+          <button type="button" data-preview-color="#d09a32" style="--swatch: #d09a32" aria-label="Ochre"></button>
+        </div>
+      </section>
+
+      <section class="mask-inspector-section">
+        <div class="mask-section-heading">
+          <span>Selected region</span>
+          <div class="mask-inline-actions">
+            <button id="maskDeleteNode" class="mask-delete-node-action" type="button" title="Delete selected node (Delete/Backspace)" aria-label="Delete selected node" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="7"/><path d="M9 12h6"/></svg>
+            </button>
+            <button id="maskDuplicateRegion" type="button" title="Duplicate selected region" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8h10v12H9V8Zm-4 8H3V4h10v2"/></svg>
+            </button>
+            <button id="maskDeleteRegion" type="button" title="Delete selected region" disabled>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4h6v3m2 0-1 13H8L7 7m3 4v5m4-5v5"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="mask-property-row">
+          <label for="maskRegionKind">Operation</label>
+          <select id="maskRegionKind" disabled>
+            <option value="add">Add to mask</option>
+            <option value="subtract">Cut from mask</option>
+          </select>
+        </div>
+        <div class="mask-property-row mask-range-row">
+          <div>
+            <label for="maskSmoothing">Curve smoothing</label>
+            <output id="maskSmoothingValue">28</output>
+          </div>
+          <input id="maskSmoothing" type="range" min="0" max="100" step="1" value="28" disabled>
+        </div>
+        <p class="mask-inspector-help">Whole-region movement is locked. Drag individual nodes to refine the contour; double-click or Shift-click the contour to insert a node; Option/Alt-click a node to remove it.</p>
+      </section>
+
+      <section class="mask-inspector-section mask-layers-section">
+        <div class="mask-section-heading">
+          <span>Regions</span>
+          <button id="maskAddRegion" class="mask-text-action" type="button">+ New</button>
+        </div>
+        <div class="mask-layer-list" id="maskLayerList">
+          <div class="mask-layer-empty">No mask regions yet.</div>
+        </div>
+      </section>
+
+      <section class="mask-inspector-section mask-document-section">
+        <div class="mask-section-heading"><span>Document</span></div>
+        <div class="mask-document-grid">
+          <label>
+            <span>Width</span>
+            <input id="maskDocumentWidth" type="number" min="1" max="12000" value="1024">
+          </label>
+          <label>
+            <span>Height</span>
+            <input id="maskDocumentHeight" type="number" min="1" max="12000" value="1536">
+          </label>
+        </div>
+        <div class="mask-property-row mask-range-row">
+          <div>
+            <label for="maskOverlayOpacity">Overlay opacity</label>
+            <output id="maskOverlayOpacityValue">10%</output>
+          </div>
+          <input id="maskOverlayOpacity" type="range" min="10" max="90" step="1" value="10">
+        </div>
+        <button id="maskApplyDimensions" class="mask-inspector-button" type="button">Apply canvas dimensions</button>
+      </section>
+
+      <section class="mask-shortcuts">
+        <span>Shortcuts</span>
+        <dl>
+          <div><dt>Close path</dt><dd>Enter</dd></div>
+          <div><dt>Cancel</dt><dd>Esc</dd></div>
+          <div><dt>Pan</dt><dd>Space</dd></div>
+          <div><dt>Delete</dt><dd>⌫</dd></div>
+        </dl>
+      </section>
+    </aside>
+  </div>
+</section>
+
+<script id="maskInitialSvg" type="image/svg+xml"><%- defaultMaskSvg %></script>
+<script src="/js/svg-mask-geometry.js?v=20260829-manual-mask-v9"></script>
+<script src="/js/svg-mask-editor.js?v=20260901-overlay-opacity-v15" defer></script>
+
+<%- include('partials/footer') %>

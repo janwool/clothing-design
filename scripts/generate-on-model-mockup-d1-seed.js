@@ -7,6 +7,7 @@ const sqlite3 = require('sqlite3');
 const rootDir = path.resolve(__dirname, '..');
 const databasePath = path.join(rootDir, 'database.sqlite');
 const manifestPath = path.join(rootDir, 'public', 'config', 'on-model-mockup-assets.json');
+const svgQueuePath = path.join(rootDir, 'public', 'config', 'on-model-svg-mask-queue.json');
 const defaultOutputPath = path.join(rootDir, 'artifacts', 'deployments', 'on-model-mockups-d1-seed.sql');
 
 function outputPathFromArguments() {
@@ -96,16 +97,32 @@ ON CONFLICT(model_id) DO UPDATE SET
   status='active',updated_at=CURRENT_TIMESTAMP;`;
 }
 
+function svgMaskStatement(record) {
+  const svgPath = path.join(rootDir, 'public', record.svgMask.replace(/^\/+/, ''));
+  const svgData = fs.readFileSync(svgPath, 'utf8').trim();
+  return `INSERT INTO on_model_mockup_svg_masks (
+  asset_name,svg_data,canvas_width,canvas_height,region_count,node_count,updated_by,updated_at
+) VALUES (
+  ${sqlValue(record.id)},${sqlValue(svgData)},${record.width},${record.height},
+  ${Number(record.addRegions || 0) + Number(record.cutRegions || 0)},${Number(record.nodes || 0)},NULL,CURRENT_TIMESTAMP
+) ON CONFLICT(asset_name) DO UPDATE SET
+  svg_data=excluded.svg_data,canvas_width=excluded.canvas_width,canvas_height=excluded.canvas_height,
+  region_count=excluded.region_count,node_count=excluded.node_count,updated_by=NULL,updated_at=CURRENT_TIMESTAMP;`;
+}
+
 async function main() {
   const outputPath = outputPathFromArguments();
   const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  const svgQueue = JSON.parse(fs.readFileSync(svgQueuePath, 'utf8'));
   const slugsById = new Map((await queryModels()).map(model => [Number(model.id), model.slug]));
   const preferred = manifest.assets.filter(record => record.preferredForModel);
   const statements = [
     fs.readFileSync(path.join(rootDir, 'migrations', '0002_on_model_mockup_profiles.sql'), 'utf8').trim(),
     fs.readFileSync(path.join(rootDir, 'migrations', '0003_on_model_mockup_assets.sql'), 'utf8').trim(),
+    fs.readFileSync(path.join(rootDir, 'migrations', '0004_on_model_mockup_svg_masks.sql'), 'utf8').trim(),
     ...manifest.assets.map(record => assetStatement(record, slugsById)),
-    ...preferred.map(record => profileStatement(record, slugsById))
+    ...preferred.map(record => profileStatement(record, slugsById)),
+    ...svgQueue.items.map(svgMaskStatement)
   ];
 
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
@@ -114,6 +131,7 @@ async function main() {
     outputPath,
     assetCount: manifest.assets.length,
     profileCount: preferred.length,
+    svgMaskCount: svgQueue.items.length,
     statementCount: statements.length,
     bytes: fs.statSync(outputPath).size
   }, null, 2));

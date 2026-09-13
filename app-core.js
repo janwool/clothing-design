@@ -5,6 +5,7 @@ const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
 const db = require('./lib/db');
+const { isGoogleAuthConfigured } = require('./lib/google-oauth');
 const {
   canonicalUrl,
   getCanonicalRedirect
@@ -154,7 +155,12 @@ function parseCookies(cookieHeader) {
 }
 
 function getSessionSecret() {
-  return process.env.SESSION_SECRET || 'clothing-design-secret-key';
+  const configured = process.env.SESSION_SECRET || (globalThis.__WORKER_ENV__ && globalThis.__WORKER_ENV__.SESSION_SECRET);
+  if (configured) return configured;
+  if (isWorkerRuntime || process.env.NODE_ENV === 'production') {
+    throw new Error('SESSION_SECRET must be configured for the user session system');
+  }
+  return 'clothing-design-local-development-only';
 }
 
 function signSessionPayload(payload) {
@@ -345,6 +351,7 @@ if (isWorkerRuntime) {
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
   res.locals.user = req.session.user || null;
+  res.locals.googleAuthEnabled = isGoogleAuthConfigured();
   res.locals.canonicalUrl = canonicalUrl(req.path || '/');
   res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;
   res.locals.defaultMetaRobots = shouldNoindexPath(req.path) ? 'noindex, nofollow, noarchive' : 'max-image-preview:large';
@@ -409,6 +416,8 @@ app.set('view engine', 'ejs');
 app.set('views', viewsDir);
 
 app.use('/api/customization-inquiries', require('./routes/customization-inquiries'));
+app.use('/api/on-model-svg-masks', require('./routes/on-model-svg-masks'));
+app.use('/', require('./routes/user-content'));
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
 app.use('/admin', require('./routes/admin'));

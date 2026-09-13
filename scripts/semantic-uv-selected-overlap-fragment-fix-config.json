@@ -1,0 +1,74 @@
+{
+  "version": "20260831-semantic-uv-selected-overlap-fragment-fix-v1",
+  "paperPatternLayout": true,
+  "models": [
+    {
+      "id": 1,
+      "slug": "oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit",
+      "actualType": "oversized crew-neck short-sleeve T-shirt",
+      "excludeObjects": ["design"],
+      "nonEditableObjects": ["matshape"],
+      "maxSvgPaths": 20
+    },
+    {
+      "id": 10,
+      "slug": "long-sleeve-crewneck-shirt-3d-model",
+      "actualType": "long-sleeve crew-neck T-shirt",
+      "maxSvgPaths": 3,
+      "uvReferenceGlb": "public/uploads/glb/long-sleeve-crewneck-shirt-3d-model-fabric-v1.glb",
+      "deduplicateGeometryFaces": true
+    },
+    {
+      "id": 50,
+      "slug": "classic-jacket-garment-3d-model",
+      "actualType": "classic puffer jacket",
+      "maxSvgPaths": 8,
+      "wholeIslandUnwrap": true
+    },
+    {
+      "id": 51,
+      "slug": "tailored-jacket-garment-3d-model",
+      "actualType": "tailored puffer jacket",
+      "maxSvgPaths": 8,
+      "wholeIslandUnwrap": true
+    },
+    {
+      "id": 52,
+      "slug": "longline-jacket-garment-3d-model",
+      "actualType": "longline puffer jacket",
+      "maxSvgPaths": 8,
+      "wholeIslandUnwrap": true
+    },
+    {
+      "id": 53,
+      "slug": "clean-puffer-jacket-3d-model",
+      "actualType": "clean puffer jacket",
+      "maxSvgPaths": 8,
+      "wholeIslandUnwrap": true
+    },
+    {
+      "id": 104,
+      "slug": "classic-long-coat-panel-layout-3d-model",
+      "actualType": "classic long coat",
+      "maxSvgPaths": 16
+    },
+    {
+      "id": 117,
+      "slug": "longline-skirt-3d-model",
+      "actualType": "hood and wrap scarf accessory",
+      "maxSvgPaths": 8
+    },
+    {
+      "id": 119,
+      "slug": "tailored-sleeveless-tank-top-3d-model",
+      "actualType": "sleeveless utility vest",
+      "maxSvgPaths": 24
+    },
+    {
+      "id": 124,
+      "slug": "modern-underwear-base-garment-3d-model",
+      "actualType": "cropped tailored blazer",
+      "maxSvgPaths": 24
+    }
+  ]
+}

@@ -10,7 +10,7 @@ window.initializeModelDesigner = () => {
   const saveDesignModal = document.getElementById('saveDesignModal');
   const designSaveStatus = document.getElementById('designSaveStatus');
   const designSaveStatusText = document.getElementById('designSaveStatusText');
-  const downloadRenderBtn = document.getElementById('downloadRenderBtn');
+  const renderCurrentModelBtn = document.getElementById('renderCurrentModelBtn');
   const downloadRenderStatus = document.getElementById('downloadRenderStatus');
   const designCtaBtn = document.getElementById('designCtaBtn');
   const customizationInquiryBtn = document.getElementById('customizationInquiryBtn');
@@ -30,8 +30,10 @@ window.initializeModelDesigner = () => {
   const customizationPreview3dLoading = document.getElementById('customizationPreview3dLoading');
   const customizationPreview2dLoading = document.getElementById('customizationPreview2dLoading');
   const designerViewer = document.getElementById('designerViewer');
+  const designPreviewLoading = document.getElementById('designPreviewLoading');
   const detailViewer = document.querySelector('#model3dViewer model-viewer');
   const textureCanvasArea = document.querySelector('.texture-canvas-area');
+  const textureCanvasFrame = document.getElementById('textureCanvasFrame');
   const textureSvg = document.getElementById('textureSvg');
   const textureElements = document.getElementById('textureElements');
   const texturePattern = document.getElementById('texturePattern');
@@ -42,6 +44,30 @@ window.initializeModelDesigner = () => {
   const canvasZoomIn = document.getElementById('canvasZoomIn');
   const canvasZoomFit = document.getElementById('canvasZoomFit');
   const canvasZoomLabel = document.getElementById('canvasZoomLabel');
+  const canvasRotate = document.getElementById('canvasRotate');
+  const textureDesigner = document.querySelector('.design-modal .texture-designer');
+  const designViewSwitcher = document.getElementById('designViewSwitcher');
+  const imageAssetTray = document.getElementById('imageAssetTray');
+  const imageAssetViewport = document.getElementById('imageAssetViewport');
+  const imageAssetTrack = document.getElementById('imageAssetTrack');
+  const imageAssetUpload = document.getElementById('imageAssetUpload');
+  const imageAssetUploadInput = document.getElementById('imageAssetUploadInput');
+  const imageAssetClose = document.getElementById('imageAssetClose');
+  const imageAssetFilter = document.getElementById('imageAssetFilter');
+  const assetScrollPrev = document.getElementById('assetScrollPrev');
+  const assetScrollNext = document.getElementById('assetScrollNext');
+  const imageAssetProgress = document.getElementById('imageAssetProgress');
+  const imageUploadToast = document.getElementById('imageUploadToast');
+  const imageUploadToastText = document.getElementById('imageUploadToastText');
+  const designAppearancePanel = document.getElementById('designAppearancePanel');
+  const appearancePanelCollapse = document.getElementById('appearancePanelCollapse');
+  const toolColor = document.getElementById('toolColor');
+  const toolMaterial = document.getElementById('toolMaterial');
+  const appearanceColorStart = document.getElementById('appearanceColorStart');
+  const appearanceColorEnd = document.getElementById('appearanceColorEnd');
+  const appearanceGradientAngle = document.getElementById('appearanceGradientAngle');
+  const appearanceGradientAngleOutput = document.getElementById('appearanceGradientAngleOutput');
+  const appearanceGradientPreview = document.getElementById('appearanceGradientPreview');
   const elementToolbar = document.createElement('div');
   elementToolbar.className = 'element-toolbar';
   elementToolbar.dataset.editorToolbar = 'true';
@@ -66,18 +92,24 @@ window.initializeModelDesigner = () => {
   const defaultRenderStandard = {
     camera: {
       webOrbit: '-48deg 72deg 142%',
+      webEditorOrbit: '-48deg 72deg 158%',
       webFieldOfView: '28deg',
       webTarget: 'auto auto auto'
     },
     web: {
-      environmentImage: 'neutral',
-      shadowIntensity: 0.58,
-      shadowSoftness: 0.94,
-      exposure: 0.96,
-      toneMapping: 'neutral'
+      environmentImage: '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr',
+      lightingMode: 'front-back-balanced-product-studio',
+      sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
+      balanceMethod: '180-degree-lighten-mirror',
+      shadowIntensity: 0,
+      shadowSoftness: 1,
+      exportShadowIntensity: 0.32,
+      exportShadowSoftness: 0.96,
+      exposure: 0.72,
+      toneMapping: 'commerce'
     }
   };
-  const renderStandardPromise = fetch('/config/design3d-render-standard.json')
+  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260907-balanced-exposure-v6')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -89,10 +121,12 @@ window.initializeModelDesigner = () => {
     elementCounter: 0,
     history: [],
     historyIndex: -1,
-    svgWidth: 800,
-    svgHeight: 600,
+    svgWidth: 1024,
+    svgHeight: 1024,
+    artworkTextureTransform: null,
     zoom: 1,
     zoomMode: 'fit',
+    canvasRotation: 0,
     textureLoadPromise: null,
     textureUpdateTimer: null,
     textureUpdateId: 0,
@@ -104,16 +138,28 @@ window.initializeModelDesigner = () => {
     colorPicker: null,
     selectedMaterial: null,
     appliedTextureUrl: null,
+    pendingTextureUrl: null,
     materialTextureCache: new WeakMap(),
     finalTextureUrl: null,
+    detailSceneUrl: null,
     isExportingRender: false,
     isCapturingInquiry: false,
     isSubmittingInquiry: false,
     inquirySnapshots: null,
-    coverCaptureHidden: []
+    coverCaptureHidden: [],
+    fillScope: 'whole',
+    fillMode: 'gradient',
+    designView: '2d',
+    projectId: '',
+    projectName: '',
+    uploadedAssetUrls: new Map(),
+    pendingArtworkUploads: new Set()
   };
+  const renderedUploadedAssetKeys = new Set();
+  let imageUploadToastTimer = null;
   let modalReturnFocus = null;
   let customizationReturnFocus = null;
+  let cloudProjectLoadPromise = Promise.resolve();
 
   function getLoadedDesignViewers() {
     return [designerViewer, detailViewer].filter((viewerElement) => viewerElement?.model);
@@ -134,6 +180,20 @@ window.initializeModelDesigner = () => {
     designSaveStatus?.classList.toggle('is-dirty', isDirty);
   }
 
+  function showImageUploadToast(message, status = 'loading', hideAfter = 0) {
+    if (!imageUploadToast || !imageUploadToastText) return;
+    if (imageUploadToastTimer) window.clearTimeout(imageUploadToastTimer);
+    imageUploadToastText.textContent = message;
+    imageUploadToast.dataset.status = status;
+    imageUploadToast.hidden = false;
+    if (hideAfter > 0) {
+      imageUploadToastTimer = window.setTimeout(() => {
+        imageUploadToast.hidden = true;
+        imageUploadToastTimer = null;
+      }, hideAfter);
+    }
+  }
+
   function applyCanvasZoom(nextZoom, mode = 'manual') {
     const zoom = Math.min(2.5, Math.max(0.2, Number(nextZoom) || 1));
     state.zoom = zoom;
@@ -142,6 +202,12 @@ window.initializeModelDesigner = () => {
     textureSvg.style.height = `${state.svgHeight * zoom}px`;
     textureSvg.style.maxWidth = 'none';
     textureSvg.style.maxHeight = 'none';
+    textureSvg.style.setProperty('--canvas-rotation', `${state.canvasRotation}deg`);
+    if (textureCanvasFrame) {
+      const isQuarterTurn = state.canvasRotation % 180 !== 0;
+      textureCanvasFrame.style.width = `${(isQuarterTurn ? state.svgHeight : state.svgWidth) * zoom}px`;
+      textureCanvasFrame.style.height = `${(isQuarterTurn ? state.svgWidth : state.svgHeight) * zoom}px`;
+    }
     if (canvasZoomLabel) canvasZoomLabel.textContent = `${Math.round(zoom * 100)}%`;
     requestAnimationFrame(() => renderSelection());
   }
@@ -151,23 +217,56 @@ window.initializeModelDesigner = () => {
     const isCompact = window.matchMedia('(max-width: 900px)').matches;
     const availableWidth = Math.max(160, textureCanvasArea.clientWidth - (isCompact ? 28 : 48));
     const availableHeight = Math.max(120, textureCanvasArea.clientHeight - (isCompact ? 118 : 154));
-    const fitScale = Math.min(availableWidth / state.svgWidth, availableHeight / state.svgHeight, 1.4);
+    const isQuarterTurn = state.canvasRotation % 180 !== 0;
+    const canvasWidth = isQuarterTurn ? state.svgHeight : state.svgWidth;
+    const canvasHeight = isQuarterTurn ? state.svgWidth : state.svgHeight;
+    const fitScale = Math.min(availableWidth / canvasWidth, availableHeight / canvasHeight, 1.4);
     applyCanvasZoom(fitScale, 'fit');
   }
 
-  function openModal() {
+  function rotateCanvas() {
+    state.canvasRotation = (state.canvasRotation + 90) % 360;
+    if (canvasRotate) {
+      canvasRotate.classList.toggle('active', state.canvasRotation !== 0);
+      canvasRotate.setAttribute(
+        'aria-label',
+        `Rotate canvas clockwise. Current rotation: ${state.canvasRotation} degrees`
+      );
+    }
+    closeColorPopover();
+    if (state.zoomMode === 'fit') fitCanvasZoom();
+    else applyCanvasZoom(state.zoom);
+    window.setTimeout(() => {
+      renderSelection();
+      positionElementToolbar();
+    }, 190);
+  }
+
+  async function openModal() {
     modalReturnFocus = document.activeElement;
+    await Promise.all([loadTextureDimensions(), cloudProjectLoadPromise]);
+    if (state.zoomMode === 'fit') fitCanvasZoom();
+    else applyCanvasZoom(state.zoom);
+    renderSelection();
     designModal.classList.add('active');
     designModal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    loadTextureDimensions();
-    renderSelection();
     renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
-    window.loadClothingModelViewer?.(designerViewer).catch((error) => {
-      console.warn('Failed to load the design preview:', error);
-    });
+    if (designPreviewLoading && !designerViewer?.loaded) designPreviewLoading.hidden = false;
+    window.loadClothingModelViewer?.(designerViewer)
+      .then(() => {
+        if (designPreviewLoading) designPreviewLoading.hidden = true;
+        if (state.pendingTextureUrl) {
+          applyTextureToModel(state.pendingTextureUrl, state.textureUpdateId);
+        } else if (hasEditableArtwork()) {
+          scheduleTexturePreviewUpdate();
+        }
+      })
+      .catch((error) => {
+        if (designPreviewLoading) designPreviewLoading.hidden = true;
+        console.warn('Failed to load the design preview:', error);
+      });
     requestAnimationFrame(() => {
-      fitCanvasZoom();
       designModalClose?.focus({ preventScroll: true });
     });
   }
@@ -183,10 +282,10 @@ window.initializeModelDesigner = () => {
     ];
   }
 
-  function getSelectedMaterialFactor() {
-    const material = state.selectedMaterial;
-    if (!material) return [1, 1, 1, 1];
-    return [...hexToRgbUnit(material.color), 1];
+  function getDesignedTextureFactor() {
+    // The rasterized design already contains the chosen solid/gradient colors.
+    // Keep its factor neutral so a previously selected fabric cannot tint it.
+    return [1, 1, 1, 1];
   }
 
   function getViewerTextureCache(viewerElement) {
@@ -231,30 +330,52 @@ window.initializeModelDesigner = () => {
   function applyFabricSurfaceResponse(modelMaterial, material) {
     const sheenStrength = Math.max(0, Math.min(1, material.sheen ?? 0.2));
     const sheenColor = [sheenStrength, sheenStrength, sheenStrength];
-    modelMaterial.setSheenColorFactor?.(sheenColor);
-    modelMaterial.setSheenRoughnessFactor?.(material.sheenRoughness ?? 0.8);
-    modelMaterial.setSpecularFactor?.(material.specular ?? 0.42);
-    modelMaterial.setSpecularColorFactor?.([1, 1, 1]);
+    // Scene Graph exposes these setters even when a GLB omits the corresponding
+    // optional extension. In that case a setter can throw; fabric enhancement
+    // must never prevent the base-color texture from being applied.
+    try {
+      modelMaterial.setSheenColorFactor?.(sheenColor);
+      modelMaterial.setSheenRoughnessFactor?.(material.sheenRoughness ?? 0.8);
+    } catch (error) {
+      // The current material does not support KHR_materials_sheen.
+    }
+    try {
+      modelMaterial.setSpecularFactor?.(material.specular ?? 0.42);
+      modelMaterial.setSpecularColorFactor?.([1, 1, 1]);
+    } catch (error) {
+      // The current material does not support KHR_materials_specular.
+    }
   }
 
   function applyFabricLighting(viewerElement, renderStandard = defaultRenderStandard) {
     if (!viewerElement) return;
     const webStandard = renderStandard.web || defaultRenderStandard.web;
-    viewerElement.setAttribute('environment-image', webStandard.environmentImage || 'neutral');
-    viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.58));
-    viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.94));
-    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.96));
-    viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'neutral');
+    const cameraStandard = renderStandard.camera || defaultRenderStandard.camera;
+    viewerElement.setAttribute('environment-image', webStandard.environmentImage || defaultRenderStandard.web.environmentImage);
+    viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0));
+    viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 1));
+    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.72));
+    viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
+    viewerElement.setAttribute('camera-target', cameraStandard.webTarget || 'auto auto auto');
+    viewerElement.setAttribute('field-of-view', cameraStandard.webFieldOfView || '28deg');
+    const cameraOrbit = viewerElement.id === 'designerViewer'
+      ? cameraStandard.webEditorOrbit || '-48deg 72deg 158%'
+      : cameraStandard.webOrbit || '-48deg 72deg 142%';
+    viewerElement.setAttribute('camera-orbit', cameraOrbit);
+    viewerElement.autoRotate = false;
+    viewerElement.removeAttribute('auto-rotate');
+    viewerElement.jumpCameraToGoal?.();
   }
 
-  function resetArtworkTextureTransform(textureInfo) {
+  function applyArtworkTextureTransform(textureInfo) {
     const sampler = textureInfo?.texture?.sampler;
     if (!sampler) return;
-    // Fabric maps in the source GLB may intentionally tile. A designed UV image is
-    // already a complete atlas, so it must always use the model's UVs one-to-one.
+    // Fabric maps in the source GLB may intentionally tile. Designed artwork uses
+    // either the ordinary 0..1 UV canvas or the approved library's normalized
+    // preview of raw (u, -v) SVG coordinates.
     sampler.setRotation?.(null);
-    sampler.setScale?.(null);
-    sampler.setOffset?.(null);
+    sampler.setScale?.(state.artworkTextureTransform?.scale || null);
+    sampler.setOffset?.(state.artworkTextureTransform?.offset || null);
   }
 
   function hasEditableArtwork() {
@@ -346,7 +467,7 @@ window.initializeModelDesigner = () => {
       button.className = 'material-swatch';
       button.dataset.materialId = material.id;
       button.setAttribute('aria-pressed', 'false');
-      button.title = `${material.name}: ${material.weave}`;
+      button.setAttribute('aria-label', material.name);
       button.innerHTML = `
         <span class="material-swatch-preview" aria-hidden="true"></span>
         <span class="material-swatch-name">${material.name}</span>
@@ -377,6 +498,48 @@ window.initializeModelDesigner = () => {
     }
   }
 
+  function resolveTextureCanvasDimensions(svgText) {
+    const svgTag = svgText.match(/<svg\b[^>]*>/i)?.[0] || '';
+    const widthMatch = svgTag.match(/\swidth=["']([^"']+)["']/i);
+    const heightMatch = svgTag.match(/\sheight=["']([^"']+)["']/i);
+    const viewBoxMatch = svgTag.match(/\sviewBox=["']([^"']+)["']/i);
+    let width = parseSvgLength(widthMatch ? widthMatch[1] : null);
+    let height = parseSvgLength(heightMatch ? heightMatch[1] : null);
+    const hasExplicitWidth = Number.isFinite(width) && width > 0;
+    const hasExplicitHeight = Number.isFinite(height) && height > 0;
+    let viewBoxWidth = NaN;
+    let viewBoxHeight = NaN;
+
+    if (viewBoxMatch) {
+      const parts = viewBoxMatch[1].trim().split(/[\s,]+/).map(parseFloat);
+      if (parts.length >= 4 && parts.every(Number.isFinite) && parts[2] > 0 && parts[3] > 0) {
+        viewBoxWidth = parts[2];
+        viewBoxHeight = parts[3];
+      }
+    }
+
+    if (!hasExplicitWidth || !hasExplicitHeight) {
+      const hasValidViewBox = Number.isFinite(viewBoxWidth) && Number.isFinite(viewBoxHeight);
+      if (hasValidViewBox) {
+        const aspectRatio = viewBoxWidth / viewBoxHeight;
+        const longEdge = 1024;
+        if (!hasExplicitWidth && !hasExplicitHeight) {
+          width = aspectRatio >= 1 ? longEdge : longEdge * aspectRatio;
+          height = aspectRatio >= 1 ? longEdge / aspectRatio : longEdge;
+        } else if (!hasExplicitWidth) {
+          width = height * aspectRatio;
+        } else {
+          height = width / aspectRatio;
+        }
+      }
+    }
+
+    if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+      return { width: 1024, height: 1024 };
+    }
+    return { width: Math.max(1, Math.round(width)), height: Math.max(1, Math.round(height)) };
+  }
+
   // Load SVG texture dimensions dynamically
   function loadTextureDimensions() {
     if (state.textureLoadPromise) return state.textureLoadPromise;
@@ -398,29 +561,8 @@ window.initializeModelDesigner = () => {
         return response.text();
       })
       .then(svgText => {
-        // Extract width and height from SVG tag using regex
-        const widthMatch = svgText.match(/<svg[^>]*\swidth=["']([^"']+)["']/i);
-        const heightMatch = svgText.match(/<svg[^>]*\sheight=["']([^"']+)["']/i);
-        const viewBoxMatch = svgText.match(/<svg[^>]*\sviewBox=["']([^"']+)["']/i);
-
-        let width = parseSvgLength(widthMatch ? widthMatch[1] : null);
-        let height = parseSvgLength(heightMatch ? heightMatch[1] : null);
-
-        // Fallback to viewBox if width/height not available
-        if ((isNaN(width) || isNaN(height)) && viewBoxMatch) {
-          const parts = viewBoxMatch[1].split(/\s+/).map(parseFloat);
-          if (parts.length >= 4) {
-            if (isNaN(width)) width = parts[2];
-            if (isNaN(height)) height = parts[3];
-          }
-        }
-
-        if (isNaN(width) || isNaN(height) || width <= 0 || height <= 0) {
-          width = 800;
-          height = 600;
-        }
-
-        setSvgDimensions(Math.round(width), Math.round(height));
+        const { width, height } = resolveTextureCanvasDimensions(svgText);
+        setSvgDimensions(width, height);
         inlineTextureTemplate(svgText);
       })
       .catch(() => new Promise(resolve => {
@@ -502,6 +644,19 @@ window.initializeModelDesigner = () => {
     return { x: 0, y: 0, width: state.svgWidth || 800, height: state.svgHeight || 600 };
   }
 
+  function resolveArtworkTextureTransform(sourceSvg, sourceViewBox) {
+    const usesRawPackedUvCoordinates =
+      sourceSvg.getAttribute('data-layout') === 'packed' &&
+      sourceSvg.hasAttribute('data-source');
+    if (!usesRawPackedUvCoordinates) return null;
+    const { x, y, width, height } = sourceViewBox;
+    if (![x, y, width, height].every(Number.isFinite) || width <= 0 || height <= 0) return null;
+    return {
+      scale: { u: 1 / width, v: -1 / height },
+      offset: { u: -x / width, v: -y / height }
+    };
+  }
+
   function applyTemplateLayerTransform(layer) {
     const parts = layer.dataset.viewBox.split(' ').map(parseFloat);
     if (parts.length < 4 || parts.some(value => !Number.isFinite(value))) return;
@@ -525,12 +680,16 @@ window.initializeModelDesigner = () => {
     if (!fillPath && create) {
       fillPath = document.importNode(path, true);
       fillPath.removeAttribute('id');
-      fillPath.classList.remove('texture-template-path', 'hover-template-path', 'selected-template-path');
-      fillPath.classList.add('texture-template-fill');
+      // A source UV path can carry a class such as `.uv-boundary` whose stylesheet
+      // paints the tailoring guide in black. The color layer must not inherit that
+      // editor-only outline or it becomes a visible line on the rendered garment.
+      fillPath.setAttribute('class', 'texture-template-fill');
       fillPath.dataset.templatePathId = path.dataset.templatePathId;
       fillPath.style.pointerEvents = 'none';
       fillPath.setAttribute('stroke', 'transparent');
       fillPath.setAttribute('stroke-width', '0');
+      fillPath.style.setProperty('stroke', 'transparent', 'important');
+      fillPath.style.setProperty('stroke-width', '0', 'important');
       fillPath.removeAttribute('filter');
       if (persistent) fillPath.dataset.persistent = 'true';
       path.parentNode.insertBefore(fillPath, path);
@@ -538,11 +697,29 @@ window.initializeModelDesigner = () => {
     return fillPath;
   }
 
+  function setTemplateFillPaint(fillPath, paint) {
+    if (!fillPath) return;
+    fillPath.setAttribute('fill', paint);
+    fillPath.style.setProperty('fill', paint, 'important');
+    fillPath.setAttribute('fill-opacity', '1');
+    if (fillPath.dataset.persistent === 'true') {
+      // Extend the exact same paint a few raster pixels beyond every UV island.
+      // This supplies safe texture padding for bilinear/mipmap sampling instead
+      // of letting the white atlas background become a bright garment seam.
+      fillPath.setAttribute('stroke', paint);
+      fillPath.setAttribute('stroke-width', '8');
+      fillPath.setAttribute('stroke-linejoin', 'round');
+      fillPath.setAttribute('paint-order', 'stroke fill');
+      fillPath.setAttribute('vector-effect', 'non-scaling-stroke');
+      fillPath.style.setProperty('stroke', paint, 'important');
+      fillPath.style.setProperty('stroke-width', '8px', 'important');
+    }
+  }
+
   function setTemplatePathPreview(path, mode) {
     if (!path || path.dataset.color) return;
     const fillPath = getTemplateFillPath(path, true, false);
-    fillPath.setAttribute('fill', mode === 'selected' ? 'rgba(0,102,255,0.42)' : 'rgba(0,102,255,0.24)');
-    fillPath.setAttribute('fill-opacity', '1');
+    setTemplateFillPaint(fillPath, mode === 'selected' ? 'rgba(0,102,255,0.42)' : 'rgba(0,102,255,0.24)');
     path.classList.toggle('hover-template-path', mode === 'hover');
     path.classList.toggle('selected-template-path', mode === 'selected');
   }
@@ -554,6 +731,7 @@ window.initializeModelDesigner = () => {
     const sourceSvg = parsed.documentElement;
     if (!sourceSvg || sourceSvg.nodeName === 'parsererror' || parsed.querySelector('parsererror')) return;
     const sourceViewBox = parseSvgViewBox(sourceSvg);
+    state.artworkTextureTransform = resolveArtworkTextureTransform(sourceSvg, sourceViewBox);
     layer.innerHTML = '';
     layer.dataset.viewBox = `${sourceViewBox.x} ${sourceViewBox.y} ${sourceViewBox.width} ${sourceViewBox.height}`;
     applyTemplateLayerTransform(layer);
@@ -591,6 +769,8 @@ window.initializeModelDesigner = () => {
 
   function closeModal() {
     clearHoveredTemplatePreview();
+    setAssetTrayOpen(false);
+    designAppearancePanel?.classList.remove('is-mobile-open');
     designModal.classList.remove('active');
     designModal.setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -604,12 +784,81 @@ window.initializeModelDesigner = () => {
   canvasZoomOut?.addEventListener('click', () => applyCanvasZoom(state.zoom * 0.85));
   canvasZoomIn?.addEventListener('click', () => applyCanvasZoom(state.zoom / 0.85));
   canvasZoomFit?.addEventListener('click', fitCanvasZoom);
+  canvasRotate?.addEventListener('click', rotateCanvas);
+
+  function updateAssetTrayScrollState() {
+    if (!imageAssetViewport) return;
+    const maximum = Math.max(0, imageAssetViewport.scrollWidth - imageAssetViewport.clientWidth);
+    const progress = maximum > 0 ? imageAssetViewport.scrollLeft / maximum : 0;
+    if (imageAssetProgress) {
+      const visibleRatio = Math.min(1, imageAssetViewport.clientWidth / Math.max(1, imageAssetViewport.scrollWidth));
+      imageAssetProgress.style.width = `${Math.max(18, visibleRatio * 100)}%`;
+      imageAssetProgress.style.transform = `translateX(${progress * ((1 / Math.max(visibleRatio, 0.18)) - 1) * 100}%)`;
+    }
+    if (assetScrollPrev) assetScrollPrev.disabled = imageAssetViewport.scrollLeft <= 2;
+    if (assetScrollNext) assetScrollNext.disabled = maximum <= 2 || imageAssetViewport.scrollLeft >= maximum - 2;
+  }
+
+  function setAssetTrayOpen(open) {
+    if (!imageAssetTray || !textureDesigner) return;
+    imageAssetTray.hidden = !open;
+    textureDesigner.classList.toggle('asset-tray-open', open);
+    if (open) {
+      requestAnimationFrame(() => {
+        updateAssetTrayScrollState();
+        imageAssetViewport?.focus({ preventScroll: true });
+      });
+    }
+    if (state.zoomMode === 'fit') requestAnimationFrame(fitCanvasZoom);
+  }
+
+  function setDesignView(view) {
+    if (!textureDesigner || !['2d', '3d', 'split'].includes(view)) return;
+    state.designView = view;
+    textureDesigner.dataset.designView = view;
+    designViewSwitcher?.querySelectorAll('[data-design-view]').forEach((button) => {
+      const isActive = button.dataset.designView === view;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+    if (view === '3d') {
+      setAssetTrayOpen(false);
+      window.loadClothingModelViewer?.(designerViewer)
+        .then(() => {
+          if (state.pendingTextureUrl) {
+            return applyTextureToModel(state.pendingTextureUrl, state.textureUpdateId);
+          }
+          if (hasEditableArtwork()) scheduleTexturePreviewUpdate();
+          return null;
+        })
+        .catch(() => {});
+    }
+    requestAnimationFrame(fitCanvasZoom);
+  }
+
+  function openAppearancePanel(section = 'color') {
+    if (!designAppearancePanel || !textureDesigner) return;
+    designAppearancePanel.classList.remove('is-collapsed');
+    textureDesigner.classList.remove('appearance-collapsed');
+    if (window.matchMedia('(max-width: 900px)').matches) {
+      designAppearancePanel.classList.add('is-mobile-open');
+    }
+    toolColor?.classList.toggle('active', section === 'color');
+    toolMaterial?.classList.toggle('active', section === 'material');
+    const target = section === 'material'
+      ? designAppearancePanel.querySelector('.material-panel')
+      : designAppearancePanel.querySelector('.design-appearance-card');
+    target?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
 
   function setTool(tool) {
     state.tool = tool;
     state.textClickCandidate = null;
     Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
+    toolColor?.classList.remove('active');
+    toolMaterial?.classList.remove('active');
     if (toolButtons[tool]) toolButtons[tool].classList.add('active');
+    if (tool !== 'image') setAssetTrayOpen(false);
     textureSvg.classList.toggle('is-drawing', tool === 'draw');
     textureSvg.style.cursor = tool === 'pan' ? 'grab' : tool === 'draw' ? 'crosshair' : 'default';
   }
@@ -617,6 +866,39 @@ window.initializeModelDesigner = () => {
   Object.entries(toolButtons).forEach(([tool, btn]) => {
     btn?.addEventListener('click', () => setTool(tool));
   });
+
+  designViewSwitcher?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-design-view]');
+    if (button) setDesignView(button.dataset.designView);
+  });
+
+  toolColor?.addEventListener('click', () => {
+    setAssetTrayOpen(false);
+    openAppearancePanel('color');
+  });
+
+  toolMaterial?.addEventListener('click', () => {
+    setAssetTrayOpen(false);
+    openAppearancePanel('material');
+  });
+
+  appearancePanelCollapse?.addEventListener('click', () => {
+    const shouldCollapse = !designAppearancePanel?.classList.contains('is-collapsed');
+    designAppearancePanel?.classList.toggle('is-collapsed', shouldCollapse);
+    designAppearancePanel?.classList.remove('is-mobile-open');
+    textureDesigner?.classList.toggle('appearance-collapsed', shouldCollapse);
+    toolColor?.classList.remove('active');
+    toolMaterial?.classList.remove('active');
+    requestAnimationFrame(fitCanvasZoom);
+  });
+
+  designAppearancePanel?.addEventListener('click', (event) => {
+    if (designAppearancePanel.classList.contains('is-collapsed') && event.target === designAppearancePanel) {
+      openAppearancePanel('color');
+    }
+  });
+
+  setDesignView('2d');
 
   function getCanvasCenter() {
     const viewBox = textureSvg.getAttribute('viewBox');
@@ -647,6 +929,7 @@ window.initializeModelDesigner = () => {
     const includeTemplateGuides = options.includeTemplateGuides === true;
     const includeTemplateHighlight = options.includeTemplateHighlight === true;
     const exportSvg = textureSvg.cloneNode(true);
+    exportSvg.style.removeProperty('--canvas-rotation');
     exportSvg.querySelector('#selectionLayer')?.remove();
     exportSvg.querySelectorAll('.texture-element.selected').forEach((element) => {
       element.classList.remove('selected');
@@ -736,53 +1019,255 @@ window.initializeModelDesigner = () => {
     return rasterizeTexture({ ...options, backgroundColor: '#ffffff' });
   }
 
-  async function applyTextureToViewer(viewerElement, textureUrl, options = {}) {
-    if (!viewerElement || !textureUrl) return;
+  function getViewerTextureUrl(textureUrl) {
+    if (!state.projectId || !/^https:\/\//i.test(textureUrl)) return textureUrl;
+    return `/api/project-texture?url=${encodeURIComponent(textureUrl)}`;
+  }
+
+  function loadViewerTextureImage(textureUrl) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error('The designed texture could not be decoded.'));
+      image.src = textureUrl;
+    });
+  }
+
+  async function createViewerTexture(viewerElement, textureUrl) {
+    const sourceUrl = getViewerTextureUrl(textureUrl);
+    const createCanvasTexture = async () => {
+      if (typeof viewerElement.createCanvasTexture !== 'function') return null;
+      const image = await loadViewerTextureImage(sourceUrl);
+      const texture = viewerElement.createCanvasTexture();
+      const canvas = texture?.source?.element;
+      const context = canvas?.getContext?.('2d');
+      if (!canvas || !context) return null;
+      canvas.width = Math.max(1, image.naturalWidth || image.width || state.svgWidth);
+      canvas.height = Math.max(1, image.naturalHeight || image.height || state.svgHeight);
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      // THREE.CanvasTexture uploads with flipY=true while model-viewer's image
+      // loader uses flipY=false for glTF. Pre-flip the pixels so both paths keep
+      // the exact same UV orientation.
+      context.save();
+      context.translate(0, canvas.height);
+      context.scale(1, -1);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      context.restore();
+      texture.source.update?.();
+      return texture;
+    };
+
+    if (/^data:image\//i.test(sourceUrl)) {
+      const canvasTexture = await createCanvasTexture();
+      if (canvasTexture) return canvasTexture;
+    }
     try {
-      await viewerElement.updateComplete;
-      if (typeof viewerElement.createTexture !== 'function') return;
-      const model = viewerElement.model;
-      const materials = model?.materials || [];
-      if (!materials.length) return;
-      const texture = await viewerElement.createTexture(textureUrl);
-      const materialMaps = state.selectedMaterial
-        ? await loadMaterialMaps(viewerElement, state.selectedMaterial)
-        : {};
-      materials.forEach((material) => {
-        const pbr = material.pbrMetallicRoughness;
-        if (!options.preserveMaterial && pbr?.setBaseColorFactor) {
-          pbr.setBaseColorFactor(getSelectedMaterialFactor());
-        }
-        if (!options.preserveMaterial && state.selectedMaterial) {
-          pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
-          pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
-          applyFabricSurfaceResponse(material, state.selectedMaterial);
-        }
-        const baseColorTexture = pbr?.baseColorTexture;
-        if (baseColorTexture?.setTexture) {
-          baseColorTexture.setTexture(texture);
-        } else if (pbr?.setBaseColorTexture) {
-          pbr.setBaseColorTexture(texture);
-        }
-        resetArtworkTextureTransform(baseColorTexture);
-        if (!options.preserveMaterial) {
-          setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
-          material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
-          setFabricTextureRepeat(material.normalTexture, state.selectedMaterial?.textureRepeat);
-          if (materialMaps.roughness) {
-            setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
-            setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial?.textureRepeat);
-          }
-        }
-      });
-      if (options.trackApplied !== false) state.appliedTextureUrl = textureUrl;
+      return await viewerElement.createTexture(sourceUrl);
     } catch (error) {
-      console.warn('Failed to update 3D texture preview:', error);
+      const canvasTexture = await createCanvasTexture();
+      if (canvasTexture) return canvasTexture;
+      throw error;
     }
   }
 
-  function applyTextureToModel(textureUrl) {
-    return applyTextureToViewer(designerViewer, textureUrl);
+  async function applyTextureToViewer(viewerElement, textureUrl, options = {}) {
+    if (!viewerElement || !textureUrl) return false;
+    try {
+      await viewerElement.updateComplete;
+      if (typeof viewerElement.createTexture !== 'function') return false;
+      const model = viewerElement.model;
+      const materials = model?.materials || [];
+      if (!materials.length) return false;
+      const texture = options.texture || await createViewerTexture(viewerElement, textureUrl);
+      const materialMaps = state.selectedMaterial
+        ? await loadMaterialMaps(viewerElement, state.selectedMaterial)
+        : {};
+      if (typeof options.isCurrent === 'function' && !options.isCurrent()) return false;
+      let appliedMaterialCount = 0;
+      materials.forEach((material) => {
+        try {
+          const pbr = material.pbrMetallicRoughness;
+          if (!options.preserveMaterial && pbr?.setBaseColorFactor) {
+            pbr.setBaseColorFactor(getDesignedTextureFactor());
+          }
+          if (!options.preserveMaterial && state.selectedMaterial) {
+            pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
+            pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
+          }
+          const baseColorTexture = pbr?.baseColorTexture;
+          if (baseColorTexture?.setTexture) {
+            baseColorTexture.setTexture(texture);
+            appliedMaterialCount += 1;
+          } else if (pbr?.setBaseColorTexture) {
+            pbr.setBaseColorTexture(texture);
+            appliedMaterialCount += 1;
+          }
+          applyArtworkTextureTransform(baseColorTexture);
+          if (!options.preserveMaterial) {
+            if (state.selectedMaterial) {
+              applyFabricSurfaceResponse(material, state.selectedMaterial);
+            }
+            setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
+            material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
+            setFabricTextureRepeat(material.normalTexture, state.selectedMaterial?.textureRepeat);
+            if (materialMaps.roughness) {
+              setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
+              setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial?.textureRepeat);
+            }
+          }
+        } catch (error) {
+          console.warn('Skipped an incompatible 3D material while applying the design:', error);
+        }
+      });
+      if (appliedMaterialCount === 0) return false;
+      if (options.trackApplied !== false) state.appliedTextureUrl = textureUrl;
+      viewerElement.requestUpdate?.();
+      await viewerElement.updateComplete;
+      return true;
+    } catch (error) {
+      console.warn('Failed to update 3D texture preview:', error);
+      return false;
+    }
+  }
+
+  async function applyTextureToModel(textureUrl, updateId = state.textureUpdateId) {
+    if (!designerViewer || !textureUrl) return false;
+    state.pendingTextureUrl = textureUrl;
+    const materials = await waitForViewerMaterials(designerViewer);
+    if (!materials.length || updateId !== state.textureUpdateId || state.pendingTextureUrl !== textureUrl) {
+      return false;
+    }
+    const applied = await applyTextureToViewer(designerViewer, textureUrl, {
+      isCurrent: () => updateId === state.textureUpdateId && state.pendingTextureUrl === textureUrl
+    });
+    if (applied && updateId === state.textureUpdateId && state.pendingTextureUrl === textureUrl) {
+      state.pendingTextureUrl = null;
+    }
+    return applied;
+  }
+
+  async function waitForViewerMaterials(viewerElement, timeoutMs = 12000) {
+    const startedAt = Date.now();
+    while (Date.now() - startedAt < timeoutMs) {
+      await viewerElement.updateComplete;
+      const materials = viewerElement.model?.materials || [];
+      if (materials.length > 0) return materials;
+      viewerElement.requestUpdate?.();
+      await new Promise(resolve => window.setTimeout(resolve, 80));
+    }
+    return [];
+  }
+
+  async function loadDesignedSceneIntoDetailViewer() {
+    if (!designerViewer?.model || typeof designerViewer.exportScene !== 'function' || !detailViewer) {
+      return false;
+    }
+
+    const sceneBlob = await designerViewer.exportScene();
+    if (!(sceneBlob instanceof Blob) || sceneBlob.size === 0) {
+      throw new Error('The editor could not export the designed 3D scene.');
+    }
+
+    const sceneUrl = URL.createObjectURL(sceneBlob);
+    try {
+      await new Promise((resolve, reject) => {
+        let settled = false;
+        const finish = (callback, value) => {
+          if (settled) return;
+          settled = true;
+          window.clearTimeout(timeoutId);
+          detailViewer.removeEventListener('load', handleLoad);
+          detailViewer.removeEventListener('error', handleError);
+          callback(value);
+        };
+        const handleLoad = () => finish(resolve);
+        const handleError = () => finish(reject, new Error('The exported 3D scene could not be loaded.'));
+        const timeoutId = window.setTimeout(() => {
+          finish(reject, new Error('The exported 3D scene timed out while loading.'));
+        }, 20000);
+
+        detailViewer.addEventListener('load', handleLoad);
+        detailViewer.addEventListener('error', handleError);
+        detailViewer.src = sceneUrl;
+        detailViewer.setAttribute('loading', 'eager');
+        detailViewer.dismissPoster?.();
+      });
+      await detailViewer.updateComplete;
+      const materials = await waitForViewerMaterials(detailViewer);
+      if (!materials.length) throw new Error('The exported 3D scene has no editable materials.');
+      detailViewer.requestUpdate?.();
+      const previousSceneUrl = state.detailSceneUrl;
+      state.detailSceneUrl = sceneUrl;
+      if (previousSceneUrl) URL.revokeObjectURL(previousSceneUrl);
+      return true;
+    } catch (error) {
+      URL.revokeObjectURL(sceneUrl);
+      throw error;
+    }
+  }
+
+  async function applyFinalTextureToViewers(textureUrl) {
+    const viewers = [...new Set([designerViewer, detailViewer].filter(Boolean))];
+    const applied = [];
+    let editorApplied = false;
+    let sharedTexture = null;
+    for (const viewerElement of viewers) {
+      let didApply = false;
+      let directApplyError = null;
+      try {
+        if (!viewerElement.model) {
+          await window.loadClothingModelViewer?.(viewerElement).catch(() => null);
+        }
+        if (!viewerElement.model) await waitForModelViewerReady(viewerElement);
+        const materials = await waitForViewerMaterials(viewerElement);
+        if (!materials.length) throw new Error('The 3D model materials are not ready.');
+        if (!sharedTexture && viewerElement === designerViewer) {
+          sharedTexture = await createViewerTexture(viewerElement, textureUrl);
+        }
+        didApply = await applyTextureToViewer(viewerElement, textureUrl, {
+          texture: sharedTexture
+        });
+        if (!didApply) {
+          viewerElement.requestUpdate?.();
+          await new Promise(resolve => window.setTimeout(resolve, 120));
+          didApply = await applyTextureToViewer(viewerElement, textureUrl, {
+            texture: sharedTexture
+          });
+        }
+        if (didApply) {
+          await viewerElement.updateComplete;
+          viewerElement.requestUpdate?.();
+        }
+      } catch (error) {
+        directApplyError = error;
+      }
+
+      if (!didApply && viewerElement === detailViewer && editorApplied) {
+        try {
+          didApply = await loadDesignedSceneIntoDetailViewer();
+          if (didApply) console.info('Loaded the designed editor scene into the detail preview.');
+        } catch (fallbackError) {
+          console.warn('Failed to load the designed editor scene into the detail preview:', fallbackError);
+          directApplyError = fallbackError;
+        }
+      }
+
+      if (!didApply) {
+        if (viewerElement === detailViewer) {
+          const detail = directApplyError?.message || 'No compatible detail material accepted the texture.';
+          throw new Error(`The detail preview could not be updated: ${detail}`);
+        }
+        console.warn('Failed to update an editor 3D preview:', directApplyError);
+      }
+      if (viewerElement === designerViewer) editorApplied = didApply;
+      applied.push(didApply);
+    }
+
+    const detailViewerIndex = viewers.indexOf(detailViewer);
+    if (detailViewerIndex >= 0 && applied[detailViewerIndex] !== true) {
+      throw new Error('The detail preview could not be updated. Please try again.');
+    }
+    return applied;
   }
 
   function copySamplerVector(value) {
@@ -851,23 +1336,120 @@ window.initializeModelDesigner = () => {
     // texture with an empty white canvas. Later edits may intentionally clear it.
     if (options.requireArtwork && !hasEditableArtwork()) return;
     clearTimeout(state.textureUpdateTimer);
+    const updateId = ++state.textureUpdateId;
     state.textureUpdateTimer = setTimeout(async () => {
-      const updateId = ++state.textureUpdateId;
-      const textureUrl = await rasterizeModelTexture();
-      if (updateId === state.textureUpdateId) {
-        applyTextureToModel(textureUrl);
+      try {
+        const textureUrl = await rasterizeModelTexture();
+        if (updateId !== state.textureUpdateId) return;
+        await applyTextureToModel(textureUrl, updateId);
+      } catch (error) {
+        if (updateId === state.textureUpdateId) {
+          console.warn('Failed to prepare the live 3D texture preview:', error);
+        }
       }
     }, 120);
   }
 
   async function saveDesignAndClose() {
+    await saveCloudProject({ closeAfterSave: true });
+  }
+
+  async function waitForPendingArtworkUploads() {
+    while (state.pendingArtworkUploads.size) {
+      const count = state.pendingArtworkUploads.size;
+      setDesignSaveStatus(`Finishing ${count} image upload${count === 1 ? '' : 's'}…`);
+      await Promise.all([...state.pendingArtworkUploads]);
+    }
+  }
+
+  function serializeProjectElements() {
+    const wrapper = getCleanElementsClone();
+    wrapper.querySelectorAll('image').forEach((image) => {
+      const source = image.getAttribute('href') || image.getAttribute('xlink:href') || '';
+      const storedUrl = state.uploadedAssetUrls.get(source) || (/^(?:https:\/\/|\/)/.test(source) ? source : '');
+      if (!storedUrl) throw new Error('Please wait for every uploaded image to finish saving.');
+      image.setAttribute('href', storedUrl);
+      image.removeAttribute('xlink:href');
+    });
+    const serialized = wrapper.innerHTML;
+    if (/(?:data:image\/|blob:)/i.test(serialized)) {
+      throw new Error('Please wait for every uploaded image to finish saving.');
+    }
+    return serialized;
+  }
+
+  async function saveCloudProject(options = {}) {
+    if (!saveDesignModal) return false;
+    saveDesignModal.disabled = true;
+    saveDesignModal.classList.add('is-loading');
     state.textEditor?.commit();
-    setDesignSaveStatus('Applying…');
-    const textureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
-    state.finalTextureUrl = textureUrl;
-    await Promise.all(getLoadedDesignViewers().map((viewerElement) => applyTextureToViewer(viewerElement, textureUrl)));
-    setDesignSaveStatus('Applied');
-    closeModal();
+    clearHoveredTemplatePreview();
+    setDesignSaveStatus(modelDesignerConfig.userAuthenticated ? 'Saving project…' : 'Applying…');
+    try {
+      const textureDataUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
+      state.finalTextureUrl = textureDataUrl;
+      await applyFinalTextureToViewers(textureDataUrl);
+      if (!modelDesignerConfig.userAuthenticated || !window.UserProjects) {
+        setDesignSaveStatus('Applied');
+        if (options.closeAfterSave) closeModal();
+        return true;
+      }
+      await waitForPendingArtworkUploads();
+      const elements = serializeProjectElements();
+      setDesignSaveStatus('Rendering 3D project cover…');
+      const cameraSnapshot = captureViewerCamera(designerViewer);
+      const previewDataUrl = await renderDesignedModelImageWithFallback(textureDataUrl, {
+        mimeType: 'image/webp',
+        quality: 0.88,
+        cameraSnapshot
+      });
+      setDesignSaveStatus('Saving project…');
+      const [texture, preview] = await Promise.all([
+        window.UserProjects.uploadImage(
+          textureDataUrl,
+          `${modelDesignerConfig.modelSlug || '3d-design'}-texture.png`,
+          'project-texture'
+        ),
+        window.UserProjects.uploadImage(
+          previewDataUrl,
+          `${modelDesignerConfig.modelSlug || '3d-design'}-preview.webp`,
+          'project-preview'
+        )
+      ]);
+      const project = await window.UserProjects.saveProject({
+        id: state.projectId || undefined,
+        projectType: '3d',
+        name: state.projectName || `${modelDesignerConfig.modelName || 'Garment'} Design`,
+        sourceId: String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || ''),
+        sourceUrl: window.location.pathname,
+        previewImageUrl: preview.url,
+        designData: {
+          elements,
+          materialId: state.selectedMaterial?.id || null,
+          fillScope: state.fillScope,
+          fillMode: state.fillMode,
+          appearance: serializeAppearanceState(),
+          textureUrl: texture.url
+        }
+      });
+      state.projectId = project.id;
+      state.projectName = project.name;
+      state.finalTextureUrl = texture.url;
+      const url = new URL(window.location.href);
+      url.searchParams.set('project', project.id);
+      window.history.replaceState({}, '', url);
+      setDesignSaveStatus('Saved to your account');
+      if (options.closeAfterSave) closeModal();
+      return true;
+    } catch (error) {
+      console.error(error);
+      if (error.status === 401) window.UserProjects.goToSignIn();
+      else setDesignSaveStatus(error.message || 'Project could not be saved', true);
+      return false;
+    } finally {
+      saveDesignModal.disabled = false;
+      saveDesignModal.classList.remove('is-loading');
+    }
   }
 
   function setRenderStatus(message) {
@@ -876,20 +1458,11 @@ window.initializeModelDesigner = () => {
 
   function setExportingState(isExporting) {
     state.isExportingRender = isExporting;
-    [downloadRenderBtn].forEach((button) => {
+    [renderCurrentModelBtn].forEach((button) => {
       if (!button) return;
       button.disabled = isExporting;
       button.classList.toggle('is-loading', isExporting);
     });
-  }
-
-  function downloadDataUrl(dataUrl, filename) {
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
   }
 
   function hasDesignedTexture() {
@@ -1075,8 +1648,8 @@ window.initializeModelDesigner = () => {
     exportViewer.setAttribute('reveal', 'auto');
     exportViewer.setAttribute('interaction-prompt', 'none');
     exportViewer.setAttribute('environment-image', webStandard.environmentImage);
-    exportViewer.setAttribute('shadow-intensity', String(webStandard.shadowIntensity));
-    exportViewer.setAttribute('shadow-softness', String(webStandard.shadowSoftness));
+    exportViewer.setAttribute('shadow-intensity', String(webStandard.exportShadowIntensity ?? 0.32));
+    exportViewer.setAttribute('shadow-softness', String(webStandard.exportShadowSoftness ?? 0.96));
     exportViewer.setAttribute('exposure', String(webStandard.exposure));
     exportViewer.setAttribute('tone-mapping', webStandard.toneMapping);
     exportViewer.autoRotate = false;
@@ -1229,7 +1802,17 @@ window.initializeModelDesigner = () => {
     }
   }
 
-  async function downloadDesignedRender() {
+  function downloadRenderedImage(renderUrl, filename) {
+    const link = document.createElement('a');
+    link.href = renderUrl;
+    link.download = filename;
+    link.hidden = true;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  }
+
+  async function renderCurrentModelImage() {
     if (state.isExportingRender) return;
     if (!modelDesignerConfig.previewModelFileUrl) return;
     setExportingState(true);
@@ -1238,18 +1821,21 @@ window.initializeModelDesigner = () => {
     try {
       await loadModelViewerModule();
       stopModelRotation();
-      const cameraSnapshot = captureViewerCamera();
+      const activeViewer = designModal.classList.contains('active') ? designerViewer : detailViewer;
+      if (activeViewer) await waitForModelViewerReady(activeViewer);
+      const cameraSnapshot = captureViewerCamera(activeViewer);
       const textureUrl = await createFinalRenderTexture();
       const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, {
         mimeType: 'image/png',
         quality: 0.95,
         cameraSnapshot
       });
-      downloadDataUrl(renderUrl, `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-hd-render.png`);
-      setRenderStatus('HD render downloaded.');
-      window.trackEvent?.('design_export', {
-        export_format: 'png',
-        export_type: 'hd_3d_render',
+      const filename = `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-render.png`;
+      downloadRenderedImage(renderUrl, filename);
+      setRenderStatus('Render downloaded.');
+      window.trackEvent?.('design_render', {
+        render_format: 'png',
+        render_type: 'current_3d_view',
         item_id: modelDesignerConfig.modelSlug || '',
         item_name: modelDesignerConfig.modelName || ''
       });
@@ -1442,7 +2028,7 @@ window.initializeModelDesigner = () => {
   window.prepareDesignedModelCoverCapture = prepareDesignedModelCoverCapture;
   window.cleanupDesignedModelCoverCapture = cleanupDesignedModelCoverCapture;
 
-  function getCleanElementsHtml() {
+  function getCleanElementsClone() {
     const clone = textureElements.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach((element) => {
       element.removeAttribute('contenteditable');
@@ -1451,7 +2037,11 @@ window.initializeModelDesigner = () => {
     clone.querySelectorAll('.texture-element.selected').forEach((element) => {
       element.classList.remove('selected');
     });
-    return clone.innerHTML;
+    return clone;
+  }
+
+  function getCleanElementsHtml() {
+    return getCleanElementsClone().innerHTML;
   }
 
   function getData(group) {
@@ -1560,8 +2150,7 @@ window.initializeModelDesigner = () => {
     if (group.classList?.contains('texture-template-path')) {
       group.dataset.color = color;
       const fillPath = getTemplateFillPath(group, true, true);
-      fillPath.setAttribute('fill', getSvgPaint(group, color, 'fill'));
-      fillPath.setAttribute('fill-opacity', '1');
+      setTemplateFillPaint(fillPath, getSvgPaint(group, color, 'fill'));
       getTemplateFillPath(group, false, false)?.remove();
       group.dataset.areaEmpty = 'false';
       return;
@@ -1601,11 +2190,20 @@ window.initializeModelDesigner = () => {
     if (!String(value || '').includes('linear-gradient')) return value;
     const parsed = parseColorState(value);
     const id = `${group.id}-${prop}-gradient`;
+    const radians = ((parsed.angle ?? 90) - 90) * (Math.PI / 180);
+    const x2 = 50 + Math.cos(radians) * 50;
+    const y2 = 50 + Math.sin(radians) * 50;
+    const x1 = 100 - x2;
+    const y1 = 100 - y2;
     let gradient = document.getElementById(id);
     if (!gradient) {
-      gradient = createSvg('linearGradient', { id, x1: '0%', y1: '0%', x2: '100%', y2: '0%' });
+      gradient = createSvg('linearGradient', { id });
       textureSvg.querySelector('defs')?.appendChild(gradient);
     }
+    gradient.setAttribute('x1', `${x1}%`);
+    gradient.setAttribute('y1', `${y1}%`);
+    gradient.setAttribute('x2', `${x2}%`);
+    gradient.setAttribute('y2', `${y2}%`);
     gradient.innerHTML = '';
     gradient.appendChild(createSvg('stop', { offset: '0%', 'stop-color': rgbaFrom(parsed.start, parsed.alpha) }));
     gradient.appendChild(createSvg('stop', { offset: '100%', 'stop-color': rgbaFrom(parsed.end, parsed.alpha) }));
@@ -1692,8 +2290,8 @@ window.initializeModelDesigner = () => {
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;
   }
 
-  function gradientFrom(start, end, alpha) {
-    return `linear-gradient(90deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;
+  function gradientFrom(start, end, alpha, angle = 90) {
+    return `linear-gradient(${angle}deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;
   }
 
   function parseCssColorTokens(value) {
@@ -1713,6 +2311,7 @@ window.initializeModelDesigner = () => {
   function parseColorState(value) {
     const colorTokens = parseCssColorTokens(value);
     const isGradient = String(value || '').includes('linear-gradient');
+    const angleMatch = String(value || '').match(/linear-gradient\(\s*(-?[0-9.]+)deg/i);
     const start = colorTokens[0]?.hex || normalizeHex(value);
     const end = colorTokens[1]?.hex || (isGradient ? start : '#ffffff');
     const hsv = rgbToHsv(...Object.values(hexToRgb(start)));
@@ -1724,9 +2323,165 @@ window.initializeModelDesigner = () => {
       h: hsv.h,
       s: hsv.s,
       v: hsv.v,
+      angle: angleMatch ? parseFloat(angleMatch[1]) : 90,
       alpha: colorTokens.find((token) => token.alpha !== undefined)?.alpha ?? 100
     };
   }
+
+  function getAppearancePaint() {
+    const start = appearanceColorStart?.value || '#5f89f4';
+    if (state.fillMode === 'solid') return start;
+    const end = appearanceColorEnd?.value || '#c39bea';
+    const angle = parseFloat(appearanceGradientAngle?.value || 135);
+    return gradientFrom(start, end, 100, angle);
+  }
+
+  function serializeAppearanceState() {
+    return {
+      colorStart: appearanceColorStart?.value || '#5f89f4',
+      colorEnd: appearanceColorEnd?.value || '#c39bea',
+      gradientAngle: Math.max(0, Math.min(360, Number(appearanceGradientAngle?.value) || 135)),
+      panelFills: [...textureSvg.querySelectorAll('.texture-template-path[data-color]')].map((path) => ({
+        id: path.dataset.templatePathId,
+        paint: path.dataset.color
+      }))
+    };
+  }
+
+  function normalizeSavedPaint(value) {
+    const parsed = parseColorState(String(value || '').slice(0, 300));
+    return parsed.mode === 'gradient'
+      ? gradientFrom(parsed.start, parsed.end, parsed.alpha, parsed.angle)
+      : parsed.start;
+  }
+
+  function restoreAppearanceState(appearance) {
+    if (!appearance || typeof appearance !== 'object') return;
+    if (appearanceColorStart) appearanceColorStart.value = normalizeHex(appearance.colorStart || appearanceColorStart.value);
+    if (appearanceColorEnd) appearanceColorEnd.value = normalizeHex(appearance.colorEnd || appearanceColorEnd.value);
+    if (appearanceGradientAngle) {
+      appearanceGradientAngle.value = String(Math.max(0, Math.min(360, Number(appearance.gradientAngle) || 135)));
+    }
+    const pathsById = new Map(
+      [...textureSvg.querySelectorAll('.texture-template-path')].map((path) => [path.dataset.templatePathId, path])
+    );
+    (Array.isArray(appearance.panelFills) ? appearance.panelFills : []).forEach((savedFill) => {
+      const path = pathsById.get(String(savedFill?.id || ''));
+      if (path && typeof savedFill?.paint === 'string') setElementColor(path, normalizeSavedPaint(savedFill.paint));
+    });
+  }
+
+  async function restoreLegacyAppearanceFromTexture(textureUrl) {
+    if (!textureUrl) return false;
+    try {
+      const dataUrl = await resolveArtworkDataUrl(textureUrl);
+      const image = await loadViewerTextureImage(dataUrl);
+      const size = 128;
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!context) return false;
+      context.drawImage(image, 0, 0, size, size);
+      const pixels = context.getImageData(0, 0, size, size).data;
+      const borderBins = new Map();
+      const allBins = new Map();
+      const borderSize = Math.ceil(size * 0.08);
+      const record = (bins, red, green, blue) => {
+        if (red > 244 && green > 244 && blue > 244) return;
+        const key = `${Math.round(red / 8) * 8},${Math.round(green / 8) * 8},${Math.round(blue / 8) * 8}`;
+        const item = bins.get(key) || { count: 0, red: 0, green: 0, blue: 0 };
+        item.count += 1;
+        item.red += red;
+        item.green += green;
+        item.blue += blue;
+        bins.set(key, item);
+      };
+      for (let y = 0; y < size; y += 1) {
+        for (let x = 0; x < size; x += 1) {
+          const offset = (y * size + x) * 4;
+          if (pixels[offset + 3] < 200) continue;
+          const red = pixels[offset];
+          const green = pixels[offset + 1];
+          const blue = pixels[offset + 2];
+          record(allBins, red, green, blue);
+          if (x < borderSize || y < borderSize || x >= size - borderSize || y >= size - borderSize) {
+            record(borderBins, red, green, blue);
+          }
+        }
+      }
+      const dominant = (bins) => [...bins.values()].sort((a, b) => b.count - a.count)[0] || null;
+      const sample = dominant(borderBins) || dominant(allBins);
+      if (!sample || sample.count < 4) return false;
+      const color = rgbToHex(sample.red / sample.count, sample.green / sample.count, sample.blue / sample.count);
+      if (appearanceColorStart) appearanceColorStart.value = color;
+      if (appearanceColorEnd) appearanceColorEnd.value = color;
+      [...textureSvg.querySelectorAll('.texture-template-path')].forEach((path) => setElementColor(path, color));
+      return true;
+    } catch (error) {
+      console.warn('Failed to restore legacy project appearance:', error);
+      return false;
+    }
+  }
+
+  function renderAppearanceControls() {
+    const paint = getAppearancePaint();
+    if (appearanceGradientPreview) appearanceGradientPreview.style.background = paint;
+    if (appearanceGradientAngleOutput) {
+      appearanceGradientAngleOutput.value = `${Math.round(parseFloat(appearanceGradientAngle?.value || 135))}°`;
+      appearanceGradientAngleOutput.textContent = appearanceGradientAngleOutput.value;
+    }
+    designAppearancePanel?.querySelectorAll('[data-fill-scope]').forEach((button) => {
+      const active = button.dataset.fillScope === state.fillScope;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    designAppearancePanel?.querySelectorAll('[data-fill-mode]').forEach((button) => {
+      const active = button.dataset.fillMode === state.fillMode;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    designAppearancePanel?.classList.toggle('is-solid-fill', state.fillMode === 'solid');
+  }
+
+  function applyAppearanceFill() {
+    const allPaths = [...textureSvg.querySelectorAll('.texture-template-path')];
+    const targets = state.fillScope === 'panel'
+      ? (state.selectedTemplatePath ? [state.selectedTemplatePath] : [])
+      : allPaths;
+    renderAppearanceControls();
+    if (!targets.length) {
+      setDesignSaveStatus(state.fillScope === 'panel' ? 'Select a garment panel first' : 'Loading garment panels…', true);
+      return;
+    }
+    const paint = getAppearancePaint();
+    targets.forEach((path) => setElementColor(path, paint));
+    setDesignSaveStatus('Unapplied changes', true);
+    renderSelection();
+    scheduleTexturePreviewUpdate();
+  }
+
+  designAppearancePanel?.addEventListener('click', (event) => {
+    const scopeButton = event.target.closest('[data-fill-scope]');
+    const modeButton = event.target.closest('[data-fill-mode]');
+    if (scopeButton) {
+      state.fillScope = scopeButton.dataset.fillScope;
+      renderAppearanceControls();
+      if (state.fillScope === 'panel' && !state.selectedTemplatePath) {
+        setDesignSaveStatus('Select a garment panel first', true);
+      } else {
+        applyAppearanceFill();
+      }
+    } else if (modeButton) {
+      state.fillMode = modeButton.dataset.fillMode;
+      applyAppearanceFill();
+    }
+  });
+
+  [appearanceColorStart, appearanceColorEnd, appearanceGradientAngle].forEach((input) => {
+    input?.addEventListener('input', applyAppearanceFill);
+  });
+  renderAppearanceControls();
 
   function setElementStrokeColor(group, color) {
     if (!group) return;
@@ -2050,6 +2805,14 @@ window.initializeModelDesigner = () => {
       addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
     }
 
+    const deleteButton = document.createElement('button');
+    deleteButton.type = 'button';
+    deleteButton.className = 'element-toolbar-delete';
+    deleteButton.dataset.deleteElement = 'true';
+    deleteButton.setAttribute('aria-label', 'Delete selected element');
+    deleteButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
+    elementToolbar.appendChild(deleteButton);
+
     positionElementToolbar(group);
   }
 
@@ -2270,11 +3033,10 @@ window.initializeModelDesigner = () => {
       return;
     }
     const data = getData(state.selected);
-    const svgRect = textureSvg.getBoundingClientRect();
-    const selectionScale = Math.max(0.001, Math.min(
-      svgRect.width / state.svgWidth,
-      svgRect.height / state.svgHeight
-    ));
+    const screenMatrix = textureSvg.getScreenCTM();
+    const selectionScale = Math.max(0.001, screenMatrix
+      ? Math.hypot(screenMatrix.a, screenMatrix.b)
+      : state.zoom);
     const screenUnit = 1 / selectionScale;
     const handleSize = 10 * screenUnit;
     const handleRadius = 2 * screenUnit;
@@ -2318,7 +3080,7 @@ window.initializeModelDesigner = () => {
           width: handleSize,
           height: handleSize,
           rx: handleRadius,
-          style: `cursor:${resizeCursor(handle, data.rotate)}`
+          style: `cursor:${resizeCursor(handle, data.rotate + state.canvasRotation)}`
         }));
       });
 
@@ -2371,21 +3133,245 @@ window.initializeModelDesigner = () => {
     return true;
   }
 
-  toolButtons.image?.addEventListener('click', () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          importArtworkDataUrl(event.target.result);
-        };
-        reader.readAsDataURL(file);
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.addEventListener('load', () => resolve(reader.result), { once: true });
+      reader.addEventListener('error', reject, { once: true });
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function resolveArtworkDataUrl(source) {
+    if (/^data:image\//i.test(String(source || ''))) return source;
+    const sourceUrl = /^https:\/\//i.test(String(source || ''))
+      ? `/api/project-texture?url=${encodeURIComponent(source)}`
+      : source;
+    const response = await fetch(sourceUrl, { credentials: 'same-origin' });
+    if (!response.ok) throw new Error('Unable to load artwork');
+    return blobToDataUrl(await response.blob());
+  }
+
+  async function addArtworkFromSource(source, button, persistedSource) {
+    if (!source) return;
+    try {
+      const dataUrl = await resolveArtworkDataUrl(source);
+      const storedUrl = persistedSource || (/^(?:https:\/\/|\/)/.test(String(source)) ? source : '');
+      if (storedUrl) state.uploadedAssetUrls.set(dataUrl, storedUrl);
+      imageAssetTrack?.querySelectorAll('.image-asset-card').forEach((card) => card.classList.remove('active'));
+      button?.classList.add('active');
+      importArtworkDataUrl(dataUrl);
+      window.trackEvent?.('upload_artwork', {
+        interaction_type: button?.classList.contains('is-uploaded') ? 'editor_asset_upload' : 'editor_asset_preset',
+        item_id: modelDesignerConfig.modelSlug || ''
+      });
+    } catch (error) {
+      console.warn('Failed to add artwork:', error);
+      setDesignSaveStatus('Image could not be loaded', true);
+    }
+  }
+
+  function createUploadedAssetCard(dataUrl, name = 'Uploaded image', storedUrl = '', imageId = '') {
+    if (!imageAssetTrack) return null;
+    const assetKey = storedUrl || dataUrl;
+    if (!assetKey || renderedUploadedAssetKeys.has(assetKey)) return null;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'image-asset-card is-uploaded';
+    button.setAttribute('aria-label', `Add ${name}`);
+    button.title = name;
+    button.draggable = true;
+    button.dataset.assetUrl = dataUrl;
+    if (imageId) button.dataset.userImageId = imageId;
+    button._assetDataUrl = dataUrl;
+    button._assetUrl = storedUrl;
+    const image = document.createElement('img');
+    image.src = dataUrl;
+    image.alt = name;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    button.appendChild(image);
+    imageAssetTrack.insertBefore(button, imageAssetUpload?.nextSibling || null);
+    renderedUploadedAssetKeys.add(assetKey);
+    requestAnimationFrame(updateAssetTrayScrollState);
+    return button;
+  }
+
+  function setUploadedAssetState(button, stateName, message = '') {
+    if (!button) return;
+    button.classList.toggle('is-uploading', stateName === 'uploading');
+    button.classList.toggle('is-upload-failed', stateName === 'failed');
+    if (stateName === 'uploading') button.setAttribute('aria-busy', 'true');
+    else button.removeAttribute('aria-busy');
+    if (message) {
+      button.title = message;
+      button.setAttribute('aria-label', message);
+    }
+  }
+
+  async function loadUploadedArtworkLibrary() {
+    if (!modelDesignerConfig.userAuthenticated || !window.UserProjects?.listImages || !imageAssetTrack) return;
+    imageAssetTrack.setAttribute('aria-busy', 'true');
+    try {
+      const images = await window.UserProjects.listImages('artwork');
+      images
+        .filter((image) => image?.purpose === 'artwork' && /^(?:https:\/\/|\/)/.test(String(image.url || '')))
+        .reverse()
+        .forEach((image) => createUploadedAssetCard(image.url, image.name || 'Uploaded image', image.url, image.id));
+    } catch (error) {
+      console.warn('Saved artwork could not be loaded:', error);
+    } finally {
+      imageAssetTrack.removeAttribute('aria-busy');
+      requestAnimationFrame(updateAssetTrayScrollState);
+    }
+  }
+
+  function handleArtworkFiles(files) {
+    const selectedFiles = [...(files || [])];
+    const mimeByExtension = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
+    const acceptedFiles = [];
+
+    selectedFiles.forEach((file) => {
+      const extension = String(file.name || '').split('.').pop().toLowerCase();
+      const inferredMime = mimeByExtension[extension] || '';
+      const mimeType = ['image/png', 'image/jpeg', 'image/webp'].includes(file.type) ? file.type : inferredMime;
+      if (!mimeType) {
+        setDesignSaveStatus(`${file.name || 'This file'} is not supported. Use PNG, JPG, or WebP.`, true);
+        showImageUploadToast('Unsupported file. Use PNG, JPG, or WebP.', 'error', 5000);
+        return;
       }
-    };
-    input.click();
+      if (file.size > 10 * 1024 * 1024) {
+        setDesignSaveStatus(`${file.name || 'Image'} is larger than 10 MB.`, true);
+        showImageUploadToast('Image is larger than 10 MB.', 'error', 5000);
+        return;
+      }
+      acceptedFiles.push({ file, mimeType });
+    });
+
+    if (!selectedFiles.length) {
+      setDesignSaveStatus('No image was selected', true);
+      showImageUploadToast('No image was selected.', 'error', 3500);
+    }
+
+    acceptedFiles.forEach(({ file, mimeType }, index) => {
+      const reader = new FileReader();
+      let finishUploadTask;
+      const uploadTask = new Promise((resolve) => {
+        finishUploadTask = resolve;
+      });
+      state.pendingArtworkUploads.add(uploadTask);
+      uploadTask.finally(() => state.pendingArtworkUploads.delete(uploadTask));
+      reader.addEventListener('load', async () => {
+        try {
+          const dataUrl = String(reader.result || '');
+          if (!dataUrl.startsWith('data:image/')) {
+            setDesignSaveStatus(`${file.name || 'Image'} could not be read`, true);
+            showImageUploadToast('Image could not be read.', 'error', 5000);
+            return;
+          }
+          const button = createUploadedAssetCard(dataUrl, file.name);
+          if (index === 0) await addArtworkFromSource(dataUrl, button);
+          try {
+            if (modelDesignerConfig.userAuthenticated && window.UserProjects) {
+              setUploadedAssetState(button, 'uploading', `Uploading ${file.name}`);
+              setDesignSaveStatus(`Uploading ${file.name}…`);
+              showImageUploadToast(`Uploading ${file.name}…`, 'loading');
+              const uploaded = await window.UserProjects.uploadImage(dataUrl, file.name, 'artwork');
+              const storedUrl = uploaded.url;
+              state.uploadedAssetUrls.set(dataUrl, storedUrl);
+              button._assetUrl = storedUrl;
+              button.dataset.assetUrl = dataUrl;
+              if (uploaded.id) button.dataset.userImageId = uploaded.id;
+              renderedUploadedAssetKeys.add(storedUrl);
+              setUploadedAssetState(button, 'saved', `Add ${file.name}`);
+              setDesignSaveStatus(`${file.name} uploaded`);
+              showImageUploadToast(`${file.name} uploaded`, 'success', 2400);
+            } else {
+              showImageUploadToast(`${file.name} added`, 'success', 1800);
+            }
+          } catch (error) {
+            console.error(error);
+            setUploadedAssetState(button, 'failed', `${file.name} upload failed. Select it again to retry.`);
+            setDesignSaveStatus(error.message || 'Image could not be saved', true);
+            showImageUploadToast(error.message || 'Image could not be saved.', 'error', 6000);
+          }
+        } finally {
+          finishUploadTask();
+        }
+      }, { once: true });
+      reader.addEventListener('error', () => {
+        setDesignSaveStatus(`${file.name || 'Image'} could not be read`, true);
+        showImageUploadToast('Image could not be read.', 'error', 5000);
+        finishUploadTask();
+      }, { once: true });
+      reader.addEventListener('abort', () => {
+        setDesignSaveStatus(`${file.name || 'Image'} upload was cancelled`, true);
+        showImageUploadToast('Image upload was cancelled.', 'error', 4000);
+        finishUploadTask();
+      }, { once: true });
+      const readableFile = file.type === mimeType ? file : new Blob([file], { type: mimeType });
+      setDesignSaveStatus(`Reading ${file.name}…`);
+      showImageUploadToast(`Preparing ${file.name}…`, 'loading');
+      reader.readAsDataURL(readableFile);
+    });
+  }
+
+  toolButtons.image?.addEventListener('click', () => setAssetTrayOpen(true));
+  imageAssetUpload?.addEventListener('click', () => imageAssetUploadInput?.click());
+  imageAssetUploadInput?.addEventListener('change', (event) => {
+    handleArtworkFiles(event.target.files);
+    event.target.value = '';
+  });
+  imageAssetClose?.addEventListener('click', () => {
+    setAssetTrayOpen(false);
+    setTool('select');
+  });
+  imageAssetFilter?.addEventListener('click', () => {
+    const nextPressed = imageAssetFilter.getAttribute('aria-pressed') !== 'true';
+    imageAssetFilter.setAttribute('aria-pressed', String(nextPressed));
+    imageAssetTrack?.classList.toggle('show-uploaded-only', nextPressed);
+    requestAnimationFrame(updateAssetTrayScrollState);
+  });
+  assetScrollPrev?.addEventListener('click', () => {
+    imageAssetViewport?.scrollBy({ left: -Math.max(240, imageAssetViewport.clientWidth * 0.62), behavior: 'smooth' });
+  });
+  assetScrollNext?.addEventListener('click', () => {
+    imageAssetViewport?.scrollBy({ left: Math.max(240, imageAssetViewport.clientWidth * 0.62), behavior: 'smooth' });
+  });
+  imageAssetViewport?.addEventListener('scroll', updateAssetTrayScrollState, { passive: true });
+
+  imageAssetTrack?.addEventListener('click', (event) => {
+    const button = event.target.closest('.image-asset-card:not(.image-asset-upload)');
+    if (!button) return;
+    addArtworkFromSource(button._assetDataUrl || button.dataset.assetUrl, button, button._assetUrl || button.dataset.assetUrl);
+  });
+
+  imageAssetTrack?.addEventListener('dragstart', (event) => {
+    const button = event.target.closest('.image-asset-card:not(.image-asset-upload)');
+    if (!button || !event.dataTransfer) return;
+    event.dataTransfer.effectAllowed = 'copy';
+    event.dataTransfer.setData('text/plain', button._assetDataUrl || button.dataset.assetUrl || '');
+    event.dataTransfer.setData('application/x-garment-artwork', 'true');
+  });
+
+  imageAssetTrack?.querySelectorAll('.image-asset-card:not(.image-asset-upload)').forEach((button) => {
+    button.draggable = true;
+  });
+  loadUploadedArtworkLibrary();
+
+  textureCanvasArea?.addEventListener('dragover', (event) => {
+    if (!event.dataTransfer?.types.includes('application/x-garment-artwork')) return;
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+    textureCanvasArea.classList.add('is-artwork-drop-target');
+  });
+  textureCanvasArea?.addEventListener('dragleave', () => textureCanvasArea.classList.remove('is-artwork-drop-target'));
+  textureCanvasArea?.addEventListener('drop', (event) => {
+    const source = event.dataTransfer?.getData('text/plain');
+    if (!source) return;
+    event.preventDefault();
+    textureCanvasArea.classList.remove('is-artwork-drop-target');
+    addArtworkFromSource(source);
   });
 
   function startDraw(event) {
@@ -2675,6 +3661,13 @@ window.initializeModelDesigner = () => {
   });
 
   elementToolbar.addEventListener('click', (event) => {
+    const deleteButton = event.target.closest('[data-delete-element]');
+    if (deleteButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      deleteSelected();
+      return;
+    }
     const button = event.target.closest('[data-color-prop]');
     if (!button) return;
     event.preventDefault();
@@ -2747,6 +3740,7 @@ window.initializeModelDesigner = () => {
   textureCanvasArea.addEventListener('scroll', () => positionElementToolbar());
   window.addEventListener('resize', () => {
     positionElementToolbar();
+    updateAssetTrayScrollState();
     if (state.zoomMode === 'fit' && designModal.classList.contains('active')) fitCanvasZoom();
   });
 
@@ -2815,6 +3809,11 @@ window.initializeModelDesigner = () => {
     if (event.key === 'Escape') {
       event.preventDefault();
       if (colorPopover.classList.contains('visible')) closeColorPopover();
+      else if (imageAssetTray && !imageAssetTray.hidden) {
+        setAssetTrayOpen(false);
+        setTool('select');
+      }
+      else if (designAppearancePanel?.classList.contains('is-mobile-open')) designAppearancePanel.classList.remove('is-mobile-open');
       else closeModal();
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
@@ -2826,6 +3825,7 @@ window.initializeModelDesigner = () => {
   });
 
   designerViewer?.addEventListener('load', () => {
+    if (designPreviewLoading) designPreviewLoading.hidden = true;
     renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
     if (state.selectedMaterial) {
       applyMaterialToViewer(designerViewer, state.selectedMaterial);
@@ -2839,7 +3839,7 @@ window.initializeModelDesigner = () => {
     }
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
-  downloadRenderBtn?.addEventListener('click', downloadDesignedRender);
+  renderCurrentModelBtn?.addEventListener('click', renderCurrentModelImage);
   customizationInquiryBtn?.addEventListener('click', openCustomizationInquiry);
   customizationInquiryOverlay?.addEventListener('click', closeCustomizationInquiry);
   customizationInquiryClose?.addEventListener('click', closeCustomizationInquiry);
@@ -2852,6 +3852,75 @@ window.initializeModelDesigner = () => {
   renderMaterialSwatches();
   saveHistory();
 
+  function parseSavedProjectElements(elementsMarkup) {
+    const parsed = new DOMParser().parseFromString(
+      `<svg xmlns="${SVG_NS}"><g id="savedProjectElements">${String(elementsMarkup || '')}</g></svg>`,
+      'image/svg+xml'
+    );
+    if (parsed.querySelector('parsererror')) {
+      throw new Error('Saved project artwork could not be read.');
+    }
+    const elements = parsed.getElementById('savedProjectElements');
+    if (!elements) throw new Error('Saved project artwork is missing.');
+    return elements;
+  }
+
+  function replaceTextureElements(savedElements) {
+    const imported = [...savedElements.childNodes].map((node) => document.importNode(node, true));
+    textureElements.replaceChildren(...imported);
+  }
+
+  async function loadCloudProject() {
+    if (!window.UserProjects) return;
+    try {
+      const project = await window.UserProjects.loadProjectFromUrl('3d');
+      if (!project) return;
+      const currentSourceId = String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || '');
+      if (project.sourceId && project.sourceId !== currentSourceId) throw new Error('This project uses another 3D model.');
+      await loadTextureDimensions();
+      const saved = project.designData || {};
+      const wrapper = parseSavedProjectElements(saved.elements);
+      await Promise.all([...wrapper.querySelectorAll('image')].map(async (image) => {
+        const storedUrl = image.getAttribute('href') || image.getAttributeNS('http://www.w3.org/1999/xlink', 'href') || '';
+        if (!storedUrl) return;
+        const dataUrl = await resolveArtworkDataUrl(storedUrl);
+        state.uploadedAssetUrls.set(dataUrl, storedUrl);
+        image.setAttribute('href', dataUrl);
+        image.removeAttributeNS('http://www.w3.org/1999/xlink', 'href');
+      }));
+      replaceTextureElements(wrapper);
+      state.projectId = project.id;
+      state.projectName = project.name;
+      state.fillScope = saved.fillScope || 'whole';
+      state.fillMode = saved.fillMode || 'gradient';
+      state.finalTextureUrl = saved.textureUrl || project.previewImageUrl || null;
+      if (saved.appearance) restoreAppearanceState(saved.appearance);
+      else await restoreLegacyAppearanceFromTexture(state.finalTextureUrl);
+      const elementIds = [...textureElements.querySelectorAll('.texture-element')]
+        .map(element => Number.parseInt(String(element.id || '').replace('element-', ''), 10))
+        .filter(Number.isFinite);
+      state.elementCounter = Math.max(0, ...elementIds);
+      state.history = [];
+      state.historyIndex = -1;
+      saveHistory();
+      renderAppearanceControls();
+      await window.loadClothingModelViewer?.(detailViewer).catch(() => null);
+      if (saved.materialId && window.Design3DMaterials) {
+        const material = window.Design3DMaterials.materials.find(item => item.id === saved.materialId);
+        if (material) await applyMaterialPreset(material);
+      }
+      if (state.finalTextureUrl) {
+        const applied = await Promise.all(getLoadedDesignViewers().map(viewerElement => applyTextureToViewer(viewerElement, state.finalTextureUrl)));
+        if (!applied.some(Boolean)) throw new Error('Saved project texture could not be applied.');
+      }
+      setDesignSaveStatus('Saved project loaded');
+    } catch (error) {
+      console.error(error);
+      setDesignSaveStatus(error.status === 401 ? 'Sign in to open this project' : (error.message || 'Project could not be loaded'), true);
+    }
+  }
+  cloudProjectLoadPromise = loadCloudProject();
+
   let pendingArtwork = null;
   try {
     pendingArtwork = JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null');
@@ -2862,7 +3931,7 @@ window.initializeModelDesigner = () => {
   const pendingArtworkIsFresh = pendingArtwork?.dataUrl && Date.now() - Number(pendingArtwork.createdAt || 0) < 10 * 60 * 1000;
   let pendingArtworkImported = false;
   const openDesignFromNavigation = () => {
-    if (window.location.hash !== '#design' && !pendingArtworkIsFresh) return;
+    if (!pendingArtworkIsFresh) return;
     window.setTimeout(() => {
       if (!designModal.classList.contains('active')) openModal();
       if (pendingArtworkIsFresh && !pendingArtworkImported) {
@@ -2874,9 +3943,8 @@ window.initializeModelDesigner = () => {
   };
   openDesignFromNavigation();
   window.addEventListener('load', openDesignFromNavigation, { once: true });
-  window.addEventListener('hashchange', openDesignFromNavigation);
   window.openModelDesigner = openModal;
-  window.downloadDesignedModelRender = downloadDesignedRender;
+  window.renderCurrentModelImage = renderCurrentModelImage;
   window.openModelCustomizationInquiry = openCustomizationInquiry;
 };
 })();

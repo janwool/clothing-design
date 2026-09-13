@@ -1,6 +1,9 @@
-<%- include('partials/header', { bodyClass: 'category-catalog-page model-product-page' }) %>
+<%- include('partials/header', {
+  bodyClass: 'category-catalog-page model-product-page',
+  pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30']
+}) %>
 <% const detailContent = modelDetailContent || {}; %>
-<% const previewModelFileUrl = model.file_url; %>
+<% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
 <% const howToSteps = detailContent.howToSteps || []; %>
 <% const applications = detailContent.applications || []; %>
 <% const faqItems = detailContent.faqItems || []; %>
@@ -9,229 +12,248 @@
 <% const howToIcons = ['open', 'inspect', 'simulate', 'download']; %>
 <% const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; %>
 <% const supportsOnModelMockup = Boolean(modelMockupProfile); %>
+<% const tryOnModels = typeof aiTryOnModels !== 'undefined' && Array.isArray(aiTryOnModels) ? aiTryOnModels : []; %>
 <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
 <% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
+<% const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; %>
+<% const heroDescription = String(model.description || 'A production-minded 3D garment base, ready for color, artwork, fabric, and fit exploration.').split(/(?<=[.!?])\s+/)[0]; %>
 
 <section class="model-detail-hero">
   <div class="container">
+    <nav class="model-breadcrumb" aria-label="Breadcrumb">
+      <a href="/mockups">3D Models</a><span>/</span>
+      <a href="/mockups/<%= model.category_slug || model.category %>"><%= model.category_label || model.category %></a><span>/</span>
+      <span><%= modelDisplayName %></span>
+    </nav>
     <div class="model-detail-grid">
-      <!-- Left: 3D Viewer -->
+      <div class="model-info-section" role="region" aria-label="Model overview">
+        <span class="model-product-kicker">Digital atelier / <%= modelCategoryName %></span>
+        <h1 class="model-detail-title"><%= modelDisplayName %></h1>
+        <div class="model-description model-product-description">
+          <h2>Description</h2>
+          <p><%= heroDescription %></p>
+        </div>
+        <div class="model-detail-meta" aria-label="Model capabilities">
+          <span class="tag tag-free">Free beta</span>
+          <span class="meta-item">Editable surface</span>
+          <% if (supportsOnModelMockup) { %><span class="meta-item">AI try-on coming soon</span><% } %>
+        </div>
+        <div class="model-actions model-action-grid">
+          <button class="detail-action detail-action-primary" id="designNowBtn" type="button">
+            <span>Customize this model</span>
+          </button>
+          <span class="ai-coming-soon-control" tabindex="0" aria-describedby="aiTryOnComingSoon">
+            <button class="detail-action" id="aiTryOnBtn" type="button" disabled aria-disabled="true">
+              <span>AI try-on</span>
+            </button>
+            <span class="ai-coming-soon-tooltip" id="aiTryOnComingSoon" role="tooltip">Coming soon</span>
+          </span>
+          <% if (previewModelFileUrl) { %>
+            <button class="detail-action" id="renderCurrentModelBtn" type="button">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
+              <span>Render current view</span>
+            </button>
+          <% } %>
+          <button class="detail-action" id="customizationInquiryBtn" type="button">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20V8l4-3v4l5-4v4l7-4v15H4Z"/><path d="M8 14h2m3 0h2m3 0h2"/></svg>
+            <span>Production customization</span>
+          </button>
+        </div>
+        <p class="model-action-note">Free during public beta · no payment details required</p>
+        <div class="model-detail-share-section model-hero-share" data-model-share-mount aria-label="Share this 3D model"></div>
+        <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
+      </div>
+
       <div class="model-viewer-section">
+        <div class="viewer-stage-label"><span>Live garment</span><i></i><span>Drag to rotate</span></div>
         <div class="model-3d-viewer<%= previewModelFileUrl ? ' is-loading' : '' %>" id="model3dViewer" aria-busy="<%= previewModelFileUrl ? 'true' : 'false' %>">
           <% if (previewModelFileUrl) { %>
-            <img
-              class="model-detail-poster"
-              src="<%= model.image_url %>"
-              alt="<%= model.name %> 3D apparel mockup preview"
-              width="1200"
-              height="1500"
-              fetchpriority="high"
-              decoding="async"
-            >
             <model-viewer 
               class="model-viewer-natural"
-              data-model-src="<%= previewModelFileUrl %>"
+              src="<%= previewModelFileUrl %>"
               poster="<%= model.image_url %>"
               alt="<%= model.name %> interactive 3D clothing model and apparel mockup"
               loading="eager"
               reveal="auto"
               camera-controls
-              shadow-intensity="1.55"
-              shadow-softness="0.52"
-              exposure="0.66"
-              environment-image="neutral"
+              disable-zoom
+              camera-orbit="-48deg 72deg 142%"
+              camera-target="auto auto auto"
+              field-of-view="28deg"
+              shadow-intensity="0"
+              shadow-softness="1"
+              exposure="0.72"
+              environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+              tone-mapping="commerce"
+              data-catalog-render-standard="main"
               style="width: 100%; height: 100%;"
-              hidden
             ></model-viewer>
-            <button type="button" class="btn btn-secondary model-viewer-load" id="modelViewerLoad" hidden>
-              <span>Retry interactive 3D</span>
-            </button>
-            <p class="model-viewer-load-status" id="modelViewerLoadStatus" aria-live="polite">Loading interactive 3D…</p>
+            <span class="model-contact-shadow" aria-hidden="true"></span>
+            <div class="model-viewer-spinner" role="status" aria-live="polite">
+              <i aria-hidden="true"></i>
+              <span>Loading 3D</span>
+            </div>
           <% } else { %>
             <div class="model-viewer-placeholder">
               <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-preview-img">
             </div>
           <% } %>
         </div>
-        <div class="model-viewer-controls">
-          <button class="viewer-btn" id="rotateBtn" type="button" aria-pressed="false">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/>
-              <path d="M21 3v5h-5"/>
-            </svg>
-            Auto Rotate
-          </button>
-          <button class="viewer-btn" id="fabricMotionBtn" type="button" aria-pressed="false" hidden>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7"/>
-              <path d="M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0"/>
-              <path d="M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0"/>
-            </svg>
-            Fabric Motion
-          </button>
-          <div class="model-view-angle-group" role="group" aria-label="Model viewing angle">
-            <button class="viewer-btn model-view-angle active" type="button" data-orbit="0deg" aria-pressed="true">Front</button>
-            <button class="viewer-btn model-view-angle" type="button" data-orbit="90deg" aria-pressed="false">Side</button>
-            <button class="viewer-btn model-view-angle" type="button" data-orbit="180deg" aria-pressed="false">Back</button>
+        <div class="model-viewer-controls" aria-label="3D garment controls">
+          <div class="viewer-gesture" aria-hidden="true">
+            <span>Drag</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.7 11.2V7.6a1.35 1.35 0 0 1 2.7 0v2.7-4.15a1.35 1.35 0 0 1 2.7 0v4.15-3.1a1.35 1.35 0 0 1 2.7 0v3.55-1.9a1.35 1.35 0 0 1 2.7 0v5.3c0 4.25-2.5 6.35-6.1 6.35h-.8c-2.5 0-4.2-1.2-5.55-3.05l-2.3-3.1a1.42 1.42 0 0 1 2.2-1.8l1.75 1.75Z"/></svg>
           </div>
-          <button class="viewer-btn" id="fullscreenBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/>
-            </svg>
-            Fullscreen
+          <button class="viewer-utility-control" id="rotateBtn" type="button" aria-pressed="false">
+            <span>Rotate</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 8.2A8 8 0 1 0 20 15"/><path d="M19.5 3.8v4.4h-4.4"/></svg>
+          </button>
+          <button class="viewer-utility-control" id="zoomBtn" type="button" aria-pressed="false">
+            <span>Zoom</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+          </button>
+          <button class="viewer-utility-control" id="backgroundBtn" type="button" aria-expanded="false" aria-controls="heroBackgroundPopover">
+            <span>Background</span>
+            <i class="background-control-preview" aria-hidden="true"></i>
           </button>
         </div>
+        <div class="hero-background-popover" id="heroBackgroundPopover" role="dialog" aria-label="Set hero background" hidden>
+          <div class="hero-background-heading"><span>Scene background</span><strong>Color / Gradient</strong></div>
+          <div class="hero-background-presets" aria-label="Background presets">
+            <button type="button" class="active" data-hero-background="#f5f3ef" style="--swatch:#f5f3ef" aria-label="Ivory"></button>
+            <button type="button" data-hero-background="#ffffff" style="--swatch:#ffffff" aria-label="White"></button>
+            <button type="button" data-hero-background="#e6ddd0" style="--swatch:#e6ddd0" aria-label="Warm sand"></button>
+            <button type="button" data-hero-background="#dfe7e8" style="--swatch:#dfe7e8" aria-label="Cool mist"></button>
+            <button type="button" data-hero-background="linear-gradient(135deg, #f8eee1 0%, #dbc4ae 100%)" style="--swatch:linear-gradient(135deg,#f8eee1,#dbc4ae)" aria-label="Champagne gradient"></button>
+            <button type="button" data-hero-background="linear-gradient(135deg, #eef3f6 0%, #ccd5df 100%)" style="--swatch:linear-gradient(135deg,#eef3f6,#ccd5df)" aria-label="Sky gradient"></button>
+            <button type="button" data-hero-background="linear-gradient(135deg, #f6e5e0 0%, #dfc6bc 100%)" style="--swatch:linear-gradient(135deg,#f6e5e0,#dfc6bc)" aria-label="Blush gradient"></button>
+            <button type="button" data-hero-background="linear-gradient(135deg, #edf1e7 0%, #cbd7c5 100%)" style="--swatch:linear-gradient(135deg,#edf1e7,#cbd7c5)" aria-label="Sage gradient"></button>
+          </div>
+          <div class="hero-gradient-editor">
+            <div class="hero-gradient-colors">
+              <label><span>From</span><input id="heroGradientFrom" type="color" value="#f8eee1"></label>
+              <label><span>To</span><input id="heroGradientTo" type="color" value="#dbc4ae"></label>
+            </div>
+            <label class="hero-gradient-angle"><span>Angle <output id="heroGradientAngleValue">135°</output></span><input id="heroGradientAngle" type="range" min="0" max="360" step="15" value="135"></label>
+            <button type="button" id="applyHeroGradient">Apply custom gradient</button>
+          </div>
+        </div>
+        <button class="viewer-internal-control" id="fabricMotionBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Fabric Motion</button>
       </div>
+    </div>
+    <% if (supportsOnModelMockup) { %><button type="button" id="modelMockupBtn" hidden aria-hidden="true" tabindex="-1">Open model preview</button><% } %>
+  </div>
+</section>
 
-      <!-- Right: Model Info -->
-      <div class="model-info-section" role="region" aria-label="Model details and specifications" tabindex="0">
-        <div class="model-breadcrumb">
-          <a href="/mockups">3D Models</a>
-          <span>/</span>
-          <a href="/mockups/<%= model.category_slug || model.category %>"><%= model.category_label || model.category %></a>
-          <span>/</span>
-          <span><%= model.name %></span>
+<section class="experience-flow" aria-labelledby="experienceFlowTitle">
+  <div class="container">
+    <h2 id="experienceFlowTitle">From a blank garment to a worn campaign</h2>
+    <div class="experience-flow-steps">
+      <article>
+        <span>01</span>
+        <svg class="flow-icon flow-icon-edit" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5 18.5.5l5 5-5 5M13.5 5.5 3 16l-1.5 6.5L8 21l10.5-10.5M12 3H3a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9"/></svg>
+        <h3>Customize</h3><p>Edit every surface. Add materials, artwork, and details.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <svg class="flow-icon flow-icon-person" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.5" r="4.5"/><path d="M3 22c.7-5.2 3.7-8 9-8s8.3 2.8 9 8H3Z"/></svg>
+        <h3>Try on</h3><p>See your design on real models with AI try-on.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <svg class="flow-icon flow-icon-eye" viewBox="0 0 28 20" aria-hidden="true"><path d="M1 10S5.6 2.5 14 2.5 27 10 27 10s-4.6 7.5-13 7.5S1 10 1 10Z"/><circle cx="14" cy="10" r="3.5"/></svg>
+        <h3>Review</h3><p>Refine the look, fit, and story before production.</p>
+      </article>
+      <article>
+        <span>04</span>
+        <svg class="flow-icon flow-icon-factory" viewBox="0 0 26 24" aria-hidden="true"><path d="M1 23V8l7 5V8l7 5V2h5v11l5-3v13H1Z"/><path d="M6 18h3M13 18h3M20 18h2"/></svg>
+        <h3>Produce</h3><p>Connect with our team to bring it to life.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="detail-customize-feature" aria-labelledby="customizeFeatureTitle">
+  <div class="container detail-feature-grid">
+    <div class="detail-feature-copy">
+      <h2 id="customizeFeatureTitle">Every surface<br>is a decision</h2>
+      <p>Use our 3D studio to customize every detail of the garment. Fabrics, colors, prints, type, and trims—your vision, precisely where you want it.</p>
+      <button class="feature-cta" id="customizeFeatureBtn" type="button">Open 3D studio</button>
+    </div>
+    <div class="studio-concept-card" aria-label="3D design studio preview">
+      <div class="studio-concept-toolbar"><span>← Back to library</span><strong><%= modelDisplayName %></strong><span><i></i> All changes saved</span></div>
+      <div class="studio-concept-body">
+        <div class="studio-tool-list"><span class="active">Select</span><span>Surface</span><span>Material</span><span>Color</span><span>Artwork</span><span>Text</span><span>Details</span><span>Layers</span><span>Export</span></div>
+        <div class="studio-garment-preview"><img src="<%= model.image_url %>" alt="<%= modelDisplayName %> design preview" loading="lazy"><span class="studio-selection-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
+        <div class="studio-property-panel">
+          <span>Surface</span><strong>Front panel</strong>
+          <span>Material</span><strong>Linen blend</strong>
+          <div class="studio-material-row"><i></i><i></i><i></i><i></i><i></i></div>
+          <span>Color</span><div class="studio-color-row"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span>Artwork</span><strong>Brush stroke 02.png</strong>
+          <span>Type</span><strong>ClozDesign Atelier</strong>
         </div>
-        
-        <span class="model-product-kicker"><%= modelCategoryName %> 3D model</span>
-        <h1 class="model-detail-title"><%= modelDisplayName %></h1>
-        
-        <div class="model-detail-meta">
-          <span class="tag tag-free">Free</span>
-          <% if (model.poly_count) { %>
-            <span class="meta-item"><%= model.poly_count %></span>
-          <% } %>
-        </div>
-
-        <div class="model-actions">
-          <button class="btn btn-primary btn-large" id="designNowBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
-            </svg>
-            Customize this model
-          </button>
-          <div class="model-secondary-actions">
-          <% if (previewModelFileUrl) { %>
-            <button type="button" class="btn btn-secondary btn-large" id="downloadRenderBtn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-              </svg>
-              Export transparent PNG
-            </button>
-          <% } %>
-          <% if (supportsOnModelMockup) { %>
-            <button type="button" class="btn btn-secondary btn-large" id="modelMockupBtn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5"/>
-                <path d="M9 4.5a3.7 3.7 0 0 0 6 0M10 11h4M10 14h4"/>
-              </svg>
-              Preview on a model
-            </button>
-          <% } %>
-          </div>
-          <button type="button" class="model-consult-link" id="customizationInquiryBtn">
-            Need a custom garment or production quantity? <strong>Request customization →</strong>
-          </button>
-          <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
-          <p class="model-action-note">Free during public beta · PNG export · no payment details required</p>
-        </div>
-
-        <div class="model-description model-product-description">
-          <h2>Description</h2>
-          <p><%= model.description || 'No description available.' %></p>
-        </div>
-
-        <% if (detailContent.searchIntentSummary) { %>
-          <div class="model-description model-search-summary">
-            <h2>Mockup workflow</h2>
-            <p><%= detailContent.searchIntentSummary %></p>
-          </div>
-        <% } %>
-
-        <div class="model-specs">
-          <h2>Specifications</h2>
-          <div class="specs-grid">
-            <% (detailContent.formatNotes || []).forEach(function(note) { %>
-              <div class="spec-item">
-                <span class="spec-label"><%= note.label %></span>
-                <span class="spec-value"><%= note.value %></span>
-              </div>
-            <% }); %>
-            <% if (model.file_size) { %>
-              <div class="spec-item">
-                <span class="spec-label">File Size</span>
-                <span class="spec-value"><%= model.file_size %></span>
-              </div>
-            <% } %>
-          </div>
-        </div>
-
-        <% if (detailContent.tagList && detailContent.tagList.length) { %>
-          <div class="model-keyword-list" aria-label="Related model topics">
-            <% detailContent.tagList.forEach(function(tag) { %>
-              <span><%= tag %></span>
-            <% }); %>
-          </div>
-        <% } %>
-
-        <% if (relatedLinks.length) { %>
-          <nav class="model-intent-links" aria-label="Related 3D clothing resources">
-            <% relatedLinks.forEach(function(link) { %>
-              <a href="<%= link.href %>"><%= link.label %></a>
-            <% }); %>
-          </nav>
-        <% } %>
-
       </div>
     </div>
   </div>
 </section>
 
-<!-- Searchable model assets -->
-<section class="model-showcase-section">
-  <div class="container">
-    <h2 class="section-title"><%= model.name %> model views</h2>
-    <p class="section-subtitle">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>
-    
-    <div class="showcase-grid">
-      <% if (model.image_url) { %>
-        <div class="showcase-item">
-          <div class="showcase-image">
-            <img src="<%= model.image_url %>" alt="<%= model.name %> front 3D apparel mockup preview" loading="lazy">
-          </div>
-          <span class="showcase-label">Garment preview</span>
-        </div>
-      <% } %>
-      <% if (model.texture_url) { %>
-        <div class="showcase-item showcase-texture-item">
-          <div class="showcase-image">
-            <img src="<%= model.texture_url %>" alt="<%= model.name %> UV texture and artwork placement layout" loading="lazy">
-          </div>
-          <span class="showcase-label">UV artwork layout</span>
-        </div>
-      <% } %>
-      <div class="showcase-item">
-          <div class="showcase-image model-side-stage">
-            <% if (previewModelFileUrl) { %>
-              <img class="model-side-poster" src="<%= model.image_url %>" alt="<%= model.name %> side-view loading preview" loading="lazy" decoding="async">
-              <model-viewer
-                class="model-viewer-natural showcase-side-viewer"
-                data-model-src="<%= previewModelFileUrl %>"
-                poster="<%= model.image_url %>"
-                alt="<%= model.name %> side silhouette 3D view"
-              loading="lazy"
-              reveal="interaction"
-              camera-controls
-              camera-orbit="90deg 75deg 112%"
-              shadow-intensity="1.2"
-                exposure="0.72"
-                environment-image="neutral"
-                hidden
-              ></model-viewer>
-          <% } %>
-        </div>
-        <span class="showcase-label">Side silhouette</span>
+<% if (supportsOnModelMockup && tryOnModels.length) { %>
+<section class="ai-tryon-feature" aria-labelledby="aiTryOnFeatureTitle">
+  <div class="container ai-tryon-feature-grid">
+    <div class="ai-tryon-copy">
+      <h2 id="aiTryOnFeatureTitle">See the design<br>on someone</h2>
+      <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>
+      <span class="ai-fitted-badge"><i></i> AI fitted</span>
+      <span class="ai-coming-soon-control ai-feature-coming-soon" tabindex="0" aria-describedby="aiFeatureComingSoon">
+        <button class="feature-cta feature-cta-light" type="button" disabled aria-disabled="true">Choose a model</button>
+        <span class="ai-coming-soon-tooltip" id="aiFeatureComingSoon" role="tooltip">Coming soon</span>
+      </span>
+    </div>
+    <div class="ai-model-panel">
+      <div class="ai-model-tabs"><span class="active">Models</span><span>Poses</span><span>Scenes</span></div>
+      <p>Select a model</p>
+      <div class="ai-avatar-grid">
+        <% tryOnModels.slice(0, 6).forEach(function(tryOnModel, index) { %>
+          <% const displayModelName = String(tryOnModel.title || 'Model').replace(/^Model\s+\d+\s+/i, '').split(/\s+(?:Female|Male|Front|Walking|From3d)/i)[0]; %>
+          <button type="button" class="<%= index === 0 ? 'active' : '' %>" disabled aria-disabled="true"><img src="<%= tryOnModel.base_image_url %>" alt="<%= displayModelName %>" loading="lazy"><span><%= displayModelName %></span></button>
+        <% }); %>
       </div>
+      <dl><div><dt>Height</dt><dd>178 cm</dd></div><div><dt>Size</dt><dd>S</dd></div><div><dt>Body type</dt><dd>Athletic</dd></div></dl>
+    </div>
+    <div class="ai-model-stage">
+      <img id="aiFeaturePreview" src="<%= tryOnModels[0].base_image_url %>" alt="AI try-on model preview" loading="lazy">
+      <div class="ai-stage-thumbnails">
+        <% tryOnModels.slice(0, 4).forEach(function(tryOnModel, index) { %><button type="button" class="<%= index === 0 ? 'active' : '' %>" disabled aria-disabled="true"><img src="<%= tryOnModel.base_image_url %>" alt="View <%= index + 1 %>" loading="lazy"></button><% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="production-feature" aria-labelledby="productionFeatureTitle">
+  <div class="container production-feature-grid">
+    <div class="production-title-wrap"><span class="production-icon" aria-hidden="true">⌁</span><h2 id="productionFeatureTitle">When the design is ready,<br>talk to people who can make it</h2></div>
+    <div class="production-copy"><p>Our production experts will review your design and recommend the best materials, techniques, and factories for your goals.</p><button class="feature-cta production-cta" id="productionFeatureBtn" type="button">Request custom production</button></div>
+    <div class="production-promises"><span>Your design file and notes will be attached automatically.</span><span>We’ll reply within 3 business days.</span><span>Confidential, professional, and global.</span></div>
+  </div>
+</section>
+
+<section class="model-technical-section" aria-labelledby="modelTechnicalTitle">
+  <div class="container model-technical-grid">
+    <div>
+      <span class="detail-eyebrow">Garment details</span>
+      <h2 id="modelTechnicalTitle">Built to inspect.<br>Ready to render.</h2>
+      <% if (detailContent.searchIntentSummary) { %><p><%= detailContent.searchIntentSummary %></p><% } %>
+    </div>
+    <div class="model-specs">
+      <h3>Technical specifications</h3>
+      <div class="specs-grid">
+        <% (detailContent.formatNotes || []).forEach(function(note) { %><div class="spec-item"><span class="spec-label"><%= note.label %></span><span class="spec-value"><%= note.value %></span></div><% }); %>
+        <% if (model.poly_count) { %><div class="spec-item"><span class="spec-label">Geometry</span><span class="spec-value"><%= model.poly_count %></span></div><% } %>
+        <% if (model.file_size) { %><div class="spec-item"><span class="spec-label">File size</span><span class="spec-value"><%= model.file_size %></span></div><% } %>
+      </div>
+      <% if (relatedLinks.length) { %><nav class="model-intent-links" aria-label="Related 3D clothing resources"><% relatedLinks.forEach(function(link) { %><a href="<%= link.href %>"><%= link.label %></a><% }); %></nav><% } %>
     </div>
   </div>
 </section>
@@ -391,6 +413,41 @@
 </section>
 <% } %>
 
+<% if (!user) { %>
+<div class="model-login-modal" id="modelLoginModal" role="dialog" aria-modal="true" aria-labelledby="modelLoginTitle" aria-hidden="true" hidden>
+  <button class="model-login-backdrop" id="modelLoginBackdrop" type="button" aria-label="Close sign in"></button>
+  <section class="model-login-panel" aria-describedby="modelLoginDescription">
+    <button class="model-login-close" id="modelLoginClose" type="button" aria-label="Close sign in">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <span class="model-login-kicker">ClozDesign account</span>
+    <h2 id="modelLoginTitle">Sign in to customize</h2>
+    <p id="modelLoginDescription">Save this garment as a project and continue editing it from your Workbench.</p>
+    <% if (googleAuthEnabled) { %>
+      <a class="model-google-login" id="modelGoogleLogin" href="/auth/google?next=<%= encodeURIComponent(modelDetailPath) %>">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"/><path fill="#34A853" d="M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z"/><path fill="#EA4335" d="M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z"/></svg>
+        <span>Continue with Google</span>
+      </a>
+      <div class="model-login-divider"><span>or use email</span></div>
+    <% } %>
+    <form class="model-login-form" id="modelLoginForm" action="/auth/login" method="post">
+      <input type="hidden" name="next" value="<%= modelDetailPath %>">
+      <label>
+        <span>Email</span>
+        <input id="modelLoginEmail" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+      </label>
+      <label>
+        <span>Password</span>
+        <input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password">
+      </label>
+      <p class="model-login-error" id="modelLoginError" role="alert" aria-live="polite" hidden></p>
+      <button class="model-login-submit" id="modelLoginSubmit" type="submit"><span>Sign in and customize</span></button>
+    </form>
+    <p class="model-login-register">New to ClozDesign? <a href="/auth/register?next=<%= encodeURIComponent(modelDetailPath) %>">Create an account</a></p>
+  </section>
+</div>
+<% } %>
+
 <!-- Customization Inquiry Modal -->
 <div class="customization-modal" id="customizationInquiryModal" role="dialog" aria-modal="true" aria-labelledby="customizationInquiryTitle" aria-hidden="true">
   <button class="customization-modal-overlay" id="customizationInquiryOverlay" type="button" aria-label="Close customization request"></button>
@@ -515,7 +572,8 @@
   aria-labelledby="modelMockupTitle"
   aria-hidden="true"
   data-base-image="<%= modelMockupProfile.base_image_url %>"
-  data-mask-image="<%= modelMockupProfile.mask_image_url %>?v=commercial-refine-v4"
+  data-mask-image="<%= modelMockupProfile.live_mask_url %>"
+  data-mask-fallback="<%= modelMockupProfile.mask_image_url %><%= modelMockupProfile.mask_image_url.includes('?') ? '&' : '?' %>v=commercial-refine-v4"
   data-depth-image="<%= modelMockupProfile.depth_image_url %>?v=commercial-refine-v4"
   data-garment-type="<%= modelMockupProfile.garment_type %>"
   data-export-slug="<%= modelMockupProfile.export_slug %>"
@@ -673,23 +731,31 @@
         <span class="design-modal-title-divider" aria-hidden="true">/</span>
         <p><%= model.name %></p>
       </div>
+      <div class="design-header-history" role="group" aria-label="Design history">
+        <button id="toolUndo" title="Undo" type="button" aria-label="Undo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+          </svg>
+        </button>
+        <button id="toolRedo" title="Redo" type="button" aria-label="Redo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+          </svg>
+        </button>
+      </div>
       <div class="design-save-status" id="designSaveStatus" role="status" aria-live="polite">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
           <path d="M20 6L9 17l-5-5"/>
         </svg>
         <span id="designSaveStatusText">Ready</span>
       </div>
+      <div class="design-view-switcher" id="designViewSwitcher" role="group" aria-label="Editor view">
+        <button type="button" class="active" data-design-view="2d" aria-pressed="true">2D</button>
+        <button type="button" data-design-view="3d" aria-pressed="false">3D</button>
+        <button type="button" data-design-view="split" aria-pressed="false">Split</button>
+      </div>
       <div class="design-modal-actions">
-        <% if (supportsOnModelMockup) { %>
-          <button class="btn btn-secondary btn-small design-model-mockup-button" id="designModelMockupBtn" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-              <path d="M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5"/>
-              <path d="M9 4.5a3.7 3.7 0 0 0 6 0"/>
-            </svg>
-            <span>Model mockup</span>
-          </button>
-        <% } %>
-        <button class="btn btn-primary btn-small" id="saveDesignModal">
+        <button class="btn btn-primary btn-small" id="saveDesignModal" type="button">
           <span class="apply-label-desktop">Apply design</span>
           <span class="apply-label-mobile">Apply</span>
         </button>
@@ -699,6 +765,10 @@
           </svg>
         </button>
       </div>
+    </div>
+    <div class="image-upload-toast" id="imageUploadToast" role="status" aria-live="polite" aria-atomic="true" hidden>
+      <i aria-hidden="true"></i>
+      <span id="imageUploadToastText"></span>
     </div>
     <div class="design-modal-body">
       <div class="texture-designer">
@@ -711,25 +781,6 @@
               </svg>
               <span>Select</span>
             </button>
-            <button class="toolbar-btn" id="toolPan" title="Pan Canvas" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20"/>
-              </svg>
-              <span>Pan</span>
-            </button>
-            <button class="toolbar-btn" id="toolDraw" title="Draw" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"/>
-                <path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
-              </svg>
-              <span>Draw</span>
-            </button>
-            <button class="toolbar-btn" id="toolText" title="Add Text" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
-              </svg>
-              <span>Text</span>
-            </button>
             <button class="toolbar-btn" id="toolImage" title="Add Image" type="button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
@@ -738,72 +789,114 @@
               </svg>
               <span>Image</span>
             </button>
+            <button class="toolbar-btn" id="toolText" title="Add Text" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
+              </svg>
+              <span>Text</span>
+            </button>
             <button class="toolbar-btn" id="toolShape" title="Add Shape" type="button">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
               </svg>
               <span>Shape</span>
             </button>
-          </div>
-          <div class="toolbar-group toolbar-history">
-            <button class="toolbar-btn" id="toolUndo" title="Undo" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 7v6h6"/>
-                <path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/>
+            <button class="toolbar-btn" id="toolColor" title="Garment color" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
+                <path d="M12 2.8S5.4 10.2 5.4 15.2a6.6 6.6 0 0 0 13.2 0C18.6 10.2 12 2.8 12 2.8Z"/>
+                <path d="M8.8 16.2c.8 1.4 2 2.1 3.7 2.1"/>
               </svg>
-              <span>Undo</span>
+              <span>Color</span>
             </button>
-            <button class="toolbar-btn" id="toolRedo" title="Redo" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 7v6h-6"/>
-                <path d="M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13"/>
+            <button class="toolbar-btn" id="toolMaterial" title="Garment material" type="button">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M7 3v18M12 3v18M17 3v18M3 8h18M3 16h18" opacity=".7"/>
               </svg>
-              <span>Redo</span>
-            </button>
-            <button class="toolbar-btn" id="toolDelete" title="Delete" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 6h18"/>
-                <path d="M8 6V4h8v2"/>
-                <path d="M19 6l-1 14H6L5 6"/>
-              </svg>
-              <span>Delete</span>
+              <span>Material</span>
             </button>
           </div>
         </div>
 
+        <!-- Compact horizontal artwork library -->
+        <section class="image-asset-tray" id="imageAssetTray" aria-label="Image assets" hidden>
+          <button class="asset-scroll-button asset-scroll-prev" id="assetScrollPrev" type="button" aria-label="Browse images to the left">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <div class="image-asset-viewport" id="imageAssetViewport" tabindex="0">
+            <div class="image-asset-track" id="imageAssetTrack">
+              <button class="image-asset-card image-asset-upload" id="imageAssetUpload" type="button">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>
+                </svg>
+                <span>Upload image</span>
+              </button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/botanical-line.svg" aria-label="Add botanical line art"><img src="/editor-assets/botanical-line.svg" alt="Botanical line art"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/butterfly.svg" aria-label="Add butterfly"><img src="/editor-assets/butterfly.svg" alt="Purple butterfly"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/mountain-wash.svg" aria-label="Add watercolor mountains"><img src="/editor-assets/mountain-wash.svg" alt="Blue watercolor mountains"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/lavender-cloud.svg" aria-label="Add watercolor cloud"><img src="/editor-assets/lavender-cloud.svg" alt="Lavender watercolor cloud"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/ocean-wave.svg" aria-label="Add ocean wave"><img src="/editor-assets/ocean-wave.svg" alt="Blue ocean wave"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/soft-gradient.svg" aria-label="Add gradient texture"><img src="/editor-assets/soft-gradient.svg" alt="Blue and purple gradient"></button>
+              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/delicate-branch.svg" aria-label="Add delicate branch"><img src="/editor-assets/delicate-branch.svg" alt="Blue delicate branch"></button>
+            </div>
+          </div>
+          <button class="asset-scroll-button asset-scroll-next" id="assetScrollNext" type="button" aria-label="Browse images to the right">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+          <div class="image-asset-actions">
+            <button id="imageAssetFilter" type="button" aria-label="Filter images" aria-pressed="false">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7v5l-4 2v-7Z"/></svg>
+            </button>
+            <button id="imageAssetClose" type="button" aria-label="Close image list">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 6-12 12M6 6l12 12"/></svg>
+            </button>
+          </div>
+          <div class="image-asset-progress" aria-hidden="true"><span id="imageAssetProgress"></span></div>
+          <input id="imageAssetUploadInput" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" multiple hidden>
+        </section>
+
         <!-- Main Texture Design Area -->
         <div class="texture-canvas-area">
           <div class="canvas-context">
-            <strong>Texture layout</strong>
+            <strong>Pattern canvas</strong>
             <span>Select a garment panel to edit</span>
           </div>
-          <svg id="textureSvg" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="patternStriped" patternUnits="userSpaceOnUse" width="20" height="20">
-                <rect width="20" height="10" fill="currentColor" opacity="0.3"/>
-              </pattern>
-              <pattern id="patternCheckered" patternUnits="userSpaceOnUse" width="20" height="20">
-                <rect width="10" height="10" fill="currentColor" opacity="0.3"/>
-                <rect x="10" y="10" width="10" height="10" fill="currentColor" opacity="0.3"/>
-              </pattern>
-              <pattern id="patternDots" patternUnits="userSpaceOnUse" width="20" height="20">
-                <circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.3"/>
-              </pattern>
-            </defs>
-            <rect id="textureWhiteBase" fill="transparent"/>
-            <!-- Model SVG Texture Background -->
-            <% if (model.texture_url) { %>
-              <image id="textureBg" href="<%= model.texture_url %>" preserveAspectRatio="none"/>
-              <g id="textureTemplateLayer"></g>
-            <% } else { %>
-              <rect id="textureBg" fill="transparent"/>
-              <text id="textureBgText" text-anchor="middle" fill="#adb5bd" font-size="18" font-family="Arial, sans-serif">No texture available for this model</text>
-            <% } %>
-            <rect id="texturePattern" fill="none"/>
-            <g id="textureElements"></g>
-            <g id="selectionLayer" class="editor-ui"></g>
-          </svg>
-          <div class="canvas-zoom-controls" aria-label="Canvas zoom controls">
+          <div class="texture-canvas-frame" id="textureCanvasFrame">
+            <svg id="textureSvg" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+              <defs>
+                <pattern id="patternStriped" patternUnits="userSpaceOnUse" width="20" height="20">
+                  <rect width="20" height="10" fill="currentColor" opacity="0.3"/>
+                </pattern>
+                <pattern id="patternCheckered" patternUnits="userSpaceOnUse" width="20" height="20">
+                  <rect width="10" height="10" fill="currentColor" opacity="0.3"/>
+                  <rect x="10" y="10" width="10" height="10" fill="currentColor" opacity="0.3"/>
+                </pattern>
+                <pattern id="patternDots" patternUnits="userSpaceOnUse" width="20" height="20">
+                  <circle cx="10" cy="10" r="3" fill="currentColor" opacity="0.3"/>
+                </pattern>
+              </defs>
+                  <rect id="textureWhiteBase" fill="transparent" width="1024" height="1024"/>
+              <!-- Model SVG Texture Background -->
+              <% if (model.texture_url) { %>
+                <image id="textureBg" href="<%= model.texture_url %>" width="1024" height="1024" preserveAspectRatio="none"/>
+                <g id="textureTemplateLayer"></g>
+              <% } else { %>
+                <rect id="textureBg" width="1024" height="1024" fill="transparent"/>
+                <text id="textureBgText" text-anchor="middle" fill="#adb5bd" font-size="18" font-family="Arial, sans-serif">No texture available for this model</text>
+              <% } %>
+              <rect id="texturePattern" width="1024" height="1024" fill="none"/>
+              <g id="textureElements"></g>
+              <g id="selectionLayer" class="editor-ui"></g>
+            </svg>
+          </div>
+          <div class="canvas-zoom-controls" aria-label="Canvas view controls">
+            <button id="canvasRotate" type="button" aria-label="Rotate canvas clockwise. Current rotation: 0 degrees" title="Rotate canvas 90° clockwise">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20 11a8 8 0 1 0-2.34 5.66"/>
+                <path d="M20 4v7h-7"/>
+              </svg>
+            </button>
+            <span class="canvas-zoom-divider" aria-hidden="true"></span>
             <button id="canvasZoomOut" type="button" aria-label="Zoom out">−</button>
             <span id="canvasZoomLabel">100%</span>
             <button id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
@@ -816,14 +909,14 @@
           </div>
         </div>
 
-        <!-- 3D Preview and Material Inspector -->
+        <!-- Live 3D preview -->
         <div class="preview-3d-panel">
           <section class="design-inspector-card design-preview-card">
             <div class="inspector-card-header">
               <div>
                 <h3>3D Preview</h3>
               </div>
-              <span class="preview-live-indicator">Live</span>
+              <span class="preview-live-indicator">LIVE</span>
             </div>
             <div class="preview-model-stage">
               <% if (previewModelFileUrl) { %>
@@ -835,14 +928,21 @@
                   alt="<%= model.name %>"
                   loading="lazy"
                   camera-controls
-                  shadow-intensity="0.58"
-                  shadow-softness="0.94"
-                  exposure="0.96"
-                  environment-image="neutral"
-                  tone-mapping="neutral"
+                  camera-orbit="-48deg 72deg 158%"
+                  camera-target="auto auto auto"
+                  field-of-view="28deg"
+                  shadow-intensity="0"
+                  shadow-softness="1"
+                  exposure="0.72"
+                  environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+                  tone-mapping="commerce"
                   style="width: 100%; height: 100%;"
                   hidden
                 ></model-viewer>
+                <div class="model-viewer-spinner" id="designPreviewLoading" role="status" aria-live="polite" hidden>
+                  <i aria-hidden="true"></i>
+                  <span>Loading 3D</span>
+                </div>
               <% } else { %>
                 <div class="designer-placeholder">
                   <img src="<%= model.image_url %>" alt="<%= model.name %>">
@@ -858,16 +958,49 @@
               Drag to rotate
             </p>
           </section>
+        </div>
+
+        <!-- Garment appearance and material inspector -->
+        <aside class="design-appearance-panel" id="designAppearancePanel" aria-label="Garment appearance">
+          <section class="design-appearance-card">
+            <div class="appearance-panel-header">
+              <h3>Appearance</h3>
+              <button id="appearancePanelCollapse" type="button" aria-label="Collapse appearance panel">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+            </div>
+            <div class="appearance-scope-switch" role="group" aria-label="Color scope">
+              <button type="button" class="active" data-fill-scope="whole" aria-pressed="true">Whole garment</button>
+              <button type="button" data-fill-scope="panel" aria-pressed="false">Panel</button>
+            </div>
+            <div class="appearance-section">
+              <strong>Fill</strong>
+              <div class="appearance-fill-switch" role="group" aria-label="Fill type">
+                <button type="button" data-fill-mode="solid" aria-pressed="false">Solid</button>
+                <button type="button" class="active" data-fill-mode="gradient" aria-pressed="true">Gradient</button>
+              </div>
+              <div class="appearance-gradient-preview" id="appearanceGradientPreview"></div>
+              <div class="appearance-color-stops">
+                <label><span>Start</span><input id="appearanceColorStart" type="color" value="#5f89f4"></label>
+                <label><span>End</span><input id="appearanceColorEnd" type="color" value="#c39bea"></label>
+              </div>
+              <label class="appearance-angle-control">
+                <span>Angle</span>
+                <input id="appearanceGradientAngle" type="range" min="0" max="360" value="135">
+                <output id="appearanceGradientAngleOutput">135°</output>
+              </label>
+            </div>
+          </section>
           <section class="material-panel" aria-label="Material presets">
             <div class="material-panel-header">
               <div>
-                <h3>Choose material</h3>
+                <h3>Material</h3>
               </div>
               <span class="material-panel-count" id="materialCount">0</span>
             </div>
             <div class="material-swatch-grid" id="materialSwatchGrid"></div>
           </section>
-        </div>
+        </aside>
       </div>
     </div>
   </div>
@@ -877,15 +1010,207 @@
 // Viewer controls
 const rotateBtn = document.getElementById('rotateBtn');
 const fabricMotionBtn = document.getElementById('fabricMotionBtn');
-const fullscreenBtn = document.getElementById('fullscreenBtn');
+const zoomBtn = document.getElementById('zoomBtn');
 const viewer = document.querySelector('#model3dViewer model-viewer');
 const modelViewerStage = document.getElementById('model3dViewer');
-const modelViewerLoad = document.getElementById('modelViewerLoad');
-const modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');
+const modelInfoSection = document.querySelector('.model-info-section');
+const modelViewerSection = document.querySelector('.model-viewer-section');
+const heroSection = document.querySelector('.model-detail-hero');
+const backgroundBtn = document.getElementById('backgroundBtn');
+const heroBackgroundPopover = document.getElementById('heroBackgroundPopover');
+const heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];
+const heroGradientFrom = document.getElementById('heroGradientFrom');
+const heroGradientTo = document.getElementById('heroGradientTo');
+const heroGradientAngle = document.getElementById('heroGradientAngle');
+const heroGradientAngleValue = document.getElementById('heroGradientAngleValue');
+const applyHeroGradient = document.getElementById('applyHeroGradient');
 const modelViewerPromises = new WeakMap();
+const defaultDetailRenderStandard = {
+  version: 'commercial-catalog-cover-v1',
+  camera: {
+    webOrbit: '-48deg 72deg 142%',
+    webEditorOrbit: '-48deg 72deg 158%',
+    webFieldOfView: '28deg',
+    webTarget: 'auto auto auto'
+  },
+  material: {
+    neutralizeBaseColor: true,
+    baseColor: [0.96, 0.96, 0.95],
+    roughness: 0.68,
+    specularIorLevel: 0.32,
+    sheenWeight: 0.32,
+    normalStrengthMultiplier: 2.8,
+    normalStrengthMax: 0.45
+  },
+  web: {
+    environmentImage: '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr',
+    lightingMode: 'front-back-balanced-product-studio',
+    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
+    balanceMethod: '180-degree-lighten-mirror',
+    shadowIntensity: 0,
+    shadowSoftness: 1,
+    exportShadowIntensity: 0.32,
+    exportShadowSoftness: 0.96,
+    exposure: 0.72,
+    toneMapping: 'commerce',
+    material: {
+      neutralizeBaseColor: true,
+      baseColor: [0.82, 0.82, 0.8],
+      roughness: 0.62,
+      specularIorLevel: 0.28,
+      sheenWeight: 0.12
+    }
+  }
+};
+let detailSceneStandard = defaultDetailRenderStandard;
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260907-balanced-exposure-v6')
+  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
+  .then((standard) => {
+    detailSceneStandard = {
+      ...defaultDetailRenderStandard,
+      ...standard,
+      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },
+      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },
+      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }
+    };
+    return detailSceneStandard;
+  })
+  .catch(() => defaultDetailRenderStandard);
 let modelViewerModulePromise = null;
 let fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let fabricMotionResumeTimer = null;
+
+function catalogOrbitForAzimuth(standard, azimuth) {
+  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)
+    .trim()
+    .split(/\s+/);
+  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;
+}
+
+function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
+  if (!element?.dataset.catalogRenderStandard) return;
+  const webStandard = standard.web || defaultDetailRenderStandard.web;
+  const isSideView = element.dataset.catalogRenderStandard === 'side';
+  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);
+  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0));
+  element.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 1));
+  element.setAttribute('exposure', String(webStandard.exposure ?? 0.72));
+  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
+  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
+  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
+  element.setAttribute(
+    'camera-orbit',
+    isSideView
+      ? catalogOrbitForAzimuth(standard, '90deg')
+      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit
+  );
+  element.autoRotate = false;
+  element.removeAttribute('auto-rotate');
+  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;
+}
+
+function applyCatalogMaterialResponse(element, standard = detailSceneStandard) {
+  if (!element?.dataset.catalogRenderStandard || !element.model) return;
+  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;
+  const baseColor = Array.isArray(materialStandard.baseColor)
+    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))
+    : defaultDetailRenderStandard.material.baseColor;
+  const neutralFactor = [...baseColor, 1];
+
+  (element.model.materials || []).forEach((material) => {
+    const pbr = material.pbrMetallicRoughness;
+    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);
+    pbr?.setMetallicFactor?.(0);
+    if (!pbr?.metallicRoughnessTexture?.texture) {
+      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));
+    }
+    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);
+    try {
+      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);
+    } catch (error) {
+      // Some GLBs do not declare the optional sheen extension.
+    }
+    try {
+      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));
+    } catch (error) {
+      // Some GLBs do not declare the optional specular extension.
+    }
+  });
+}
+
+detailRenderStandardPromise.then((standard) => {
+  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {
+    applyCatalogRenderAttributes(element, standard);
+    applyCatalogMaterialResponse(element, standard);
+  });
+});
+
+function syncHeroColumnHeights() {
+  if (!modelInfoSection || !modelViewerSection) return;
+  if (window.matchMedia('(max-width: 820px)').matches) {
+    modelViewerSection.style.removeProperty('--model-viewer-height');
+    return;
+  }
+  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);
+}
+
+requestAnimationFrame(syncHeroColumnHeights);
+window.addEventListener('resize', syncHeroColumnHeights, { passive: true });
+if ('ResizeObserver' in window && modelInfoSection) {
+  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);
+}
+
+function setHeroBackground(value, activePreset = null) {
+  if (!heroSection || !value) return;
+  heroSection.style.setProperty('--hero-background', value);
+  backgroundBtn?.style.setProperty('--control-background', value);
+  heroBackgroundPresets.forEach((button) => button.classList.toggle('active', button === activePreset));
+}
+
+function customHeroGradient() {
+  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;
+}
+
+function closeHeroBackgroundPopover({ restoreFocus = false } = {}) {
+  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;
+  heroBackgroundPopover.hidden = true;
+  backgroundBtn?.setAttribute('aria-expanded', 'false');
+  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });
+}
+
+backgroundBtn?.addEventListener('click', () => {
+  const shouldOpen = heroBackgroundPopover?.hidden;
+  if (!heroBackgroundPopover) return;
+  heroBackgroundPopover.hidden = !shouldOpen;
+  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));
+  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });
+});
+
+heroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {
+  setHeroBackground(button.dataset.heroBackground, button);
+}));
+
+[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {
+  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;
+  setHeroBackground(customHeroGradient());
+}));
+
+applyHeroGradient?.addEventListener('click', () => {
+  setHeroBackground(customHeroGradient());
+  closeHeroBackgroundPopover({ restoreFocus: true });
+});
+
+document.addEventListener('pointerdown', (event) => {
+  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;
+  closeHeroBackgroundPopover();
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {
+    event.preventDefault();
+    closeHeroBackgroundPopover({ restoreFocus: true });
+  }
+});
 
 function setFabricMotionState(element, shouldPlay) {
   if (!element?.availableAnimations?.length) return false;
@@ -933,13 +1258,15 @@ function withModelViewerTimeout(promise, milliseconds, message) {
 }
 
 function loadModelViewerModule() {
+  window.ModelViewerElement = window.ModelViewerElement || {};
+  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
   if (customElements.get('model-viewer')) return Promise.resolve();
   if (modelViewerModulePromise) return modelViewerModulePromise;
 
   modelViewerModulePromise = new Promise((resolve, reject) => {
     const script = document.createElement('script');
     script.type = 'module';
-    script.src = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';
+    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';
     script.dataset.detailModelViewer = 'true';
     script.addEventListener('load', resolve, { once: true });
     script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });
@@ -951,27 +1278,32 @@ function loadModelViewerModule() {
 
 function loadModelViewerElement(element) {
   if (!element) return Promise.reject(new Error('3D viewer unavailable'));
-  if (element.loaded && element.model) return Promise.resolve(element);
   if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);
 
-  const promise = loadModelViewerModule().then(() => {
+  const renderStandardReady = element.dataset.catalogRenderStandard
+    ? detailRenderStandardPromise
+    : Promise.resolve(null);
+  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {
+    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);
     element.hidden = false;
     element.setAttribute('loading', 'eager');
     element.setAttribute('reveal', 'auto');
-    if (element.loaded && element.model) return element;
-    return withModelViewerTimeout(new Promise((resolve, reject) => {
+    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;
+    if (!modelSource) throw new Error('3D model source unavailable');
+    if (element.getAttribute('src') && element.loaded && element.model) return element;
+    return new Promise((resolve, reject) => {
       element.addEventListener('load', () => resolve(element), { once: true });
       element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });
-      if (!element.getAttribute('src')) element.src = element.dataset.modelSrc;
-    }), 45000, '3D model timed out');
+      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);
+    });
   }).then((readyViewer) => {
     readyViewer.dismissPoster?.();
+    readyViewer.removeAttribute('poster');
+    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);
     configureGarmentSoftnessAnimation(readyViewer);
     return readyViewer;
   }).catch((error) => {
     modelViewerPromises.delete(element);
-    element.hidden = true;
-    element.removeAttribute('src');
     throw error;
   });
 
@@ -987,32 +1319,21 @@ async function ensureDetailViewer() {
   modelViewerStage.classList.remove('is-error');
   modelViewerStage.classList.add('is-loading');
   modelViewerStage.setAttribute('aria-busy', 'true');
-  if (modelViewerLoad) modelViewerLoad.hidden = true;
-  if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';
   try {
     const readyViewer = await loadModelViewerElement(viewer);
     modelViewerStage.classList.remove('is-loading');
     modelViewerStage.classList.add('is-ready');
     modelViewerStage.setAttribute('aria-busy', 'false');
-    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';
+    delete modelViewerStage.dataset.loadError;
     return readyViewer;
   } catch (error) {
     modelViewerStage.classList.remove('is-loading');
-    modelViewerStage.classList.add('is-error');
     modelViewerStage.setAttribute('aria-busy', 'false');
-    if (modelViewerLoad) modelViewerLoad.hidden = false;
-    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available.';
+    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';
     throw error;
   }
 }
 
-modelViewerLoad?.addEventListener('click', () => {
-  window.trackEvent?.('tool_interaction', {
-    interaction_type: 'retry_model_detail_3d',
-    item_id: <%- JSON.stringify(model.slug || '') %>
-  });
-  ensureDetailViewer().catch(() => {});
-});
 ensureDetailViewer().catch(() => {});
 
 if (rotateBtn && viewer) {
@@ -1032,7 +1353,7 @@ document.querySelectorAll('.model-view-angle').forEach((button) => {
     readyViewer.autoRotate = false;
     rotateBtn?.classList.remove('active');
     rotateBtn?.setAttribute('aria-pressed', 'false');
-    readyViewer.cameraOrbit = `${button.dataset.orbit} 75deg 105%`;
+    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);
     readyViewer.jumpCameraToGoal?.();
     document.querySelectorAll('.model-view-angle').forEach((item) => {
       const isActive = item === button;
@@ -1060,26 +1381,21 @@ document.addEventListener('visibilitychange', () => {
   setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);
 });
 
-if (fullscreenBtn && viewer) {
-  fullscreenBtn.addEventListener('click', async () => {
+if (zoomBtn && viewer) {
+  let viewerZoomed = false;
+  let viewerBaseRadius = null;
+  zoomBtn.addEventListener('click', async () => {
     const readyViewer = await ensureDetailViewer().catch(() => null);
-    if (readyViewer?.requestFullscreen) {
-      readyViewer.requestFullscreen();
-    }
+    const orbit = readyViewer?.getCameraOrbit?.();
+    if (!orbit) return;
+    if (!viewerBaseRadius) viewerBaseRadius = orbit.radius;
+    viewerZoomed = !viewerZoomed;
+    const radius = viewerZoomed ? viewerBaseRadius * 0.8 : viewerBaseRadius;
+    readyViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${radius}m`;
+    readyViewer.jumpCameraToGoal?.();
+    zoomBtn.classList.toggle('active', viewerZoomed);
+    zoomBtn.setAttribute('aria-pressed', String(viewerZoomed));
   });
-}
-
-const sideViewer = document.querySelector('.showcase-side-viewer');
-const sideStage = sideViewer?.closest('.model-side-stage');
-if (sideViewer && sideStage && 'IntersectionObserver' in window) {
-  const sideObserver = new IntersectionObserver((entries) => {
-    if (!entries.some((entry) => entry.isIntersecting)) return;
-    sideObserver.disconnect();
-    loadModelViewerElement(sideViewer)
-      .then(() => sideStage.classList.add('is-ready'))
-      .catch(() => sideStage.classList.add('is-error'));
-  }, { rootMargin: '240px 0px' });
-  sideObserver.observe(sideStage);
 }
 
 // Demo color picker
@@ -1111,18 +1427,97 @@ window.ModelDesignerConfig = Object.freeze({
   previewModelFileUrl: <%- JSON.stringify(previewModelFileUrl || '') %>,
   modelId: <%- JSON.stringify(model.id || null) %>,
   modelSlug: <%- JSON.stringify(model.slug || '') %>,
-  modelName: <%- JSON.stringify(model.name || '') %>
+  modelName: <%- JSON.stringify(model.name || '') %>,
+  userAuthenticated: <%- JSON.stringify(Boolean(user)) %>
 });
 
 (() => {
   const entryButtons = [
     document.getElementById('designNowBtn'),
+    document.getElementById('customizeFeatureBtn'),
     document.getElementById('designCtaBtn'),
-    document.getElementById('downloadRenderBtn'),
-    document.getElementById('customizationInquiryBtn')
+    document.getElementById('renderCurrentModelBtn'),
+    document.getElementById('customizationInquiryBtn'),
+    document.getElementById('productionFeatureBtn')
   ].filter(Boolean);
   let runtimePromise = null;
   let runtimeReady = false;
+  const loginModal = document.getElementById('modelLoginModal');
+  const loginBackdrop = document.getElementById('modelLoginBackdrop');
+  const loginClose = document.getElementById('modelLoginClose');
+  const loginForm = document.getElementById('modelLoginForm');
+  const loginEmail = document.getElementById('modelLoginEmail');
+  const loginError = document.getElementById('modelLoginError');
+  const loginSubmit = document.getElementById('modelLoginSubmit');
+  const googleLogin = document.getElementById('modelGoogleLogin');
+  const resumeCustomizeKey = 'clozdesign_resume_customize';
+  let loginReturnFocus = null;
+
+  function openLoginModal() {
+    if (!loginModal) return;
+    loginReturnFocus = document.activeElement;
+    loginError.hidden = true;
+    loginError.textContent = '';
+    loginModal.hidden = false;
+    loginModal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('model-login-open');
+    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));
+  }
+
+  function closeLoginModal() {
+    if (!loginModal || loginModal.hidden) return;
+    loginModal.hidden = true;
+    loginModal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('model-login-open');
+    loginReturnFocus?.focus?.({ preventScroll: true });
+  }
+
+  loginBackdrop?.addEventListener('click', closeLoginModal);
+  loginClose?.addEventListener('click', closeLoginModal);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {
+      event.preventDefault();
+      closeLoginModal();
+    }
+  });
+
+  googleLogin?.addEventListener('click', () => {
+    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));
+  });
+
+  loginForm?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!loginForm.reportValidity() || loginSubmit.disabled) return;
+    const data = new FormData(loginForm);
+    loginSubmit.disabled = true;
+    loginSubmit.setAttribute('aria-busy', 'true');
+    loginSubmit.querySelector('span').textContent = 'Signing in…';
+    loginError.hidden = true;
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: data.get('email'),
+          password: data.get('password'),
+          next: window.location.pathname + window.location.search
+        })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Unable to sign in. Please try again.');
+      }
+      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));
+      window.location.reload();
+    } catch (error) {
+      loginError.textContent = error.message || 'Unable to sign in. Please try again.';
+      loginError.hidden = false;
+      loginSubmit.disabled = false;
+      loginSubmit.removeAttribute('aria-busy');
+      loginSubmit.querySelector('span').textContent = 'Sign in and customize';
+    }
+  });
 
   function loadDesignerMaterials() {
     if (window.Design3DMaterials) return Promise.resolve();
@@ -1171,7 +1566,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260819-fabric-softness-v2',
+      src: '/js/model-designer.js?v=20260913-legacy-project-state-v41',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1196,6 +1591,10 @@ window.ModelDesignerConfig = Object.freeze({
 
   async function handleDesignerEntry(event) {
     const entryId = event.currentTarget.id;
+    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {
+      openLoginModal();
+      return;
+    }
     entryButtons.forEach((button) => {
       button.disabled = true;
       button.setAttribute('aria-busy', 'true');
@@ -1203,9 +1602,9 @@ window.ModelDesignerConfig = Object.freeze({
     try {
       await loadModelDesignerRuntime();
       entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));
-      if (entryId === 'downloadRenderBtn') {
-        await window.downloadDesignedModelRender?.();
-      } else if (entryId === 'customizationInquiryBtn') {
+      if (entryId === 'renderCurrentModelBtn') {
+        await window.renderCurrentModelImage?.();
+      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {
         window.openModelCustomizationInquiry?.();
       } else {
         window.openModelDesigner?.();
@@ -1222,6 +1621,17 @@ window.ModelDesignerConfig = Object.freeze({
 
   entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));
   window.loadModelDesignerRuntime = loadModelDesignerRuntime;
+
+  if (window.ModelDesignerConfig.userAuthenticated) {
+    try {
+      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');
+      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;
+      sessionStorage.removeItem(resumeCustomizeKey);
+      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());
+    } catch (error) {
+      sessionStorage.removeItem(resumeCustomizeKey);
+    }
+  }
 
   const exportProxies = [
     'exportDesignedModelCover',
@@ -1242,12 +1652,15 @@ window.ModelDesignerConfig = Object.freeze({
   } catch (error) {
     hasPendingArtwork = false;
   }
-  if (window.location.hash === '#design' || hasPendingArtwork) {
-    loadModelDesignerRuntime().catch((error) => console.error(error));
+  const hasSavedProject = new URLSearchParams(window.location.search).has('project');
+  if (hasPendingArtwork || hasSavedProject) {
+    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });
+    } else {
+      loadSavedDesign();
+    }
   }
-  window.addEventListener('hashchange', () => {
-    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));
-  });
 })();
 </script>
 <% if (supportsOnModelMockup) { %>
@@ -1284,7 +1697,7 @@ window.ModelDesignerConfig = Object.freeze({
       if (window.ModelMockupStudio) return Promise.resolve();
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = '/js/on-model-mockup.js?v=20260821-database-profiles';
+        script.src = '/js/on-model-mockup.js?v=20260913-svg-live-mask-v2';
         script.dataset.onModelStudio = 'true';
         script.addEventListener('load', resolve, { once: true });
         script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });

@@ -15,6 +15,7 @@
   const gestureHint = document.getElementById('whiteMockupGestureHint');
   const resetButton = document.getElementById('whiteMockupReset');
   const downloadButton = document.getElementById('whiteMockupDownload');
+  const saveButton = document.getElementById('whiteMockupSave');
   const status = document.getElementById('whiteMockupStatus');
   const backgroundLabel = document.getElementById('whiteMockupBackgroundLabel');
   const backgroundButtons = [...editor.querySelectorAll('[data-background]')];
@@ -28,6 +29,7 @@
   const assets = {
     base: editor.dataset.baseImage,
     mask: editor.dataset.maskImage,
+    maskFallback: editor.dataset.maskFallback,
     depth: editor.dataset.depthImage
   };
 
@@ -65,7 +67,12 @@
     rotation: 0,
     warp: template.defaultWarp,
     opacity: 0.96,
-    interaction: null
+    interaction: null,
+    artworkUrl: '',
+    artworkDataUrl: '',
+    artworkUploadPromise: null,
+    projectId: '',
+    projectName: ''
   };
 
   const baseCanvas = document.createElement('canvas');
@@ -101,6 +108,16 @@
       image.onerror = () => reject(new Error(`Unable to load image: ${url}`));
       image.src = url;
     });
+  }
+
+  async function loadRealtimeMask() {
+    try {
+      return await loadImage(assets.mask);
+    } catch (error) {
+      if (!assets.maskFallback || assets.maskFallback === assets.mask) throw error;
+      console.warn('SVG garment mask failed to load; using the raster fallback.', error);
+      return loadImage(assets.maskFallback);
+    }
   }
 
   function readPixels(image) {
@@ -411,7 +428,7 @@
     try {
       const [baseImage, maskImage, depthImage] = await Promise.all([
         loadImage(assets.base),
-        loadImage(assets.mask),
+        loadRealtimeMask(),
         loadImage(assets.depth)
       ]);
       state.baseImage = baseImage;
@@ -456,6 +473,7 @@
     gestureHint.hidden = false;
     resetButton.hidden = false;
     downloadButton.disabled = false;
+    saveButton.disabled = false;
     canvas.classList.add('has-artwork');
     resetTransform();
     setStatus('Design added. Adjust it directly on the garment.');
@@ -472,6 +490,15 @@
     });
   }
 
+  async function storeArtwork(dataUrl, name) {
+    if (editor.dataset.authenticated !== 'true' || !window.UserProjects) return null;
+    setStatus('Uploading artwork securely…');
+    const image = await window.UserProjects.uploadImage(dataUrl, name, 'artwork');
+    state.artworkUrl = image.url;
+    setStatus('Artwork saved. Continue designing or save the project.');
+    return image;
+  }
+
   function handleArtworkFile(file) {
     if (!file) return;
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
@@ -479,14 +506,21 @@
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
-      setStatus('Choose an image smaller than 10 MB.', true);
+      setStatus('Choose an image no larger than 10 MB.', true);
       return;
     }
     const reader = new FileReader();
     reader.onload = () => {
+      state.artworkDataUrl = reader.result;
+      state.artworkUrl = '';
       loadArtworkDataUrl(reader.result, file.name).catch((error) => {
         console.error(error);
         setStatus('The selected image could not be opened.', true);
+      });
+      state.artworkUploadPromise = storeArtwork(reader.result, file.name).catch((error) => {
+        console.error(error);
+        setStatus(error.message || 'Artwork could not be saved.', true);
+        return null;
       });
     };
     reader.onerror = () => setStatus('The selected image could not be read.', true);
@@ -644,9 +678,98 @@
     }, 'image/png');
   }
 
+  async function saveProject() {
+    if (editor.dataset.authenticated !== 'true') {
+      window.UserProjects?.goToSignIn();
+      return;
+    }
+    if (!state.ready || !state.artworkImage || !window.UserProjects) return;
+    saveButton.disabled = true;
+    setStatus('Saving project…');
+    try {
+      if (state.artworkUploadPromise) await state.artworkUploadPromise;
+      if (!state.artworkUrl && state.artworkDataUrl) {
+        await storeArtwork(state.artworkDataUrl, state.artworkName);
+      }
+      if (!state.artworkUrl) throw new Error('Artwork must finish uploading before this project can be saved.');
+      render({ overlay: false, forceQuality: true });
+      const preview = await window.UserProjects.uploadImage(
+        canvas.toDataURL('image/jpeg', 0.86),
+        `${template.assetName}-preview.jpg`,
+        'project-preview'
+      );
+      const project = await window.UserProjects.saveProject({
+        id: state.projectId || undefined,
+        projectType: 'white_mockup',
+        name: state.projectName || `${state.artworkName.replace(/\.[^.]+$/, '')} — ${template.assetName}`,
+        sourceId: template.assetName,
+        sourceUrl: window.location.pathname,
+        previewImageUrl: preview.url,
+        designData: {
+          artworkUrl: state.artworkUrl,
+          artworkName: state.artworkName,
+          background: state.background,
+          garmentColor: state.garmentColor,
+          offsetX: state.offsetX,
+          offsetY: state.offsetY,
+          scale: state.scale,
+          rotation: state.rotation,
+          warp: state.warp,
+          opacity: state.opacity
+        }
+      });
+      state.projectId = project.id;
+      state.projectName = project.name;
+      const url = new URL(window.location.href);
+      url.searchParams.set('project', project.id);
+      window.history.replaceState({}, '', url);
+      setStatus('Project saved to your account.');
+    } catch (error) {
+      console.error(error);
+      if (error.status === 401) window.UserProjects.goToSignIn();
+      else setStatus(error.message || 'Project could not be saved.', true);
+    } finally {
+      saveButton.disabled = false;
+      scheduleRender({ forceQuality: true });
+    }
+  }
+
+  async function loadSavedProject() {
+    if (!window.UserProjects) return;
+    try {
+      const project = await window.UserProjects.loadProjectFromUrl('white_mockup');
+      if (!project) return;
+      if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another white mockup.');
+      const saved = project.designData || {};
+      if (!saved.artworkUrl) throw new Error('The saved artwork is unavailable.');
+      await loadArtworkDataUrl(saved.artworkUrl, saved.artworkName || project.name);
+      state.artworkUrl = saved.artworkUrl;
+      state.projectId = project.id;
+      state.projectName = project.name;
+      state.background = saved.background || 'studio';
+      state.garmentColor = saved.garmentColor || '#ffffff';
+      state.offsetX = Number(saved.offsetX) || 0;
+      state.offsetY = Number(saved.offsetY) || 0;
+      state.scale = Number(saved.scale) || template.defaultScale;
+      state.rotation = Number(saved.rotation) || 0;
+      state.warp = Number(saved.warp) || template.defaultWarp;
+      state.opacity = Number(saved.opacity) || 0.96;
+      backgroundLabel.textContent = state.background === 'studio' ? 'Original studio' : 'Saved color';
+      garmentColorLabel.textContent = 'Saved color';
+      customBackground.value = /^#[0-9a-f]{6}$/i.test(state.background) ? state.background : '#d6d3cb';
+      customGarmentColor.value = state.garmentColor;
+      setStatus('Saved project loaded.');
+      scheduleRender({ forceQuality: true });
+    } catch (error) {
+      console.error(error);
+      setStatus(error.status === 401 ? 'Sign in to open this saved project.' : (error.message || 'Project could not be loaded.'), true);
+    }
+  }
+
   input.addEventListener('change', () => handleArtworkFile(input.files?.[0]));
   emptyUpload.addEventListener('click', () => input.click());
   resetButton.addEventListener('click', resetTransform);
+  saveButton.addEventListener('click', saveProject);
   downloadButton.addEventListener('click', downloadMockup);
 
   ['dragenter', 'dragover'].forEach((eventName) => {
@@ -727,5 +850,5 @@
     }
   };
 
-  prepareEditor();
+  prepareEditor().then(loadSavedProject);
 }());

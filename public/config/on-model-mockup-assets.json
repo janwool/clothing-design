@@ -408,17 +408,17 @@
         339
       ],
       "render": [
-        234,
-        260,
-        752,
-        768
+        230,
+        255,
+        755,
+        775
       ],
       "defaults": [
         48,
         34
       ],
-      "coverage": 0.118907,
-      "method": "automatic-white-garment-v1+commercial-refine-v3+commercial-refine-v4+commercial-refine-v5+commercial-refine-v6+commercial-refine-v9+commercial-refine-v10",
+      "coverage": 0.117874,
+      "method": "provided-garment-reference+direct-alpha-v1+manual-registration-v1+pixel-reviewed-edge-v4",
       "preferredForModel": true
     },
     {

@@ -54,6 +54,12 @@ test('offers garment colorways without flattening the mockup shading', () => {
   assert.match(detailEditor, /function drawGarmentColor\(\)/);
   assert.match(detailEditor, /globalCompositeOperation = 'multiply'/);
   assert.match(detailEditor, /setGarmentColor\(value\)/);
+  assert.match(data, /result\.svg_mask_url = `\/api\/on-model-svg-masks\//);
+  assert.match(data, /result\.live_mask_url = result\.svg_mask_url \|\| result\.mask_image_url/);
+  assert.match(detailView, /data-mask-image="<%= asset\.live_mask_url %>"/);
+  assert.match(detailView, /data-mask-fallback="<%= rasterMaskFallbackUrl %>"/);
+  assert.match(detailEditor, /function loadRealtimeMask\(\)/);
+  assert.match(detailEditor, /loadRealtimeMask\(\)/);
 });
 
 test('cache-busts commercial white mockup assets consistently', () => {
@@ -62,9 +68,9 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
   assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
-  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260826-commercial-v7/);
+  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260907-user-projects-v8/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260826-commercial-v8/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260913-svg-live-mask-v11/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);

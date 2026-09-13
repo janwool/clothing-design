@@ -10,6 +10,10 @@ const templateLocals = [
   'title',
   'page',
   'error',
+  'next',
+  'oauthError',
+  'googleAuthEnabled',
+  'googleAuthUrl',
   'metaDescription',
   'metaRobots',
   'metaImage',
@@ -59,7 +63,14 @@ const templateLocals = [
   'typeLabel',
   'typeName',
   'relatedAssets',
-  'whiteFaqItems'
+  'whiteFaqItems',
+  'projects',
+  'images',
+  'account',
+  'workspaceStats',
+  'currentView',
+  'headerEyebrow',
+  'headerDetail'
 ];
 
 function walk(dir, predicate) {

@@ -56,6 +56,57 @@ def face_components(mesh: bpy.types.Mesh) -> list[list[int]]:
     return components
 
 
+def collect_topology_uv_island_faces(mesh: bpy.types.Mesh, precision: int = 6) -> list[list[int]]:
+    """Collect UV-continuous faces using real mesh topology, not welded positions."""
+    layer = mesh.uv_layers.active
+    if layer is None:
+        return []
+    scale = 10**precision
+
+    def uv_key(loop_index: int) -> tuple[int, int]:
+        uv = layer.data[loop_index].uv
+        return (round(float(uv.x) * scale), round(float(uv.y) * scale))
+
+    edge_faces = defaultdict(list)
+    for polygon in mesh.polygons:
+        loops = list(polygon.loop_indices)
+        for index, loop in enumerate(loops):
+            following = loops[(index + 1) % len(loops)]
+            start_vertex = mesh.loops[loop].vertex_index
+            end_vertex = mesh.loops[following].vertex_index
+            start_uv = uv_key(loop)
+            end_uv = uv_key(following)
+            key = tuple(sorted(((start_vertex, start_uv), (end_vertex, end_uv))))
+            edge_faces[key].append((polygon.index, start_uv, end_uv))
+
+    neighbors = defaultdict(set)
+    for entries in edge_faces.values():
+        if len(entries) != 2:
+            continue
+        (face_a, a0, a1), (face_b, b0, b1) = entries
+        if (a0 == b0 and a1 == b1) or (a0 == b1 and a1 == b0):
+            neighbors[face_a].add(face_b)
+            neighbors[face_b].add(face_a)
+
+    islands = []
+    visited = set()
+    for polygon in mesh.polygons:
+        if polygon.index in visited:
+            continue
+        queue = deque([polygon.index])
+        visited.add(polygon.index)
+        faces = []
+        while queue:
+            face = queue.popleft()
+            faces.append(face)
+            for neighbor in neighbors[face]:
+                if neighbor not in visited:
+                    visited.add(neighbor)
+                    queue.append(neighbor)
+        islands.append(faces)
+    return islands
+
+
 def position_welded_topology(
     mesh: bpy.types.Mesh,
     tolerance: float = 1e-5,
@@ -313,6 +364,228 @@ def uv_overlap_report(
             {"face_a": row[0], "face_b": row[1], "area": round(row[2], 9)} for row in overlap_samples
         ],
         "cross_island_samples": cross_island_samples,
+    }
+
+
+def uv_same_island_overlap_report(
+    mesh: bpy.types.Mesh,
+    islands: list[list[int]],
+    max_tested_pairs: int = 20_000_000,
+) -> dict[str, object]:
+    """Exhaustively test plausible triangle pairs within each UV island.
+
+    A sweep on each triangle's U bounding interval avoids the large number of
+    irrelevant cross-island candidates produced by pre-pack Smart Project UVs.
+    The V bounding interval is checked before the exact polygon clip.
+    """
+    triangles = triangulated_uvs(mesh)
+    face_island = {
+        face: island_index
+        for island_index, faces in enumerate(islands)
+        for face in faces
+    }
+    grouped: dict[int, list[tuple[int, int, tuple[Vector, Vector, Vector], float, float, float, float]]] = defaultdict(list)
+    for triangle_index, (face_index, triangle) in enumerate(triangles):
+        xs = [point.x for point in triangle]
+        ys = [point.y for point in triangle]
+        grouped[face_island.get(face_index, -1)].append(
+            (
+                triangle_index,
+                face_index,
+                triangle,
+                min(xs),
+                max(xs),
+                min(ys),
+                max(ys),
+            )
+        )
+
+    tested_pairs = 0
+    overlap_pairs = 0
+    overlap_area = 0.0
+    overlap_faces: set[int] = set()
+    samples = []
+    truncated = False
+    epsilon = 1e-10
+    for island_index in sorted(grouped):
+        ordered = sorted(grouped[island_index], key=lambda row: row[3])
+        active = []
+        for current in ordered:
+            _triangle_index, face_index, triangle, min_x, _max_x, min_y, max_y = current
+            active = [other for other in active if other[4] > min_x + epsilon]
+            for other in active:
+                _other_index, other_face, other_triangle, _other_min_x, _other_max_x, other_min_y, other_max_y = other
+                if other_face == face_index:
+                    continue
+                if min(max_y, other_max_y) - max(min_y, other_min_y) <= epsilon:
+                    continue
+                tested_pairs += 1
+                if tested_pairs > max_tested_pairs:
+                    truncated = True
+                    break
+                area = clipped_triangle_area(other_triangle, triangle)
+                if area > 1e-7:
+                    overlap_pairs += 1
+                    overlap_area += area
+                    overlap_faces.update((other_face, face_index))
+                    if len(samples) < 20:
+                        area_a = triangle_area(*other_triangle)
+                        area_b = triangle_area(*triangle)
+                        shared_vertices = len(
+                            set(mesh.polygons[other_face].vertices)
+                            & set(mesh.polygons[face_index].vertices)
+                        )
+                        samples.append(
+                            {
+                                "face_a": other_face,
+                                "face_b": face_index,
+                                "island": island_index,
+                                "area": round(area, 9),
+                                "smaller_triangle_area": round(min(area_a, area_b), 9),
+                                "overlap_ratio": round(area / max(min(area_a, area_b), EPS), 6),
+                                "shared_vertices": shared_vertices,
+                            }
+                        )
+            if truncated:
+                break
+            active.append(current)
+        if truncated:
+            break
+    return {
+        "triangles": len(triangles),
+        "tested_pairs": tested_pairs,
+        "test_limit": max_tested_pairs,
+        "truncated": truncated,
+        "overlap_pairs": overlap_pairs,
+        "overlap_area_sum": round(overlap_area, 9),
+        "overlap_faces": sorted(overlap_faces),
+        "samples": samples,
+    }
+
+
+def uv_cross_island_overlap_report(
+    mesh: bpy.types.Mesh,
+    islands: list[list[int]],
+    max_tested_pairs: int = 20_000_000,
+) -> dict[str, object]:
+    """Exactly test triangles only for cross-island bounding-box candidates."""
+    triangles = triangulated_uvs(mesh)
+    face_island = {
+        face: island_index
+        for island_index, faces in enumerate(islands)
+        for face in faces
+    }
+    grouped = defaultdict(list)
+    island_bounds = {}
+    for triangle_index, (face_index, triangle) in enumerate(triangles):
+        island_index = face_island.get(face_index, -1)
+        xs = [point.x for point in triangle]
+        ys = [point.y for point in triangle]
+        row = (triangle_index, face_index, triangle, min(xs), max(xs), min(ys), max(ys))
+        grouped[island_index].append(row)
+        bounds = island_bounds.get(island_index)
+        if bounds is None:
+            island_bounds[island_index] = [row[3], row[5], row[4], row[6]]
+        else:
+            bounds[0] = min(bounds[0], row[3])
+            bounds[1] = min(bounds[1], row[5])
+            bounds[2] = max(bounds[2], row[4])
+            bounds[3] = max(bounds[3], row[6])
+
+    epsilon = 1e-10
+    # Spatial hashing keeps exact bbox candidate generation near-linear for
+    # repair atlases containing hundreds of thousands of isolated cells.  The
+    # former U-only nested sweep became quadratic when many cells shared the
+    # same narrow U column even though their V intervals were disjoint.
+    candidate_pairs = []
+    if island_bounds:
+        all_bounds = list(island_bounds.values())
+        global_min_x = min(bounds[0] for bounds in all_bounds)
+        global_min_y = min(bounds[1] for bounds in all_bounds)
+        global_max_x = max(bounds[2] for bounds in all_bounds)
+        global_max_y = max(bounds[3] for bounds in all_bounds)
+        grid_size = min(256, max(16, math.ceil(math.sqrt(len(island_bounds)) / 2.0)))
+        cell_width = max((global_max_x - global_min_x) / grid_size, 1e-12)
+        cell_height = max((global_max_y - global_min_y) / grid_size, 1e-12)
+        cells: dict[tuple[int, int], list[int]] = defaultdict(list)
+
+        def cell_span(bounds):
+            min_cell_x = max(0, min(grid_size - 1, math.floor((bounds[0] - global_min_x) / cell_width)))
+            max_cell_x = max(0, min(grid_size - 1, math.floor((bounds[2] - global_min_x) / cell_width)))
+            min_cell_y = max(0, min(grid_size - 1, math.floor((bounds[1] - global_min_y) / cell_height)))
+            max_cell_y = max(0, min(grid_size - 1, math.floor((bounds[3] - global_min_y) / cell_height)))
+            return min_cell_x, max_cell_x, min_cell_y, max_cell_y
+
+        for island_a, bounds_a in sorted(island_bounds.items()):
+            min_x, max_x, min_y, max_y = cell_span(bounds_a)
+            possible = set()
+            for cell_x in range(min_x, max_x + 1):
+                for cell_y in range(min_y, max_y + 1):
+                    possible.update(cells[(cell_x, cell_y)])
+            for island_b in sorted(possible):
+                bounds_b = island_bounds[island_b]
+                overlap_x = min(bounds_a[2], bounds_b[2]) - max(bounds_a[0], bounds_b[0])
+                overlap_y = min(bounds_a[3], bounds_b[3]) - max(bounds_a[1], bounds_b[1])
+                if overlap_x > epsilon and overlap_y > epsilon:
+                    candidate_pairs.append((island_b, island_a))
+            for cell_x in range(min_x, max_x + 1):
+                for cell_y in range(min_y, max_y + 1):
+                    cells[(cell_x, cell_y)].append(island_a)
+
+    tested_pairs = 0
+    overlap_pairs = 0
+    overlap_area = 0.0
+    overlap_faces: set[int] = set()
+    samples = []
+    truncated = False
+    for island_a, island_b in candidate_pairs:
+        combined = sorted(
+            [(0, row) for row in grouped[island_a]]
+            + [(1, row) for row in grouped[island_b]],
+            key=lambda item: item[1][3],
+        )
+        active = {0: [], 1: []}
+        for tag, current in combined:
+            _index, face_index, triangle, min_x, _max_x, min_y, max_y = current
+            other_tag = 1 - tag
+            active[other_tag] = [other for other in active[other_tag] if other[4] > min_x + epsilon]
+            for other in active[other_tag]:
+                _other_index, other_face, other_triangle, _other_min_x, _other_max_x, other_min_y, other_max_y = other
+                if min(max_y, other_max_y) - max(min_y, other_min_y) <= epsilon:
+                    continue
+                tested_pairs += 1
+                if tested_pairs > max_tested_pairs:
+                    truncated = True
+                    break
+                area = clipped_triangle_area(other_triangle, triangle)
+                if area > 1e-7:
+                    overlap_pairs += 1
+                    overlap_area += area
+                    overlap_faces.update((other_face, face_index))
+                    if len(samples) < 20:
+                        samples.append(
+                            {
+                                "face_a": other_face,
+                                "face_b": face_index,
+                                "island_a": island_a,
+                                "island_b": island_b,
+                                "area": round(area, 9),
+                            }
+                        )
+            if truncated:
+                break
+            active[tag].append(current)
+        if truncated:
+            break
+    return {
+        "candidate_island_pairs": len(candidate_pairs),
+        "tested_pairs": tested_pairs,
+        "test_limit": max_tested_pairs,
+        "truncated": truncated,
+        "overlap_pairs": overlap_pairs,
+        "overlap_area_sum": round(overlap_area, 9),
+        "overlap_faces": sorted(overlap_faces),
+        "samples": samples,
     }
 
 

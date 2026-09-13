@@ -292,6 +292,32 @@
   font-weight: 800;
 }
 
+.tool-model-spinner {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(29, 29, 31, 0.14);
+  border-top-color: #1d1d1f;
+  border-radius: 50%;
+  animation: tool-model-spin 720ms linear infinite;
+}
+
+.tool-model-stage.is-loading .tool-model-spinner {
+  display: block;
+  grid-row: 1 / span 2;
+  align-self: center;
+}
+
+.tool-model-stage.is-loading .tool-model-load {
+  grid-template-columns: auto 1fr;
+  column-gap: 10px;
+  text-align: left;
+}
+
+@keyframes tool-model-spin {
+  to { transform: rotate(360deg); }
+}
+
 .tool-model-load small {
   color: var(--color-secondary);
   font-size: 10px;

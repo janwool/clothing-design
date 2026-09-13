@@ -85,11 +85,15 @@ test('presents the complete generated material library as real fabric samples', 
 
   assert.match(designerScript, /getGeneratedMaterials\?\.\(\)/);
   assert.match(designerScript, /material-swatch-preview/);
+  assert.match(designerScript, /button\.setAttribute\('aria-label', material\.name\)/);
   assert.match(designerScript, /preview\.style\.backgroundImage = `url/);
   assert.match(designerScript, /includeBaseColorMap: options\.includeBaseColorMap !== false/);
   assert.doesNotMatch(designerScript, /querySelector\('\.material-ball'\)\.style\.background = material\.sphere/);
   assert.match(stylesheet, /grid-auto-columns: 82px/);
   assert.match(stylesheet, /scroll-snap-type: inline proximity/);
+  assert.match(stylesheet, /\.design-appearance-panel \.material-swatch-grid \{[^}]*grid-template-columns: repeat\(6, minmax\(0, 1fr\)\)/s);
+  assert.match(stylesheet, /\.design-appearance-panel \.material-swatch-preview \{[^}]*border-radius: 50%/s);
+  assert.match(stylesheet, /\.design-appearance-panel \.material-swatch:hover \.material-swatch-name[^}]*opacity: 1/s);
 });
 
 test('renders generated materials with textile-scale detail and soft studio lighting', () => {
@@ -97,6 +101,7 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   const designerScript = fs.readFileSync(path.join(projectRoot, 'public/js/model-designer.js'), 'utf8');
   const renderStandard = JSON.parse(fs.readFileSync(path.join(projectRoot, 'public/config/design3d-render-standard.json'), 'utf8'));
   const template = fs.readFileSync(path.join(projectRoot, 'views/model-detail.ejs'), 'utf8');
+  const studioEnvironment = fs.readFileSync(path.join(projectRoot, 'public/environments/commercial-apparel-studio-v4-balanced-20260829.hdr'));
 
   assert.match(materialScript, /'cotton-jersey': \{ normalScale: 0\.32, textureRepeat: 7/);
   assert.match(materialScript, /'satin-silk': \{ normalScale: 0\.16, textureRepeat: 5, sheenRoughness: 0\.22/);
@@ -104,13 +109,25 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.match(designerScript, /setSheenColorFactor\?\.\(sheenColor\)/);
   assert.match(designerScript, /setSheenRoughnessFactor\?\.\(material\.sheenRoughness/);
   assert.match(designerScript, /setSpecularFactor\?\.\(material\.specular/);
-  assert.equal(renderStandard.web.shadowIntensity, 0.58);
-  assert.equal(renderStandard.web.shadowSoftness, 0.94);
-  assert.equal(renderStandard.web.exposure, 0.96);
-  assert.equal(renderStandard.web.toneMapping, 'neutral');
-  assert.match(template, /shadow-intensity="0\.58"/);
-  assert.match(template, /shadow-softness="0\.94"/);
-  assert.match(template, /tone-mapping="neutral"/);
+  assert.equal(renderStandard.web.environmentImage, '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr');
+  assert.equal(renderStandard.camera.webEditorOrbit, '-48deg 72deg 158%');
+  assert.equal(renderStandard.web.lightingMode, 'front-back-balanced-product-studio');
+  assert.equal(renderStandard.web.sourceEnvironment, '/environments/commercial-apparel-studio-v2-20260829.hdr');
+  assert.equal(renderStandard.web.balanceMethod, '180-degree-lighten-mirror');
+  assert.deepEqual(renderStandard.web.environmentBake.resolution, [2048, 1024]);
+  assert.equal(renderStandard.web.environmentBake.sourceStrength, 1.12);
+  assert.equal(renderStandard.web.shadowIntensity, 0);
+  assert.equal(renderStandard.web.shadowSoftness, 1);
+  assert.equal(renderStandard.web.exportShadowIntensity, 0.32);
+  assert.equal(renderStandard.web.exportShadowSoftness, 0.96);
+  assert.equal(renderStandard.web.exposure, 0.72);
+  assert.equal(renderStandard.web.toneMapping, 'commerce');
+  assert.deepEqual(renderStandard.web.material.baseColor, [0.82, 0.82, 0.8]);
+  assert.equal(studioEnvironment.toString('ascii', 0, 10), '#?RADIANCE');
+  assert.ok(studioEnvironment.length > 100000);
+  assert.match(template, /shadow-intensity="0"/);
+  assert.match(template, /shadow-softness="1"/);
+  assert.match(template, /tone-mapping="commerce"/);
 });
 
 test('ships a UV-safe GLB drape remesher that preserves morph animation', () => {

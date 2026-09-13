@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { validateInquiryPayload } = require('../lib/customization-inquiry');
-const { deleteObject, parseImageDataUrl, uploadImageDataUrl } = require('../lib/object-storage');
+const { deleteObject, parseImageDataUrl, uploadImageDataUrl, MAX_IMAGE_BYTES } = require('../lib/object-storage');
 
 const pngHeader = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
 const webpHeader = Buffer.from('RIFF0000WEBP', 'ascii');
@@ -9,6 +9,10 @@ const webpHeader = Buffer.from('RIFF0000WEBP', 'ascii');
 function dataUrl(type, bytes) {
   return `data:${type};base64,${bytes.toString('base64')}`;
 }
+
+test('limits stored images to 10 MB', () => {
+  assert.equal(MAX_IMAGE_BYTES, 10 * 1024 * 1024);
+});
 
 test('normalizes a valid customization inquiry payload', () => {
   const payload = validateInquiryPayload({

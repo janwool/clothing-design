@@ -18,7 +18,7 @@ module.exports = {
           "signOut": "Sign Out"
         },
         "tools": {
-          "title": "Free Online Clothing Design & Mockup Tools | ClothingDesign",
+          "title": "Free Online Clothing Design & Mockup Tools | ClozDesign",
           "pageTitle": "Free Online Clothing Design & Mockup Tools",
           "pageSubtitle": "Design clothing online with free 3D garment models, apparel mockup generators, artwork previews, and transparent product exports",
           "popularTools": "Popular Tools",
@@ -34,7 +34,7 @@ module.exports = {
           "learn": "Learn"
         },
         "home": {
-          "title": "Free 3D Clothing Models for Apparel Mockups | ClothingDesign",
+          "title": "Free 3D Clothing Models for Apparel Mockups | ClozDesign",
           "heroTitle": "Free 3D Clothing Models for Apparel Mockups",
           "heroSubtitle": "Browse free 3D garment models, preview print placement, and export clean product images for ecommerce and POD listings.",
           "startDesigning": "Design Clothing Online in 3D",
@@ -68,7 +68,7 @@ module.exports = {
           "error": "An error occurred"
         },
         "design3d": {
-          "title": "Free 3D Clothing Models & Apparel Mockups | ClothingDesign",
+          "title": "Free 3D Clothing Models & Apparel Mockups | ClozDesign",
           "pageTitle": "Free 3D Clothing Models & Apparel Mockups",
           "pageSubtitle": "Browse free 3D clothing mockups for jackets, pants, dresses, shirts, and hoodies. Customize artwork online and export transparent PNG product renders",
           "filterAll": "All Models",
@@ -94,7 +94,7 @@ module.exports = {
           "defaultText": "Your Text Here"
         },
         "design2d": {
-          "title": "Design 2D - ClothingDesign",
+          "title": "Design 2D - ClozDesign",
           "pageTitle": "2D Clothing Templates",
           "pageSubtitle": "Professional 2D templates for flat lays, technical drawings, and presentations",
           "filterAll": "All Templates",
@@ -117,12 +117,12 @@ module.exports = {
           "tankTop": "Tank Top Template"
         },
         "gallery": {
-          "title": "Get Inspired - ClothingDesign",
+          "title": "Get Inspired - ClozDesign",
           "pageTitle": "Design Gallery",
           "pageSubtitle": "Get inspired by designs from our community"
         },
         "pricing": {
-          "title": "See Plans - ClothingDesign"
+          "title": "See Plans - ClozDesign"
         }
       }
     }

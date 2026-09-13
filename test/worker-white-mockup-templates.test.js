@@ -59,6 +59,7 @@ test('renders a white mockup detail page with the Worker template runtime', () =
 
   assert.match(html, /Crew-neck T-shirt White Mockup/);
   assert.match(html, /whiteMockupCanvas/);
+  assert.match(html, /crewneck-tee-male-front-mask\.png\?v=direct-alpha-edge-v4/);
   assert.match(html, /<body class="category-catalog-page white-mockup-detail-page">/);
 });
 

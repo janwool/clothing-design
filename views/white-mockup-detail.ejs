@@ -9,6 +9,8 @@
   };
   const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
   const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v10`;
+  const rasterMaskVersionSeparator = String(asset.mask_image_url).includes('?') ? '&' : '?';
+  const rasterMaskFallbackUrl = `${asset.mask_image_url}${rasterMaskVersionSeparator}v=direct-alpha-edge-v4`;
 %>
 
 <div class="white-detail-main">
@@ -23,7 +25,8 @@
       class="white-detail-product"
       id="whiteMockupEditor"
       data-base-image="<%= editorBaseImageUrl %>"
-      data-mask-image="<%= asset.mask_image_url %>?v=commercial-refine-v10"
+      data-mask-image="<%= asset.live_mask_url %>"
+      data-mask-fallback="<%= rasterMaskFallbackUrl %>"
       data-depth-image="<%= asset.depth_image_url %>?v=commercial-refine-v10"
       data-asset-name="<%= asset.asset_name %>"
       data-garment-type="<%= asset.garment_type %>"
@@ -39,6 +42,7 @@
       data-render-bottom="<%= asset.render_bottom %>"
       data-default-scale="<%= asset.default_scale %>"
       data-default-warp="<%= asset.default_warp %>"
+      data-authenticated="<%= user ? 'true' : 'false' %>"
     >
       <div class="white-detail-stage-column">
         <div class="white-detail-stage" id="whiteMockupStage">
@@ -126,6 +130,7 @@
           </div>
         </div>
 
+        <button type="button" class="white-detail-save" id="whiteMockupSave" disabled>Save project</button>
         <button type="button" class="white-detail-download" id="whiteMockupDownload" disabled>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
           Download PNG
@@ -139,7 +144,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3"/></svg>
-            <span>Private in your browser</span>
+            <span><%= user ? 'Saved to your account' : 'Sign in to save projects' %></span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
@@ -207,5 +212,5 @@
   </div>
 </div>
 
-<script src="/js/white-mockup-editor.js?v=20260826-commercial-v8" defer></script>
+<script src="/js/white-mockup-editor.js?v=20260913-svg-live-mask-v11" defer></script>
 <%- include('partials/footer') %>

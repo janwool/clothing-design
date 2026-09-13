@@ -1,0 +1,54 @@
+<%
+  const overviewDisplayName = String(account.name || user.name || 'Designer').trim();
+  const firstName = overviewDisplayName.split(/\s+/)[0] || 'Designer';
+  const initial = overviewDisplayName.charAt(0).toUpperCase();
+  const recentProject = projects[0] || null;
+  const formatBytes = function(bytes) {
+    const value = Number(bytes) || 0;
+    if (value < 1024) return `${value} B`;
+    if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+    return `${(value / 1024 / 1024).toFixed(value > 10 * 1024 * 1024 ? 0 : 1)} MB`;
+  };
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  const projectUrl = function(project) {
+    return `${project.sourceUrl}?project=${encodeURIComponent(project.id)}`;
+  };
+%>
+<%- include('partials/workspace-shell', {
+  currentView: 'overview',
+  headerEyebrow: 'Your workspace',
+  headerDetail: new Date().toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric' })
+}) %>
+
+    <section class="workspace-intro" aria-labelledby="workspaceTitle">
+      <div class="workspace-intro-copy"><span class="workspace-kicker">ClozDesign workspace</span><h1 id="workspaceTitle">Welcome back,<br><em><%= firstName %>.</em></h1><p>Continue a saved apparel design or start a new mockup.</p></div>
+      <div class="workspace-monogram" aria-hidden="true"><span><%= initial %></span><i>CLOZ<br>DESIGN</i></div>
+    </section>
+
+    <section class="workspace-metrics" aria-label="Workspace summary">
+      <article><span>All projects</span><strong><%= workspaceStats.totalProjects %></strong><small>Across every collection</small></article>
+      <article><span>3D studies</span><strong><%= workspaceStats.projects3d %></strong><small>Garment and material work</small></article>
+      <article><span>White mockups</span><strong><%= workspaceStats.whiteMockups %></strong><small>On-model compositions</small></article>
+      <article><span>R2 storage</span><strong><%= formatBytes(workspaceStats.storageBytes) %></strong><small>Project assets stored securely</small></article>
+    </section>
+
+    <section class="workspace-section workspace-continue" aria-labelledby="continueTitle">
+      <div class="workspace-section-heading"><div><span>Recent work</span><h2 id="continueTitle">Continue designing</h2></div><a href="/account/projects/3d">View 3D projects <b>→</b></a></div>
+      <% if (recentProject) { %>
+        <article class="workspace-featured-project" data-project-type="<%= recentProject.projectType %>">
+          <a class="workspace-featured-visual" href="<%= projectUrl(recentProject) %>">
+            <% if (recentProject.previewImageUrl) { %><img src="<%= recentProject.previewImageUrl %>" alt="<%= recentProject.name %> preview"><% } else { %><div class="workspace-preview-empty"><span><%= initial %></span><small>Preview pending</small></div><% } %>
+            <span class="workspace-project-index">LAST EDITED</span>
+          </a>
+          <div class="workspace-featured-copy"><span><%= recentProject.projectType === '3d' ? '3D garment project' : 'White mockup project' %></span><h3><%= recentProject.name %></h3><p>Updated <%= formatDate(recentProject.updatedAt) %>. Your saved design settings are ready to continue.</p><a href="<%= projectUrl(recentProject) %>">Continue designing <b>→</b></a></div>
+        </article>
+      <% } else { %>
+        <div class="workspace-first-project"><span>01</span><div><h3>Your first piece starts with a silhouette.</h3><p>Choose a garment model, customize the design, and save it back to this workspace.</p></div><a href="/mockups">Browse garment models →</a></div>
+      <% } %>
+    </section>
+
+<%- include('partials/workspace-end') %>

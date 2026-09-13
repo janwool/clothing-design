@@ -1,0 +1,24 @@
+<%
+  const settingsDisplayName = String(account.name || user.name || 'Designer').trim();
+  const initial = settingsDisplayName.charAt(0).toUpperCase();
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+%>
+<%- include('partials/workspace-shell', {
+  currentView: 'settings',
+  headerEyebrow: 'Account settings',
+  headerDetail: 'Manage your ClozDesign profile.'
+}) %>
+
+    <section class="workspace-section workspace-page-section workspace-account" aria-labelledby="accountTitle">
+      <div class="workspace-section-heading"><div><span>Account</span><h1 id="accountTitle">Profile settings</h1></div><p>Member since <%= formatDate(account.created_at) %></p></div>
+      <div class="workspace-account-grid">
+        <form id="workspaceProfileForm" class="workspace-profile-card"><div class="workspace-profile-mark"><%= initial %></div><div class="workspace-profile-fields"><label><span>Display name</span><input id="workspaceProfileName" name="name" value="<%= settingsDisplayName %>" minlength="2" maxlength="100" required></label><label><span>Email address</span><input value="<%= account.email %>" disabled></label></div><button type="submit">Save changes</button></form>
+        <aside class="workspace-account-note"><span>Storage model</span><h3>Design data stays light.</h3><p>Projects contain design settings and image addresses. Original images and generated previews live separately in Cloudflare R2.</p><a href="/privacy">Review privacy overview →</a></aside>
+      </div>
+    </section>
+
+<%- include('partials/workspace-end') %>

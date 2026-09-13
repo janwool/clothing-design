@@ -26,6 +26,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -75,10 +79,816 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"error-section\">\n  <div class=\"container\">\n    <div class=\"error-content\">\n      <h1 class=\"error-code\">404</h1>\n      <h2 class=\"error-title\">Page Not Found</h2>\n      <p class=\"error-message\">The page you are looking for does not exist or has been moved.</p>\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n    </div>\n  </div>\n</section>\n\n<style>\n.error-section {\n  min-height: 70vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  padding: 4rem 0;\n}\n\n.error-code {\n  font-size: 6rem;\n  font-weight: 800;\n  color: var(--gray-200);\n  line-height: 1;\n  margin-bottom: 1rem;\n}\n\n.error-title {\n  font-size: 1.5rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.error-message {\n  color: var(--gray-600);\n  margin-bottom: 2rem;\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "account/overview.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; 
+  const overviewDisplayName = String(account.name || user.name || 'Designer').trim();
+  const firstName = overviewDisplayName.split(/\s+/)[0] || 'Designer';
+  const initial = overviewDisplayName.charAt(0).toUpperCase();
+  const recentProject = projects[0] || null;
+  const formatBytes = function(bytes) {
+    const value = Number(bytes) || 0;
+    if (value < 1024) return `${value} B`;
+    if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+    return `${(value / 1024 / 1024).toFixed(value > 10 * 1024 * 1024 ? 0 : 1)} MB`;
+  };
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  const projectUrl = function(project) {
+    return `${project.sourceUrl}?project=${encodeURIComponent(project.id)}`;
+  };
+
+    ; __append("\n")
+    ; __append( include('partials/workspace-shell', {
+  currentView: 'overview',
+  headerEyebrow: 'Your workspace',
+  headerDetail: new Date().toLocaleDateString('en', { weekday: 'long', month: 'long', day: 'numeric' })
+}) )
+    ; __append("\n\n    <section class=\"workspace-intro\" aria-labelledby=\"workspaceTitle\">\n      <div class=\"workspace-intro-copy\"><span class=\"workspace-kicker\">ClozDesign workspace</span><h1 id=\"workspaceTitle\">Welcome back,<br><em>")
+    ; __append(escapeFn( firstName ))
+    ; __append(".</em></h1><p>Continue a saved apparel design or start a new mockup.</p></div>\n      <div class=\"workspace-monogram\" aria-hidden=\"true\"><span>")
+    ; __append(escapeFn( initial ))
+    ; __append("</span><i>CLOZ<br>DESIGN</i></div>\n    </section>\n\n    <section class=\"workspace-metrics\" aria-label=\"Workspace summary\">\n      <article><span>All projects</span><strong>")
+    ; __append(escapeFn( workspaceStats.totalProjects ))
+    ; __append("</strong><small>Across every collection</small></article>\n      <article><span>3D studies</span><strong>")
+    ; __append(escapeFn( workspaceStats.projects3d ))
+    ; __append("</strong><small>Garment and material work</small></article>\n      <article><span>White mockups</span><strong>")
+    ; __append(escapeFn( workspaceStats.whiteMockups ))
+    ; __append("</strong><small>On-model compositions</small></article>\n      <article><span>R2 storage</span><strong>")
+    ; __append(escapeFn( formatBytes(workspaceStats.storageBytes) ))
+    ; __append("</strong><small>Project assets stored securely</small></article>\n    </section>\n\n    <section class=\"workspace-section workspace-continue\" aria-labelledby=\"continueTitle\">\n      <div class=\"workspace-section-heading\"><div><span>Recent work</span><h2 id=\"continueTitle\">Continue designing</h2></div><a href=\"/account/projects/3d\">View 3D projects <b>→</b></a></div>\n      ")
+    ;  if (recentProject) { 
+    ; __append("\n        <article class=\"workspace-featured-project\" data-project-type=\"")
+    ; __append(escapeFn( recentProject.projectType ))
+    ; __append("\">\n          <a class=\"workspace-featured-visual\" href=\"")
+    ; __append(escapeFn( projectUrl(recentProject) ))
+    ; __append("\">\n            ")
+    ;  if (recentProject.previewImageUrl) { 
+    ; __append("<img src=\"")
+    ; __append(escapeFn( recentProject.previewImageUrl ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( recentProject.name ))
+    ; __append(" preview\">")
+    ;  } else { 
+    ; __append("<div class=\"workspace-preview-empty\"><span>")
+    ; __append(escapeFn( initial ))
+    ; __append("</span><small>Preview pending</small></div>")
+    ;  } 
+    ; __append("\n            <span class=\"workspace-project-index\">LAST EDITED</span>\n          </a>\n          <div class=\"workspace-featured-copy\"><span>")
+    ; __append(escapeFn( recentProject.projectType === '3d' ? '3D garment project' : 'White mockup project' ))
+    ; __append("</span><h3>")
+    ; __append(escapeFn( recentProject.name ))
+    ; __append("</h3><p>Updated ")
+    ; __append(escapeFn( formatDate(recentProject.updatedAt) ))
+    ; __append(". Your saved design settings are ready to continue.</p><a href=\"")
+    ; __append(escapeFn( projectUrl(recentProject) ))
+    ; __append("\">Continue designing <b>→</b></a></div>\n        </article>\n      ")
+    ;  } else { 
+    ; __append("\n        <div class=\"workspace-first-project\"><span>01</span><div><h3>Your first piece starts with a silhouette.</h3><p>Choose a garment model, customize the design, and save it back to this workspace.</p></div><a href=\"/mockups\">Browse garment models →</a></div>\n      ")
+    ;  } 
+    ; __append("\n    </section>\n\n")
+    ; __append( include('partials/workspace-end') )
+    ; __append("\n")
+  return __output;
+
+},
+  "account/partials/workspace-end.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append("  </main>\n</div>\n\n<div class=\"workspace-toast\" id=\"workspaceToast\" role=\"status\" aria-live=\"polite\"></div>\n<script src=\"/js/account-workspace.js?v=20260913-route-pages-v6\" defer></script>\n")
+    ; __append( include('../../partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "account/partials/workspace-shell.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append( include('../../partials/header', { bodyClass: 'account-workspace-page' }) )
+    ; __append("\n")
+    ; 
+  const shellDisplayName = String(account.name || user.name || 'Designer').trim();
+  const shellInitial = shellDisplayName.charAt(0).toUpperCase();
+
+    ; __append("\n\n<div class=\"workspace-frame\">\n  <aside class=\"workspace-sidebar\" aria-label=\"Workspace navigation\">\n    <div class=\"workspace-identity\">\n      <span class=\"workspace-avatar\">")
+    ; __append(escapeFn( shellInitial ))
+    ; __append("</span>\n      <div><strong>")
+    ; __append(escapeFn( shellDisplayName ))
+    ; __append("</strong><small>")
+    ; __append(escapeFn( account.email ))
+    ; __append("</small></div>\n    </div>\n    <nav class=\"workspace-nav\">\n      <a class=\"")
+    ; __append(escapeFn( currentView === 'overview' ? 'is-active' : '' ))
+    ; __append("\" href=\"/account\" aria-label=\"Overview\"")
+    ;  if (currentView === 'overview') { 
+    ; __append(" aria-current=\"page\"")
+    ;  } 
+    ; __append("><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 4h6v6H4zm10 0h6v10h-6zM4 14h6v6H4zm10 4h6v2h-6z\"/></svg><span>Overview</span></a>\n      <a class=\"")
+    ; __append(escapeFn( currentView === 'projects3d' ? 'is-active' : '' ))
+    ; __append("\" href=\"/account/projects/3d\" aria-label=\"3D Projects\"")
+    ;  if (currentView === 'projects3d') { 
+    ; __append(" aria-current=\"page\"")
+    ;  } 
+    ; __append("><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9\"/></svg><span>3D Projects</span><b>")
+    ; __append(escapeFn( workspaceStats.projects3d ))
+    ; __append("</b></a>\n      <a class=\"")
+    ; __append(escapeFn( currentView === 'whiteMockups' ? 'is-active' : '' ))
+    ; __append("\" href=\"/account/projects/white-mockups\" aria-label=\"White Mockups\"")
+    ;  if (currentView === 'whiteMockups') { 
+    ; __append(" aria-current=\"page\"")
+    ;  } 
+    ; __append("><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 4 4 6l-2 4 3 2 1-2v10h12V10l1 2 3-2-2-4-4-2c-.8 1.3-2.1 2-4 2S8.8 5.3 8 4Z\"/></svg><span>White Mockups</span><b>")
+    ; __append(escapeFn( workspaceStats.whiteMockups ))
+    ; __append("</b></a>\n      <a class=\"")
+    ; __append(escapeFn( currentView === 'settings' ? 'is-active' : '' ))
+    ; __append("\" href=\"/account/settings\" aria-label=\"Account\"")
+    ;  if (currentView === 'settings') { 
+    ; __append(" aria-current=\"page\"")
+    ;  } 
+    ; __append("><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21c.8-4.5 3.3-7 7.5-7s6.7 2.5 7.5 7\"/></svg><span>Account</span></a>\n    </nav>\n    <div class=\"workspace-sidebar-note\"><i></i><span>Cloud sync</span><strong>Active</strong></div>\n  </aside>\n\n  <main class=\"workspace-main\" data-workspace-view=\"")
+    ; __append(escapeFn( currentView ))
+    ; __append("\">\n    <header class=\"workspace-topbar\">\n      <div><span>")
+    ; __append(escapeFn( headerEyebrow ))
+    ; __append("</span><p>")
+    ; __append(escapeFn( headerDetail ))
+    ; __append("</p></div>\n      <div class=\"workspace-top-actions\"><a href=\"/white-mockups\">New white mockup</a><a class=\"workspace-primary-action\" href=\"/mockups\"><span>New 3D project</span><b>+</b></a></div>\n    </header>\n")
+  return __output;
+
+},
+  "account/projects-3d.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; 
+  const visibleProjects = projects.filter(project => project.projectType === '3d');
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  const projectUrl = function(project) {
+    return `${project.sourceUrl}?project=${encodeURIComponent(project.id)}`;
+  };
+
+    ; __append("\n")
+    ; __append( include('partials/workspace-shell', {
+  currentView: 'projects3d',
+  headerEyebrow: '3D project library',
+  headerDetail: 'Continue saved garment and material studies.'
+}) )
+    ; __append("\n\n    <section class=\"workspace-section workspace-page-section workspace-project-list\" aria-label=\"Saved 3D projects\">\n      <div class=\"workspace-project-grid\" id=\"workspaceProjectGrid\">\n        ")
+    ;  visibleProjects.forEach(function(project, index) { 
+    ; __append("\n          <article class=\"workspace-project-card workspace-project-card-3d\" data-project-id=\"")
+    ; __append(escapeFn( project.id ))
+    ; __append("\" data-project-type=\"")
+    ; __append(escapeFn( project.projectType ))
+    ; __append("\" data-project-name=\"")
+    ; __append(escapeFn( project.name.toLowerCase() ))
+    ; __append("\">\n            <a class=\"workspace-project-image workspace-project-image-3d\" href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">\n              ")
+    ;  if (project.previewImageUrl) { 
+    ; __append("<img src=\"")
+    ; __append(escapeFn( project.previewImageUrl ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( project.name ))
+    ; __append(" preview\" loading=\"lazy\">")
+    ;  } else { 
+    ; __append("<span class=\"workspace-card-placeholder\"><b>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</b>Saved study</span>")
+    ;  } 
+    ; __append("\n              <span class=\"workspace-project-type\">3D</span><span class=\"workspace-project-open\">Open ↗</span>\n            </a>\n            <div class=\"workspace-project-details\"><div><span>")
+    ; __append(escapeFn( formatDate(project.updatedAt) ))
+    ; __append("</span><h3 data-project-title><a href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">")
+    ; __append(escapeFn( project.name ))
+    ; __append("</a></h3></div><button type=\"button\" class=\"workspace-more\" data-project-menu-button aria-label=\"Project actions\" aria-expanded=\"false\">•••</button></div>\n            <div class=\"workspace-card-menu\" hidden><button type=\"button\" data-project-action=\"rename\">Rename</button><button type=\"button\" data-project-action=\"duplicate\">Duplicate</button><a href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">Open project</a><button class=\"is-danger\" type=\"button\" data-project-action=\"delete\">Delete</button></div>\n          </article>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n      ")
+    ;  if (!visibleProjects.length) { 
+    ; __append("<div class=\"workspace-empty-archive\"><span>EMPTY ARCHIVE</span><h3>No 3D projects saved—yet.</h3><p>Your saved garment and material studies will collect here.</p><div><a class=\"btn btn-primary\" href=\"/mockups\">Create a 3D project</a></div></div>")
+    ;  } 
+    ; __append("\n    </section>\n\n    <dialog class=\"workspace-dialog\" id=\"workspaceRenameDialog\"><form method=\"dialog\"><button class=\"workspace-dialog-close\" value=\"cancel\" aria-label=\"Close\">×</button><span>Project details</span><h2>Rename this study</h2><label><span>Project name</span><input id=\"workspaceRenameInput\" maxlength=\"120\" required></label><div><button value=\"cancel\">Cancel</button><button id=\"workspaceRenameConfirm\" value=\"default\">Save name</button></div></form></dialog>\n")
+    ; __append( include('partials/workspace-end') )
+    ; __append("\n")
+  return __output;
+
+},
+  "account/settings.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; 
+  const settingsDisplayName = String(account.name || user.name || 'Designer').trim();
+  const initial = settingsDisplayName.charAt(0).toUpperCase();
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+    ; __append("\n")
+    ; __append( include('partials/workspace-shell', {
+  currentView: 'settings',
+  headerEyebrow: 'Account settings',
+  headerDetail: 'Manage your ClozDesign profile.'
+}) )
+    ; __append("\n\n    <section class=\"workspace-section workspace-page-section workspace-account\" aria-labelledby=\"accountTitle\">\n      <div class=\"workspace-section-heading\"><div><span>Account</span><h1 id=\"accountTitle\">Profile settings</h1></div><p>Member since ")
+    ; __append(escapeFn( formatDate(account.created_at) ))
+    ; __append("</p></div>\n      <div class=\"workspace-account-grid\">\n        <form id=\"workspaceProfileForm\" class=\"workspace-profile-card\"><div class=\"workspace-profile-mark\">")
+    ; __append(escapeFn( initial ))
+    ; __append("</div><div class=\"workspace-profile-fields\"><label><span>Display name</span><input id=\"workspaceProfileName\" name=\"name\" value=\"")
+    ; __append(escapeFn( settingsDisplayName ))
+    ; __append("\" minlength=\"2\" maxlength=\"100\" required></label><label><span>Email address</span><input value=\"")
+    ; __append(escapeFn( account.email ))
+    ; __append("\" disabled></label></div><button type=\"submit\">Save changes</button></form>\n        <aside class=\"workspace-account-note\"><span>Storage model</span><h3>Design data stays light.</h3><p>Projects contain design settings and image addresses. Original images and generated previews live separately in Cloudflare R2.</p><a href=\"/privacy\">Review privacy overview →</a></aside>\n      </div>\n    </section>\n\n")
+    ; __append( include('partials/workspace-end') )
+    ; __append("\n")
+  return __output;
+
+},
+  "account/white-mockups.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; 
+  const visibleProjects = projects.filter(project => project.projectType === 'white_mockup');
+  const formatDate = function(value) {
+    if (!value) return 'Just now';
+    const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
+    return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+  const projectUrl = function(project) {
+    return `${project.sourceUrl}?project=${encodeURIComponent(project.id)}`;
+  };
+
+    ; __append("\n")
+    ; __append( include('partials/workspace-shell', {
+  currentView: 'whiteMockups',
+  headerEyebrow: 'White mockup library',
+  headerDetail: 'Continue saved on-model compositions.'
+}) )
+    ; __append("\n\n    <section class=\"workspace-section workspace-page-section workspace-project-list\" aria-label=\"Saved white mockups\">\n      <div class=\"workspace-project-grid\" id=\"workspaceProjectGrid\">\n        ")
+    ;  visibleProjects.forEach(function(project, index) { 
+    ; __append("\n          <article class=\"workspace-project-card\" data-project-id=\"")
+    ; __append(escapeFn( project.id ))
+    ; __append("\" data-project-type=\"")
+    ; __append(escapeFn( project.projectType ))
+    ; __append("\" data-project-name=\"")
+    ; __append(escapeFn( project.name.toLowerCase() ))
+    ; __append("\">\n            <a class=\"workspace-project-image\" href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">\n              ")
+    ;  if (project.previewImageUrl) { 
+    ; __append("<img src=\"")
+    ; __append(escapeFn( project.previewImageUrl ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( project.name ))
+    ; __append(" preview\" loading=\"lazy\">")
+    ;  } else { 
+    ; __append("<span class=\"workspace-card-placeholder\"><b>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</b>Saved composition</span>")
+    ;  } 
+    ; __append("\n              <span class=\"workspace-project-type\">WHITE</span><span class=\"workspace-project-open\">Open ↗</span>\n            </a>\n            <div class=\"workspace-project-details\"><div><span>")
+    ; __append(escapeFn( formatDate(project.updatedAt) ))
+    ; __append("</span><h3 data-project-title><a href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">")
+    ; __append(escapeFn( project.name ))
+    ; __append("</a></h3></div><button type=\"button\" class=\"workspace-more\" data-project-menu-button aria-label=\"Project actions\" aria-expanded=\"false\">•••</button></div>\n            <div class=\"workspace-card-menu\" hidden><button type=\"button\" data-project-action=\"rename\">Rename</button><button type=\"button\" data-project-action=\"duplicate\">Duplicate</button><a href=\"")
+    ; __append(escapeFn( projectUrl(project) ))
+    ; __append("\">Open project</a><button class=\"is-danger\" type=\"button\" data-project-action=\"delete\">Delete</button></div>\n          </article>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n      ")
+    ;  if (!visibleProjects.length) { 
+    ; __append("<div class=\"workspace-empty-archive\"><span>EMPTY ARCHIVE</span><h3>No white mockups saved—yet.</h3><p>Your saved white mockup compositions will collect here.</p><div><a class=\"btn btn-primary\" href=\"/white-mockups\">Create a white mockup</a></div></div>")
+    ;  } 
+    ; __append("\n    </section>\n\n    <dialog class=\"workspace-dialog\" id=\"workspaceRenameDialog\"><form method=\"dialog\"><button class=\"workspace-dialog-close\" value=\"cancel\" aria-label=\"Close\">×</button><span>Project details</span><h2>Rename this study</h2><label><span>Project name</span><input id=\"workspaceRenameInput\" maxlength=\"120\" required></label><div><button value=\"cancel\">Cancel</button><button id=\"workspaceRenameConfirm\" value=\"default\">Save name</button></div></form></dialog>\n")
+    ; __append( include('partials/workspace-end') )
     ; __append("\n")
   return __output;
 
@@ -109,6 +919,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -158,7 +972,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -230,6 +1051,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -279,7 +1104,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -327,6 +1159,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -376,7 +1212,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -456,6 +1299,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -505,7 +1352,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -725,6 +1579,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -774,7 +1632,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -856,6 +1721,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -905,7 +1774,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1007,6 +1883,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1056,7 +1936,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append("  </main>\n</div>\n\n<script>\n// Admin sidebar toggle for mobile\nconst sidebarToggle = document.querySelector('.sidebar-toggle');\nconst adminSidebar = document.querySelector('.admin-sidebar');\n\nif (sidebarToggle) {\n  sidebarToggle.addEventListener('click', () => {\n    adminSidebar.classList.toggle('active');\n  });\n}\n\n// Close modal function\nfunction closeModal() {\n  const modal = document.querySelector('.modal-overlay');\n  if (modal) {\n    modal.remove();\n  }\n}\n\n// Delete confirmation\ndocument.querySelectorAll('.btn-delete').forEach(btn => {\n  btn.addEventListener('click', (e) => {\n    if (!confirm('Are you sure you want to delete this item?')) {\n      e.preventDefault();\n    }\n  });\n});\n</script>\n\n</body>\n</html>\n")
   return __output;
 
@@ -1087,6 +1974,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1136,14 +2027,21 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next ? i18next.language : 'en' ))
     ; __append("\" dir=\"")
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260813-plain-uv\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260805\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260805\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },
@@ -1173,6 +2071,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1222,8 +2124,15 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
-    ; __append("<aside class=\"admin-sidebar\">\n  <div class=\"sidebar-header\">\n    <a href=\"/admin\" class=\"sidebar-logo\">ClothingDesign</a>\n    <span class=\"sidebar-badge\">Admin</span>\n  </div>\n  \n  <nav class=\"sidebar-nav\">\n    <a href=\"/admin\" class=\"sidebar-link ")
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append("<aside class=\"admin-sidebar\">\n  <div class=\"sidebar-header\">\n    <a href=\"/admin\" class=\"sidebar-logo\">ClozDesign</a>\n    <span class=\"sidebar-badge\">Admin</span>\n  </div>\n  \n  <nav class=\"sidebar-nav\">\n    <a href=\"/admin\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/>\n        <rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/>\n      </svg>\n      Dashboard\n    </a>\n    \n    <div class=\"sidebar-section\">Resources</div>\n    \n    <a href=\"/admin/models-3d\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-models-3d' ? 'active' : '' ))
@@ -1269,6 +2178,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1318,7 +2231,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1400,6 +2320,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1449,7 +2373,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1507,6 +2438,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1556,17 +2491,32 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
-    ; __append("</h1>\n      <p class=\"auth-intro\">Sign in to your ClothingDesign account, or start a public mockup without an account.</p>\n      \n      ")
-    ;  if (typeof error !== 'undefined') { 
+    ; __append("</h1>\n      <p class=\"auth-intro\">Sign in to your ClozDesign account, or start a public mockup without an account.</p>\n      \n      ")
+    ;  if ((typeof error !== 'undefined' && error) || oauthError) { 
     ; __append("\n        <div class=\"auth-error\">")
-    ; __append(escapeFn( error ))
+    ; __append(escapeFn( (typeof error !== 'undefined' && error) ? error : oauthError ))
     ; __append("</div>\n      ")
     ;  } 
-    ; __append("\n\n      <form action=\"/auth/login\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
+    ; __append("\n\n      ")
+    ;  if (googleAuthEnabled) { 
+    ; __append("\n        <a class=\"auth-google-button\" href=\"")
+    ; __append(escapeFn( googleAuthUrl ))
+    ; __append("\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#4285F4\" d=\"M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z\"/><path fill=\"#34A853\" d=\"M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z\"/><path fill=\"#FBBC05\" d=\"M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z\"/><path fill=\"#EA4335\" d=\"M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z\"/></svg>\n          <span>Continue with Google</span>\n        </a>\n        <div class=\"auth-divider\"><span>or use email</span></div>\n      ")
+    ;  } 
+    ; __append("\n      \n      <form action=\"/auth/login\" method=\"POST\" class=\"auth-form\">\n        <input type=\"hidden\" name=\"next\" value=\"")
+    ; __append(escapeFn( typeof next !== 'undefined' ? next : '' ))
+    ; __append("\">\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.email') ))
     ; __append("</label>\n          <input type=\"email\" id=\"email\" name=\"email\" class=\"form-input\" autocomplete=\"email\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"password\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.password') ))
@@ -1574,7 +2524,9 @@ title = __locals.title,
     ; __append(escapeFn( t('auth.login') ))
     ; __append("</button>\n      </form>\n\n      <div class=\"auth-footer\">\n        <p>")
     ; __append(escapeFn( t('auth.noAccount') ))
-    ; __append(" <a href=\"/auth/register\">")
+    ; __append(" <a href=\"/auth/register")
+    ; __append(escapeFn( typeof next !== 'undefined' && next ? `?next=${encodeURIComponent(next)}` : '' ))
+    ; __append("\">")
     ; __append(escapeFn( t('auth.signUpNow') ))
     ; __append("</a></p>\n        <p><a href=\"/tools/t-shirt-mockup-generator\">Continue without an account →</a></p>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('../partials/footer') )
@@ -1608,6 +2560,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1657,17 +2613,32 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
     ; __append("</h1>\n      <p class=\"auth-intro\">Create an account for sign-in access. The public mockup editor can also be used without registering.</p>\n      \n      ")
-    ;  if (typeof error !== 'undefined') { 
+    ;  if ((typeof error !== 'undefined' && error) || oauthError) { 
     ; __append("\n        <div class=\"auth-error\">")
-    ; __append(escapeFn( error ))
+    ; __append(escapeFn( (typeof error !== 'undefined' && error) ? error : oauthError ))
     ; __append("</div>\n      ")
     ;  } 
-    ; __append("\n\n      <form action=\"/auth/register\" method=\"POST\" class=\"auth-form\">\n        <div class=\"form-group\">\n          <label for=\"name\" class=\"form-label\">")
+    ; __append("\n\n      ")
+    ;  if (googleAuthEnabled) { 
+    ; __append("\n        <a class=\"auth-google-button\" href=\"")
+    ; __append(escapeFn( googleAuthUrl ))
+    ; __append("\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#4285F4\" d=\"M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z\"/><path fill=\"#34A853\" d=\"M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z\"/><path fill=\"#FBBC05\" d=\"M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z\"/><path fill=\"#EA4335\" d=\"M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z\"/></svg>\n          <span>Continue with Google</span>\n        </a>\n        <div class=\"auth-divider\"><span>or create with email</span></div>\n      ")
+    ;  } 
+    ; __append("\n      \n      <form action=\"/auth/register\" method=\"POST\" class=\"auth-form\">\n        <input type=\"hidden\" name=\"next\" value=\"")
+    ; __append(escapeFn( typeof next !== 'undefined' ? next : '' ))
+    ; __append("\">\n        <div class=\"form-group\">\n          <label for=\"name\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.name') ))
     ; __append("</label>\n          <input type=\"text\" id=\"name\" name=\"name\" class=\"form-input\" autocomplete=\"name\" minlength=\"2\" maxlength=\"100\" required>\n        </div>\n\n        <div class=\"form-group\">\n          <label for=\"email\" class=\"form-label\">")
     ; __append(escapeFn( t('auth.email') ))
@@ -1677,7 +2648,9 @@ title = __locals.title,
     ; __append(escapeFn( t('auth.register') ))
     ; __append("</button>\n      </form>\n\n      <div class=\"auth-footer\">\n        <p>")
     ; __append(escapeFn( t('auth.hasAccount') ))
-    ; __append(" <a href=\"/auth/login\">")
+    ; __append(" <a href=\"/auth/login")
+    ; __append(escapeFn( typeof next !== 'undefined' && next ? `?next=${encodeURIComponent(next)}` : '' ))
+    ; __append("\">")
     ; __append(escapeFn( t('auth.signInNow') ))
     ; __append("</a></p>\n        <p class=\"auth-legal\">By creating an account, you agree to the <a href=\"/terms\">Terms</a> and acknowledge the <a href=\"/privacy\">Privacy overview</a>.</p>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('../partials/footer') )
@@ -1711,6 +2684,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1760,7 +2737,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<article class=\"blog-article\">\n  <header class=\"article-hero\">\n    <div class=\"container\">\n      <nav class=\"article-breadcrumbs\" aria-label=\"Breadcrumb\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/blog\">Blog</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( article.category ))
@@ -1770,7 +2754,7 @@ title = __locals.title,
     ; __append(escapeFn( article.title ))
     ; __append("</h1>\n          <p class=\"article-dek\">")
     ; __append(escapeFn( article.dek ))
-    ; __append("</p>\n          <div class=\"article-byline\">\n            <span>ClothingDesign Editorial</span>\n            <span><time datetime=\"")
+    ; __append("</p>\n          <div class=\"article-byline\">\n            <span>ClozDesign Editorial</span>\n            <span><time datetime=\"")
     ; __append(escapeFn( article.updatedAt ))
     ; __append("\">Updated ")
     ; __append(escapeFn( new Date(article.updatedAt + 'T00:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' }) ))
@@ -1780,7 +2764,7 @@ title = __locals.title,
     ; __append(escapeFn( article.image ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( article.imageAlt ))
-    ; __append("\">\n          <span class=\"article-image-caption\">ClothingDesign workflow reference</span>\n        </div>\n      </div>\n    </div>\n  </header>\n\n  <div class=\"container\">\n    ")
+    ; __append("\">\n          <span class=\"article-image-caption\">ClozDesign workflow reference</span>\n        </div>\n      </div>\n    </div>\n  </header>\n\n  <div class=\"container\">\n    ")
     ; __append( include('partials/share-panel', {
       shareSurface: 'article',
       shareTitle: article.title,
@@ -1805,7 +2789,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </ul>\n      </section>\n\n      ")
     ;  if (resources && resources.length) { 
-    ; __append("\n        <section class=\"article-resource-section\" id=\"free-resources\">\n          <span class=\"blog-card-category\">Continue in ClothingDesign</span>\n          <h2>Free tools and 3D models for this workflow</h2>\n          <div class=\"article-resource-grid\">\n            ")
+    ; __append("\n        <section class=\"article-resource-section\" id=\"free-resources\">\n          <span class=\"blog-card-category\">Continue in ClozDesign</span>\n          <h2>Free tools and 3D models for this workflow</h2>\n          <div class=\"article-resource-grid\">\n            ")
     ;  resources.forEach(function(resource) { 
     ; __append("\n              <a href=\"")
     ; __append(escapeFn( resource.href ))
@@ -1965,6 +2949,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2014,7 +3002,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
     ; __append(escapeFn( articles.length ))
@@ -2088,6 +3083,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2137,7 +3136,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header', { bodyClass: resourceType === '3d-models' ? 'category-catalog-page' : '' }) )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') { 
@@ -2387,6 +3393,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2436,7 +3446,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('design2d.pageTitle') ))
@@ -2524,6 +3541,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2573,7 +3594,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) )
     ; __append("\n")
     ; 
@@ -2760,6 +3788,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2809,7 +3841,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const previewModelFileUrl = model.file_url; 
@@ -2819,13 +3858,13 @@ title = __locals.title,
     ; __append(escapeFn( model.slug ))
     ; __append("\" class=\"btn btn-ghost btn-small\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M19 12H5M12 19l-7-7 7-7\"/>\n        </svg>\n        Back\n      </a>\n      <h1 class=\"designer-title\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
+    ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <span id=\"designerSaveStatus\" role=\"status\" aria-live=\"polite\"></span>\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-secondary btn-small\" id=\"designerSaveBtn\">Save Project</button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n        <model-viewer \n          class=\"model-viewer-natural\"\n          id=\"designerViewer\"\n          src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\" \n          alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n          camera-controls\n          auto-rotate\n          shadow-intensity=\"1.55\"\n          shadow-softness=\"0.52\"\n          exposure=\"0.66\"\n          environment-image=\"neutral\"\n          style=\"width: 100%; height: 100%;\"\n        ></model-viewer>\n      ")
+    ; __append("\"\n          camera-controls\n          auto-rotate\n          shadow-intensity=\"1.55\"\n          shadow-softness=\"0.52\"\n          exposure=\"0.66\"\n          environment-image=\"neutral\"\n          style=\"width: 100%; height: 100%;\"\n        ></model-viewer>\n        <div class=\"model-viewer-spinner\" id=\"designerViewerLoading\" role=\"status\" aria-live=\"polite\">\n          <i aria-hidden=\"true\"></i>\n          <span>Loading 3D</span>\n        </div>\n      ")
     ;  } else { 
     ; __append("\n        <div class=\"designer-placeholder\">\n          <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -2833,7 +3872,15 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n        </div>\n      ")
     ;  } 
-    ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    // Apply color to model (if material is accessible)\n    if (viewer && viewer.model) {\n      const color = btn.dataset.color;\n      // Note: Actual material manipulation requires model materials to be exposed\n      console.log('Apply color:', color, 'to', target);\n    }\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    console.log('Apply pattern:', btn.dataset.pattern);\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n  });\n}\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n  });\n}\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', () => {\n    if (viewer && viewer.toDataURL) {\n      const link = document.createElement('a');\n      link.download = '")
+    ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst designerViewerLoading = document.getElementById('designerViewerLoading');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\nconst designerSaveBtn = document.getElementById('designerSaveBtn');\nconst designerSaveStatus = document.getElementById('designerSaveStatus');\nconst designerProjectState = { id: '', name: '' };\nconst designerUserAuthenticated = ")
+    ; __append( JSON.stringify(Boolean(user)) )
+    ; __append(";\n\nif (viewer && designerViewerLoading) {\n  const finishViewerLoading = () => { designerViewerLoading.hidden = true; };\n  if (viewer.loaded) finishViewerLoading();\n  else {\n    viewer.addEventListener('load', finishViewerLoading, { once: true });\n    viewer.addEventListener('error', finishViewerLoading, { once: true });\n  }\n}\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    // Apply color to model (if material is accessible)\n    if (viewer && viewer.model) {\n      const color = btn.dataset.color;\n      // Note: Actual material manipulation requires model materials to be exposed\n      console.log('Apply color:', color, 'to', target);\n    }\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    console.log('Apply pattern:', btn.dataset.pattern);\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n  });\n}\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n  });\n}\n\nfunction getDesignerProjectData() {\n  return {\n    baseColor: document.querySelector('.color-btn[data-target=\"base\"].active')?.dataset.color || '#ffffff',\n    accentColor: document.querySelector('.color-btn[data-target=\"accent\"].active')?.dataset.color || '#ffffff',\n    pattern: document.querySelector('.pattern-btn[data-pattern].active')?.dataset.pattern || 'none',\n    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'neutral',\n    roughness: Number(document.getElementById('roughnessSlider').value),\n    metalness: Number(document.getElementById('metalnessSlider').value),\n    autoRotate: Boolean(autoRotateCheck?.checked)\n  };\n}\n\nasync function saveDesignerProject() {\n  if (!designerUserAuthenticated) {\n    window.UserProjects?.goToSignIn();\n    return;\n  }\n  if (!viewer || !window.UserProjects) return;\n  designerSaveBtn.disabled = true;\n  designerSaveStatus.textContent = 'Saving…';\n  try {\n    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);\n    const preview = await window.UserProjects.uploadImage(previewDataUrl, '")
+    ; __append(escapeFn( model.slug ))
+    ; __append("-preview.jpg', 'project-preview');\n    const project = await window.UserProjects.saveProject({\n      id: designerProjectState.id || undefined,\n      projectType: '3d',\n      name: designerProjectState.name || ")
+    ; __append( JSON.stringify(`${model.name || 'Garment'} Design`) )
+    ; __append(",\n      sourceId: ")
+    ; __append( JSON.stringify(String(model.id || model.slug || '')) )
+    ; __append(",\n      sourceUrl: window.location.pathname,\n      previewImageUrl: preview.url,\n      designData: getDesignerProjectData()\n    });\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    const url = new URL(window.location.href);\n    url.searchParams.set('project', project.id);\n    window.history.replaceState({}, '', url);\n    designerSaveStatus.textContent = 'Saved';\n  } catch (error) {\n    console.error(error);\n    if (error.status === 401) window.UserProjects.goToSignIn();\n    else designerSaveStatus.textContent = error.message || 'Save failed';\n  } finally {\n    designerSaveBtn.disabled = false;\n  }\n}\n\nasync function loadDesignerProject() {\n  if (!window.UserProjects) return;\n  try {\n    const project = await window.UserProjects.loadProjectFromUrl('3d');\n    if (!project) return;\n    const saved = project.designData || {};\n    const activate = (selector) => document.querySelector(selector)?.click();\n    activate(`.color-btn[data-target=\"base\"][data-color=\"${saved.baseColor}\"]`);\n    activate(`.color-btn[data-target=\"accent\"][data-color=\"${saved.accentColor}\"]`);\n    activate(`.pattern-btn[data-pattern=\"${saved.pattern}\"]`);\n    activate(`.pattern-btn[data-env=\"${saved.environment}\"]`);\n    document.getElementById('roughnessSlider').value = Number(saved.roughness) || 0;\n    document.getElementById('metalnessSlider').value = Number(saved.metalness) || 0;\n    autoRotateCheck.checked = saved.autoRotate !== false;\n    if (viewer) viewer.autoRotate = autoRotateCheck.checked;\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    designerSaveStatus.textContent = 'Saved project loaded';\n  } catch (error) {\n    console.error(error);\n    designerSaveStatus.textContent = error.status === 401 ? 'Sign in to open this project' : 'Project could not be loaded';\n  }\n}\n\ndesignerSaveBtn?.addEventListener('click', saveDesignerProject);\nif (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDesignerProject, { once: true });\nelse loadDesignerProject();\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', () => {\n    if (viewer && viewer.toDataURL) {\n      const link = document.createElement('a');\n      link.download = '")
     ; __append(escapeFn( model.slug ))
     ; __append("-design.png';\n      link.href = viewer.toDataURL('image/png');\n      link.click();\n    } else {\n      alert('Render download is not available for this model.');\n    }\n  });\n}\n</script>\n\n")
     ; __append( include('partials/footer') )
@@ -2867,6 +3914,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2916,7 +3967,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title || 'Error' ))
     ; __append("</title>\n  <style>\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      background: #f8fafc;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 100vh;\n      padding: 2rem;\n    }\n    .error-container {\n      text-align: center;\n      max-width: 480px;\n    }\n    .error-code {\n      font-size: 6rem;\n      font-weight: 700;\n      color: #1e293b;\n      line-height: 1;\n      margin-bottom: 1rem;\n    }\n    .error-title {\n      font-size: 1.5rem;\n      color: #334155;\n      margin-bottom: 0.75rem;\n    }\n    .error-message {\n      color: #64748b;\n      margin-bottom: 2rem;\n      line-height: 1.6;\n    }\n    .error-actions {\n      display: flex;\n      gap: 1rem;\n      justify-content: center;\n    }\n    .btn {\n      padding: 0.75rem 1.5rem;\n      border-radius: 8px;\n      text-decoration: none;\n      font-weight: 500;\n      transition: all 0.2s;\n    }\n    .btn-primary {\n      background: #2563eb;\n      color: white;\n    }\n    .btn-primary:hover {\n      background: #1d4ed8;\n    }\n    .btn-ghost {\n      background: white;\n      color: #64748b;\n      border: 1px solid #e2e8f0;\n    }\n    .btn-ghost:hover {\n      background: #f1f5f9;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"error-container\">\n    <div class=\"error-code\">500</div>\n    <h1 class=\"error-title\">Something went wrong</h1>\n    <p class=\"error-message\">We're sorry, but something went wrong on our end. Please try again later.</p>\n    <div class=\"error-actions\">\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n      <a href=\"javascript:history.back()\" class=\"btn btn-ghost\">Go Back</a>\n    </div>\n  </div>\n</body>\n</html>\n")
@@ -2949,6 +4007,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2998,7 +4060,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('gallery.pageTitle') ))
@@ -3036,6 +4105,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3085,7 +4158,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const content = homeContent || {}; 
@@ -3115,7 +4195,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </dl>\n      ")
     ;  } 
-    ; __append("\n    </div>\n\n    <figure class=\"home-hero-visual home-hero-reveal\">\n      <img src=\"/images/hero/apparel-design-hero-v3.webp\" alt=\"Oversized cotton T-shirt with an original screen-print design\" width=\"1120\" height=\"1400\" decoding=\"async\" fetchpriority=\"high\">\n    </figure>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClothingDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClothingDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-tshirt-cluster home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Popular T-shirt workflow</span>\n      <h2 class=\"home-copy-reveal\">Create a free T-shirt mockup from the right starting point</h2>\n      <p class=\"home-copy-reveal\">Choose the generator for a guided workflow, browse every T-shirt fit, or open the classic crew-neck model directly.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      <a class=\"generator-output-card home-reveal-card\" href=\"/tools/t-shirt-mockup-generator\" data-analytics-event=\"home_tshirt_generator_click\">\n        <h3 class=\"home-copy-reveal\">T-shirt mockup generator</h3>\n        <p class=\"home-copy-reveal\">Test garment colors, artwork placement, viewing angles, and product-image direction in one workflow.</p>\n        <strong>Start a T-shirt mockup →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/mockups/t-shirt-mockup\" data-analytics-event=\"home_tshirt_models_click\">\n        <h3 class=\"home-copy-reveal\">Free T-shirt 3D models</h3>\n        <p class=\"home-copy-reveal\">Compare classic, oversized, polo, and long-sleeve models before choosing a blank.</p>\n        <strong>Browse T-shirt models →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design\" data-analytics-event=\"home_tshirt_classic_model_click\">\n        <h3 class=\"home-copy-reveal\">Basic short-sleeve T-shirt</h3>\n        <p class=\"home-copy-reveal\">Open a familiar blank directly in the design studio for chest logos, front graphics, back prints, and POD listings.</p>\n        <strong>Customize this T-shirt →</strong>\n      </a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
+    ; __append("\n    </div>\n\n    <figure class=\"home-hero-visual home-hero-reveal\">\n      <img src=\"/images/hero/apparel-design-hero-v3.webp\" alt=\"Oversized cotton T-shirt with an original screen-print design\" width=\"1120\" height=\"1400\" decoding=\"async\" fetchpriority=\"high\">\n    </figure>\n  </div>\n</section>\n\n<section class=\"home-answer-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"home-answer-grid\">\n      <div>\n        <span class=\"generator-eyebrow home-copy-reveal\">Quick answer</span>\n        <h2 class=\"home-copy-reveal\">What is ClozDesign?</h2>\n      </div>\n      <p class=\"home-copy-reveal\">\n        ClozDesign is a free 3D clothing model library and browser-based apparel mockup workspace.\n        Choose a garment, preview artwork placement, test colors, and create clean product visuals before\n        samples, photoshoots, or product pages are ready.\n      </p>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-tshirt-cluster home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Popular T-shirt workflow</span>\n      <h2 class=\"home-copy-reveal\">Create a free T-shirt mockup from the right starting point</h2>\n      <p class=\"home-copy-reveal\">Choose the generator for a guided workflow, browse every T-shirt fit, or open the classic crew-neck model directly.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      <a class=\"generator-output-card home-reveal-card\" href=\"/tools/t-shirt-mockup-generator\" data-analytics-event=\"home_tshirt_generator_click\">\n        <h3 class=\"home-copy-reveal\">T-shirt mockup generator</h3>\n        <p class=\"home-copy-reveal\">Test garment colors, artwork placement, viewing angles, and product-image direction in one workflow.</p>\n        <strong>Start a T-shirt mockup →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/mockups/t-shirt-mockup\" data-analytics-event=\"home_tshirt_models_click\">\n        <h3 class=\"home-copy-reveal\">Free T-shirt 3D models</h3>\n        <p class=\"home-copy-reveal\">Compare classic, oversized, polo, and long-sleeve models before choosing a blank.</p>\n        <strong>Browse T-shirt models →</strong>\n      </a>\n      <a class=\"generator-output-card home-reveal-card\" href=\"/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design\" data-analytics-event=\"home_tshirt_classic_model_click\">\n        <h3 class=\"home-copy-reveal\">Basic short-sleeve T-shirt</h3>\n        <p class=\"home-copy-reveal\">Open a familiar blank directly in the design studio for chest logos, front graphics, back prints, and POD listings.</p>\n        <strong>Customize this T-shirt →</strong>\n      </a>\n    </div>\n  </div>\n</section>\n\n<section class=\"generator-section home-reveal\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Mockup workflow</span>\n      <h2 class=\"home-copy-reveal\">From free 3D garment model to finished mockup direction</h2>\n      <p class=\"home-copy-reveal\">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>\n    </div>\n    <div class=\"generator-steps\">\n      ")
     ;  workflow.forEach(function(step, index) { 
     ; __append("\n        <article class=\"generator-step ")
     ; __append(escapeFn( step.image_url ? 'generator-step-with-media' : '' ))
@@ -3195,7 +4275,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n    </div>\n  </div>\n</section>\n")
     ;  } 
-    ; __append("\n\n<section class=\"generator-section generator-section-muted home-reveal\" id=\"use-cases\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Use cases</span>\n      <h2 class=\"home-copy-reveal\">Built for apparel mockups, not generic 3D downloads</h2>\n      <p class=\"home-copy-reveal\">Use ClothingDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
+    ; __append("\n\n<section class=\"generator-section generator-section-muted home-reveal\" id=\"use-cases\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow home-copy-reveal\">Use cases</span>\n      <h2 class=\"home-copy-reveal\">Built for apparel mockups, not generic 3D downloads</h2>\n      <p class=\"home-copy-reveal\">Use ClozDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
     ;  useCases.forEach(function(item) { 
     ; __append("\n        <article class=\"generator-output-card ")
     ; __append(escapeFn( item.image_url ? 'generator-output-card-with-media' : '' ))
@@ -3259,6 +4339,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3308,7 +4392,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -3368,6 +4459,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3417,7 +4512,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero utility-page-hero-compact\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -3465,6 +4567,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3514,12 +4620,22 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
-    ; __append( include('partials/header', { bodyClass: 'category-catalog-page model-product-page' }) )
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append( include('partials/header', {
+  bodyClass: 'category-catalog-page model-product-page',
+  pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30']
+}) )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {}; 
     ; __append("\n")
-    ;  const previewModelFileUrl = model.file_url; 
+    ;  const previewModelFileUrl = model.preview_file_url || model.file_url; 
     ; __append("\n")
     ;  const howToSteps = detailContent.howToSteps || []; 
     ; __append("\n")
@@ -3537,26 +4653,48 @@ title = __locals.title,
     ; __append("\n")
     ;  const supportsOnModelMockup = Boolean(modelMockupProfile); 
     ; __append("\n")
+    ;  const tryOnModels = typeof aiTryOnModels !== 'undefined' && Array.isArray(aiTryOnModels) ? aiTryOnModels : []; 
+    ; __append("\n")
     ;  const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); 
     ; __append("\n")
     ;  const modelCategoryName = model.category_label || model.category || 'Apparel'; 
-    ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <div class=\"model-detail-grid\">\n      <!-- Left: 3D Viewer -->\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer")
+    ; __append("\n")
+    ;  const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; 
+    ; __append("\n")
+    ;  const heroDescription = String(model.description || 'A production-minded 3D garment base, ready for color, artwork, fabric, and fit exploration.').split(/(?<=[.!?])\s+/)[0]; 
+    ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <nav class=\"model-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/mockups\">3D Models</a><span>/</span>\n      <a href=\"/mockups/")
+    ; __append(escapeFn( model.category_slug || model.category ))
+    ; __append("\">")
+    ; __append(escapeFn( model.category_label || model.category ))
+    ; __append("</a><span>/</span>\n      <span>")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append("</span>\n    </nav>\n    <div class=\"model-detail-grid\">\n      <div class=\"model-info-section\" role=\"region\" aria-label=\"Model overview\">\n        <span class=\"model-product-kicker\">Digital atelier / ")
+    ; __append(escapeFn( modelCategoryName ))
+    ; __append("</span>\n        <h1 class=\"model-detail-title\">")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append("</h1>\n        <div class=\"model-description model-product-description\">\n          <h2>Description</h2>\n          <p>")
+    ; __append(escapeFn( heroDescription ))
+    ; __append("</p>\n        </div>\n        <div class=\"model-detail-meta\" aria-label=\"Model capabilities\">\n          <span class=\"tag tag-free\">Free beta</span>\n          <span class=\"meta-item\">Editable surface</span>\n          ")
+    ;  if (supportsOnModelMockup) { 
+    ; __append("<span class=\"meta-item\">AI try-on coming soon</span>")
+    ;  } 
+    ; __append("\n        </div>\n        <div class=\"model-actions model-action-grid\">\n          <button class=\"detail-action detail-action-primary\" id=\"designNowBtn\" type=\"button\">\n            <span>Customize this model</span>\n          </button>\n          <span class=\"ai-coming-soon-control\" tabindex=\"0\" aria-describedby=\"aiTryOnComingSoon\">\n            <button class=\"detail-action\" id=\"aiTryOnBtn\" type=\"button\" disabled aria-disabled=\"true\">\n              <span>AI try-on</span>\n            </button>\n            <span class=\"ai-coming-soon-tooltip\" id=\"aiTryOnComingSoon\" role=\"tooltip\">Coming soon</span>\n          </span>\n          ")
+    ;  if (previewModelFileUrl) { 
+    ; __append("\n            <button class=\"detail-action\" id=\"renderCurrentModelBtn\" type=\"button\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"1\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"m5 17 4-4 3 3 2-2 5 3\"/></svg>\n              <span>Render current view</span>\n            </button>\n          ")
+    ;  } 
+    ; __append("\n          <button class=\"detail-action\" id=\"customizationInquiryBtn\" type=\"button\">\n            <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><path d=\"M4 20V8l4-3v4l5-4v4l7-4v15H4Z\"/><path d=\"M8 14h2m3 0h2m3 0h2\"/></svg>\n            <span>Production customization</span>\n          </button>\n        </div>\n        <p class=\"model-action-note\">Free during public beta · no payment details required</p>\n        <div class=\"model-detail-share-section model-hero-share\" data-model-share-mount aria-label=\"Share this 3D model\"></div>\n        <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n      </div>\n\n      <div class=\"model-viewer-section\">\n        <div class=\"viewer-stage-label\"><span>Live garment</span><i></i><span>Drag to rotate</span></div>\n        <div class=\"model-3d-viewer")
     ; __append(escapeFn( previewModelFileUrl ? ' is-loading' : '' ))
     ; __append("\" id=\"model3dViewer\" aria-busy=\"")
     ; __append(escapeFn( previewModelFileUrl ? 'true' : 'false' ))
     ; __append("\">\n          ")
     ;  if (previewModelFileUrl) { 
-    ; __append("\n            <img\n              class=\"model-detail-poster\"\n              src=\"")
-    ; __append(escapeFn( model.image_url ))
-    ; __append("\"\n              alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append(" 3D apparel mockup preview\"\n              width=\"1200\"\n              height=\"1500\"\n              fetchpriority=\"high\"\n              decoding=\"async\"\n            >\n            <model-viewer \n              class=\"model-viewer-natural\"\n              data-model-src=\"")
+    ; __append("\n            <model-viewer \n              class=\"model-viewer-natural\"\n              src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
     ; __append("\"\n              poster=\"")
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              style=\"width: 100%; height: 100%;\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary model-viewer-load\" id=\"modelViewerLoad\" hidden>\n              <span>Retry interactive 3D</span>\n            </button>\n            <p class=\"model-viewer-load-status\" id=\"modelViewerLoadStatus\" aria-live=\"polite\">Loading interactive 3D…</p>\n          ")
+    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              disable-zoom\n              camera-orbit=\"-48deg 72deg 142%\"\n              camera-target=\"auto auto auto\"\n              field-of-view=\"28deg\"\n              shadow-intensity=\"0\"\n              shadow-softness=\"1\"\n              exposure=\"0.72\"\n              environment-image=\"/environments/commercial-apparel-studio-v4-balanced-20260829.hdr\"\n              tone-mapping=\"commerce\"\n              data-catalog-render-standard=\"main\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n            <span class=\"model-contact-shadow\" aria-hidden=\"true\"></span>\n            <div class=\"model-viewer-spinner\" role=\"status\" aria-live=\"polite\">\n              <i aria-hidden=\"true\"></i>\n              <span>Loading 3D</span>\n            </div>\n          ")
     ;  } else { 
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -3564,107 +4702,85 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  } 
-    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\">\n          <button class=\"viewer-btn\" id=\"rotateBtn\" type=\"button\" aria-pressed=\"false\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8\"/>\n              <path d=\"M21 3v5h-5\"/>\n            </svg>\n            Auto Rotate\n          </button>\n          <button class=\"viewer-btn\" id=\"fabricMotionBtn\" type=\"button\" aria-pressed=\"false\" hidden>\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M4 8c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0S21.6 5.6 23 7\"/>\n              <path d=\"M1 13c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0 4.4-2.4 6.6 0\"/>\n              <path d=\"M4 18c2.2-2.4 4.4-2.4 6.6 0s4.4 2.4 6.6 0\"/>\n            </svg>\n            Fabric Motion\n          </button>\n          <div class=\"model-view-angle-group\" role=\"group\" aria-label=\"Model viewing angle\">\n            <button class=\"viewer-btn model-view-angle active\" type=\"button\" data-orbit=\"0deg\" aria-pressed=\"true\">Front</button>\n            <button class=\"viewer-btn model-view-angle\" type=\"button\" data-orbit=\"90deg\" aria-pressed=\"false\">Side</button>\n            <button class=\"viewer-btn model-view-angle\" type=\"button\" data-orbit=\"180deg\" aria-pressed=\"false\">Back</button>\n          </div>\n          <button class=\"viewer-btn\" id=\"fullscreenBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3\"/>\n            </svg>\n            Fullscreen\n          </button>\n        </div>\n      </div>\n\n      <!-- Right: Model Info -->\n      <div class=\"model-info-section\" role=\"region\" aria-label=\"Model details and specifications\" tabindex=\"0\">\n        <div class=\"model-breadcrumb\">\n          <a href=\"/mockups\">3D Models</a>\n          <span>/</span>\n          <a href=\"/mockups/")
-    ; __append(escapeFn( model.category_slug || model.category ))
-    ; __append("\">")
-    ; __append(escapeFn( model.category_label || model.category ))
-    ; __append("</a>\n          <span>/</span>\n          <span>")
-    ; __append(escapeFn( model.name ))
-    ; __append("</span>\n        </div>\n        \n        <span class=\"model-product-kicker\">")
-    ; __append(escapeFn( modelCategoryName ))
-    ; __append(" 3D model</span>\n        <h1 class=\"model-detail-title\">")
-    ; __append(escapeFn( modelDisplayName ))
-    ; __append("</h1>\n        \n        <div class=\"model-detail-meta\">\n          <span class=\"tag tag-free\">Free</span>\n          ")
-    ;  if (model.poly_count) { 
-    ; __append("\n            <span class=\"meta-item\">")
-    ; __append(escapeFn( model.poly_count ))
-    ; __append("</span>\n          ")
-    ;  } 
-    ; __append("\n        </div>\n\n        <div class=\"model-actions\">\n          <button class=\"btn btn-primary btn-large\" id=\"designNowBtn\">\n            <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n              <path d=\"M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z\"/>\n            </svg>\n            Customize this model\n          </button>\n          <div class=\"model-secondary-actions\">\n          ")
-    ;  if (previewModelFileUrl) { 
-    ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"downloadRenderBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n              </svg>\n              Export transparent PNG\n            </button>\n          ")
-    ;  } 
-    ; __append("\n          ")
+    ; __append("\n        </div>\n        <div class=\"model-viewer-controls\" aria-label=\"3D garment controls\">\n          <div class=\"viewer-gesture\" aria-hidden=\"true\">\n            <span>Drag</span>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M8.7 11.2V7.6a1.35 1.35 0 0 1 2.7 0v2.7-4.15a1.35 1.35 0 0 1 2.7 0v4.15-3.1a1.35 1.35 0 0 1 2.7 0v3.55-1.9a1.35 1.35 0 0 1 2.7 0v5.3c0 4.25-2.5 6.35-6.1 6.35h-.8c-2.5 0-4.2-1.2-5.55-3.05l-2.3-3.1a1.42 1.42 0 0 1 2.2-1.8l1.75 1.75Z\"/></svg>\n          </div>\n          <button class=\"viewer-utility-control\" id=\"rotateBtn\" type=\"button\" aria-pressed=\"false\">\n            <span>Rotate</span>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M19.5 8.2A8 8 0 1 0 20 15\"/><path d=\"M19.5 3.8v4.4h-4.4\"/></svg>\n          </button>\n          <button class=\"viewer-utility-control\" id=\"zoomBtn\" type=\"button\" aria-pressed=\"false\">\n            <span>Zoom</span>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6.5\"/><path d=\"m15.5 15.5 5 5\"/></svg>\n          </button>\n          <button class=\"viewer-utility-control\" id=\"backgroundBtn\" type=\"button\" aria-expanded=\"false\" aria-controls=\"heroBackgroundPopover\">\n            <span>Background</span>\n            <i class=\"background-control-preview\" aria-hidden=\"true\"></i>\n          </button>\n        </div>\n        <div class=\"hero-background-popover\" id=\"heroBackgroundPopover\" role=\"dialog\" aria-label=\"Set hero background\" hidden>\n          <div class=\"hero-background-heading\"><span>Scene background</span><strong>Color / Gradient</strong></div>\n          <div class=\"hero-background-presets\" aria-label=\"Background presets\">\n            <button type=\"button\" class=\"active\" data-hero-background=\"#f5f3ef\" style=\"--swatch:#f5f3ef\" aria-label=\"Ivory\"></button>\n            <button type=\"button\" data-hero-background=\"#ffffff\" style=\"--swatch:#ffffff\" aria-label=\"White\"></button>\n            <button type=\"button\" data-hero-background=\"#e6ddd0\" style=\"--swatch:#e6ddd0\" aria-label=\"Warm sand\"></button>\n            <button type=\"button\" data-hero-background=\"#dfe7e8\" style=\"--swatch:#dfe7e8\" aria-label=\"Cool mist\"></button>\n            <button type=\"button\" data-hero-background=\"linear-gradient(135deg, #f8eee1 0%, #dbc4ae 100%)\" style=\"--swatch:linear-gradient(135deg,#f8eee1,#dbc4ae)\" aria-label=\"Champagne gradient\"></button>\n            <button type=\"button\" data-hero-background=\"linear-gradient(135deg, #eef3f6 0%, #ccd5df 100%)\" style=\"--swatch:linear-gradient(135deg,#eef3f6,#ccd5df)\" aria-label=\"Sky gradient\"></button>\n            <button type=\"button\" data-hero-background=\"linear-gradient(135deg, #f6e5e0 0%, #dfc6bc 100%)\" style=\"--swatch:linear-gradient(135deg,#f6e5e0,#dfc6bc)\" aria-label=\"Blush gradient\"></button>\n            <button type=\"button\" data-hero-background=\"linear-gradient(135deg, #edf1e7 0%, #cbd7c5 100%)\" style=\"--swatch:linear-gradient(135deg,#edf1e7,#cbd7c5)\" aria-label=\"Sage gradient\"></button>\n          </div>\n          <div class=\"hero-gradient-editor\">\n            <div class=\"hero-gradient-colors\">\n              <label><span>From</span><input id=\"heroGradientFrom\" type=\"color\" value=\"#f8eee1\"></label>\n              <label><span>To</span><input id=\"heroGradientTo\" type=\"color\" value=\"#dbc4ae\"></label>\n            </div>\n            <label class=\"hero-gradient-angle\"><span>Angle <output id=\"heroGradientAngleValue\">135°</output></span><input id=\"heroGradientAngle\" type=\"range\" min=\"0\" max=\"360\" step=\"15\" value=\"135\"></label>\n            <button type=\"button\" id=\"applyHeroGradient\">Apply custom gradient</button>\n          </div>\n        </div>\n        <button class=\"viewer-internal-control\" id=\"fabricMotionBtn\" type=\"button\" aria-pressed=\"false\" aria-hidden=\"true\" tabindex=\"-1\" hidden>Fabric Motion</button>\n      </div>\n    </div>\n    ")
     ;  if (supportsOnModelMockup) { 
-    ; __append("\n            <button type=\"button\" class=\"btn btn-secondary btn-large\" id=\"modelMockupBtn\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5\"/>\n                <path d=\"M9 4.5a3.7 3.7 0 0 0 6 0M10 11h4M10 14h4\"/>\n              </svg>\n              Preview on a model\n            </button>\n          ")
+    ; __append("<button type=\"button\" id=\"modelMockupBtn\" hidden aria-hidden=\"true\" tabindex=\"-1\">Open model preview</button>")
     ;  } 
-    ; __append("\n          </div>\n          <button type=\"button\" class=\"model-consult-link\" id=\"customizationInquiryBtn\">\n            Need a custom garment or production quantity? <strong>Request customization →</strong>\n          </button>\n          <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n          <p class=\"model-action-note\">Free during public beta · PNG export · no payment details required</p>\n        </div>\n\n        <div class=\"model-description model-product-description\">\n          <h2>Description</h2>\n          <p>")
-    ; __append(escapeFn( model.description || 'No description available.' ))
-    ; __append("</p>\n        </div>\n\n        ")
+    ; __append("\n  </div>\n</section>\n\n<section class=\"experience-flow\" aria-labelledby=\"experienceFlowTitle\">\n  <div class=\"container\">\n    <h2 id=\"experienceFlowTitle\">From a blank garment to a worn campaign</h2>\n    <div class=\"experience-flow-steps\">\n      <article>\n        <span>01</span>\n        <svg class=\"flow-icon flow-icon-edit\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M13.5 5.5 18.5.5l5 5-5 5M13.5 5.5 3 16l-1.5 6.5L8 21l10.5-10.5M12 3H3a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9\"/></svg>\n        <h3>Customize</h3><p>Edit every surface. Add materials, artwork, and details.</p>\n      </article>\n      <article>\n        <span>02</span>\n        <svg class=\"flow-icon flow-icon-person\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"6.5\" r=\"4.5\"/><path d=\"M3 22c.7-5.2 3.7-8 9-8s8.3 2.8 9 8H3Z\"/></svg>\n        <h3>Try on</h3><p>See your design on real models with AI try-on.</p>\n      </article>\n      <article>\n        <span>03</span>\n        <svg class=\"flow-icon flow-icon-eye\" viewBox=\"0 0 28 20\" aria-hidden=\"true\"><path d=\"M1 10S5.6 2.5 14 2.5 27 10 27 10s-4.6 7.5-13 7.5S1 10 1 10Z\"/><circle cx=\"14\" cy=\"10\" r=\"3.5\"/></svg>\n        <h3>Review</h3><p>Refine the look, fit, and story before production.</p>\n      </article>\n      <article>\n        <span>04</span>\n        <svg class=\"flow-icon flow-icon-factory\" viewBox=\"0 0 26 24\" aria-hidden=\"true\"><path d=\"M1 23V8l7 5V8l7 5V2h5v11l5-3v13H1Z\"/><path d=\"M6 18h3M13 18h3M20 18h2\"/></svg>\n        <h3>Produce</h3><p>Connect with our team to bring it to life.</p>\n      </article>\n    </div>\n  </div>\n</section>\n\n<section class=\"detail-customize-feature\" aria-labelledby=\"customizeFeatureTitle\">\n  <div class=\"container detail-feature-grid\">\n    <div class=\"detail-feature-copy\">\n      <h2 id=\"customizeFeatureTitle\">Every surface<br>is a decision</h2>\n      <p>Use our 3D studio to customize every detail of the garment. Fabrics, colors, prints, type, and trims—your vision, precisely where you want it.</p>\n      <button class=\"feature-cta\" id=\"customizeFeatureBtn\" type=\"button\">Open 3D studio</button>\n    </div>\n    <div class=\"studio-concept-card\" aria-label=\"3D design studio preview\">\n      <div class=\"studio-concept-toolbar\"><span>← Back to library</span><strong>")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append("</strong><span><i></i> All changes saved</span></div>\n      <div class=\"studio-concept-body\">\n        <div class=\"studio-tool-list\"><span class=\"active\">Select</span><span>Surface</span><span>Material</span><span>Color</span><span>Artwork</span><span>Text</span><span>Details</span><span>Layers</span><span>Export</span></div>\n        <div class=\"studio-garment-preview\"><img src=\"")
+    ; __append(escapeFn( model.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( modelDisplayName ))
+    ; __append(" design preview\" loading=\"lazy\"><span class=\"studio-selection-frame\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></span></div>\n        <div class=\"studio-property-panel\">\n          <span>Surface</span><strong>Front panel</strong>\n          <span>Material</span><strong>Linen blend</strong>\n          <div class=\"studio-material-row\"><i></i><i></i><i></i><i></i><i></i></div>\n          <span>Color</span><div class=\"studio-color-row\"><i></i><i></i><i></i><i></i><i></i><i></i></div>\n          <span>Artwork</span><strong>Brush stroke 02.png</strong>\n          <span>Type</span><strong>ClozDesign Atelier</strong>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ;  if (supportsOnModelMockup && tryOnModels.length) { 
+    ; __append("\n<section class=\"ai-tryon-feature\" aria-labelledby=\"aiTryOnFeatureTitle\">\n  <div class=\"container ai-tryon-feature-grid\">\n    <div class=\"ai-tryon-copy\">\n      <h2 id=\"aiTryOnFeatureTitle\">See the design<br>on someone</h2>\n      <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>\n      <span class=\"ai-fitted-badge\"><i></i> AI fitted</span>\n      <span class=\"ai-coming-soon-control ai-feature-coming-soon\" tabindex=\"0\" aria-describedby=\"aiFeatureComingSoon\">\n        <button class=\"feature-cta feature-cta-light\" type=\"button\" disabled aria-disabled=\"true\">Choose a model</button>\n        <span class=\"ai-coming-soon-tooltip\" id=\"aiFeatureComingSoon\" role=\"tooltip\">Coming soon</span>\n      </span>\n    </div>\n    <div class=\"ai-model-panel\">\n      <div class=\"ai-model-tabs\"><span class=\"active\">Models</span><span>Poses</span><span>Scenes</span></div>\n      <p>Select a model</p>\n      <div class=\"ai-avatar-grid\">\n        ")
+    ;  tryOnModels.slice(0, 6).forEach(function(tryOnModel, index) { 
+    ; __append("\n          ")
+    ;  const displayModelName = String(tryOnModel.title || 'Model').replace(/^Model\s+\d+\s+/i, '').split(/\s+(?:Female|Male|Front|Walking|From3d)/i)[0]; 
+    ; __append("\n          <button type=\"button\" class=\"")
+    ; __append(escapeFn( index === 0 ? 'active' : '' ))
+    ; __append("\" disabled aria-disabled=\"true\"><img src=\"")
+    ; __append(escapeFn( tryOnModel.base_image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( displayModelName ))
+    ; __append("\" loading=\"lazy\"><span>")
+    ; __append(escapeFn( displayModelName ))
+    ; __append("</span></button>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n      <dl><div><dt>Height</dt><dd>178 cm</dd></div><div><dt>Size</dt><dd>S</dd></div><div><dt>Body type</dt><dd>Athletic</dd></div></dl>\n    </div>\n    <div class=\"ai-model-stage\">\n      <img id=\"aiFeaturePreview\" src=\"")
+    ; __append(escapeFn( tryOnModels[0].base_image_url ))
+    ; __append("\" alt=\"AI try-on model preview\" loading=\"lazy\">\n      <div class=\"ai-stage-thumbnails\">\n        ")
+    ;  tryOnModels.slice(0, 4).forEach(function(tryOnModel, index) { 
+    ; __append("<button type=\"button\" class=\"")
+    ; __append(escapeFn( index === 0 ? 'active' : '' ))
+    ; __append("\" disabled aria-disabled=\"true\"><img src=\"")
+    ; __append(escapeFn( tryOnModel.base_image_url ))
+    ; __append("\" alt=\"View ")
+    ; __append(escapeFn( index + 1 ))
+    ; __append("\" loading=\"lazy\"></button>")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </div>\n</section>\n")
+    ;  } 
+    ; __append("\n\n<section class=\"production-feature\" aria-labelledby=\"productionFeatureTitle\">\n  <div class=\"container production-feature-grid\">\n    <div class=\"production-title-wrap\"><span class=\"production-icon\" aria-hidden=\"true\">⌁</span><h2 id=\"productionFeatureTitle\">When the design is ready,<br>talk to people who can make it</h2></div>\n    <div class=\"production-copy\"><p>Our production experts will review your design and recommend the best materials, techniques, and factories for your goals.</p><button class=\"feature-cta production-cta\" id=\"productionFeatureBtn\" type=\"button\">Request custom production</button></div>\n    <div class=\"production-promises\"><span>Your design file and notes will be attached automatically.</span><span>We’ll reply within 3 business days.</span><span>Confidential, professional, and global.</span></div>\n  </div>\n</section>\n\n<section class=\"model-technical-section\" aria-labelledby=\"modelTechnicalTitle\">\n  <div class=\"container model-technical-grid\">\n    <div>\n      <span class=\"detail-eyebrow\">Garment details</span>\n      <h2 id=\"modelTechnicalTitle\">Built to inspect.<br>Ready to render.</h2>\n      ")
     ;  if (detailContent.searchIntentSummary) { 
-    ; __append("\n          <div class=\"model-description model-search-summary\">\n            <h2>Mockup workflow</h2>\n            <p>")
+    ; __append("<p>")
     ; __append(escapeFn( detailContent.searchIntentSummary ))
-    ; __append("</p>\n          </div>\n        ")
+    ; __append("</p>")
     ;  } 
-    ; __append("\n\n        <div class=\"model-specs\">\n          <h2>Specifications</h2>\n          <div class=\"specs-grid\">\n            ")
+    ; __append("\n    </div>\n    <div class=\"model-specs\">\n      <h3>Technical specifications</h3>\n      <div class=\"specs-grid\">\n        ")
     ;  (detailContent.formatNotes || []).forEach(function(note) { 
-    ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">")
+    ; __append("<div class=\"spec-item\"><span class=\"spec-label\">")
     ; __append(escapeFn( note.label ))
-    ; __append("</span>\n                <span class=\"spec-value\">")
+    ; __append("</span><span class=\"spec-value\">")
     ; __append(escapeFn( note.value ))
-    ; __append("</span>\n              </div>\n            ")
+    ; __append("</span></div>")
     ;  }); 
-    ; __append("\n            ")
+    ; __append("\n        ")
+    ;  if (model.poly_count) { 
+    ; __append("<div class=\"spec-item\"><span class=\"spec-label\">Geometry</span><span class=\"spec-value\">")
+    ; __append(escapeFn( model.poly_count ))
+    ; __append("</span></div>")
+    ;  } 
+    ; __append("\n        ")
     ;  if (model.file_size) { 
-    ; __append("\n              <div class=\"spec-item\">\n                <span class=\"spec-label\">File Size</span>\n                <span class=\"spec-value\">")
+    ; __append("<div class=\"spec-item\"><span class=\"spec-label\">File size</span><span class=\"spec-value\">")
     ; __append(escapeFn( model.file_size ))
-    ; __append("</span>\n              </div>\n            ")
+    ; __append("</span></div>")
     ;  } 
-    ; __append("\n          </div>\n        </div>\n\n        ")
-    ;  if (detailContent.tagList && detailContent.tagList.length) { 
-    ; __append("\n          <div class=\"model-keyword-list\" aria-label=\"Related model topics\">\n            ")
-    ;  detailContent.tagList.forEach(function(tag) { 
-    ; __append("\n              <span>")
-    ; __append(escapeFn( tag ))
-    ; __append("</span>\n            ")
-    ;  }); 
-    ; __append("\n          </div>\n        ")
-    ;  } 
-    ; __append("\n\n        ")
+    ; __append("\n      </div>\n      ")
     ;  if (relatedLinks.length) { 
-    ; __append("\n          <nav class=\"model-intent-links\" aria-label=\"Related 3D clothing resources\">\n            ")
+    ; __append("<nav class=\"model-intent-links\" aria-label=\"Related 3D clothing resources\">")
     ;  relatedLinks.forEach(function(link) { 
-    ; __append("\n              <a href=\"")
+    ; __append("<a href=\"")
     ; __append(escapeFn( link.href ))
     ; __append("\">")
     ; __append(escapeFn( link.label ))
-    ; __append("</a>\n            ")
+    ; __append("</a>")
     ;  }); 
-    ; __append("\n          </nav>\n        ")
+    ; __append("</nav>")
     ;  } 
-    ; __append("\n\n      </div>\n    </div>\n  </div>\n</section>\n\n<!-- Searchable model assets -->\n<section class=\"model-showcase-section\">\n  <div class=\"container\">\n    <h2 class=\"section-title\">")
-    ; __append(escapeFn( model.name ))
-    ; __append(" model views</h2>\n    <p class=\"section-subtitle\">Inspect the garment preview, UV artwork layout, and side silhouette before customizing the model.</p>\n    \n    <div class=\"showcase-grid\">\n      ")
-    ;  if (model.image_url) { 
-    ; __append("\n        <div class=\"showcase-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
-    ; __append(escapeFn( model.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append(" front 3D apparel mockup preview\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">Garment preview</span>\n        </div>\n      ")
-    ;  } 
-    ; __append("\n      ")
-    ;  if (model.texture_url) { 
-    ; __append("\n        <div class=\"showcase-item showcase-texture-item\">\n          <div class=\"showcase-image\">\n            <img src=\"")
-    ; __append(escapeFn( model.texture_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append(" UV texture and artwork placement layout\" loading=\"lazy\">\n          </div>\n          <span class=\"showcase-label\">UV artwork layout</span>\n        </div>\n      ")
-    ;  } 
-    ; __append("\n      <div class=\"showcase-item\">\n          <div class=\"showcase-image model-side-stage\">\n            ")
-    ;  if (previewModelFileUrl) { 
-    ; __append("\n              <img class=\"model-side-poster\" src=\"")
-    ; __append(escapeFn( model.image_url ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append(" side-view loading preview\" loading=\"lazy\" decoding=\"async\">\n              <model-viewer\n                class=\"model-viewer-natural showcase-side-viewer\"\n                data-model-src=\"")
-    ; __append(escapeFn( previewModelFileUrl ))
-    ; __append("\"\n                poster=\"")
-    ; __append(escapeFn( model.image_url ))
-    ; __append("\"\n                alt=\"")
-    ; __append(escapeFn( model.name ))
-    ; __append(" side silhouette 3D view\"\n              loading=\"lazy\"\n              reveal=\"interaction\"\n              camera-controls\n              camera-orbit=\"90deg 75deg 112%\"\n              shadow-intensity=\"1.2\"\n                exposure=\"0.72\"\n                environment-image=\"neutral\"\n                hidden\n              ></model-viewer>\n          ")
-    ;  } 
-    ; __append("\n        </div>\n        <span class=\"showcase-label\">Side silhouette</span>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n")
     ;  if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { 
     ; __append("\n<section class=\"model-seo-section generator-section\">\n  <div class=\"container\">\n    ")
     ;  if (howToSteps.length) { 
@@ -3768,13 +4884,30 @@ title = __locals.title,
     ;  if (detailCta.title || detailCta.text) { 
     ; __append("\n<section class=\"model-detail-cta\">\n  <div class=\"container\">\n    <div class=\"pattern-design-cta-inner\">\n      <div>\n        <span class=\"generator-eyebrow\">Design 3D</span>\n        <h2>Ready to make it yours?</h2>\n        <p>Customize this model, test your ideas, and create a review-ready mockup.</p>\n      </div>\n      <button class=\"btn btn-primary btn-large\" id=\"designCtaBtn\">Start Designing</button>\n    </div>\n  </div>\n</section>\n")
     ;  } 
+    ; __append("\n\n")
+    ;  if (!user) { 
+    ; __append("\n<div class=\"model-login-modal\" id=\"modelLoginModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modelLoginTitle\" aria-hidden=\"true\" hidden>\n  <button class=\"model-login-backdrop\" id=\"modelLoginBackdrop\" type=\"button\" aria-label=\"Close sign in\"></button>\n  <section class=\"model-login-panel\" aria-describedby=\"modelLoginDescription\">\n    <button class=\"model-login-close\" id=\"modelLoginClose\" type=\"button\" aria-label=\"Close sign in\">\n      <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>\n    </button>\n    <span class=\"model-login-kicker\">ClozDesign account</span>\n    <h2 id=\"modelLoginTitle\">Sign in to customize</h2>\n    <p id=\"modelLoginDescription\">Save this garment as a project and continue editing it from your Workbench.</p>\n    ")
+    ;  if (googleAuthEnabled) { 
+    ; __append("\n      <a class=\"model-google-login\" id=\"modelGoogleLogin\" href=\"/auth/google?next=")
+    ; __append(escapeFn( encodeURIComponent(modelDetailPath) ))
+    ; __append("\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#4285F4\" d=\"M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z\"/><path fill=\"#34A853\" d=\"M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z\"/><path fill=\"#FBBC05\" d=\"M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z\"/><path fill=\"#EA4335\" d=\"M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z\"/></svg>\n        <span>Continue with Google</span>\n      </a>\n      <div class=\"model-login-divider\"><span>or use email</span></div>\n    ")
+    ;  } 
+    ; __append("\n    <form class=\"model-login-form\" id=\"modelLoginForm\" action=\"/auth/login\" method=\"post\">\n      <input type=\"hidden\" name=\"next\" value=\"")
+    ; __append(escapeFn( modelDetailPath ))
+    ; __append("\">\n      <label>\n        <span>Email</span>\n        <input id=\"modelLoginEmail\" type=\"email\" name=\"email\" autocomplete=\"email\" inputmode=\"email\" required placeholder=\"you@example.com\">\n      </label>\n      <label>\n        <span>Password</span>\n        <input type=\"password\" name=\"password\" autocomplete=\"current-password\" required placeholder=\"Enter your password\">\n      </label>\n      <p class=\"model-login-error\" id=\"modelLoginError\" role=\"alert\" aria-live=\"polite\" hidden></p>\n      <button class=\"model-login-submit\" id=\"modelLoginSubmit\" type=\"submit\"><span>Sign in and customize</span></button>\n    </form>\n    <p class=\"model-login-register\">New to ClozDesign? <a href=\"/auth/register?next=")
+    ; __append(escapeFn( encodeURIComponent(modelDetailPath) ))
+    ; __append("\">Create an account</a></p>\n  </section>\n</div>\n")
+    ;  } 
     ; __append("\n\n<!-- Customization Inquiry Modal -->\n<div class=\"customization-modal\" id=\"customizationInquiryModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"customizationInquiryTitle\" aria-hidden=\"true\">\n  <button class=\"customization-modal-overlay\" id=\"customizationInquiryOverlay\" type=\"button\" aria-label=\"Close customization request\"></button>\n  <div class=\"customization-modal-content\">\n    <header class=\"customization-modal-header\">\n      <div>\n        <span>Production inquiry</span>\n        <h2 id=\"customizationInquiryTitle\">Request customization</h2>\n        <p>Tell us how to reach you and the quantity you need. Your current design will be attached automatically.</p>\n      </div>\n      <button class=\"customization-modal-close\" id=\"customizationInquiryClose\" type=\"button\" aria-label=\"Close customization request\">\n        <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n          <path d=\"M18 6L6 18M6 6l12 12\"/>\n        </svg>\n      </button>\n    </header>\n\n    <div class=\"customization-modal-body\">\n      <form class=\"customization-form\" id=\"customizationInquiryForm\">\n        <div class=\"customization-form-grid\">\n          <label class=\"customization-field\">\n            <span>Contact name <b>*</b></span>\n            <input type=\"text\" name=\"name\" autocomplete=\"name\" maxlength=\"100\" required placeholder=\"Your name\">\n          </label>\n          <label class=\"customization-field\">\n            <span>Email <b>*</b></span>\n            <input type=\"email\" name=\"email\" autocomplete=\"email\" maxlength=\"180\" required placeholder=\"you@example.com\">\n          </label>\n          <label class=\"customization-field customization-field-quantity\">\n            <span>Customization quantity <b>*</b></span>\n            <input type=\"number\" name=\"quantity\" min=\"1\" max=\"1000000\" step=\"1\" inputmode=\"numeric\" required placeholder=\"e.g. 500\">\n          </label>\n          <label class=\"customization-field customization-field-wide\">\n            <span>Requirements</span>\n            <textarea name=\"notes\" maxlength=\"3000\" rows=\"4\" placeholder=\"Tell us about fabric, colors, sizes, delivery market, timeline, or other production requirements.\"></textarea>\n          </label>\n          <label class=\"customization-honeypot\" aria-hidden=\"true\">\n            <span>Website</span>\n            <input type=\"text\" name=\"website\" tabindex=\"-1\" autocomplete=\"off\">\n          </label>\n        </div>\n\n        <section class=\"customization-attachments\" aria-labelledby=\"customizationAttachmentsTitle\">\n          <div class=\"customization-section-heading\">\n            <div>\n              <span>Design attachments</span>\n              <h3 id=\"customizationAttachmentsTitle\">Current 3D and 2D design</h3>\n            </div>\n            <button type=\"button\" class=\"customization-refresh\" id=\"customizationRefreshSnapshots\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M20 11a8 8 0 10-2.34 5.66M20 4v7h-7\"/>\n              </svg>\n              Refresh\n            </button>\n          </div>\n          <div class=\"customization-preview-grid\">\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview3d\" alt=\"Current 3D clothing design screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview3dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Rendering 3D view…</span>\n                </div>\n              </div>\n              <figcaption><strong>3D design</strong><span>High-resolution garment view</span></figcaption>\n            </figure>\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview2d\" alt=\"Current 2D texture layout screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview2dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Capturing 2D layout…</span>\n                </div>\n              </div>\n              <figcaption><strong>2D design</strong><span>Artwork and panel layout</span></figcaption>\n            </figure>\n          </div>\n        </section>\n\n        <p class=\"customization-form-status\" id=\"customizationInquiryStatus\" role=\"alert\" aria-live=\"polite\"></p>\n        <footer class=\"customization-form-actions\">\n          <p>We use these details only to respond to this customization request.</p>\n          <div>\n            <button type=\"button\" class=\"btn btn-secondary\" id=\"customizationInquiryCancel\">Cancel</button>\n            <button type=\"submit\" class=\"btn btn-primary\" id=\"customizationInquirySubmit\" disabled>\n              <span>Submit request</span>\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M5 12h14M13 6l6 6-6 6\"/>\n              </svg>\n            </button>\n          </div>\n        </footer>\n      </form>\n\n      <section class=\"customization-success\" id=\"customizationInquirySuccess\" hidden>\n        <div class=\"customization-success-icon\">\n          <svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n            <path d=\"M20 6L9 17l-5-5\"/>\n          </svg>\n        </div>\n        <span>Request received</span>\n        <h3>Thank you — we’ll be in touch.</h3>\n        <p>Our team will reply within <strong>3 business days</strong>. Please watch your email messages.</p>\n        <div class=\"customization-reference\">\n          <span>Reference</span>\n          <strong id=\"customizationInquiryReference\">—</strong>\n        </div>\n        <button type=\"button\" class=\"btn btn-primary\" id=\"customizationInquiryDone\">Done</button>\n      </section>\n    </div>\n  </div>\n</div>\n\n")
     ;  if (supportsOnModelMockup) { 
     ; __append("\n<!-- On-model Garment Mockup Studio -->\n<div\n  class=\"model-mockup-modal\"\n  id=\"modelMockupModal\"\n  hidden\n  role=\"dialog\"\n  aria-modal=\"true\"\n  aria-labelledby=\"modelMockupTitle\"\n  aria-hidden=\"true\"\n  data-base-image=\"")
     ; __append(escapeFn( modelMockupProfile.base_image_url ))
     ; __append("\"\n  data-mask-image=\"")
+    ; __append(escapeFn( modelMockupProfile.live_mask_url ))
+    ; __append("\"\n  data-mask-fallback=\"")
     ; __append(escapeFn( modelMockupProfile.mask_image_url ))
-    ; __append("?v=commercial-refine-v4\"\n  data-depth-image=\"")
+    ; __append(escapeFn( modelMockupProfile.mask_image_url.includes('?') ? '&' : '?' ))
+    ; __append("v=commercial-refine-v4\"\n  data-depth-image=\"")
     ; __append(escapeFn( modelMockupProfile.depth_image_url ))
     ; __append("?v=commercial-refine-v4\"\n  data-garment-type=\"")
     ; __append(escapeFn( modelMockupProfile.garment_type ))
@@ -3832,19 +4965,15 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n<!-- Design Modal -->\n<div class=\"design-modal\" id=\"designModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"designModalTitle\" aria-hidden=\"true\">\n  <div class=\"design-modal-overlay\" id=\"designModalOverlay\"></div>\n  <div class=\"design-modal-content\">\n    <div class=\"design-modal-header\">\n      <div class=\"design-modal-heading\">\n        <h2 id=\"designModalTitle\">Design Studio</h2>\n        <span class=\"design-modal-title-divider\" aria-hidden=\"true\">/</span>\n        <p>")
     ; __append(escapeFn( model.name ))
-    ; __append("</p>\n      </div>\n      <div class=\"design-save-status\" id=\"designSaveStatus\" role=\"status\" aria-live=\"polite\">\n        <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\">\n          <path d=\"M20 6L9 17l-5-5\"/>\n        </svg>\n        <span id=\"designSaveStatusText\">Ready</span>\n      </div>\n      <div class=\"design-modal-actions\">\n        ")
-    ;  if (supportsOnModelMockup) { 
-    ; __append("\n          <button class=\"btn btn-secondary btn-small design-model-mockup-button\" id=\"designModelMockupBtn\" type=\"button\">\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n              <path d=\"M9 4.5 6.5 7 3 8.5l2 5 2.5-1V21h9v-8.5l2.5 1 2-5L17.5 7 15 4.5\"/>\n              <path d=\"M9 4.5a3.7 3.7 0 0 0 6 0\"/>\n            </svg>\n            <span>Model mockup</span>\n          </button>\n        ")
-    ;  } 
-    ; __append("\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\">\n          <span class=\"apply-label-desktop\">Apply design</span>\n          <span class=\"apply-label-mobile\">Apply</span>\n        </button>\n        <button class=\"design-modal-close\" id=\"designModalClose\" type=\"button\" aria-label=\"Close Design Studio\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6L6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- Editor Tool Rail -->\n        <div class=\"designer-toolbar\" aria-label=\"Design tools\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n              <span>Select</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolPan\" title=\"Pan Canvas\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M5 9l-3 3 3 3M9 5l3-3 3 3M19 9l3 3-3 3M9 19l3 3 3-3M2 12h20M12 2v20\"/>\n              </svg>\n              <span>Pan</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDraw\" title=\"Draw\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M12 20h9\"/>\n                <path d=\"M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4 12.5-12.5z\"/>\n              </svg>\n              <span>Draw</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n              <span>Text</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n              <span>Image</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n              <span>Shape</span>\n            </button>\n          </div>\n          <div class=\"toolbar-group toolbar-history\">\n            <button class=\"toolbar-btn\" id=\"toolUndo\" title=\"Undo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 7v6h6\"/>\n                <path d=\"M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13\"/>\n              </svg>\n              <span>Undo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolRedo\" title=\"Redo\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M21 7v6h-6\"/>\n                <path d=\"M3 17a9 9 0 019-9 9 9 0 016 2.3L21 13\"/>\n              </svg>\n              <span>Redo</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolDelete\" title=\"Delete\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 6h18\"/>\n                <path d=\"M8 6V4h8v2\"/>\n                <path d=\"M19 6l-1 14H6L5 6\"/>\n              </svg>\n              <span>Delete</span>\n            </button>\n          </div>\n        </div>\n\n        <!-- Main Texture Design Area -->\n        <div class=\"texture-canvas-area\">\n          <div class=\"canvas-context\">\n            <strong>Texture layout</strong>\n            <span>Select a garment panel to edit</span>\n          </div>\n          <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\">\n            <defs>\n              <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n              <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n              </pattern>\n            </defs>\n            <rect id=\"textureWhiteBase\" fill=\"transparent\"/>\n            <!-- Model SVG Texture Background -->\n            ")
+    ; __append("</p>\n      </div>\n      <div class=\"design-header-history\" role=\"group\" aria-label=\"Design history\">\n        <button id=\"toolUndo\" title=\"Undo\" type=\"button\" aria-label=\"Undo\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n            <path d=\"M3 7v6h6\"/><path d=\"M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13\"/>\n          </svg>\n        </button>\n        <button id=\"toolRedo\" title=\"Redo\" type=\"button\" aria-label=\"Redo\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n            <path d=\"M21 7v6h-6\"/><path d=\"M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13\"/>\n          </svg>\n        </button>\n      </div>\n      <div class=\"design-save-status\" id=\"designSaveStatus\" role=\"status\" aria-live=\"polite\">\n        <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" aria-hidden=\"true\">\n          <path d=\"M20 6L9 17l-5-5\"/>\n        </svg>\n        <span id=\"designSaveStatusText\">Ready</span>\n      </div>\n      <div class=\"design-view-switcher\" id=\"designViewSwitcher\" role=\"group\" aria-label=\"Editor view\">\n        <button type=\"button\" class=\"active\" data-design-view=\"2d\" aria-pressed=\"true\">2D</button>\n        <button type=\"button\" data-design-view=\"3d\" aria-pressed=\"false\">3D</button>\n        <button type=\"button\" data-design-view=\"split\" aria-pressed=\"false\">Split</button>\n      </div>\n      <div class=\"design-modal-actions\">\n        <button class=\"btn btn-primary btn-small\" id=\"saveDesignModal\" type=\"button\">\n          <span class=\"apply-label-desktop\">Apply design</span>\n          <span class=\"apply-label-mobile\">Apply</span>\n        </button>\n        <button class=\"design-modal-close\" id=\"designModalClose\" type=\"button\" aria-label=\"Close Design Studio\">\n          <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n            <path d=\"M18 6L6 18M6 6l12 12\"/>\n          </svg>\n        </button>\n      </div>\n    </div>\n    <div class=\"image-upload-toast\" id=\"imageUploadToast\" role=\"status\" aria-live=\"polite\" aria-atomic=\"true\" hidden>\n      <i aria-hidden=\"true\"></i>\n      <span id=\"imageUploadToastText\"></span>\n    </div>\n    <div class=\"design-modal-body\">\n      <div class=\"texture-designer\">\n        <!-- Editor Tool Rail -->\n        <div class=\"designer-toolbar\" aria-label=\"Design tools\">\n          <div class=\"toolbar-group\">\n            <button class=\"toolbar-btn active\" id=\"toolSelect\" title=\"Select\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z\"/>\n              </svg>\n              <span>Select</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolImage\" title=\"Add Image\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n                <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n                <polyline points=\"21 15 16 10 5 21\"/>\n              </svg>\n              <span>Image</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolText\" title=\"Add Text\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <path d=\"M4 7V4h16v3M9 20h6M12 4v16\"/>\n              </svg>\n              <span>Text</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolShape\" title=\"Add Shape\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" ry=\"2\"/>\n              </svg>\n              <span>Shape</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolColor\" title=\"Garment color\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\">\n                <path d=\"M12 2.8S5.4 10.2 5.4 15.2a6.6 6.6 0 0 0 13.2 0C18.6 10.2 12 2.8 12 2.8Z\"/>\n                <path d=\"M8.8 16.2c.8 1.4 2 2.1 3.7 2.1\"/>\n              </svg>\n              <span>Color</span>\n            </button>\n            <button class=\"toolbar-btn\" id=\"toolMaterial\" title=\"Garment material\" type=\"button\">\n              <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\">\n                <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n                <path d=\"M7 3v18M12 3v18M17 3v18M3 8h18M3 16h18\" opacity=\".7\"/>\n              </svg>\n              <span>Material</span>\n            </button>\n          </div>\n        </div>\n\n        <!-- Compact horizontal artwork library -->\n        <section class=\"image-asset-tray\" id=\"imageAssetTray\" aria-label=\"Image assets\" hidden>\n          <button class=\"asset-scroll-button asset-scroll-prev\" id=\"assetScrollPrev\" type=\"button\" aria-label=\"Browse images to the left\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n          </button>\n          <div class=\"image-asset-viewport\" id=\"imageAssetViewport\" tabindex=\"0\">\n            <div class=\"image-asset-track\" id=\"imageAssetTrack\">\n              <button class=\"image-asset-card image-asset-upload\" id=\"imageAssetUpload\" type=\"button\">\n                <svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                  <path d=\"M12 16V4m0 0L8 8m4-4 4 4\"/><path d=\"M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5\"/>\n                </svg>\n                <span>Upload image</span>\n              </button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/botanical-line.svg\" aria-label=\"Add botanical line art\"><img src=\"/editor-assets/botanical-line.svg\" alt=\"Botanical line art\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/butterfly.svg\" aria-label=\"Add butterfly\"><img src=\"/editor-assets/butterfly.svg\" alt=\"Purple butterfly\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/mountain-wash.svg\" aria-label=\"Add watercolor mountains\"><img src=\"/editor-assets/mountain-wash.svg\" alt=\"Blue watercolor mountains\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/lavender-cloud.svg\" aria-label=\"Add watercolor cloud\"><img src=\"/editor-assets/lavender-cloud.svg\" alt=\"Lavender watercolor cloud\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/ocean-wave.svg\" aria-label=\"Add ocean wave\"><img src=\"/editor-assets/ocean-wave.svg\" alt=\"Blue ocean wave\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/soft-gradient.svg\" aria-label=\"Add gradient texture\"><img src=\"/editor-assets/soft-gradient.svg\" alt=\"Blue and purple gradient\"></button>\n              <button class=\"image-asset-card\" type=\"button\" data-asset-url=\"/editor-assets/delicate-branch.svg\" aria-label=\"Add delicate branch\"><img src=\"/editor-assets/delicate-branch.svg\" alt=\"Blue delicate branch\"></button>\n            </div>\n          </div>\n          <button class=\"asset-scroll-button asset-scroll-next\" id=\"assetScrollNext\" type=\"button\" aria-label=\"Browse images to the right\">\n            <svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m9 18 6-6-6-6\"/></svg>\n          </button>\n          <div class=\"image-asset-actions\">\n            <button id=\"imageAssetFilter\" type=\"button\" aria-label=\"Filter images\" aria-pressed=\"false\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\"><path d=\"M4 5h16l-6 7v5l-4 2v-7Z\"/></svg>\n            </button>\n            <button id=\"imageAssetClose\" type=\"button\" aria-label=\"Close image list\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m18 6-12 12M6 6l12 12\"/></svg>\n            </button>\n          </div>\n          <div class=\"image-asset-progress\" aria-hidden=\"true\"><span id=\"imageAssetProgress\"></span></div>\n          <input id=\"imageAssetUploadInput\" type=\"file\" accept=\".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp\" multiple hidden>\n        </section>\n\n        <!-- Main Texture Design Area -->\n        <div class=\"texture-canvas-area\">\n          <div class=\"canvas-context\">\n            <strong>Pattern canvas</strong>\n            <span>Select a garment panel to edit</span>\n          </div>\n          <div class=\"texture-canvas-frame\" id=\"textureCanvasFrame\">\n            <svg id=\"textureSvg\" xmlns=\"http://www.w3.org/2000/svg\" width=\"1024\" height=\"1024\" viewBox=\"0 0 1024 1024\">\n              <defs>\n                <pattern id=\"patternStriped\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                  <rect width=\"20\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                </pattern>\n                <pattern id=\"patternCheckered\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                  <rect width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                  <rect x=\"10\" y=\"10\" width=\"10\" height=\"10\" fill=\"currentColor\" opacity=\"0.3\"/>\n                </pattern>\n                <pattern id=\"patternDots\" patternUnits=\"userSpaceOnUse\" width=\"20\" height=\"20\">\n                  <circle cx=\"10\" cy=\"10\" r=\"3\" fill=\"currentColor\" opacity=\"0.3\"/>\n                </pattern>\n              </defs>\n                  <rect id=\"textureWhiteBase\" fill=\"transparent\" width=\"1024\" height=\"1024\"/>\n              <!-- Model SVG Texture Background -->\n              ")
     ;  if (model.texture_url) { 
-    ; __append("\n              <image id=\"textureBg\" href=\"")
+    ; __append("\n                <image id=\"textureBg\" href=\"")
     ; __append(escapeFn( model.texture_url ))
-    ; __append("\" preserveAspectRatio=\"none\"/>\n              <g id=\"textureTemplateLayer\"></g>\n            ")
+    ; __append("\" width=\"1024\" height=\"1024\" preserveAspectRatio=\"none\"/>\n                <g id=\"textureTemplateLayer\"></g>\n              ")
     ;  } else { 
-    ; __append("\n              <rect id=\"textureBg\" fill=\"transparent\"/>\n              <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n            ")
+    ; __append("\n                <rect id=\"textureBg\" width=\"1024\" height=\"1024\" fill=\"transparent\"/>\n                <text id=\"textureBgText\" text-anchor=\"middle\" fill=\"#adb5bd\" font-size=\"18\" font-family=\"Arial, sans-serif\">No texture available for this model</text>\n              ")
     ;  } 
-    ; __append("\n            <rect id=\"texturePattern\" fill=\"none\"/>\n            <g id=\"textureElements\"></g>\n            <g id=\"selectionLayer\" class=\"editor-ui\"></g>\n          </svg>\n          <div class=\"canvas-zoom-controls\" aria-label=\"Canvas zoom controls\">\n            <button id=\"canvasZoomOut\" type=\"button\" aria-label=\"Zoom out\">−</button>\n            <span id=\"canvasZoomLabel\">100%</span>\n            <button id=\"canvasZoomIn\" type=\"button\" aria-label=\"Zoom in\">+</button>\n            <span class=\"canvas-zoom-divider\" aria-hidden=\"true\"></span>\n            <button id=\"canvasZoomFit\" type=\"button\" aria-label=\"Fit canvas\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" aria-hidden=\"true\">\n                <path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <!-- 3D Preview and Material Inspector -->\n        <div class=\"preview-3d-panel\">\n          <section class=\"design-inspector-card design-preview-card\">\n            <div class=\"inspector-card-header\">\n              <div>\n                <h3>3D Preview</h3>\n              </div>\n              <span class=\"preview-live-indicator\">Live</span>\n            </div>\n            <div class=\"preview-model-stage\">\n              ")
+    ; __append("\n              <rect id=\"texturePattern\" width=\"1024\" height=\"1024\" fill=\"none\"/>\n              <g id=\"textureElements\"></g>\n              <g id=\"selectionLayer\" class=\"editor-ui\"></g>\n            </svg>\n          </div>\n          <div class=\"canvas-zoom-controls\" aria-label=\"Canvas view controls\">\n            <button id=\"canvasRotate\" type=\"button\" aria-label=\"Rotate canvas clockwise. Current rotation: 0 degrees\" title=\"Rotate canvas 90° clockwise\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">\n                <path d=\"M20 11a8 8 0 1 0-2.34 5.66\"/>\n                <path d=\"M20 4v7h-7\"/>\n              </svg>\n            </button>\n            <span class=\"canvas-zoom-divider\" aria-hidden=\"true\"></span>\n            <button id=\"canvasZoomOut\" type=\"button\" aria-label=\"Zoom out\">−</button>\n            <span id=\"canvasZoomLabel\">100%</span>\n            <button id=\"canvasZoomIn\" type=\"button\" aria-label=\"Zoom in\">+</button>\n            <span class=\"canvas-zoom-divider\" aria-hidden=\"true\"></span>\n            <button id=\"canvasZoomFit\" type=\"button\" aria-label=\"Fit canvas\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" aria-hidden=\"true\">\n                <path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/>\n              </svg>\n            </button>\n          </div>\n        </div>\n\n        <!-- Live 3D preview -->\n        <div class=\"preview-3d-panel\">\n          <section class=\"design-inspector-card design-preview-card\">\n            <div class=\"inspector-card-header\">\n              <div>\n                <h3>3D Preview</h3>\n              </div>\n              <span class=\"preview-live-indicator\">LIVE</span>\n            </div>\n            <div class=\"preview-model-stage\">\n              ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n                <model-viewer\n                  class=\"model-viewer-natural\"\n                  id=\"designerViewer\"\n                  data-model-src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
@@ -3852,7 +4981,7 @@ title = __locals.title,
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n                  alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  shadow-intensity=\"0.58\"\n                  shadow-softness=\"0.94\"\n                  exposure=\"0.96\"\n                  environment-image=\"neutral\"\n                  tone-mapping=\"neutral\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n              ")
+    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  camera-orbit=\"-48deg 72deg 158%\"\n                  camera-target=\"auto auto auto\"\n                  field-of-view=\"28deg\"\n                  shadow-intensity=\"0\"\n                  shadow-softness=\"1\"\n                  exposure=\"0.72\"\n                  environment-image=\"/environments/commercial-apparel-studio-v4-balanced-20260829.hdr\"\n                  tone-mapping=\"commerce\"\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n                <div class=\"model-viewer-spinner\" id=\"designPreviewLoading\" role=\"status\" aria-live=\"polite\" hidden>\n                  <i aria-hidden=\"true\"></i>\n                  <span>Loading 3D</span>\n                </div>\n              ")
     ;  } else { 
     ; __append("\n                <div class=\"designer-placeholder\">\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -3860,11 +4989,9 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n                </div>\n              ")
     ;  } 
-    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Choose material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </div>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst fullscreenBtn = document.getElementById('fullscreenBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelViewerLoad = document.getElementById('modelViewerLoad');\nconst modelViewerLoadStatus = document.getElementById('modelViewerLoadStatus');\nconst modelViewerPromises = new WeakMap();\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (element.loaded && element.model) return Promise.resolve(element);\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const promise = loadModelViewerModule().then(() => {\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    if (element.loaded && element.model) return element;\n    return withModelViewerTimeout(new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.src = element.dataset.modelSrc;\n    }), 45000, '3D model timed out');\n  }).then((readyViewer) => {\n    readyViewer.dismissPoster?.();\n    configureGarmentSoftnessAnimation(readyViewer);\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    element.hidden = true;\n    element.removeAttribute('src');\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  if (modelViewerLoad) modelViewerLoad.hidden = true;\n  if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Preparing the garment viewer…';\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'Interactive 3D ready.';\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-error');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    if (modelViewerLoad) modelViewerLoad.hidden = false;\n    if (modelViewerLoadStatus) modelViewerLoadStatus.textContent = 'The image preview is still available.';\n    throw error;\n  }\n}\n\nmodelViewerLoad?.addEventListener('click', () => {\n  window.trackEvent?.('tool_interaction', {\n    interaction_type: 'retry_model_detail_3d',\n    item_id: ")
+    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n        </div>\n\n        <!-- Garment appearance and material inspector -->\n        <aside class=\"design-appearance-panel\" id=\"designAppearancePanel\" aria-label=\"Garment appearance\">\n          <section class=\"design-appearance-card\">\n            <div class=\"appearance-panel-header\">\n              <h3>Appearance</h3>\n              <button id=\"appearancePanelCollapse\" type=\"button\" aria-label=\"Collapse appearance panel\">\n                <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n              </button>\n            </div>\n            <div class=\"appearance-scope-switch\" role=\"group\" aria-label=\"Color scope\">\n              <button type=\"button\" class=\"active\" data-fill-scope=\"whole\" aria-pressed=\"true\">Whole garment</button>\n              <button type=\"button\" data-fill-scope=\"panel\" aria-pressed=\"false\">Panel</button>\n            </div>\n            <div class=\"appearance-section\">\n              <strong>Fill</strong>\n              <div class=\"appearance-fill-switch\" role=\"group\" aria-label=\"Fill type\">\n                <button type=\"button\" data-fill-mode=\"solid\" aria-pressed=\"false\">Solid</button>\n                <button type=\"button\" class=\"active\" data-fill-mode=\"gradient\" aria-pressed=\"true\">Gradient</button>\n              </div>\n              <div class=\"appearance-gradient-preview\" id=\"appearanceGradientPreview\"></div>\n              <div class=\"appearance-color-stops\">\n                <label><span>Start</span><input id=\"appearanceColorStart\" type=\"color\" value=\"#5f89f4\"></label>\n                <label><span>End</span><input id=\"appearanceColorEnd\" type=\"color\" value=\"#c39bea\"></label>\n              </div>\n              <label class=\"appearance-angle-control\">\n                <span>Angle</span>\n                <input id=\"appearanceGradientAngle\" type=\"range\" min=\"0\" max=\"360\" value=\"135\">\n                <output id=\"appearanceGradientAngleOutput\">135°</output>\n              </label>\n            </div>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </aside>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst zoomBtn = document.getElementById('zoomBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelInfoSection = document.querySelector('.model-info-section');\nconst modelViewerSection = document.querySelector('.model-viewer-section');\nconst heroSection = document.querySelector('.model-detail-hero');\nconst backgroundBtn = document.getElementById('backgroundBtn');\nconst heroBackgroundPopover = document.getElementById('heroBackgroundPopover');\nconst heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];\nconst heroGradientFrom = document.getElementById('heroGradientFrom');\nconst heroGradientTo = document.getElementById('heroGradientTo');\nconst heroGradientAngle = document.getElementById('heroGradientAngle');\nconst heroGradientAngleValue = document.getElementById('heroGradientAngleValue');\nconst applyHeroGradient = document.getElementById('applyHeroGradient');\nconst modelViewerPromises = new WeakMap();\nconst defaultDetailRenderStandard = {\n  version: 'commercial-catalog-cover-v1',\n  camera: {\n    webOrbit: '-48deg 72deg 142%',\n    webEditorOrbit: '-48deg 72deg 158%',\n    webFieldOfView: '28deg',\n    webTarget: 'auto auto auto'\n  },\n  material: {\n    neutralizeBaseColor: true,\n    baseColor: [0.96, 0.96, 0.95],\n    roughness: 0.68,\n    specularIorLevel: 0.32,\n    sheenWeight: 0.32,\n    normalStrengthMultiplier: 2.8,\n    normalStrengthMax: 0.45\n  },\n  web: {\n    environmentImage: '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr',\n    lightingMode: 'front-back-balanced-product-studio',\n    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',\n    balanceMethod: '180-degree-lighten-mirror',\n    shadowIntensity: 0,\n    shadowSoftness: 1,\n    exportShadowIntensity: 0.32,\n    exportShadowSoftness: 0.96,\n    exposure: 0.72,\n    toneMapping: 'commerce',\n    material: {\n      neutralizeBaseColor: true,\n      baseColor: [0.82, 0.82, 0.8],\n      roughness: 0.62,\n      specularIorLevel: 0.28,\n      sheenWeight: 0.12\n    }\n  }\n};\nlet detailSceneStandard = defaultDetailRenderStandard;\nconst detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260907-balanced-exposure-v6')\n  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)\n  .then((standard) => {\n    detailSceneStandard = {\n      ...defaultDetailRenderStandard,\n      ...standard,\n      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },\n      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },\n      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }\n    };\n    return detailSceneStandard;\n  })\n  .catch(() => defaultDetailRenderStandard);\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction catalogOrbitForAzimuth(standard, azimuth) {\n  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)\n    .trim()\n    .split(/\\s+/);\n  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;\n}\n\nfunction applyCatalogRenderAttributes(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard) return;\n  const webStandard = standard.web || defaultDetailRenderStandard.web;\n  const isSideView = element.dataset.catalogRenderStandard === 'side';\n  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);\n  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0));\n  element.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 1));\n  element.setAttribute('exposure', String(webStandard.exposure ?? 0.72));\n  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');\n  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');\n  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');\n  element.setAttribute(\n    'camera-orbit',\n    isSideView\n      ? catalogOrbitForAzimuth(standard, '90deg')\n      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit\n  );\n  element.autoRotate = false;\n  element.removeAttribute('auto-rotate');\n  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;\n}\n\nfunction applyCatalogMaterialResponse(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard || !element.model) return;\n  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;\n  const baseColor = Array.isArray(materialStandard.baseColor)\n    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))\n    : defaultDetailRenderStandard.material.baseColor;\n  const neutralFactor = [...baseColor, 1];\n\n  (element.model.materials || []).forEach((material) => {\n    const pbr = material.pbrMetallicRoughness;\n    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);\n    pbr?.setMetallicFactor?.(0);\n    if (!pbr?.metallicRoughnessTexture?.texture) {\n      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));\n    }\n    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);\n    try {\n      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);\n    } catch (error) {\n      // Some GLBs do not declare the optional sheen extension.\n    }\n    try {\n      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));\n    } catch (error) {\n      // Some GLBs do not declare the optional specular extension.\n    }\n  });\n}\n\ndetailRenderStandardPromise.then((standard) => {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    applyCatalogRenderAttributes(element, standard);\n    applyCatalogMaterialResponse(element, standard);\n  });\n});\n\nfunction syncHeroColumnHeights() {\n  if (!modelInfoSection || !modelViewerSection) return;\n  if (window.matchMedia('(max-width: 820px)').matches) {\n    modelViewerSection.style.removeProperty('--model-viewer-height');\n    return;\n  }\n  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);\n}\n\nrequestAnimationFrame(syncHeroColumnHeights);\nwindow.addEventListener('resize', syncHeroColumnHeights, { passive: true });\nif ('ResizeObserver' in window && modelInfoSection) {\n  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);\n}\n\nfunction setHeroBackground(value, activePreset = null) {\n  if (!heroSection || !value) return;\n  heroSection.style.setProperty('--hero-background', value);\n  backgroundBtn?.style.setProperty('--control-background', value);\n  heroBackgroundPresets.forEach((button) => button.classList.toggle('active', button === activePreset));\n}\n\nfunction customHeroGradient() {\n  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;\n}\n\nfunction closeHeroBackgroundPopover({ restoreFocus = false } = {}) {\n  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;\n  heroBackgroundPopover.hidden = true;\n  backgroundBtn?.setAttribute('aria-expanded', 'false');\n  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });\n}\n\nbackgroundBtn?.addEventListener('click', () => {\n  const shouldOpen = heroBackgroundPopover?.hidden;\n  if (!heroBackgroundPopover) return;\n  heroBackgroundPopover.hidden = !shouldOpen;\n  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));\n  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });\n});\n\nheroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {\n  setHeroBackground(button.dataset.heroBackground, button);\n}));\n\n[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {\n  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;\n  setHeroBackground(customHeroGradient());\n}));\n\napplyHeroGradient?.addEventListener('click', () => {\n  setHeroBackground(customHeroGradient());\n  closeHeroBackgroundPopover({ restoreFocus: true });\n});\n\ndocument.addEventListener('pointerdown', (event) => {\n  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;\n  closeHeroBackgroundPopover();\n});\n\ndocument.addEventListener('keydown', (event) => {\n  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {\n    event.preventDefault();\n    closeHeroBackgroundPopover({ restoreFocus: true });\n  }\n});\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const renderStandardReady = element.dataset.catalogRenderStandard\n    ? detailRenderStandardPromise\n    : Promise.resolve(null);\n  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {\n    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;\n    if (!modelSource) throw new Error('3D model source unavailable');\n    if (element.getAttribute('src') && element.loaded && element.model) return element;\n    return new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);\n    });\n  }).then((readyViewer) => {\n    readyViewer.dismissPoster?.();\n    readyViewer.removeAttribute('poster');\n    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);\n    configureGarmentSoftnessAnimation(readyViewer);\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    delete modelViewerStage.dataset.loadError;\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';\n    throw error;\n  }\n}\n\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
-    ; __append("\n  });\n  ensureDetailViewer().catch(() => {});\n});\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = `${button.dataset.orbit} 75deg 105%`;\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.('tool_interaction', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
-    ; __append( JSON.stringify(model.slug || '') )
-    ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (fullscreenBtn && viewer) {\n  fullscreenBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (readyViewer?.requestFullscreen) {\n      readyViewer.requestFullscreen();\n    }\n  });\n}\n\nconst sideViewer = document.querySelector('.showcase-side-viewer');\nconst sideStage = sideViewer?.closest('.model-side-stage');\nif (sideViewer && sideStage && 'IntersectionObserver' in window) {\n  const sideObserver = new IntersectionObserver((entries) => {\n    if (!entries.some((entry) => entry.isIntersecting)) return;\n    sideObserver.disconnect();\n    loadModelViewerElement(sideViewer)\n      .then(() => sideStage.classList.add('is-ready'))\n      .catch(() => sideStage.classList.add('is-error'));\n  }, { rootMargin: '240px 0px' });\n  sideObserver.observe(sideStage);\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
+    ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (zoomBtn && viewer) {\n  let viewerZoomed = false;\n  let viewerBaseRadius = null;\n  zoomBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    const orbit = readyViewer?.getCameraOrbit?.();\n    if (!orbit) return;\n    if (!viewerBaseRadius) viewerBaseRadius = orbit.radius;\n    viewerZoomed = !viewerZoomed;\n    const radius = viewerZoomed ? viewerBaseRadius * 0.8 : viewerBaseRadius;\n    readyViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${radius}m`;\n    readyViewer.jumpCameraToGoal?.();\n    zoomBtn.classList.toggle('active', viewerZoomed);\n    zoomBtn.setAttribute('aria-pressed', String(viewerZoomed));\n  });\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
     ; __append(",\n  currentModelCategory: ")
     ; __append( JSON.stringify(model.category || model.category_label || model.category_slug || '') )
@@ -3882,9 +5009,11 @@ title = __locals.title,
     ; __append( JSON.stringify(model.slug || '') )
     ; __append(",\n  modelName: ")
     ; __append( JSON.stringify(model.name || '') )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('downloadRenderBtn'),\n    document.getElementById('customizationInquiryBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260819-fabric-softness-v2',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'downloadRenderBtn') {\n        await window.downloadDesignedModelRender?.();\n      } else if (entryId === 'customizationInquiryBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  if (window.location.hash === '#design' || hasPendingArtwork) {\n    loadModelDesignerRuntime().catch((error) => console.error(error));\n  }\n  window.addEventListener('hashchange', () => {\n    if (window.location.hash === '#design') loadModelDesignerRuntime().catch((error) => console.error(error));\n  });\n})();\n</script>\n")
+    ; __append(",\n  userAuthenticated: ")
+    ; __append( JSON.stringify(Boolean(user)) )
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    loginModal.hidden = false;\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || loginModal.hidden) return;\n    loginModal.hidden = true;\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  googleLogin?.addEventListener('click', () => {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  });\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260913-legacy-project-state-v41',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        await window.renderCurrentModelImage?.();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const hasSavedProject = new URLSearchParams(window.location.search).has('project');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
     ;  if (supportsOnModelMockup) { 
-    ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260821-database-profiles';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
+    ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260913-svg-live-mask-v2';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
     ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
@@ -3918,6 +5047,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3967,7 +5100,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
@@ -4064,6 +5204,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4113,10 +5257,17 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClothingDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClozDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
-    ; __append(" ClothingDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=20260805-overlay-fix\"></script>\n  <script src=\"/js/share.js?v=20260805-stable-events\" defer></script>\n</body>\n</html>\n")
+    ; __append(" ClozDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=20260805-overlay-fix\"></script>\n  <script src=\"/js/share.js?v=20260829-model-detail-hero-v2\" defer></script>\n</body>\n</html>\n")
   return __output;
 
 },
@@ -4146,6 +5297,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4195,7 +5350,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ;  const content = landingContent || {}; 
     ; __append("\n")
     ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
@@ -4401,6 +5563,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4450,10 +5616,17 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
-    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260907-render-current-view\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260913-upload-timeout-v3\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
@@ -4512,7 +5685,7 @@ title = __locals.title,
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
     ;  } 
-    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClothingDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260819-fabric-softness-v2\">\n  ")
+    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClozDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260913-responsive-upload-v16\">\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260913-loading-spinner-v2\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260913-navbar-type-v9\">\n  ")
     ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; 
     ; __append("\n  ")
     ;  headPageStyles.forEach(function(stylesheet) { 
@@ -4520,9 +5693,9 @@ title = __locals.title,
     ; __append(escapeFn( stylesheet ))
     ; __append("\">\n  ")
     ;  }); 
-    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260806-auto-3d\">\n    <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260819-model-detail-split-scroll-v4\">\n</head>\n<body class=\"")
+    ; __append("\n</head>\n<body class=\"")
     ; __append(escapeFn( typeof bodyClass !== 'undefined' && bodyClass ? bodyClass : '' ))
-    ; __append("\">\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClothingDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
+    ; __append("\">\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClozDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          3D Models\n        </a>\n        <a href=\"/white-mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' ))
@@ -4540,11 +5713,7 @@ title = __locals.title,
     ; __append(escapeFn( t('tools.mockup2d') ))
     ; __append("</span>\n                    <small>Make flat apparel mockup concepts.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Mockups</span>\n                    <small>Design across garment categories.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
     ;  if (user) { 
-    ; __append("\n          <!-- User Menu -->\n          <div class=\"user-dropdown\">\n            <button class=\"user-toggle\">\n              <div class=\"user-avatar\">\n                ")
-    ; __append(escapeFn( user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase() ))
-    ; __append("\n              </div>\n            </button>\n            <div class=\"user-menu\">\n              <a href=\"/tools/t-shirt-mockup-generator\" class=\"user-item\">Start a new mockup</a>\n              <a href=\"/mockups\" class=\"user-item\">Browse garment models</a>\n              <div class=\"user-divider\"></div>\n              <a href=\"/auth/logout\" class=\"user-item\">")
-    ; __append(escapeFn( t('nav.signOut') ))
-    ; __append("</a>\n            </div>\n          </div>\n        ")
+    ; __append("\n          <a href=\"/account\" class=\"btn btn-primary navbar-workbench-link\">Workbench</a>\n        ")
     ;  } else { 
     ; __append("\n          <!-- Auth Buttons -->\n          <a href=\"/auth/login\" class=\"btn btn-ghost\">")
     ; __append(escapeFn( t('nav.signIn') ))
@@ -4554,7 +5723,7 @@ title = __locals.title,
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("</a>\n      <div class=\"mobile-divider\"></div>\n      ")
     ;  if (user) { 
-    ; __append("\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"mobile-link\">Start a new mockup</a>\n        <a href=\"/mockups\" class=\"mobile-link\">Browse garment models</a>\n        <a href=\"/auth/logout\" class=\"mobile-link\">")
+    ; __append("\n        <a href=\"/account\" class=\"mobile-link\">Workbench</a>\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"mobile-link\">Start a new mockup</a>\n        <a href=\"/mockups\" class=\"mobile-link\">Browse garment models</a>\n        <a href=\"/auth/logout\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.signOut') ))
     ; __append("</a>\n      ")
     ;  } else { 
@@ -4592,6 +5761,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4641,7 +5814,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append("<aside\n  class=\"growth-share-panel\"\n  data-growth-share\n  data-share-surface=\"")
     ; __append(escapeFn( shareSurface ))
     ; __append("\"\n  data-share-title=\"")
@@ -4682,6 +5862,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4731,9 +5915,156 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
-    ; __append("\n\n<section class=\"beta-access-hero\">\n  <div class=\"container beta-access-grid\">\n    <div class=\"beta-access-copy\">\n      <span class=\"generator-eyebrow\">Public beta access</span>\n      <h1>Design first.<br>Pay nothing.</h1>\n      <p>ClothingDesign is free while the browser mockup workflow is in public beta. Choose a garment, place artwork, review the shape, and export a transparent PNG.</p>\n      <div class=\"hero-actions\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary btn-large\">Start a T-shirt mockup</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">Browse all models</a>\n      </div>\n    </div>\n    <aside class=\"beta-access-card\" aria-label=\"Free beta access details\">\n      <div class=\"beta-access-price\"><strong>$0</strong><span>during public beta</span></div>\n      <ul>\n        <li><span>01</span> Browse the complete public 3D garment library</li>\n        <li><span>02</span> Test garment color and artwork placement</li>\n        <li><span>03</span> Review front, side, and back presentation angles</li>\n        <li><span>04</span> Export a transparent PNG mockup</li>\n      </ul>\n      <p>No payment details are requested. Cloud project storage, collaboration, and paid team plans are not currently offered.</p>\n    </aside>\n  </div>\n</section>\n\n<section class=\"beta-access-note\">\n  <div class=\"container beta-access-note-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">Clear expectations</span>\n      <h2>Mockup-ready, not production-spec CAD.</h2>\n    </div>\n    <p>Use exports for product-page drafts, POD planning, client review, and launch decks. Confirm dimensions, fabric behavior, and manufacturing requirements with your production partner.</p>\n  </div>\n</section>\n\n")
+    ; __append("\n\n<section class=\"beta-access-hero\">\n  <div class=\"container beta-access-grid\">\n    <div class=\"beta-access-copy\">\n      <span class=\"generator-eyebrow\">Public beta access</span>\n      <h1>Design first.<br>Pay nothing.</h1>\n      <p>ClozDesign is free while the browser mockup workflow is in public beta. Choose a garment, place artwork, review the shape, and export a transparent PNG.</p>\n      <div class=\"hero-actions\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary btn-large\">Start a T-shirt mockup</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">Browse all models</a>\n      </div>\n    </div>\n    <aside class=\"beta-access-card\" aria-label=\"Free beta access details\">\n      <div class=\"beta-access-price\"><strong>$0</strong><span>during public beta</span></div>\n      <ul>\n        <li><span>01</span> Browse the complete public 3D garment library</li>\n        <li><span>02</span> Test garment color and artwork placement</li>\n        <li><span>03</span> Review front, side, and back presentation angles</li>\n        <li><span>04</span> Export a transparent PNG mockup</li>\n      </ul>\n      <p>No payment details are requested. Cloud project storage, collaboration, and paid team plans are not currently offered.</p>\n    </aside>\n  </div>\n</section>\n\n<section class=\"beta-access-note\">\n  <div class=\"container beta-access-note-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">Clear expectations</span>\n      <h2>Mockup-ready, not production-spec CAD.</h2>\n    </div>\n    <p>Use exports for product-page drafts, POD planning, client review, and launch decks. Confirm dimensions, fabric behavior, and manufacturing requirements with your production partner.</p>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "svg-mask-editor.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append( include('partials/header', { bodyClass: 'svg-mask-editor-page' }) )
+    ; __append("\n\n<section\n  class=\"mask-studio\"\n  id=\"svgMaskEditor\"\n  data-default-image=\"")
+    ; __append(escapeFn( defaultImage ))
+    ; __append("\"\n  data-default-mask-name=\"")
+    ; __append(escapeFn( defaultMaskName ))
+    ; __append("\"\n  data-mask-key=\"")
+    ; __append(escapeFn( maskKey ))
+    ; __append("\"\n  data-mask-revision=\"")
+    ; __append(escapeFn( defaultMaskRevision ))
+    ; __append("\"\n  aria-label=\"SVG garment mask editor\"\n>\n  <header class=\"mask-command-bar\">\n    <div class=\"mask-brand-lockup\">\n      <span class=\"mask-brand-index\">MASK / 01</span>\n      <div>\n        <strong>Contour Studio</strong>\n        <small>Manual SVG garment masks</small>\n      </div>\n    </div>\n\n    <div class=\"mask-command-group\" aria-label=\"Document controls\">\n      <label class=\"mask-command-button mask-command-primary\" title=\"Open an image\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 19V7h6l2-2h8v14H4Zm0-9h16M12 12v5m-2.5-2.5h5\"/></svg>\n        <span>Open image</span>\n        <input id=\"maskImageInput\" type=\"file\" accept=\"image/png,image/jpeg,image/webp,image/avif\" hidden>\n      </label>\n      <label class=\"mask-command-button\" title=\"Import an SVG created by this editor\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 3h10l4 4v14H5V3Zm9 0v5h5M9 14h6m-3-3v6\"/></svg>\n        <span>Import SVG</span>\n        <input id=\"maskSvgInput\" type=\"file\" accept=\"image/svg+xml,.svg\" hidden>\n      </label>\n      <button class=\"mask-command-button\" id=\"maskNewDocument\" type=\"button\" title=\"Clear all regions\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 4h12v16H6V4Zm3 4h6M9 12h6\"/></svg>\n        <span>Clear</span>\n      </button>\n    </div>\n\n    <div class=\"mask-history-controls\" aria-label=\"History controls\">\n      <button id=\"maskUndo\" type=\"button\" title=\"Undo (⌘/Ctrl Z)\" disabled>\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m9 7-5 5 5 5M5 12h8a6 6 0 0 1 6 6\"/></svg>\n      </button>\n      <button id=\"maskRedo\" type=\"button\" title=\"Redo (⌘/Ctrl Shift Z)\" disabled>\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m15 7 5 5-5 5m4-5h-8a6 6 0 0 0-6 6\"/></svg>\n      </button>\n    </div>\n\n    <div class=\"mask-command-spacer\"></div>\n\n    <div class=\"mask-save-state\" id=\"maskSaveState\" aria-live=\"polite\">\n      <i></i>\n      <span>Local draft ready</span>\n    </div>\n    <button class=\"mask-command-button\" id=\"maskCopySvg\" type=\"button\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 8h10v12H9V8Zm-4 8H3V4h10v2\"/></svg>\n      <span>Copy SVG</span>\n    </button>\n    <button class=\"mask-command-button\" id=\"maskExportPng\" type=\"button\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 4h16v16H4V4Zm3 12 3-4 2 2 2-3 3 5H7Z\"/></svg>\n      <span>PNG mask</span>\n    </button>\n    <button class=\"mask-command-button mask-command-apply\" id=\"maskSaveApply\" type=\"button\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12.5 9.5 17 19 7.5M4 4h16v16H4V4Z\"/></svg>\n      <span>Save &amp; Apply</span>\n    </button>\n    <button class=\"mask-command-button mask-command-export\" id=\"maskExportSvg\" type=\"button\">\n      <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n      <span>Export SVG</span>\n    </button>\n  </header>\n\n  <div class=\"mask-studio-grid\">\n    <aside class=\"mask-tool-rail\" aria-label=\"Drawing tools\">\n      <div class=\"mask-tool-stack\" role=\"toolbar\" aria-label=\"Mask drawing tools\">\n        <button class=\"mask-tool is-active\" type=\"button\" data-tool=\"select\" title=\"Select and edit nodes (V)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m6 3 12 9-7 1.5L8 20 6 3Z\"/></svg>\n          <span>Select</span><kbd>V</kbd>\n        </button>\n        <button class=\"mask-tool\" type=\"button\" data-tool=\"pen\" title=\"Place contour points (P)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"m14 4 6 6-9 9H5v-6l9-9Zm-6 13 4 4M14 4l2-2 6 6-2 2\"/></svg>\n          <span>Pen</span><kbd>P</kbd>\n        </button>\n        <button class=\"mask-tool\" type=\"button\" data-tool=\"freehand\" title=\"Draw a closed contour (B)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 19c4-1 4-5 7-6s5 1 7-2 0-7 0-7M4 19c0 1 1 2 3 1\"/></svg>\n          <span>Trace</span><kbd>B</kbd>\n        </button>\n        <button class=\"mask-tool\" type=\"button\" data-tool=\"pan\" title=\"Pan the canvas (H or Space)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 11V6a2 2 0 0 1 4 0v4-6a2 2 0 1 1 4 0v7-4a2 2 0 1 1 4 0v7c0 5-3 8-8 8-3 0-5-1-7-4l-3-5a2 2 0 0 1 3-2l3 3\"/></svg>\n          <span>Pan</span><kbd>H</kbd>\n        </button>\n      </div>\n\n      <div class=\"mask-rail-divider\"></div>\n\n      <div class=\"mask-operation-picker\" role=\"group\" aria-label=\"Region operation\">\n        <button class=\"is-active\" type=\"button\" data-kind=\"add\" title=\"Add white mask area (A)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 5v14M5 12h14\"/></svg>\n          <span>Add</span>\n        </button>\n        <button type=\"button\" data-kind=\"subtract\" title=\"Cut a hole from the mask (S)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14\"/></svg>\n          <span>Cut</span>\n        </button>\n      </div>\n\n      <div class=\"mask-rail-divider\"></div>\n\n      <div class=\"mask-zoom-stack\" aria-label=\"Canvas zoom\">\n        <button id=\"maskZoomIn\" type=\"button\" title=\"Zoom in\"><span>+</span></button>\n        <button id=\"maskFitView\" type=\"button\" title=\"Fit image (0)\">\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5\"/></svg>\n        </button>\n        <button id=\"maskZoomOut\" type=\"button\" title=\"Zoom out\"><span>−</span></button>\n      </div>\n    </aside>\n\n    <section class=\"mask-workspace\" id=\"maskWorkspace\" aria-label=\"Mask drawing canvas\">\n      <div class=\"mask-workspace-head\">\n      <div class=\"mask-document-name\">\n        <i></i>\n        <select id=\"maskModelSelect\" aria-label=\"Choose mask model\" hidden>\n          ")
+    ;  maskQueue.forEach(function(item, index) { 
+    ; __append("\n            <option value=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\" data-label=\"")
+    ; __append(escapeFn( String(index + 1).padStart(3, '0') ))
+    ; __append(" · ")
+    ; __append(escapeFn( item.label ))
+    ; __append("\" ")
+    ; __append(escapeFn( index === maskIndex ? 'selected' : '' ))
+    ; __append(">")
+    ; __append(escapeFn( String(index + 1).padStart(3, '0') ))
+    ; __append(" · ")
+    ; __append(escapeFn( item.label ))
+    ; __append("</option>\n          ")
+    ;  }) 
+    ; __append("\n        </select>\n        <button\n          class=\"mask-model-switch-trigger\"\n          id=\"maskQuickSwitchTrigger\"\n          type=\"button\"\n          aria-haspopup=\"dialog\"\n          aria-controls=\"maskQuickSwitchPanel\"\n          aria-expanded=\"false\"\n          title=\"Quick switch model (⌘/Ctrl K)\"\n        >\n          <span id=\"maskQuickSwitchLabel\">")
+    ; __append(escapeFn( String(maskIndex + 1).padStart(3, '0') ))
+    ; __append(" · ")
+    ; __append(escapeFn( maskQueue[maskIndex].label ))
+    ; __append("</span>\n          <kbd>⌘K</kbd>\n        </button>\n        <span class=\"mask-queue-progress\" id=\"maskQueueProgress\">")
+    ; __append(escapeFn( maskIndex + 1 ))
+    ; __append(" / ")
+    ; __append(escapeFn( maskQueue.length ))
+    ; __append("</span>\n        <span id=\"maskDocumentName\" hidden>")
+    ; __append(escapeFn( defaultMaskName ))
+    ; __append("</span>\n        <div class=\"mask-queue-navigation\">\n          <button id=\"maskPreviousModel\" type=\"button\" data-mask-id=\"")
+    ; __append(escapeFn( maskQueue[maskIndex - 1]?.id || '' ))
+    ; __append("\" ")
+    ; __append(escapeFn( maskIndex === 0 ? 'disabled' : '' ))
+    ; __append(" aria-label=\"Previous model\">←</button>\n          <button id=\"maskNextModel\" type=\"button\" data-mask-id=\"")
+    ; __append(escapeFn( maskQueue[maskIndex + 1]?.id || '' ))
+    ; __append("\" ")
+    ; __append(escapeFn( maskIndex === maskQueue.length - 1 ? 'disabled' : '' ))
+    ; __append(" aria-label=\"Next model\">→</button>\n        </div>\n        <button class=\"mask-reviewed-button\" id=\"maskMarkReviewed\" type=\"button\">Mark reviewed</button>\n      </div>\n        <div class=\"mask-quick-switch-panel\" id=\"maskQuickSwitchPanel\" role=\"dialog\" aria-modal=\"false\" aria-label=\"Quick switch model\" hidden>\n          <div class=\"mask-quick-switch-search\">\n            <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"10.5\" cy=\"10.5\" r=\"6.5\"/><path d=\"m16 16 5 5\"/></svg>\n            <input id=\"maskQuickSwitchSearch\" type=\"search\" autocomplete=\"off\" spellcheck=\"false\" placeholder=\"Search model number, name, or slug…\" aria-controls=\"maskQuickSwitchList\">\n            <kbd>ESC</kbd>\n          </div>\n          <div class=\"mask-quick-switch-meta\">\n            <span>Model registry</span>\n            <output id=\"maskQuickSwitchCount\">")
+    ; __append(escapeFn( maskQueue.length ))
+    ; __append(" models</output>\n          </div>\n          <div class=\"mask-quick-switch-list\" id=\"maskQuickSwitchList\" role=\"listbox\" aria-label=\"Matching models\"></div>\n          <footer>\n            <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>\n            <span><kbd>↵</kbd> Open</span>\n            <span>Current draft saves before switching</span>\n          </footer>\n        </div>\n        <div class=\"mask-preview-switcher\" role=\"group\" aria-label=\"Preview mode\">\n          <button class=\"is-active\" type=\"button\" data-preview=\"overlay\">Overlay</button>\n          <button type=\"button\" data-preview=\"mask\">Mask</button>\n          <button type=\"button\" data-preview=\"outline\">Outline</button>\n        </div>\n        <div class=\"mask-workspace-hint\" id=\"maskWorkspaceHint\">Double-click or Shift-click a contour to add a node</div>\n      </div>\n\n      <div class=\"mask-canvas-viewport\" id=\"maskCanvasViewport\">\n        <div class=\"mask-canvas-drop\" id=\"maskCanvasDrop\" hidden>\n          <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 17v3h16v-3\"/></svg>\n          <strong>Drop an image or SVG</strong>\n          <span>Images start a new document · SVG restores mask regions</span>\n        </div>\n\n        <svg\n          id=\"maskEditorSvg\"\n          class=\"mask-editor-svg\"\n          viewBox=\"0 0 1024 1536\"\n          preserveAspectRatio=\"xMidYMid meet\"\n          role=\"application\"\n          aria-label=\"Editable mask canvas\"\n          tabindex=\"0\"\n        >\n          <defs>\n            <pattern id=\"maskChecker\" width=\"32\" height=\"32\" patternUnits=\"userSpaceOnUse\">\n              <rect width=\"32\" height=\"32\" fill=\"#25282c\"/>\n              <path d=\"M0 0h16v16H0zm16 16h16v16H16z\" fill=\"#2d3035\"/>\n            </pattern>\n          </defs>\n          <rect id=\"maskCanvasBackground\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" fill=\"url(#maskChecker)\"/>\n          <image id=\"maskBaseImage\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" preserveAspectRatio=\"none\"/>\n          <rect id=\"maskBlackPreview\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" fill=\"#050607\" hidden/>\n          <g id=\"maskAddRegions\" class=\"mask-region-group mask-region-add\"></g>\n          <g id=\"maskSubtractRegions\" class=\"mask-region-group mask-region-subtract\"></g>\n          <g id=\"maskDraftLayer\"></g>\n          <g id=\"maskNodeLayer\"></g>\n        </svg>\n\n        <div class=\"mask-empty-note\" id=\"maskEmptyNote\">\n          <span>Start a contour</span>\n          <strong>Choose Pen for precise points or Trace for a freehand outline.</strong>\n          <small>Close with Enter, double-click, or click the first point.</small>\n        </div>\n      </div>\n\n      <footer class=\"mask-status-bar\">\n        <span id=\"maskCanvasDimensions\">1024 × 1536 px</span>\n        <span id=\"maskCursorPosition\">X — &nbsp; Y —</span>\n        <span id=\"maskZoomLabel\">100%</span>\n        <span class=\"mask-status-spacer\"></span>\n        <span id=\"maskRegionSummary\">0 add · 0 cut</span>\n        <span class=\"mask-status-message\" id=\"maskStatusMessage\" role=\"status\" aria-live=\"polite\">Ready</span>\n      </footer>\n    </section>\n\n    <aside class=\"mask-inspector\" aria-label=\"Mask inspector\">\n      <div class=\"mask-inspector-title\">\n        <span>Inspector</span>\n        <small id=\"maskSelectionLabel\">No selection</small>\n      </div>\n\n      <section class=\"mask-inspector-section mask-color-proof-section\" aria-labelledby=\"maskColorProofTitle\">\n        <div class=\"mask-section-heading mask-color-proof-heading\">\n          <span id=\"maskColorProofTitle\">Color proof</span>\n          <small><i></i> Live mask</small>\n        </div>\n        <div class=\"mask-color-preview-frame\">\n          <svg\n            id=\"maskColorPreview\"\n            class=\"mask-color-preview\"\n            viewBox=\"0 0 1024 1536\"\n            preserveAspectRatio=\"xMidYMid meet\"\n            role=\"img\"\n            aria-label=\"Live garment color preview\"\n          >\n            <defs>\n              <mask id=\"maskColorPreviewMask\" maskUnits=\"userSpaceOnUse\" maskContentUnits=\"userSpaceOnUse\">\n                <rect id=\"maskColorPreviewClear\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" fill=\"#000000\"/>\n                <g id=\"maskColorPreviewAdd\" fill=\"#ffffff\"></g>\n                <g id=\"maskColorPreviewCut\" fill=\"#000000\"></g>\n              </mask>\n            </defs>\n            <rect id=\"maskColorPreviewBackdrop\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" fill=\"#d7d5d0\"/>\n            <image id=\"maskColorPreviewImage\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" preserveAspectRatio=\"none\"/>\n            <rect id=\"maskColorPreviewTint\" class=\"mask-color-preview-tint\" x=\"0\" y=\"0\" width=\"1024\" height=\"1536\" fill=\"#c43d32\" mask=\"url(#maskColorPreviewMask)\"/>\n          </svg>\n          <div class=\"mask-color-preview-empty\" id=\"maskColorPreviewEmpty\">\n            <span>NO ACTIVE MASK</span>\n            <small>Draw an Add region to preview color</small>\n          </div>\n          <span class=\"mask-color-preview-tag\">Proof / RGB</span>\n        </div>\n        <div class=\"mask-color-control\">\n          <label for=\"maskPreviewColor\">\n            <input id=\"maskPreviewColor\" type=\"color\" value=\"#c43d32\" aria-label=\"Choose preview garment color\">\n            <span>Garment color</span>\n          </label>\n          <output id=\"maskPreviewColorValue\" for=\"maskPreviewColor\">#C43D32</output>\n        </div>\n        <div class=\"mask-color-swatches\" id=\"maskColorSwatches\" role=\"group\" aria-label=\"Preview color presets\">\n          <button type=\"button\" data-preview-color=\"#f2efe6\" style=\"--swatch: #f2efe6\" aria-label=\"Ivory\"></button>\n          <button type=\"button\" data-preview-color=\"#1c2028\" style=\"--swatch: #1c2028\" aria-label=\"Ink\"></button>\n          <button type=\"button\" data-preview-color=\"#244b8f\" style=\"--swatch: #244b8f\" aria-label=\"Cobalt\"></button>\n          <button class=\"is-active\" type=\"button\" data-preview-color=\"#c43d32\" style=\"--swatch: #c43d32\" aria-label=\"Vermilion\"></button>\n          <button type=\"button\" data-preview-color=\"#3f745b\" style=\"--swatch: #3f745b\" aria-label=\"Forest\"></button>\n          <button type=\"button\" data-preview-color=\"#d09a32\" style=\"--swatch: #d09a32\" aria-label=\"Ochre\"></button>\n        </div>\n      </section>\n\n      <section class=\"mask-inspector-section\">\n        <div class=\"mask-section-heading\">\n          <span>Selected region</span>\n          <div class=\"mask-inline-actions\">\n            <button id=\"maskDeleteNode\" class=\"mask-delete-node-action\" type=\"button\" title=\"Delete selected node (Delete/Backspace)\" aria-label=\"Delete selected node\" disabled>\n              <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"7\"/><path d=\"M9 12h6\"/></svg>\n            </button>\n            <button id=\"maskDuplicateRegion\" type=\"button\" title=\"Duplicate selected region\" disabled>\n              <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M9 8h10v12H9V8Zm-4 8H3V4h10v2\"/></svg>\n            </button>\n            <button id=\"maskDeleteRegion\" type=\"button\" title=\"Delete selected region\" disabled>\n              <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 7h14M9 7V4h6v3m2 0-1 13H8L7 7m3 4v5m4-5v5\"/></svg>\n            </button>\n          </div>\n        </div>\n        <div class=\"mask-property-row\">\n          <label for=\"maskRegionKind\">Operation</label>\n          <select id=\"maskRegionKind\" disabled>\n            <option value=\"add\">Add to mask</option>\n            <option value=\"subtract\">Cut from mask</option>\n          </select>\n        </div>\n        <div class=\"mask-property-row mask-range-row\">\n          <div>\n            <label for=\"maskSmoothing\">Curve smoothing</label>\n            <output id=\"maskSmoothingValue\">28</output>\n          </div>\n          <input id=\"maskSmoothing\" type=\"range\" min=\"0\" max=\"100\" step=\"1\" value=\"28\" disabled>\n        </div>\n        <p class=\"mask-inspector-help\">Whole-region movement is locked. Drag individual nodes to refine the contour; double-click or Shift-click the contour to insert a node; Option/Alt-click a node to remove it.</p>\n      </section>\n\n      <section class=\"mask-inspector-section mask-layers-section\">\n        <div class=\"mask-section-heading\">\n          <span>Regions</span>\n          <button id=\"maskAddRegion\" class=\"mask-text-action\" type=\"button\">+ New</button>\n        </div>\n        <div class=\"mask-layer-list\" id=\"maskLayerList\">\n          <div class=\"mask-layer-empty\">No mask regions yet.</div>\n        </div>\n      </section>\n\n      <section class=\"mask-inspector-section mask-document-section\">\n        <div class=\"mask-section-heading\"><span>Document</span></div>\n        <div class=\"mask-document-grid\">\n          <label>\n            <span>Width</span>\n            <input id=\"maskDocumentWidth\" type=\"number\" min=\"1\" max=\"12000\" value=\"1024\">\n          </label>\n          <label>\n            <span>Height</span>\n            <input id=\"maskDocumentHeight\" type=\"number\" min=\"1\" max=\"12000\" value=\"1536\">\n          </label>\n        </div>\n        <div class=\"mask-property-row mask-range-row\">\n          <div>\n            <label for=\"maskOverlayOpacity\">Overlay opacity</label>\n            <output id=\"maskOverlayOpacityValue\">10%</output>\n          </div>\n          <input id=\"maskOverlayOpacity\" type=\"range\" min=\"10\" max=\"90\" step=\"1\" value=\"10\">\n        </div>\n        <button id=\"maskApplyDimensions\" class=\"mask-inspector-button\" type=\"button\">Apply canvas dimensions</button>\n      </section>\n\n      <section class=\"mask-shortcuts\">\n        <span>Shortcuts</span>\n        <dl>\n          <div><dt>Close path</dt><dd>Enter</dd></div>\n          <div><dt>Cancel</dt><dd>Esc</dd></div>\n          <div><dt>Pan</dt><dd>Space</dd></div>\n          <div><dt>Delete</dt><dd>⌫</dd></div>\n        </dl>\n      </section>\n    </aside>\n  </div>\n</section>\n\n<script id=\"maskInitialSvg\" type=\"image/svg+xml\">")
+    ; __append( defaultMaskSvg )
+    ; __append("</script>\n<script src=\"/js/svg-mask-geometry.js?v=20260829-manual-mask-v9\"></script>\n<script src=\"/js/svg-mask-editor.js?v=20260901-overlay-opacity-v15\" defer></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -4765,6 +6096,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4814,7 +6149,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"tool-detail-hero\">\n  <div class=\"container tool-detail-hero-grid\">\n    <div class=\"tool-detail-copy\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/tools\">Tools</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( toolPage.title ))
@@ -4852,7 +6194,7 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
     ; __append("\"\n              camera-controls\n              auto-rotate\n              shadow-intensity=\"1.55\"\n              shadow-softness=\"0.52\"\n              exposure=\"0.66\"\n              environment-image=\"neutral\"\n              aria-label=\"")
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
-    ; __append("\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary tool-model-load\" id=\"toolLoadPreview\">\n              <span>Load interactive 3D</span>\n              <small>Loads only when you need it</small>\n            </button>\n          </div>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
+    ; __append("\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary tool-model-load\" id=\"toolLoadPreview\">\n              <i class=\"tool-model-spinner\" aria-hidden=\"true\"></i>\n              <span>Load interactive 3D</span>\n              <small>Loads only when you need it</small>\n            </button>\n          </div>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
     ;  ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) { 
     ; __append("\n                <button type=\"button\" class=\"tool-color-swatch")
     ; __append(escapeFn( index === 0 ? ' active' : '' ))
@@ -4928,7 +6270,7 @@ title = __locals.title,
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.benefitsTitle || 'Preview the product before you spend on samples' ))
     ; __append("</h2>\n      <p>")
-    ; __append(escapeFn( toolPage.benefitsSubtitle || 'Use ClothingDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' ))
+    ; __append(escapeFn( toolPage.benefitsSubtitle || 'Use ClozDesign when you need clear apparel direction quickly, without waiting for photography, physical samples, or another PSD pack.' ))
     ; __append("</p>\n    </div>\n    <div class=\"generator-output-grid\">\n      ")
     ;  toolPage.competitorInsights.forEach(function(insight) { 
     ; __append("\n        <article class=\"generator-output-card\">\n          <h3>")
@@ -5077,7 +6419,7 @@ title = __locals.title,
     ; __append( JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') )
     ; __append(";\n      const modelViewerSrc = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n      let viewerReadyPromise = null;\n      if (!viewer || !stage || !preview) return;\n\n      const withTimeout = (promise, milliseconds, message) => Promise.race([\n        promise,\n        new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n      ]);\n\n      const loadModelViewerModule = () => {\n        if (customElements.get('model-viewer')) return Promise.resolve();\n        const existing = document.querySelector('script[data-tool-model-viewer]');\n        const scriptReady = existing\n          ? new Promise((resolve, reject) => {\n              existing.addEventListener('load', resolve, { once: true });\n              existing.addEventListener('error', reject, { once: true });\n            })\n          : new Promise((resolve, reject) => {\n              const script = document.createElement('script');\n              script.type = 'module';\n              script.src = modelViewerSrc;\n              script.dataset.toolModelViewer = 'true';\n              script.addEventListener('load', resolve, { once: true });\n              script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n              document.head.appendChild(script);\n            });\n        return withTimeout(scriptReady, 15000, '3D viewer timed out')\n          .then(() => withTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n      };\n\n      const waitForModel = () => {\n        if (viewer.loaded) return Promise.resolve();\n        return withTimeout(new Promise((resolve, reject) => {\n          viewer.addEventListener('load', resolve, { once: true });\n          viewer.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n          viewer.src = viewer.dataset.modelSrc;\n        }), 45000, '3D model timed out');\n      };\n\n      const ensureViewerReady = () => {\n        if (viewer.loaded && customElements.get('model-viewer')) return Promise.resolve(viewer);\n        if (viewerReadyPromise) return viewerReadyPromise;\n\n        stage.classList.remove('is-error');\n        stage.classList.add('is-loading');\n        stage.setAttribute('aria-busy', 'true');\n        if (loadPreview) loadPreview.querySelector('span').textContent = 'Loading 3D preview…';\n        status.textContent = 'Loading the interactive garment only once…';\n\n        viewerReadyPromise = loadModelViewerModule()\n          .then(() => {\n            viewer.hidden = false;\n            return waitForModel();\n          })\n          .then(() => {\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-ready');\n            stage.setAttribute('aria-busy', 'false');\n            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';\n            window.trackEvent?.('tool_interaction', {\n              interaction_type: 'load_3d_preview',\n              tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
-    ; __append("\n            });\n            return viewer;\n          })\n          .catch((error) => {\n            viewerReadyPromise = null;\n            viewer.hidden = true;\n            viewer.removeAttribute('src');\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-error');\n            stage.setAttribute('aria-busy', 'false');\n            if (loadPreview) loadPreview.querySelector('span').textContent = 'Retry interactive 3D';\n            status.textContent = 'The fast preview is still available. Retry 3D or open the full editor.';\n            throw error;\n          });\n\n        return viewerReadyPromise;\n      };\n\n      const hexFactor = (hex) => {\n        const value = parseInt(String(hex).replace('#', ''), 16);\n        return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n      };\n\n      const applyColor = (hex) => {\n        const materials = viewer.model?.materials || [];\n        materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));\n        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';\n      };\n\n      loadPreview?.addEventListener('click', () => {\n        ensureViewerReady().catch(() => {});\n      });\n\n      document.querySelectorAll('.tool-color-swatch').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            applyColor(button.dataset.color);\n          } catch (_) {}\n        });\n      });\n\n      document.querySelectorAll('.tool-angle-controls button').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            viewer.removeAttribute('auto-rotate');\n            viewer.cameraOrbit = button.dataset.orbit;\n            viewer.jumpCameraToGoal?.();\n            status.textContent = `${button.textContent} view selected.`;\n          } catch (_) {}\n        });\n      });\n\n      upload?.addEventListener('change', () => {\n        const file = upload.files?.[0];\n        if (!file) return;\n        if (file.size > 8 * 1024 * 1024) {\n          status.textContent = 'Choose an artwork file smaller than 8 MB.';\n          upload.value = '';\n          return;\n        }\n        const reader = new FileReader();\n        reader.onload = () => {\n          try {\n            sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({\n              dataUrl: reader.result,\n              name: file.name,\n              createdAt: Date.now()\n            }));\n          } catch (error) {\n            status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';\n            return;\n          }\n          window.trackEvent?.('begin_design', {\n            design_entry: 'tool_artwork_upload',\n            tool_name: ")
+    ; __append("\n            });\n            return viewer;\n          })\n          .catch((error) => {\n            viewerReadyPromise = null;\n            viewer.hidden = true;\n            viewer.removeAttribute('src');\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-error');\n            stage.setAttribute('aria-busy', 'false');\n            if (loadPreview) loadPreview.querySelector('span').textContent = 'Retry interactive 3D';\n            status.textContent = 'The fast preview is still available. Retry 3D or open the full editor.';\n            throw error;\n          });\n\n        return viewerReadyPromise;\n      };\n\n      const hexFactor = (hex) => {\n        const value = parseInt(String(hex).replace('#', ''), 16);\n        return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n      };\n\n      const applyColor = (hex) => {\n        const materials = viewer.model?.materials || [];\n        materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));\n        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';\n      };\n\n      loadPreview?.addEventListener('click', () => {\n        ensureViewerReady().catch(() => {});\n      });\n\n      document.querySelectorAll('.tool-color-swatch').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            applyColor(button.dataset.color);\n          } catch (_) {}\n        });\n      });\n\n      document.querySelectorAll('.tool-angle-controls button').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            viewer.removeAttribute('auto-rotate');\n            viewer.cameraOrbit = button.dataset.orbit;\n            viewer.jumpCameraToGoal?.();\n            status.textContent = `${button.textContent} view selected.`;\n          } catch (_) {}\n        });\n      });\n\n      upload?.addEventListener('change', () => {\n        const file = upload.files?.[0];\n        if (!file) return;\n        if (file.size > 10 * 1024 * 1024) {\n          status.textContent = 'Choose an artwork file no larger than 10 MB.';\n          upload.value = '';\n          return;\n        }\n        const reader = new FileReader();\n        reader.onload = () => {\n          try {\n            sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({\n              dataUrl: reader.result,\n              name: file.name,\n              createdAt: Date.now()\n            }));\n          } catch (error) {\n            status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';\n            return;\n          }\n          window.trackEvent?.('begin_design', {\n            design_entry: 'tool_artwork_upload',\n            tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
     ; __append("\n          });\n          window.location.href = preview.dataset.editorHref;\n        };\n        reader.readAsDataURL(file);\n      });\n\n      download?.addEventListener('click', async () => {\n        try {\n          status.textContent = isBulkTool ? 'Rendering four garment colorways...' : 'Preparing transparent preview...';\n          await ensureViewerReady();\n          status.textContent = isBulkTool ? 'Rendering four garment colorways...' : 'Preparing transparent preview...';\n          if (isBulkTool) {\n            const colors = ['#f7f7f5', '#171717', '#506b5d', '#a54b43'];\n            const snapshots = [];\n            for (const color of colors) {\n              applyColor(color);\n              await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));\n              const snapshot = viewer.toDataURL?.('image/png');\n              if (!snapshot) throw new Error('Colorway export unavailable');\n              snapshots.push({ color, snapshot });\n            }\n            const tileSize = 900;\n            const canvas = document.createElement('canvas');\n            canvas.width = tileSize * 2;\n            canvas.height = tileSize * 2;\n            const context = canvas.getContext('2d');\n            context.fillStyle = '#f5f5f7';\n            context.fillRect(0, 0, canvas.width, canvas.height);\n            for (let index = 0; index < snapshots.length; index += 1) {\n              const item = snapshots[index];\n              const image = new Image();\n              await new Promise((resolve, reject) => {\n                image.onload = resolve;\n                image.onerror = reject;\n                image.src = item.snapshot;\n              });\n              const x = (index % 2) * tileSize;\n              const y = Math.floor(index / 2) * tileSize;\n              context.drawImage(image, x, y, tileSize, tileSize);\n              context.fillStyle = item.color;\n              context.beginPath();\n              context.arc(x + 54, y + tileSize - 54, 22, 0, Math.PI * 2);\n              context.fill();\n              context.strokeStyle = 'rgba(0, 0, 0, 0.2)';\n              context.stroke();\n            }\n            const link = document.createElement('a');\n            link.href = canvas.toDataURL('image/png');\n            link.download = 'bulk-t-shirt-colorway-sheet.png';\n            document.body.appendChild(link);\n            link.click();\n            link.remove();\n            status.textContent = 'Four-color T-shirt mockup sheet downloaded.';\n            window.trackEvent?.('design_export', {\n              export_format: 'png',\n              export_type: 'colorway_sheet',\n              tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
@@ -5119,6 +6461,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5168,7 +6514,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('tools.pageTitle') ))
@@ -5189,6 +6542,193 @@ title = __locals.title,
     ; __append("</h3>\n        <ul>\n          <li><a href=\"/blog/how-to-choose-a-3d-clothing-model\">Choose a 3D Clothing Model</a></li>\n          <li><a href=\"/blog/3d-apparel-mockup-workflow\">3D Apparel Mockup Workflow</a></li>\n        </ul>\n      </div>\n    </div>\n\n    <!-- Popular Tools Section -->\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">")
     ; __append(escapeFn( t('tools.popularTools') ))
     ; __append("</h2>\n      <div class=\"popular-grid\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png\" alt=\"T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>T-Shirt Mockup Generator</h4>\n            <p>Start from T-shirt models and plan product-page mockups</p>\n          </div>\n        </a>\n        <a href=\"/tools/hoodie-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png\" alt=\"Hoodie Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Hoodie Mockup Generator</h4>\n            <p>Preview streetwear fits and hoodie artwork zones</p>\n          </div>\n        </a>\n        <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png\" alt=\"Bulk T-Shirt Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Bulk T-Shirt Mockup Generator</h4>\n            <p>Compare POD colorways and product variants</p>\n          </div>\n        </a>\n        <a href=\"/tools/print-on-demand-mockup-generator\" class=\"popular-card\">\n          <div class=\"popular-image\">\n            <img src=\"https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png\" alt=\"Print-on-Demand Mockup Generator\">\n          </div>\n          <div class=\"popular-info\">\n            <h4>Print-on-Demand Mockup Generator</h4>\n            <p>Plan listing visuals for Shopify and Etsy drafts</p>\n          </div>\n        </a>\n      </div>\n    </div>\n\n    <div class=\"popular-tools\">\n      <h2 class=\"section-title\">Free garment-specific mockup tools</h2>\n      <div class=\"tool-picker-grid\">\n        <a href=\"/tools/oversized-t-shirt-mockup-generator\">Oversized T-shirt mockups</a>\n        <a href=\"/tools/front-and-back-t-shirt-mockup\">Front and back T-shirt views</a>\n        <a href=\"/tools/polo-shirt-mockup-generator\">Polo shirt mockups</a>\n        <a href=\"/tools/long-sleeve-shirt-mockup-generator\">Long-sleeve shirt mockups</a>\n        <a href=\"/tools/streetwear-hoodie-mockup-generator\">Streetwear hoodie mockups</a>\n        <a href=\"/tools/transparent-apparel-mockup-generator\">Transparent apparel PNGs</a>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "tshirt-generator-landing.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
+    ; __append( include('partials/header', {
+  bodyClass: 'tmg-page',
+  pageStyles: ['/css/tshirt-generator-landing.css?v=20260913-spinner-v7']
+}) )
+    ; __append("\n\n")
+    ;  const tshirtModels = toolPage.modelStarters || []; 
+    ; __append("\n")
+    ;  const firstModel = tshirtModels[0] || {}; 
+    ; __append("\n\n<div class=\"tmg-landing\" data-tmg-carousel>\n  <section class=\"tmg-hero\" aria-labelledby=\"tmg-title\">\n    <div class=\"tmg-shell tmg-hero-grid\">\n      <div class=\"tmg-hero-copy\">\n        <p class=\"tmg-eyebrow\">Free browser T-shirt studio</p>\n        <h1 id=\"tmg-title\">Design your next<br>T-shirt in 3D.</h1>\n        <p class=\"tmg-hero-lede\">Start with a real garment fit, add your artwork, check every angle, and export a clean mockup—right in your browser.</p>\n        <div class=\"tmg-actions\">\n          <a class=\"tmg-button tmg-button-dark\" href=\"")
+    ; __append(escapeFn( firstModel.href ))
+    ; __append("#design\">\n            Start with the basic tee\n            <span aria-hidden=\"true\">→</span>\n          </a>\n          <a class=\"tmg-button tmg-button-light\" href=\"/mockups/t-shirt-mockup\">Explore all fits</a>\n        </div>\n        <p class=\"tmg-note\">Free during beta <span aria-hidden=\"true\">·</span> No Photoshop required</p>\n      </div>\n\n      <div class=\"tmg-model-panel\" aria-label=\"Interactive T-shirt model carousel\">\n        <div class=\"tmg-model-stage\" aria-busy=\"true\">\n          <div class=\"tmg-model-track\">\n            ")
+    ;  tshirtModels.forEach(function(model, index) { 
+    ; __append("\n              <div\n                class=\"tmg-model-slide")
+    ; __append(escapeFn( index === 0 ? ' is-active' : '' ))
+    ; __append("\"\n                data-tmg-slide\n                data-index=\"")
+    ; __append(escapeFn( index ))
+    ; __append("\"\n                data-position=\"")
+    ; __append(escapeFn( index === 0 ? 'active' : (index === 1 ? 'next' : (index === tshirtModels.length - 1 ? 'previous' : 'hidden-next')) ))
+    ; __append("\"\n                aria-hidden=\"")
+    ; __append(escapeFn( index === 0 ? 'false' : 'true' ))
+    ; __append("\"\n              >\n                <model-viewer\n                  class=\"tmg-model-viewer\"\n                  src=\"")
+    ; __append(escapeFn( model.modelSrc ))
+    ; __append("\"\n                  alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append(" interactive 3D preview\"\n                  loading=\"eager\"\n                  reveal=\"auto\"\n                  camera-controls\n                  interaction-prompt=\"none\"\n                  shadow-intensity=\"1.1\"\n                  shadow-softness=\"0.8\"\n                  exposure=\"0.72\"\n                  environment-image=\"neutral\"\n                  camera-orbit=\"0deg 78deg 105%\"\n                  min-camera-orbit=\"auto 55deg 85%\"\n                  max-camera-orbit=\"auto 105deg 140%\"\n                  tabindex=\"")
+    ; __append(escapeFn( index === 0 ? '0' : '-1' ))
+    ; __append("\"\n                ></model-viewer>\n              </div>\n            ")
+    ;  }); 
+    ; __append("\n          </div>\n          <div class=\"tmg-model-loading\" data-tmg-loading aria-live=\"polite\">\n            <span aria-hidden=\"true\"></span>\n            <strong>Loading 3D</strong>\n          </div>\n\n          <button class=\"tmg-carousel-arrow tmg-carousel-arrow-left\" type=\"button\" data-tmg-prev aria-label=\"Previous T-shirt model\">\n            <span aria-hidden=\"true\">‹</span>\n          </button>\n          <button class=\"tmg-carousel-arrow tmg-carousel-arrow-right\" type=\"button\" data-tmg-next aria-label=\"Next T-shirt model\">\n            <span aria-hidden=\"true\">›</span>\n          </button>\n        </div>\n\n        <div class=\"tmg-model-controls\">\n          <p class=\"tmg-model-count\" aria-live=\"polite\"><span data-tmg-current>01</span> / ")
+    ; __append(escapeFn( String(tshirtModels.length).padStart(2, '0') ))
+    ; __append("</p>\n          <div class=\"tmg-model-control-row\">\n            <div class=\"tmg-model-tabs\" role=\"tablist\" aria-label=\"Choose a T-shirt fit\">\n              ")
+    ;  tshirtModels.forEach(function(model, index) { 
+    ; __append("\n                <button\n                  type=\"button\"\n                  role=\"tab\"\n                  aria-selected=\"")
+    ; __append(escapeFn( index === 0 ? 'true' : 'false' ))
+    ; __append("\"\n                  tabindex=\"")
+    ; __append(escapeFn( index === 0 ? '0' : '-1' ))
+    ; __append("\"\n                  class=\"tmg-model-tab")
+    ; __append(escapeFn( index === 0 ? ' is-active' : '' ))
+    ; __append("\"\n                  data-tmg-model\n                  data-index=\"")
+    ; __append(escapeFn( index ))
+    ; __append("\"\n                  data-title=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\"\n                  data-href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("#design\"\n                >")
+    ; __append(escapeFn( model.shortTitle || model.title ))
+    ; __append("</button>\n              ")
+    ;  }); 
+    ; __append("\n            </div>\n            <p class=\"tmg-drag-hint\" aria-hidden=\"true\"><span>↻</span> Drag to rotate</p>\n          </div>\n        </div>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-fit-section\" id=\"tshirt-fits\" aria-labelledby=\"tmg-fit-title\">\n    <div class=\"tmg-shell\">\n      <p class=\"tmg-eyebrow\">Choose your fit</p>\n      <h2 id=\"tmg-fit-title\">Pick the shape before the artwork.</h2>\n      <p class=\"tmg-section-lede\">Start with a real garment fit and find the right look for your design.</p>\n      <div class=\"tmg-fit-grid\">\n        ")
+    ;  tshirtModels.forEach(function(model) { 
+    ; __append("\n          <article class=\"tmg-fit-card\">\n            <a class=\"tmg-fit-image\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("\" aria-label=\"Open ")
+    ; __append(escapeFn( model.title ))
+    ; __append("\">\n              <img src=\"")
+    ; __append(escapeFn( model.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" width=\"640\" height=\"640\" loading=\"lazy\" decoding=\"async\">\n            </a>\n            <div class=\"tmg-fit-card-copy\">\n              <h3>")
+    ; __append(escapeFn( model.title ))
+    ; __append("</h3>\n              <a href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("\">Open model <span aria-hidden=\"true\">→</span></a>\n            </div>\n          </article>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-workflow\" aria-labelledby=\"tmg-workflow-title\">\n    <div class=\"tmg-shell tmg-workflow-grid\">\n      <figure class=\"tmg-workflow-visual\">\n        <img src=\"/images/mockups/generated/tshirt-workflow-studio.webp\" alt=\"The ClozDesign basic T-shirt shown blank, with artwork, and as a finished product mockup\" width=\"1536\" height=\"1024\" loading=\"lazy\" decoding=\"async\">\n      </figure>\n\n      <div class=\"tmg-workflow-copy\">\n        <p class=\"tmg-eyebrow\">One simple workflow</p>\n        <h2 id=\"tmg-workflow-title\">From blank garment<br>to finished mockup.</h2>\n        <ol class=\"tmg-step-list\">\n          <li><span>01</span><strong>Choose a T-shirt</strong></li>\n          <li><span>02</span><strong>Add artwork and review every angle</strong></li>\n          <li><span>03</span><strong>Download your product preview</strong></li>\n        </ol>\n        <a class=\"tmg-button tmg-button-dark tmg-editor-link\" href=\"")
+    ; __append(escapeFn( firstModel.href ))
+    ; __append("#design\">Open T-Shirt Editor <span aria-hidden=\"true\">→</span></a>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-use-cases\" aria-labelledby=\"tmg-use-cases-title\">\n    <div class=\"tmg-shell\">\n      <p class=\"tmg-eyebrow\">Made for the next decision</p>\n      <h2 id=\"tmg-use-cases-title\">See it before you print it.</h2>\n      <div class=\"tmg-use-case-grid\">\n        ")
+    ;  const useCases = [
+          { title: 'Print-on-demand listings', image: '/images/mockups/generated/tshirt-pod-listing.webp', alt: 'ClozDesign basic short-sleeve T-shirt prepared as a product listing' },
+          { title: 'Streetwear drop reviews', image: '/images/mockups/generated/tshirt-streetwear-review.webp', alt: 'ClozDesign oversized drop-shoulder T-shirt with blue artwork' },
+          { title: 'Front and back approvals', image: '/images/mockups/generated/tshirt-front-back-approval.webp', alt: 'ClozDesign long-sleeve shirt shown from the front and back' }
+        ]; 
+    ; __append("\n        ")
+    ;  useCases.forEach(function(item) { 
+    ; __append("\n          <article class=\"tmg-use-case-card\">\n            <img src=\"")
+    ; __append(escapeFn( item.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( item.alt ))
+    ; __append("\" width=\"1122\" height=\"1402\" loading=\"lazy\" decoding=\"async\">\n            <h3>")
+    ; __append(escapeFn( item.title ))
+    ; __append("</h3>\n          </article>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-faq\" aria-labelledby=\"tmg-faq-title\">\n    <div class=\"tmg-shell tmg-faq-grid\">\n      <div>\n        <h2 id=\"tmg-faq-title\">Questions before you start.</h2>\n        <p>Everything you need to know, in one place.</p>\n      </div>\n      <div class=\"tmg-faq-list\">\n        ")
+    ;  (toolPage.faq || []).slice(0, 4).forEach(function(item, index) { 
+    ; __append("\n          <details")
+    ; __append(escapeFn( index === 0 ? ' open' : '' ))
+    ; __append(">\n            <summary>")
+    ; __append(escapeFn( index === 3 ? 'Can I use oversized and long-sleeve models?' : item.question ))
+    ; __append("<span aria-hidden=\"true\"></span></summary>\n            <p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p>\n          </details>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-final-wrap\">\n    <div class=\"tmg-shell\">\n      <div class=\"tmg-final-cta\">\n        <div>\n          <h2>Start with the fit that matches your idea.</h2>\n          <p>Open the T-shirt editor and bring your design to life.</p>\n        </div>\n        <div class=\"tmg-final-actions\">\n          <a class=\"tmg-button tmg-button-white tmg-editor-link\" href=\"")
+    ; __append(escapeFn( firstModel.href ))
+    ; __append("#design\">Open T-Shirt Editor <span aria-hidden=\"true\">→</span></a>\n          <a class=\"tmg-text-link\" href=\"/mockups\">Browse Apparel Models <span aria-hidden=\"true\">→</span></a>\n        </div>\n      </div>\n    </div>\n  </section>\n</div>\n\n<script src=\"/js/tshirt-generator-landing.js?v=20260910-v5\" defer></script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -5220,6 +6760,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5269,7 +6813,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) )
     ; __append("\n")
     ; 
@@ -5282,14 +6833,18 @@ title = __locals.title,
   };
   const baseImageVersionSeparator = String(asset.base_image_url).includes('?') ? '&' : '?';
   const editorBaseImageUrl = `${asset.base_image_url}${baseImageVersionSeparator}v=commercial-refine-v10`;
+  const rasterMaskVersionSeparator = String(asset.mask_image_url).includes('?') ? '&' : '?';
+  const rasterMaskFallbackUrl = `${asset.mask_image_url}${rasterMaskVersionSeparator}v=direct-alpha-edge-v4`;
 
     ; __append("\n\n<div class=\"white-detail-main\">\n  <div class=\"white-detail-shell\">\n    <nav class=\"white-detail-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/\">Home</a><span aria-hidden=\"true\">›</span>\n      <a href=\"/white-mockups\">White Mockups</a><span aria-hidden=\"true\">›</span>\n      <span aria-current=\"page\">")
     ; __append(escapeFn( displayTitle ))
     ; __append("</span>\n    </nav>\n\n    <section\n      class=\"white-detail-product\"\n      id=\"whiteMockupEditor\"\n      data-base-image=\"")
     ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n      data-mask-image=\"")
-    ; __append(escapeFn( asset.mask_image_url ))
-    ; __append("?v=commercial-refine-v10\"\n      data-depth-image=\"")
+    ; __append(escapeFn( asset.live_mask_url ))
+    ; __append("\"\n      data-mask-fallback=\"")
+    ; __append(escapeFn( rasterMaskFallbackUrl ))
+    ; __append("\"\n      data-depth-image=\"")
     ; __append(escapeFn( asset.depth_image_url ))
     ; __append("?v=commercial-refine-v10\"\n      data-asset-name=\"")
     ; __append(escapeFn( asset.asset_name ))
@@ -5319,6 +6874,8 @@ title = __locals.title,
     ; __append(escapeFn( asset.default_scale ))
     ; __append("\"\n      data-default-warp=\"")
     ; __append(escapeFn( asset.default_warp ))
+    ; __append("\"\n      data-authenticated=\"")
+    ; __append(escapeFn( user ? 'true' : 'false' ))
     ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <img\n            class=\"white-detail-stage-poster\"\n            crossorigin=\"anonymous\"\n            src=\"")
     ; __append(escapeFn( editorBaseImageUrl ))
     ; __append("\"\n            alt=\"")
@@ -5337,7 +6894,9 @@ title = __locals.title,
     ; __append(escapeFn( displayTitle ))
     ; __append(" White Mockup</h1>\n        <p class=\"white-detail-description\">Preview artwork on a natural ")
     ; __append(escapeFn( typeName ))
-    ; __append(" fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>\n\n        <label class=\"white-detail-upload\" id=\"whiteMockupUploadZone\">\n          <input type=\"file\" id=\"whiteMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"white-detail-upload-icon\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/></svg>\n          </span>\n          <span>\n            <strong id=\"whiteMockupUploadLabel\">Upload your design</strong>\n            <small>PNG, JPG or WebP · up to 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"white-detail-garment-colors\">\n          <div class=\"white-detail-control-label\">\n            <span>Garment color</span>\n            <small id=\"whiteMockupGarmentColorLabel\">Original white</small>\n          </div>\n          <div class=\"white-detail-garment-swatches\" role=\"group\" aria-label=\"Choose garment color\">\n            <button type=\"button\" class=\"active\" data-garment-color=\"#ffffff\" data-label=\"Original white\" aria-label=\"White garment\" aria-pressed=\"true\"><i style=\"--swatch:#ffffff\"></i></button>\n            <button type=\"button\" data-garment-color=\"#e2d5c2\" data-label=\"Natural ecru\" aria-label=\"Natural ecru garment\" aria-pressed=\"false\"><i style=\"--swatch:#e2d5c2\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a9b5a4\" data-label=\"Soft sage\" aria-label=\"Soft sage garment\" aria-pressed=\"false\"><i style=\"--swatch:#a9b5a4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#9db3c4\" data-label=\"Dusty blue\" aria-label=\"Dusty blue garment\" aria-pressed=\"false\"><i style=\"--swatch:#9db3c4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a8493f\" data-label=\"Brick red\" aria-label=\"Brick red garment\" aria-pressed=\"false\"><i style=\"--swatch:#a8493f\"></i></button>\n            <button type=\"button\" data-garment-color=\"#27384d\" data-label=\"Deep navy\" aria-label=\"Deep navy garment\" aria-pressed=\"false\"><i style=\"--swatch:#27384d\"></i></button>\n            <button type=\"button\" data-garment-color=\"#252523\" data-label=\"Black\" aria-label=\"Black garment\" aria-pressed=\"false\"><i style=\"--swatch:#252523\"></i></button>\n            <label class=\"white-detail-custom-swatch white-detail-garment-custom-swatch\" aria-label=\"Choose a custom garment color\">\n              <input type=\"color\" id=\"whiteMockupGarmentColor\" value=\"#c9b7a2\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <div class=\"white-detail-backgrounds\">\n          <div class=\"white-detail-control-label\">\n            <span>Change background</span>\n            <small id=\"whiteMockupBackgroundLabel\">Original studio</small>\n          </div>\n          <div class=\"white-detail-swatches\" role=\"group\" aria-label=\"Choose mockup background\">\n            <button type=\"button\" class=\"active\" data-background=\"studio\" data-label=\"Original studio\" aria-label=\"Original studio background\" aria-pressed=\"true\"><i class=\"studio\"></i></button>\n            <button type=\"button\" data-background=\"#f7f7f4\" data-label=\"Soft white\" aria-label=\"Soft white background\" aria-pressed=\"false\"><i style=\"--swatch:#f7f7f4\"></i></button>\n            <button type=\"button\" data-background=\"#d9d3c9\" data-label=\"Warm stone\" aria-label=\"Warm stone background\" aria-pressed=\"false\"><i style=\"--swatch:#d9d3c9\"></i></button>\n            <button type=\"button\" data-background=\"#a8b4a6\" data-label=\"Muted sage\" aria-label=\"Muted sage background\" aria-pressed=\"false\"><i style=\"--swatch:#a8b4a6\"></i></button>\n            <button type=\"button\" data-background=\"#b8c7d0\" data-label=\"Cool gray\" aria-label=\"Cool gray background\" aria-pressed=\"false\"><i style=\"--swatch:#b8c7d0\"></i></button>\n            <button type=\"button\" data-background=\"#242522\" data-label=\"Charcoal\" aria-label=\"Charcoal background\" aria-pressed=\"false\"><i style=\"--swatch:#242522\"></i></button>\n            <label class=\"white-detail-custom-swatch\" aria-label=\"Choose a custom background color\">\n              <input type=\"color\" id=\"whiteMockupBackgroundColor\" value=\"#d6d3cb\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <button type=\"button\" class=\"white-detail-download\" id=\"whiteMockupDownload\" disabled>\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n          Download PNG\n        </button>\n        <p class=\"white-detail-status\" id=\"whiteMockupStatus\" role=\"status\" aria-live=\"polite\">Ready for your design.</p>\n\n        <ul class=\"white-detail-trust\" aria-label=\"Mockup benefits\">\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z\"/></svg>\n            <span>Free to use</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3\"/></svg>\n            <span>Private in your browser</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/></svg>\n            <span>High-resolution export</span>\n          </li>\n        </ul>\n      </aside>\n    </section>\n\n    <section class=\"white-detail-benefits\" aria-label=\"White mockup features\">\n      <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>\n      <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>\n      <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>\n    </section>\n\n    <section class=\"white-detail-about\">\n      <div class=\"white-detail-section-heading\">\n        <span>About this mockup</span>\n        <h2>A commercial ")
+    ; __append(" fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>\n\n        <label class=\"white-detail-upload\" id=\"whiteMockupUploadZone\">\n          <input type=\"file\" id=\"whiteMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"white-detail-upload-icon\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/></svg>\n          </span>\n          <span>\n            <strong id=\"whiteMockupUploadLabel\">Upload your design</strong>\n            <small>PNG, JPG or WebP · up to 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"white-detail-garment-colors\">\n          <div class=\"white-detail-control-label\">\n            <span>Garment color</span>\n            <small id=\"whiteMockupGarmentColorLabel\">Original white</small>\n          </div>\n          <div class=\"white-detail-garment-swatches\" role=\"group\" aria-label=\"Choose garment color\">\n            <button type=\"button\" class=\"active\" data-garment-color=\"#ffffff\" data-label=\"Original white\" aria-label=\"White garment\" aria-pressed=\"true\"><i style=\"--swatch:#ffffff\"></i></button>\n            <button type=\"button\" data-garment-color=\"#e2d5c2\" data-label=\"Natural ecru\" aria-label=\"Natural ecru garment\" aria-pressed=\"false\"><i style=\"--swatch:#e2d5c2\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a9b5a4\" data-label=\"Soft sage\" aria-label=\"Soft sage garment\" aria-pressed=\"false\"><i style=\"--swatch:#a9b5a4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#9db3c4\" data-label=\"Dusty blue\" aria-label=\"Dusty blue garment\" aria-pressed=\"false\"><i style=\"--swatch:#9db3c4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a8493f\" data-label=\"Brick red\" aria-label=\"Brick red garment\" aria-pressed=\"false\"><i style=\"--swatch:#a8493f\"></i></button>\n            <button type=\"button\" data-garment-color=\"#27384d\" data-label=\"Deep navy\" aria-label=\"Deep navy garment\" aria-pressed=\"false\"><i style=\"--swatch:#27384d\"></i></button>\n            <button type=\"button\" data-garment-color=\"#252523\" data-label=\"Black\" aria-label=\"Black garment\" aria-pressed=\"false\"><i style=\"--swatch:#252523\"></i></button>\n            <label class=\"white-detail-custom-swatch white-detail-garment-custom-swatch\" aria-label=\"Choose a custom garment color\">\n              <input type=\"color\" id=\"whiteMockupGarmentColor\" value=\"#c9b7a2\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <div class=\"white-detail-backgrounds\">\n          <div class=\"white-detail-control-label\">\n            <span>Change background</span>\n            <small id=\"whiteMockupBackgroundLabel\">Original studio</small>\n          </div>\n          <div class=\"white-detail-swatches\" role=\"group\" aria-label=\"Choose mockup background\">\n            <button type=\"button\" class=\"active\" data-background=\"studio\" data-label=\"Original studio\" aria-label=\"Original studio background\" aria-pressed=\"true\"><i class=\"studio\"></i></button>\n            <button type=\"button\" data-background=\"#f7f7f4\" data-label=\"Soft white\" aria-label=\"Soft white background\" aria-pressed=\"false\"><i style=\"--swatch:#f7f7f4\"></i></button>\n            <button type=\"button\" data-background=\"#d9d3c9\" data-label=\"Warm stone\" aria-label=\"Warm stone background\" aria-pressed=\"false\"><i style=\"--swatch:#d9d3c9\"></i></button>\n            <button type=\"button\" data-background=\"#a8b4a6\" data-label=\"Muted sage\" aria-label=\"Muted sage background\" aria-pressed=\"false\"><i style=\"--swatch:#a8b4a6\"></i></button>\n            <button type=\"button\" data-background=\"#b8c7d0\" data-label=\"Cool gray\" aria-label=\"Cool gray background\" aria-pressed=\"false\"><i style=\"--swatch:#b8c7d0\"></i></button>\n            <button type=\"button\" data-background=\"#242522\" data-label=\"Charcoal\" aria-label=\"Charcoal background\" aria-pressed=\"false\"><i style=\"--swatch:#242522\"></i></button>\n            <label class=\"white-detail-custom-swatch\" aria-label=\"Choose a custom background color\">\n              <input type=\"color\" id=\"whiteMockupBackgroundColor\" value=\"#d6d3cb\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <button type=\"button\" class=\"white-detail-save\" id=\"whiteMockupSave\" disabled>Save project</button>\n        <button type=\"button\" class=\"white-detail-download\" id=\"whiteMockupDownload\" disabled>\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n          Download PNG\n        </button>\n        <p class=\"white-detail-status\" id=\"whiteMockupStatus\" role=\"status\" aria-live=\"polite\">Ready for your design.</p>\n\n        <ul class=\"white-detail-trust\" aria-label=\"Mockup benefits\">\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z\"/></svg>\n            <span>Free to use</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3\"/></svg>\n            <span>")
+    ; __append(escapeFn( user ? 'Saved to your account' : 'Sign in to save projects' ))
+    ; __append("</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/></svg>\n            <span>High-resolution export</span>\n          </li>\n        </ul>\n      </aside>\n    </section>\n\n    <section class=\"white-detail-benefits\" aria-label=\"White mockup features\">\n      <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>\n      <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>\n      <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>\n    </section>\n\n    <section class=\"white-detail-about\">\n      <div class=\"white-detail-section-heading\">\n        <span>About this mockup</span>\n        <h2>A commercial ")
     ; __append(escapeFn( typeName ))
     ; __append(" mockup built around the garment.</h2>\n      </div>\n      <div class=\"white-detail-about-copy\">\n        <p>The ")
     ; __append(escapeFn( displayTitle ))
@@ -5379,7 +6938,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260826-commercial-v8\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260913-svg-live-mask-v11\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -5411,6 +6970,10 @@ function encode_char(c) {
 title = __locals.title,
   page = __locals.page,
   error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5460,7 +7023,14 @@ title = __locals.title,
   typeLabel = __locals.typeLabel,
   typeName = __locals.typeName,
   relatedAssets = __locals.relatedAssets,
-  whiteFaqItems = __locals.whiteFaqItems;
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-library-page' }) )
     ; __append("\n")
     ; 

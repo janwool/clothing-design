@@ -42,7 +42,7 @@ async function main() {
       if (preferredModels.has(record.modelId)) throw new Error(`Multiple preferred assets for model ${record.modelId}`);
       preferredModels.add(record.modelId);
     }
-    if (!String(record.method || '').includes('commercial-refine-v3')) {
+    if (!/commercial-refine-v3|manual-registration-v1/.test(String(record.method || ''))) {
       throw new Error(`Asset has not passed commercial mask refinement: ${record.assetName}`);
     }
     if (!(Number(record.coverage) > 0 && Number(record.coverage) < 0.85)) {

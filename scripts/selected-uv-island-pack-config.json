@@ -1,0 +1,15 @@
+{
+  "version": "20260906-selected-uv-island-pack-v1",
+  "models": [
+    {"id": 1, "slug": "oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit", "input": "artifacts/deployments/catalog-20260825-commercial-uv-all-v1/remote-source/001-oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit.glb"},
+    {"id": 10, "slug": "long-sleeve-crewneck-shirt-3d-model", "input": "artifacts/deployments/catalog-20260819-commercial-uv-v1/glb/long-sleeve-crewneck-shirt-3d-model.glb", "packVisibleOnly": true},
+    {"id": 50, "slug": "classic-jacket-garment-3d-model", "input": "artifacts/deployments/catalog-20260819-commercial-uv-v1/glb/classic-jacket-garment-3d-model.glb"},
+    {"id": 51, "slug": "tailored-jacket-garment-3d-model", "input": "artifacts/deployments/catalog-20260819-commercial-uv-v1/glb/tailored-jacket-garment-3d-model.glb"},
+    {"id": 52, "slug": "longline-jacket-garment-3d-model", "input": "artifacts/deployments/catalog-20260819-commercial-uv-v1/glb/longline-jacket-garment-3d-model.glb"},
+    {"id": 53, "slug": "clean-puffer-jacket-3d-model", "input": "artifacts/deployments/catalog-20260819-commercial-uv-v1/glb/clean-puffer-jacket-3d-model.glb"},
+    {"id": 104, "slug": "classic-long-coat-panel-layout-3d-model", "input": "public/uploads/glb/classic-long-coat-panel-layout-3d-model-fabric-v2-neutral-v1.glb"},
+    {"id": 117, "slug": "longline-skirt-3d-model", "input": "public/uploads/glb/longline-skirt-3d-model-fabric-v1.glb"},
+    {"id": 119, "slug": "tailored-sleeveless-tank-top-3d-model", "input": "public/uploads/glb/tailored-sleeveless-tank-top-3d-model-fabric-v1.glb"},
+    {"id": 124, "slug": "modern-underwear-base-garment-3d-model", "input": "public/uploads/glb/modern-underwear-base-garment-3d-model-fabric-v1.glb"}
+  ]
+}

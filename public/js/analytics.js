@@ -175,7 +175,7 @@
       selected_value: target.dataset.color || target.dataset.pattern || target.dataset.env
     }));
 
-    if (target.id === 'downloadBtn' || target.id === 'downloadRenderBtn' || target.id === 'downloadRenderModalBtn') {
+    if (target.id === 'downloadBtn' || target.id === 'downloadRenderBtn' || target.id === 'downloadRenderModalBtn' || target.id === 'renderCurrentModelBtn') {
       // A successful export is reported by the export function. This only records intent.
       return track('tool_interaction', Object.assign(common, { interaction_type: 'export_intent' }));
     }

@@ -1,4 +1,4 @@
-# ClothingDesign growth operations
+# ClozDesign growth operations
 
 ## Operating target
 

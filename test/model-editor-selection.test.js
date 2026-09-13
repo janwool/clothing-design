@@ -11,6 +11,10 @@ const styles = fs.readFileSync(
   path.join(__dirname, '..', 'public', 'css', 'style.css'),
   'utf8'
 );
+const view = fs.readFileSync(
+  path.join(__dirname, '..', 'views', 'model-detail.ejs'),
+  'utf8'
+);
 
 test('recognizes two stationary pointer releases without stealing a quick follow-up drag', () => {
   assert.doesNotMatch(runtime, /isTextDoubleClick|lastTextClick/);
@@ -57,17 +61,32 @@ test('redraws selection controls when canvas zoom changes', () => {
   assert.match(zoomFunction, /requestAnimationFrame\(\(\) => renderSelection\(\)\)/);
 });
 
+test('rotates the canvas view in quarter turns without rotating the exported texture', () => {
+  assert.match(view, /id="canvasRotate"[^>]*aria-label="Rotate canvas clockwise/);
+  assert.match(view, /class="texture-canvas-frame" id="textureCanvasFrame"/);
+  assert.match(runtime, /canvasRotation: 0/);
+  assert.match(runtime, /state\.canvasRotation = \(state\.canvasRotation \+ 90\) % 360/);
+  assert.match(runtime, /const isQuarterTurn = state\.canvasRotation % 180 !== 0/);
+  assert.match(runtime, /resizeCursor\(handle, data\.rotate \+ state\.canvasRotation\)/);
+  assert.match(runtime, /exportSvg\.style\.removeProperty\('--canvas-rotation'\)/);
+  assert.match(styles, /transform: rotate\(var\(--canvas-rotation, 0deg\)\)/);
+});
+
 test('keeps editor overlays aligned to the scrolled canvas viewport', () => {
   assert.match(runtime, /const visibleLeft = textureCanvasArea\.scrollLeft \+ 8/);
   assert.match(runtime, /const visibleTop = textureCanvasArea\.scrollTop \+ 8/);
 });
 
-test('closes the color popover before closing the design modal with Escape', () => {
-  assert.match(runtime, /if \(colorPopover\.classList\.contains\('visible'\)\) closeColorPopover\(\);\s*else closeModal\(\);/);
+test('closes transient editor overlays before closing the design modal with Escape', () => {
+  assert.match(runtime, /if \(colorPopover\.classList\.contains\('visible'\)\) closeColorPopover\(\);/);
+  assert.match(runtime, /else if \(imageAssetTray && !imageAssetTray\.hidden\)/);
+  assert.match(runtime, /else if \(designAppearancePanel\?\.classList\.contains\('is-mobile-open'\)\)/);
+  assert.match(runtime, /else closeModal\(\);/);
 });
 
-test('labels the canvas pan tool according to its behavior', () => {
-  const view = fs.readFileSync(path.join(__dirname, '..', 'views', 'model-detail.ejs'), 'utf8');
-  assert.match(view, /id="toolPan" title="Pan Canvas"/);
-  assert.match(view, /<span>Pan<\/span>/);
+test('keeps the compact primary rail focused on visible editor tools', () => {
+  assert.match(view, /id="toolImage" title="Add Image"/);
+  assert.match(view, /id="toolColor" title="Garment color"/);
+  assert.match(view, /id="toolMaterial" title="Garment material"/);
+  assert.doesNotMatch(view, /id="toolPan"/);
 });

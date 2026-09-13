@@ -6,6 +6,7 @@ const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const rootDir = path.resolve(__dirname, '..');
 const imagesDir = path.join(rootDir, 'public', 'images');
+const dedicatedOnModelDir = path.join(imagesDir, 'mockups', 'on-model', 'generated');
 const bucket = process.env.R2_BUCKET || 'clothing-design';
 const publicBaseUrl = (process.env.R2_PUBLIC_URL || 'https://cdn.cloz-design.com').replace(/\/+$/, '');
 const dryRun = process.argv.includes('--dry-run');
@@ -32,7 +33,11 @@ async function walk(dir) {
   for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name !== 'source') files.push(...await walk(fullPath));
+      // The generated White Mockup maps have their own concurrent uploader,
+      // which also performs remote size verification after every upload.
+      if (entry.name !== 'source' && fullPath !== dedicatedOnModelDir) {
+        files.push(...await walk(fullPath));
+      }
     } else if (/\.(?:png|webp|jpe?g)$/i.test(entry.name)) {
       files.push(fullPath);
     }

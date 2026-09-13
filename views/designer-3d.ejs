@@ -13,6 +13,7 @@
       <h1 class="designer-title"><%= model.name %></h1>
     </div>
     <div class="designer-toolbar-right">
+      <span id="designerSaveStatus" role="status" aria-live="polite"></span>
       <button class="btn btn-secondary btn-small" id="resetBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
@@ -20,6 +21,7 @@
         </svg>
         Reset
       </button>
+      <button class="btn btn-secondary btn-small" id="designerSaveBtn">Save Project</button>
       <button class="btn btn-primary btn-small" id="downloadBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
@@ -46,6 +48,10 @@
           environment-image="neutral"
           style="width: 100%; height: 100%;"
         ></model-viewer>
+        <div class="model-viewer-spinner" id="designerViewerLoading" role="status" aria-live="polite">
+          <i aria-hidden="true"></i>
+          <span>Loading 3D</span>
+        </div>
       <% } else { %>
         <div class="designer-placeholder">
           <img src="<%= model.image_url %>" alt="<%= model.name %>">
@@ -144,8 +150,22 @@
 <script>
 // Designer functionality
 const viewer = document.getElementById('designerViewer');
+const designerViewerLoading = document.getElementById('designerViewerLoading');
 const resetBtn = document.getElementById('resetBtn');
 const downloadBtn = document.getElementById('downloadBtn');
+const designerSaveBtn = document.getElementById('designerSaveBtn');
+const designerSaveStatus = document.getElementById('designerSaveStatus');
+const designerProjectState = { id: '', name: '' };
+const designerUserAuthenticated = <%- JSON.stringify(Boolean(user)) %>;
+
+if (viewer && designerViewerLoading) {
+  const finishViewerLoading = () => { designerViewerLoading.hidden = true; };
+  if (viewer.loaded) finishViewerLoading();
+  else {
+    viewer.addEventListener('load', finishViewerLoading, { once: true });
+    viewer.addEventListener('error', finishViewerLoading, { once: true });
+  }
+}
 
 // Color picker
 const colorBtns = document.querySelectorAll('.color-btn');
@@ -224,6 +244,81 @@ if (resetBtn) {
     }
   });
 }
+
+function getDesignerProjectData() {
+  return {
+    baseColor: document.querySelector('.color-btn[data-target="base"].active')?.dataset.color || '#ffffff',
+    accentColor: document.querySelector('.color-btn[data-target="accent"].active')?.dataset.color || '#ffffff',
+    pattern: document.querySelector('.pattern-btn[data-pattern].active')?.dataset.pattern || 'none',
+    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'neutral',
+    roughness: Number(document.getElementById('roughnessSlider').value),
+    metalness: Number(document.getElementById('metalnessSlider').value),
+    autoRotate: Boolean(autoRotateCheck?.checked)
+  };
+}
+
+async function saveDesignerProject() {
+  if (!designerUserAuthenticated) {
+    window.UserProjects?.goToSignIn();
+    return;
+  }
+  if (!viewer || !window.UserProjects) return;
+  designerSaveBtn.disabled = true;
+  designerSaveStatus.textContent = 'Saving…';
+  try {
+    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);
+    const preview = await window.UserProjects.uploadImage(previewDataUrl, '<%= model.slug %>-preview.jpg', 'project-preview');
+    const project = await window.UserProjects.saveProject({
+      id: designerProjectState.id || undefined,
+      projectType: '3d',
+      name: designerProjectState.name || <%- JSON.stringify(`${model.name || 'Garment'} Design`) %>,
+      sourceId: <%- JSON.stringify(String(model.id || model.slug || '')) %>,
+      sourceUrl: window.location.pathname,
+      previewImageUrl: preview.url,
+      designData: getDesignerProjectData()
+    });
+    designerProjectState.id = project.id;
+    designerProjectState.name = project.name;
+    const url = new URL(window.location.href);
+    url.searchParams.set('project', project.id);
+    window.history.replaceState({}, '', url);
+    designerSaveStatus.textContent = 'Saved';
+  } catch (error) {
+    console.error(error);
+    if (error.status === 401) window.UserProjects.goToSignIn();
+    else designerSaveStatus.textContent = error.message || 'Save failed';
+  } finally {
+    designerSaveBtn.disabled = false;
+  }
+}
+
+async function loadDesignerProject() {
+  if (!window.UserProjects) return;
+  try {
+    const project = await window.UserProjects.loadProjectFromUrl('3d');
+    if (!project) return;
+    const saved = project.designData || {};
+    const activate = (selector) => document.querySelector(selector)?.click();
+    activate(`.color-btn[data-target="base"][data-color="${saved.baseColor}"]`);
+    activate(`.color-btn[data-target="accent"][data-color="${saved.accentColor}"]`);
+    activate(`.pattern-btn[data-pattern="${saved.pattern}"]`);
+    activate(`.pattern-btn[data-env="${saved.environment}"]`);
+    document.getElementById('roughnessSlider').value = Number(saved.roughness) || 0;
+    document.getElementById('metalnessSlider').value = Number(saved.metalness) || 0;
+    autoRotateCheck.checked = saved.autoRotate !== false;
+    if (viewer) viewer.autoRotate = autoRotateCheck.checked;
+    designerProjectState.id = project.id;
+    designerProjectState.name = project.name;
+    designerSaveStatus.textContent = 'Saved project loaded';
+  } catch (error) {
+    console.error(error);
+    designerSaveStatus.textContent = error.status === 401 ? 'Sign in to open this project' : 'Project could not be loaded';
+  }
+}
+
+designerSaveBtn?.addEventListener('click', saveDesignerProject);
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDesignerProject, { once: true });
+else loadDesignerProject();
 
 // Download render
 if (downloadBtn) {
