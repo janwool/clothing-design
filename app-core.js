@@ -5,6 +5,7 @@ const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
 const db = require('./lib/db');
+const { getHeaderLoginUrl } = require('./lib/auth-return-path');
 const { isGoogleAuthConfigured } = require('./lib/google-oauth');
 const {
   canonicalUrl,
@@ -361,6 +362,7 @@ if (isWorkerRuntime) {
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
   res.locals.user = req.session.user || null;
+  res.locals.authLoginUrl = getHeaderLoginUrl(req);
   res.locals.googleAuthEnabled = isGoogleAuthConfigured();
   res.locals.canonicalUrl = canonicalUrl(req.path || '/');
   res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;

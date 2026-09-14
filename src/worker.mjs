@@ -15,7 +15,8 @@ function applyEnvironment(workerEnv) {
     'R2_SECRET_ACCESS_KEY',
     'R2_PUBLIC_URL',
     'PUBLIC_SITE_ORIGIN',
-    'SESSION_SECRET'
+    'SESSION_SECRET',
+    'AI_TRY_ON_ENABLED'
   ];
 
   for (const key of keys) {

@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { randomBytes } = require('node:crypto');
 const router = express.Router();
 const db = require('../lib/db');
+const { getAuthReturnPath, safeReturnPath } = require('../lib/auth-return-path');
 const {
   buildGoogleAuthorizationUrl,
   createOAuthState,
@@ -38,7 +39,7 @@ function buildAuthPageData(req, page, title) {
     ? 'Create a ClozDesign account for sign-in access while the browser mockup workspace is in public beta.'
     : 'Sign in to ClozDesign, or continue into the public browser mockup workspace without an account.';
 
-  const nextPath = safeReturnPath(req.body?.next || req.query?.next);
+  const nextPath = getAuthReturnPath(req);
   const oauthErrors = {
     cancelled: 'Google sign-in was cancelled.',
     invalid_state: 'That Google sign-in request expired. Please try again.',
@@ -75,12 +76,6 @@ function redirectGoogleError(res, code, nextPath = '') {
   return res.redirect(`/auth/login?${params.toString()}`);
 }
 
-function safeReturnPath(value) {
-  const path = String(value || '').trim();
-  if (!path.startsWith('/') || path.startsWith('//') || /[\r\n]/.test(path)) return '';
-  return path.slice(0, 1000);
-}
-
 function wantsJson(req) {
   return Boolean(
     req.is?.('application/json') ||
@@ -101,7 +96,7 @@ router.get('/register', (req, res) => {
 // Google OAuth entry point
 router.get('/google', (req, res) => {
   const config = getGoogleOAuthConfig(req);
-  const nextPath = safeReturnPath(req.query?.next);
+  const nextPath = getAuthReturnPath(req);
   if (!config.enabled) return redirectGoogleError(res, 'not_configured', nextPath);
 
   const state = createOAuthState();
@@ -176,7 +171,7 @@ router.post('/login', async (req, res) => {
   try {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
-    const nextPath = safeReturnPath(req.body.next);
+    const nextPath = getAuthReturnPath(req);
     
     const user = await db.get('SELECT * FROM users WHERE email = ?', [email]);
     
@@ -223,7 +218,7 @@ router.post('/register', async (req, res) => {
     const email = String(req.body.email || '').trim().toLowerCase();
     const password = String(req.body.password || '');
     const name = String(req.body.name || '').trim();
-    const nextPath = safeReturnPath(req.body.next);
+    const nextPath = getAuthReturnPath(req);
     if (String(name || '').trim().length < 2) {
       return res.render('auth/register', {
         ...buildAuthPageData(req, 'register', req.t('auth.register')),

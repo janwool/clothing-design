@@ -50,14 +50,31 @@ test('enforces allowances at project, storage, try-on, and export boundaries', (
   const exportRuntime = read('public/js/export-entitlements.js');
   const designerRuntime = read('public/js/model-designer.js');
   const whiteMockupRuntime = read('public/js/white-mockup-editor.js');
+  const modelDetail = read('views/model-detail.ejs');
+  const whiteMockupDetail = read('views/white-mockup-detail.ejs');
 
   assert.match(userRoute, /canCreateProject\(req\.session\.user\.id\)/);
   assert.match(userRoute, /canStoreImage\(req\.session\.user\.id, incomingBytes\)/);
   assert.match(tryOnRoute, /reserveTryOnCredit\(req\.session\.user\.id\)/);
   assert.match(tryOnRoute, /releaseTryOnCredit\(creditReservation\.reservation\)/);
   assert.match(exportRuntime, /features\?\.removeWatermarks/);
-  assert.match(designerRuntime, /ExportEntitlements\.prepareExport\(renderUrl\)/);
-  assert.match(whiteMockupRuntime, /ExportEntitlements\.prepareExport\(source\)/);
+  assert.match(exportRuntime, /clozdesign-watermark-tile-v1\.png/);
+  assert.match(exportRuntime, /drawTiledWatermark\(context, canvas, options/);
+  assert.match(exportRuntime, /sourceCrop\.x,[\s\S]*?markWidth,[\s\S]*?markHeight/);
+  assert.match(exportRuntime, /applyModelViewerWatermark/);
+  assert.match(exportRuntime, /viewer\.createCanvasTexture\(\)/);
+  assert.match(exportRuntime, /textureInfo\.setTexture\(viewerTexture\)/);
+  assert.match(modelDetail, /<model-viewer[\s\S]{0,900}data-entitlement-texture-watermark/);
+  assert.doesNotMatch(modelDetail, /data-entitlement-watermark/);
+  assert.doesNotMatch(whiteMockupDetail, /data-entitlement-watermark/);
+  assert.match(designerRuntime, /ExportEntitlements\.prepareTexture\(originalSourceUrl\)/);
+  assert.doesNotMatch(designerRuntime, /ExportEntitlements\.prepareExport\(renderUrl\)/);
+  assert.match(whiteMockupRuntime, /function buildGarmentWatermark\(\)/);
+  assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
+  assert.match(exportRuntime, /options\.color \|\| '#c5c7c4'/);
+  assert.match(whiteMockupRuntime, /markContext\.fillStyle = '#c5c7c4'/);
+  assert.match(whiteMockupRuntime, /globalCompositeOperation = 'source-over'/);
+  assert.doesNotMatch(whiteMockupRuntime, /ExportEntitlements\.prepareExport\(source\)/);
 });
 
 test('lets authenticated administrators assign a user plan without exposing public activation', () => {

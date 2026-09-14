@@ -105,6 +105,16 @@ test('proxies only the signed-in user\'s stored project textures', () => {
   assert.match(route, /Cache-Control', 'private, max-age=300'/);
 });
 
+test('keeps AI try-on results in the signed-in user image library', () => {
+  const contentDb = fs.readFileSync(path.join(root, 'lib', 'user-content-db.js'), 'utf8');
+  const tryOnRoute = fs.readFileSync(path.join(root, 'routes', 'ai-try-on.js'), 'utf8');
+  assert.match(contentDb, /CREATE TABLE IF NOT EXISTS ai_try_on_results/);
+  assert.match(contentDb, /FOREIGN KEY \(image_id\) REFERENCES user_images\(id\)/);
+  assert.match(tryOnRoute, /purpose\)\s*VALUES \(\?, \?, \?, \?, \?, \?, \?, 'try-on-result'\)/);
+  assert.match(route, /'try-on-result'/);
+  assert.match(route, /DELETE FROM ai_try_on_results WHERE image_id = \? AND user_id = \?/);
+});
+
 test('shows project cards without the removed collection header and tools', () => {
   assert.match(projects3dView, /workspace-project-list/);
   assert.match(whiteMockupsView, /workspace-project-list/);
@@ -119,7 +129,7 @@ test('shows complete 3D project covers without hover cropping', () => {
   assert.match(styles, /\.workspace-project-image-3d \{[\s\S]*?aspect-ratio: 4 \/ 5;[\s\S]*?padding: 0;[\s\S]*?overflow: hidden;/);
   assert.match(styles, /\.workspace-project-image-3d img \{[\s\S]*?width: 100%;[\s\S]*?height: 100%;[\s\S]*?object-fit: contain;/);
   assert.match(styles, /\.workspace-project-card-3d:hover \.workspace-project-image-3d img \{ transform: none; \}/);
-  assert.match(route, /account-workspace\.css\?v=20260914-entitlements-v12/);
+  assert.match(route, /account-workspace\.css\?v=20260915-ai-disabled-v13/);
 });
 
 test('shows the signed-in user plan and live allowance usage', () => {
@@ -127,8 +137,12 @@ test('shows the signed-in user plan and live allowance usage', () => {
   assert.match(route, /router\.get\('\/api\/account\/entitlements', requireUser/);
   assert.match(overviewView, /Current plan/);
   assert.match(overviewView, /Try-on Credits/);
+  assert.match(overviewView, /<% if \(aiTryOnAvailable\) \{ %><article>/);
+  assert.match(overviewView, /workspace-plan-usage<%= aiTryOnAvailable \? '' : ' is-ai-disabled' %>/);
+  assert.match(route, /aiTryOnEnabled: isAiTryOnEnabled\(\)/);
   assert.match(overviewView, /Image storage/);
   assert.match(styles, /\.workspace-plan-usage/);
+  assert.match(styles, /\.workspace-plan-usage\.is-ai-disabled \{ grid-template-columns: repeat\(2/);
 });
 
 test('uses the responsive ClozDesign product visual system for the workspace', () => {

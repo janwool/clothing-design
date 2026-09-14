@@ -1,5 +1,6 @@
 <%- include('partials/header') %>
 <% const previewModelFileUrl = model.file_url; %>
+<% const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled); %>
 
 <section class="designer-page">
   <div class="designer-toolbar">
@@ -14,13 +15,13 @@
     </div>
     <div class="designer-toolbar-right">
       <span id="designerSaveStatus" role="status" aria-live="polite"></span>
-      <a class="btn btn-secondary btn-small" id="designerAiTryOn" href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>/try-on">
+      <% if (aiTryOnAvailable) { %><a class="btn btn-secondary btn-small" id="designerAiTryOn" href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>/try-on">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M12 3l1.55 4.45L18 9l-4.45 1.55L12 15l-1.55-4.45L6 9l4.45-1.55L12 3Z"/>
           <path d="M19 15l.8 2.2L22 18l-2.2.8L19 22l-.8-2.2L16 18l2.2-.8L19 15Z"/>
         </svg>
         AI Try-on
-      </a>
+      </a><% } %>
       <button class="btn btn-secondary btn-small" id="resetBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>

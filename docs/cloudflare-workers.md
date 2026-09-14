@@ -20,6 +20,25 @@ Set these in Cloudflare Workers settings:
 - `R2_PUBLIC_URL`
 - `SESSION_SECRET`
 
+Creem subscriptions additionally require Worker secrets named `CREEM_API_KEY` and
+`CREEM_WEBHOOK_SECRET`. The four public product IDs are mapped in server code, so
+they cannot be replaced through browser requests. Configure the secrets with:
+
+```sh
+npx wrangler secret put CREEM_API_KEY
+npx wrangler secret put CREEM_WEBHOOK_SECRET
+```
+
+Register this production webhook URL in Creem:
+
+```text
+https://www.cloz-design.com/api/billing/webhooks/creem
+```
+
+Set `APP_BASE_URL=https://www.cloz-design.com` for the Checkout success redirect.
+For Creem sandbox products, set `CREEM_TEST_MODE=true`; live products must use
+`false` or omit the variable.
+
 Google sign-in additionally requires Worker secrets named `GOOGLE_CLIENT_ID` and
 `GOOGLE_CLIENT_SECRET`. Create a Google OAuth client with the Web application type
 and register this exact production redirect URI:

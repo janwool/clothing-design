@@ -44,6 +44,15 @@ test('downloads the current-view render directly without opening a preview dialo
   assert.doesNotMatch(runtime, /modelRenderDialog|modelRenderImage|modelRenderDownload|window\.open\(renderUrl/);
 });
 
+test('finishes the current-view download as a commercial studio product image', () => {
+  assert.match(runtime, /async function composeCommercialProductRender\(dataUrl, renderStandard/);
+  assert.match(runtime, /findOpaqueGarmentBounds\(sourceContext, width, height\)/);
+  assert.match(runtime, /background\.addColorStop\(0, composition\.backgroundTop/);
+  assert.match(runtime, /const floorShadow = context\.createRadialGradient/);
+  assert.match(runtime, /context\.filter = `contrast\(/);
+  assert.match(runtime, /cameraSnapshot,\n\s*commercialFrame: true/);
+});
+
 test('keeps in-page render exports invisible while preserving visible cover capture', () => {
   assert.match(runtime, /const isVisibleCapture = options\.visibleCapture === true;/);
   assert.match(runtime, /exportViewer\.style\.opacity = isVisibleCapture \? '1' : '0';/);
@@ -52,12 +61,12 @@ test('keeps in-page render exports invisible while preserving visible cover capt
 });
 
 test('uses the saved reference lighting standard for user render exports', () => {
-  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260907-balanced-exposure-v6'\)/);
-  assert.match(runtime, /exportViewer\.setAttribute\('environment-image', webStandard\.environmentImage\)/);
+  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260915-commercial-export-v1'\)/);
+  assert.match(runtime, /exportViewer\.setAttribute\('environment-image', webStandard\.exportEnvironmentImage \|\| webStandard\.environmentImage\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-intensity', String\(webStandard\.exportShadowIntensity \?\? 0\.32\)\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-softness', String\(webStandard\.exportShadowSoftness \?\? 0\.96\)\)/);
-  assert.match(runtime, /exportViewer\.setAttribute\('exposure', String\(webStandard\.exposure\)\)/);
-  assert.match(runtime, /exportViewer\.setAttribute\('tone-mapping', webStandard\.toneMapping\)/);
+  assert.match(runtime, /webStandard\.exportExposure \?\? webStandard\.exposure/);
+  assert.match(runtime, /webStandard\.exportToneMapping \|\| webStandard\.toneMapping/);
 });
 
 test('uses the saved commercial camera and lighting in the live design preview', () => {

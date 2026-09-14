@@ -133,15 +133,6 @@
   transform: translateY(0);
 }
 
-.ai-button--secondary {
-  background: #fff;
-  color: var(--tryon-ink);
-}
-
-.ai-button--secondary:hover {
-  box-shadow: 0 4px 12px rgba(20, 20, 18, 0.07);
-}
-
 .ai-button--primary {
   border-color: #151614;
   background: #151614;
@@ -232,25 +223,12 @@
   object-fit: contain;
   object-position: center;
   transform: none;
-  transition: filter 360ms ease, transform 650ms cubic-bezier(.2, .7, .2, 1), opacity 220ms ease;
-}
-
-.tryon-result__image.is-before {
-  filter: saturate(.55) contrast(.94) brightness(1.04);
-  transform: scale(.985);
+  transition: transform 650ms cubic-bezier(.2, .7, .2, 1), opacity 220ms ease;
 }
 
 .tryon-result__image.is-updating {
   opacity: .26;
   transform: scale(1.02);
-}
-
-.tryon-result__wash {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(180deg, rgba(18, 18, 16, .07), transparent 19%, transparent 77%, rgba(18, 18, 16, .1));
 }
 
 .tryon-result__toggle {

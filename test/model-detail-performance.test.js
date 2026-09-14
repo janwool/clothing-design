@@ -98,7 +98,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260914-entitlements-v44'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260915-commercial-render-v47'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -173,7 +173,8 @@ test('applies a saved project to the detail viewer without opening the editor', 
 test('loads saved project textures through the authenticated same-origin proxy', () => {
   assert.match(designerRuntime, /function getViewerTextureUrl\(textureUrl\)/);
   assert.match(designerRuntime, /`\/api\/project-texture\?url=\$\{encodeURIComponent\(textureUrl\)\}`/);
-  assert.match(designerRuntime, /const sourceUrl = getViewerTextureUrl\(textureUrl\);/);
+  assert.match(designerRuntime, /const originalSourceUrl = getViewerTextureUrl\(textureUrl\);/);
+  assert.match(designerRuntime, /ExportEntitlements\.prepareTexture\(originalSourceUrl\)/);
   assert.match(designerRuntime, /return await viewerElement\.createTexture\(sourceUrl\);/);
   assert.match(designerRuntime, /async function resolveArtworkDataUrl\(source\) \{[\s\S]*?`\/api\/project-texture\?url=\$\{encodeURIComponent\(source\)\}`/);
   assert.match(designerRuntime, /fetch\(sourceUrl, \{ credentials: 'same-origin' \}\)/);
@@ -221,7 +222,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260914-entitlements-v44/);
+  assert.match(template, /model-designer\.js\?v=20260915-commercial-render-v47/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -408,14 +409,15 @@ test('keeps on-model mockup code, styles, and image maps behind its launch actio
   assert.match(template, /button\.addEventListener\('click', openStudio\)/);
 });
 
-test('opens the current model in the AI try-on editor from detail-page actions', () => {
+test('keeps AI try-on entry points behind the disabled-by-default feature flag', () => {
+  assert.match(template, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
   assert.match(template, /const aiTryOnPath = `\$\{modelDetailPath\}\/try-on`/);
-  assert.match(template, /id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link/);
-  assert.match(template, /class="feature-cta feature-cta-light" href="<%= aiTryOnPath %>" data-ai-try-on-link>Choose a model</);
+  assert.match(template, /<% if \(aiTryOnAvailable\) \{ %><a class="detail-action" id="aiTryOnBtn"/);
+  assert.match(template, /<% if \(aiTryOnAvailable && supportsOnModelMockup && tryOnModels\.length\) \{ %>/);
+  assert.match(template, /<h3>Render<\/h3><p>Create a studio-quality product image/);
   assert.match(template, /syncModelTryOnLinks/);
   assert.match(designerRuntime, /persistTryOnDesign/);
   assert.match(designerRuntime, /clozdesign_tryon_design_v1/);
-  assert.doesNotMatch(template, /AI try-on coming soon|aiTryOnComingSoon|aiFeatureComingSoon/);
   assert.doesNotMatch(template, /data-ai-tryon-open|id="aiTryOnChooser"|\/js\/model-detail-v2\.js/);
   assert.doesNotMatch(modelDetailStyles, /\.ai-coming-soon-control|\.ai-coming-soon-tooltip/);
 });

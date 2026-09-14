@@ -3,9 +3,26 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { normalizeModelResult, TRY_ON_MODEL } = require('../lib/cloudflare-try-on');
+const { isAiTryOnEnabled } = require('../lib/feature-flags');
 
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
+
+test('keeps AI try-on disabled unless the feature flag is explicitly enabled', () => {
+  const previousValue = process.env.AI_TRY_ON_ENABLED;
+  delete process.env.AI_TRY_ON_ENABLED;
+  assert.equal(isAiTryOnEnabled(), false);
+  process.env.AI_TRY_ON_ENABLED = 'true';
+  assert.equal(isAiTryOnEnabled(), true);
+  if (previousValue === undefined) delete process.env.AI_TRY_ON_ENABLED;
+  else process.env.AI_TRY_ON_ENABLED = previousValue;
+
+  const route = read('routes/ai-try-on.js');
+  const pageRoute = read('routes/index.js');
+  assert.match(route, /router\.use\(\(req, res, next\) => \{\s+if \(isAiTryOnEnabled\(\)\) return next\(\);/);
+  assert.match(route, /status\(503\).*AI try-on is temporarily unavailable/s);
+  assert.match(pageRoute, /router\.get\('\/3d-models\/:category\/:slug\/try-on'[\s\S]*?if \(!isAiTryOnEnabled\(\)\)[\s\S]*?status\(404\)/);
+});
 
 test('uses Cloudflare dedicated virtual try-on without exposing credentials to the browser', () => {
   assert.equal(TRY_ON_MODEL, 'pruna/p-image-try-on');
@@ -19,8 +36,20 @@ test('uses Cloudflare dedicated virtual try-on without exposing credentials to t
   assert.match(appCore, /app\.use\('\/api\/ai-try-on'/);
   assert.match(route, /runCloudflareTryOn/);
   assert.match(route, /data:image\\\/\(\?:png\|jpeg\|webp\)/);
+  assert.match(route, /saveTryOnResult\(req\.session\.user\.id, result\.image/);
+  assert.match(route, /try-on-result/);
+  assert.match(route, /INSERT INTO user_images/);
+  assert.match(route, /INSERT INTO ai_try_on_results/);
+  assert.match(route, /router\.get\('\/results'/);
+  assert.match(route, /source_project_id/);
+  assert.match(route, /image: savedResult\?\.url \|\| result\.image/);
+  assert.match(route, /if \(!generationCompleted && creditReservation\?\.reservation\)/);
   assert.match(browser, /fetch\('\/api\/ai-try-on'/);
   assert.match(browser, /captureGarmentImage/);
+  assert.match(browser, /modelName: root\.dataset\.modelName/);
+  assert.match(browser, /projectId: new URLSearchParams\(window\.location\.search\)\.get\('project'\)/);
+  assert.match(browser, /personModelId: selectedModel\.dataset\.modelId/);
+  assert.match(browser, /personModelName: selectedModel\.dataset\.modelName/);
   assert.match(integration, /output_quality: 92/);
   assert.doesNotMatch(integration, /\n\s+quality:/);
   assert.match(integration, /uploadImageDataUrl\(personImage/);
@@ -58,6 +87,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.doesNotMatch(view, /rotation-per-second/);
   assert.match(view, /Your design/);
   assert.match(view, /Choose a model/);
+  assert.doesNotMatch(view, /Back to 3D|const editHref/);
   assert.match(view, /full-body model/);
   assert.match(view, /data-garment-fallback/);
   assert.match(view, /data-model-id/);
@@ -65,6 +95,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.match(view, /data-texture-template-url/);
   assert.match(view, /data-fit="contain"/);
   assert.match(view, /class="is-active" data-preview-state="before"/);
+  assert.doesNotMatch(view, /tryon-result__wash/);
   assert.match(view, /data-preview-state="after" data-after-result hidden/);
   assert.match(view, /class="tryon-result__ai-label" data-after-result hidden/);
   assert.match(view, /alt="<%= tryOnModels\[0\]\.name %>, selected model for AI try-on"/);
@@ -75,6 +106,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.match(read('public/js/ai-try-on.js'), /loadProjectFromUrl\('3d'\)/);
   assert.match(read('public/js/ai-try-on.js'), /clozdesign_tryon_design_v1/);
   assert.match(designerView, /id="designerAiTryOn"/);
+  assert.match(designerView, /<% if \(aiTryOnAvailable\) \{ %><a class="btn btn-secondary btn-small" id="designerAiTryOn"/);
   assert.match(designerView, /persistDesignerTryOnDesign/);
   assert.match(designerView, /appearance: getDesignerProjectData\(\)/);
   assert.match(designerView, /applyDesignerAppearance/);
@@ -91,6 +123,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.doesNotMatch(read('public/js/ai-try-on.js'), /viewer\.autoRotate = true/);
   assert.match(styles, /\.ai-tryon \{[\s\S]*?width: 100vw;[\s\S]*?height: 100dvh;[\s\S]*?margin: 0;/);
   assert.match(styles, /\.tryon-result__image \{[\s\S]*?object-fit: contain;/);
+  assert.doesNotMatch(styles, /\.tryon-result__image\.is-before|filter:\s*saturate/);
   assert.doesNotMatch(view, /Try-on settings|Styling notes/);
 });
 

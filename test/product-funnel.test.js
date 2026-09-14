@@ -27,11 +27,15 @@ test('publishes the current Free, Pro, Max, and Business pricing', () => {
   assert.match(pricing, /99 projects \/ month/);
   assert.match(pricing, /150 Try-on Credits/);
   assert.match(pricing, /1,000 Try-on Credits/);
-  assert.match(pricing, /data-yearly="¥99"/);
+  assert.match(pricing, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
+  assert.match(pricing, /<% if \(aiTryOnAvailable\) \{ %><li><span aria-hidden="true">✓<\/span> All AI models<\/li>/);
+  assert.match(pricing, /data-yearly="\$99"/);
   assert.match(pricing, /data-yearly="\$299"/);
-  assert.match(pricing, /data-plan-alt data-monthly="¥99 \/ year" data-yearly="\$9\.90 \/ month"/);
+  assert.match(pricing, /data-plan-alt data-monthly="\$99 \/ year" data-yearly="\$9\.90 \/ month"/);
   assert.match(pricing, /mailto:support@cloz-design\.com\?subject=ClozDesign%20Business/);
   assert.match(route, /name: 'Pro monthly', price: '9\.90'/);
+  assert.match(route, /name: 'Pro yearly', price: '99', priceCurrency: 'USD'/);
+  assert.match(route, /name: 'Max monthly', price: '29', priceCurrency: 'USD'/);
   assert.match(route, /name: 'Max yearly', price: '299'/);
 });
 
@@ -59,6 +63,11 @@ test('uses a clear primary action that applies and saves the project', () => {
   assert.match(designer, /downloadRenderedImage\(renderUrl, filename\)/);
   assert.match(designer, /link\.download = filename/);
   assert.doesNotMatch(designer, /modelRenderDialog\.showModal\(\)|window\.open\(renderUrl/);
+  assert.match(modelDetail, /id="removeWatermarkBtn"/);
+  assert.match(modelDetail, /href="\/pricing\?source=model-detail&amp;intent=remove-watermark&amp;model=/);
+  assert.match(modelDetail, /data-analytics-event="remove_watermark_upgrade_click"/);
+  assert.match(modelDetailStyles, /\.detail-action-upgrade \{[\s\S]*?background: var\(--md-lime\);/);
+  assert.match(modelDetailStyles, /\.detail-action-upgrade:nth-child\(odd\):last-child \{ grid-column: 1 \/ -1; \}/);
   assert.match(modelDetail, /designSaveStatusText">Ready/);
   assert.doesNotMatch(designer, /Unsaved changes/);
   assert.match(designer, /setDesignSaveStatus\('Saved to your account'\)/);

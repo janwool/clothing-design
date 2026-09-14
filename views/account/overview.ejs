@@ -2,6 +2,7 @@
   const overviewDisplayName = String(account.name || user.name || 'Designer').trim();
   const firstName = overviewDisplayName.split(/\s+/)[0] || 'Designer';
   const initial = overviewDisplayName.charAt(0).toUpperCase();
+  const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled);
   const recentProject = projects[0] || null;
   const planAccess = typeof entitlements !== 'undefined' ? entitlements : {
     plan: { id: 'free', name: 'Free' },
@@ -66,17 +67,17 @@
           <a href="/pricing"><%= planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' %> <b>→</b></a>
         </div>
       </div>
-      <div class="workspace-plan-usage">
+      <div class="workspace-plan-usage<%= aiTryOnAvailable ? '' : ' is-ai-disabled' %>">
         <article>
           <div><span>Projects</span><strong><%= projectQuotaLabel %></strong></div>
           <i aria-hidden="true"><b style="width:<%= usagePercent(planAccess.projects.used, planAccess.projects.limit) %>%"></b></i>
           <small><%= planAccess.projects.period === 'month' ? 'New projects this month' : 'Projects saved in total' %></small>
         </article>
-        <article>
+        <% if (aiTryOnAvailable) { %><article>
           <div><span>Try-on Credits</span><strong><%= creditQuotaLabel %></strong></div>
           <i aria-hidden="true"><b style="width:<%= usagePercent(planAccess.tryOnCredits.used, planAccess.tryOnCredits.limit) %>%"></b></i>
           <small>Credits refresh monthly</small>
-        </article>
+        </article><% } %>
         <article>
           <div><span>Image storage</span><strong><%= storageQuotaLabel %></strong></div>
           <i aria-hidden="true"><b style="width:<%= usagePercent(planAccess.storage.usedBytes, planAccess.storage.limitBytes) %>%"></b></i>

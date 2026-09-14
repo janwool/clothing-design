@@ -29,9 +29,9 @@
       else window.addEventListener('load', schedule, { once: true });
     })();
   </script>
-  <script src="/js/analytics.js?v=20260907-render-current-view" defer></script>
+  <script src="/js/analytics.js?v=20260915-auth-return-v2" defer></script>
   <script src="/js/user-projects.js?v=20260913-upload-timeout-v3" defer></script>
-  <script src="/js/export-entitlements.js?v=20260914-v1" defer></script>
+  <script src="/js/export-entitlements.js?v=20260915-gray-white-watermark-v9" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -71,7 +71,7 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png?v=20260719">
   <link rel="alternate" type="application/rss+xml" title="ClozDesign apparel mockup guides" href="/feed.xml">
-  <link rel="stylesheet" href="/css/style.css?v=20260913-responsive-upload-v16">
+  <link rel="stylesheet" href="/css/style.css?v=20260914-texture-watermark-v18">
   <link rel="stylesheet" href="/css/growth.css?v=20260913-loading-spinner-v2">
   <link rel="stylesheet" href="/css/product-refresh.css?v=20260913-navbar-type-v9">
   <% const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; %>
@@ -190,7 +190,7 @@
           <a href="/account" class="btn btn-primary navbar-workbench-link">Workbench</a>
         <% } else { %>
           <!-- Auth Buttons -->
-          <a href="/auth/login" class="btn btn-ghost"><%= t('nav.signIn') %></a>
+          <a href="<%= authLoginUrl %>" class="btn btn-ghost"><%= t('nav.signIn') %></a>
           <a href="/tools/t-shirt-mockup-generator" class="btn btn-primary">Start designing</a>
         <% } %>
 
@@ -217,7 +217,7 @@
         <a href="/mockups" class="mobile-link">Browse garment models</a>
         <a href="/auth/logout" class="mobile-link"><%= t('nav.signOut') %></a>
       <% } else { %>
-        <a href="/auth/login" class="mobile-link"><%= t('nav.signIn') %></a>
+        <a href="<%= authLoginUrl %>" class="mobile-link"><%= t('nav.signIn') %></a>
         <a href="/tools/t-shirt-mockup-generator" class="mobile-link btn btn-primary">Start designing</a>
       <% } %>
     </div>

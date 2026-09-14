@@ -104,13 +104,32 @@ window.initializeModelDesigner = () => {
       balanceMethod: '180-degree-lighten-mirror',
       shadowIntensity: 0,
       shadowSoftness: 1,
-      exportShadowIntensity: 0.32,
-      exportShadowSoftness: 0.96,
+      exportShadowIntensity: 0.58,
+      exportShadowSoftness: 0.84,
+      exportExposure: 0.78,
+      exportToneMapping: 'commerce',
       exposure: 0.72,
-      toneMapping: 'commerce'
+      toneMapping: 'commerce',
+      exportMaterial: {
+        roughness: 0.72,
+        specularIorLevel: 0.4,
+        sheenWeight: 0.22,
+        sheenRoughness: 0.82,
+        normalScale: 0.24
+      },
+      exportComposition: {
+        width: 1200,
+        height: 1500,
+        backgroundTop: '#faf9f6',
+        backgroundBottom: '#e8e5de',
+        spotlight: 'rgba(255, 255, 255, 0.96)',
+        floorShadow: 'rgba(29, 27, 24, 0.3)',
+        contrast: 1.08,
+        saturation: 1.02
+      }
     }
   };
-  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260907-balanced-exposure-v6')
+  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260915-commercial-export-v1')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -374,6 +393,30 @@ window.initializeModelDesigner = () => {
     }
   }
 
+  function applyCommercialExportMaterialResponse(viewerElement, renderStandard = defaultRenderStandard) {
+    if (!viewerElement?.model || state.selectedMaterial) return;
+    const materialStandard = {
+      ...defaultRenderStandard.web.exportMaterial,
+      ...(renderStandard.web?.exportMaterial || {})
+    };
+    (viewerElement.model.materials || []).forEach((material) => {
+      const pbr = material.pbrMetallicRoughness;
+      pbr?.setMetallicFactor?.(0);
+      if (!pbr?.metallicRoughnessTexture?.texture) {
+        pbr?.setRoughnessFactor?.(materialStandard.roughness ?? 0.72);
+      }
+      applyFabricSurfaceResponse(material, {
+        sheen: materialStandard.sheenWeight ?? 0.22,
+        sheenRoughness: materialStandard.sheenRoughness ?? 0.82,
+        specular: materialStandard.specularIorLevel ?? 0.4
+      });
+      if (material.normalTexture?.texture) {
+        material.normalTexture.setScale?.(materialStandard.normalScale ?? 0.24);
+      }
+    });
+    viewerElement.requestUpdate?.();
+  }
+
   function applyFabricLighting(viewerElement, renderStandard = defaultRenderStandard) {
     if (!viewerElement) return;
     const webStandard = renderStandard.web || defaultRenderStandard.web;
@@ -452,6 +495,7 @@ window.initializeModelDesigner = () => {
           setFabricTextureRepeat(pbr?.metallicRoughnessTexture, material.textureRepeat);
         }
       });
+      await window.ExportEntitlements?.applyModelViewerWatermark?.(viewerElement, { force: true });
     } catch (error) {
       console.warn('Failed to apply material preset:', error);
     }
@@ -1091,7 +1135,10 @@ window.initializeModelDesigner = () => {
   }
 
   async function createViewerTexture(viewerElement, textureUrl) {
-    const sourceUrl = getViewerTextureUrl(textureUrl);
+    const originalSourceUrl = getViewerTextureUrl(textureUrl);
+    const sourceUrl = window.ExportEntitlements?.prepareTexture
+      ? await window.ExportEntitlements.prepareTexture(originalSourceUrl)
+      : originalSourceUrl;
     const createCanvasTexture = async () => {
       if (typeof viewerElement.createCanvasTexture !== 'function') return null;
       const image = await loadViewerTextureImage(sourceUrl);
@@ -1582,6 +1629,105 @@ window.initializeModelDesigner = () => {
     throw new Error('This browser cannot export the 3D render.');
   }
 
+  function loadRenderImage(dataUrl) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error('The rendered garment could not be composed.'));
+      image.src = dataUrl;
+    });
+  }
+
+  function findOpaqueGarmentBounds(context, width, height) {
+    const pixels = context.getImageData(0, 0, width, height).data;
+    let minX = width;
+    let minY = height;
+    let maxX = 0;
+    let maxY = 0;
+    const step = 2;
+    for (let y = 0; y < height; y += step) {
+      for (let x = 0; x < width; x += step) {
+        const alpha = pixels[((y * width) + x) * 4 + 3];
+        if (alpha < 220) continue;
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+    if (maxX <= minX || maxY <= minY) {
+      return { minX: width * 0.2, minY: height * 0.12, maxX: width * 0.8, maxY: height * 0.88 };
+    }
+    return { minX, minY, maxX, maxY };
+  }
+
+  async function composeCommercialProductRender(dataUrl, renderStandard = defaultRenderStandard) {
+    const composition = {
+      ...defaultRenderStandard.web.exportComposition,
+      ...(renderStandard.web?.exportComposition || {})
+    };
+    const width = Number(composition.width) || 1200;
+    const height = Number(composition.height) || 1500;
+    const image = await loadRenderImage(dataUrl);
+    const sourceCanvas = document.createElement('canvas');
+    sourceCanvas.width = width;
+    sourceCanvas.height = height;
+    const sourceContext = sourceCanvas.getContext('2d', { willReadFrequently: true });
+    sourceContext.drawImage(image, 0, 0, width, height);
+    const bounds = findOpaqueGarmentBounds(sourceContext, width, height);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    const background = context.createLinearGradient(0, 0, 0, height);
+    background.addColorStop(0, composition.backgroundTop || '#faf9f6');
+    background.addColorStop(1, composition.backgroundBottom || '#e8e5de');
+    context.fillStyle = background;
+    context.fillRect(0, 0, width, height);
+
+    const spotlight = context.createRadialGradient(
+      width * 0.5, height * 0.38, width * 0.04,
+      width * 0.5, height * 0.4, width * 0.66
+    );
+    spotlight.addColorStop(0, composition.spotlight || 'rgba(255, 255, 255, 0.96)');
+    spotlight.addColorStop(0.58, 'rgba(255, 255, 255, 0.36)');
+    spotlight.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    context.fillStyle = spotlight;
+    context.fillRect(0, 0, width, height);
+
+    const garmentWidth = bounds.maxX - bounds.minX;
+    const garmentHeight = bounds.maxY - bounds.minY;
+    const shadowCenterX = (bounds.minX + bounds.maxX) / 2;
+    const shadowCenterY = Math.min(height * 0.92, bounds.maxY + Math.max(8, garmentHeight * 0.012));
+    const shadowRadius = Math.max(width * 0.09, garmentWidth * 0.36);
+    context.save();
+    context.translate(shadowCenterX, shadowCenterY);
+    context.scale(1, 0.13);
+    const floorShadow = context.createRadialGradient(0, 0, shadowRadius * 0.08, 0, 0, shadowRadius);
+    floorShadow.addColorStop(0, composition.floorShadow || 'rgba(29, 27, 24, 0.3)');
+    floorShadow.addColorStop(0.46, 'rgba(29, 27, 24, 0.14)');
+    floorShadow.addColorStop(1, 'rgba(29, 27, 24, 0)');
+    context.fillStyle = floorShadow;
+    context.fillRect(-shadowRadius, -shadowRadius, shadowRadius * 2, shadowRadius * 2);
+    context.restore();
+
+    context.save();
+    context.filter = `contrast(${Number(composition.contrast) || 1.08}) saturate(${Number(composition.saturation) || 1.02})`;
+    context.drawImage(sourceCanvas, 0, 0);
+    context.restore();
+
+    const vignette = context.createRadialGradient(
+      width * 0.5, height * 0.43, width * 0.38,
+      width * 0.5, height * 0.46, width * 0.82
+    );
+    vignette.addColorStop(0, 'rgba(29, 27, 24, 0)');
+    vignette.addColorStop(1, 'rgba(29, 27, 24, 0.065)');
+    context.fillStyle = vignette;
+    context.fillRect(0, 0, width, height);
+    return canvas.toDataURL('image/png', 1);
+  }
+
   async function createFinalRenderTexture() {
     state.textEditor?.commit();
     if (!hasDesignedTexture()) {
@@ -1701,6 +1847,7 @@ window.initializeModelDesigner = () => {
 
   function createCoverExportViewer(options = {}, renderStandard = defaultRenderStandard) {
     const isVisibleCapture = options.visibleCapture === true;
+    const isCommercialCapture = options.commercialFrame === true;
     const webStandard = { ...defaultRenderStandard.web, ...(renderStandard.web || {}) };
     const exportViewer = document.createElement('model-viewer');
     exportViewer.src = modelDesignerConfig.previewModelFileUrl || '';
@@ -1708,11 +1855,11 @@ window.initializeModelDesigner = () => {
     exportViewer.setAttribute('loading', 'eager');
     exportViewer.setAttribute('reveal', 'auto');
     exportViewer.setAttribute('interaction-prompt', 'none');
-    exportViewer.setAttribute('environment-image', webStandard.environmentImage);
+    exportViewer.setAttribute('environment-image', webStandard.exportEnvironmentImage || webStandard.environmentImage);
     exportViewer.setAttribute('shadow-intensity', String(webStandard.exportShadowIntensity ?? 0.32));
     exportViewer.setAttribute('shadow-softness', String(webStandard.exportShadowSoftness ?? 0.96));
-    exportViewer.setAttribute('exposure', String(webStandard.exposure));
-    exportViewer.setAttribute('tone-mapping', webStandard.toneMapping);
+    exportViewer.setAttribute('exposure', String(isCommercialCapture ? (webStandard.exportExposure ?? webStandard.exposure) : webStandard.exposure));
+    exportViewer.setAttribute('tone-mapping', isCommercialCapture ? (webStandard.exportToneMapping || webStandard.toneMapping) : webStandard.toneMapping);
     exportViewer.autoRotate = false;
     exportViewer.removeAttribute('auto-rotate');
     exportViewer.setAttribute('aria-hidden', 'true');
@@ -1741,7 +1888,10 @@ window.initializeModelDesigner = () => {
 
   async function renderDesignedModelImage(textureUrl, options = {}) {
     const renderStandard = await renderStandardPromise;
-    const exportViewer = createCoverExportViewer({ zIndex: options.viewerZIndex }, renderStandard);
+    const exportViewer = createCoverExportViewer({
+      zIndex: options.viewerZIndex,
+      commercialFrame: options.commercialFrame
+    }, renderStandard);
     document.body.appendChild(exportViewer);
 
     try {
@@ -1754,6 +1904,12 @@ window.initializeModelDesigner = () => {
         await applyTextureToViewer(exportViewer, textureUrl);
       } else if (state.selectedMaterial) {
         await applyMaterialToViewer(exportViewer, state.selectedMaterial);
+      }
+      if (!textureUrl) {
+        await window.ExportEntitlements?.applyModelViewerWatermark?.(exportViewer);
+      }
+      if (options.commercialFrame) {
+        applyCommercialExportMaterialResponse(exportViewer, renderStandard);
       }
       await exportViewer.updateComplete;
       await waitForVisibleModelRender(exportViewer);
@@ -1779,6 +1935,9 @@ window.initializeModelDesigner = () => {
         await applyTextureToViewer(exportViewer, textureUrl);
       } else if (state.selectedMaterial) {
         await applyMaterialToViewer(exportViewer, state.selectedMaterial);
+      }
+      if (!textureUrl) {
+        await window.ExportEntitlements?.applyModelViewerWatermark?.(exportViewer);
       }
       await exportViewer.updateComplete;
       await waitForVisibleModelRender(exportViewer);
@@ -1834,6 +1993,9 @@ window.initializeModelDesigner = () => {
     } else if (state.selectedMaterial) {
       await applyMaterialToViewer(exportViewer, state.selectedMaterial);
     }
+    if (!textureUrl) {
+      await window.ExportEntitlements?.applyModelViewerWatermark?.(exportViewer);
+    }
     await exportViewer.updateComplete;
     await new Promise(resolve => setTimeout(resolve, 1800));
     return { x: 0, y: 0, width: 1200, height: 1500 };
@@ -1849,8 +2011,9 @@ window.initializeModelDesigner = () => {
   }
 
   async function renderDesignedModelImageWithFallback(textureUrl, options = {}) {
+    let renderedImage;
     try {
-      return await renderDesignedModelImage(textureUrl, options);
+      renderedImage = await renderDesignedModelImage(textureUrl, options);
     } catch (error) {
       console.warn('High-resolution render failed, falling back to active viewer:', error);
       const activeViewer = designModal.classList.contains('active') ? designerViewer : detailViewer;
@@ -1859,8 +2022,11 @@ window.initializeModelDesigner = () => {
       } else if (state.selectedMaterial) {
         await applyMaterialToViewer(activeViewer, state.selectedMaterial);
       }
-      return captureModelViewerImage(activeViewer, options);
+      renderedImage = await captureModelViewerImage(activeViewer, options);
     }
+    if (!options.commercialFrame) return renderedImage;
+    const renderStandard = await renderStandardPromise;
+    return composeCommercialProductRender(renderedImage, renderStandard);
   }
 
   function downloadRenderedImage(renderUrl, filename) {
@@ -1889,13 +2055,11 @@ window.initializeModelDesigner = () => {
       const renderUrl = await renderDesignedModelImageWithFallback(textureUrl, {
         mimeType: 'image/png',
         quality: 0.95,
-        cameraSnapshot
+        cameraSnapshot,
+        commercialFrame: true
       });
       const filename = `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-render.png`;
-      const entitledRenderUrl = window.ExportEntitlements
-        ? await window.ExportEntitlements.prepareExport(renderUrl)
-        : renderUrl;
-      downloadRenderedImage(entitledRenderUrl, filename);
+      downloadRenderedImage(renderUrl, filename);
       setRenderStatus('Render downloaded.');
       window.trackEvent?.('design_render', {
         render_format: 'png',
@@ -2039,7 +2203,8 @@ window.initializeModelDesigner = () => {
           modelName: modelDesignerConfig.modelName || '',
           contact: {
             name: formData.get('name'),
-            email: formData.get('email')
+            email: formData.get('email'),
+            address: formData.get('address')
           },
           quantity: formData.get('quantity'),
           notes: formData.get('notes'),

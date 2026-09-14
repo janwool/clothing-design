@@ -38,9 +38,21 @@ function trackedName(sourceEvent) {
 
 test('keeps conversion and recommended event names stable', () => {
   assert.equal(trackedName('generate_lead')[1], 'generate_lead');
+  assert.equal(trackedName('view_item_list')[1], 'view_item_list');
+  assert.equal(trackedName('select_item')[1], 'select_item');
+  assert.equal(trackedName('begin_checkout')[1], 'begin_checkout');
   assert.equal(trackedName('design_export')[1], 'design_export');
   assert.equal(trackedName('sign_up')[1], 'sign_up');
   assert.equal(trackedName('share')[1], 'share');
+});
+
+test('tracks authentication method, return target, and redirect result', () => {
+  assert.match(analyticsScript, /authContext\(googleType, 'google', authReturnPathFromUrl\(anchor\.href\)\)/);
+  assert.match(analyticsScript, /authContext\(name, 'email', nextInput\?\.value\)/);
+  assert.match(analyticsScript, /auth_entry_path: pendingAuth\.auth_entry_path/);
+  assert.match(analyticsScript, /auth_return_path: pendingAuth\.auth_return_path \|\| DEFAULT_AUTH_RETURN_PATH/);
+  assert.match(analyticsScript, /auth_return_mode: pendingAuth\.auth_return_mode \|\| 'default'/);
+  assert.match(analyticsScript, /auth_redirect_status:[\s\S]*?'matched'[\s\S]*?: 'unexpected'/);
 });
 
 test('maps legacy high-cardinality event names into a fixed taxonomy', () => {

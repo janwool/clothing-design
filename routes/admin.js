@@ -294,6 +294,8 @@ const INQUIRY_PAGE_SIZE = 30;
 const INQUIRY_STATUSES = new Set(['all', 'pending', 'contacted', 'completed', 'closed']);
 const PROJECT_PAGE_SIZE = 24;
 const PROJECT_TYPES = new Set(['all', '3d', 'white_mockup']);
+const IMAGE_PAGE_SIZE = 30;
+const IMAGE_PURPOSES = new Set(['all', 'artwork', 'project-preview', 'project-texture', 'try-on-result']);
 
 function normalizeInquiryStatus(value) {
   const status = String(value || 'all').trim().toLowerCase();
@@ -308,6 +310,29 @@ function normalizeInquiryPage(value) {
 function normalizeProjectType(value) {
   const type = String(value || 'all').trim().toLowerCase();
   return PROJECT_TYPES.has(type) ? type : 'all';
+}
+
+function normalizeImagePurpose(value) {
+  const purpose = String(value || 'all').trim().toLowerCase();
+  return IMAGE_PURPOSES.has(purpose) ? purpose : 'all';
+}
+
+function formatImageBytes(value) {
+  const bytes = Number(value || 0);
+  if (!Number.isFinite(bytes) || bytes <= 0) return '0 B';
+  const units = ['B', 'KB', 'MB', 'GB'];
+  const unitIndex = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+  const amount = bytes / (1024 ** unitIndex);
+  return `${amount >= 10 || unitIndex === 0 ? amount.toFixed(0) : amount.toFixed(1)} ${units[unitIndex]}`;
+}
+
+function imagePurposeLabel(value) {
+  return ({
+    artwork: 'Artwork',
+    'project-preview': 'Project preview',
+    'project-texture': 'Project texture',
+    'try-on-result': 'AI try-on'
+  })[value] || 'Other';
 }
 
 function formatInquiryDate(value) {
@@ -360,6 +385,7 @@ router.get('/', requireAuth, async (req, res) => {
     const inquiries = await db.get('SELECT COUNT(*) as count FROM customization_inquiries');
     await ensureUserContentTables();
     const projects = await db.get('SELECT COUNT(*) as count FROM design_projects');
+    const images = await db.get('SELECT COUNT(*) as count FROM user_images');
 
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
@@ -371,14 +397,15 @@ router.get('/', requireAuth, async (req, res) => {
         tools: tools ? tools.count : 0,
         users: users ? users.count : 0,
         inquiries: inquiries ? inquiries.count : 0,
-        projects: projects ? projects.count : 0
+        projects: projects ? projects.count : 0,
+        images: images ? images.count : 0
       }
     });
   } catch (err) {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, projects: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, projects: 0, images: 0 }
     });
   }
 });
@@ -400,8 +427,8 @@ router.get('/inquiries', requireAuth, async (req, res) => {
     }
     if (search) {
       const pattern = `%${search}%`;
-      where.push('(reference_code LIKE ? OR contact_name LIKE ? OR email LIKE ? OR model_name LIKE ?)');
-      params.push(pattern, pattern, pattern, pattern);
+      where.push('(reference_code LIKE ? OR contact_name LIKE ? OR email LIKE ? OR address LIKE ? OR model_name LIKE ?)');
+      params.push(pattern, pattern, pattern, pattern, pattern);
     }
 
     const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
@@ -416,7 +443,7 @@ router.get('/inquiries', requireAuth, async (req, res) => {
     const items = await db.all(
       `SELECT
         id, reference_code, model_id, model_slug, model_name,
-        contact_name, email, quantity, notes,
+        contact_name, email, address, quantity, notes,
         snapshot_3d_url, snapshot_2d_url, source_url,
         status, created_at, updated_at
       FROM customization_inquiries
@@ -561,6 +588,94 @@ router.delete('/projects/:id', requireAuth, async (req, res) => {
     return res.json({ success: true });
   } catch (err) {
     return res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// ==================== User Uploads ====================
+router.get('/images', requireAuth, async (req, res) => {
+  const purpose = normalizeImagePurpose(req.query.purpose);
+  const search = String(req.query.q || '').trim().slice(0, 100);
+  const requestedPage = normalizeInquiryPage(req.query.page);
+
+  try {
+    await ensureUserContentTables();
+    const where = [];
+    const params = [];
+
+    if (purpose !== 'all') {
+      where.push('i.purpose = ?');
+      params.push(purpose);
+    }
+    if (search) {
+      const pattern = `%${search}%`;
+      where.push('(i.original_name LIKE ? OR i.id LIKE ? OR u.email LIKE ? OR u.name LIKE ?)');
+      params.push(pattern, pattern, pattern, pattern);
+    }
+
+    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const totalRow = await db.get(
+      `SELECT COUNT(*) as count
+       FROM user_images i
+       LEFT JOIN users u ON u.id = i.user_id
+       ${whereSql}`,
+      params
+    );
+    const total = Number(totalRow?.count || 0);
+    const pageCount = Math.max(1, Math.ceil(total / IMAGE_PAGE_SIZE));
+    const page = Math.min(requestedPage, pageCount);
+    const offset = (page - 1) * IMAGE_PAGE_SIZE;
+    const items = await db.all(
+      `SELECT
+        i.id, i.user_id, i.url, i.original_name, i.mime_type,
+        i.size_bytes, i.purpose, i.created_at,
+        u.email as user_email, u.name as user_name
+       FROM user_images i
+       LEFT JOIN users u ON u.id = i.user_id
+       ${whereSql}
+       ORDER BY i.created_at DESC, i.id DESC
+       LIMIT ? OFFSET ?`,
+      [...params, IMAGE_PAGE_SIZE, offset]
+    );
+    const stats = await db.get(`SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN purpose = 'artwork' THEN 1 ELSE 0 END) as artwork,
+      SUM(CASE WHEN purpose = 'try-on-result' THEN 1 ELSE 0 END) as try_on,
+      COUNT(DISTINCT user_id) as creators,
+      COALESCE(SUM(size_bytes), 0) as storage_bytes
+      FROM user_images`);
+
+    res.render('admin/images', {
+      title: 'User Uploads',
+      page: 'admin-images',
+      items: (items || []).map(item => ({
+        ...item,
+        image_url_safe: safeProjectPreviewUrl(item.url),
+        purpose_label: imagePurposeLabel(item.purpose),
+        size_display: formatImageBytes(item.size_bytes),
+        created_at_display: formatInquiryDate(item.created_at)
+      })),
+      imageFilters: { purpose, search },
+      imagePagination: { page, pageCount, total },
+      imageStats: {
+        total: Number(stats?.total || 0),
+        artwork: Number(stats?.artwork || 0),
+        tryOn: Number(stats?.try_on || 0),
+        creators: Number(stats?.creators || 0),
+        storage: formatImageBytes(stats?.storage_bytes)
+      },
+      error: ''
+    });
+  } catch (err) {
+    console.error('Failed to load user uploads:', err);
+    res.render('admin/images', {
+      title: 'User Uploads',
+      page: 'admin-images',
+      items: [],
+      imageFilters: { purpose, search },
+      imagePagination: { page: 1, pageCount: 1, total: 0 },
+      imageStats: { total: 0, artwork: 0, tryOn: 0, creators: 0, storage: '0 B' },
+      error: 'User uploads could not be loaded.'
+    });
   }
 });
 

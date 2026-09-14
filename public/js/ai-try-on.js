@@ -357,7 +357,16 @@
           'Content-Type': 'application/json',
           Accept: 'application/json'
         },
-        body: JSON.stringify({ personImage, garmentImage })
+        body: JSON.stringify({
+          personImage,
+          garmentImage,
+          modelId: root.dataset.modelId,
+          modelSlug: root.dataset.modelSlug,
+          modelName: root.dataset.modelName,
+          projectId: new URLSearchParams(window.location.search).get('project'),
+          personModelId: selectedModel.dataset.modelId,
+          personModelName: selectedModel.dataset.modelName
+        })
       });
       const payload = await response.json().catch(() => ({}));
       if (!response.ok || !payload.success || !payload.image) {

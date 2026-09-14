@@ -118,11 +118,19 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.equal(renderStandard.web.environmentBake.sourceStrength, 1.12);
   assert.equal(renderStandard.web.shadowIntensity, 0);
   assert.equal(renderStandard.web.shadowSoftness, 1);
-  assert.equal(renderStandard.web.exportShadowIntensity, 0.32);
-  assert.equal(renderStandard.web.exportShadowSoftness, 0.96);
+  assert.equal(renderStandard.web.exportShadowIntensity, 0.58);
+  assert.equal(renderStandard.web.exportShadowSoftness, 0.84);
+  assert.equal(renderStandard.web.exportExposure, 0.78);
   assert.equal(renderStandard.web.exposure, 0.72);
   assert.equal(renderStandard.web.toneMapping, 'commerce');
   assert.deepEqual(renderStandard.web.material.baseColor, [0.82, 0.82, 0.8]);
+  assert.deepEqual(renderStandard.web.exportMaterial, {
+    roughness: 0.72,
+    specularIorLevel: 0.4,
+    sheenWeight: 0.22,
+    sheenRoughness: 0.82,
+    normalScale: 0.24
+  });
   assert.equal(studioEnvironment.toString('ascii', 0, 10), '#?RADIANCE');
   assert.ok(studioEnvironment.length > 100000);
   assert.match(template, /shadow-intensity="0"/);

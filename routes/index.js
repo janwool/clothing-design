@@ -28,6 +28,7 @@ const {
   pageStructuredData
 } = require('../lib/seo');
 const { modelCover, siteImage } = require('../lib/site-assets');
+const { isAiTryOnEnabled } = require('../lib/feature-flags');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
 const { targetForLegacyPattern, targetForLegacyPatternId } = require('../lib/legacy-patterns');
 const svgMaskQueueManifest = require('../public/config/on-model-svg-mask-queue.json');
@@ -2624,7 +2625,10 @@ router.get('/blog/:slug', (req, res) => {
 
 // Pricing
 router.get('/pricing', (req, res) => {
-  const description = 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, AI try-on credits, watermark-free exports, and image storage.';
+  const aiTryOnEnabled = isAiTryOnEnabled();
+  const description = aiTryOnEnabled
+    ? 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, AI try-on credits, watermark-free exports, and image storage.'
+    : 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, watermark-free exports, and image storage.';
   res.render('pricing', { 
     title: 'Pricing & Plans - ClozDesign',
     metaDescription: description,
@@ -2644,15 +2648,16 @@ router.get('/pricing', (req, res) => {
         itemListElement: [
           { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro monthly', price: '9.90', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Pro yearly', price: '99', priceCurrency: 'CNY' },
-          { '@type': 'Offer', name: 'Max monthly', price: '29.90', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro yearly', price: '99', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Max monthly', price: '29', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Max yearly', price: '299', priceCurrency: 'USD' }
         ]
       }
     }),
     pageStyles: ['/css/pricing.css?v=20260914-v4'],
     bodyClass: 'pricing-page',
-    page: 'pricing'
+    page: 'pricing',
+    aiTryOnEnabled
   });
 });
 
@@ -3096,7 +3101,8 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
       }),
       page: 'designer',
       model: normalizedModel,
-      useLocalModelAssets: shouldUseLocalModelAssets(req)
+      useLocalModelAssets: shouldUseLocalModelAssets(req),
+      aiTryOnEnabled: isAiTryOnEnabled()
     });
   } catch (err) {
     console.error('Error loading designer:', err);
@@ -3106,6 +3112,9 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
 
 // AI Try-on workspace - MUST be before /3d-models/:category/:slug
 router.get('/3d-models/:category/:slug/try-on', async (req, res) => {
+  if (!isAiTryOnEnabled()) {
+    return res.status(404).render('404', { title: 'Not Found', page: '' });
+  }
   try {
     const model = await findActive3dModelBySlug(req.params.slug);
 
@@ -3126,7 +3135,7 @@ router.get('/3d-models/:category/:slug/try-on', async (req, res) => {
       metaDescription: description,
       metaRobots: 'noindex,follow',
       metaImage: firstImage(req, [normalizedModel.image_url]),
-      pageStyles: ['/css/ai-try-on.css?v=20260914-design-transfer-v6'],
+      pageStyles: ['/css/ai-try-on.css?v=20260914-original-before-v7'],
       bodyClass: 'ai-tryon-body',
       page: 'designer',
       model: normalizedModel,
@@ -3179,8 +3188,9 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     const normalizedRelated = normalize3dModels(related);
     const modelDetailContent = buildModelDetailContent(normalizedModel, normalizedRelated, req);
     const onModelMockupProfile = await findOnModelMockupProfile(normalizedModel.id);
+    const aiTryOnEnabled = isAiTryOnEnabled();
     let aiTryOnModels = [];
-    if (onModelMockupProfile?.garment_type) {
+    if (aiTryOnEnabled && onModelMockupProfile?.garment_type) {
       try {
         const catalog = await listOnModelMockupAssets({
           garmentType: onModelMockupProfile.garment_type,
@@ -3200,11 +3210,12 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
-      pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30'],
+      pageStyles: ['/css/model-detail-v2.css?v=20260915-remove-watermark-v32'],
       model: normalizedModel,
       modelDetailContent,
       onModelMockupProfile,
       aiTryOnModels,
+      aiTryOnEnabled,
       related: normalizedRelated,
       useLocalModelAssets: shouldUseLocalModelAssets(req)
     });

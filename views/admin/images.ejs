@@ -1,0 +1,151 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main project-admin-main user-upload-admin-main">
+    <div class="admin-header project-page-header">
+      <div>
+        <span class="admin-eyebrow">Operations / User media</span>
+        <h1 class="admin-title">User Uploads</h1>
+        <p class="admin-subtitle">Review artwork, generated previews, textures, and AI try-on results stored by users.</p>
+      </div>
+      <button class="sidebar-toggle" type="button" aria-label="Open admin navigation">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <section class="project-stats" aria-label="Upload summary">
+      <article class="project-stat project-stat-total">
+        <span>All uploads</span>
+        <strong><%= imageStats.total %></strong>
+        <small><%= imageStats.creators %> contributing <%= imageStats.creators === 1 ? 'user' : 'users' %></small>
+      </article>
+      <article class="project-stat">
+        <span>Artwork</span>
+        <strong><%= imageStats.artwork %></strong>
+        <small>User-supplied design assets</small>
+      </article>
+      <article class="project-stat">
+        <span>AI try-on</span>
+        <strong><%= imageStats.tryOn %></strong>
+        <small>Generated result images</small>
+      </article>
+      <article class="project-stat">
+        <span>Storage</span>
+        <strong class="user-upload-storage"><%= imageStats.storage %></strong>
+        <small>Total recorded file size</small>
+      </article>
+    </section>
+
+    <section class="project-library user-upload-library">
+      <header class="project-library-header">
+        <div>
+          <span class="admin-eyebrow">Media library</span>
+          <h2><%= imagePagination.total %> matching <%= imagePagination.total === 1 ? 'image' : 'images' %></h2>
+        </div>
+        <form class="project-filters" action="/admin/images" method="get">
+          <label class="project-search-field">
+            <span class="sr-only">Search uploaded images</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="search" name="q" value="<%= imageFilters.search %>" placeholder="File, user or image ID…">
+          </label>
+          <select name="purpose" aria-label="Filter by image purpose">
+            <option value="all" <%= imageFilters.purpose === 'all' ? 'selected' : '' %>>All image types</option>
+            <option value="artwork" <%= imageFilters.purpose === 'artwork' ? 'selected' : '' %>>Artwork</option>
+            <option value="project-preview" <%= imageFilters.purpose === 'project-preview' ? 'selected' : '' %>>Project previews</option>
+            <option value="project-texture" <%= imageFilters.purpose === 'project-texture' ? 'selected' : '' %>>Project textures</option>
+            <option value="try-on-result" <%= imageFilters.purpose === 'try-on-result' ? 'selected' : '' %>>AI try-on results</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-small">Filter</button>
+          <% if (imageFilters.search || imageFilters.purpose !== 'all') {%>
+            <a href="/admin/images" class="project-clear-filter">Clear</a>
+          <% }%>
+        </form>
+      </header>
+
+      <% if (error) {%>
+        <div class="inquiry-error" role="alert"><%= error %></div>
+      <% }%>
+
+      <% if (items && items.length > 0) {%>
+        <div class="user-upload-grid">
+          <% items.forEach(function(item, index) {%>
+            <article class="user-upload-card">
+              <div class="user-upload-preview">
+                <% if (item.image_url_safe) {%>
+                  <a href="<%= item.image_url_safe %>" target="_blank" rel="noopener" aria-label="Open <%= item.original_name || 'uploaded image' %>">
+                    <img src="<%= item.image_url_safe %>" alt="<%= item.original_name || 'User uploaded image' %>" loading="lazy">
+                    <span class="user-upload-open" aria-hidden="true">Open ↗</span>
+                  </a>
+                <% } else {%>
+                  <div class="project-admin-placeholder">
+                    <span><%= String(index + 1 + ((imagePagination.page - 1) * 30)).padStart(2, '0') %></span>
+                    <small>Preview unavailable</small>
+                  </div>
+                <% }%>
+                <span class="user-upload-purpose user-upload-purpose-<%= item.purpose %>"><%= item.purpose_label %></span>
+              </div>
+              <div class="user-upload-content">
+                <div class="project-admin-owner">
+                  <span class="project-owner-avatar"><%= String(item.user_name || item.user_email || '?').charAt(0).toUpperCase() %></span>
+                  <div>
+                    <strong><%= item.user_name || 'Unnamed user' %></strong>
+                    <span><%= item.user_email || `User #${item.user_id}` %></span>
+                  </div>
+                </div>
+                <h3 title="<%= item.original_name || 'Untitled image' %>"><%= item.original_name || 'Untitled image' %></h3>
+                <p>Uploaded <%= item.created_at_display %></p>
+                <dl class="project-admin-meta user-upload-meta">
+                  <div><dt>Size</dt><dd><%= item.size_display %></dd></div>
+                  <div><dt>Format</dt><dd><%= String(item.mime_type || 'image').replace('image/', '').toUpperCase() %></dd></div>
+                  <div class="user-upload-id"><dt>Image ID</dt><dd title="<%= item.id %>"><%= item.id %></dd></div>
+                </dl>
+              </div>
+            </article>
+          <% });%>
+        </div>
+
+        <% if (imagePagination.pageCount > 1) {%>
+          <nav class="inquiry-pagination project-pagination" aria-label="Upload pages">
+            <% if (imagePagination.page > 1) {%>
+              <a href="/admin/images?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page - 1 %>">← Previous</a>
+            <% } else {%>
+              <span>← Previous</span>
+            <% }%>
+            <strong>Page <%= imagePagination.page %> of <%= imagePagination.pageCount %></strong>
+            <% if (imagePagination.page < imagePagination.pageCount) {%>
+              <a href="/admin/images?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page + 1 %>">Next →</a>
+            <% } else {%>
+              <span>Next →</span>
+            <% }%>
+          </nav>
+        <% }%>
+      <% } else if (!error) {%>
+        <div class="empty-state project-empty-state">
+          <div class="project-empty-mark user-upload-empty-mark" aria-hidden="true">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="m21 15-5-5L5 21"/>
+            </svg>
+          </div>
+          <h3><%= imageFilters.search || imageFilters.purpose !== 'all' ? 'No matching uploads' : 'No user uploads yet' %></h3>
+          <p><%= imageFilters.search || imageFilters.purpose !== 'all' ? 'Try another search or clear the active filter.' : 'Images will appear here when users upload artwork or generate visual results.' %></p>
+          <% if (imageFilters.search || imageFilters.purpose !== 'all') {%>
+            <a href="/admin/images" class="btn btn-secondary btn-small">Clear filters</a>
+          <% }%>
+        </div>
+      <% }%>
+    </section>
+  </main>
+</div>
+
+<%- include('partials/footer') %>

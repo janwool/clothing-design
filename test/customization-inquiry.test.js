@@ -21,7 +21,8 @@ test('normalizes a valid customization inquiry payload', () => {
     modelName: 'Classic Crew Neck T-Shirt 3D Model',
     contact: {
       name: '  Jane   Buyer ',
-      email: 'JANE@EXAMPLE.COM'
+      email: 'JANE@EXAMPLE.COM',
+      address: '  88  Market Street, Shanghai, China  '
     },
     quantity: '500',
     notes: 'Cotton jersey\nBlack colorway',
@@ -35,13 +36,14 @@ test('normalizes a valid customization inquiry payload', () => {
   assert.equal(payload.value.modelId, 23);
   assert.equal(payload.value.name, 'Jane Buyer');
   assert.equal(payload.value.email, 'jane@example.com');
+  assert.equal(payload.value.address, '88 Market Street, Shanghai, China');
   assert.equal(payload.value.quantity, 500);
 });
 
 test('rejects incomplete customization contact and quantity data', () => {
   const payload = validateInquiryPayload({
     modelName: 'T-Shirt',
-    contact: { name: 'A', email: 'invalid' },
+    contact: { name: 'A', email: 'invalid', address: '' },
     quantity: '0',
     snapshots: {}
   });
@@ -49,6 +51,7 @@ test('rejects incomplete customization contact and quantity data', () => {
   assert.equal(payload.valid, false);
   assert.match(payload.errors.join(' '), /name/i);
   assert.match(payload.errors.join(' '), /email/i);
+  assert.match(payload.errors.join(' '), /delivery address/i);
   assert.match(payload.errors.join(' '), /quantity/i);
   assert.match(payload.errors.join(' '), /3D design screenshot/i);
   assert.match(payload.errors.join(' '), /2D design screenshot/i);

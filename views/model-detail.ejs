@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30']
+  pageStyles: ['/css/model-detail-v2.css?v=20260915-remove-watermark-v32']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -13,6 +13,7 @@
 <% const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; %>
 <% const supportsOnModelMockup = Boolean(modelMockupProfile); %>
 <% const tryOnModels = typeof aiTryOnModels !== 'undefined' && Array.isArray(aiTryOnModels) ? aiTryOnModels : []; %>
+<% const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled); %>
 <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
 <% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
 <% const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; %>
@@ -37,15 +38,15 @@
         <div class="model-detail-meta" aria-label="Model capabilities">
           <span class="tag tag-free">Free beta</span>
           <span class="meta-item">Editable surface</span>
-          <span class="meta-item">AI try-on ready</span>
+          <% if (aiTryOnAvailable) { %><span class="meta-item">AI try-on ready</span><% } %>
         </div>
         <div class="model-actions model-action-grid">
           <button class="detail-action detail-action-primary" id="designNowBtn" type="button">
             <span>Customize this model</span>
           </button>
-          <a class="detail-action" id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link>
+          <% if (aiTryOnAvailable) { %><a class="detail-action" id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link>
             <span>AI try-on</span>
-          </a>
+          </a><% } %>
           <% if (previewModelFileUrl) { %>
             <button class="detail-action" id="renderCurrentModelBtn" type="button">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
@@ -56,8 +57,21 @@
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20V8l4-3v4l5-4v4l7-4v15H4Z"/><path d="M8 14h2m3 0h2m3 0h2"/></svg>
             <span>Production customization</span>
           </button>
+          <a
+            class="detail-action detail-action-upgrade"
+            id="removeWatermarkBtn"
+            href="/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=<%= encodeURIComponent(model.slug) %>"
+            data-analytics-event="remove_watermark_upgrade_click"
+            data-analytics-item="Watermark-free exports"
+            data-analytics-category="upgrade"
+            data-id="<%= model.slug %>"
+          >
+            <svg class="detail-action-upgrade-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 9.8 8.8 4 11l5.8 2.2L12 19l2.2-5.8L20 11l-5.8-2.2L12 3Z"/><path d="m18.5 3 .7 1.8L21 5.5l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg>
+            <span><strong>Remove watermark</strong><small>Compare Pro &amp; Max plans</small></span>
+            <svg class="detail-action-upgrade-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+          </a>
         </div>
-        <p class="model-action-note">Free during public beta · no payment details required</p>
+        <p class="model-action-note">Free exports include a watermark · Pro and Max remove it</p>
         <div class="model-detail-share-section model-hero-share" data-model-share-mount aria-label="Share this 3D model"></div>
         <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
       </div>
@@ -84,6 +98,7 @@
               environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
               tone-mapping="commerce"
               data-catalog-render-standard="main"
+              data-entitlement-texture-watermark
               style="width: 100%; height: 100%;"
             ></model-viewer>
             <span class="model-contact-shadow" aria-hidden="true"></span>
@@ -155,7 +170,11 @@
       <article>
         <span>02</span>
         <svg class="flow-icon flow-icon-person" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.5" r="4.5"/><path d="M3 22c.7-5.2 3.7-8 9-8s8.3 2.8 9 8H3Z"/></svg>
-        <h3>Try on</h3><p>See your design on real models with AI try-on.</p>
+        <% if (aiTryOnAvailable) { %>
+          <h3>Try on</h3><p>See your design on real models with AI try-on.</p>
+        <% } else { %>
+          <h3>Render</h3><p>Create a studio-quality product image from the angle you choose.</p>
+        <% } %>
       </article>
       <article>
         <span>03</span>
@@ -196,7 +215,7 @@
   </div>
 </section>
 
-<% if (supportsOnModelMockup && tryOnModels.length) { %>
+<% if (aiTryOnAvailable && supportsOnModelMockup && tryOnModels.length) { %>
 <section class="ai-tryon-feature" aria-labelledby="aiTryOnFeatureTitle">
   <div class="container ai-tryon-feature-grid">
     <div class="ai-tryon-copy">
@@ -451,7 +470,7 @@
       <div>
         <span>Production inquiry</span>
         <h2 id="customizationInquiryTitle">Request customization</h2>
-        <p>Tell us how to reach you and the quantity you need. Your current design will be attached automatically.</p>
+        <p>Tell us how to reach you, where the order is going, and the quantity you need. Your current design will be attached automatically.</p>
       </div>
       <button class="customization-modal-close" id="customizationInquiryClose" type="button" aria-label="Close customization request">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -470,6 +489,10 @@
           <label class="customization-field">
             <span>Email <b>*</b></span>
             <input type="email" name="email" autocomplete="email" maxlength="180" required placeholder="you@example.com">
+          </label>
+          <label class="customization-field customization-field-wide">
+            <span>Delivery address <b>*</b></span>
+            <input type="text" name="address" autocomplete="street-address" maxlength="300" required placeholder="Street, city, state/province, postal code, country">
           </label>
           <label class="customization-field customization-field-quantity">
             <span>Customization quantity <b>*</b></span>
@@ -931,6 +954,7 @@
                   exposure="0.72"
                   environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
                   tone-mapping="commerce"
+                  data-entitlement-texture-watermark
                   style="width: 100%; height: 100%;"
                   hidden
                 ></model-viewer>
@@ -1291,11 +1315,14 @@ function loadModelViewerElement(element) {
       element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });
       if (!element.getAttribute('src')) element.setAttribute('src', modelSource);
     });
-  }).then((readyViewer) => {
+  }).then(async (readyViewer) => {
     readyViewer.dismissPoster?.();
     readyViewer.removeAttribute('poster');
     applyCatalogMaterialResponse(readyViewer, detailSceneStandard);
     configureGarmentSoftnessAnimation(readyViewer);
+    if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {
+      await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);
+    }
     return readyViewer;
   }).catch((error) => {
     modelViewerPromises.delete(element);
@@ -1575,7 +1602,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260914-entitlements-v44',
+      src: '/js/model-designer.js?v=20260915-commercial-render-v47',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

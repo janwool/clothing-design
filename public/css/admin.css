@@ -1495,6 +1495,152 @@
   transform: translateY(0);
 }
 
+/* ===== User Uploads ===== */
+.user-upload-admin-main {
+  background:
+    radial-gradient(circle at 82% 2%, rgba(217, 207, 186, 0.46), transparent 25rem),
+    #f6f6f3;
+}
+
+.user-upload-storage {
+  font-size: clamp(23px, 2.1vw, 32px) !important;
+}
+
+.user-upload-grid {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.user-upload-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(29, 29, 31, 0.1);
+  border-radius: 14px;
+  background: #fff;
+  animation: project-card-arrive 420ms both;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.user-upload-card:hover {
+  border-color: rgba(92, 73, 44, 0.34);
+  box-shadow: 0 14px 32px rgba(50, 40, 25, 0.1);
+  transform: translateY(-2px);
+}
+
+.user-upload-preview {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-bottom: 1px solid var(--color-border);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.72), transparent),
+    repeating-linear-gradient(45deg, #f3f1ec 0 8px, #ebe8e1 8px 16px);
+}
+
+.user-upload-preview > a {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.user-upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 420ms cubic-bezier(.2, .7, .2, 1);
+}
+
+.user-upload-card:hover .user-upload-preview img {
+  transform: scale(1.03);
+}
+
+.user-upload-open {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(28, 28, 26, 0.76);
+  opacity: 0;
+  backdrop-filter: blur(8px);
+  transform: translateY(4px);
+  transition: opacity 160ms ease, transform 160ms ease;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.user-upload-card:hover .user-upload-open,
+.user-upload-preview a:focus-visible .user-upload-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.user-upload-purpose {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  max-width: calc(100% - 18px);
+  padding: 6px 9px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(45, 50, 42, 0.84);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8px);
+  font-size: 9px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-upload-purpose-project-preview,
+.user-upload-purpose-project-texture {
+  color: #3d3121;
+  background: rgba(241, 225, 194, 0.9);
+}
+
+.user-upload-purpose-try-on-result {
+  background: rgba(43, 74, 83, 0.88);
+}
+
+.user-upload-content {
+  padding: 13px 14px 14px;
+}
+
+.user-upload-content h3 {
+  margin: 0;
+  overflow: hidden;
+  font-size: 13px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-upload-content > p {
+  margin: 4px 0 0;
+  color: var(--color-muted);
+  font-size: 9px;
+}
+
+.user-upload-meta {
+  grid-template-columns: 0.7fr 0.7fr 1.6fr;
+}
+
+.user-upload-id {
+  min-width: 0;
+}
+
+.user-upload-empty-mark {
+  color: #6f5c3d;
+  border-color: #e1d7c3;
+  background: #f4ede0;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
   .stats-grid {
@@ -1557,6 +1703,10 @@
 
   .project-admin-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .user-upload-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
 
@@ -1684,6 +1834,10 @@
     flex: 1;
   }
 
+  .user-upload-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .project-admin-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1696,11 +1850,13 @@
 
 @media (max-width: 520px) {
   .project-stats,
-  .project-admin-grid {
+  .project-admin-grid,
+  .user-upload-grid {
     grid-template-columns: 1fr;
   }
 
-  .project-admin-grid {
+  .project-admin-grid,
+  .user-upload-grid {
     padding: 12px;
   }
 
@@ -1710,7 +1866,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .project-admin-card {
+  .project-admin-card,
+  .user-upload-card {
     animation: none;
     transition: none;
   }

@@ -177,6 +177,31 @@
 .model-product-page .detail-action-primary:hover { color: var(--md-ink); background: var(--md-lime); }
 .model-product-page .detail-action[disabled] { color: #8b8982; cursor: not-allowed; opacity: 0.55; }
 
+.model-product-page .detail-action-upgrade {
+  justify-content: flex-start;
+  padding-right: 16px;
+  padding-left: 16px;
+  background: var(--md-lime);
+  border-color: var(--md-ink);
+  text-align: left;
+}
+
+.model-product-page .detail-action-upgrade:nth-child(odd):last-child { grid-column: 1 / -1; }
+
+.model-product-page .detail-action-upgrade > span {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+}
+
+.model-product-page .detail-action-upgrade strong { font: inherit; }
+.model-product-page .detail-action-upgrade small { color: #4e541e; font-size: 8px; font-weight: 650; letter-spacing: 0.035em; }
+.model-product-page .detail-action-upgrade-icon { width: 18px; height: 18px; flex: 0 0 auto; }
+.model-product-page .detail-action-upgrade-arrow { width: 17px; height: 17px; flex: 0 0 auto; transition: transform 160ms ease; }
+.model-product-page .detail-action-upgrade:hover { color: #fff; background: var(--md-ink); }
+.model-product-page .detail-action-upgrade:hover small { color: #d9e8a9; }
+.model-product-page .detail-action-upgrade:hover .detail-action-upgrade-arrow { transform: translateX(3px); }
+
 .model-product-page .model-action-note {
   order: initial;
   margin: 10px 0 0;
@@ -576,6 +601,8 @@ body.ai-chooser-open { overflow: hidden; }
 @media (max-width: 520px) {
   .model-product-page .model-breadcrumb > span:last-child { max-width: 120px; }
   .model-product-page .model-action-grid { grid-template-columns: 1fr; }
+  .model-product-page .detail-action-upgrade,
+  .model-product-page .detail-action-upgrade:nth-child(odd):last-child { grid-column: auto; }
   .model-product-page .model-viewer-controls { right: 6px; width: 46px; gap: 10px; }
   .model-product-page .viewer-gesture,.model-product-page .viewer-utility-control { width: 46px; min-height: 50px; gap: 7px; padding-bottom: 12px; }
   .model-product-page .viewer-gesture::after,.model-product-page .viewer-utility-control:not(:last-child)::after { right: 12px; left: 12px; }
@@ -605,7 +632,7 @@ body.ai-chooser-open { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .model-product-page .detail-action,.ai-chooser-stage > img { transition: none; }
+  .model-product-page .detail-action,.model-product-page .detail-action-upgrade-arrow,.ai-chooser-stage > img { transition: none; }
 }
 
 /* Account gate for the primary model-customization action. */

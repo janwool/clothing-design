@@ -713,6 +713,7 @@ img {
 .account-project-card { overflow: hidden; border: 1px solid #dedbd5; border-radius: 14px; background: #fff; }
 .account-project-preview { display: grid; place-items: center; aspect-ratio: 4 / 3; overflow: hidden; background: #eceae6; color: #8b857e; }
 .account-project-preview img { width: 100%; height: 100%; object-fit: contain; }
+
 .account-project-meta { padding: 17px; }
 .account-project-meta > span { color: #847e76; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
 .account-project-meta h3 { margin: 6px 0 10px; font-size: 17px; }

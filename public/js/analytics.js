@@ -3,8 +3,13 @@
 
   window.dataLayer = window.dataLayer || [];
 
+  var DEFAULT_AUTH_RETURN_PATH = '/tools/t-shirt-mockup-generator';
+
   var STABLE_EVENTS = new Set([
     'page_view',
+    'view_item_list',
+    'select_item',
+    'begin_checkout',
     'navigation_click',
     'select_content',
     'sign_up_start',
@@ -113,6 +118,42 @@
     }
   }
 
+  function localPath(value) {
+    if (!value) return '';
+    try {
+      var url = new URL(value, window.location.origin);
+      return url.origin === window.location.origin ? url.pathname : '';
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function authReturnPathFromUrl(value) {
+    if (!value) return '';
+    try {
+      var url = new URL(value, window.location.origin);
+      if (url.origin !== window.location.origin) return '';
+      return localPath(url.searchParams.get('next'));
+    } catch (_) {
+      return '';
+    }
+  }
+
+  function authContext(type, method, requestedReturnPath) {
+    var returnPath = localPath(requestedReturnPath);
+    return {
+      type: type,
+      method: method,
+      auth_entry_path: window.location.pathname,
+      auth_return_path: returnPath || DEFAULT_AUTH_RETURN_PATH,
+      auth_return_mode: returnPath ? 'requested_page' : 'default'
+    };
+  }
+
+  function savePendingAuth(context) {
+    sessionStorage.setItem('analytics_pending_auth', JSON.stringify(context));
+  }
+
   function contentType(element) {
     if (element.closest('.model-card')) return '3d_model';
     if (element.closest('.generator-category-card')) return 'category';
@@ -148,10 +189,24 @@
     }
 
     if (href === '/auth/logout') return track('navigation_click', Object.assign(common, { navigation_type: 'logout' }));
-    if (href.includes('/auth/register')) return track('sign_up_start', Object.assign(common, {
-      plan_name: cleanText(target.closest('.pricing-card')?.querySelector('h3')?.textContent)
-    }));
-    if (href.includes('/auth/login')) return track('login_start', common);
+    if (href.includes('/auth/google')) {
+      var googleType = window.location.pathname === '/auth/register' ? 'register' : 'login';
+      var googleContext = authContext(googleType, 'google', authReturnPathFromUrl(anchor.href));
+      savePendingAuth(googleContext);
+      return track(googleType === 'register' ? 'sign_up_start' : 'login_start', Object.assign(common, googleContext));
+    }
+    if (href.includes('/auth/register')) {
+      var registerContext = authContext('register', undefined, authReturnPathFromUrl(anchor.href));
+      return track('sign_up_start', Object.assign(common, registerContext, {
+        plan_name: cleanText(target.dataset.plan || target.closest('.pricing-card')?.querySelector('h2, h3')?.textContent),
+        billing_interval: target.dataset.billing
+      }));
+    }
+    if (href.includes('/auth/login')) {
+      return track('login_start', Object.assign(common,
+        authContext('login', undefined, authReturnPathFromUrl(anchor.href))
+      ));
+    }
 
     if (anchor?.hasAttribute('download')) return track('file_download', Object.assign(common, {
       file_name: href.split('/').pop()?.split('?')[0]
@@ -206,11 +261,23 @@
       if (pendingAuth) {
         var authError = document.querySelector('.auth-error, .alert-error, [data-auth-error]');
         if (type !== 'auth') {
-          track(pendingAuth.type === 'register' ? 'sign_up' : 'login', { method: 'email' });
+          track(pendingAuth.type === 'register' ? 'sign_up' : 'login', {
+            method: pendingAuth.method || 'email',
+            auth_entry_path: pendingAuth.auth_entry_path,
+            auth_return_path: pendingAuth.auth_return_path || DEFAULT_AUTH_RETURN_PATH,
+            auth_return_mode: pendingAuth.auth_return_mode || 'default',
+            auth_redirect_status: window.location.pathname === (pendingAuth.auth_return_path || DEFAULT_AUTH_RETURN_PATH)
+              ? 'matched'
+              : 'unexpected'
+          });
           sessionStorage.removeItem('analytics_pending_auth');
         } else if (authError) {
           track('auth_error', {
             auth_type: pendingAuth.type,
+            method: pendingAuth.method || 'email',
+            auth_entry_path: pendingAuth.auth_entry_path,
+            auth_return_path: pendingAuth.auth_return_path || DEFAULT_AUTH_RETURN_PATH,
+            auth_return_mode: pendingAuth.auth_return_mode || 'default',
             error_message: cleanText(authError.textContent)
           });
           sessionStorage.removeItem('analytics_pending_auth');
@@ -234,7 +301,8 @@
         form_action: form.action
       });
       if (name === 'login' || name === 'register') {
-        sessionStorage.setItem('analytics_pending_auth', JSON.stringify({ type: name }));
+        var nextInput = form.querySelector('[name="next"]');
+        savePendingAuth(authContext(name, 'email', nextInput?.value));
       }
     });
 

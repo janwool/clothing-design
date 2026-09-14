@@ -1,5 +1,5 @@
 {
-  "version": "commercial-catalog-cover-v1",
+  "version": "commercial-catalog-cover-v2",
   "referenceModel": "basic-short-sleeve-tshirt-3d-model",
   "engine": "CYCLES",
   "cyclesDevice": "CPU",
@@ -106,8 +106,10 @@
     },
     "shadowIntensity": 0.0,
     "shadowSoftness": 1.0,
-    "exportShadowIntensity": 0.32,
-    "exportShadowSoftness": 0.96,
+    "exportShadowIntensity": 0.58,
+    "exportShadowSoftness": 0.84,
+    "exportExposure": 0.78,
+    "exportToneMapping": "commerce",
     "exposure": 0.72,
     "toneMapping": "commerce",
     "material": {
@@ -116,6 +118,23 @@
       "roughness": 0.62,
       "specularIorLevel": 0.28,
       "sheenWeight": 0.12
+    },
+    "exportMaterial": {
+      "roughness": 0.72,
+      "specularIorLevel": 0.4,
+      "sheenWeight": 0.22,
+      "sheenRoughness": 0.82,
+      "normalScale": 0.24
+    },
+    "exportComposition": {
+      "width": 1200,
+      "height": 1500,
+      "backgroundTop": "#faf9f6",
+      "backgroundBottom": "#e8e5de",
+      "spotlight": "rgba(255, 255, 255, 0.96)",
+      "floorShadow": "rgba(29, 27, 24, 0.3)",
+      "contrast": 1.08,
+      "saturation": 1.02
     }
   }
 }

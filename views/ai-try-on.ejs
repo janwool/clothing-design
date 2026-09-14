@@ -34,7 +34,6 @@ const tryOnModels = [
   }
 ];
 const currentModelFile = model.preview_file_url || model.file_url || '';
-const editHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
 const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
 %>
 
@@ -60,7 +59,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     </div>
 
     <div class="ai-tryon__actions">
-      <a href="<%= editHref %>" class="ai-button ai-button--secondary">Back to 3D</a>
       <button class="ai-button ai-button--primary" type="button" data-generate>Generate try-on</button>
       <a class="ai-tryon__close" href="<%= detailHref %>" aria-label="Close AI try-on">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
@@ -78,7 +76,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
         alt="<%= tryOnModels[0].name %>, selected model for AI try-on"
         data-fit="contain"
       >
-      <div class="tryon-result__wash" aria-hidden="true"></div>
 
       <div class="tryon-result__toggle" role="group" aria-label="Preview state">
         <button type="button" class="is-active" data-preview-state="before">Before</button>
@@ -176,6 +173,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
               role="option"
               aria-selected="<%= index === 0 ? 'true' : 'false' %>"
               data-model-card
+              data-model-id="<%= person.id %>"
               data-model-name="<%= person.name %>"
               data-model-image="<%= person.image %>"
             >
@@ -210,6 +208,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
   window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
 </script>
 <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
-<script src="/js/ai-try-on.js?v=20260914-static-view-v8" defer></script>
+<script src="/js/ai-try-on.js?v=20260914-result-history-v10" defer></script>
 
 <%- include('partials/footer') %>

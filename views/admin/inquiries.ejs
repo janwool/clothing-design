@@ -50,7 +50,7 @@
               <circle cx="11" cy="11" r="8"/>
               <path d="m21 21-4.35-4.35"/>
             </svg>
-            <input type="search" name="q" value="<%= inquiryFilters.search %>" placeholder="Reference, email, model…">
+            <input type="search" name="q" value="<%= inquiryFilters.search %>" placeholder="Reference, email, address, model…">
           </label>
           <select name="status" aria-label="Filter by status">
             <option value="all" <%= inquiryFilters.status === 'all' ? 'selected' : '' %>>All statuses</option>
@@ -195,6 +195,16 @@
           <div><span>Model</span><strong><%= item.model_name %></strong><small><%= item.model_slug || '—' %></small></div>
           <div><span>Status</span><strong class="inquiry-detail-status"><%= item.status || 'pending' %></strong></div>
         </div>
+
+        <section class="inquiry-detail-section">
+          <div class="inquiry-detail-section-heading">
+            <div>
+              <span>Fulfillment</span>
+              <h3>Delivery address</h3>
+            </div>
+          </div>
+          <p><%= item.address || 'No delivery address was provided.' %></p>
+        </section>
 
         <section class="inquiry-detail-section">
           <div class="inquiry-detail-section-heading">

@@ -75,7 +75,8 @@ router.post('/', async (req, res) => {
       inquiry.modelSlug,
       inquiry.modelName || inquiry.modelSlug,
       inquiry.name,
-      inquiry.email
+      inquiry.email,
+      inquiry.address
     ];
     const trailingValues = [
       inquiry.quantity,
@@ -91,19 +92,19 @@ router.post('/', async (req, res) => {
       ? await db.run(
         `INSERT INTO customization_inquiries (
           reference_code, model_id, model_slug, model_name,
-          contact_name, email, phone, company, preferred_contact,
+          contact_name, email, address, phone, company, preferred_contact,
           quantity, notes, snapshot_3d_url, snapshot_3d_key,
           snapshot_2d_url, snapshot_2d_key, source_url, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [...commonValues, '', null, 'email', ...trailingValues]
       )
       : await db.run(
         `INSERT INTO customization_inquiries (
           reference_code, model_id, model_slug, model_name,
-          contact_name, email, quantity, notes,
+          contact_name, email, address, quantity, notes,
           snapshot_3d_url, snapshot_3d_key,
           snapshot_2d_url, snapshot_2d_key, source_url, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [...commonValues, ...trailingValues]
       );
 

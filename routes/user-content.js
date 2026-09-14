@@ -12,6 +12,7 @@ const {
   limitError
 } = require('../lib/user-entitlements');
 const { parseProjectRow, validateProjectPayload } = require('../lib/user-projects');
+const { isAiTryOnEnabled } = require('../lib/feature-flags');
 
 const router = express.Router();
 
@@ -40,7 +41,7 @@ function cleanFileName(value) {
 
 function cleanPurpose(value) {
   const purpose = String(value || 'artwork').toLowerCase();
-  return ['artwork', 'project-preview', 'project-texture'].includes(purpose) ? purpose : 'artwork';
+  return ['artwork', 'project-preview', 'project-texture', 'try-on-result'].includes(purpose) ? purpose : 'artwork';
 }
 
 function imageStorageBase(userId, imageId, purpose) {
@@ -84,7 +85,7 @@ router.get('/api/user-images', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
     const requestedPurpose = String(req.query?.purpose || '').toLowerCase();
-    const purpose = ['artwork', 'project-preview', 'project-texture'].includes(requestedPurpose)
+    const purpose = ['artwork', 'project-preview', 'project-texture', 'try-on-result'].includes(requestedPurpose)
       ? requestedPurpose
       : '';
     const rows = await db.all(
@@ -264,6 +265,7 @@ router.delete('/api/user-images/:id', requireUser, async (req, res) => {
     const inUse = projects.some(project => project.preview_image_url === image.url || String(project.design_data || '').includes(image.url));
     if (inUse) return res.status(409).json({ success: false, error: 'This image is used by a saved project and cannot be deleted.' });
     await deleteObject(image.storage_key);
+    await db.run('DELETE FROM ai_try_on_results WHERE image_id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
     await db.run('DELETE FROM user_images WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
     return res.json({ success: true });
   } catch (error) {
@@ -341,11 +343,12 @@ async function renderWorkspace(req, res, pageKey = 'overview') {
       metaDescription: pageConfig.description,
       metaRobots: 'noindex,nofollow',
       page: 'account',
-      pageStyles: ['/css/account-workspace.css?v=20260914-entitlements-v12'],
+      pageStyles: ['/css/account-workspace.css?v=20260915-ai-disabled-v13'],
       projects,
       account: account || req.session.user,
       workspaceStats,
       entitlements,
+      aiTryOnEnabled: isAiTryOnEnabled(),
       checkoutState: req.query?.checkout === 'success' ? 'success' : ''
     });
   } catch (error) {

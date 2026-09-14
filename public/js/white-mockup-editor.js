@@ -3,6 +3,7 @@
 
   const editor = document.getElementById('whiteMockupEditor');
   if (!editor) return;
+  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v1.png';
 
   const stage = document.getElementById('whiteMockupStage');
   const canvas = document.getElementById('whiteMockupCanvas');
@@ -71,6 +72,7 @@
     artworkUrl: '',
     artworkDataUrl: '',
     artworkUploadPromise: null,
+    watermarkEnabled: false,
     projectId: '',
     projectName: ''
   };
@@ -82,7 +84,9 @@
   const mapCanvas = document.createElement('canvas');
   const garmentMaskCanvas = document.createElement('canvas');
   const garmentTintCanvas = document.createElement('canvas');
-  [baseCanvas, foregroundCanvas, artworkCanvas, compositeCanvas, mapCanvas, garmentMaskCanvas, garmentTintCanvas].forEach((item) => {
+  const watermarkSourceCanvas = document.createElement('canvas');
+  const watermarkCanvas = document.createElement('canvas');
+  [baseCanvas, foregroundCanvas, artworkCanvas, compositeCanvas, mapCanvas, garmentMaskCanvas, garmentTintCanvas, watermarkSourceCanvas, watermarkCanvas].forEach((item) => {
     item.width = canvas.width;
     item.height = canvas.height;
   });
@@ -93,6 +97,8 @@
   const mapContext = mapCanvas.getContext('2d', { willReadFrequently: true });
   const garmentMaskContext = garmentMaskCanvas.getContext('2d');
   const garmentTintContext = garmentTintCanvas.getContext('2d');
+  const watermarkSourceContext = watermarkSourceCanvas.getContext('2d', { willReadFrequently: true });
+  const watermarkContext = watermarkCanvas.getContext('2d');
 
   function setStatus(message, isError) {
     status.textContent = message;
@@ -156,6 +162,59 @@
     }
     garmentMaskContext.clearRect(0, 0, garmentMaskCanvas.width, garmentMaskCanvas.height);
     garmentMaskContext.putImageData(output, 0, 0);
+  }
+
+  async function buildGarmentWatermark() {
+    const entitlements = window.ExportEntitlements?.getEntitlements
+      ? await window.ExportEntitlements.getEntitlements()
+      : await fetch('/api/account/entitlements', {
+        credentials: 'same-origin',
+        headers: { Accept: 'application/json' }
+      }).then(async (response) => {
+        const payload = await response.json().catch(() => ({}));
+        return response.ok ? payload.entitlements : null;
+      }).catch(() => null);
+    state.watermarkEnabled = !entitlements?.features?.removeWatermarks;
+    canvas.dataset.watermarkEnabled = String(state.watermarkEnabled);
+    watermarkSourceContext.clearRect(0, 0, canvas.width, canvas.height);
+    watermarkContext.clearRect(0, 0, canvas.width, canvas.height);
+    if (!state.watermarkEnabled) return;
+
+    const tile = await loadImage(WATERMARK_TILE_URL);
+    const markWidth = Math.max(96, Math.min(220, Math.round(Math.min(canvas.width, canvas.height) * 0.12)));
+    const markHeight = Math.round(markWidth * 0.58);
+    const horizontalStep = Math.round(markWidth * 0.9);
+    const verticalStep = Math.round(markHeight * 0.92);
+    const markCanvas = document.createElement('canvas');
+    markCanvas.width = 650;
+    markCanvas.height = 480;
+    const markContext = markCanvas.getContext('2d');
+    markContext.drawImage(tile, 300, 390, 650, 480, 0, 0, markCanvas.width, markCanvas.height);
+    markContext.globalCompositeOperation = 'source-in';
+    markContext.fillStyle = '#c5c7c4';
+    markContext.fillRect(0, 0, markCanvas.width, markCanvas.height);
+    watermarkSourceContext.save();
+    watermarkSourceContext.globalAlpha = 0.62;
+    watermarkSourceContext.imageSmoothingEnabled = true;
+    watermarkSourceContext.imageSmoothingQuality = 'high';
+    let row = 0;
+    for (let y = -verticalStep; y < canvas.height + verticalStep; y += verticalStep) {
+      const rowOffset = row % 2 ? -horizontalStep / 2 : 0;
+      for (let x = -horizontalStep; x < canvas.width + horizontalStep; x += horizontalStep) {
+        watermarkSourceContext.drawImage(markCanvas, 0, 0, markCanvas.width, markCanvas.height, x + rowOffset, y, markWidth, markHeight);
+      }
+      row += 1;
+    }
+    watermarkSourceContext.restore();
+
+    // This is a real canvas texture layer: crop the repeated artwork with the
+    // garment alpha mask so no watermark pixels exist on the person/background.
+    watermarkContext.drawImage(watermarkSourceCanvas, 0, 0);
+    watermarkContext.save();
+    watermarkContext.globalCompositeOperation = 'destination-in';
+    watermarkContext.drawImage(garmentMaskCanvas, 0, 0);
+    watermarkContext.restore();
+    canvas.dataset.watermarkRendered = 'true';
   }
 
   function sampleRegion(pixels, xStart, yStart, xEnd, yEnd) {
@@ -356,6 +415,14 @@
     context.restore();
   }
 
+  function drawGarmentWatermark() {
+    if (!state.watermarkEnabled) return;
+    context.save();
+    context.globalCompositeOperation = 'source-over';
+    context.drawImage(watermarkCanvas, 0, 0);
+    context.restore();
+  }
+
   function canvasUiScale() {
     const rect = canvas.getBoundingClientRect();
     return canvas.width / Math.max(1, rect.width);
@@ -422,9 +489,10 @@
       context.globalCompositeOperation = 'multiply';
       context.drawImage(compositeCanvas, 0, 0);
       context.restore();
-      if (options.overlay !== false) drawSelection();
       updateAccessibleTransform();
     }
+    drawGarmentWatermark();
+    if (state.artworkImage && options.overlay !== false) drawSelection();
   }
 
   function scheduleRender(options) {
@@ -446,6 +514,7 @@
       state.maskPixels = readPixels(maskImage);
       state.depthPixels = readPixels(depthImage);
       buildGarmentMask();
+      await buildGarmentWatermark();
       baseContext.clearRect(0, 0, baseCanvas.width, baseCanvas.height);
       baseContext.drawImage(baseImage, 0, 0, baseCanvas.width, baseCanvas.height);
       buildForegroundCutout();
@@ -661,17 +730,7 @@
     render({ overlay: false, forceQuality: true });
     downloadButton.disabled = true;
     try {
-      const entitlements = await window.ExportEntitlements?.getEntitlements();
-      let blob;
-      if (entitlements?.features?.removeWatermarks) {
-        blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      } else {
-        const source = canvas.toDataURL('image/png');
-        const exportUrl = window.ExportEntitlements
-          ? await window.ExportEntitlements.prepareExport(source)
-          : source;
-        blob = await fetch(exportUrl).then(response => response.blob());
-      }
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       if (!blob) throw new Error('The PNG could not be created.');
       const safeArtworkName = state.artworkName
         .replace(/\.[^.]+$/, '')

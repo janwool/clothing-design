@@ -5,6 +5,8 @@ compatibility_flags = ["nodejs_compat"]
 
 [vars]
 DB_TYPE = "d1"
+APP_BASE_URL = "https://www.cloz-design.com"
+CREEM_TEST_MODE = "false"
 
 [ai]
 binding = "AI"
