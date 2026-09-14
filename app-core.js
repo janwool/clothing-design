@@ -304,9 +304,6 @@ function workerBodyParser(req, res, next) {
 
   readRequestBody(req, JSON_BODY_LIMIT_BYTES)
     .then(text => {
-      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/creem') {
-        req.rawBody = text;
-      }
       if (contentType === 'application/json') {
         req.body = text.trim() ? JSON.parse(text) : {};
       } else {
@@ -337,14 +334,7 @@ if (isWorkerRuntime) {
   app.use(workerBodyParser);
 } else {
   app.use(express.urlencoded({ extended: true }));
-  app.use(express.json({
-    limit: JSON_BODY_LIMIT_BYTES,
-    verify(req, res, buffer) {
-      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/creem') {
-        req.rawBody = buffer.toString('utf8');
-      }
-    }
-  }));
+  app.use(express.json({ limit: JSON_BODY_LIMIT_BYTES }));
 }
 if (isWorkerRuntime) {
   app.use(workerSessionMiddleware);
@@ -427,8 +417,6 @@ app.set('views', viewsDir);
 
 app.use('/api/customization-inquiries', require('./routes/customization-inquiries'));
 app.use('/api/on-model-svg-masks', require('./routes/on-model-svg-masks'));
-app.use('/api/billing', require('./routes/billing'));
-app.use('/api/ai-try-on', require('./routes/ai-try-on'));
 app.use('/', require('./routes/user-content'));
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));

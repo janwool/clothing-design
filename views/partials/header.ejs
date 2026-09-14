@@ -31,7 +31,6 @@
   </script>
   <script src="/js/analytics.js?v=20260907-render-current-view" defer></script>
   <script src="/js/user-projects.js?v=20260913-upload-timeout-v3" defer></script>
-  <script src="/js/export-entitlements.js?v=20260914-v1" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -95,9 +94,6 @@
         </a>
         <a href="/white-mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' %>">
           White Mockups
-        </a>
-        <a href="/pricing" class="nav-link <%= typeof page !== 'undefined' && page === 'pricing' ? 'active' : '' %>">
-          Pricing
         </a>
         <a href="/blog" class="nav-link <%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">
           Guides
@@ -207,7 +203,6 @@
     <div class="mobile-menu" id="mobileNavigation">
       <a href="/mockups" class="mobile-link">3D Models</a>
       <a href="/white-mockups" class="mobile-link">White Mockups</a>
-      <a href="/pricing" class="mobile-link">Pricing</a>
       <a href="/blog" class="mobile-link">Guides</a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>

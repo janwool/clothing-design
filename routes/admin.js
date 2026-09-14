@@ -4,12 +4,6 @@ const path = require('path');
 const db = require('../lib/db');
 const { generateSlug } = require('../lib/slug');
 const { ensureCustomizationInquiriesTable } = require('../lib/customization-inquiries-db');
-const { ensureUserContentTables } = require('../lib/user-content-db');
-const {
-  ensureEntitlementTables,
-  getUserEntitlements,
-  normalizePlan
-} = require('../lib/user-entitlements');
 const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 
 // Cloudflare R2 Configuration
@@ -292,8 +286,6 @@ function requireAuth(req, res, next) {
 
 const INQUIRY_PAGE_SIZE = 30;
 const INQUIRY_STATUSES = new Set(['all', 'pending', 'contacted', 'completed', 'closed']);
-const PROJECT_PAGE_SIZE = 24;
-const PROJECT_TYPES = new Set(['all', '3d', 'white_mockup']);
 
 function normalizeInquiryStatus(value) {
   const status = String(value || 'all').trim().toLowerCase();
@@ -303,11 +295,6 @@ function normalizeInquiryStatus(value) {
 function normalizeInquiryPage(value) {
   const page = Number.parseInt(value, 10);
   return Number.isInteger(page) && page > 0 ? page : 1;
-}
-
-function normalizeProjectType(value) {
-  const type = String(value || 'all').trim().toLowerCase();
-  return PROJECT_TYPES.has(type) ? type : 'all';
 }
 
 function formatInquiryDate(value) {
@@ -336,18 +323,6 @@ function safeHttpUrl(value) {
   }
 }
 
-function safeProjectPreviewUrl(value) {
-  const url = String(value || '').trim();
-  if (/^\/(?!\/)[^\s]*$/.test(url)) return url;
-  return safeHttpUrl(url);
-}
-
-function safeProjectSourceUrl(value) {
-  const url = String(value || '').trim();
-  if (!/^\/(?:3d-models|white-mockups)\/(?!\/)[^\s]*$/.test(url)) return '';
-  return url;
-}
-
 // Admin Dashboard
 router.get('/', requireAuth, async (req, res) => {
   try {
@@ -358,8 +333,6 @@ router.get('/', requireAuth, async (req, res) => {
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
     const users = await db.get('SELECT COUNT(*) as count FROM users');
     const inquiries = await db.get('SELECT COUNT(*) as count FROM customization_inquiries');
-    await ensureUserContentTables();
-    const projects = await db.get('SELECT COUNT(*) as count FROM design_projects');
 
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
@@ -370,15 +343,14 @@ router.get('/', requireAuth, async (req, res) => {
         gallery: gallery ? gallery.count : 0,
         tools: tools ? tools.count : 0,
         users: users ? users.count : 0,
-        inquiries: inquiries ? inquiries.count : 0,
-        projects: projects ? projects.count : 0
+        inquiries: inquiries ? inquiries.count : 0
       }
     });
   } catch (err) {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, projects: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0 }
     });
   }
 });
@@ -462,105 +434,6 @@ router.get('/inquiries', requireAuth, async (req, res) => {
       inquiryStats: { total: 0, pending: 0, handled: 0 },
       error: 'Customization inquiries could not be loaded.'
     });
-  }
-});
-
-// ==================== User Projects ====================
-router.get('/projects', requireAuth, async (req, res) => {
-  const type = normalizeProjectType(req.query.type);
-  const search = String(req.query.q || '').trim().slice(0, 100);
-  const requestedPage = normalizeInquiryPage(req.query.page);
-
-  try {
-    await ensureUserContentTables();
-    const where = [];
-    const params = [];
-
-    if (type !== 'all') {
-      where.push('p.project_type = ?');
-      params.push(type);
-    }
-    if (search) {
-      const pattern = `%${search}%`;
-      where.push('(p.name LIKE ? OR p.id LIKE ? OR u.email LIKE ? OR u.name LIKE ?)');
-      params.push(pattern, pattern, pattern, pattern);
-    }
-
-    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
-    const totalRow = await db.get(
-      `SELECT COUNT(*) as count
-       FROM design_projects p
-       LEFT JOIN users u ON u.id = p.user_id
-       ${whereSql}`,
-      params
-    );
-    const total = Number(totalRow?.count || 0);
-    const pageCount = Math.max(1, Math.ceil(total / PROJECT_PAGE_SIZE));
-    const page = Math.min(requestedPage, pageCount);
-    const offset = (page - 1) * PROJECT_PAGE_SIZE;
-    const items = await db.all(
-      `SELECT
-        p.id, p.user_id, p.project_type, p.name, p.source_id, p.source_url,
-        p.preview_image_url, p.created_at, p.updated_at,
-        u.email as user_email, u.name as user_name
-       FROM design_projects p
-       LEFT JOIN users u ON u.id = p.user_id
-       ${whereSql}
-       ORDER BY p.updated_at DESC, p.created_at DESC
-       LIMIT ? OFFSET ?`,
-      [...params, PROJECT_PAGE_SIZE, offset]
-    );
-    const stats = await db.get(`SELECT
-      COUNT(*) as total,
-      SUM(CASE WHEN project_type = '3d' THEN 1 ELSE 0 END) as projects_3d,
-      SUM(CASE WHEN project_type = 'white_mockup' THEN 1 ELSE 0 END) as white_mockups,
-      COUNT(DISTINCT user_id) as creators
-      FROM design_projects`);
-
-    res.render('admin/projects', {
-      title: 'User Projects',
-      page: 'admin-projects',
-      items: (items || []).map(item => ({
-        ...item,
-        preview_image_url_safe: safeProjectPreviewUrl(item.preview_image_url),
-        source_url_safe: safeProjectSourceUrl(item.source_url),
-        created_at_display: formatInquiryDate(item.created_at),
-        updated_at_display: formatInquiryDate(item.updated_at)
-      })),
-      projectFilters: { type, search },
-      projectPagination: { page, pageCount, total },
-      projectStats: {
-        total: Number(stats?.total || 0),
-        projects3d: Number(stats?.projects_3d || 0),
-        whiteMockups: Number(stats?.white_mockups || 0),
-        creators: Number(stats?.creators || 0)
-      },
-      error: ''
-    });
-  } catch (err) {
-    console.error('Failed to load user projects:', err);
-    res.render('admin/projects', {
-      title: 'User Projects',
-      page: 'admin-projects',
-      items: [],
-      projectFilters: { type, search },
-      projectPagination: { page: 1, pageCount: 1, total: 0 },
-      projectStats: { total: 0, projects3d: 0, whiteMockups: 0, creators: 0 },
-      error: 'User projects could not be loaded.'
-    });
-  }
-});
-
-router.delete('/projects/:id', requireAuth, async (req, res) => {
-  try {
-    await ensureUserContentTables();
-    const result = await db.run('DELETE FROM design_projects WHERE id = ?', [req.params.id]);
-    if (!result.changes) {
-      return res.status(404).json({ success: false, error: 'Project not found.' });
-    }
-    return res.json({ success: true });
-  } catch (err) {
-    return res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -811,78 +684,15 @@ router.delete('/tools/:id', requireAuth, async (req, res) => {
 // ==================== Users Management ====================
 router.get('/users', requireAuth, async (req, res) => {
   try {
-    await ensureEntitlementTables();
-    const items = await db.all(`SELECT u.id, u.email, u.name, u.created_at,
-      COALESCE(s.plan, 'free') AS plan, s.billing_interval, s.status AS subscription_status,
-      s.current_period_end
-      FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id
-      ORDER BY u.created_at DESC`);
+    const items = await db.all('SELECT id, email, name, created_at FROM users ORDER BY created_at DESC');
     res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: items || [] });
   } catch (err) {
     res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: [] });
   }
 });
 
-router.patch('/users/:id/plan', requireAuth, async (req, res) => {
-  const requestedPlan = String(req.body?.plan || '').trim().toLowerCase();
-  const billingInterval = String(req.body?.billingInterval || '').trim().toLowerCase();
-  if (!['free', 'pro', 'max', 'business'].includes(requestedPlan)) {
-    return res.status(400).json({ success: false, error: 'Choose a valid plan.' });
-  }
-  if (requestedPlan !== 'free' && requestedPlan !== 'business' && !['monthly', 'yearly'].includes(billingInterval)) {
-    return res.status(400).json({ success: false, error: 'Choose monthly or yearly billing.' });
-  }
-
-  try {
-    await ensureEntitlementTables();
-    const user = await db.get('SELECT id FROM users WHERE id = ?', [req.params.id]);
-    if (!user) return res.status(404).json({ success: false, error: 'User not found.' });
-
-    if (requestedPlan === 'free') {
-      await db.run('DELETE FROM user_subscriptions WHERE user_id = ?', [req.params.id]);
-    } else {
-      const startedAt = new Date();
-      const endsAt = new Date(startedAt);
-      if (billingInterval === 'yearly' || requestedPlan === 'business') {
-        endsAt.setUTCFullYear(endsAt.getUTCFullYear() + 1);
-      } else {
-        endsAt.setUTCMonth(endsAt.getUTCMonth() + 1);
-      }
-      const sqliteDate = date => date.toISOString().slice(0, 19).replace('T', ' ');
-      await db.run(
-        `INSERT INTO user_subscriptions
-         (user_id, plan, billing_interval, status, current_period_start, current_period_end)
-         VALUES (?, ?, ?, 'active', ?, ?)
-         ON CONFLICT(user_id) DO UPDATE SET
-           plan = excluded.plan,
-           billing_interval = excluded.billing_interval,
-           status = 'active',
-           current_period_start = excluded.current_period_start,
-           current_period_end = excluded.current_period_end,
-           updated_at = CURRENT_TIMESTAMP`,
-        [
-          req.params.id,
-          normalizePlan(requestedPlan),
-          requestedPlan === 'business' ? null : billingInterval,
-          sqliteDate(startedAt),
-          sqliteDate(endsAt)
-        ]
-      );
-    }
-
-    const entitlements = await getUserEntitlements(req.params.id);
-    return res.json({ success: true, entitlements });
-  } catch (error) {
-    console.error('Admin plan update failed:', error);
-    return res.status(500).json({ success: false, error: 'The user plan could not be updated.' });
-  }
-});
-
 router.delete('/users/:id', requireAuth, async (req, res) => {
   try {
-    await ensureEntitlementTables();
-    await db.run('DELETE FROM user_entitlement_usage WHERE user_id = ?', [req.params.id]);
-    await db.run('DELETE FROM user_subscriptions WHERE user_id = ?', [req.params.id]);
     await db.run('DELETE FROM users WHERE id = ?', [req.params.id]);
     res.json({ success: true });
   } catch (err) {

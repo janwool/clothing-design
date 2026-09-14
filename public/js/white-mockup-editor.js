@@ -127,21 +127,12 @@
   }
 
   function maskOpacityAt(index) {
-    // SVG masks encode coverage as black/white luminance, not transparency:
-    // the full-canvas black background is intentionally opaque. Reading only
-    // the alpha channel therefore turns the entire SVG into an active mask.
-    // Multiplying luminance by source alpha also keeps transparent raster masks
-    // compatible with the grayscale PNG fallback.
-    const red = state.maskPixels[index] / 255;
-    const green = state.maskPixels[index + 1] / 255;
-    const blue = state.maskPixels[index + 2] / 255;
-    const sourceAlpha = state.maskPixels[index + 3] / 255;
-    const coverage = (red * 0.2126 + green * 0.7152 + blue * 0.0722) * sourceAlpha;
-    if (coverage <= 0.14) return 0;
+    const alpha = state.maskPixels[index] / 255;
+    if (alpha <= 0.14) return 0;
     // Keep the antialiased edge inside the garment. The previous curve turned
     // a partially transparent studio-edge pixel fully opaque, which made color
     // spill visible around collars, cuffs, hands, and sleeve gaps.
-    const normalized = Math.min(1, (coverage - 0.14) / 0.70);
+    const normalized = Math.min(1, (alpha - 0.14) / 0.70);
     return normalized * normalized * (3 - 2 * normalized);
   }
 
@@ -656,23 +647,15 @@
     scheduleRender({ forceQuality: true });
   }
 
-  async function downloadMockup() {
+  function downloadMockup() {
     if (!state.ready || !state.artworkImage) return;
     render({ overlay: false, forceQuality: true });
-    downloadButton.disabled = true;
-    try {
-      const entitlements = await window.ExportEntitlements?.getEntitlements();
-      let blob;
-      if (entitlements?.features?.removeWatermarks) {
-        blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-      } else {
-        const source = canvas.toDataURL('image/png');
-        const exportUrl = window.ExportEntitlements
-          ? await window.ExportEntitlements.prepareExport(source)
-          : source;
-        blob = await fetch(exportUrl).then(response => response.blob());
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        setStatus('The PNG could not be created. Please try again.', true);
+        scheduleRender({ forceQuality: true });
+        return;
       }
-      if (!blob) throw new Error('The PNG could not be created.');
       const safeArtworkName = state.artworkName
         .replace(/\.[^.]+$/, '')
         .replace(/[^a-z0-9-_]+/gi, '-')
@@ -691,13 +674,8 @@
         export_type: 'white_mockup_detail',
         item_id: template.assetName
       });
-    } catch (error) {
-      console.error(error);
-      setStatus('The PNG could not be created. Please try again.', true);
-    } finally {
-      downloadButton.disabled = false;
       scheduleRender({ forceQuality: true });
-    }
+    }, 'image/png');
   }
 
   async function saveProject() {

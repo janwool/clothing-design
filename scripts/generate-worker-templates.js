@@ -46,9 +46,6 @@ const templateLocals = [
   'inquiryFilters',
   'inquiryPagination',
   'inquiryStats',
-  'projectFilters',
-  'projectPagination',
-  'projectStats',
   'articles',
   'article',
   'resources',
@@ -73,13 +70,7 @@ const templateLocals = [
   'workspaceStats',
   'currentView',
   'headerEyebrow',
-  'headerDetail',
-  'eyebrow',
-  'heading',
-  'intro',
-  'updatedAt',
-  'sections',
-  'footerVariant'
+  'headerDetail'
 ];
 
 function walk(dir, predicate) {

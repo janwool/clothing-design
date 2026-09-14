@@ -14,13 +14,6 @@
     </div>
     <div class="designer-toolbar-right">
       <span id="designerSaveStatus" role="status" aria-live="polite"></span>
-      <a class="btn btn-secondary btn-small" id="designerAiTryOn" href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>/try-on">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M12 3l1.55 4.45L18 9l-4.45 1.55L12 15l-1.55-4.45L6 9l4.45-1.55L12 3Z"/>
-          <path d="M19 15l.8 2.2L22 18l-2.2.8L19 22l-.8-2.2L16 18l2.2-.8L19 15Z"/>
-        </svg>
-        AI Try-on
-      </a>
       <button class="btn btn-secondary btn-small" id="resetBtn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/>
@@ -152,11 +145,7 @@
   </div>
 </section>
 
-<script>
-  window.ModelViewerElement = window.ModelViewerElement || {};
-  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
-</script>
-<script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
+<script type="module" src="https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js"></script>
 
 <script>
 // Designer functionality
@@ -166,62 +155,11 @@ const resetBtn = document.getElementById('resetBtn');
 const downloadBtn = document.getElementById('downloadBtn');
 const designerSaveBtn = document.getElementById('designerSaveBtn');
 const designerSaveStatus = document.getElementById('designerSaveStatus');
-const designerAiTryOn = document.getElementById('designerAiTryOn');
 const designerProjectState = { id: '', name: '' };
 const designerUserAuthenticated = <%- JSON.stringify(Boolean(user)) %>;
-const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
-
-function hexToRgba(hex) {
-  const safe = /^#[0-9a-f]{6}$/i.test(String(hex || '')) ? hex.slice(1) : 'ffffff';
-  const value = Number.parseInt(safe, 16);
-  return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];
-}
-
-function applyDesignerAppearance() {
-  const materials = viewer?.model?.materials || [];
-  if (!materials.length) return false;
-  const design = getDesignerProjectData();
-  materials.forEach((material, index) => {
-    const pbr = material.pbrMetallicRoughness;
-    pbr?.setBaseColorFactor?.(hexToRgba(index === 0 ? design.baseColor : design.accentColor));
-    pbr?.setRoughnessFactor?.(design.roughness);
-    pbr?.setMetallicFactor?.(design.metalness);
-  });
-  viewer.requestUpdate?.();
-  return true;
-}
-
-function syncDesignerTryOnLink(projectId = designerProjectState.id || new URLSearchParams(window.location.search).get('project')) {
-  if (!designerAiTryOn) return;
-  const destination = new URL(designerAiTryOn.href, window.location.origin);
-  if (/^[a-f0-9-]{36}$/i.test(String(projectId || ''))) destination.searchParams.set('project', projectId);
-  else destination.searchParams.delete('project');
-  designerAiTryOn.href = `${destination.pathname}${destination.search}`;
-}
-
-function persistDesignerTryOnDesign() {
-  try {
-    sessionStorage.setItem(tryOnDesignTransferKey, JSON.stringify({
-      modelId: <%- JSON.stringify(String(model.id || '')) %>,
-      modelSlug: <%- JSON.stringify(String(model.slug || '')) %>,
-      projectId: designerProjectState.id,
-      appearance: getDesignerProjectData(),
-      createdAt: Date.now()
-    }));
-    if (designerAiTryOn) designerAiTryOn.dataset.designTransfer = 'ready';
-  } catch (error) {
-    if (designerAiTryOn) designerAiTryOn.dataset.designTransfer = 'failed';
-    console.warn('Could not prepare the current 3D design for Try-on:', error);
-  }
-  syncDesignerTryOnLink();
-}
 
 if (viewer && designerViewerLoading) {
-  const finishViewerLoading = () => {
-    designerViewerLoading.hidden = true;
-    applyDesignerAppearance();
-    persistDesignerTryOnDesign();
-  };
+  const finishViewerLoading = () => { designerViewerLoading.hidden = true; };
   if (viewer.loaded) finishViewerLoading();
   else {
     viewer.addEventListener('load', finishViewerLoading, { once: true });
@@ -237,7 +175,12 @@ colorBtns.forEach(btn => {
     document.querySelectorAll(`.color-btn[data-target="${target}"]`).forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     
-    applyDesignerAppearance();
+    // Apply color to model (if material is accessible)
+    if (viewer && viewer.model) {
+      const color = btn.dataset.color;
+      // Note: Actual material manipulation requires model materials to be exposed
+      console.log('Apply color:', color, 'to', target);
+    }
   });
 });
 
@@ -247,7 +190,7 @@ patternBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    persistDesignerTryOnDesign();
+    console.log('Apply pattern:', btn.dataset.pattern);
   });
 });
 
@@ -260,7 +203,6 @@ envBtns.forEach(btn => {
     if (viewer) {
       viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';
     }
-    persistDesignerTryOnDesign();
   });
 });
 
@@ -269,20 +211,8 @@ const autoRotateCheck = document.getElementById('autoRotateCheck');
 if (autoRotateCheck && viewer) {
   autoRotateCheck.addEventListener('change', () => {
     viewer.autoRotate = autoRotateCheck.checked;
-    persistDesignerTryOnDesign();
   });
 }
-
-document.getElementById('roughnessSlider')?.addEventListener('input', () => {
-  applyDesignerAppearance();
-  persistDesignerTryOnDesign();
-});
-document.getElementById('metalnessSlider')?.addEventListener('input', () => {
-  applyDesignerAppearance();
-  persistDesignerTryOnDesign();
-});
-designerAiTryOn?.addEventListener('click', persistDesignerTryOnDesign);
-persistDesignerTryOnDesign();
 
 // Reset button
 if (resetBtn) {
@@ -312,8 +242,6 @@ if (resetBtn) {
       viewer.shadowSoftness = 0.52;
       viewer.exposure = 0.66;
     }
-    applyDesignerAppearance();
-    persistDesignerTryOnDesign();
   });
 }
 
@@ -354,8 +282,6 @@ async function saveDesignerProject() {
     const url = new URL(window.location.href);
     url.searchParams.set('project', project.id);
     window.history.replaceState({}, '', url);
-    persistDesignerTryOnDesign();
-    syncDesignerTryOnLink(project.id);
     designerSaveStatus.textContent = 'Saved';
   } catch (error) {
     console.error(error);
@@ -383,9 +309,6 @@ async function loadDesignerProject() {
     if (viewer) viewer.autoRotate = autoRotateCheck.checked;
     designerProjectState.id = project.id;
     designerProjectState.name = project.name;
-    applyDesignerAppearance();
-    persistDesignerTryOnDesign();
-    syncDesignerTryOnLink(project.id);
     designerSaveStatus.textContent = 'Saved project loaded';
   } catch (error) {
     console.error(error);
@@ -399,24 +322,12 @@ else loadDesignerProject();
 
 // Download render
 if (downloadBtn) {
-  downloadBtn.addEventListener('click', async () => {
+  downloadBtn.addEventListener('click', () => {
     if (viewer && viewer.toDataURL) {
-      downloadBtn.disabled = true;
-      try {
-        const source = viewer.toDataURL('image/png');
-        const exportUrl = window.ExportEntitlements
-          ? await window.ExportEntitlements.prepareExport(source)
-          : source;
-        const link = document.createElement('a');
-        link.download = '<%= model.slug %>-design.png';
-        link.href = exportUrl;
-        link.click();
-      } catch (error) {
-        console.error(error);
-        alert('Render download could not be prepared.');
-      } finally {
-        downloadBtn.disabled = false;
-      }
+      const link = document.createElement('a');
+      link.download = '<%= model.slug %>-design.png';
+      link.href = viewer.toDataURL('image/png');
+      link.click();
     } else {
       alert('Render download is not available for this model.');
     }
