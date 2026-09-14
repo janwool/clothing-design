@@ -1,37 +1,104 @@
-<%- include('partials/header') %>
+<%- include('partials/header', {
+  bodyClass: 'pricing-page',
+  pageStyles: ['/css/pricing.css?v=20260914-creem-v5']
+}) %>
 
-<section class="beta-access-hero">
-  <div class="container beta-access-grid">
-    <div class="beta-access-copy">
-      <span class="generator-eyebrow">Public beta access</span>
-      <h1>Design first.<br>Pay nothing.</h1>
-      <p>ClozDesign is free while the browser mockup workflow is in public beta. Choose a garment, place artwork, review the shape, and export a transparent PNG.</p>
-      <div class="hero-actions">
-        <a href="/tools/t-shirt-mockup-generator" class="btn btn-primary btn-large">Start a T-shirt mockup</a>
-        <a href="/mockups" class="btn btn-secondary btn-large">Browse all models</a>
+<section class="pricing-hero" aria-labelledby="pricingTitle">
+  <div class="container pricing-hero-inner">
+    <span class="pricing-eyebrow">Plans for every workflow</span>
+    <h1 id="pricingTitle">Choose the space<br>your ideas need.</h1>
+    <p>Start with five projects, or unlock more room for mockups, AI try-on, and image storage.</p>
+  </div>
+</section>
+
+<section class="pricing-plans" aria-label="ClozDesign plans" data-pricing-plans data-authenticated="<%= user ? 'true' : 'false' %>">
+  <div class="container pricing-billing">
+    <div class="billing-switch" role="group" aria-label="Billing frequency">
+      <button class="is-active" type="button" data-billing-option="monthly" aria-pressed="true">Monthly</button>
+      <button type="button" data-billing-option="yearly" aria-pressed="false">Yearly</button>
+    </div>
+    <p class="billing-caption" aria-live="polite" data-billing-caption>Flexible monthly billing. Change plans anytime.</p>
+  </div>
+
+  <div class="container pricing-grid">
+    <article class="pricing-card pricing-card-free">
+      <div class="pricing-card-heading"><h2>Free</h2></div>
+      <div class="pricing-price-block">
+        <div class="pricing-price-line"><strong>$0</strong></div>
+        <span class="pricing-alt-price" aria-hidden="true">&nbsp;</span>
       </div>
-    </div>
-    <aside class="beta-access-card" aria-label="Free beta access details">
-      <div class="beta-access-price"><strong>$0</strong><span>during public beta</span></div>
-      <ul>
-        <li><span>01</span> Browse the complete public 3D garment library</li>
-        <li><span>02</span> Test garment color and artwork placement</li>
-        <li><span>03</span> Review front, side, and back presentation angles</li>
-        <li><span>04</span> Export a transparent PNG mockup</li>
+      <ul class="pricing-features">
+        <li><span aria-hidden="true">✓</span> 5 projects total</li>
+        <li><span aria-hidden="true">✓</span> 100 MB image storage</li>
+        <li><span aria-hidden="true">✓</span> Watermarked exports</li>
       </ul>
-      <p>No payment details are requested. Cloud project storage, collaboration, and paid team plans are not currently offered.</p>
-    </aside>
+      <a class="pricing-cta pricing-cta-secondary" href="/auth/register">Start free</a>
+    </article>
+
+    <article class="pricing-card">
+      <div class="pricing-card-heading"><h2>Pro</h2></div>
+      <div class="pricing-price-block">
+        <div class="pricing-price-line">
+          <strong data-plan-price data-monthly="$9.90" data-yearly="¥99">$9.90</strong>
+          <span data-plan-period data-monthly="/ month" data-yearly="/ year">/ month</span>
+        </div>
+        <span class="pricing-alt-price" data-plan-alt data-monthly="¥99 / year" data-yearly="$9.90 / month">¥99 / year</span>
+      </div>
+      <ul class="pricing-features">
+        <li><span aria-hidden="true">✓</span> 28 projects / month</li>
+        <li><span aria-hidden="true">✓</span> Remove watermarks</li>
+        <li><span aria-hidden="true">✓</span> All AI models</li>
+        <li><span aria-hidden="true">✓</span> 150 Try-on Credits</li>
+        <li><span aria-hidden="true">✓</span> 1 GB image storage</li>
+      </ul>
+      <a class="pricing-cta pricing-cta-secondary" href="/auth/register?plan=pro&amp;billing=monthly" data-plan-link data-plan="pro">Choose Pro</a>
+    </article>
+
+    <article class="pricing-card pricing-card-featured">
+      <div class="pricing-popular">Most popular</div>
+      <div class="pricing-card-heading"><h2>Max</h2></div>
+      <div class="pricing-price-block">
+        <div class="pricing-price-line">
+          <strong data-plan-price data-monthly="$29.90" data-yearly="$299">$29.90</strong>
+          <span data-plan-period data-monthly="/ month" data-yearly="/ year">/ month</span>
+        </div>
+        <span class="pricing-alt-price" data-plan-alt data-monthly="$299 / year" data-yearly="$29.90 / month">$299 / year</span>
+      </div>
+      <ul class="pricing-features">
+        <li><span aria-hidden="true">✓</span> 99 projects / month</li>
+        <li><span aria-hidden="true">✓</span> Remove watermarks</li>
+        <li><span aria-hidden="true">✓</span> All AI models</li>
+        <li><span aria-hidden="true">✓</span> 1,000 Try-on Credits</li>
+        <li><span aria-hidden="true">✓</span> 100 GB image storage</li>
+      </ul>
+      <a class="pricing-cta pricing-cta-inverse" href="/auth/register?plan=max&amp;billing=monthly" data-plan-link data-plan="max">Choose Max</a>
+    </article>
+
+    <article class="pricing-card pricing-card-business">
+      <div class="pricing-card-heading"><h2>Business</h2></div>
+      <div class="pricing-price-block">
+        <div class="pricing-price-line"><strong>Custom</strong></div>
+        <span class="pricing-alt-price" aria-hidden="true">&nbsp;</span>
+      </div>
+      <ul class="pricing-features">
+        <li><span aria-hidden="true">✓</span> Custom projects &amp; credits</li>
+        <li><span aria-hidden="true">✓</span> Custom storage</li>
+        <li><span aria-hidden="true">✓</span> Priority support</li>
+      </ul>
+      <a class="pricing-cta pricing-cta-secondary" href="mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry">Contact sales</a>
+    </article>
+  </div>
+
+  <div class="container pricing-inline-note">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <ellipse cx="12" cy="5" rx="8" ry="3"></ellipse>
+      <path d="M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5"></path>
+      <path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path>
+    </svg>
+    <span aria-hidden="true"></span>
+    <p>Projects refresh monthly. Storage stays with you.</p>
   </div>
 </section>
 
-<section class="beta-access-note">
-  <div class="container beta-access-note-grid">
-    <div>
-      <span class="generator-eyebrow">Clear expectations</span>
-      <h2>Mockup-ready, not production-spec CAD.</h2>
-    </div>
-    <p>Use exports for product-page drafts, POD planning, client review, and launch decks. Confirm dimensions, fabric behavior, and manufacturing requirements with your production partner.</p>
-  </div>
-</section>
-
+<script src="/js/pricing.js?v=20260914-creem-v3" defer></script>
 <%- include('partials/footer') %>

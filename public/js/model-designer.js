@@ -8,6 +8,7 @@ window.initializeModelDesigner = () => {
   const designModalOverlay = document.getElementById('designModalOverlay');
   const designModalClose = document.getElementById('designModalClose');
   const saveDesignModal = document.getElementById('saveDesignModal');
+  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];
   const designSaveStatus = document.getElementById('designSaveStatus');
   const designSaveStatusText = document.getElementById('designSaveStatusText');
   const renderCurrentModelBtn = document.getElementById('renderCurrentModelBtn');
@@ -155,6 +156,32 @@ window.initializeModelDesigner = () => {
     uploadedAssetUrls: new Map(),
     pendingArtworkUploads: new Set()
   };
+  const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
+
+  function persistTryOnDesign(textureUrl = state.finalTextureUrl || state.appliedTextureUrl) {
+    if (!textureUrl) return false;
+    try {
+      sessionStorage.setItem(tryOnDesignTransferKey, JSON.stringify({
+        modelId: String(modelDesignerConfig.modelId || ''),
+        modelSlug: String(modelDesignerConfig.modelSlug || ''),
+        projectId: state.projectId || '',
+        textureUrl,
+        textureTransform: state.artworkTextureTransform,
+        createdAt: Date.now()
+      }));
+      return true;
+    } catch (error) {
+      console.warn('The current design is too large for a browser handoff:', error);
+      return false;
+    }
+  }
+
+  function prepareTryOnNavigation() {
+    persistTryOnDesign();
+    window.syncModelTryOnLinks?.(state.projectId);
+  }
+
+  aiTryOnLinks.forEach((link) => link.addEventListener('click', prepareTryOnNavigation));
   const renderedUploadedAssetKeys = new Set();
   let imageUploadToastTimer = null;
   let modalReturnFocus = null;
@@ -1419,6 +1446,7 @@ window.initializeModelDesigner = () => {
       const textureDataUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
       state.finalTextureUrl = textureDataUrl;
       await applyFinalTextureToViewers(textureDataUrl);
+      persistTryOnDesign(textureDataUrl);
       if (!modelDesignerConfig.userAuthenticated || !window.UserProjects) {
         setDesignSaveStatus('Applied');
         if (options.closeAfterSave) closeModal();
@@ -1459,6 +1487,7 @@ window.initializeModelDesigner = () => {
           fillScope: state.fillScope,
           fillMode: state.fillMode,
           appearance: serializeAppearanceState(),
+          textureTransform: state.artworkTextureTransform,
           textureUrl: texture.url
         }
       });
@@ -1468,6 +1497,8 @@ window.initializeModelDesigner = () => {
       const url = new URL(window.location.href);
       url.searchParams.set('project', project.id);
       window.history.replaceState({}, '', url);
+      persistTryOnDesign(texture.url);
+      window.syncModelTryOnLinks?.(project.id);
       setDesignSaveStatus('Saved to your account');
       if (options.closeAfterSave) closeModal();
       return true;
@@ -1861,7 +1892,10 @@ window.initializeModelDesigner = () => {
         cameraSnapshot
       });
       const filename = `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-render.png`;
-      downloadRenderedImage(renderUrl, filename);
+      const entitledRenderUrl = window.ExportEntitlements
+        ? await window.ExportEntitlements.prepareExport(renderUrl)
+        : renderUrl;
+      downloadRenderedImage(entitledRenderUrl, filename);
       setRenderStatus('Render downloaded.');
       window.trackEvent?.('design_render', {
         render_format: 'png',
@@ -3924,6 +3958,8 @@ window.initializeModelDesigner = () => {
       state.fillScope = saved.fillScope || 'whole';
       state.fillMode = saved.fillMode || 'gradient';
       state.finalTextureUrl = saved.textureUrl || project.previewImageUrl || null;
+      persistTryOnDesign(state.finalTextureUrl);
+      window.syncModelTryOnLinks?.(project.id);
       if (saved.appearance) restoreAppearanceState(saved.appearance);
       else await restoreLegacyAppearanceFromTexture(state.finalTextureUrl);
       const elementIds = [...textureElements.querySelectorAll('.texture-element')]

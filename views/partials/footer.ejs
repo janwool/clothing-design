@@ -1,12 +1,16 @@
+  <% const isHoodieFooter = typeof footerVariant !== 'undefined' && footerVariant === 'hoodie'; %>
   </main>
 
-  <footer class="footer">
+  <footer class="footer<%= isHoodieFooter ? ' footer-hoodie' : '' %>">
     <div class="footer-container">
       <div class="footer-grid">
         <!-- Brand -->
         <div class="footer-brand">
           <a href="/" class="footer-logo">ClozDesign</a>
           <p class="footer-desc">Professional clothing design tools and resources for designers worldwide.</p>
+          <% if (isHoodieFooter) { %>
+            <p class="footer-manifesto">Design. Visualize. Create. Repeat.</p>
+          <% } %>
         </div>
 
         <!-- Product -->
@@ -14,7 +18,11 @@
           <p class="footer-title">Product</p>
           <a href="/mockups" class="footer-link">3D Models</a>
           <a href="/white-mockups" class="footer-link">White Mockups</a>
-          <a href="/pricing" class="footer-link">Free Beta Access</a>
+          <% if (isHoodieFooter) { %>
+            <a href="/tools/hoodie-mockup-generator" class="footer-link">Hoodie Generator</a>
+            <a href="/tools" class="footer-link">Apparel Tools</a>
+          <% } %>
+          <a href="/pricing" class="footer-link">Pricing</a>
         </div>
 
         <!-- Resources -->
@@ -29,10 +37,23 @@
         <!-- Company and trust -->
         <div class="footer-column">
           <p class="footer-title">Company</p>
-          <a href="/contact" class="footer-link">Contact</a>
+          <a href="mailto:support@cloz-design.com" class="footer-link">Contact</a>
           <a href="/privacy" class="footer-link">Privacy</a>
           <a href="/terms" class="footer-link">Terms</a>
         </div>
+
+        <% if (isHoodieFooter) { %>
+          <div class="footer-column footer-newsletter">
+            <p class="footer-title">Stay in the loop</p>
+            <p>Get updates, new features, and design tips.</p>
+            <form action="mailto:support@cloz-design.com" method="post" enctype="text/plain">
+              <label class="sr-only" for="hoodie-footer-email">Your email address</label>
+              <input id="hoodie-footer-email" type="email" name="email" autocomplete="email" placeholder="Your email address" required>
+              <button type="submit" aria-label="Join ClozDesign updates">→</button>
+            </form>
+            <small>No spam. Unsubscribe anytime.</small>
+          </div>
+        <% } %>
       </div>
 
       <div class="footer-bottom">

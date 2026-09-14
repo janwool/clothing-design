@@ -21,18 +21,25 @@ test('routes public calls to action into a working mockup path', () => {
   assert.match(authRoute, /res\.redirect\('\/tools\/t-shirt-mockup-generator'\)/);
 });
 
-test('only promises the currently available free public beta', () => {
-  assert.match(pricing, /free while the browser mockup workflow is in public beta/i);
-  assert.match(pricing, /No payment details are requested/);
-  assert.doesNotMatch(pricing, /\$29|\$99|API access|Team collaboration/);
-  assert.match(route, /name: 'Free public beta', price: '0'/);
+test('publishes the current Free, Pro, Max, and Business pricing', () => {
+  assert.match(pricing, /5 projects total/);
+  assert.match(pricing, /28 projects \/ month/);
+  assert.match(pricing, /99 projects \/ month/);
+  assert.match(pricing, /150 Try-on Credits/);
+  assert.match(pricing, /1,000 Try-on Credits/);
+  assert.match(pricing, /data-yearly="¥99"/);
+  assert.match(pricing, /data-yearly="\$299"/);
+  assert.match(pricing, /data-plan-alt data-monthly="¥99 \/ year" data-yearly="\$9\.90 \/ month"/);
+  assert.match(pricing, /mailto:support@cloz-design\.com\?subject=ClozDesign%20Business/);
+  assert.match(route, /name: 'Pro monthly', price: '9\.90'/);
+  assert.match(route, /name: 'Max yearly', price: '299'/);
 });
 
 test('provides live trust routes linked from the footer', () => {
   assert.match(route, /router\.get\('\/contact'/);
   assert.match(route, /router\.get\('\/privacy'/);
   assert.match(route, /router\.get\('\/terms'/);
-  assert.match(footer, /href="\/contact"/);
+  assert.match(footer, /href="mailto:support@cloz-design\.com"/);
   assert.match(footer, /href="\/privacy"/);
   assert.match(footer, /href="\/terms"/);
 });

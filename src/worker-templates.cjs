@@ -62,6 +62,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -86,7 +89,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"error-section\">\n  <div class=\"container\">\n    <div class=\"error-content\">\n      <h1 class=\"error-code\">404</h1>\n      <h2 class=\"error-title\">Page Not Found</h2>\n      <p class=\"error-message\">The page you are looking for does not exist or has been moved.</p>\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n    </div>\n  </div>\n</section>\n\n<style>\n.error-section {\n  min-height: 70vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  text-align: center;\n  padding: 4rem 0;\n}\n\n.error-code {\n  font-size: 6rem;\n  font-weight: 800;\n  color: var(--gray-200);\n  line-height: 1;\n  margin-bottom: 1rem;\n}\n\n.error-title {\n  font-size: 1.5rem;\n  font-weight: 600;\n  color: var(--gray-900);\n  margin-bottom: 0.75rem;\n}\n\n.error-message {\n  color: var(--gray-600);\n  margin-bottom: 2rem;\n}\n</style>\n\n")
     ; __append( include('partials/footer') )
@@ -156,6 +165,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -180,18 +192,46 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; 
   const overviewDisplayName = String(account.name || user.name || 'Designer').trim();
   const firstName = overviewDisplayName.split(/\s+/)[0] || 'Designer';
   const initial = overviewDisplayName.charAt(0).toUpperCase();
   const recentProject = projects[0] || null;
+  const planAccess = typeof entitlements !== 'undefined' ? entitlements : {
+    plan: { id: 'free', name: 'Free' },
+    features: { removeWatermarks: false, allModels: false },
+    projects: { period: 'lifetime', limit: 5, used: workspaceStats.totalProjects, remaining: Math.max(0, 5 - workspaceStats.totalProjects) },
+    tryOnCredits: { limit: 0, used: 0, remaining: 0 },
+    storage: { limitBytes: 100 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 100 * 1024 * 1024 - workspaceStats.storageBytes) }
+  };
   const formatBytes = function(bytes) {
     const value = Number(bytes) || 0;
     if (value < 1024) return `${value} B`;
     if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
-    return `${(value / 1024 / 1024).toFixed(value > 10 * 1024 * 1024 ? 0 : 1)} MB`;
+    if (value < 1024 * 1024 * 1024) return `${(value / 1024 / 1024).toFixed(value > 10 * 1024 * 1024 ? 0 : 1)} MB`;
+    return `${(value / 1024 / 1024 / 1024).toFixed(value >= 10 * 1024 * 1024 * 1024 ? 0 : 1)} GB`;
   };
+  const usagePercent = function(used, limit) {
+    if (limit === null) return 0;
+    if (!Number(limit)) return 0;
+    return Math.min(100, Math.max(0, Math.round((Number(used) || 0) / Number(limit) * 100)));
+  };
+  const projectQuotaLabel = planAccess.projects.limit === null
+    ? 'Unlimited'
+    : `${planAccess.projects.used} / ${planAccess.projects.limit}`;
+  const creditQuotaLabel = planAccess.tryOnCredits.limit === null
+    ? 'Custom'
+    : `${planAccess.tryOnCredits.remaining} left`;
+  const storageQuotaLabel = planAccess.storage.limitBytes === null
+    ? 'Custom'
+    : `${formatBytes(planAccess.storage.usedBytes)} / ${formatBytes(planAccess.storage.limitBytes)}`;
   const formatDate = function(value) {
     if (!value) return 'Just now';
     const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
@@ -211,7 +251,27 @@ title = __locals.title,
     ; __append(escapeFn( firstName ))
     ; __append(".</em></h1><p>Continue a saved apparel design or start a new mockup.</p></div>\n      <div class=\"workspace-monogram\" aria-hidden=\"true\"><span>")
     ; __append(escapeFn( initial ))
-    ; __append("</span><i>CLOZ<br>DESIGN</i></div>\n    </section>\n\n    <section class=\"workspace-metrics\" aria-label=\"Workspace summary\">\n      <article><span>All projects</span><strong>")
+    ; __append("</span><i>CLOZ<br>DESIGN</i></div>\n    </section>\n\n    <section class=\"workspace-plan\" aria-labelledby=\"workspacePlanTitle\">\n      <div class=\"workspace-plan-heading\">\n        <div><span>Current plan</span><h2 id=\"workspacePlanTitle\">")
+    ; __append(escapeFn( planAccess.plan.name ))
+    ; __append("</h2></div>\n        <div class=\"workspace-plan-actions\">\n          <span class=\"workspace-plan-feature\">")
+    ; __append(escapeFn( planAccess.features.removeWatermarks ? 'Watermark-free exports' : 'Watermarked exports' ))
+    ; __append("</span>\n          <a href=\"/pricing\">")
+    ; __append(escapeFn( planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' ))
+    ; __append(" <b>→</b></a>\n        </div>\n      </div>\n      <div class=\"workspace-plan-usage\">\n        <article>\n          <div><span>Projects</span><strong>")
+    ; __append(escapeFn( projectQuotaLabel ))
+    ; __append("</strong></div>\n          <i aria-hidden=\"true\"><b style=\"width:")
+    ; __append(escapeFn( usagePercent(planAccess.projects.used, planAccess.projects.limit) ))
+    ; __append("%\"></b></i>\n          <small>")
+    ; __append(escapeFn( planAccess.projects.period === 'month' ? 'New projects this month' : 'Projects saved in total' ))
+    ; __append("</small>\n        </article>\n        <article>\n          <div><span>Try-on Credits</span><strong>")
+    ; __append(escapeFn( creditQuotaLabel ))
+    ; __append("</strong></div>\n          <i aria-hidden=\"true\"><b style=\"width:")
+    ; __append(escapeFn( usagePercent(planAccess.tryOnCredits.used, planAccess.tryOnCredits.limit) ))
+    ; __append("%\"></b></i>\n          <small>Credits refresh monthly</small>\n        </article>\n        <article>\n          <div><span>Image storage</span><strong>")
+    ; __append(escapeFn( storageQuotaLabel ))
+    ; __append("</strong></div>\n          <i aria-hidden=\"true\"><b style=\"width:")
+    ; __append(escapeFn( usagePercent(planAccess.storage.usedBytes, planAccess.storage.limitBytes) ))
+    ; __append("%\"></b></i>\n          <small>Cumulative account storage</small>\n        </article>\n      </div>\n    </section>\n\n    <section class=\"workspace-metrics\" aria-label=\"Workspace summary\">\n      <article><span>All projects</span><strong>")
     ; __append(escapeFn( workspaceStats.totalProjects ))
     ; __append("</strong><small>Across every collection</small></article>\n      <article><span>3D studies</span><strong>")
     ; __append(escapeFn( workspaceStats.projects3d ))
@@ -317,6 +377,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -341,7 +404,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("  </main>\n</div>\n\n<div class=\"workspace-toast\" id=\"workspaceToast\" role=\"status\" aria-live=\"polite\"></div>\n<script src=\"/js/account-workspace.js?v=20260913-route-pages-v6\" defer></script>\n")
     ; __append( include('../../partials/footer') )
     ; __append("\n")
@@ -410,6 +479,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -434,7 +506,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('../../partials/header', { bodyClass: 'account-workspace-page' }) )
     ; __append("\n")
     ; 
@@ -547,6 +625,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -571,7 +652,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; 
   const visibleProjects = projects.filter(project => project.projectType === '3d');
   const formatDate = function(value) {
@@ -693,6 +780,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -717,7 +807,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; 
   const settingsDisplayName = String(account.name || user.name || 'Designer').trim();
   const initial = settingsDisplayName.charAt(0).toUpperCase();
@@ -809,6 +905,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -833,7 +932,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; 
   const visibleProjects = projects.filter(project => project.projectType === 'white_mockup');
   const formatDate = function(value) {
@@ -955,6 +1060,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -979,7 +1087,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1087,6 +1201,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1111,7 +1228,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1125,9 +1248,11 @@ title = __locals.title,
     ; __append(escapeFn( counts.tools ))
     ; __append("</div>\n      </div>\n      <div class=\"stat-card\">\n        <div class=\"stat-label\">Users</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.users ))
-    ; __append("</div>\n      </div>\n      <a href=\"/admin/inquiries\" class=\"stat-card stat-card-link\">\n        <div class=\"stat-label\">Custom Inquiries</div>\n        <div class=\"stat-value\">")
+    ; __append("</div>\n      </div>\n      <a href=\"/admin/projects\" class=\"stat-card stat-card-link\">\n        <div class=\"stat-label\">User Projects</div>\n        <div class=\"stat-value\">")
+    ; __append(escapeFn( counts.projects ))
+    ; __append("</div>\n        <span class=\"stat-link-label\">Open library →</span>\n      </a>\n      <a href=\"/admin/inquiries\" class=\"stat-card stat-card-link\">\n        <div class=\"stat-label\">Custom Inquiries</div>\n        <div class=\"stat-value\">")
     ; __append(escapeFn( counts.inquiries ))
-    ; __append("</div>\n        <span class=\"stat-link-label\">Open list →</span>\n      </a>\n    </div>\n    \n    <!-- Quick Links -->\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">Quick Actions</h2>\n      </div>\n      <div style=\"padding: var(--spacing-xl);\">\n        <div style=\"display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);\">\n          <a href=\"/admin/models-3d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 3D Models</a>\n          <a href=\"/admin/models-2d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 2D Templates</a>\n          <a href=\"/admin/inquiries\" class=\"btn btn-primary\" style=\"justify-content: center;\">View Custom Inquiries</a>\n        </div>\n      </div>\n    </div>\n  </main>\n</div>\n\n")
+    ; __append("</div>\n        <span class=\"stat-link-label\">Open list →</span>\n      </a>\n    </div>\n    \n    <!-- Quick Links -->\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">Quick Actions</h2>\n      </div>\n      <div style=\"padding: var(--spacing-xl);\">\n        <div style=\"display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg);\">\n          <a href=\"/admin/models-3d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 3D Models</a>\n          <a href=\"/admin/models-2d\" class=\"btn btn-primary\" style=\"justify-content: center;\">Manage 2D Templates</a>\n          <a href=\"/admin/projects\" class=\"btn btn-primary\" style=\"justify-content: center;\">View User Projects</a>\n          <a href=\"/admin/inquiries\" class=\"btn btn-primary\" style=\"justify-content: center;\">View Custom Inquiries</a>\n        </div>\n      </div>\n    </div>\n  </main>\n</div>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -1195,6 +1320,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1219,7 +1347,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1335,6 +1469,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1359,7 +1496,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1615,6 +1758,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1639,7 +1785,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1757,6 +1909,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1781,7 +1936,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -1919,6 +2080,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -1943,7 +2107,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("  </main>\n</div>\n\n<script>\n// Admin sidebar toggle for mobile\nconst sidebarToggle = document.querySelector('.sidebar-toggle');\nconst adminSidebar = document.querySelector('.admin-sidebar');\n\nif (sidebarToggle) {\n  sidebarToggle.addEventListener('click', () => {\n    adminSidebar.classList.toggle('active');\n  });\n}\n\n// Close modal function\nfunction closeModal() {\n  const modal = document.querySelector('.modal-overlay');\n  if (modal) {\n    modal.remove();\n  }\n}\n\n// Delete confirmation\ndocument.querySelectorAll('.btn-delete').forEach(btn => {\n  btn.addEventListener('click', (e) => {\n    if (!confirm('Are you sure you want to delete this item?')) {\n      e.preventDefault();\n    }\n  });\n});\n</script>\n\n</body>\n</html>\n")
   return __output;
 
@@ -2010,6 +2180,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2034,14 +2207,20 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next ? i18next.language : 'en' ))
     ; __append("\" dir=\"")
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260805\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260914-entitlements-v2\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },
@@ -2107,6 +2286,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2131,7 +2313,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("<aside class=\"admin-sidebar\">\n  <div class=\"sidebar-header\">\n    <a href=\"/admin\" class=\"sidebar-logo\">ClozDesign</a>\n    <span class=\"sidebar-badge\">Admin</span>\n  </div>\n  \n  <nav class=\"sidebar-nav\">\n    <a href=\"/admin\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/>\n        <rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/>\n        <rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/>\n      </svg>\n      Dashboard\n    </a>\n    \n    <div class=\"sidebar-section\">Resources</div>\n    \n    <a href=\"/admin/models-3d\" class=\"sidebar-link ")
@@ -2144,11 +2332,252 @@ title = __locals.title,
     ; __append(escapeFn( page === 'admin-tools' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z\"/>\n      </svg>\n      Tools\n    </a>\n    \n    <a href=\"/admin/categories\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-categories' ? 'active' : '' ))
-    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n        <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n      </svg>\n      Categories\n    </a>\n    \n    <div class=\"sidebar-section\">Operations</div>\n\n    <a href=\"/admin/inquiries\" class=\"sidebar-link ")
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z\"/>\n        <line x1=\"7\" y1=\"7\" x2=\"7.01\" y2=\"7\"/>\n      </svg>\n      Categories\n    </a>\n    \n    <div class=\"sidebar-section\">Operations</div>\n\n    <a href=\"/admin/projects\" class=\"sidebar-link ")
+    ; __append(escapeFn( page === 'admin-projects' ? 'active' : '' ))
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9z\"/>\n        <path d=\"m4 7.5 8 4.5 8-4.5M12 12v9\"/>\n      </svg>\n      User Projects\n    </a>\n\n    <a href=\"/admin/inquiries\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-inquiries' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z\"/>\n        <path d=\"M8 9h8M8 13h5\"/>\n      </svg>\n      Custom Inquiries\n    </a>\n\n    <div class=\"sidebar-section\">System</div>\n    \n    <a href=\"/admin/users\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-users' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n        <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n      </svg>\n      Users\n    </a>\n    \n    <a href=\"/\" class=\"sidebar-link\" target=\"_blank\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/>\n        <polyline points=\"15 3 21 3 21 9\"/>\n        <line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>\n      </svg>\n      View Site\n    </a>\n  </nav>\n  \n  <div class=\"sidebar-footer\">\n    <a href=\"/auth/logout\" class=\"sidebar-link\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\"/>\n        <polyline points=\"16 17 21 12 16 7\"/>\n        <line x1=\"21\" y1=\"12\" x2=\"9\" y2=\"12\"/>\n      </svg>\n      Sign Out\n    </a>\n  </div>\n</aside>\n")
+  return __output;
+
+},
+  "admin/projects.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append( include('partials/header') )
+    ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
+    ; __append( include('partials/sidebar') )
+    ; __append("\n\n  <main class=\"admin-main project-admin-main\">\n    <div class=\"admin-header project-page-header\">\n      <div>\n        <span class=\"admin-eyebrow\">Operations / Saved work</span>\n        <h1 class=\"admin-title\">User Projects</h1>\n        <p class=\"admin-subtitle\">A visual library of every 3D study and white mockup saved by your users.</p>\n      </div>\n      <button class=\"sidebar-toggle\" type=\"button\" aria-label=\"Open admin navigation\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"/>\n          <line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/>\n          <line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n\n    <section class=\"project-stats\" aria-label=\"Project summary\">\n      <article class=\"project-stat project-stat-total\">\n        <span>All projects</span>\n        <strong>")
+    ; __append(escapeFn( projectStats.total ))
+    ; __append("</strong>\n        <small>Saved across the workspace</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>3D studies</span>\n        <strong>")
+    ; __append(escapeFn( projectStats.projects3d ))
+    ; __append("</strong>\n        <small>Garment and material projects</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>White mockups</span>\n        <strong>")
+    ; __append(escapeFn( projectStats.whiteMockups ))
+    ; __append("</strong>\n        <small>Print-ready composition work</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>Creators</span>\n        <strong>")
+    ; __append(escapeFn( projectStats.creators ))
+    ; __append("</strong>\n        <small>Users with saved projects</small>\n      </article>\n    </section>\n\n    <section class=\"project-library\">\n      <header class=\"project-library-header\">\n        <div>\n          <span class=\"admin-eyebrow\">Project library</span>\n          <h2>")
+    ; __append(escapeFn( projectPagination.total ))
+    ; __append(" matching ")
+    ; __append(escapeFn( projectPagination.total === 1 ? 'project' : 'projects' ))
+    ; __append("</h2>\n        </div>\n        <form class=\"project-filters\" action=\"/admin/projects\" method=\"get\">\n          <label class=\"project-search-field\">\n            <span class=\"sr-only\">Search projects</span>\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <circle cx=\"11\" cy=\"11\" r=\"8\"/>\n              <path d=\"m21 21-4.35-4.35\"/>\n            </svg>\n            <input type=\"search\" name=\"q\" value=\"")
+    ; __append(escapeFn( projectFilters.search ))
+    ; __append("\" placeholder=\"Project, user or ID…\">\n          </label>\n          <select name=\"type\" aria-label=\"Filter by project type\">\n            <option value=\"all\" ")
+    ; __append(escapeFn( projectFilters.type === 'all' ? 'selected' : '' ))
+    ; __append(">All project types</option>\n            <option value=\"3d\" ")
+    ; __append(escapeFn( projectFilters.type === '3d' ? 'selected' : '' ))
+    ; __append(">3D studies</option>\n            <option value=\"white_mockup\" ")
+    ; __append(escapeFn( projectFilters.type === 'white_mockup' ? 'selected' : '' ))
+    ; __append(">White mockups</option>\n          </select>\n          <button type=\"submit\" class=\"btn btn-primary btn-small\">Filter</button>\n          ")
+    ;  if (projectFilters.search || projectFilters.type !== 'all') {
+    ; __append("\n            <a href=\"/admin/projects\" class=\"project-clear-filter\">Clear</a>\n          ")
+    ;  }
+    ; __append("\n        </form>\n      </header>\n\n      ")
+    ;  if (error) {
+    ; __append("\n        <div class=\"inquiry-error\" role=\"alert\">")
+    ; __append(escapeFn( error ))
+    ; __append("</div>\n      ")
+    ;  }
+    ; __append("\n\n      ")
+    ;  if (items && items.length > 0) {
+    ; __append("\n        <div class=\"project-admin-grid\" id=\"projectAdminGrid\">\n          ")
+    ;  items.forEach(function(item, index) {
+    ; __append("\n            <article class=\"project-admin-card\" data-project-card=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\">\n              <div class=\"project-admin-preview\">\n                ")
+    ;  if (item.preview_image_url_safe) {
+    ; __append("\n                  <a href=\"")
+    ; __append(escapeFn( item.preview_image_url_safe ))
+    ; __append("\" target=\"_blank\" rel=\"noopener\" aria-label=\"Open preview for ")
+    ; __append(escapeFn( item.name ))
+    ; __append("\">\n                    <img src=\"")
+    ; __append(escapeFn( item.preview_image_url_safe ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( item.name ))
+    ; __append(" preview\" loading=\"lazy\">\n                  </a>\n                ")
+    ;  } else {
+    ; __append("\n                  <div class=\"project-admin-placeholder\">\n                    <span>")
+    ; __append(escapeFn( String(index + 1 + ((projectPagination.page - 1) * 24)).padStart(2, '0') ))
+    ; __append("</span>\n                    <small>Preview unavailable</small>\n                  </div>\n                ")
+    ;  }
+    ; __append("\n                <span class=\"project-type-chip project-type-")
+    ; __append(escapeFn( item.project_type === '3d' ? '3d' : 'mockup' ))
+    ; __append("\">\n                  <i aria-hidden=\"true\"></i>")
+    ; __append(escapeFn( item.project_type === '3d' ? '3D study' : 'White mockup' ))
+    ; __append("\n                </span>\n                <button class=\"project-delete-button\" type=\"button\" data-delete-project=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\" data-project-name=\"")
+    ; __append(escapeFn( item.name ))
+    ; __append("\" aria-label=\"Delete ")
+    ; __append(escapeFn( item.name ))
+    ; __append("\">\n                  <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                    <path d=\"M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6\"/>\n                  </svg>\n                </button>\n              </div>\n              <div class=\"project-admin-content\">\n                <div class=\"project-admin-owner\">\n                  <span class=\"project-owner-avatar\">")
+    ; __append(escapeFn( String(item.user_name || item.user_email || '?').charAt(0).toUpperCase() ))
+    ; __append("</span>\n                  <div>\n                    <strong>")
+    ; __append(escapeFn( item.user_name || 'Unnamed user' ))
+    ; __append("</strong>\n                    <span>")
+    ; __append(escapeFn( item.user_email || `User #${item.user_id}` ))
+    ; __append("</span>\n                  </div>\n                </div>\n                <div class=\"project-admin-title-row\">\n                  <div>\n                    <h3>")
+    ; __append(escapeFn( item.name ))
+    ; __append("</h3>\n                    <p>Updated ")
+    ; __append(escapeFn( item.updated_at_display ))
+    ; __append("</p>\n                  </div>\n                  ")
+    ;  if (item.source_url_safe) {
+    ; __append("\n                    <a href=\"")
+    ; __append(escapeFn( item.source_url_safe ))
+    ; __append("\" target=\"_blank\" rel=\"noopener\" aria-label=\"Open source page for ")
+    ; __append(escapeFn( item.name ))
+    ; __append("\">↗</a>\n                  ")
+    ;  }
+    ; __append("\n                </div>\n                <dl class=\"project-admin-meta\">\n                  <div><dt>Project ID</dt><dd title=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\">")
+    ; __append(escapeFn( item.id ))
+    ; __append("</dd></div>\n                  <div><dt>Source</dt><dd title=\"")
+    ; __append(escapeFn( item.source_id || '—' ))
+    ; __append("\">")
+    ; __append(escapeFn( item.source_id || '—' ))
+    ; __append("</dd></div>\n                </dl>\n              </div>\n            </article>\n          ")
+    ;  });
+    ; __append("\n        </div>\n\n        ")
+    ;  if (projectPagination.pageCount > 1) {
+    ; __append("\n          <nav class=\"inquiry-pagination project-pagination\" aria-label=\"Project pages\">\n            ")
+    ;  if (projectPagination.page > 1) {
+    ; __append("\n              <a href=\"/admin/projects?q=")
+    ; __append(escapeFn( encodeURIComponent(projectFilters.search) ))
+    ; __append("&type=")
+    ; __append(escapeFn( encodeURIComponent(projectFilters.type) ))
+    ; __append("&page=")
+    ; __append(escapeFn( projectPagination.page - 1 ))
+    ; __append("\">← Previous</a>\n            ")
+    ;  } else {
+    ; __append("\n              <span>← Previous</span>\n            ")
+    ;  }
+    ; __append("\n            <strong>Page ")
+    ; __append(escapeFn( projectPagination.page ))
+    ; __append(" of ")
+    ; __append(escapeFn( projectPagination.pageCount ))
+    ; __append("</strong>\n            ")
+    ;  if (projectPagination.page < projectPagination.pageCount) {
+    ; __append("\n              <a href=\"/admin/projects?q=")
+    ; __append(escapeFn( encodeURIComponent(projectFilters.search) ))
+    ; __append("&type=")
+    ; __append(escapeFn( encodeURIComponent(projectFilters.type) ))
+    ; __append("&page=")
+    ; __append(escapeFn( projectPagination.page + 1 ))
+    ; __append("\">Next →</a>\n            ")
+    ;  } else {
+    ; __append("\n              <span>Next →</span>\n            ")
+    ;  }
+    ; __append("\n          </nav>\n        ")
+    ;  }
+    ; __append("\n      ")
+    ;  } else if (!error) {
+    ; __append("\n        <div class=\"empty-state project-empty-state\">\n          <div class=\"project-empty-mark\" aria-hidden=\"true\">\n            <svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\">\n              <path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9z\"/>\n              <path d=\"m4 7.5 8 4.5 8-4.5M12 12v9\"/>\n            </svg>\n          </div>\n          <h3>")
+    ; __append(escapeFn( projectFilters.search || projectFilters.type !== 'all' ? 'No matching projects' : 'No user projects yet' ))
+    ; __append("</h3>\n          <p>")
+    ; __append(escapeFn( projectFilters.search || projectFilters.type !== 'all' ? 'Try another search or clear the active filter.' : 'Projects will appear here as soon as users save work from an editor.' ))
+    ; __append("</p>\n          ")
+    ;  if (projectFilters.search || projectFilters.type !== 'all') {
+    ; __append("\n            <a href=\"/admin/projects\" class=\"btn btn-secondary btn-small\">Clear filters</a>\n          ")
+    ;  }
+    ; __append("\n        </div>\n      ")
+    ;  }
+    ; __append("\n    </section>\n\n    <p class=\"project-action-message\" id=\"projectActionMessage\" role=\"status\" aria-live=\"polite\"></p>\n  </main>\n</div>\n\n<script>\n(() => {\n  const grid = document.getElementById('projectAdminGrid');\n  const message = document.getElementById('projectActionMessage');\n\n  grid?.addEventListener('click', async event => {\n    const button = event.target.closest('[data-delete-project]');\n    if (!button) return;\n\n    const projectId = button.dataset.deleteProject;\n    const projectName = button.dataset.projectName || 'this project';\n    if (!window.confirm(`Delete “${projectName}”? This removes the saved project for its user and cannot be undone.`)) return;\n\n    button.disabled = true;\n    try {\n      const response = await fetch(`/admin/projects/${encodeURIComponent(projectId)}`, {\n        method: 'DELETE',\n        headers: { Accept: 'application/json' }\n      });\n      const result = await response.json();\n      if (!response.ok || !result.success) throw new Error(result.error || 'Project could not be deleted.');\n\n      const card = button.closest('[data-project-card]');\n      card?.classList.add('is-removing');\n      window.setTimeout(() => window.location.reload(), 220);\n    } catch (error) {\n      button.disabled = false;\n      message.textContent = error.message || 'Project could not be deleted.';\n      message.classList.add('is-visible');\n    }\n  });\n})();\n</script>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
   return __output;
 
 },
@@ -2214,6 +2643,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2238,7 +2670,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
@@ -2356,6 +2794,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2380,13 +2821,19 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Users</h1>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Users</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
     ;  if (items && items.length > 0) { 
-    ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
+    ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Plan</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
     ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
@@ -2396,7 +2843,29 @@ title = __locals.title,
     ; __append(escapeFn( item.name || '-' ))
     ; __append("</td>\n                <td>")
     ; __append(escapeFn( item.email ))
-    ; __append("</td>\n                <td>")
+    ; __append("</td>\n                <td>\n                  <div class=\"user-plan-control\" data-user-plan-control>\n                    <select aria-label=\"Plan for ")
+    ; __append(escapeFn( item.email ))
+    ; __append("\" data-user-plan>\n                      ")
+    ;  ['free', 'pro', 'max', 'business'].forEach(function(plan) { 
+    ; __append("\n                        <option value=\"")
+    ; __append(escapeFn( plan ))
+    ; __append("\" ")
+    ; __append(escapeFn( item.plan === plan ? 'selected' : '' ))
+    ; __append(">")
+    ; __append(escapeFn( plan.charAt(0).toUpperCase() + plan.slice(1) ))
+    ; __append("</option>\n                      ")
+    ;  }); 
+    ; __append("\n                    </select>\n                    <select aria-label=\"Billing interval for ")
+    ; __append(escapeFn( item.email ))
+    ; __append("\" data-user-billing ")
+    ; __append(escapeFn( item.plan === 'free' || item.plan === 'business' ? 'disabled' : '' ))
+    ; __append(">\n                      <option value=\"monthly\" ")
+    ; __append(escapeFn( item.billing_interval !== 'yearly' ? 'selected' : '' ))
+    ; __append(">Monthly</option>\n                      <option value=\"yearly\" ")
+    ; __append(escapeFn( item.billing_interval === 'yearly' ? 'selected' : '' ))
+    ; __append(">Yearly</option>\n                    </select>\n                    <button class=\"btn btn-secondary btn-small\" type=\"button\" data-action=\"save-plan\" data-id=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\">Save</button>\n                  </div>\n                </td>\n                <td>")
     ; __append(escapeFn( new Date(item.created_at).toLocaleDateString() ))
     ; __append("</td>\n                <td>\n                  <div class=\"table-actions\">\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
@@ -2406,7 +2875,204 @@ title = __locals.title,
     ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          <h3>No users yet</h3>\n          <p>Users will appear here once they register.</p>\n        </div>\n      ")
     ;  } 
-    ; __append("\n    </div>\n  </main>\n</div>\n\n<script>\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Delete user\nasync function deleteUser(id) {\n  if (!confirm('Are you sure you want to delete this user?')) return;\n\n  try {\n    const response = await fetch('/admin/users/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting user');\n  }\n}\n\n// Event delegation for delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'delete') {\n    deleteUser(id);\n  }\n});\n</script>\n\n")
+    ; __append("\n    </div>\n  </main>\n</div>\n\n<script>\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Delete user\nasync function deleteUser(id) {\n  if (!confirm('Are you sure you want to delete this user?')) return;\n\n  try {\n    const response = await fetch('/admin/users/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting user');\n  }\n}\n\nasync function saveUserPlan(id, row) {\n  const control = row.querySelector('[data-user-plan-control]');\n  const plan = control.querySelector('[data-user-plan]').value;\n  const billingInterval = control.querySelector('[data-user-billing]').value;\n  const button = control.querySelector('[data-action=\"save-plan\"]');\n  button.disabled = true;\n  try {\n    const response = await fetch('/admin/users/' + id + '/plan', {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },\n      body: JSON.stringify({ plan, billingInterval })\n    });\n    const result = await response.json();\n    if (!response.ok || !result.success) throw new Error(result.error || 'Plan could not be updated.');\n    button.textContent = 'Saved';\n    window.setTimeout(() => { button.textContent = 'Save'; }, 1500);\n  } catch (error) {\n    alert(error.message || 'Plan could not be updated.');\n  } finally {\n    button.disabled = false;\n  }\n}\n\ndocument.querySelectorAll('[data-user-plan]').forEach(select => {\n  select.addEventListener('change', () => {\n    const billing = select.closest('[data-user-plan-control]').querySelector('[data-user-billing]');\n    billing.disabled = select.value === 'free' || select.value === 'business';\n  });\n});\n\n// Event delegation for delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'delete') {\n    deleteUser(id);\n  } else if (action === 'save-plan') {\n    saveUserPlan(id, btn.closest('tr'));\n  }\n});\n</script>\n\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "ai-try-on.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append( include('partials/header') )
+    ; __append("\n\n")
+    ; 
+const tryOnModels = [
+  {
+    id: 'mara',
+    name: 'Mara',
+    image: '/images/mockups/on-model/generated/model-pose-contrapposto-v3-base.png'
+  },
+  {
+    id: 'leo',
+    name: 'Leo',
+    image: '/images/mockups/on-model/generated/model-pose-walking-v3-base.png'
+  },
+  {
+    id: 'imani',
+    name: 'Imani',
+    image: '/images/mockups/on-model/generated/young-western-female-shirt-v4-base.png'
+  },
+  {
+    id: 'noor',
+    name: 'Noor',
+    image: '/images/mockups/on-model/generated/turtleneck-nonbinary-front-base.png'
+  },
+  {
+    id: 'alex',
+    name: 'Alex',
+    image: '/images/mockups/on-model/generated/long-coat-male-walking-base.png'
+  },
+  {
+    id: 'zuri',
+    name: 'Zuri',
+    image: '/images/mockups/on-model/generated/tank-top-female-front-base.png'
+  }
+];
+const currentModelFile = model.preview_file_url || model.file_url || '';
+const editHref = `/3d-models/${categorySlug}/${model.slug}/edit`;
+const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
+
+    ; __append("\n\n<section\n  class=\"ai-tryon\"\n  id=\"aiTryOnApp\"\n  data-model-name=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append("\"\n  data-model-id=\"")
+    ; __append(escapeFn( model.id || '' ))
+    ; __append("\"\n  data-model-slug=\"")
+    ; __append(escapeFn( model.slug || '' ))
+    ; __append("\"\n  data-garment-fallback=\"")
+    ; __append(escapeFn( model.image_url || '' ))
+    ; __append("\"\n  data-texture-template-url=\"")
+    ; __append(escapeFn( model.texture_url || '' ))
+    ; __append("\"\n>\n  <header class=\"ai-tryon__bar\">\n    <div class=\"ai-tryon__crumbs\" aria-label=\"Breadcrumb\">\n      <strong>Design Studio</strong>\n      <span aria-hidden=\"true\">/</span>\n      <span>AI Try-on</span>\n    </div>\n\n    <div class=\"ai-tryon__status\" role=\"status\">\n      <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n      <span>Design ready</span>\n    </div>\n\n    <div class=\"ai-tryon__actions\">\n      <a href=\"")
+    ; __append(escapeFn( editHref ))
+    ; __append("\" class=\"ai-button ai-button--secondary\">Back to 3D</a>\n      <button class=\"ai-button ai-button--primary\" type=\"button\" data-generate>Generate try-on</button>\n      <a class=\"ai-tryon__close\" href=\"")
+    ; __append(escapeFn( detailHref ))
+    ; __append("\" aria-label=\"Close AI try-on\">\n        <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg>\n      </a>\n    </div>\n  </header>\n\n  <div class=\"ai-tryon__workspace\">\n    <section class=\"tryon-result\" aria-labelledby=\"tryonResultTitle\">\n      <h1 class=\"sr-only\" id=\"tryonResultTitle\">AI try-on preview</h1>\n      <img\n        class=\"tryon-result__image\"\n        id=\"tryOnResultImage\"\n        src=\"")
+    ; __append(escapeFn( tryOnModels[0].image ))
+    ; __append("\"\n        alt=\"")
+    ; __append(escapeFn( tryOnModels[0].name ))
+    ; __append(", selected model for AI try-on\"\n        data-fit=\"contain\"\n      >\n      <div class=\"tryon-result__wash\" aria-hidden=\"true\"></div>\n\n      <div class=\"tryon-result__toggle\" role=\"group\" aria-label=\"Preview state\">\n        <button type=\"button\" class=\"is-active\" data-preview-state=\"before\">Before</button>\n        <button type=\"button\" data-preview-state=\"after\" data-after-result hidden>After</button>\n      </div>\n\n      <span class=\"tryon-result__ai-label\" data-after-result hidden>\n        <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n        AI generated\n      </span>\n\n      <div class=\"tryon-result__loading\" id=\"tryOnLoading\" hidden>\n        <span class=\"tryon-result__spinner\" aria-hidden=\"true\"></span>\n        <strong>Creating your try-on</strong>\n        <small>Matching shape, fabric and drape…</small>\n      </div>\n\n      <div class=\"tryon-result__toolbar\" role=\"toolbar\" aria-label=\"Try-on preview tools\">\n        <button type=\"button\" id=\"fitViewButton\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5\"/></svg>\n          <span>Fill view</span>\n          <svg class=\"toolbar-chevron\" aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m8 10 4 4 4-4\"/></svg>\n        </button>\n        <button type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n          <span>Generate try-on</span>\n        </button>\n        <button type=\"button\" id=\"downloadTryOn\" disabled aria-disabled=\"true\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 20h14\"/></svg>\n          <span>Download</span>\n        </button>\n      </div>\n    </section>\n\n    <aside class=\"tryon-flow\" aria-label=\"AI try-on steps\">\n      <section class=\"tryon-step tryon-step--design\">\n        <div class=\"tryon-step__title\">\n          <span class=\"tryon-step__number\">1</span>\n          <div>\n            <h2>Your design</h2>\n            <p>")
+    ; __append(escapeFn( model.name ))
+    ; __append("</p>\n          </div>\n        </div>\n\n        <div class=\"tryon-viewer\" id=\"tryOnViewerPanel\">\n          ")
+    ;  if (currentModelFile) { 
+    ; __append("\n            <model-viewer\n              id=\"tryOnGarmentViewer\"\n              src=\"")
+    ; __append(escapeFn( currentModelFile ))
+    ; __append("\"\n              poster=\"")
+    ; __append(escapeFn( model.image_url || '' ))
+    ; __append("\"\n              alt=\"3D preview of ")
+    ; __append(escapeFn( model.name ))
+    ; __append("\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              shadow-intensity=\"1.45\"\n              shadow-softness=\"0.62\"\n              exposure=\"0.72\"\n              environment-image=\"neutral\"\n              camera-orbit=\"28deg 74deg 108%\"\n            ></model-viewer>\n          ")
+    ;  } else { 
+    ; __append("\n            <img src=\"")
+    ; __append(escapeFn( model.image_url ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.name ))
+    ; __append("\">\n          ")
+    ;  } 
+    ; __append("\n\n          <div class=\"tryon-viewer__controls\">\n            <button type=\"button\" id=\"resetTryOnViewer\" aria-label=\"Reset 3D view\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n            </button>\n            <button type=\"button\" id=\"fullscreenTryOnViewer\" aria-label=\"View 3D design fullscreen\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/></svg>\n            </button>\n          </div>\n\n          <span class=\"tryon-viewer__hint\">\n            <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 11V7a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v7c0 4-3 7-7 7h-1c-2 0-3.4-.8-4.6-2.3L3.8 14a2 2 0 0 1 3-2.6L8 13\"/></svg>\n            Drag to rotate\n          </span>\n        </div>\n      </section>\n\n      <section class=\"tryon-step tryon-step--models\">\n        <div class=\"tryon-step__heading-row\">\n          <div class=\"tryon-step__title\">\n            <span class=\"tryon-step__number\">2</span>\n            <h2>Choose a model</h2>\n          </div>\n          <button type=\"button\" class=\"tryon-step__view-all\">View all</button>\n        </div>\n\n        <div class=\"model-picker\" role=\"listbox\" aria-label=\"Choose a model\">\n          ")
+    ;  tryOnModels.forEach(function(person, index) { 
+    ; __append("\n            <button\n              class=\"model-card ")
+    ; __append(escapeFn( index === 0 ? 'is-selected' : '' ))
+    ; __append("\"\n              type=\"button\"\n              role=\"option\"\n              aria-selected=\"")
+    ; __append(escapeFn( index === 0 ? 'true' : 'false' ))
+    ; __append("\"\n              data-model-card\n              data-model-name=\"")
+    ; __append(escapeFn( person.name ))
+    ; __append("\"\n              data-model-image=\"")
+    ; __append(escapeFn( person.image ))
+    ; __append("\"\n            >\n              <img src=\"")
+    ; __append(escapeFn( person.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( person.name ))
+    ; __append(", full-body model\" loading=\"")
+    ; __append(escapeFn( index > 2 ? 'lazy' : 'eager' ))
+    ; __append("\">\n              <span class=\"model-card__check\" aria-hidden=\"true\">\n                <svg viewBox=\"0 0 24 24\"><path d=\"m6 12 4 4 8-9\"/></svg>\n              </span>\n              <span class=\"sr-only\">")
+    ; __append(escapeFn( person.name ))
+    ; __append("</span>\n            </button>\n          ")
+    ;  }); 
+    ; __append("\n        </div>\n      </section>\n\n      <div class=\"tryon-flow__generate\">\n        <button class=\"ai-button ai-button--primary ai-button--wide\" type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n          <span>Generate try-on</span>\n        </button>\n        <p id=\"tryOnTimeHint\">Usually takes 20–30 sec</p>\n      </div>\n    </aside>\n  </div>\n\n  <div class=\"tryon-toast\" id=\"tryOnToast\" role=\"status\" aria-live=\"polite\" hidden>\n    <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n    Try-on ready\n  </div>\n</section>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n<script src=\"/js/ai-try-on.js?v=20260914-static-view-v8\" defer></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2474,6 +3140,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2498,7 +3167,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.login') ))
@@ -2596,6 +3271,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2620,7 +3298,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('../partials/header') )
     ; __append("\n\n<section class=\"auth-section\">\n  <div class=\"auth-container\">\n    <div class=\"auth-card\">\n      <h1 class=\"auth-title\">")
     ; __append(escapeFn( t('auth.register') ))
@@ -2720,6 +3404,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -2744,7 +3431,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<article class=\"blog-article\">\n  <header class=\"article-hero\">\n    <div class=\"container\">\n      <nav class=\"article-breadcrumbs\" aria-label=\"Breadcrumb\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/blog\">Blog</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( article.category ))
@@ -2985,6 +3678,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3009,7 +3705,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"blog-index-hero\">\n  <div class=\"container\">\n    <div class=\"blog-index-kicker\">\n      <span>Field notes for apparel creators</span>\n      <span>")
     ; __append(escapeFn( articles.length ))
@@ -3119,6 +3821,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3143,7 +3848,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', { bodyClass: resourceType === '3d-models' ? 'category-catalog-page' : '' }) )
     ; __append("\n\n")
     ;  if (resourceType === '3d-models') { 
@@ -3429,6 +4140,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3453,7 +4167,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('design2d.pageTitle') ))
@@ -3577,6 +4297,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3601,7 +4324,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) )
     ; __append("\n")
     ; 
@@ -3824,6 +4553,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3848,7 +4580,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const previewModelFileUrl = model.file_url; 
@@ -3858,7 +4596,11 @@ title = __locals.title,
     ; __append(escapeFn( model.slug ))
     ; __append("\" class=\"btn btn-ghost btn-small\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M19 12H5M12 19l-7-7 7-7\"/>\n        </svg>\n        Back\n      </a>\n      <h1 class=\"designer-title\">")
     ; __append(escapeFn( model.name ))
-    ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <span id=\"designerSaveStatus\" role=\"status\" aria-live=\"polite\"></span>\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-secondary btn-small\" id=\"designerSaveBtn\">Save Project</button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
+    ; __append("</h1>\n    </div>\n    <div class=\"designer-toolbar-right\">\n      <span id=\"designerSaveStatus\" role=\"status\" aria-live=\"polite\"></span>\n      <a class=\"btn btn-secondary btn-small\" id=\"designerAiTryOn\" href=\"/3d-models/")
+    ; __append(escapeFn( model.category_slug || model.category ))
+    ; __append("/")
+    ; __append(escapeFn( model.slug ))
+    ; __append("/try-on\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M12 3l1.55 4.45L18 9l-4.45 1.55L12 15l-1.55-4.45L6 9l4.45-1.55L12 3Z\"/>\n          <path d=\"M19 15l.8 2.2L22 18l-2.2.8L19 22l-.8-2.2L16 18l2.2-.8L19 15Z\"/>\n        </svg>\n        AI Try-on\n      </a>\n      <button class=\"btn btn-secondary btn-small\" id=\"resetBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8\"/>\n          <path d=\"M3 3v5h5\"/>\n        </svg>\n        Reset\n      </button>\n      <button class=\"btn btn-secondary btn-small\" id=\"designerSaveBtn\">Save Project</button>\n      <button class=\"btn btn-primary btn-small\" id=\"downloadBtn\">\n        <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\">\n          <path d=\"M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3\"/>\n        </svg>\n        Download Render\n      </button>\n    </div>\n  </div>\n\n  <div class=\"designer-workspace\">\n    <!-- 3D Canvas -->\n    <div class=\"designer-canvas\" id=\"designerCanvas\">\n      ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n        <model-viewer \n          class=\"model-viewer-natural\"\n          id=\"designerViewer\"\n          src=\"")
     ; __append(escapeFn( previewModelFileUrl ))
@@ -3872,17 +4614,21 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n        </div>\n      ")
     ;  } 
-    ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script type=\"module\" src=\"https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst designerViewerLoading = document.getElementById('designerViewerLoading');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\nconst designerSaveBtn = document.getElementById('designerSaveBtn');\nconst designerSaveStatus = document.getElementById('designerSaveStatus');\nconst designerProjectState = { id: '', name: '' };\nconst designerUserAuthenticated = ")
+    ; __append("\n    </div>\n\n    <!-- Sidebar Controls -->\n    <div class=\"designer-sidebar\">\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Colors</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Base Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #7c3aed;\" data-color=\"#7c3aed\" data-target=\"base\"></button>\n              <button class=\"color-btn\" style=\"background: #db2777;\" data-color=\"#db2777\" data-target=\"base\"></button>\n            </div>\n          </div>\n          \n          <div class=\"control-group\">\n            <label>Accent Color</label>\n            <div class=\"color-options\">\n              <button class=\"color-btn active\" style=\"background: #ffffff;\" data-color=\"#ffffff\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1a1a1a;\" data-color=\"#1a1a1a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #c41e3a;\" data-color=\"#c41e3a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #1e3a8a;\" data-color=\"#1e3a8a\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #059669;\" data-color=\"#059669\" data-target=\"accent\"></button>\n              <button class=\"color-btn\" style=\"background: #d97706;\" data-color=\"#d97706\" data-target=\"accent\"></button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Patterns</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Pattern Style</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-pattern=\"none\">None</button>\n              <button class=\"pattern-btn\" data-pattern=\"striped\">Striped</button>\n              <button class=\"pattern-btn\" data-pattern=\"checkered\">Checkered</button>\n              <button class=\"pattern-btn\" data-pattern=\"dots\">Dots</button>\n              <button class=\"pattern-btn\" data-pattern=\"camo\">Camo</button>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">Material</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Roughness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"roughnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0.5\">\n          </div>\n          <div class=\"control-group\">\n            <label>Metalness</label>\n            <input type=\"range\" class=\"range-slider\" id=\"metalnessSlider\" min=\"0\" max=\"1\" step=\"0.1\" value=\"0\">\n          </div>\n        </div>\n      </div>\n\n      <div class=\"designer-panel\">\n        <h3 class=\"panel-title\">View</h3>\n        <div class=\"panel-content\">\n          <div class=\"control-group\">\n            <label>Environment</label>\n            <div class=\"pattern-options\">\n              <button class=\"pattern-btn active\" data-env=\"neutral\">Neutral</button>\n              <button class=\"pattern-btn\" data-env=\"studio\">Studio</button>\n              <button class=\"pattern-btn\" data-env=\"outdoor\">Outdoor</button>\n            </div>\n          </div>\n          <div class=\"control-group\">\n            <label class=\"checkbox-label\">\n              <input type=\"checkbox\" id=\"autoRotateCheck\" checked>\n              <span>Auto Rotate</span>\n            </label>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n\n<script>\n// Designer functionality\nconst viewer = document.getElementById('designerViewer');\nconst designerViewerLoading = document.getElementById('designerViewerLoading');\nconst resetBtn = document.getElementById('resetBtn');\nconst downloadBtn = document.getElementById('downloadBtn');\nconst designerSaveBtn = document.getElementById('designerSaveBtn');\nconst designerSaveStatus = document.getElementById('designerSaveStatus');\nconst designerAiTryOn = document.getElementById('designerAiTryOn');\nconst designerProjectState = { id: '', name: '' };\nconst designerUserAuthenticated = ")
     ; __append( JSON.stringify(Boolean(user)) )
-    ; __append(";\n\nif (viewer && designerViewerLoading) {\n  const finishViewerLoading = () => { designerViewerLoading.hidden = true; };\n  if (viewer.loaded) finishViewerLoading();\n  else {\n    viewer.addEventListener('load', finishViewerLoading, { once: true });\n    viewer.addEventListener('error', finishViewerLoading, { once: true });\n  }\n}\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    // Apply color to model (if material is accessible)\n    if (viewer && viewer.model) {\n      const color = btn.dataset.color;\n      // Note: Actual material manipulation requires model materials to be exposed\n      console.log('Apply color:', color, 'to', target);\n    }\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    console.log('Apply pattern:', btn.dataset.pattern);\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n  });\n}\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n  });\n}\n\nfunction getDesignerProjectData() {\n  return {\n    baseColor: document.querySelector('.color-btn[data-target=\"base\"].active')?.dataset.color || '#ffffff',\n    accentColor: document.querySelector('.color-btn[data-target=\"accent\"].active')?.dataset.color || '#ffffff',\n    pattern: document.querySelector('.pattern-btn[data-pattern].active')?.dataset.pattern || 'none',\n    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'neutral',\n    roughness: Number(document.getElementById('roughnessSlider').value),\n    metalness: Number(document.getElementById('metalnessSlider').value),\n    autoRotate: Boolean(autoRotateCheck?.checked)\n  };\n}\n\nasync function saveDesignerProject() {\n  if (!designerUserAuthenticated) {\n    window.UserProjects?.goToSignIn();\n    return;\n  }\n  if (!viewer || !window.UserProjects) return;\n  designerSaveBtn.disabled = true;\n  designerSaveStatus.textContent = 'Saving…';\n  try {\n    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);\n    const preview = await window.UserProjects.uploadImage(previewDataUrl, '")
+    ; __append(";\nconst tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';\n\nfunction hexToRgba(hex) {\n  const safe = /^#[0-9a-f]{6}$/i.test(String(hex || '')) ? hex.slice(1) : 'ffffff';\n  const value = Number.parseInt(safe, 16);\n  return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n}\n\nfunction applyDesignerAppearance() {\n  const materials = viewer?.model?.materials || [];\n  if (!materials.length) return false;\n  const design = getDesignerProjectData();\n  materials.forEach((material, index) => {\n    const pbr = material.pbrMetallicRoughness;\n    pbr?.setBaseColorFactor?.(hexToRgba(index === 0 ? design.baseColor : design.accentColor));\n    pbr?.setRoughnessFactor?.(design.roughness);\n    pbr?.setMetallicFactor?.(design.metalness);\n  });\n  viewer.requestUpdate?.();\n  return true;\n}\n\nfunction syncDesignerTryOnLink(projectId = designerProjectState.id || new URLSearchParams(window.location.search).get('project')) {\n  if (!designerAiTryOn) return;\n  const destination = new URL(designerAiTryOn.href, window.location.origin);\n  if (/^[a-f0-9-]{36}$/i.test(String(projectId || ''))) destination.searchParams.set('project', projectId);\n  else destination.searchParams.delete('project');\n  designerAiTryOn.href = `${destination.pathname}${destination.search}`;\n}\n\nfunction persistDesignerTryOnDesign() {\n  try {\n    sessionStorage.setItem(tryOnDesignTransferKey, JSON.stringify({\n      modelId: ")
+    ; __append( JSON.stringify(String(model.id || '')) )
+    ; __append(",\n      modelSlug: ")
+    ; __append( JSON.stringify(String(model.slug || '')) )
+    ; __append(",\n      projectId: designerProjectState.id,\n      appearance: getDesignerProjectData(),\n      createdAt: Date.now()\n    }));\n    if (designerAiTryOn) designerAiTryOn.dataset.designTransfer = 'ready';\n  } catch (error) {\n    if (designerAiTryOn) designerAiTryOn.dataset.designTransfer = 'failed';\n    console.warn('Could not prepare the current 3D design for Try-on:', error);\n  }\n  syncDesignerTryOnLink();\n}\n\nif (viewer && designerViewerLoading) {\n  const finishViewerLoading = () => {\n    designerViewerLoading.hidden = true;\n    applyDesignerAppearance();\n    persistDesignerTryOnDesign();\n  };\n  if (viewer.loaded) finishViewerLoading();\n  else {\n    viewer.addEventListener('load', finishViewerLoading, { once: true });\n    viewer.addEventListener('error', finishViewerLoading, { once: true });\n  }\n}\n\n// Color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    const target = btn.dataset.target;\n    document.querySelectorAll(`.color-btn[data-target=\"${target}\"]`).forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    \n    applyDesignerAppearance();\n  });\n});\n\n// Pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn[data-pattern]');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    persistDesignerTryOnDesign();\n  });\n});\n\n// Environment picker\nconst envBtns = document.querySelectorAll('.pattern-btn[data-env]');\nenvBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n    if (viewer) {\n      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';\n    }\n    persistDesignerTryOnDesign();\n  });\n});\n\n// Auto rotate toggle\nconst autoRotateCheck = document.getElementById('autoRotateCheck');\nif (autoRotateCheck && viewer) {\n  autoRotateCheck.addEventListener('change', () => {\n    viewer.autoRotate = autoRotateCheck.checked;\n    persistDesignerTryOnDesign();\n  });\n}\n\ndocument.getElementById('roughnessSlider')?.addEventListener('input', () => {\n  applyDesignerAppearance();\n  persistDesignerTryOnDesign();\n});\ndocument.getElementById('metalnessSlider')?.addEventListener('input', () => {\n  applyDesignerAppearance();\n  persistDesignerTryOnDesign();\n});\ndesignerAiTryOn?.addEventListener('click', persistDesignerTryOnDesign);\npersistDesignerTryOnDesign();\n\n// Reset button\nif (resetBtn) {\n  resetBtn.addEventListener('click', () => {\n    // Reset colors\n    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));\n    document.querySelectorAll('.color-btn[data-color=\"#ffffff\"]').forEach(b => b.classList.add('active'));\n    \n    // Reset patterns\n    document.querySelectorAll('.pattern-btn[data-pattern]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-pattern=\"none\"]').classList.add('active');\n    \n    // Reset environment\n    document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));\n    document.querySelector('.pattern-btn[data-env=\"neutral\"]').classList.add('active');\n    \n    // Reset sliders\n    document.getElementById('roughnessSlider').value = 0.5;\n    document.getElementById('metalnessSlider').value = 0;\n    \n    // Reset viewer\n    if (viewer) {\n      viewer.environmentImage = 'neutral';\n      viewer.autoRotate = true;\n      viewer.cameraOrbit = '0deg 75deg 105%';\n      viewer.shadowIntensity = 1.55;\n      viewer.shadowSoftness = 0.52;\n      viewer.exposure = 0.66;\n    }\n    applyDesignerAppearance();\n    persistDesignerTryOnDesign();\n  });\n}\n\nfunction getDesignerProjectData() {\n  return {\n    baseColor: document.querySelector('.color-btn[data-target=\"base\"].active')?.dataset.color || '#ffffff',\n    accentColor: document.querySelector('.color-btn[data-target=\"accent\"].active')?.dataset.color || '#ffffff',\n    pattern: document.querySelector('.pattern-btn[data-pattern].active')?.dataset.pattern || 'none',\n    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'neutral',\n    roughness: Number(document.getElementById('roughnessSlider').value),\n    metalness: Number(document.getElementById('metalnessSlider').value),\n    autoRotate: Boolean(autoRotateCheck?.checked)\n  };\n}\n\nasync function saveDesignerProject() {\n  if (!designerUserAuthenticated) {\n    window.UserProjects?.goToSignIn();\n    return;\n  }\n  if (!viewer || !window.UserProjects) return;\n  designerSaveBtn.disabled = true;\n  designerSaveStatus.textContent = 'Saving…';\n  try {\n    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);\n    const preview = await window.UserProjects.uploadImage(previewDataUrl, '")
     ; __append(escapeFn( model.slug ))
     ; __append("-preview.jpg', 'project-preview');\n    const project = await window.UserProjects.saveProject({\n      id: designerProjectState.id || undefined,\n      projectType: '3d',\n      name: designerProjectState.name || ")
     ; __append( JSON.stringify(`${model.name || 'Garment'} Design`) )
     ; __append(",\n      sourceId: ")
     ; __append( JSON.stringify(String(model.id || model.slug || '')) )
-    ; __append(",\n      sourceUrl: window.location.pathname,\n      previewImageUrl: preview.url,\n      designData: getDesignerProjectData()\n    });\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    const url = new URL(window.location.href);\n    url.searchParams.set('project', project.id);\n    window.history.replaceState({}, '', url);\n    designerSaveStatus.textContent = 'Saved';\n  } catch (error) {\n    console.error(error);\n    if (error.status === 401) window.UserProjects.goToSignIn();\n    else designerSaveStatus.textContent = error.message || 'Save failed';\n  } finally {\n    designerSaveBtn.disabled = false;\n  }\n}\n\nasync function loadDesignerProject() {\n  if (!window.UserProjects) return;\n  try {\n    const project = await window.UserProjects.loadProjectFromUrl('3d');\n    if (!project) return;\n    const saved = project.designData || {};\n    const activate = (selector) => document.querySelector(selector)?.click();\n    activate(`.color-btn[data-target=\"base\"][data-color=\"${saved.baseColor}\"]`);\n    activate(`.color-btn[data-target=\"accent\"][data-color=\"${saved.accentColor}\"]`);\n    activate(`.pattern-btn[data-pattern=\"${saved.pattern}\"]`);\n    activate(`.pattern-btn[data-env=\"${saved.environment}\"]`);\n    document.getElementById('roughnessSlider').value = Number(saved.roughness) || 0;\n    document.getElementById('metalnessSlider').value = Number(saved.metalness) || 0;\n    autoRotateCheck.checked = saved.autoRotate !== false;\n    if (viewer) viewer.autoRotate = autoRotateCheck.checked;\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    designerSaveStatus.textContent = 'Saved project loaded';\n  } catch (error) {\n    console.error(error);\n    designerSaveStatus.textContent = error.status === 401 ? 'Sign in to open this project' : 'Project could not be loaded';\n  }\n}\n\ndesignerSaveBtn?.addEventListener('click', saveDesignerProject);\nif (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDesignerProject, { once: true });\nelse loadDesignerProject();\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', () => {\n    if (viewer && viewer.toDataURL) {\n      const link = document.createElement('a');\n      link.download = '")
+    ; __append(",\n      sourceUrl: window.location.pathname,\n      previewImageUrl: preview.url,\n      designData: getDesignerProjectData()\n    });\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    const url = new URL(window.location.href);\n    url.searchParams.set('project', project.id);\n    window.history.replaceState({}, '', url);\n    persistDesignerTryOnDesign();\n    syncDesignerTryOnLink(project.id);\n    designerSaveStatus.textContent = 'Saved';\n  } catch (error) {\n    console.error(error);\n    if (error.status === 401) window.UserProjects.goToSignIn();\n    else designerSaveStatus.textContent = error.message || 'Save failed';\n  } finally {\n    designerSaveBtn.disabled = false;\n  }\n}\n\nasync function loadDesignerProject() {\n  if (!window.UserProjects) return;\n  try {\n    const project = await window.UserProjects.loadProjectFromUrl('3d');\n    if (!project) return;\n    const saved = project.designData || {};\n    const activate = (selector) => document.querySelector(selector)?.click();\n    activate(`.color-btn[data-target=\"base\"][data-color=\"${saved.baseColor}\"]`);\n    activate(`.color-btn[data-target=\"accent\"][data-color=\"${saved.accentColor}\"]`);\n    activate(`.pattern-btn[data-pattern=\"${saved.pattern}\"]`);\n    activate(`.pattern-btn[data-env=\"${saved.environment}\"]`);\n    document.getElementById('roughnessSlider').value = Number(saved.roughness) || 0;\n    document.getElementById('metalnessSlider').value = Number(saved.metalness) || 0;\n    autoRotateCheck.checked = saved.autoRotate !== false;\n    if (viewer) viewer.autoRotate = autoRotateCheck.checked;\n    designerProjectState.id = project.id;\n    designerProjectState.name = project.name;\n    applyDesignerAppearance();\n    persistDesignerTryOnDesign();\n    syncDesignerTryOnLink(project.id);\n    designerSaveStatus.textContent = 'Saved project loaded';\n  } catch (error) {\n    console.error(error);\n    designerSaveStatus.textContent = error.status === 401 ? 'Sign in to open this project' : 'Project could not be loaded';\n  }\n}\n\ndesignerSaveBtn?.addEventListener('click', saveDesignerProject);\nif (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadDesignerProject, { once: true });\nelse loadDesignerProject();\n\n// Download render\nif (downloadBtn) {\n  downloadBtn.addEventListener('click', async () => {\n    if (viewer && viewer.toDataURL) {\n      downloadBtn.disabled = true;\n      try {\n        const source = viewer.toDataURL('image/png');\n        const exportUrl = window.ExportEntitlements\n          ? await window.ExportEntitlements.prepareExport(source)\n          : source;\n        const link = document.createElement('a');\n        link.download = '")
     ; __append(escapeFn( model.slug ))
-    ; __append("-design.png';\n      link.href = viewer.toDataURL('image/png');\n      link.click();\n    } else {\n      alert('Render download is not available for this model.');\n    }\n  });\n}\n</script>\n\n")
+    ; __append("-design.png';\n        link.href = exportUrl;\n        link.click();\n      } catch (error) {\n        console.error(error);\n        alert('Render download could not be prepared.');\n      } finally {\n        downloadBtn.disabled = false;\n      }\n    } else {\n      alert('Render download is not available for this model.');\n    }\n  });\n}\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -3950,6 +4696,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -3974,7 +4723,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <!-- Google tag (gtag.js) -->\n  <script async src=\"https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B\"></script>\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n  </script>\n  <script src=\"/js/analytics.js?v=20260805-stable-events\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title || 'Error' ))
     ; __append("</title>\n  <style>\n    * { margin: 0; padding: 0; box-sizing: border-box; }\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      background: #f8fafc;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      min-height: 100vh;\n      padding: 2rem;\n    }\n    .error-container {\n      text-align: center;\n      max-width: 480px;\n    }\n    .error-code {\n      font-size: 6rem;\n      font-weight: 700;\n      color: #1e293b;\n      line-height: 1;\n      margin-bottom: 1rem;\n    }\n    .error-title {\n      font-size: 1.5rem;\n      color: #334155;\n      margin-bottom: 0.75rem;\n    }\n    .error-message {\n      color: #64748b;\n      margin-bottom: 2rem;\n      line-height: 1.6;\n    }\n    .error-actions {\n      display: flex;\n      gap: 1rem;\n      justify-content: center;\n    }\n    .btn {\n      padding: 0.75rem 1.5rem;\n      border-radius: 8px;\n      text-decoration: none;\n      font-weight: 500;\n      transition: all 0.2s;\n    }\n    .btn-primary {\n      background: #2563eb;\n      color: white;\n    }\n    .btn-primary:hover {\n      background: #1d4ed8;\n    }\n    .btn-ghost {\n      background: white;\n      color: #64748b;\n      border: 1px solid #e2e8f0;\n    }\n    .btn-ghost:hover {\n      background: #f1f5f9;\n    }\n  </style>\n</head>\n<body>\n  <div class=\"error-container\">\n    <div class=\"error-code\">500</div>\n    <h1 class=\"error-title\">Something went wrong</h1>\n    <p class=\"error-message\">We're sorry, but something went wrong on our end. Please try again later.</p>\n    <div class=\"error-actions\">\n      <a href=\"/\" class=\"btn btn-primary\">Go Home</a>\n      <a href=\"javascript:history.back()\" class=\"btn btn-ghost\">Go Back</a>\n    </div>\n  </div>\n</body>\n</html>\n")
@@ -4043,6 +4798,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -4067,7 +4825,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('gallery.pageTitle') ))
@@ -4075,6 +4839,242 @@ title = __locals.title,
     ; __append(escapeFn( t('gallery.pageSubtitle') ))
     ; __append("</p>\n  </div>\n</section>\n\n<section class=\"content-section\">\n  <div class=\"container\">\n    <!-- Gallery Grid -->\n    <div class=\"gallery-grid\">\n      <!-- Gallery Item 1 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M140 80 L260 80 L280 120 L260 140 L240 120 L240 400 L160 400 L160 120 L140 140 L120 120 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M160 120 L240 120\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <circle cx=\"200\" cy=\"250\" r=\"60\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">T-Shirt Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Minimalist Tee</h3>\n          <p class=\"gallery-author\">by Sarah Chen</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">3D</span>\n            <span class=\"tag\">Casual</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 2 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M120 60 L280 60 L300 100 L280 420 L120 420 L100 100 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M120 100 L280 100\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <rect x=\"180\" y=\"200\" width=\"40\" height=\"60\" rx=\"4\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Hoodie Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Streetwear Hoodie</h3>\n          <p class=\"gallery-author\">by Mike Ross</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">3D</span>\n            <span class=\"tag\">Street</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 3 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M150 60 L250 60 L270 100 L260 440 L140 440 L130 100 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M140 100 L260 100\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <path d=\"M170 200 Q200 180 230 200\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"470\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Dress Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Summer Dress</h3>\n          <p class=\"gallery-author\">by Emma Wilson</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">2D</span>\n            <span class=\"tag\">Elegant</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 4 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M130 80 L270 80 L290 120 L270 140 L250 120 L250 400 L150 400 L150 120 L130 140 L110 120 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M150 120 L250 120\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <rect x=\"180\" y=\"200\" width=\"40\" height=\"40\" rx=\"2\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Jacket Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Leather Jacket</h3>\n          <p class=\"gallery-author\">by Alex Kim</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">3D</span>\n            <span class=\"tag\">Outerwear</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 5 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <rect x=\"120\" y=\"80\" width=\"160\" height=\"320\" rx=\"4\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M120 120 L280 120\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <path d=\"M160 80 L160 400\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <circle cx=\"200\" cy=\"250\" r=\"50\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">2D Template</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Flat Lay Template</h3>\n          <p class=\"gallery-author\">by Lisa Park</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">2D</span>\n            <span class=\"tag\">Template</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 6 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M140 80 L260 80 L280 120 L260 140 L240 120 L240 400 L160 400 L160 120 L140 140 L120 120 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M160 120 L240 120\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <path d=\"M180 200 L220 200 L200 240 Z\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Tank Top Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Athletic Tank</h3>\n          <p class=\"gallery-author\">by Chris Lee</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">3D</span>\n            <span class=\"tag\">Sport</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 7 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <path d=\"M130 60 L270 60 L290 100 L270 420 L130 420 L110 100 Z\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M130 100 L270 100\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <rect x=\"180\" y=\"200\" width=\"40\" height=\"50\" rx=\"4\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Blazer Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Business Blazer</h3>\n          <p class=\"gallery-author\">by Anna White</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">3D</span>\n            <span class=\"tag\">Formal</span>\n          </div>\n        </div>\n      </div>\n\n      <!-- Gallery Item 8 -->\n      <div class=\"gallery-item\">\n        <div class=\"gallery-image\">\n          <svg viewBox=\"0 0 400 500\" class=\"gallery-svg\">\n            <rect width=\"400\" height=\"500\" fill=\"#f5f5f5\"/>\n            <rect x=\"140\" y=\"80\" width=\"120\" height=\"340\" rx=\"4\" fill=\"#e8e8e8\" stroke=\"#999\" stroke-width=\"1\"/>\n            <path d=\"M140 120 L260 120\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <path d=\"M170 80 L170 420\" stroke=\"#999\" stroke-width=\"0.5\" stroke-dasharray=\"4\"/>\n            <circle cx=\"200\" cy=\"250\" r=\"40\" fill=\"none\" stroke=\"#ccc\" stroke-width=\"1\"/>\n            <text x=\"200\" y=\"450\" text-anchor=\"middle\" fill=\"#999\" font-size=\"14\">Jeans Design</text>\n          </svg>\n        </div>\n        <div class=\"gallery-info\">\n          <h3 class=\"gallery-title\">Denim Collection</h3>\n          <p class=\"gallery-author\">by Tom Brown</p>\n          <div class=\"gallery-tags\">\n            <span class=\"tag\">2D</span>\n            <span class=\"tag\">Casual</span>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "hoodie-generator-landing.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append( include('partials/header', {
+  bodyClass: 'hmg-page',
+  pageStyles: ['/css/hoodie-generator-landing.css?v=20260913-v8']
+}) )
+    ; __append("\n\n")
+    ; 
+  const fallbackHoodieHref = String(toolPage.cta && toolPage.cta.href || '/mockups/hoodie-mockup').replace(/\/edit$/, '');
+  const hoodieModels = toolPage.modelStarters && toolPage.modelStarters.length
+    ? toolPage.modelStarters
+    : [{
+        title: toolPage.heroModel && toolPage.heroModel.alt || 'Pullover hoodie',
+        shortTitle: 'Pullover',
+        href: fallbackHoodieHref,
+        image: toolPage.image,
+        modelSrc: toolPage.heroModel && toolPage.heroModel.src
+      }];
+  const firstHoodie = hoodieModels[0];
+  const workflowModels = [0, 1, 2].map(function(index) {
+    return hoodieModels[index % hoodieModels.length];
+  });
+  const useCaseLabels = ['Streetwear drops', 'Client approvals', 'Product listings'];
+  const useCaseNotes = [
+    ['Test graphics', 'Try colorways', 'Create lookbooks'],
+    ['Present concepts', 'Show multiple angles', 'Speed up sign-off'],
+    ['High-resolution exports', 'Consistent lighting', 'Ready for ecommerce']
+  ];
+
+    ; __append("\n\n<div class=\"hmg-landing\" data-hmg-carousel>\n  <section class=\"hmg-hero\" aria-labelledby=\"hmg-title\">\n    <div class=\"hmg-hero-copy\">\n      <p class=\"hmg-eyebrow\">Free browser hoodie studio</p>\n      <h1 id=\"hmg-title\">Build your hoodie<br>in 3D.</h1>\n      <p class=\"hmg-hero-lede\">Test the fit. Place the graphic. Ship the idea.</p>\n      <div class=\"hmg-actions\">\n        <a class=\"hmg-button hmg-button-primary hmg-editor-link\" href=\"")
+    ; __append(escapeFn( firstHoodie.href ))
+    ; __append("#design\">\n          Open hoodie editor <span aria-hidden=\"true\">→</span>\n        </a>\n        <a class=\"hmg-button hmg-button-secondary\" href=\"/mockups/hoodie-mockup\">Explore hoodie fits</a>\n      </div>\n      <p class=\"hmg-note\">Free during beta <span aria-hidden=\"true\">·</span> No Photoshop required</p>\n      <div class=\"hmg-maker-note\" aria-hidden=\"true\">\n        <span></span>\n        <p>For creators<br>who make real things.</p>\n      </div>\n    </div>\n\n    <div class=\"hmg-studio\" aria-label=\"Interactive 3D hoodie studio\">\n      <div class=\"hmg-studio-label\" aria-hidden=\"true\">\n        <span>CLOZDESIGN</span>\n        <span>3D HOODIE STUDIO</span>\n        <span>REAL FIT. REAL DETAILS.</span>\n      </div>\n      <div class=\"hmg-spec-note hmg-spec-note-fit\" aria-hidden=\"true\"><span></span>GARMENT<br>PROPORTIONS</div>\n      <div class=\"hmg-spec-note hmg-spec-note-texture\" aria-hidden=\"true\"><span></span>TEXTURE<br>LIGHTING<br>REAL VOLUME</div>\n\n      <div class=\"hmg-model-stage\" aria-busy=\"true\">\n        <div class=\"hmg-model-track\">\n          ")
+    ;  hoodieModels.forEach(function(model, index) { 
+    ; __append("\n            <div\n              class=\"hmg-model-slide")
+    ; __append(escapeFn( index === 0 ? ' is-active' : '' ))
+    ; __append("\"\n              data-hmg-slide\n              data-title=\"")
+    ; __append(escapeFn( model.shortTitle || model.title ))
+    ; __append("\"\n              data-href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("#design\"\n              data-position=\"")
+    ; __append(escapeFn( index === 0 ? 'active' : (index === 1 ? 'next' : (index === hoodieModels.length - 1 ? 'previous' : 'hidden-next')) ))
+    ; __append("\"\n              aria-hidden=\"")
+    ; __append(escapeFn( index === 0 ? 'false' : 'true' ))
+    ; __append("\"\n            >\n              <model-viewer\n                class=\"hmg-model-viewer\"\n                src=\"")
+    ; __append(escapeFn( model.modelSrc ))
+    ; __append("\"\n                alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append(" interactive 3D preview\"\n                loading=\"eager\"\n                reveal=\"auto\"\n                camera-controls\n                interaction-prompt=\"none\"\n                shadow-intensity=\"1.35\"\n                shadow-softness=\"0.65\"\n                exposure=\"0.76\"\n                environment-image=\"neutral\"\n                camera-orbit=\"0deg 78deg 112%\"\n                min-camera-orbit=\"auto 55deg 88%\"\n                max-camera-orbit=\"auto 105deg 145%\"\n                tabindex=\"")
+    ; __append(escapeFn( index === 0 ? '0' : '-1' ))
+    ; __append("\"\n              ></model-viewer>\n            </div>\n          ")
+    ;  }); 
+    ; __append("\n        </div>\n\n        <div class=\"hmg-model-loading\" data-hmg-loading aria-live=\"polite\">\n          <i aria-hidden=\"true\"></i><strong>Loading 3D hoodie</strong>\n        </div>\n        <button class=\"hmg-arrow hmg-arrow-prev\" type=\"button\" data-hmg-prev aria-label=\"Previous hoodie model\">‹</button>\n        <button class=\"hmg-arrow hmg-arrow-next\" type=\"button\" data-hmg-next aria-label=\"Next hoodie model\">›</button>\n      </div>\n\n      <div class=\"hmg-color-controls\" aria-label=\"Garment color\">\n        ")
+    ;  [
+          ['#e8e7e2', 'Bone'],
+          ['#45474a', 'Charcoal'],
+          ['#687062', 'Olive'],
+          ['#172844', 'Navy']
+        ].forEach(function(color, index) { 
+    ; __append("\n          <button\n            type=\"button\"\n            class=\"hmg-color")
+    ; __append(escapeFn( index === 0 ? ' is-active' : '' ))
+    ; __append("\"\n            data-hmg-color=\"")
+    ; __append(escapeFn( color[0] ))
+    ; __append("\"\n            style=\"--hmg-swatch: ")
+    ; __append(escapeFn( color[0] ))
+    ; __append("\"\n            aria-label=\"Set hoodie color to ")
+    ; __append(escapeFn( color[1] ))
+    ; __append("\"\n          ></button>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n\n      <div class=\"hmg-angle-controls\" aria-label=\"Hoodie viewing angle\">\n        <button type=\"button\" class=\"is-active\" data-hmg-orbit=\"0deg 78deg 112%\">Front</button>\n        <button type=\"button\" data-hmg-orbit=\"90deg 78deg 112%\">Side</button>\n        <button type=\"button\" data-hmg-orbit=\"180deg 78deg 112%\">Back</button>\n      </div>\n\n      <div class=\"hmg-studio-footer\">\n        <p><span data-hmg-current>01</span> / ")
+    ; __append(escapeFn( String(hoodieModels.length).padStart(2, '0') ))
+    ; __append("</p>\n        <strong data-hmg-title>")
+    ; __append(escapeFn( firstHoodie.shortTitle || firstHoodie.title ))
+    ; __append("</strong>\n        <span aria-hidden=\"true\">↻&nbsp; Drag to rotate</span>\n      </div>\n    </div>\n  </section>\n\n  <section class=\"hmg-proof\" aria-label=\"Hoodie mockup benefits\">\n    <div class=\"hmg-shell hmg-proof-grid\">\n      <article><span>01</span><i></i><div><strong>Real garment fit</strong><p>Accurate volume and proportions.</p></div></article>\n      <article><span>02</span><i></i><div><strong>Design in your browser</strong><p>No software. No limits.</p></div></article>\n      <article><span>03</span><i></i><div><strong>Export clean mockups</strong><p>High-resolution, ready to share.</p></div></article>\n    </div>\n  </section>\n\n  <section class=\"hmg-fits\" id=\"hoodie-fits\" aria-labelledby=\"hmg-fits-title\">\n    <div class=\"hmg-shell\">\n      <div class=\"hmg-section-heading\">\n        <div><p class=\"hmg-eyebrow\">Choose your silhouette</p><h2 id=\"hmg-fits-title\">The fit sets the tone.</h2></div>\n        <div class=\"hmg-section-aside\">\n          <p>Different fits. Same freedom.<br>Find the silhouette that matches your vision.</p>\n          <a href=\"/mockups/hoodie-mockup\">View all hoodie models <span aria-hidden=\"true\">↗</span></a>\n        </div>\n      </div>\n      <div class=\"hmg-fit-grid\">\n        ")
+    ;  hoodieModels.forEach(function(model, index) { 
+    ; __append("\n          <a class=\"hmg-fit-card")
+    ; __append(escapeFn( index === 0 ? ' is-featured' : '' ))
+    ; __append("\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("\">\n            <div class=\"hmg-fit-image\"><img src=\"")
+    ; __append(escapeFn( model.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" width=\"640\" height=\"640\" loading=\"lazy\" decoding=\"async\"></div>\n            <div><span>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</span><strong>")
+    ; __append(escapeFn( model.shortTitle || model.title ))
+    ; __append("</strong><i aria-hidden=\"true\">→</i></div>\n          </a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"hmg-workflow\" id=\"hoodie-workflow\" aria-labelledby=\"hmg-workflow-title\">\n    <div class=\"hmg-shell\">\n      <div class=\"hmg-workflow-heading\">\n        <div>\n          <p class=\"hmg-kicker\"><span></span> How it works</p>\n          <h2 id=\"hmg-workflow-title\">From blank to<br>drop-ready.</h2>\n        </div>\n        <p>Three simple stages. One professional result.<br>Everything happens in your browser.</p>\n      </div>\n      <ol class=\"hmg-workflow-list\">\n        <li>\n          <header><span>01</span><i></i><div><strong>Choose &amp; customize</strong><p>Pick a hoodie, adjust colors, and add your design.</p></div></header>\n          <div class=\"hmg-workflow-visual hmg-workflow-visual-build\">\n            <img src=\"")
+    ; __append(escapeFn( workflowModels[0].image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( workflowModels[0].title ))
+    ; __append(" ready for customization\" width=\"560\" height=\"560\" loading=\"lazy\" decoding=\"async\">\n            <div aria-hidden=\"true\"><span>◇</span> MODEL<br><span>◒</span> COLOR<br><span>▧</span> GRAPHICS</div>\n          </div>\n        </li>\n        <li>\n          <header><span>02</span><i></i><div><strong>Preview in 3D</strong><p>Check the fit, rotate, and inspect every detail in real time.</p></div></header>\n          <div class=\"hmg-workflow-visual hmg-workflow-visual-preview\">\n            <img src=\"")
+    ; __append(escapeFn( workflowModels[1].image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( workflowModels[1].title ))
+    ; __append(" shown as a 3D preview\" width=\"560\" height=\"560\" loading=\"lazy\" decoding=\"async\">\n            <div aria-hidden=\"true\"><span>◇</span> REAL PROPORTIONS<br><span>☼</span> STUDIO LIGHTING<br><span>↻</span> 360° VIEW</div>\n          </div>\n        </li>\n        <li>\n          <header><span>03</span><i></i><div><strong>Export &amp; share</strong><p>Download high-resolution mockups, ready for anything.</p></div></header>\n          <div class=\"hmg-workflow-visual hmg-workflow-visual-export\">\n            <span aria-hidden=\"true\"></span><span aria-hidden=\"true\"></span>\n            <img src=\"")
+    ; __append(escapeFn( workflowModels[2].image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( workflowModels[2].title ))
+    ; __append(" mockup ready to export\" width=\"560\" height=\"560\" loading=\"lazy\" decoding=\"async\">\n            <div aria-hidden=\"true\">▣&nbsp; PNG<br>▣&nbsp; JPG<br>▧&nbsp; TRANSPARENT</div>\n          </div>\n        </li>\n      </ol>\n    </div>\n  </section>\n\n  <section class=\"hmg-use-cases\" id=\"hoodie-use-cases\" aria-labelledby=\"hmg-use-cases-title\">\n    <div class=\"hmg-shell\">\n      <div class=\"hmg-section-heading\">\n        <div><p class=\"hmg-kicker\"><span></span> Use cases</p><h2 id=\"hmg-use-cases-title\">See the drop<br>before it exists.</h2></div>\n        <p>One tool. Real results.<br>From early ideas to final launch.</p>\n      </div>\n      <div class=\"hmg-use-grid\">\n        ")
+    ;  useCaseLabels.forEach(function(item, index) { 
+    ; __append("\n          <a href=\"")
+    ; __append(escapeFn( hoodieModels[index % hoodieModels.length].href ))
+    ; __append("\" class=\"hmg-use-row\">\n            <div class=\"hmg-use-image\"><img src=\"")
+    ; __append(escapeFn( hoodieModels[index % hoodieModels.length].image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( hoodieModels[index % hoodieModels.length].title ))
+    ; __append(" for ")
+    ; __append(escapeFn( item.toLowerCase() ))
+    ; __append("\" width=\"520\" height=\"300\" loading=\"lazy\" decoding=\"async\"></div>\n            <div class=\"hmg-use-copy\"><span>")
+    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
+    ; __append("</span><div><h3>")
+    ; __append(escapeFn( item ))
+    ; __append("</h3><p>")
+    ; __append(escapeFn( toolPage.useCaseDetails && toolPage.useCaseDetails[index] || '' ))
+    ; __append("</p></div></div>\n            <ul>")
+    ;  useCaseNotes[index].forEach(function(note) { 
+    ; __append("<li>")
+    ; __append(escapeFn( note ))
+    ; __append("</li>")
+    ;  }); 
+    ; __append("</ul>\n            <i aria-hidden=\"true\">→</i>\n          </a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"hmg-faq\" id=\"hoodie-faq\" aria-labelledby=\"hmg-faq-title\">\n    <div class=\"hmg-shell\">\n      <div class=\"hmg-faq-heading\">\n        <div><p class=\"hmg-eyebrow\">Hoodie FAQ</p><h2 id=\"hmg-faq-title\">Before you start.</h2></div>\n        <p>Quick answers to common questions.</p>\n      </div>\n      <div class=\"hmg-faq-list\">\n        ")
+    ;  (toolPage.faq || []).slice(0, 4).forEach(function(item, index) { 
+    ; __append("\n          <details")
+    ; __append(escapeFn( index === 0 ? ' open' : '' ))
+    ; __append(">\n            <summary>")
+    ; __append(escapeFn( item.question ))
+    ; __append("<span aria-hidden=\"true\"></span></summary>\n            <p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p>\n          </details>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"hmg-final\" id=\"hoodie-start\">\n    <div class=\"hmg-shell hmg-final-shell\">\n      <div class=\"hmg-final-panel\">\n        <div>\n          <p class=\"hmg-kicker\"><span></span> Make the hoodie feel real</p>\n          <h2>Start designing today.</h2>\n          <p>Bring your ideas to life with a professional 3D hoodie studio.<br>No software. No limits. Just your creativity.</p>\n        </div>\n        <div class=\"hmg-final-action\">\n          <a class=\"hmg-button hmg-button-light hmg-editor-link\" href=\"")
+    ; __append(escapeFn( firstHoodie.href ))
+    ; __append("#design\">Open hoodie editor <span aria-hidden=\"true\">→</span></a>\n          <p>Free during beta <span aria-hidden=\"true\">·</span> No credit card required</p>\n        </div>\n      </div>\n    </div>\n  </section>\n</div>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script src=\"/js/hoodie-generator-landing.js?v=20260913-v2\" defer></script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n\n")
+    ; __append( include('partials/footer', { footerVariant: 'hoodie' }) )
     ; __append("\n")
   return __output;
 
@@ -4141,6 +5141,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -4165,7 +5168,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n")
     ;  const content = homeContent || {}; 
@@ -4375,6 +5384,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -4399,7 +5411,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -4495,6 +5513,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -4519,7 +5540,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"utility-page-hero utility-page-hero-compact\">\n  <div class=\"container utility-page-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( eyebrow ))
@@ -4603,6 +5630,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -4627,7 +5657,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
   pageStyles: ['/css/model-detail-v2.css?v=20260913-google-auth-v30']
@@ -4661,6 +5697,8 @@ title = __locals.title,
     ; __append("\n")
     ;  const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; 
     ; __append("\n")
+    ;  const aiTryOnPath = `${modelDetailPath}/try-on`; 
+    ; __append("\n")
     ;  const heroDescription = String(model.description || 'A production-minded 3D garment base, ready for color, artwork, fabric, and fit exploration.').split(/(?<=[.!?])\s+/)[0]; 
     ; __append("\n\n<section class=\"model-detail-hero\">\n  <div class=\"container\">\n    <nav class=\"model-breadcrumb\" aria-label=\"Breadcrumb\">\n      <a href=\"/mockups\">3D Models</a><span>/</span>\n      <a href=\"/mockups/")
     ; __append(escapeFn( model.category_slug || model.category ))
@@ -4674,11 +5712,9 @@ title = __locals.title,
     ; __append(escapeFn( modelDisplayName ))
     ; __append("</h1>\n        <div class=\"model-description model-product-description\">\n          <h2>Description</h2>\n          <p>")
     ; __append(escapeFn( heroDescription ))
-    ; __append("</p>\n        </div>\n        <div class=\"model-detail-meta\" aria-label=\"Model capabilities\">\n          <span class=\"tag tag-free\">Free beta</span>\n          <span class=\"meta-item\">Editable surface</span>\n          ")
-    ;  if (supportsOnModelMockup) { 
-    ; __append("<span class=\"meta-item\">AI try-on coming soon</span>")
-    ;  } 
-    ; __append("\n        </div>\n        <div class=\"model-actions model-action-grid\">\n          <button class=\"detail-action detail-action-primary\" id=\"designNowBtn\" type=\"button\">\n            <span>Customize this model</span>\n          </button>\n          <span class=\"ai-coming-soon-control\" tabindex=\"0\" aria-describedby=\"aiTryOnComingSoon\">\n            <button class=\"detail-action\" id=\"aiTryOnBtn\" type=\"button\" disabled aria-disabled=\"true\">\n              <span>AI try-on</span>\n            </button>\n            <span class=\"ai-coming-soon-tooltip\" id=\"aiTryOnComingSoon\" role=\"tooltip\">Coming soon</span>\n          </span>\n          ")
+    ; __append("</p>\n        </div>\n        <div class=\"model-detail-meta\" aria-label=\"Model capabilities\">\n          <span class=\"tag tag-free\">Free beta</span>\n          <span class=\"meta-item\">Editable surface</span>\n          <span class=\"meta-item\">AI try-on ready</span>\n        </div>\n        <div class=\"model-actions model-action-grid\">\n          <button class=\"detail-action detail-action-primary\" id=\"designNowBtn\" type=\"button\">\n            <span>Customize this model</span>\n          </button>\n          <a class=\"detail-action\" id=\"aiTryOnBtn\" href=\"")
+    ; __append(escapeFn( aiTryOnPath ))
+    ; __append("\" data-ai-try-on-link>\n            <span>AI try-on</span>\n          </a>\n          ")
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <button class=\"detail-action\" id=\"renderCurrentModelBtn\" type=\"button\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"1\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"m5 17 4-4 3 3 2-2 5 3\"/></svg>\n              <span>Render current view</span>\n            </button>\n          ")
     ;  } 
@@ -4714,7 +5750,9 @@ title = __locals.title,
     ; __append(escapeFn( modelDisplayName ))
     ; __append(" design preview\" loading=\"lazy\"><span class=\"studio-selection-frame\" aria-hidden=\"true\"><i></i><i></i><i></i><i></i></span></div>\n        <div class=\"studio-property-panel\">\n          <span>Surface</span><strong>Front panel</strong>\n          <span>Material</span><strong>Linen blend</strong>\n          <div class=\"studio-material-row\"><i></i><i></i><i></i><i></i><i></i></div>\n          <span>Color</span><div class=\"studio-color-row\"><i></i><i></i><i></i><i></i><i></i><i></i></div>\n          <span>Artwork</span><strong>Brush stroke 02.png</strong>\n          <span>Type</span><strong>ClozDesign Atelier</strong>\n        </div>\n      </div>\n    </div>\n  </div>\n</section>\n\n")
     ;  if (supportsOnModelMockup && tryOnModels.length) { 
-    ; __append("\n<section class=\"ai-tryon-feature\" aria-labelledby=\"aiTryOnFeatureTitle\">\n  <div class=\"container ai-tryon-feature-grid\">\n    <div class=\"ai-tryon-copy\">\n      <h2 id=\"aiTryOnFeatureTitle\">See the design<br>on someone</h2>\n      <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>\n      <span class=\"ai-fitted-badge\"><i></i> AI fitted</span>\n      <span class=\"ai-coming-soon-control ai-feature-coming-soon\" tabindex=\"0\" aria-describedby=\"aiFeatureComingSoon\">\n        <button class=\"feature-cta feature-cta-light\" type=\"button\" disabled aria-disabled=\"true\">Choose a model</button>\n        <span class=\"ai-coming-soon-tooltip\" id=\"aiFeatureComingSoon\" role=\"tooltip\">Coming soon</span>\n      </span>\n    </div>\n    <div class=\"ai-model-panel\">\n      <div class=\"ai-model-tabs\"><span class=\"active\">Models</span><span>Poses</span><span>Scenes</span></div>\n      <p>Select a model</p>\n      <div class=\"ai-avatar-grid\">\n        ")
+    ; __append("\n<section class=\"ai-tryon-feature\" aria-labelledby=\"aiTryOnFeatureTitle\">\n  <div class=\"container ai-tryon-feature-grid\">\n    <div class=\"ai-tryon-copy\">\n      <h2 id=\"aiTryOnFeatureTitle\">See the design<br>on someone</h2>\n      <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>\n      <span class=\"ai-fitted-badge\"><i></i> AI fitted</span>\n      <a class=\"feature-cta feature-cta-light\" href=\"")
+    ; __append(escapeFn( aiTryOnPath ))
+    ; __append("\" data-ai-try-on-link>Choose a model</a>\n    </div>\n    <div class=\"ai-model-panel\">\n      <div class=\"ai-model-tabs\"><span class=\"active\">Models</span><span>Poses</span><span>Scenes</span></div>\n      <p>Select a model</p>\n      <div class=\"ai-avatar-grid\">\n        ")
     ;  tryOnModels.slice(0, 6).forEach(function(tryOnModel, index) { 
     ; __append("\n          ")
     ;  const displayModelName = String(tryOnModel.title || 'Model').replace(/^Model\s+\d+\s+/i, '').split(/\s+(?:Female|Male|Front|Walking|From3d)/i)[0]; 
@@ -5011,7 +6049,7 @@ title = __locals.title,
     ; __append( JSON.stringify(model.name || '') )
     ; __append(",\n  userAuthenticated: ")
     ; __append( JSON.stringify(Boolean(user)) )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    loginModal.hidden = false;\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || loginModal.hidden) return;\n    loginModal.hidden = true;\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  googleLogin?.addEventListener('click', () => {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  });\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260913-legacy-project-state-v41',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        await window.renderCurrentModelImage?.();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const hasSavedProject = new URLSearchParams(window.location.search).has('project');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];\n\n  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {\n    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';\n    aiTryOnLinks.forEach((link) => {\n      const destination = new URL(link.href, window.location.origin);\n      if (safeProjectId) destination.searchParams.set('project', safeProjectId);\n      else destination.searchParams.delete('project');\n      link.href = `${destination.pathname}${destination.search}`;\n    });\n  }\n\n  window.syncModelTryOnLinks = syncModelTryOnLinks;\n  syncModelTryOnLinks();\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    loginModal.hidden = false;\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || loginModal.hidden) return;\n    loginModal.hidden = true;\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  googleLogin?.addEventListener('click', () => {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  });\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260914-entitlements-v44',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        await window.renderCurrentModelImage?.();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const hasSavedProject = new URLSearchParams(window.location.search).has('project');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
     ;  if (supportsOnModelMockup) { 
     ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260913-svg-live-mask-v2';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
     ;  } 
@@ -5083,6 +6121,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5107,7 +6148,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; 
   const iconLocals = typeof locals !== 'undefined' && locals ? locals : {};
   const iconSlug = Object.prototype.hasOwnProperty.call(iconLocals, 'slug') ? iconLocals.slug : (typeof slug !== 'undefined' ? slug : '');
@@ -5240,6 +6287,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5264,8 +6314,30 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
-    ; __append("  </main>\n\n  <footer class=\"footer\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClozDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          <a href=\"/pricing\" class=\"footer-link\">Free Beta Access</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"/contact\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append("  ")
+    ;  const isHoodieFooter = typeof footerVariant !== 'undefined' && footerVariant === 'hoodie'; 
+    ; __append("\n  </main>\n\n  <footer class=\"footer")
+    ; __append(escapeFn( isHoodieFooter ? ' footer-hoodie' : '' ))
+    ; __append("\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClozDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n          ")
+    ;  if (isHoodieFooter) { 
+    ; __append("\n            <p class=\"footer-manifesto\">Design. Visualize. Create. Repeat.</p>\n          ")
+    ;  } 
+    ; __append("\n        </div>\n\n        <!-- Product -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Product</p>\n          <a href=\"/mockups\" class=\"footer-link\">3D Models</a>\n          <a href=\"/white-mockups\" class=\"footer-link\">White Mockups</a>\n          ")
+    ;  if (isHoodieFooter) { 
+    ; __append("\n            <a href=\"/tools/hoodie-mockup-generator\" class=\"footer-link\">Hoodie Generator</a>\n            <a href=\"/tools\" class=\"footer-link\">Apparel Tools</a>\n          ")
+    ;  } 
+    ; __append("\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"mailto:support@cloz-design.com\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n\n        ")
+    ;  if (isHoodieFooter) { 
+    ; __append("\n          <div class=\"footer-column footer-newsletter\">\n            <p class=\"footer-title\">Stay in the loop</p>\n            <p>Get updates, new features, and design tips.</p>\n            <form action=\"mailto:support@cloz-design.com\" method=\"post\" enctype=\"text/plain\">\n              <label class=\"sr-only\" for=\"hoodie-footer-email\">Your email address</label>\n              <input id=\"hoodie-footer-email\" type=\"email\" name=\"email\" autocomplete=\"email\" placeholder=\"Your email address\" required>\n              <button type=\"submit\" aria-label=\"Join ClozDesign updates\">→</button>\n            </form>\n            <small>No spam. Unsubscribe anytime.</small>\n          </div>\n        ")
+    ;  } 
+    ; __append("\n      </div>\n\n      <div class=\"footer-bottom\">\n        <p>&copy; ")
     ; __append(escapeFn( new Date().getFullYear() ))
     ; __append(" ClozDesign. All rights reserved.</p>\n      </div>\n    </div>\n  </footer>\n\n  <script src=\"/js/main.js?v=20260805-overlay-fix\"></script>\n  <script src=\"/js/share.js?v=20260829-model-detail-hero-v2\" defer></script>\n</body>\n</html>\n")
   return __output;
@@ -5333,6 +6405,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5357,7 +6432,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ;  const content = landingContent || {}; 
     ; __append("\n")
     ;  const workflow = content.workflow || { eyebrow: 'Workflow', title: 'Create apparel mockups from editable 3D clothing models', description: '', steps: [] }; 
@@ -5599,6 +6680,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5623,10 +6707,16 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
-    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260907-render-current-view\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260913-upload-timeout-v3\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260907-render-current-view\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260913-upload-timeout-v3\" defer></script>\n  <script src=\"/js/export-entitlements.js?v=20260914-v1\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
@@ -5699,7 +6789,9 @@ title = __locals.title,
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          3D Models\n        </a>\n        <a href=\"/white-mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' ))
-    ; __append("\">\n          White Mockups\n        </a>\n        <a href=\"/blog\" class=\"nav-link ")
+    ; __append("\">\n          White Mockups\n        </a>\n        <a href=\"/pricing\" class=\"nav-link ")
+    ; __append(escapeFn( typeof page !== 'undefined' && page === 'pricing' ? 'active' : '' ))
+    ; __append("\">\n          Pricing\n        </a>\n        <a href=\"/blog\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'blog' ? 'active' : '' ))
     ; __append("\">\n          Guides\n        </a>\n        <!-- Tools Dropdown -->\n        <div class=\"nav-dropdown\">\n          <button class=\"nav-link dropdown-toggle ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'tools' ? 'active' : '' ))
@@ -5719,7 +6811,7 @@ title = __locals.title,
     ; __append(escapeFn( t('nav.signIn') ))
     ; __append("</a>\n          <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary\">Start designing</a>\n        ")
     ;  } 
-    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" type=\"button\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobileNavigation\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\" id=\"mobileNavigation\">\n      <a href=\"/mockups\" class=\"mobile-link\">3D Models</a>\n      <a href=\"/white-mockups\" class=\"mobile-link\">White Mockups</a>\n      <a href=\"/blog\" class=\"mobile-link\">Guides</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
+    ; __append("\n\n        <!-- Mobile Menu Toggle -->\n        <button class=\"mobile-toggle\" type=\"button\" aria-label=\"Open menu\" aria-expanded=\"false\" aria-controls=\"mobileNavigation\">\n          <span></span>\n          <span></span>\n          <span></span>\n        </button>\n      </div>\n    </div>\n\n    <!-- Mobile Menu -->\n    <div class=\"mobile-menu\" id=\"mobileNavigation\">\n      <a href=\"/mockups\" class=\"mobile-link\">3D Models</a>\n      <a href=\"/white-mockups\" class=\"mobile-link\">White Mockups</a>\n      <a href=\"/pricing\" class=\"mobile-link\">Pricing</a>\n      <a href=\"/blog\" class=\"mobile-link\">Guides</a>\n      <a href=\"/tools\" class=\"mobile-link\">")
     ; __append(escapeFn( t('nav.tools') ))
     ; __append("</a>\n      <div class=\"mobile-divider\"></div>\n      ")
     ;  if (user) { 
@@ -5797,6 +6889,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5821,7 +6916,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append("<aside\n  class=\"growth-share-panel\"\n  data-growth-share\n  data-share-surface=\"")
     ; __append(escapeFn( shareSurface ))
     ; __append("\"\n  data-share-title=\"")
@@ -5898,6 +6999,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -5922,9 +7026,20 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
-    ; __append( include('partials/header') )
-    ; __append("\n\n<section class=\"beta-access-hero\">\n  <div class=\"container beta-access-grid\">\n    <div class=\"beta-access-copy\">\n      <span class=\"generator-eyebrow\">Public beta access</span>\n      <h1>Design first.<br>Pay nothing.</h1>\n      <p>ClozDesign is free while the browser mockup workflow is in public beta. Choose a garment, place artwork, review the shape, and export a transparent PNG.</p>\n      <div class=\"hero-actions\">\n        <a href=\"/tools/t-shirt-mockup-generator\" class=\"btn btn-primary btn-large\">Start a T-shirt mockup</a>\n        <a href=\"/mockups\" class=\"btn btn-secondary btn-large\">Browse all models</a>\n      </div>\n    </div>\n    <aside class=\"beta-access-card\" aria-label=\"Free beta access details\">\n      <div class=\"beta-access-price\"><strong>$0</strong><span>during public beta</span></div>\n      <ul>\n        <li><span>01</span> Browse the complete public 3D garment library</li>\n        <li><span>02</span> Test garment color and artwork placement</li>\n        <li><span>03</span> Review front, side, and back presentation angles</li>\n        <li><span>04</span> Export a transparent PNG mockup</li>\n      </ul>\n      <p>No payment details are requested. Cloud project storage, collaboration, and paid team plans are not currently offered.</p>\n    </aside>\n  </div>\n</section>\n\n<section class=\"beta-access-note\">\n  <div class=\"container beta-access-note-grid\">\n    <div>\n      <span class=\"generator-eyebrow\">Clear expectations</span>\n      <h2>Mockup-ready, not production-spec CAD.</h2>\n    </div>\n    <p>Use exports for product-page drafts, POD planning, client review, and launch decks. Confirm dimensions, fabric behavior, and manufacturing requirements with your production partner.</p>\n  </div>\n</section>\n\n")
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append( include('partials/header', {
+  bodyClass: 'pricing-page',
+  pageStyles: ['/css/pricing.css?v=20260914-creem-v5']
+}) )
+    ; __append("\n\n<section class=\"pricing-hero\" aria-labelledby=\"pricingTitle\">\n  <div class=\"container pricing-hero-inner\">\n    <span class=\"pricing-eyebrow\">Plans for every workflow</span>\n    <h1 id=\"pricingTitle\">Choose the space<br>your ideas need.</h1>\n    <p>Start with five projects, or unlock more room for mockups, AI try-on, and image storage.</p>\n  </div>\n</section>\n\n<section class=\"pricing-plans\" aria-label=\"ClozDesign plans\" data-pricing-plans data-authenticated=\"")
+    ; __append(escapeFn( user ? 'true' : 'false' ))
+    ; __append("\">\n  <div class=\"container pricing-billing\">\n    <div class=\"billing-switch\" role=\"group\" aria-label=\"Billing frequency\">\n      <button class=\"is-active\" type=\"button\" data-billing-option=\"monthly\" aria-pressed=\"true\">Monthly</button>\n      <button type=\"button\" data-billing-option=\"yearly\" aria-pressed=\"false\">Yearly</button>\n    </div>\n    <p class=\"billing-caption\" aria-live=\"polite\" data-billing-caption>Flexible monthly billing. Change plans anytime.</p>\n  </div>\n\n  <div class=\"container pricing-grid\">\n    <article class=\"pricing-card pricing-card-free\">\n      <div class=\"pricing-card-heading\"><h2>Free</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>$0</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 5 projects total</li>\n        <li><span aria-hidden=\"true\">✓</span> 100 MB image storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Watermarked exports</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register\">Start free</a>\n    </article>\n\n    <article class=\"pricing-card\">\n      <div class=\"pricing-card-heading\"><h2>Pro</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$9.90\" data-yearly=\"¥99\">$9.90</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ year\">/ month</span>\n        </div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"¥99 / year\" data-yearly=\"$9.90 / month\">¥99 / year</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 28 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        <li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 150 Try-on Credits</li>\n        <li><span aria-hidden=\"true\">✓</span> 1 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register?plan=pro&amp;billing=monthly\" data-plan-link data-plan=\"pro\">Choose Pro</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-featured\">\n      <div class=\"pricing-popular\">Most popular</div>\n      <div class=\"pricing-card-heading\"><h2>Max</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$29.90\" data-yearly=\"$299\">$29.90</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ year\">/ month</span>\n        </div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"$299 / year\" data-yearly=\"$29.90 / month\">$299 / year</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 99 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        <li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 1,000 Try-on Credits</li>\n        <li><span aria-hidden=\"true\">✓</span> 100 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-inverse\" href=\"/auth/register?plan=max&amp;billing=monthly\" data-plan-link data-plan=\"max\">Choose Max</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-business\">\n      <div class=\"pricing-card-heading\"><h2>Business</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>Custom</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> Custom projects &amp; credits</li>\n        <li><span aria-hidden=\"true\">✓</span> Custom storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Priority support</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry\">Contact sales</a>\n    </article>\n  </div>\n\n  <div class=\"container pricing-inline-note\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">\n      <ellipse cx=\"12\" cy=\"5\" rx=\"8\" ry=\"3\"></ellipse>\n      <path d=\"M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5\"></path>\n      <path d=\"M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7\"></path>\n    </svg>\n    <span aria-hidden=\"true\"></span>\n    <p>Projects refresh monthly. Storage stays with you.</p>\n  </div>\n</section>\n\n<script src=\"/js/pricing.js?v=20260914-creem-v3\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -5992,6 +7107,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -6016,7 +7134,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', { bodyClass: 'svg-mask-editor-page' }) )
     ; __append("\n\n<section\n  class=\"mask-studio\"\n  id=\"svgMaskEditor\"\n  data-default-image=\"")
     ; __append(escapeFn( defaultImage ))
@@ -6132,6 +7256,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -6156,7 +7283,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"tool-detail-hero\">\n  <div class=\"container tool-detail-hero-grid\">\n    <div class=\"tool-detail-copy\">\n      <div class=\"category-breadcrumbs\">\n        <a href=\"/\">Home</a>\n        <span>/</span>\n        <a href=\"/tools\">Tools</a>\n        <span>/</span>\n        <span>")
     ; __append(escapeFn( toolPage.title ))
@@ -6497,6 +7630,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -6521,7 +7657,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header') )
     ; __append("\n\n<section class=\"page-header\">\n  <div class=\"container\">\n    <h1 class=\"page-title\">")
     ; __append(escapeFn( t('tools.pageTitle') ))
@@ -6609,6 +7751,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -6633,7 +7778,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', {
   bodyClass: 'tmg-page',
   pageStyles: ['/css/tshirt-generator-landing.css?v=20260913-spinner-v7']
@@ -6644,7 +7795,9 @@ title = __locals.title,
     ;  const firstModel = tshirtModels[0] || {}; 
     ; __append("\n\n<div class=\"tmg-landing\" data-tmg-carousel>\n  <section class=\"tmg-hero\" aria-labelledby=\"tmg-title\">\n    <div class=\"tmg-shell tmg-hero-grid\">\n      <div class=\"tmg-hero-copy\">\n        <p class=\"tmg-eyebrow\">Free browser T-shirt studio</p>\n        <h1 id=\"tmg-title\">Design your next<br>T-shirt in 3D.</h1>\n        <p class=\"tmg-hero-lede\">Start with a real garment fit, add your artwork, check every angle, and export a clean mockup—right in your browser.</p>\n        <div class=\"tmg-actions\">\n          <a class=\"tmg-button tmg-button-dark\" href=\"")
     ; __append(escapeFn( firstModel.href ))
-    ; __append("#design\">\n            Start with the basic tee\n            <span aria-hidden=\"true\">→</span>\n          </a>\n          <a class=\"tmg-button tmg-button-light\" href=\"/mockups/t-shirt-mockup\">Explore all fits</a>\n        </div>\n        <p class=\"tmg-note\">Free during beta <span aria-hidden=\"true\">·</span> No Photoshop required</p>\n      </div>\n\n      <div class=\"tmg-model-panel\" aria-label=\"Interactive T-shirt model carousel\">\n        <div class=\"tmg-model-stage\" aria-busy=\"true\">\n          <div class=\"tmg-model-track\">\n            ")
+    ; __append("#design\">\n            ")
+    ; __append(escapeFn( firstModel.shortTitle === 'Basic' ? 'Start with the basic tee' : 'Start with this T-shirt' ))
+    ; __append("\n            <span aria-hidden=\"true\">→</span>\n          </a>\n          <a class=\"tmg-button tmg-button-light\" href=\"/mockups/t-shirt-mockup\">Explore all fits</a>\n        </div>\n        <p class=\"tmg-note\">Free during beta <span aria-hidden=\"true\">·</span> No Photoshop required</p>\n      </div>\n\n      <div class=\"tmg-model-panel\" aria-label=\"Interactive T-shirt model carousel\">\n        <div class=\"tmg-model-stage\" aria-busy=\"true\">\n          <div class=\"tmg-model-track\">\n            ")
     ;  tshirtModels.forEach(function(model, index) { 
     ; __append("\n              <div\n                class=\"tmg-model-slide")
     ; __append(escapeFn( index === 0 ? ' is-active' : '' ))
@@ -6728,7 +7881,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n      </div>\n    </div>\n  </section>\n\n  <section class=\"tmg-final-wrap\">\n    <div class=\"tmg-shell\">\n      <div class=\"tmg-final-cta\">\n        <div>\n          <h2>Start with the fit that matches your idea.</h2>\n          <p>Open the T-shirt editor and bring your design to life.</p>\n        </div>\n        <div class=\"tmg-final-actions\">\n          <a class=\"tmg-button tmg-button-white tmg-editor-link\" href=\"")
     ; __append(escapeFn( firstModel.href ))
-    ; __append("#design\">Open T-Shirt Editor <span aria-hidden=\"true\">→</span></a>\n          <a class=\"tmg-text-link\" href=\"/mockups\">Browse Apparel Models <span aria-hidden=\"true\">→</span></a>\n        </div>\n      </div>\n    </div>\n  </section>\n</div>\n\n<script src=\"/js/tshirt-generator-landing.js?v=20260910-v5\" defer></script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n\n")
+    ; __append("#design\">Open T-Shirt Editor <span aria-hidden=\"true\">→</span></a>\n          <a class=\"tmg-text-link\" href=\"/mockups\">Browse Apparel Models <span aria-hidden=\"true\">→</span></a>\n        </div>\n      </div>\n    </div>\n  </section>\n</div>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script src=\"/js/tshirt-generator-landing.js?v=20260910-v5\" defer></script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -6796,6 +7949,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -6820,7 +7976,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) )
     ; __append("\n")
     ; 
@@ -6938,7 +8100,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260913-svg-live-mask-v11\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n<script src=\"/js/white-mockup-editor.js?v=20260914-entitlements-v13\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -7006,6 +8168,9 @@ title = __locals.title,
   inquiryFilters = __locals.inquiryFilters,
   inquiryPagination = __locals.inquiryPagination,
   inquiryStats = __locals.inquiryStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
   articles = __locals.articles,
   article = __locals.article,
   resources = __locals.resources,
@@ -7030,7 +8195,13 @@ title = __locals.title,
   workspaceStats = __locals.workspaceStats,
   currentView = __locals.currentView,
   headerEyebrow = __locals.headerEyebrow,
-  headerDetail = __locals.headerDetail;
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-library-page' }) )
     ; __append("\n")
     ; 

@@ -98,7 +98,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260914-reverse-surface-color-v43'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260914-entitlements-v44'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -221,7 +221,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260914-reverse-surface-color-v43/);
+  assert.match(template, /model-designer\.js\?v=20260914-entitlements-v44/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -408,10 +408,14 @@ test('keeps on-model mockup code, styles, and image maps behind its launch actio
   assert.match(template, /button\.addEventListener\('click', openStudio\)/);
 });
 
-test('keeps detail-page AI try-on unavailable with a coming-soon tooltip', () => {
-  assert.match(template, /id="aiTryOnBtn"[^>]*disabled[^>]*aria-disabled="true"/);
-  assert.match(template, /id="aiTryOnComingSoon" role="tooltip">Coming soon</);
-  assert.match(template, /class="feature-cta feature-cta-light"[^>]*disabled[^>]*aria-disabled="true"/);
+test('opens the current model in the AI try-on editor from detail-page actions', () => {
+  assert.match(template, /const aiTryOnPath = `\$\{modelDetailPath\}\/try-on`/);
+  assert.match(template, /id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link/);
+  assert.match(template, /class="feature-cta feature-cta-light" href="<%= aiTryOnPath %>" data-ai-try-on-link>Choose a model</);
+  assert.match(template, /syncModelTryOnLinks/);
+  assert.match(designerRuntime, /persistTryOnDesign/);
+  assert.match(designerRuntime, /clozdesign_tryon_design_v1/);
+  assert.doesNotMatch(template, /AI try-on coming soon|aiTryOnComingSoon|aiFeatureComingSoon/);
   assert.doesNotMatch(template, /data-ai-tryon-open|id="aiTryOnChooser"|\/js\/model-detail-v2\.js/);
-  assert.match(modelDetailStyles, /\.ai-coming-soon-control:hover \.ai-coming-soon-tooltip/);
+  assert.doesNotMatch(modelDetailStyles, /\.ai-coming-soon-control|\.ai-coming-soon-tooltip/);
 });

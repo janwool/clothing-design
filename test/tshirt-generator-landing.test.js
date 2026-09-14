@@ -37,6 +37,7 @@ test('preloads every real 3D model in one transparent animated carousel', () => 
   assert.match(template, /tshirtModels\.forEach[\s\S]*?class="tmg-model-viewer"[\s\S]*?src="<%= model\.modelSrc %>"/);
   assert.match(template, /loading="eager"/);
   assert.match(template, /\/vendor\/model-viewer\/model-viewer\.min\.js/);
+  assert.match(template, /ModelViewerElement\.meshoptDecoderLocation/);
   assert.match(template, /data-tmg-prev/);
   assert.match(template, /data-tmg-next/);
   assert.match(carousel, /slides\.forEach/);
@@ -50,14 +51,14 @@ test('preloads every real 3D model in one transparent animated carousel', () => 
   assert.doesNotMatch(template, /Retry interactive 3D|Load interactive 3D/);
 });
 
-test('keeps the named basic-tee CTA fixed while generic editor CTAs follow the carousel', () => {
-  assert.match(template, /class="tmg-button tmg-button-dark" href="<%= firstModel\.href %>#design">[\s\S]*?Start with the basic tee/);
+test('keeps the first-model CTA accurate while generic editor CTAs follow the carousel', () => {
+  assert.match(template, /class="tmg-button tmg-button-dark" href="<%= firstModel\.href %>#design">[\s\S]*?firstModel\.shortTitle === 'Basic'[\s\S]*?Start with this T-shirt/);
   assert.match(template, /class="tmg-button tmg-button-light" href="\/mockups\/t-shirt-mockup">Explore all fits<\/a>/);
   assert.equal((template.match(/tmg-editor-link/g) || []).length, 2);
   assert.match(carousel, /editorLinks\.forEach/);
 });
 
-test('uses the four real T-shirt model routes and matching previews', () => {
+test('uses four active T-shirt database models and their current online assets', () => {
   [
     'basic-short-sleeve-tshirt-3d-model',
     'oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit',
@@ -66,8 +67,16 @@ test('uses the four real T-shirt model routes and matching previews', () => {
   ].forEach(slug => {
     assert.match(routes, new RegExp(slug));
   });
-  assert.match(routes, /20260828-commercial-covers-v1/);
-  assert.match(routes, /shouldUseLocalModelAssets\(req\)[\s\S]*?public', 'uploads', 'glb'/);
+  assert.match(routes, /getActiveTshirtModelStarters\(req\)/);
+  assert.match(routes, /WHERE m\.status = \?[\s\S]*?category_tshirt\.slug = \?/);
+  assert.match(routes, /selectFirstMatch\(name => \/short\[- \]sleeve/);
+  assert.match(routes, /selectFirstMatch\(name => \/oversized\|drop/);
+  assert.match(routes, /selectFirstMatch\(name => \/polo/);
+  assert.match(routes, /selectFirstMatch\(name => \/long\[- \]sleeve/);
+  assert.match(routes, /selectedModels\.slice\(0, 4\)/);
+  assert.match(routes, /modelSrc: getPreviewModelFileUrl\(model, req\)/);
+  assert.match(routes, /image: model\.image_url/);
+  assert.match(routes, /\['active', 't-shirt-mockup', 't-shirt-mockup'\]/);
 });
 
 test('uses generated garment photography instead of programmatic workflow artwork', () => {

@@ -6,6 +6,9 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 DB_TYPE = "d1"
 
+[ai]
+binding = "AI"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "clothing-design"

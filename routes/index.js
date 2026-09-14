@@ -238,6 +238,172 @@ function getModelCategoryGroupBy() {
   return 'GROUP BY m.id';
 }
 
+const TSHIRT_STARTER_METADATA = {
+  'basic-short-sleeve-tshirt-3d-model': {
+    title: 'Basic short-sleeve T-shirt',
+    shortTitle: 'Basic',
+    body: 'Start with the highest-interest short-sleeve blank for chest logos, front graphics, back prints, and everyday product listings.'
+  },
+  'oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit': {
+    title: 'Oversized drop-shoulder T-shirt',
+    shortTitle: 'Oversized',
+    body: 'Use a relaxed streetwear silhouette when artwork scale, shoulder position, and garment volume matter.'
+  },
+  'short-sleeve-polo-shirt-3d-model': {
+    title: 'Short-sleeve polo shirt',
+    shortTitle: 'Polo',
+    body: 'Choose a collared model for teamwear, uniforms, embroidered logos, and smart-casual product previews.'
+  },
+  'long-sleeve-crewneck-shirt-3d-model': {
+    title: 'Long-sleeve crewneck shirt',
+    shortTitle: 'Long sleeve',
+    body: 'Plan front, back, and sleeve artwork on a long-sleeve model before creating the final product set.'
+  }
+};
+
+function tshirtStarterTitle(model) {
+  return String(model.name || 'T-shirt')
+    .replace(/\s+3D(?:\s+Garment)?\s+Model$/i, '')
+    .trim();
+}
+
+function tshirtStarterShortTitle(model, title) {
+  const normalizedTitle = String(title || '').replace(/T-?shirt/ig, 'tee').trim();
+  const words = normalizedTitle.split(/\s+/).filter(Boolean);
+  return words.slice(0, 3).join(' ') || `Tee ${model.id}`;
+}
+
+async function getActiveTshirtModelStarters(req) {
+  await ensureModelCategoryTable();
+  const models = await db.all(`
+    ${getModelCategorySelect()}
+    WHERE m.status = ?
+      AND COALESCE(m.file_url, '') != ''
+      AND COALESCE(m.image_url, '') != ''
+      AND (
+        legacy_category.slug = ?
+        OR EXISTS (
+          SELECT 1
+          FROM model_3d_categories mc_tshirt
+          JOIN categories category_tshirt ON category_tshirt.id = mc_tshirt.category_id
+          WHERE mc_tshirt.model_id = m.id
+            AND category_tshirt.resource_type = '3d-models'
+            AND category_tshirt.slug = ?
+        )
+      )
+    ${getModelCategoryGroupBy()}
+    ORDER BY
+      CASE m.slug
+        WHEN 'basic-short-sleeve-tshirt-3d-model' THEN 0
+        WHEN 'oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit' THEN 1
+        WHEN 'short-sleeve-polo-shirt-3d-model' THEN 2
+        WHEN 'long-sleeve-crewneck-shirt-3d-model' THEN 3
+        ELSE 4
+      END,
+      m.updated_at DESC,
+      m.created_at DESC,
+      m.id ASC
+  `, ['active', 't-shirt-mockup', 't-shirt-mockup']);
+
+  const normalizedModels = normalize3dModels(models);
+  const selectedModels = [];
+  const selectFirstMatch = matcher => {
+    const match = normalizedModels.find(model => !selectedModels.includes(model) && matcher(String(model.name || '')));
+    if (match) selectedModels.push(match);
+  };
+
+  selectFirstMatch(name => /short[- ]sleeve/i.test(name) && !/drop[- ]shoulder|long[- ]sleeve|polo|ruffle|placket|set/i.test(name));
+  selectFirstMatch(name => /oversized|drop[- ]shoulder/i.test(name));
+  selectFirstMatch(name => /polo/i.test(name));
+  selectFirstMatch(name => /long[- ]sleeve/i.test(name));
+  normalizedModels.forEach(model => {
+    if (selectedModels.length < 4 && !selectedModels.includes(model)) selectedModels.push(model);
+  });
+
+  return selectedModels.slice(0, 4).map(model => {
+    const metadata = TSHIRT_STARTER_METADATA[model.slug] || {};
+    const title = metadata.title || tshirtStarterTitle(model);
+    const categorySlug = model.category_slug || 't-shirt-mockup';
+    return {
+      title,
+      shortTitle: metadata.shortTitle || tshirtStarterShortTitle(model, title),
+      body: metadata.body || sanitizePublicModelDescription(model.description),
+      href: `/3d-models/${categorySlug}/${model.slug}`,
+      image: model.image_url,
+      modelSrc: getPreviewModelFileUrl(model, req)
+    };
+  });
+}
+
+function hoodieStarterTitle(model) {
+  return String(model.name || 'Hoodie')
+    .replace(/\s+3D(?:\s+Garment)?\s+Model$/i, '')
+    .trim();
+}
+
+function hoodieStarterShortTitle(title) {
+  const value = String(title || 'Hoodie');
+  if (/full[- ]zip|zip[- ]up/i.test(value)) return 'Zip-up';
+  if (/oversized|drop[- ]shoulder|relaxed/i.test(value)) return 'Oversized';
+  if (/crop/i.test(value)) return 'Cropped';
+  if (/half[- ]zip/i.test(value)) return 'Half-zip';
+  return 'Pullover';
+}
+
+async function getActiveHoodieModelStarters(req) {
+  await ensureModelCategoryTable();
+  const models = await db.all(`
+    ${getModelCategorySelect()}
+    WHERE m.status = ?
+      AND COALESCE(m.file_url, '') != ''
+      AND COALESCE(m.image_url, '') != ''
+      AND (
+        legacy_category.slug = ?
+        OR EXISTS (
+          SELECT 1
+          FROM model_3d_categories mc_hoodie
+          JOIN categories category_hoodie ON category_hoodie.id = mc_hoodie.category_id
+          WHERE mc_hoodie.model_id = m.id
+            AND category_hoodie.resource_type = '3d-models'
+            AND category_hoodie.slug = ?
+        )
+      )
+    ${getModelCategoryGroupBy()}
+    ORDER BY m.updated_at DESC, m.created_at DESC, m.id ASC
+  `, ['active', 'hoodie-mockup', 'hoodie-mockup']);
+
+  const normalizedModels = normalize3dModels(models);
+  const selectedModels = [];
+  const selectFirstMatch = matcher => {
+    const match = normalizedModels.find(model => !selectedModels.includes(model) && matcher(String(model.name || '')));
+    if (match) selectedModels.push(match);
+    return Boolean(match);
+  };
+
+  selectFirstMatch(name => /pullover|kangaroo[- ]pocket/i.test(name) && !/zip|crop|drop[- ]shoulder|relaxed|set|bag/i.test(name));
+  if (!selectFirstMatch(name => /drop[- ]shoulder|oversized/i.test(name) && !/bag|set/i.test(name))) {
+    selectFirstMatch(name => /relaxed/i.test(name) && !/bag|set/i.test(name));
+  }
+  selectFirstMatch(name => /full[- ]zip|zip[- ]up/i.test(name));
+  selectFirstMatch(name => /crop|half[- ]zip/i.test(name));
+  normalizedModels.forEach(model => {
+    if (selectedModels.length < 4 && !selectedModels.includes(model)) selectedModels.push(model);
+  });
+
+  return selectedModels.slice(0, 4).map(model => {
+    const title = hoodieStarterTitle(model);
+    const categorySlug = model.category_slug || 'hoodie-mockup';
+    return {
+      title,
+      shortTitle: hoodieStarterShortTitle(title),
+      body: sanitizePublicModelDescription(model.description),
+      href: `/3d-models/${categorySlug}/${model.slug}`,
+      image: model.image_url,
+      modelSrc: getPreviewModelFileUrl(model, req)
+    };
+  });
+}
+
 async function getActive3dCategories() {
   await ensureModelCategoryTable();
   return db.all(`
@@ -1510,11 +1676,13 @@ function buildToolStructuredData(req, toolPage) {
     }
   ];
 
-  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters?.length) {
+  if (['t-shirt-mockup-generator', 'hoodie-mockup-generator'].includes(toolPage.slug) && toolPage.modelStarters?.length) {
     structuredData.push({
       '@context': 'https://schema.org',
       '@type': 'ItemList',
-      name: 'T-shirt mockup model starting points',
+      name: toolPage.slug === 'hoodie-mockup-generator'
+        ? 'Hoodie mockup model starting points'
+        : 'T-shirt mockup model starting points',
       itemListElement: toolPage.modelStarters.map((model, index) => ({
         '@type': 'ListItem',
         position: index + 1,
@@ -2456,14 +2624,14 @@ router.get('/blog/:slug', (req, res) => {
 
 // Pricing
 router.get('/pricing', (req, res) => {
-  const description = 'ClozDesign is free during public beta. Browse 3D clothing models, customize apparel artwork, and export transparent PNG mockups in your browser.';
+  const description = 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, AI try-on credits, watermark-free exports, and image storage.';
   res.render('pricing', { 
-    title: 'Free Beta Access - ClozDesign',
+    title: 'Pricing & Plans - ClozDesign',
     metaDescription: description,
     metaImage: firstImage(req),
     structuredData: buildSimplePageStructuredData(req, {
       type: 'WebPage',
-      name: 'ClozDesign Free Beta Access',
+      name: 'ClozDesign Pricing & Plans',
       description,
       path: '/pricing',
       breadcrumbs: [
@@ -2472,12 +2640,18 @@ router.get('/pricing', (req, res) => {
       ],
       mainEntity: {
         '@type': 'OfferCatalog',
-        name: 'ClozDesign public beta access',
+        name: 'ClozDesign plans',
         itemListElement: [
-          { '@type': 'Offer', name: 'Free public beta', price: '0', priceCurrency: 'USD' }
+          { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro monthly', price: '9.90', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro yearly', price: '99', priceCurrency: 'CNY' },
+          { '@type': 'Offer', name: 'Max monthly', price: '29.90', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Max yearly', price: '299', priceCurrency: 'USD' }
         ]
       }
     }),
+    pageStyles: ['/css/pricing.css?v=20260914-v4'],
+    bodyClass: 'pricing-page',
     page: 'pricing'
   });
 });
@@ -2783,31 +2957,62 @@ router.get('/tools/:slug', async (req, res) => {
   const toolPage = getToolPage(req.params.slug);
   if (toolPage) {
     const isTshirtGenerator = req.params.slug === 't-shirt-mockup-generator';
-    const renderedToolPage = isTshirtGenerator && shouldUseLocalModelAssets(req)
-      ? {
-          ...toolPage,
-          modelStarters: (toolPage.modelStarters || []).map(model => {
-            const slug = String(model.href || '').split('/').filter(Boolean).pop();
-            const filename = `${slug}.glb`;
-            const localFile = path.join(__dirname, '..', 'public', 'uploads', 'glb', filename);
-            return fs.existsSync(localFile)
-              ? { ...model, modelSrc: `/uploads/glb/${filename}` }
-              : model;
-          })
+    let renderedToolPage = toolPage;
+    if (isTshirtGenerator) {
+      try {
+        const activeModelStarters = await getActiveTshirtModelStarters(req);
+        if (activeModelStarters.length) {
+          renderedToolPage = {
+            ...toolPage,
+            modelStarters: activeModelStarters,
+            heroModel: {
+              src: activeModelStarters[0].modelSrc,
+              alt: `${activeModelStarters[0].title} 3D model`
+            },
+            editorHref: `${activeModelStarters[0].href}#design`
+          };
         }
-      : toolPage;
+      } catch (error) {
+        console.error('Error loading active T-shirt generator models:', error);
+      }
+    }
+    const isHoodieGenerator = req.params.slug === 'hoodie-mockup-generator';
+    if (isHoodieGenerator) {
+      try {
+        const activeModelStarters = await getActiveHoodieModelStarters(req);
+        if (activeModelStarters.length) {
+          renderedToolPage = {
+            ...toolPage,
+            modelStarters: activeModelStarters,
+            heroModel: {
+              src: activeModelStarters[0].modelSrc,
+              alt: `${activeModelStarters[0].title} 3D model`
+            },
+            editorHref: `${activeModelStarters[0].href}#design`,
+            cta: {
+              ...toolPage.cta,
+              href: `${activeModelStarters[0].href}#design`
+            }
+          };
+        }
+      } catch (error) {
+        console.error('Error loading active Hoodie generator models:', error);
+      }
+    }
     const isIndexableTool = Boolean(
       TOOL_VARIANT_CONTENT[req.params.slug]
       || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
     );
     const viewName = isTshirtGenerator
       ? 'tshirt-generator-landing'
-      : 'tool-detail';
+      : isHoodieGenerator
+        ? 'hoodie-generator-landing'
+        : 'tool-detail';
     return res.render(viewName, {
       title: buildSeoTitle(toolPage.title, 'ClozDesign'),
       metaDescription: compactText(toolPage.subtitle, 160),
       metaImage: firstImage(req, [toolPage.image]),
-      structuredData: buildToolStructuredData(req, toolPage),
+      structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
       toolPage: renderedToolPage
@@ -2895,6 +3100,40 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     });
   } catch (err) {
     console.error('Error loading designer:', err);
+    res.status(500).render('404', { title: 'Error', page: '' });
+  }
+});
+
+// AI Try-on workspace - MUST be before /3d-models/:category/:slug
+router.get('/3d-models/:category/:slug/try-on', async (req, res) => {
+  try {
+    const model = await findActive3dModelBySlug(req.params.slug);
+
+    if (!model) {
+      return res.status(404).render('404', { title: 'Not Found', page: '' });
+    }
+
+    const normalizedModel = {
+      ...normalize3dModel(model),
+      description: sanitizePublicModelDescription(model.description)
+    };
+    normalizedModel.preview_file_url = getPreviewModelFileUrl(normalizedModel, req);
+    const categorySlug = normalizedModel.category_slug || normalizedModel.category || req.params.category;
+    const description = `Preview ${normalizedModel.name} on a model in the ClozDesign AI try-on workspace.`;
+
+    res.render('ai-try-on', {
+      title: `AI Try-on - ${normalizedModel.name}`,
+      metaDescription: description,
+      metaRobots: 'noindex,follow',
+      metaImage: firstImage(req, [normalizedModel.image_url]),
+      pageStyles: ['/css/ai-try-on.css?v=20260914-design-transfer-v6'],
+      bodyClass: 'ai-tryon-body',
+      page: 'designer',
+      model: normalizedModel,
+      categorySlug
+    });
+  } catch (err) {
+    console.error('Error loading AI try-on:', err);
     res.status(500).render('404', { title: 'Error', page: '' });
   }
 });

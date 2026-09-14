@@ -1,0 +1,251 @@
+<%- include('partials/header', {
+  bodyClass: 'hmg-page',
+  pageStyles: ['/css/hoodie-generator-landing.css?v=20260913-v8']
+}) %>
+
+<%
+  const fallbackHoodieHref = String(toolPage.cta && toolPage.cta.href || '/mockups/hoodie-mockup').replace(/\/edit$/, '');
+  const hoodieModels = toolPage.modelStarters && toolPage.modelStarters.length
+    ? toolPage.modelStarters
+    : [{
+        title: toolPage.heroModel && toolPage.heroModel.alt || 'Pullover hoodie',
+        shortTitle: 'Pullover',
+        href: fallbackHoodieHref,
+        image: toolPage.image,
+        modelSrc: toolPage.heroModel && toolPage.heroModel.src
+      }];
+  const firstHoodie = hoodieModels[0];
+  const workflowModels = [0, 1, 2].map(function(index) {
+    return hoodieModels[index % hoodieModels.length];
+  });
+  const useCaseLabels = ['Streetwear drops', 'Client approvals', 'Product listings'];
+  const useCaseNotes = [
+    ['Test graphics', 'Try colorways', 'Create lookbooks'],
+    ['Present concepts', 'Show multiple angles', 'Speed up sign-off'],
+    ['High-resolution exports', 'Consistent lighting', 'Ready for ecommerce']
+  ];
+%>
+
+<div class="hmg-landing" data-hmg-carousel>
+  <section class="hmg-hero" aria-labelledby="hmg-title">
+    <div class="hmg-hero-copy">
+      <p class="hmg-eyebrow">Free browser hoodie studio</p>
+      <h1 id="hmg-title">Build your hoodie<br>in 3D.</h1>
+      <p class="hmg-hero-lede">Test the fit. Place the graphic. Ship the idea.</p>
+      <div class="hmg-actions">
+        <a class="hmg-button hmg-button-primary hmg-editor-link" href="<%= firstHoodie.href %>#design">
+          Open hoodie editor <span aria-hidden="true">→</span>
+        </a>
+        <a class="hmg-button hmg-button-secondary" href="/mockups/hoodie-mockup">Explore hoodie fits</a>
+      </div>
+      <p class="hmg-note">Free during beta <span aria-hidden="true">·</span> No Photoshop required</p>
+      <div class="hmg-maker-note" aria-hidden="true">
+        <span></span>
+        <p>For creators<br>who make real things.</p>
+      </div>
+    </div>
+
+    <div class="hmg-studio" aria-label="Interactive 3D hoodie studio">
+      <div class="hmg-studio-label" aria-hidden="true">
+        <span>CLOZDESIGN</span>
+        <span>3D HOODIE STUDIO</span>
+        <span>REAL FIT. REAL DETAILS.</span>
+      </div>
+      <div class="hmg-spec-note hmg-spec-note-fit" aria-hidden="true"><span></span>GARMENT<br>PROPORTIONS</div>
+      <div class="hmg-spec-note hmg-spec-note-texture" aria-hidden="true"><span></span>TEXTURE<br>LIGHTING<br>REAL VOLUME</div>
+
+      <div class="hmg-model-stage" aria-busy="true">
+        <div class="hmg-model-track">
+          <% hoodieModels.forEach(function(model, index) { %>
+            <div
+              class="hmg-model-slide<%= index === 0 ? ' is-active' : '' %>"
+              data-hmg-slide
+              data-title="<%= model.shortTitle || model.title %>"
+              data-href="<%= model.href %>#design"
+              data-position="<%= index === 0 ? 'active' : (index === 1 ? 'next' : (index === hoodieModels.length - 1 ? 'previous' : 'hidden-next')) %>"
+              aria-hidden="<%= index === 0 ? 'false' : 'true' %>"
+            >
+              <model-viewer
+                class="hmg-model-viewer"
+                src="<%= model.modelSrc %>"
+                alt="<%= model.title %> interactive 3D preview"
+                loading="eager"
+                reveal="auto"
+                camera-controls
+                interaction-prompt="none"
+                shadow-intensity="1.35"
+                shadow-softness="0.65"
+                exposure="0.76"
+                environment-image="neutral"
+                camera-orbit="0deg 78deg 112%"
+                min-camera-orbit="auto 55deg 88%"
+                max-camera-orbit="auto 105deg 145%"
+                tabindex="<%= index === 0 ? '0' : '-1' %>"
+              ></model-viewer>
+            </div>
+          <% }); %>
+        </div>
+
+        <div class="hmg-model-loading" data-hmg-loading aria-live="polite">
+          <i aria-hidden="true"></i><strong>Loading 3D hoodie</strong>
+        </div>
+        <button class="hmg-arrow hmg-arrow-prev" type="button" data-hmg-prev aria-label="Previous hoodie model">‹</button>
+        <button class="hmg-arrow hmg-arrow-next" type="button" data-hmg-next aria-label="Next hoodie model">›</button>
+      </div>
+
+      <div class="hmg-color-controls" aria-label="Garment color">
+        <% [
+          ['#e8e7e2', 'Bone'],
+          ['#45474a', 'Charcoal'],
+          ['#687062', 'Olive'],
+          ['#172844', 'Navy']
+        ].forEach(function(color, index) { %>
+          <button
+            type="button"
+            class="hmg-color<%= index === 0 ? ' is-active' : '' %>"
+            data-hmg-color="<%= color[0] %>"
+            style="--hmg-swatch: <%= color[0] %>"
+            aria-label="Set hoodie color to <%= color[1] %>"
+          ></button>
+        <% }); %>
+      </div>
+
+      <div class="hmg-angle-controls" aria-label="Hoodie viewing angle">
+        <button type="button" class="is-active" data-hmg-orbit="0deg 78deg 112%">Front</button>
+        <button type="button" data-hmg-orbit="90deg 78deg 112%">Side</button>
+        <button type="button" data-hmg-orbit="180deg 78deg 112%">Back</button>
+      </div>
+
+      <div class="hmg-studio-footer">
+        <p><span data-hmg-current>01</span> / <%= String(hoodieModels.length).padStart(2, '0') %></p>
+        <strong data-hmg-title><%= firstHoodie.shortTitle || firstHoodie.title %></strong>
+        <span aria-hidden="true">↻&nbsp; Drag to rotate</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="hmg-proof" aria-label="Hoodie mockup benefits">
+    <div class="hmg-shell hmg-proof-grid">
+      <article><span>01</span><i></i><div><strong>Real garment fit</strong><p>Accurate volume and proportions.</p></div></article>
+      <article><span>02</span><i></i><div><strong>Design in your browser</strong><p>No software. No limits.</p></div></article>
+      <article><span>03</span><i></i><div><strong>Export clean mockups</strong><p>High-resolution, ready to share.</p></div></article>
+    </div>
+  </section>
+
+  <section class="hmg-fits" id="hoodie-fits" aria-labelledby="hmg-fits-title">
+    <div class="hmg-shell">
+      <div class="hmg-section-heading">
+        <div><p class="hmg-eyebrow">Choose your silhouette</p><h2 id="hmg-fits-title">The fit sets the tone.</h2></div>
+        <div class="hmg-section-aside">
+          <p>Different fits. Same freedom.<br>Find the silhouette that matches your vision.</p>
+          <a href="/mockups/hoodie-mockup">View all hoodie models <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="hmg-fit-grid">
+        <% hoodieModels.forEach(function(model, index) { %>
+          <a class="hmg-fit-card<%= index === 0 ? ' is-featured' : '' %>" href="<%= model.href %>">
+            <div class="hmg-fit-image"><img src="<%= model.image %>" alt="<%= model.title %>" width="640" height="640" loading="lazy" decoding="async"></div>
+            <div><span><%= String(index + 1).padStart(2, '0') %></span><strong><%= model.shortTitle || model.title %></strong><i aria-hidden="true">→</i></div>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="hmg-workflow" id="hoodie-workflow" aria-labelledby="hmg-workflow-title">
+    <div class="hmg-shell">
+      <div class="hmg-workflow-heading">
+        <div>
+          <p class="hmg-kicker"><span></span> How it works</p>
+          <h2 id="hmg-workflow-title">From blank to<br>drop-ready.</h2>
+        </div>
+        <p>Three simple stages. One professional result.<br>Everything happens in your browser.</p>
+      </div>
+      <ol class="hmg-workflow-list">
+        <li>
+          <header><span>01</span><i></i><div><strong>Choose &amp; customize</strong><p>Pick a hoodie, adjust colors, and add your design.</p></div></header>
+          <div class="hmg-workflow-visual hmg-workflow-visual-build">
+            <img src="<%= workflowModels[0].image %>" alt="<%= workflowModels[0].title %> ready for customization" width="560" height="560" loading="lazy" decoding="async">
+            <div aria-hidden="true"><span>◇</span> MODEL<br><span>◒</span> COLOR<br><span>▧</span> GRAPHICS</div>
+          </div>
+        </li>
+        <li>
+          <header><span>02</span><i></i><div><strong>Preview in 3D</strong><p>Check the fit, rotate, and inspect every detail in real time.</p></div></header>
+          <div class="hmg-workflow-visual hmg-workflow-visual-preview">
+            <img src="<%= workflowModels[1].image %>" alt="<%= workflowModels[1].title %> shown as a 3D preview" width="560" height="560" loading="lazy" decoding="async">
+            <div aria-hidden="true"><span>◇</span> REAL PROPORTIONS<br><span>☼</span> STUDIO LIGHTING<br><span>↻</span> 360° VIEW</div>
+          </div>
+        </li>
+        <li>
+          <header><span>03</span><i></i><div><strong>Export &amp; share</strong><p>Download high-resolution mockups, ready for anything.</p></div></header>
+          <div class="hmg-workflow-visual hmg-workflow-visual-export">
+            <span aria-hidden="true"></span><span aria-hidden="true"></span>
+            <img src="<%= workflowModels[2].image %>" alt="<%= workflowModels[2].title %> mockup ready to export" width="560" height="560" loading="lazy" decoding="async">
+            <div aria-hidden="true">▣&nbsp; PNG<br>▣&nbsp; JPG<br>▧&nbsp; TRANSPARENT</div>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="hmg-use-cases" id="hoodie-use-cases" aria-labelledby="hmg-use-cases-title">
+    <div class="hmg-shell">
+      <div class="hmg-section-heading">
+        <div><p class="hmg-kicker"><span></span> Use cases</p><h2 id="hmg-use-cases-title">See the drop<br>before it exists.</h2></div>
+        <p>One tool. Real results.<br>From early ideas to final launch.</p>
+      </div>
+      <div class="hmg-use-grid">
+        <% useCaseLabels.forEach(function(item, index) { %>
+          <a href="<%= hoodieModels[index % hoodieModels.length].href %>" class="hmg-use-row">
+            <div class="hmg-use-image"><img src="<%= hoodieModels[index % hoodieModels.length].image %>" alt="<%= hoodieModels[index % hoodieModels.length].title %> for <%= item.toLowerCase() %>" width="520" height="300" loading="lazy" decoding="async"></div>
+            <div class="hmg-use-copy"><span><%= String(index + 1).padStart(2, '0') %></span><div><h3><%= item %></h3><p><%= toolPage.useCaseDetails && toolPage.useCaseDetails[index] || '' %></p></div></div>
+            <ul><% useCaseNotes[index].forEach(function(note) { %><li><%= note %></li><% }); %></ul>
+            <i aria-hidden="true">→</i>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="hmg-faq" id="hoodie-faq" aria-labelledby="hmg-faq-title">
+    <div class="hmg-shell">
+      <div class="hmg-faq-heading">
+        <div><p class="hmg-eyebrow">Hoodie FAQ</p><h2 id="hmg-faq-title">Before you start.</h2></div>
+        <p>Quick answers to common questions.</p>
+      </div>
+      <div class="hmg-faq-list">
+        <% (toolPage.faq || []).slice(0, 4).forEach(function(item, index) { %>
+          <details<%= index === 0 ? ' open' : '' %>>
+            <summary><%= item.question %><span aria-hidden="true"></span></summary>
+            <p><%= item.answer %></p>
+          </details>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="hmg-final" id="hoodie-start">
+    <div class="hmg-shell hmg-final-shell">
+      <div class="hmg-final-panel">
+        <div>
+          <p class="hmg-kicker"><span></span> Make the hoodie feel real</p>
+          <h2>Start designing today.</h2>
+          <p>Bring your ideas to life with a professional 3D hoodie studio.<br>No software. No limits. Just your creativity.</p>
+        </div>
+        <div class="hmg-final-action">
+          <a class="hmg-button hmg-button-light hmg-editor-link" href="<%= firstHoodie.href %>#design">Open hoodie editor <span aria-hidden="true">→</span></a>
+          <p>Free during beta <span aria-hidden="true">·</span> No credit card required</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  window.ModelViewerElement = window.ModelViewerElement || {};
+  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
+</script>
+<script src="/js/hoodie-generator-landing.js?v=20260913-v2" defer></script>
+<script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
+
+<%- include('partials/footer', { footerVariant: 'hoodie' }) %>

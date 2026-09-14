@@ -16,6 +16,7 @@
 <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
 <% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
 <% const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; %>
+<% const aiTryOnPath = `${modelDetailPath}/try-on`; %>
 <% const heroDescription = String(model.description || 'A production-minded 3D garment base, ready for color, artwork, fabric, and fit exploration.').split(/(?<=[.!?])\s+/)[0]; %>
 
 <section class="model-detail-hero">
@@ -36,18 +37,15 @@
         <div class="model-detail-meta" aria-label="Model capabilities">
           <span class="tag tag-free">Free beta</span>
           <span class="meta-item">Editable surface</span>
-          <% if (supportsOnModelMockup) { %><span class="meta-item">AI try-on coming soon</span><% } %>
+          <span class="meta-item">AI try-on ready</span>
         </div>
         <div class="model-actions model-action-grid">
           <button class="detail-action detail-action-primary" id="designNowBtn" type="button">
             <span>Customize this model</span>
           </button>
-          <span class="ai-coming-soon-control" tabindex="0" aria-describedby="aiTryOnComingSoon">
-            <button class="detail-action" id="aiTryOnBtn" type="button" disabled aria-disabled="true">
-              <span>AI try-on</span>
-            </button>
-            <span class="ai-coming-soon-tooltip" id="aiTryOnComingSoon" role="tooltip">Coming soon</span>
-          </span>
+          <a class="detail-action" id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link>
+            <span>AI try-on</span>
+          </a>
           <% if (previewModelFileUrl) { %>
             <button class="detail-action" id="renderCurrentModelBtn" type="button">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
@@ -205,10 +203,7 @@
       <h2 id="aiTryOnFeatureTitle">See the design<br>on someone</h2>
       <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>
       <span class="ai-fitted-badge"><i></i> AI fitted</span>
-      <span class="ai-coming-soon-control ai-feature-coming-soon" tabindex="0" aria-describedby="aiFeatureComingSoon">
-        <button class="feature-cta feature-cta-light" type="button" disabled aria-disabled="true">Choose a model</button>
-        <span class="ai-coming-soon-tooltip" id="aiFeatureComingSoon" role="tooltip">Coming soon</span>
-      </span>
+      <a class="feature-cta feature-cta-light" href="<%= aiTryOnPath %>" data-ai-try-on-link>Choose a model</a>
     </div>
     <div class="ai-model-panel">
       <div class="ai-model-tabs"><span class="active">Models</span><span>Poses</span><span>Scenes</span></div>
@@ -1440,6 +1435,20 @@ window.ModelDesignerConfig = Object.freeze({
     document.getElementById('customizationInquiryBtn'),
     document.getElementById('productionFeatureBtn')
   ].filter(Boolean);
+  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];
+
+  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {
+    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';
+    aiTryOnLinks.forEach((link) => {
+      const destination = new URL(link.href, window.location.origin);
+      if (safeProjectId) destination.searchParams.set('project', safeProjectId);
+      else destination.searchParams.delete('project');
+      link.href = `${destination.pathname}${destination.search}`;
+    });
+  }
+
+  window.syncModelTryOnLinks = syncModelTryOnLinks;
+  syncModelTryOnLinks();
   let runtimePromise = null;
   let runtimeReady = false;
   const loginModal = document.getElementById('modelLoginModal');
@@ -1566,7 +1575,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260914-reverse-surface-color-v43',
+      src: '/js/model-designer.js?v=20260914-entitlements-v44',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

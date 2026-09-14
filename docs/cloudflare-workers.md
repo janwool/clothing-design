@@ -39,6 +39,19 @@ For local development, add the same names to `.env` and register
 `http://localhost:3000/auth/google/callback` on the Google OAuth client. An explicit
 `GOOGLE_REDIRECT_URI` can override the request-derived callback when needed.
 
+## AI Try-on
+
+The AI Try-on workspace uses the Cloudflare AI model `pruna/p-image-try-on` with
+the Worker AI binding named `AI`. The binding is declared in `wrangler.toml`, so
+production requests do not expose or require an API token in browser code.
+
+Local Express development calls the Cloudflare REST API and requires
+`CF_ACCOUNT_ID` plus `CF_AI_API_TOKEN` in the ignored `.env.local` file. Keeping
+the AI token separate avoids replacing the `CF_API_TOKEN` used by local D1. The token
+must have Workers AI read/run access. The Pruna model is a paid third-party model;
+the Cloudflare AI Gateway account must have balance or BYOK configured before it
+can produce an image.
+
 The database layer uses the D1 binding named `DB`. Do not rely on the D1 REST API variables for production Workers.
 
 ## Local development

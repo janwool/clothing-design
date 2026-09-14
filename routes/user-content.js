@@ -4,6 +4,13 @@ const { Buffer } = require('node:buffer');
 const db = require('../lib/db');
 const { deleteObject, uploadImageDataUrl } = require('../lib/object-storage');
 const { ensureUserContentTables } = require('../lib/user-content-db');
+const {
+  canCreateProject,
+  canStoreImage,
+  getUserEntitlements,
+  imageDataUrlBytes,
+  limitError
+} = require('../lib/user-entitlements');
 const { parseProjectRow, validateProjectPayload } = require('../lib/user-projects');
 
 const router = express.Router();
@@ -48,6 +55,11 @@ router.post('/api/user-images', requireUser, async (req, res) => {
   let uploaded;
   try {
     await ensureUserContentTables();
+    const incomingBytes = imageDataUrlBytes(req.body?.dataUrl);
+    const storageAccess = await canStoreImage(req.session.user.id, incomingBytes);
+    if (!storageAccess.allowed) {
+      return res.status(403).json(limitError('storage', storageAccess.entitlements));
+    }
     uploaded = await uploadImageDataUrl(req.body?.dataUrl, {
       keyBase: imageStorageBase(req.session.user.id, imageId, purpose),
       label: 'Uploaded image'
@@ -129,6 +141,17 @@ router.get('/api/projects', requireUser, async (req, res) => {
   }
 });
 
+router.get('/api/account/entitlements', requireUser, async (req, res) => {
+  try {
+    const entitlements = await getUserEntitlements(req.session.user.id);
+    res.set('Cache-Control', 'private, no-store');
+    return res.json({ success: true, entitlements });
+  } catch (error) {
+    console.error('Account entitlements failed:', error);
+    return res.status(500).json({ success: false, error: 'Plan allowances could not be loaded.' });
+  }
+});
+
 router.get('/api/projects/:id', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
@@ -157,6 +180,10 @@ router.post('/api/projects', requireUser, async (req, res) => {
         [project.projectType, project.name, project.sourceId, project.sourceUrl, project.previewImageUrl, project.serialized, projectId, req.session.user.id]
       );
     } else {
+      const projectAccess = await canCreateProject(req.session.user.id);
+      if (!projectAccess.allowed) {
+        return res.status(403).json(limitError('projects', projectAccess.entitlements));
+      }
       await db.run(
         `INSERT INTO design_projects (id, user_id, project_type, name, source_id, source_url, preview_image_url, design_data)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -194,6 +221,10 @@ router.post('/api/projects/:id/duplicate', requireUser, async (req, res) => {
     await ensureUserContentTables();
     const source = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
     if (!source) return res.status(404).json({ success: false, error: 'Project not found.' });
+    const projectAccess = await canCreateProject(req.session.user.id);
+    if (!projectAccess.allowed) {
+      return res.status(403).json(limitError('projects', projectAccess.entitlements));
+    }
     const projectId = randomUUID();
     const copyName = `${source.name} Copy`.slice(0, 120);
     await db.run(
@@ -281,11 +312,12 @@ const workspacePages = {
 async function renderWorkspace(req, res, pageKey = 'overview') {
   try {
     await ensureUserContentTables();
-    const [projectRows, imageRows, account] = await Promise.all([
+    const [projectRows, imageRows, account, entitlements] = await Promise.all([
       db.all('SELECT * FROM design_projects WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100', [req.session.user.id]),
       db.all(`SELECT id, url, original_name, mime_type, size_bytes, purpose, created_at
               FROM user_images WHERE user_id = ? ORDER BY created_at DESC LIMIT 100`, [req.session.user.id]),
-      db.get('SELECT id, email, name, created_at FROM users WHERE id = ?', [req.session.user.id])
+      db.get('SELECT id, email, name, created_at FROM users WHERE id = ?', [req.session.user.id]),
+      getUserEntitlements(req.session.user.id)
     ]);
     const projects = projectRows.map(row => parseProjectRow(row, false));
     const images = imageRows.map(row => ({
@@ -309,10 +341,12 @@ async function renderWorkspace(req, res, pageKey = 'overview') {
       metaDescription: pageConfig.description,
       metaRobots: 'noindex,nofollow',
       page: 'account',
-      pageStyles: ['/css/account-workspace.css?v=20260913-five-column-projects-v11'],
+      pageStyles: ['/css/account-workspace.css?v=20260914-entitlements-v12'],
       projects,
       account: account || req.session.user,
-      workspaceStats
+      workspaceStats,
+      entitlements,
+      checkoutState: req.query?.checkout === 'success' ? 'success' : ''
     });
   } catch (error) {
     console.error('Workspace page failed:', error);

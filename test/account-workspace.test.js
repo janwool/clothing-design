@@ -119,7 +119,16 @@ test('shows complete 3D project covers without hover cropping', () => {
   assert.match(styles, /\.workspace-project-image-3d \{[\s\S]*?aspect-ratio: 4 \/ 5;[\s\S]*?padding: 0;[\s\S]*?overflow: hidden;/);
   assert.match(styles, /\.workspace-project-image-3d img \{[\s\S]*?width: 100%;[\s\S]*?height: 100%;[\s\S]*?object-fit: contain;/);
   assert.match(styles, /\.workspace-project-card-3d:hover \.workspace-project-image-3d img \{ transform: none; \}/);
-  assert.match(route, /account-workspace\.css\?v=20260913-five-column-projects-v11/);
+  assert.match(route, /account-workspace\.css\?v=20260914-entitlements-v12/);
+});
+
+test('shows the signed-in user plan and live allowance usage', () => {
+  assert.match(route, /getUserEntitlements\(req\.session\.user\.id\)/);
+  assert.match(route, /router\.get\('\/api\/account\/entitlements', requireUser/);
+  assert.match(overviewView, /Current plan/);
+  assert.match(overviewView, /Try-on Credits/);
+  assert.match(overviewView, /Image storage/);
+  assert.match(styles, /\.workspace-plan-usage/);
 });
 
 test('uses the responsive ClozDesign product visual system for the workspace', () => {

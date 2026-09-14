@@ -25,6 +25,10 @@
         const requestError = new Error(result.error || 'Request failed.');
         requestError.status = response.status;
         requestError.loginUrl = result.loginUrl;
+        requestError.code = result.code;
+        requestError.resource = result.resource;
+        requestError.upgradeUrl = result.upgradeUrl;
+        requestError.entitlements = result.entitlements;
         throw requestError;
       }
       return result;

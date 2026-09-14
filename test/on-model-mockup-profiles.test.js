@@ -81,10 +81,13 @@ test('uses editable SVG garment masks for live rendering with a raster fallback'
 
 test('keeps soft mask edges inside the garment to prevent color spill', () => {
   assert.match(whiteMockupRuntime, /function maskOpacityAt\(index\)/);
-  assert.match(whiteMockupRuntime, /alpha <= 0\.14/);
-  assert.match(whiteMockupRuntime, /\(alpha - 0\.14\) \/ 0\.70/);
+  assert.match(whiteMockupRuntime, /red \* 0\.2126 \+ green \* 0\.7152 \+ blue \* 0\.0722/);
+  assert.match(whiteMockupRuntime, /state\.maskPixels\[index \+ 3\] \/ 255/);
+  assert.match(whiteMockupRuntime, /coverage <= 0\.14/);
+  assert.match(whiteMockupRuntime, /\(coverage - 0\.14\) \/ 0\.70/);
   assert.match(whiteMockupRuntime, /normalized \* normalized \* \(3 - 2 \* normalized\)/);
   assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
+  assert.doesNotMatch(whiteMockupRuntime, /const alpha = state\.maskPixels\[index\] \/ 255/);
 });
 
 test('feathers refined mask contours enough to remove raster stair steps', () => {

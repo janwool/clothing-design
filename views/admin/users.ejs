@@ -23,6 +23,7 @@
               <th>ID</th>
               <th>Username</th>
               <th>Email</th>
+              <th>Plan</th>
               <th>Created</th>
               <th>Actions</th>
             </tr>
@@ -33,6 +34,20 @@
                 <td>#<%= item.id %></td>
                 <td><%= item.name || '-' %></td>
                 <td><%= item.email %></td>
+                <td>
+                  <div class="user-plan-control" data-user-plan-control>
+                    <select aria-label="Plan for <%= item.email %>" data-user-plan>
+                      <% ['free', 'pro', 'max', 'business'].forEach(function(plan) { %>
+                        <option value="<%= plan %>" <%= item.plan === plan ? 'selected' : '' %>><%= plan.charAt(0).toUpperCase() + plan.slice(1) %></option>
+                      <% }); %>
+                    </select>
+                    <select aria-label="Billing interval for <%= item.email %>" data-user-billing <%= item.plan === 'free' || item.plan === 'business' ? 'disabled' : '' %>>
+                      <option value="monthly" <%= item.billing_interval !== 'yearly' ? 'selected' : '' %>>Monthly</option>
+                      <option value="yearly" <%= item.billing_interval === 'yearly' ? 'selected' : '' %>>Yearly</option>
+                    </select>
+                    <button class="btn btn-secondary btn-small" type="button" data-action="save-plan" data-id="<%= item.id %>">Save</button>
+                  </div>
+                </td>
                 <td><%= new Date(item.created_at).toLocaleDateString() %></td>
                 <td>
                   <div class="table-actions">
@@ -84,6 +99,36 @@ async function deleteUser(id) {
   }
 }
 
+async function saveUserPlan(id, row) {
+  const control = row.querySelector('[data-user-plan-control]');
+  const plan = control.querySelector('[data-user-plan]').value;
+  const billingInterval = control.querySelector('[data-user-billing]').value;
+  const button = control.querySelector('[data-action="save-plan"]');
+  button.disabled = true;
+  try {
+    const response = await fetch('/admin/users/' + id + '/plan', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ plan, billingInterval })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success) throw new Error(result.error || 'Plan could not be updated.');
+    button.textContent = 'Saved';
+    window.setTimeout(() => { button.textContent = 'Save'; }, 1500);
+  } catch (error) {
+    alert(error.message || 'Plan could not be updated.');
+  } finally {
+    button.disabled = false;
+  }
+}
+
+document.querySelectorAll('[data-user-plan]').forEach(select => {
+  select.addEventListener('change', () => {
+    const billing = select.closest('[data-user-plan-control]').querySelector('[data-user-billing]');
+    billing.disabled = select.value === 'free' || select.value === 'business';
+  });
+});
+
 // Event delegation for delete buttons
 document.querySelector('.data-table tbody')?.addEventListener('click', function(e) {
   const btn = e.target.closest('[data-action]');
@@ -92,6 +137,8 @@ document.querySelector('.data-table tbody')?.addEventListener('click', function(
   const action = btn.getAttribute('data-action');
   if (action === 'delete') {
     deleteUser(id);
+  } else if (action === 'save-plan') {
+    saveUserPlan(id, btn.closest('tr'));
   }
 });
 </script>

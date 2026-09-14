@@ -37,6 +37,11 @@
         <div class="stat-label">Users</div>
         <div class="stat-value"><%= counts.users %></div>
       </div>
+      <a href="/admin/projects" class="stat-card stat-card-link">
+        <div class="stat-label">User Projects</div>
+        <div class="stat-value"><%= counts.projects %></div>
+        <span class="stat-link-label">Open library →</span>
+      </a>
       <a href="/admin/inquiries" class="stat-card stat-card-link">
         <div class="stat-label">Custom Inquiries</div>
         <div class="stat-value"><%= counts.inquiries %></div>
@@ -50,9 +55,10 @@
         <h2 class="data-title">Quick Actions</h2>
       </div>
       <div style="padding: var(--spacing-xl);">
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg);">
           <a href="/admin/models-3d" class="btn btn-primary" style="justify-content: center;">Manage 3D Models</a>
           <a href="/admin/models-2d" class="btn btn-primary" style="justify-content: center;">Manage 2D Templates</a>
+          <a href="/admin/projects" class="btn btn-primary" style="justify-content: center;">View User Projects</a>
           <a href="/admin/inquiries" class="btn btn-primary" style="justify-content: center;">View Custom Inquiries</a>
         </div>
       </div>
