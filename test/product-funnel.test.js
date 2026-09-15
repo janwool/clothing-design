@@ -48,15 +48,17 @@ test('provides live trust routes linked from the footer', () => {
   assert.match(footer, /href="\/terms"/);
 });
 
-test('uses a clear primary action that applies and saves the project', () => {
-  assert.match(modelDetail, /Customize this model/);
+test('uses concise product actions that apply, render, and request production', () => {
+  assert.match(modelDetail, /Edit in 3D/);
   assert.match(modelDetail, /id="saveDesignModal"/);
   assert.doesNotMatch(modelDetail, /id="saveProjectButton"/);
   assert.doesNotMatch(modelDetail, /id="designModelMockupBtn"/);
   assert.match(designer, /saveCloudProject\(\{ closeAfterSave: true \}\)/);
   assert.match(designer, /if \(options\.closeAfterSave\) closeModal\(\)/);
   assert.match(modelDetail, /id="renderCurrentModelBtn"/);
-  assert.match(modelDetail, /Render current view/);
+  assert.match(modelDetail, /Save Image/);
+  assert.match(modelDetail, /Production/);
+  assert.match(modelDetail, /No Watermark/);
   assert.doesNotMatch(modelDetail, /id="modelRenderDialog"|id="modelRenderImage"/);
   assert.doesNotMatch(modelDetail, /Download model/);
   assert.doesNotMatch(modelDetail, /id="downloadModelBtn"/);

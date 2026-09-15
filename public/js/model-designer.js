@@ -4079,6 +4079,37 @@ window.initializeModelDesigner = () => {
   customizationRefreshSnapshots?.addEventListener('click', prepareCustomizationSnapshots);
   customizationInquiryForm?.addEventListener('submit', submitCustomizationInquiry);
 
+  async function applyQuickMaterial(materialId) {
+    const material = window.Design3DMaterials?.materials?.find((item) => item.id === materialId);
+    if (!material) throw new Error('Material preset is unavailable.');
+    await applyMaterialPreset(material);
+    return { id: material.id, name: material.name };
+  }
+
+  async function applyQuickColor(color) {
+    const normalized = normalizeHex(color);
+    await loadTextureDimensions();
+    state.fillScope = 'whole';
+    state.fillMode = 'solid';
+    if (appearanceColorStart) appearanceColorStart.value = normalized;
+    if (appearanceColorEnd) appearanceColorEnd.value = normalized;
+    const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
+    if (!paths.length) throw new Error('Garment surfaces are still loading.');
+    paths.forEach((path) => setElementColor(path, normalized));
+    renderAppearanceControls();
+    renderSelection();
+    setDesignSaveStatus('Unapplied changes', true);
+    const textureUrl = await rasterizeModelTexture();
+    state.finalTextureUrl = textureUrl;
+    state.appliedTextureUrl = textureUrl;
+    await Promise.all(getLoadedDesignViewers().map((viewerElement) => applyTextureToViewer(viewerElement, textureUrl)));
+    saveHistory();
+    return normalized;
+  }
+
+  window.applyModelQuickMaterial = applyQuickMaterial;
+  window.applyModelQuickColor = applyQuickColor;
+
   // Initialize history
   renderMaterialSwatches();
   saveHistory();

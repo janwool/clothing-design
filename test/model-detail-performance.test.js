@@ -98,7 +98,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260915-direct-events-v48'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260915-quick-style-v49'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -222,7 +222,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260915-direct-events-v48/);
+  assert.match(template, /model-designer\.js\?v=20260915-quick-style-v49/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -240,11 +240,25 @@ test('keeps the hero contact shadow behind and below the garment', () => {
   assert.match(modelDetailStyles, /\.model-product-page \.model-viewer-natural \{[^}]*z-index: 1;/);
 });
 
-test('keeps the desktop share controls inside the first viewport', () => {
+test('keeps the editorial quick-style controls inside the first viewport', () => {
   assert.match(modelDetailStyles, /\.model-product-page \.model-detail-hero \{[^}]*min-height: 100svh;/);
   assert.match(modelDetailStyles, /\.model-product-page \.model-detail-hero > \.container \{[^}]*min-height: calc\(100svh - var\(--navbar-height\) - 40px\);/);
-  assert.match(modelDetailStyles, /@media \(min-width: 821px\) and \(max-height: 700px\)/);
-  assert.match(modelDetailStyles, /\.model-product-page \.model-detail-share-section \{ margin-top: 8px; padding-top: 8px; \}/);
+  assert.match(template, /class="model-quick-style"/);
+  assert.match(template, /\['cotton-jersey', 'Cotton'/);
+  assert.match(template, /\['rib-knit', 'Jersey', '\/images\/material-previews\/jersey\.webp'/);
+  assert.match(template, /\['satin-silk', 'Satin', '\/images\/material-previews\/satin\.webp'/);
+  assert.match(template, /\['#d8c5b1', 'Warm beige'/);
+  assert.match(template, /class="quick-style-upgrade"/);
+  assert.match(modelDetailStyles, /\.model-product-page \.model-quick-style \{[^}]*grid-template-columns: minmax\(0, 1fr\) 220px;/s);
+  assert.match(modelDetailStyles, /\.model-product-page \.quick-fabric-menu \{[^}]*grid-template-columns: repeat\(3, minmax\(0, 1fr\)\);/s);
+});
+
+test('applies hero material and color choices to the live 3D model', () => {
+  assert.match(template, /window\.applyModelQuickMaterial/);
+  assert.match(template, /window\.applyModelQuickColor/);
+  assert.match(designerRuntime, /window\.applyModelQuickMaterial = applyQuickMaterial/);
+  assert.match(designerRuntime, /window\.applyModelQuickColor = applyQuickColor/);
+  assert.match(designerRuntime, /await Promise\.all\(getLoadedDesignViewers\(\)\.map\(\(viewerElement\) => applyTextureToViewer\(viewerElement, textureUrl\)\)\)/);
 });
 
 test('uses the selected hero background without decorative vertical grid lines', () => {
@@ -412,7 +426,6 @@ test('keeps on-model mockup code, styles, and image maps behind its launch actio
 test('keeps AI try-on entry points behind the disabled-by-default feature flag', () => {
   assert.match(template, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
   assert.match(template, /const aiTryOnPath = `\$\{modelDetailPath\}\/try-on`/);
-  assert.match(template, /<% if \(aiTryOnAvailable\) \{ %><a class="detail-action" id="aiTryOnBtn"/);
   assert.match(template, /<% if \(aiTryOnAvailable && supportsOnModelMockup && tryOnModels\.length\) \{ %>/);
   assert.match(template, /<h3>Render<\/h3><p>Create a studio-quality product image/);
   assert.match(template, /syncModelTryOnLinks/);

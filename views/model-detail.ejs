@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260915-remove-watermark-v32']
+  pageStyles: ['/css/model-detail-v2.css?v=20260916-material-previews-v34']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -18,7 +18,6 @@
 <% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
 <% const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; %>
 <% const aiTryOnPath = `${modelDetailPath}/try-on`; %>
-<% const heroDescription = String(model.description || 'A production-minded 3D garment base, ready for color, artwork, fabric, and fit exploration.').split(/(?<=[.!?])\s+/)[0]; %>
 
 <section class="model-detail-hero">
   <div class="container">
@@ -31,53 +30,29 @@
       <div class="model-info-section" role="region" aria-label="Model overview">
         <span class="model-product-kicker">Digital atelier / <%= modelCategoryName %></span>
         <h1 class="model-detail-title"><%= modelDisplayName %></h1>
-        <div class="model-description model-product-description">
-          <h2>Description</h2>
-          <p><%= heroDescription %></p>
-        </div>
         <div class="model-detail-meta" aria-label="Model capabilities">
-          <span class="tag tag-free">Free beta</span>
-          <span class="meta-item">Editable surface</span>
-          <% if (aiTryOnAvailable) { %><span class="meta-item">AI try-on ready</span><% } %>
+          <span class="tag tag-free">Free 3D model</span>
         </div>
         <div class="model-actions model-action-grid">
           <button class="detail-action detail-action-primary" id="designNowBtn" type="button">
-            <span>Customize this model</span>
+            <span>Edit in 3D</span>
+            <svg class="detail-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
           </button>
-          <% if (aiTryOnAvailable) { %><a class="detail-action" id="aiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link>
-            <span>AI try-on</span>
-          </a><% } %>
           <% if (previewModelFileUrl) { %>
             <button class="detail-action" id="renderCurrentModelBtn" type="button">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
-              <span>Render current view</span>
+              <span>Save Image</span>
             </button>
           <% } %>
           <button class="detail-action" id="customizationInquiryBtn" type="button">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20V8l4-3v4l5-4v4l7-4v15H4Z"/><path d="M8 14h2m3 0h2m3 0h2"/></svg>
-            <span>Production customization</span>
+            <span>Production</span>
           </button>
-          <a
-            class="detail-action detail-action-upgrade"
-            id="removeWatermarkBtn"
-            href="/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=<%= encodeURIComponent(model.slug) %>"
-            data-analytics-event="remove_watermark_upgrade_click"
-            data-analytics-item="Watermark-free exports"
-            data-analytics-category="upgrade"
-            data-id="<%= model.slug %>"
-          >
-            <svg class="detail-action-upgrade-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 9.8 8.8 4 11l5.8 2.2L12 19l2.2-5.8L20 11l-5.8-2.2L12 3Z"/><path d="m18.5 3 .7 1.8L21 5.5l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg>
-            <span><strong>Remove watermark</strong><small>Compare Pro &amp; Max plans</small></span>
-            <svg class="detail-action-upgrade-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
-          </a>
         </div>
-        <p class="model-action-note">Free exports include a watermark · Pro and Max remove it</p>
-        <div class="model-detail-share-section model-hero-share" data-model-share-mount aria-label="Share this 3D model"></div>
         <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
       </div>
 
       <div class="model-viewer-section">
-        <div class="viewer-stage-label"><span>Live garment</span><i></i><span>Drag to rotate</span></div>
         <div class="model-3d-viewer<%= previewModelFileUrl ? ' is-loading' : '' %>" id="model3dViewer" aria-busy="<%= previewModelFileUrl ? 'true' : 'false' %>">
           <% if (previewModelFileUrl) { %>
             <model-viewer 
@@ -112,45 +87,71 @@
             </div>
           <% } %>
         </div>
-        <div class="model-viewer-controls" aria-label="3D garment controls">
-          <div class="viewer-gesture" aria-hidden="true">
-            <span>Drag</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8.7 11.2V7.6a1.35 1.35 0 0 1 2.7 0v2.7-4.15a1.35 1.35 0 0 1 2.7 0v4.15-3.1a1.35 1.35 0 0 1 2.7 0v3.55-1.9a1.35 1.35 0 0 1 2.7 0v5.3c0 4.25-2.5 6.35-6.1 6.35h-.8c-2.5 0-4.2-1.2-5.55-3.05l-2.3-3.1a1.42 1.42 0 0 1 2.2-1.8l1.75 1.75Z"/></svg>
-          </div>
-          <button class="viewer-utility-control" id="rotateBtn" type="button" aria-pressed="false">
-            <span>Rotate</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19.5 8.2A8 8 0 1 0 20 15"/><path d="M19.5 3.8v4.4h-4.4"/></svg>
-          </button>
-          <button class="viewer-utility-control" id="zoomBtn" type="button" aria-pressed="false">
-            <span>Zoom</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
-          </button>
-          <button class="viewer-utility-control" id="backgroundBtn" type="button" aria-expanded="false" aria-controls="heroBackgroundPopover">
-            <span>Background</span>
-            <i class="background-control-preview" aria-hidden="true"></i>
-          </button>
+        <div class="viewer-explore-hint" aria-hidden="true">
+          <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 7C3.5 9 2 11 2 12.5 2 15 7.8 18 18 18s16-3 16-5.5c0-1.6-1.7-3.7-5.5-5.7"/><path d="m7.5 3-1 4.5L11 9M28.5 3l1 4.5L25 9"/></svg>
+          <span>Drag to explore 360°</span>
         </div>
-        <div class="hero-background-popover" id="heroBackgroundPopover" role="dialog" aria-label="Set hero background" hidden>
-          <div class="hero-background-heading"><span>Scene background</span><strong>Color / Gradient</strong></div>
-          <div class="hero-background-presets" aria-label="Background presets">
-            <button type="button" class="active" data-hero-background="#f5f3ef" style="--swatch:#f5f3ef" aria-label="Ivory"></button>
-            <button type="button" data-hero-background="#ffffff" style="--swatch:#ffffff" aria-label="White"></button>
-            <button type="button" data-hero-background="#e6ddd0" style="--swatch:#e6ddd0" aria-label="Warm sand"></button>
-            <button type="button" data-hero-background="#dfe7e8" style="--swatch:#dfe7e8" aria-label="Cool mist"></button>
-            <button type="button" data-hero-background="linear-gradient(135deg, #f8eee1 0%, #dbc4ae 100%)" style="--swatch:linear-gradient(135deg,#f8eee1,#dbc4ae)" aria-label="Champagne gradient"></button>
-            <button type="button" data-hero-background="linear-gradient(135deg, #eef3f6 0%, #ccd5df 100%)" style="--swatch:linear-gradient(135deg,#eef3f6,#ccd5df)" aria-label="Sky gradient"></button>
-            <button type="button" data-hero-background="linear-gradient(135deg, #f6e5e0 0%, #dfc6bc 100%)" style="--swatch:linear-gradient(135deg,#f6e5e0,#dfc6bc)" aria-label="Blush gradient"></button>
-            <button type="button" data-hero-background="linear-gradient(135deg, #edf1e7 0%, #cbd7c5 100%)" style="--swatch:linear-gradient(135deg,#edf1e7,#cbd7c5)" aria-label="Sage gradient"></button>
-          </div>
-          <div class="hero-gradient-editor">
-            <div class="hero-gradient-colors">
-              <label><span>From</span><input id="heroGradientFrom" type="color" value="#f8eee1"></label>
-              <label><span>To</span><input id="heroGradientTo" type="color" value="#dbc4ae"></label>
+        <div class="model-quick-style" aria-label="Quick garment styling">
+          <div class="quick-style-shelf">
+            <div class="quick-style-fabric">
+              <button class="quick-style-fabric-toggle" id="quickFabricToggle" type="button" aria-expanded="false" aria-controls="quickFabricMenu">
+                <span class="quick-style-label">Fabric</span>
+                <span class="quick-style-value"><i id="quickFabricPreview" aria-hidden="true"></i><strong id="quickFabricName">Cotton</strong><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="m2.5 4.5 3.5 3 3.5-3"/></svg></span>
+              </button>
+              <div class="quick-fabric-menu" id="quickFabricMenu" hidden>
+                <% [
+                  ['cotton-jersey', 'Cotton', '/images/material-previews/cotton.webp'],
+                  ['rib-knit', 'Jersey', '/images/material-previews/jersey.webp'],
+                  ['linen', 'Linen', '/images/material-previews/linen.webp'],
+                  ['fleece', 'Fleece', '/images/material-previews/fleece.webp'],
+                  ['denim', 'Denim', '/images/material-previews/denim.webp'],
+                  ['satin-silk', 'Satin', '/images/material-previews/satin.webp']
+                ].forEach(function(material, index) { %>
+                  <button type="button" class="<%= index === 0 ? 'active' : '' %>" data-quick-material="<%= material[0] %>" data-material-name="<%= material[1] %>" data-material-preview="<%= material[2] %>" aria-pressed="<%= index === 0 ? 'true' : 'false' %>">
+                    <i style="--material-preview:url('<%= material[2] %>')" aria-hidden="true"></i><span><%= material[1] %></span>
+                  </button>
+                <% }); %>
+              </div>
             </div>
-            <label class="hero-gradient-angle"><span>Angle <output id="heroGradientAngleValue">135°</output></span><input id="heroGradientAngle" type="range" min="0" max="360" step="15" value="135"></label>
-            <button type="button" id="applyHeroGradient">Apply custom gradient</button>
+            <div class="quick-style-control quick-style-color" role="group" aria-label="Garment color">
+              <span class="quick-style-label">Color</span>
+              <div class="quick-color-swatches">
+                <% [
+                  ['#d8c5b1', 'Warm beige'],
+                  ['#f5f4ef', 'Ivory'],
+                  ['#c9cbca', 'Silver gray'],
+                  ['#252625', 'Black'],
+                  ['#667054', 'Olive']
+                ].forEach(function(color, index) { %>
+                  <button type="button" class="<%= index === 0 ? 'active' : '' %>" data-quick-color="<%= color[0] %>" style="--quick-color:<%= color[0] %>" aria-label="<%= color[1] %>" aria-pressed="<%= index === 0 ? 'true' : 'false' %>"></button>
+                <% }); %>
+              </div>
+            </div>
+            <div class="quick-style-control quick-style-background" role="group" aria-label="Scene background">
+              <span class="quick-style-label">Background</span>
+              <div class="quick-background-swatches">
+                <button type="button" class="active" data-hero-background="#f5f3ef" style="--swatch:#f5f3ef" aria-label="Warm studio" aria-pressed="true"></button>
+                <button type="button" data-hero-background="#ffffff" style="--swatch:#ffffff" aria-label="White studio" aria-pressed="false"></button>
+                <button type="button" data-hero-background="#d8d9d7" style="--swatch:#d8d9d7" aria-label="Soft gray" aria-pressed="false"></button>
+                <button type="button" data-hero-background="#a8aaa8" style="--swatch:#a8aaa8" aria-label="Slate gray" aria-pressed="false"></button>
+              </div>
+            </div>
           </div>
+          <a
+            class="quick-style-upgrade"
+            id="removeWatermarkBtn"
+            href="/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=<%= encodeURIComponent(model.slug) %>"
+            data-analytics-event="remove_watermark_upgrade_click"
+            data-analytics-item="Watermark-free exports"
+            data-analytics-category="upgrade"
+            data-id="<%= model.slug %>"
+          >
+            <svg class="detail-action-upgrade-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 9.8 8.8 4 11l5.8 2.2L12 19l2.2-5.8L20 11l-5.8-2.2L12 3Z"/><path d="m18.5 3 .7 1.8L21 5.5l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg>
+            <span><strong>No Watermark</strong><small>Pro &amp; Max</small></span>
+            <svg class="detail-action-upgrade-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
+          </a>
         </div>
+        <button class="viewer-internal-control" id="rotateBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Rotate</button>
         <button class="viewer-internal-control" id="fabricMotionBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Fabric Motion</button>
       </div>
     </div>
@@ -1183,7 +1184,11 @@ function setHeroBackground(value, activePreset = null) {
   if (!heroSection || !value) return;
   heroSection.style.setProperty('--hero-background', value);
   backgroundBtn?.style.setProperty('--control-background', value);
-  heroBackgroundPresets.forEach((button) => button.classList.toggle('active', button === activePreset));
+  heroBackgroundPresets.forEach((button) => {
+    const isActive = button === activePreset;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
 }
 
 function customHeroGradient() {
@@ -1604,7 +1609,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260915-direct-events-v48',
+      src: '/js/model-designer.js?v=20260915-quick-style-v49',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1620,12 +1625,86 @@ window.ModelDesignerConfig = Object.freeze({
       }
       window.initializeModelDesigner();
       runtimeReady = true;
+      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));
     }).catch((error) => {
       runtimePromise = null;
       throw error;
     });
     return runtimePromise;
   }
+
+  const quickFabricToggle = document.getElementById('quickFabricToggle');
+  const quickFabricMenu = document.getElementById('quickFabricMenu');
+  const quickFabricName = document.getElementById('quickFabricName');
+  const quickFabricPreview = document.getElementById('quickFabricPreview');
+  const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];
+  const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];
+
+  function closeQuickFabricMenu({ restoreFocus = false } = {}) {
+    if (!quickFabricMenu || quickFabricMenu.hidden) return;
+    quickFabricMenu.hidden = true;
+    quickFabricToggle?.setAttribute('aria-expanded', 'false');
+    if (restoreFocus) quickFabricToggle?.focus({ preventScroll: true });
+  }
+
+  quickFabricToggle?.addEventListener('click', () => {
+    const shouldOpen = quickFabricMenu?.hidden;
+    if (!quickFabricMenu) return;
+    quickFabricMenu.hidden = !shouldOpen;
+    quickFabricToggle.setAttribute('aria-expanded', String(shouldOpen));
+    if (shouldOpen) quickFabricMenu.querySelector('button')?.focus({ preventScroll: true });
+  });
+
+  quickMaterialButtons.forEach((button) => button.addEventListener('click', async () => {
+    if (button.getAttribute('aria-busy') === 'true') return;
+    button.setAttribute('aria-busy', 'true');
+    try {
+      await loadModelDesignerRuntime();
+      await window.applyModelQuickMaterial?.(button.dataset.quickMaterial);
+      quickMaterialButtons.forEach((item) => {
+        const isActive = item === button;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', String(isActive));
+      });
+      if (quickFabricName) quickFabricName.textContent = button.dataset.materialName || 'Fabric';
+      if (quickFabricPreview) quickFabricPreview.style.backgroundImage = `url("${button.dataset.materialPreview || ''}")`;
+      closeQuickFabricMenu({ restoreFocus: true });
+    } catch (error) {
+      console.error('Failed to apply quick material:', error);
+    } finally {
+      button.removeAttribute('aria-busy');
+    }
+  }));
+
+  quickColorButtons.forEach((button) => button.addEventListener('click', async () => {
+    if (button.getAttribute('aria-busy') === 'true') return;
+    button.setAttribute('aria-busy', 'true');
+    try {
+      await loadModelDesignerRuntime();
+      await window.applyModelQuickColor?.(button.dataset.quickColor);
+      quickColorButtons.forEach((item) => {
+        const isActive = item === button;
+        item.classList.toggle('active', isActive);
+        item.setAttribute('aria-pressed', String(isActive));
+      });
+    } catch (error) {
+      console.error('Failed to apply quick color:', error);
+    } finally {
+      button.removeAttribute('aria-busy');
+    }
+  }));
+
+  document.addEventListener('pointerdown', (event) => {
+    if (quickFabricMenu?.hidden || quickFabricMenu?.contains(event.target) || quickFabricToggle?.contains(event.target)) return;
+    closeQuickFabricMenu();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && quickFabricMenu && !quickFabricMenu.hidden) {
+      event.preventDefault();
+      closeQuickFabricMenu({ restoreFocus: true });
+    }
+  });
 
   async function handleDesignerEntry(event) {
     const entryId = event.currentTarget.id;

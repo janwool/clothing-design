@@ -3281,7 +3281,7 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       metaImage: modelDetailContent.primaryImage,
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
-      pageStyles: ['/css/model-detail-v2.css?v=20260915-remove-watermark-v32'],
+      pageStyles: ['/css/model-detail-v2.css?v=20260916-material-previews-v34'],
       model: normalizedModel,
       modelDetailContent,
       onModelMockupProfile,
