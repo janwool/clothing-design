@@ -2061,7 +2061,7 @@ window.initializeModelDesigner = () => {
       const filename = `${modelDesignerConfig.modelSlug || 'designed-3d-model'}-render.png`;
       downloadRenderedImage(renderUrl, filename);
       setRenderStatus('Render downloaded.');
-      window.trackEvent?.('design_render', {
+      window.trackEvent?.('designer_current_view_render_download', {
         render_format: 'png',
         render_type: 'current_3d_view',
         item_id: modelDesignerConfig.modelSlug || '',
@@ -2222,7 +2222,7 @@ window.initializeModelDesigner = () => {
       customizationInquiryForm.hidden = true;
       customizationInquirySuccess.hidden = false;
       customizationInquirySuccess.querySelector('.btn')?.focus({ preventScroll: true });
-      window.trackEvent?.('generate_lead', {
+      window.trackEvent?.('designer_customization_inquiry_submit', {
         lead_type: 'customization_inquiry',
         item_id: modelDesignerConfig.modelSlug || '',
         item_name: modelDesignerConfig.modelName || ''
@@ -3390,7 +3390,9 @@ window.initializeModelDesigner = () => {
       imageAssetTrack?.querySelectorAll('.image-asset-card').forEach((card) => card.classList.remove('active'));
       button?.classList.add('active');
       importArtworkDataUrl(dataUrl);
-      window.trackEvent?.('upload_artwork', {
+      window.trackEvent?.(button?.classList.contains('is-uploaded')
+        ? 'designer_artwork_upload_select'
+        : 'designer_artwork_preset_select', {
         interaction_type: button?.classList.contains('is-uploaded') ? 'editor_asset_upload' : 'editor_asset_preset',
         item_id: modelDesignerConfig.modelSlug || ''
       });

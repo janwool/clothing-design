@@ -36,14 +36,11 @@ function trackedName(sourceEvent) {
   return calls[0];
 }
 
-test('keeps conversion and recommended event names stable', () => {
-  assert.equal(trackedName('generate_lead')[1], 'generate_lead');
-  assert.equal(trackedName('view_item_list')[1], 'view_item_list');
-  assert.equal(trackedName('select_item')[1], 'select_item');
-  assert.equal(trackedName('begin_checkout')[1], 'begin_checkout');
-  assert.equal(trackedName('design_export')[1], 'design_export');
-  assert.equal(trackedName('sign_up')[1], 'sign_up');
-  assert.equal(trackedName('share')[1], 'share');
+test('uses the functional event name directly without taxonomy remapping', () => {
+  assert.equal(trackedName('pricing_pro_checkout_begin')[1], 'pricing_pro_checkout_begin');
+  assert.equal(trackedName('pricing_max_checkout_begin')[1], 'pricing_max_checkout_begin');
+  assert.equal(trackedName('designer_current_view_render_download')[1], 'designer_current_view_render_download');
+  assert.equal(trackedName('model_detail_fabric_motion_enable')[1], 'model_detail_fabric_motion_enable');
 });
 
 test('tracks authentication method, return target, and redirect result', () => {
@@ -55,16 +52,32 @@ test('tracks authentication method, return target, and redirect result', () => {
   assert.match(analyticsScript, /auth_redirect_status:[\s\S]*?'matched'[\s\S]*?: 'unexpected'/);
 });
 
-test('maps legacy high-cardinality event names into a fixed taxonomy', () => {
-  assert.equal(trackedName('home_model_classic_crew_neck_tshirt_select')[1], 'select_content');
-  assert.equal(trackedName('designer_designnowbtn_start')[1], 'begin_design');
-  assert.equal(trackedName('content_share')[1], 'share');
-  assert.equal(trackedName('model_detail_artwork_file_selected')[1], 'upload_artwork');
-  assert.equal(trackedName('home_faq_17_toggle')[1], 'faq_toggle');
+test('gives white mockup library and detail pages their own page event surfaces', () => {
+  assert.match(analyticsScript, /path === '\/white-mockups'\) return 'white_mockups_library'/);
+  assert.match(analyticsScript, /path\.startsWith\('\/white-mockups\/'\)\) return 'white_mockup_detail'/);
 });
 
-test('does not turn unknown UI labels into new GA4 event names', () => {
+test('keeps distinct source functions as distinct GA4 event names', () => {
+  assert.notEqual(
+    trackedName('home_model_classic_crew_neck_tshirt_select')[1],
+    trackedName('home_model_oversized_tshirt_select')[1]
+  );
+  assert.notEqual(
+    trackedName('pricing_billing_monthly_click')[1],
+    trackedName('pricing_billing_yearly_click')[1]
+  );
+});
+
+test('sanitizes direct names and never falls back to a shared event name', () => {
   const call = trackedName('cotton_jersey_fine_okkatz');
-  assert.equal(call[1], 'ui_interaction');
-  assert.equal(call[2].source_event, 'cotton_jersey_fine_okkatz');
+  assert.equal(call[1], 'cotton_jersey_fine_okkatz');
+  assert.equal(call[2].source_event, undefined);
+});
+
+test('keeps long direct event names unique within the GA4 40-character limit', () => {
+  const first = trackedName('home_model_extra_long_classic_crew_neck_tshirt_front_select')[1];
+  const second = trackedName('home_model_extra_long_classic_crew_neck_tshirt_back_select')[1];
+  assert.ok(first.length <= 40);
+  assert.ok(second.length <= 40);
+  assert.notEqual(first, second);
 });

@@ -391,7 +391,7 @@
     document.body.style.overflow = 'hidden';
     closeButton.focus({ preventScroll: true });
     ensureAssets();
-    window.trackEvent?.('begin_design', {
+    window.trackEvent?.('on_model_mockup_open', {
       design_entry: 'on_model_mockup',
       item_id: window.location.pathname
     });
@@ -425,7 +425,7 @@
       link.remove();
       setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
       setStatus(`Mockup downloaded as a ${canvas.width} × ${canvas.height} PNG.`, 'ready');
-      window.trackEvent?.('design_export', {
+      window.trackEvent?.('on_model_mockup_png_download', {
         export_format: 'png',
         export_type: 'on_model_mockup',
         item_id: window.location.pathname

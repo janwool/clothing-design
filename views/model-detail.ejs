@@ -1391,7 +1391,9 @@ if (fabricMotionBtn && viewer) {
     if (!readyViewer) return;
     fabricMotionEnabled = !fabricMotionEnabled;
     setFabricMotionState(readyViewer, fabricMotionEnabled);
-    window.trackEvent?.('tool_interaction', {
+    window.trackEvent?.(fabricMotionEnabled
+      ? 'model_detail_fabric_motion_enable'
+      : 'model_detail_fabric_motion_disable', {
       interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',
       item_id: <%- JSON.stringify(model.slug || '') %>
     });
@@ -1602,7 +1604,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260915-commercial-render-v47',
+      src: '/js/model-designer.js?v=20260915-direct-events-v48',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1733,7 +1735,7 @@ window.ModelDesignerConfig = Object.freeze({
       if (window.ModelMockupStudio) return Promise.resolve();
       return new Promise((resolve, reject) => {
         const script = document.createElement('script');
-        script.src = '/js/on-model-mockup.js?v=20260913-svg-live-mask-v2';
+        script.src = '/js/on-model-mockup.js?v=20260915-direct-events-v3';
         script.dataset.onModelStudio = 'true';
         script.addEventListener('load', resolve, { once: true });
         script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });

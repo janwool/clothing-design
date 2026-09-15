@@ -58,6 +58,11 @@ async function ensureModel3dCategoryTable() {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (model_id, category_id)
   )`);
+  await db.run(`CREATE TABLE IF NOT EXISTS model_3d_slug_redirects (
+    old_slug TEXT PRIMARY KEY,
+    model_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )`);
 }
 
 async function getCategoriesByIds(categoryIds) {
@@ -741,8 +746,15 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
       return res.json({ success: false, error: 'Please select at least one active 3D category.' });
     }
 
+    await ensureModel3dCategoryTable();
+    const existingModel = await db.get('SELECT slug FROM models_3d WHERE id = ?', [req.params.id]);
+    if (!existingModel) {
+      return res.status(404).json({ success: false, error: '3D model not found.' });
+    }
+    const nextSlug = generateSlug(slug || name, `model-${req.params.id}`);
+
     updates.push('name = ?'); params.push(name);
-    updates.push('slug = ?'); params.push(generateSlug(slug || name, `model-${req.params.id}`));
+    updates.push('slug = ?'); params.push(nextSlug);
     updates.push('category = ?'); params.push(primaryCategory.name);
     updates.push('description = ?'); params.push(description);
     updates.push('tags = ?'); params.push(tags);
@@ -767,6 +779,14 @@ router.put('/models-3d/:id', requireAuth, async (req, res) => {
       'UPDATE models_3d SET ' + updates.join(', ') + ', updated_at = CURRENT_TIMESTAMP WHERE id = ?',
       params
     );
+    if (existingModel.slug && existingModel.slug !== nextSlug) {
+      await db.run(
+        `INSERT INTO model_3d_slug_redirects (old_slug, model_id)
+         VALUES (?, ?)
+         ON CONFLICT(old_slug) DO UPDATE SET model_id = excluded.model_id`,
+        [existingModel.slug, req.params.id]
+      );
+    }
     await syncModel3dCategories(req.params.id, selectedCategories.map(item => item.id));
     res.json({ success: true });
   } catch (err) {

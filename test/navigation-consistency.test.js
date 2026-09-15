@@ -11,7 +11,7 @@ const refreshStyles = fs.readFileSync(path.join(root, 'public', 'css', 'product-
 const detailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'model-detail-v2.css'), 'utf8');
 
 test('uses one navigation treatment across standard pages', () => {
-  assert.match(header, /product-refresh\.css\?v=20260913-navbar-type-v9/);
+  assert.match(header, /product-refresh\.css\?v=20260915-navbar-type-v10/);
   assert.match(header, /style\.css\?v=20260914-texture-watermark-v18/);
   assert.match(routes, /model-detail-v2\.css\?v=20260915-remove-watermark-v32/);
   assert.match(styles, /--navbar-height: 76px/);
@@ -19,6 +19,7 @@ test('uses one navigation treatment across standard pages', () => {
   assert.match(refreshStyles, /\.navbar-container \{[^}]*max-width: 1320px;/s);
   assert.match(refreshStyles, /\.navbar \.navbar-actions > \.btn \{[^}]*min-height: 48px;/s);
   assert.match(refreshStyles, /\.navbar-link,[\s\S]*?\.user-toggle \{[^}]*font-size: 16px;/s);
+  assert.match(refreshStyles, /\.navbar-link,[\s\S]*?\.user-toggle \{[^}]*font-weight: 500;/s);
   assert.match(refreshStyles, /\.navbar \.navbar-actions > \.btn \{[^}]*font-size: 16px;/s);
   assert.match(refreshStyles, /\.navbar-menu > \.nav-link::after/);
   assert.doesNotMatch(refreshStyles, /\.category-catalog-page \.navbar(?:\s|\{|\.)/);

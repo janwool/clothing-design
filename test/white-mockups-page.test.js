@@ -46,6 +46,19 @@ test('keeps technical maps internal and uses direct canvas transforms', () => {
   assert.match(detailEditor, /canvas\.toBlob/);
 });
 
+test('tracks the white mockup detail funnel with dedicated event names', () => {
+  assert.match(detailEditor, /white_mockup_editor_ready/);
+  assert.match(detailEditor, /white_mockup_artwork_\$\{source\}_select/);
+  assert.match(detailEditor, /white_mockup_artwork_\$\{completedInteraction\.mode\}_complete/);
+  assert.match(detailEditor, /white_mockup_bg_\$\{button\.dataset\.label\}_select/);
+  assert.match(detailEditor, /white_mockup_color_\$\{button\.dataset\.label\}_select/);
+  assert.match(detailEditor, /white_mockup_project_\$\{saveMode\}_success/);
+  assert.match(detailEditor, /white_mockup_png_download_success/);
+  assert.match(detailView, /id="whiteMockupUploadZone" data-analytics-managed="true"/);
+  assert.match(detailView, /id="whiteMockupSave" data-analytics-managed="true"/);
+  assert.match(detailView, /id="whiteMockupDownload" data-analytics-managed="true"/);
+});
+
 test('offers garment colorways without flattening the mockup shading', () => {
   assert.match(detailView, /Garment color/);
   assert.match(detailView, /data-garment-color="#a8493f"/);
@@ -70,7 +83,7 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
   assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260907-user-projects-v8/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260915-gray-white-watermark-v24/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260915-white-detail-events-v26/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);

@@ -86,9 +86,8 @@
         : 'Flexible monthly billing. Change plans anytime.';
     }
 
-    if (trackChange && previousBilling !== billing) {
-      trackPricing('ui_interaction', {
-        interaction_type: 'pricing_billing_change',
+    if (trackChange) {
+      trackPricing(`pricing_billing_${billing}_click`, {
         billing_interval: billing,
         previous_billing_interval: previousBilling
       });
@@ -102,7 +101,7 @@
   async function startCheckout(link, source = 'pricing_cta') {
     const selected = selectedBilling();
     const checkoutEvent = planEvent(link.dataset.plan, selected);
-    trackPricing('begin_checkout', { ...checkoutEvent, checkout_source: source });
+    trackPricing(`pricing_${link.dataset.plan}_checkout_begin`, { ...checkoutEvent, checkout_source: source });
     const originalText = link.textContent;
     link.classList.add('is-loading');
     link.setAttribute('aria-disabled', 'true');
@@ -116,7 +115,7 @@
       });
       const payload = await response.json().catch(() => ({}));
       if (response.status === 401 && payload.loginUrl) {
-        trackPricing('login_start', {
+        trackPricing(`pricing_${link.dataset.plan}_checkout_login_required`, {
           method: 'unknown',
           login_reason: 'checkout_session_expired',
           plan_name: link.dataset.plan,
@@ -126,16 +125,14 @@
         return;
       }
       if (!response.ok || !payload.checkoutUrl) throw new Error(payload.error || 'Checkout could not be started.');
-      trackPricing('ui_interaction', {
-        interaction_type: 'checkout_redirect',
+      trackPricing(`pricing_${link.dataset.plan}_checkout_redirect`, {
         checkout_provider: 'creem',
         plan_name: link.dataset.plan,
         billing_interval: selected
       });
       window.location.assign(payload.checkoutUrl);
     } catch (error) {
-      trackPricing('ui_interaction', {
-        interaction_type: 'checkout_error',
+      trackPricing(`pricing_${link.dataset.plan}_checkout_error`, {
         checkout_provider: 'creem',
         plan_name: link.dataset.plan,
         billing_interval: selected,
@@ -152,13 +149,18 @@
     link.addEventListener('click', () => {
       const plan = link.dataset.plan;
       const selection = planEvent(plan);
-      trackPricing('select_item', selection);
       if (plan === 'business') {
-        trackPricing('generate_lead', {
+        trackPricing('pricing_business_contact_click', {
           lead_source: 'pricing',
           plan_name: 'business',
           billing_interval: 'custom'
         });
+      } else if (plan === 'free') {
+        trackPricing('pricing_free_signup_start', selection);
+      } else if (authenticated) {
+        trackPricing(`pricing_${plan}_checkout_click`, selection);
+      } else {
+        trackPricing(`pricing_${plan}_signup_start`, selection);
       }
     });
   });
@@ -176,7 +178,7 @@
   const requestedBilling = query.get('billing');
   const initialBilling = ['monthly', 'yearly'].includes(requestedBilling) ? requestedBilling : 'monthly';
   setBilling(initialBilling);
-  trackPricing('view_item_list', {
+  trackPricing('pricing_plans_view', {
     billing_interval: initialBilling,
     pricing_entry_source: query.get('source') || undefined,
     pricing_intent: query.get('intent') || undefined,

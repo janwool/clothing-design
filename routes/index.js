@@ -1975,6 +1975,47 @@ async function findActive3dModelBySlug(slug) {
   return legacyModel ? normalize3dModel(legacyModel) : null;
 }
 
+async function findHistorical3dModelBySlug(slug) {
+  await ensureModelCategoryTable();
+  const model = await db.get(`
+    ${getModelCategorySelect()}
+    WHERE m.slug = ?
+    ${getModelCategoryGroupBy()}
+  `, [slug]);
+
+  if (model) {
+    return normalize3dModel(model);
+  }
+
+  const redirectedModel = await db.get(`
+    ${getModelCategorySelect()}
+    INNER JOIN model_3d_slug_redirects sr
+      ON sr.model_id = m.id
+    WHERE sr.old_slug = ?
+    ${getModelCategoryGroupBy()}
+  `, [slug]);
+
+  return redirectedModel ? normalize3dModel(redirectedModel) : null;
+}
+
+async function redirectHistorical3dModel(req, res, model, requestedCategorySlug = '') {
+  if (model.status === 'active') {
+    redirectToCanonical3dModel(req, res, model);
+    return;
+  }
+
+  const categorySlugs = [...new Set([requestedCategorySlug, model.category_slug].filter(Boolean))];
+  let activeCategory = null;
+  for (const categorySlug of categorySlugs) {
+    activeCategory = await db.get(
+      'SELECT slug FROM categories WHERE slug = ? AND resource_type = ? AND status = ?',
+      [categorySlug, '3d-models', 'active']
+    );
+    if (activeCategory) break;
+  }
+  res.redirect(301, activeCategory ? `/mockups/${activeCategory.slug}` : '/mockups');
+}
+
 function redirectToCanonical3dModel(req, res, model, editPath = false) {
   const canonicalPath = `/3d-models/${model.category_slug || model.category}/${model.slug}${editPath ? '/edit' : ''}`;
   if (req.path !== canonicalPath) {
@@ -2726,8 +2767,26 @@ router.get('/terms', (req, res) => {
 // ==================== SEO Category Routes ====================
 
 // 3D Models Category Route
-router.get('/3d-models/:slug', (req, res) => {
-  res.redirect(301, `/mockups/${req.params.slug}`);
+router.get('/3d-models/:slug', async (req, res) => {
+  try {
+    const model = await findHistorical3dModelBySlug(req.params.slug);
+    if (model) {
+      return redirectHistorical3dModel(req, res, model);
+    }
+
+    const category = await db.get(
+      'SELECT slug FROM categories WHERE slug = ? AND resource_type = ? AND status = ?',
+      [req.params.slug, '3d-models', 'active']
+    );
+    if (category) {
+      return res.redirect(301, `/mockups/${category.slug}`);
+    }
+
+    return res.status(404).render('404', { title: 'Not Found', page: '' });
+  } catch (err) {
+    console.error('Error resolving legacy 3D model URL:', err);
+    return res.status(500).render('404', { title: 'Error', page: '' });
+  }
 });
 
 router.get('/mockups/t-shirt-mockup-generator', (req, res) => {
@@ -2754,6 +2813,10 @@ router.get('/mockups/:slug', async (req, res) => {
     );
     
     if (!category) {
+      const historicalModel = await findHistorical3dModelBySlug(req.params.slug);
+      if (historicalModel) {
+        return redirectHistorical3dModel(req, res, historicalModel);
+      }
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
     
@@ -3061,6 +3124,10 @@ router.get('/3d-models/:category/:slug/edit', async (req, res) => {
     const model = await findActive3dModelBySlug(req.params.slug);
     
     if (!model) {
+      const historicalModel = await findHistorical3dModelBySlug(req.params.slug);
+      if (historicalModel) {
+        return redirectHistorical3dModel(req, res, historicalModel, req.params.category);
+      }
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
 
@@ -3153,6 +3220,10 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
     const model = await findActive3dModelBySlug(req.params.slug);
     
     if (!model) {
+      const historicalModel = await findHistorical3dModelBySlug(req.params.slug);
+      if (historicalModel) {
+        return redirectHistorical3dModel(req, res, historicalModel, req.params.category);
+      }
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
 

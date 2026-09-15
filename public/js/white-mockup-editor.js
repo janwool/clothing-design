@@ -49,6 +49,14 @@
     defaultWarp: Number(editor.dataset.defaultWarp) || 34
   };
 
+  function trackWhiteMockup(eventName, parameters = {}) {
+    window.trackEvent?.(eventName, {
+      item_id: template.assetName,
+      item_category: template.garmentType,
+      ...parameters
+    });
+  }
+
   const state = {
     ready: false,
     renderQueued: false,
@@ -523,15 +531,19 @@
       stage.classList.add('is-ready');
       loading.hidden = true;
       setStatus('Ready for your design.');
+      trackWhiteMockup('white_mockup_editor_ready');
     } catch (error) {
       console.error(error);
       stage.classList.add('is-error');
       loading.hidden = true;
       setStatus('The preview is available, but editing controls could not be prepared. Refresh the page and try again.', true);
+      trackWhiteMockup('white_mockup_editor_load_error', {
+        error_message: String(error.message || 'Editor assets could not be prepared.').slice(0, 120)
+      });
     }
   }
 
-  function resetTransform() {
+  function resetTransform(trackAction = false) {
     state.offsetX = 0;
     state.offsetY = 0;
     state.scale = template.defaultScale;
@@ -540,9 +552,10 @@
     canvas.classList.remove('is-interacting');
     setStatus('Artwork placement reset.');
     scheduleRender({ forceQuality: true });
+    if (trackAction) trackWhiteMockup('white_mockup_artwork_reset_click');
   }
 
-  function setArtworkImage(image, name) {
+  function setArtworkImage(image, name, source = 'external') {
     state.artworkImage = image;
     state.artworkName = name || 'artwork';
     uploadLabel.textContent = name || 'Design uploaded';
@@ -555,15 +568,15 @@
     canvas.classList.add('has-artwork');
     resetTransform();
     setStatus('Design added. Adjust it directly on the garment.');
-    window.trackEvent?.('begin_design', {
+    trackWhiteMockup(`white_mockup_artwork_${source}_load_success`, {
       design_entry: 'white_mockup_detail',
-      item_id: template.assetName
+      file_name: name || undefined
     });
   }
 
-  function loadArtworkDataUrl(dataUrl, name) {
+  function loadArtworkDataUrl(dataUrl, name, source = 'external') {
     return loadImage(dataUrl).then((image) => {
-      setArtworkImage(image, name);
+      setArtworkImage(image, name, source);
       return image;
     });
   }
@@ -574,34 +587,52 @@
     const image = await window.UserProjects.uploadImage(dataUrl, name, 'artwork');
     state.artworkUrl = image.url;
     setStatus('Artwork saved. Continue designing or save the project.');
+    trackWhiteMockup('white_mockup_artwork_cloud_save_success', {
+      file_name: name || undefined
+    });
     return image;
   }
 
-  function handleArtworkFile(file) {
+  function handleArtworkFile(file, source = 'picker') {
     if (!file) return;
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
       setStatus('Choose a PNG, JPG, or WebP image.', true);
+      trackWhiteMockup(`white_mockup_artwork_${source}_invalid_type`, { file_type: file.type || undefined });
       return;
     }
     if (file.size > 10 * 1024 * 1024) {
       setStatus('Choose an image no larger than 10 MB.', true);
+      trackWhiteMockup(`white_mockup_artwork_${source}_too_large`, { file_size: file.size });
       return;
     }
+    trackWhiteMockup(`white_mockup_artwork_${source}_select`, {
+      file_type: file.type,
+      file_size: file.size
+    });
     const reader = new FileReader();
     reader.onload = () => {
       state.artworkDataUrl = reader.result;
       state.artworkUrl = '';
-      loadArtworkDataUrl(reader.result, file.name).catch((error) => {
+      loadArtworkDataUrl(reader.result, file.name, source).catch((error) => {
         console.error(error);
         setStatus('The selected image could not be opened.', true);
+        trackWhiteMockup(`white_mockup_artwork_${source}_load_error`, {
+          error_message: String(error.message || 'Selected image could not be opened.').slice(0, 120)
+        });
       });
       state.artworkUploadPromise = storeArtwork(reader.result, file.name).catch((error) => {
         console.error(error);
         setStatus(error.message || 'Artwork could not be saved.', true);
+        trackWhiteMockup('white_mockup_artwork_cloud_upload_error', {
+          error_message: String(error.message || 'Artwork could not be saved.').slice(0, 120)
+        });
         return null;
       });
     };
-    reader.onerror = () => setStatus('The selected image could not be read.', true);
+    reader.onerror = () => {
+      setStatus('The selected image could not be read.', true);
+      trackWhiteMockup(`white_mockup_artwork_${source}_read_error`);
+    };
     reader.readAsDataURL(file);
   }
 
@@ -693,14 +724,21 @@
 
   function endInteraction(event) {
     if (!state.interaction) return;
+    const completedInteraction = state.interaction;
     state.interaction = null;
     canvas.classList.remove('is-interacting');
     try { canvas.releasePointerCapture?.(event.pointerId); } catch (error) { /* Pointer capture may already be released. */ }
     setStatus('Artwork placement updated.');
     scheduleRender({ forceQuality: true });
+    trackWhiteMockup(`white_mockup_artwork_${completedInteraction.mode}_complete`, {
+      artwork_offset_x: Math.round(state.offsetX),
+      artwork_offset_y: Math.round(state.offsetY),
+      artwork_scale: Math.round(state.scale * 10) / 10,
+      artwork_rotation: Math.round(state.rotation * 10) / 10
+    });
   }
 
-  function selectBackground(value, label, selectedButton) {
+  function selectBackground(value, label, selectedButton, analyticsEventName) {
     state.background = value;
     backgroundLabel.textContent = label;
     backgroundButtons.forEach((button) => {
@@ -710,9 +748,12 @@
     });
     customBackgroundSwatch.classList.toggle('active', selectedButton === customBackgroundSwatch);
     scheduleRender({ forceQuality: true });
+    if (analyticsEventName) {
+      trackWhiteMockup(analyticsEventName, { background_name: label, background_value: value });
+    }
   }
 
-  function selectGarmentColor(value, label, selectedControl) {
+  function selectGarmentColor(value, label, selectedControl, analyticsEventName) {
     state.garmentColor = value;
     garmentColorLabel.textContent = label;
     garmentColorButtons.forEach((button) => {
@@ -723,10 +764,14 @@
     customGarmentColorSwatch.classList.toggle('active', selectedControl === customGarmentColorSwatch);
     setStatus(`${label} garment color applied.`);
     scheduleRender({ forceQuality: true });
+    if (analyticsEventName) {
+      trackWhiteMockup(analyticsEventName, { color_name: label, color_value: value });
+    }
   }
 
   async function downloadMockup() {
     if (!state.ready || !state.artworkImage) return;
+    trackWhiteMockup('white_mockup_png_download_begin');
     render({ overlay: false, forceQuality: true });
     downloadButton.disabled = true;
     try {
@@ -745,14 +790,16 @@
       link.remove();
       setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
       setStatus(`PNG downloaded at ${canvas.width} × ${canvas.height}.`);
-      window.trackEvent?.('design_export', {
+      trackWhiteMockup('white_mockup_png_download_success', {
         export_format: 'png',
-        export_type: 'white_mockup_detail',
-        item_id: template.assetName
+        export_type: 'white_mockup_detail'
       });
     } catch (error) {
       console.error(error);
       setStatus('The PNG could not be created. Please try again.', true);
+      trackWhiteMockup('white_mockup_png_download_error', {
+        error_message: String(error.message || 'PNG could not be created.').slice(0, 120)
+      });
     } finally {
       downloadButton.disabled = false;
       scheduleRender({ forceQuality: true });
@@ -761,10 +808,13 @@
 
   async function saveProject() {
     if (editor.dataset.authenticated !== 'true') {
+      trackWhiteMockup('white_mockup_save_signin_required');
       window.UserProjects?.goToSignIn();
       return;
     }
     if (!state.ready || !state.artworkImage || !window.UserProjects) return;
+    const saveMode = state.projectId ? 'update' : 'create';
+    trackWhiteMockup(`white_mockup_project_${saveMode}_begin`);
     saveButton.disabled = true;
     setStatus('Saving project…');
     try {
@@ -805,10 +855,20 @@
       url.searchParams.set('project', project.id);
       window.history.replaceState({}, '', url);
       setStatus('Project saved to your account.');
+      trackWhiteMockup(`white_mockup_project_${saveMode}_success`, {
+        project_id: project.id
+      });
     } catch (error) {
       console.error(error);
-      if (error.status === 401) window.UserProjects.goToSignIn();
-      else setStatus(error.message || 'Project could not be saved.', true);
+      if (error.status === 401) {
+        trackWhiteMockup('white_mockup_save_session_expired');
+        window.UserProjects.goToSignIn();
+      } else {
+        setStatus(error.message || 'Project could not be saved.', true);
+        trackWhiteMockup(`white_mockup_project_${saveMode}_error`, {
+          error_message: String(error.message || 'Project could not be saved.').slice(0, 120)
+        });
+      }
     } finally {
       saveButton.disabled = false;
       scheduleRender({ forceQuality: true });
@@ -823,7 +883,7 @@
       if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another white mockup.');
       const saved = project.designData || {};
       if (!saved.artworkUrl) throw new Error('The saved artwork is unavailable.');
-      await loadArtworkDataUrl(saved.artworkUrl, saved.artworkName || project.name);
+      await loadArtworkDataUrl(saved.artworkUrl, saved.artworkName || project.name, 'saved_project');
       state.artworkUrl = saved.artworkUrl;
       state.projectId = project.id;
       state.projectName = project.name;
@@ -841,15 +901,27 @@
       customGarmentColor.value = state.garmentColor;
       setStatus('Saved project loaded.');
       scheduleRender({ forceQuality: true });
+      trackWhiteMockup('white_mockup_saved_project_load_success', {
+        project_id: project.id
+      });
     } catch (error) {
       console.error(error);
       setStatus(error.status === 401 ? 'Sign in to open this saved project.' : (error.message || 'Project could not be loaded.'), true);
+      trackWhiteMockup(error.status === 401
+        ? 'white_mockup_saved_load_signin_required'
+        : 'white_mockup_saved_project_load_error', {
+        error_message: String(error.message || 'Project could not be loaded.').slice(0, 120)
+      });
     }
   }
 
-  input.addEventListener('change', () => handleArtworkFile(input.files?.[0]));
-  emptyUpload.addEventListener('click', () => input.click());
-  resetButton.addEventListener('click', resetTransform);
+  input.addEventListener('click', () => trackWhiteMockup('white_mockup_artwork_picker_open'));
+  input.addEventListener('change', () => handleArtworkFile(input.files?.[0], 'picker'));
+  emptyUpload.addEventListener('click', () => {
+    trackWhiteMockup('white_mockup_empty_stage_upload_click');
+    input.click();
+  });
+  resetButton.addEventListener('click', () => resetTransform(true));
   saveButton.addEventListener('click', saveProject);
   downloadButton.addEventListener('click', downloadMockup);
 
@@ -865,23 +937,45 @@
       uploadZone.classList.remove('is-dragover');
     });
   });
-  uploadZone.addEventListener('drop', (event) => handleArtworkFile(event.dataTransfer?.files?.[0]));
+  uploadZone.addEventListener('drop', (event) => handleArtworkFile(event.dataTransfer?.files?.[0], 'drop'));
 
   backgroundButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      selectBackground(button.dataset.background, button.dataset.label, button);
+      selectBackground(
+        button.dataset.background,
+        button.dataset.label,
+        button,
+        `white_mockup_bg_${button.dataset.label}_select`
+      );
     });
   });
   customBackground.addEventListener('input', () => {
     selectBackground(customBackground.value, 'Custom color', customBackgroundSwatch);
   });
+  customBackground.addEventListener('change', () => {
+    trackWhiteMockup('white_mockup_bg_custom_select', {
+      background_name: 'Custom color',
+      background_value: customBackground.value
+    });
+  });
   garmentColorButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      selectGarmentColor(button.dataset.garmentColor, button.dataset.label, button);
+      selectGarmentColor(
+        button.dataset.garmentColor,
+        button.dataset.label,
+        button,
+        `white_mockup_color_${button.dataset.label}_select`
+      );
     });
   });
   customGarmentColor.addEventListener('input', () => {
     selectGarmentColor(customGarmentColor.value, 'Custom color', customGarmentColorSwatch);
+  });
+  customGarmentColor.addEventListener('change', () => {
+    trackWhiteMockup('white_mockup_color_custom_select', {
+      color_name: 'Custom color',
+      color_value: customGarmentColor.value
+    });
   });
 
   canvas.addEventListener('pointerdown', beginInteraction);
@@ -904,6 +998,10 @@
     if (!handled) return;
     event.preventDefault();
     scheduleRender({ forceQuality: true });
+    const keyboardAction = event.key.startsWith('Arrow') ? 'move' : (event.key === '[' || event.key === ']') ? 'rotate' : 'scale';
+    trackWhiteMockup(`white_mockup_artwork_keyboard_${keyboardAction}`, {
+      keyboard_key: event.key
+    });
   });
 
   window.addEventListener('resize', () => scheduleRender({ forceQuality: true }));

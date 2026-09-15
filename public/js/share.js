@@ -28,7 +28,7 @@
 
   function report(platform, surface, result) {
     if (typeof window.trackEvent !== 'function') return;
-    window.trackEvent('share', {
+    window.trackEvent(`${surface}_${platform}_${result || 'opened'}_share`, {
       method: platform,
       content_type: surface,
       item_id: window.location.pathname,

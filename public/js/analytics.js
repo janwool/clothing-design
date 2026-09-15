@@ -5,71 +5,47 @@
 
   var DEFAULT_AUTH_RETURN_PATH = '/tools/t-shirt-mockup-generator';
 
-  var STABLE_EVENTS = new Set([
-    'page_view',
-    'view_item_list',
-    'select_item',
-    'begin_checkout',
-    'navigation_click',
-    'select_content',
-    'sign_up_start',
-    'sign_up',
-    'login_start',
-    'login',
-    'auth_error',
-    'form_submit',
-    'file_download',
-    'upload_artwork',
-    'begin_design',
-    'design_customize',
-    'design_export',
-    'generate_lead',
-    'tool_interaction',
-    'search',
-    'faq_toggle',
-    'share',
-    'ui_interaction'
-  ]);
-
   function cleanText(value, maxLength) {
     return String(value || '').replace(/\s+/g, ' ').trim().slice(0, maxLength || 120);
   }
 
-  function cleanKey(value, fallback) {
+  function cleanKey(value, fallback, maxLength) {
     var key = String(value || '')
       .toLowerCase()
       .replace(/^https?:\/\/[^/]+/i, '')
       .replace(/[^a-z0-9]+/g, '_')
       .replace(/^_+|_+$/g, '')
-      .slice(0, 80);
+      .slice(0, maxLength || 80);
     return key || fallback || 'unknown';
   }
 
-  function normalizeEventName(value) {
-    var name = cleanKey(value, 'ui_interaction');
-    if (STABLE_EVENTS.has(name)) return name;
-    if (name === 'content_share' || name.includes('share')) return 'share';
-    if (name.includes('faq')) return 'faq_toggle';
-    if (name.includes('registration') || name.includes('sign_up')) {
-      return name.includes('success') ? 'sign_up' : 'sign_up_start';
+  function eventHash(value) {
+    var hash = 2166136261;
+    for (var index = 0; index < value.length; index += 1) {
+      hash ^= value.charCodeAt(index);
+      hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
     }
-    if (name.includes('login')) return name.includes('success') ? 'login' : 'login_start';
-    if (name.includes('lead') || name.includes('inquiry')) return 'generate_lead';
-    if (name.includes('export') || name.includes('download_render')) return 'design_export';
-    if (name.includes('download')) return 'file_download';
-    if (name.includes('upload') || name.includes('file_selected')) return 'upload_artwork';
-    if (name.includes('designer') || name.includes('design_now') || name.includes('designnow')) return 'begin_design';
-    if (name.includes('category') || name.includes('model') || name.includes('tool') || name.includes('select')) return 'select_content';
-    if (name.includes('menu') || name.includes('click')) return 'navigation_click';
-    return 'ui_interaction';
+    return (hash >>> 0).toString(36).slice(0, 6).padStart(6, '0');
+  }
+
+  // GA4 event names are limited to 40 characters. Keep the functional name
+  // readable and add a deterministic suffix only when a name must be shortened.
+  function directEventName(value) {
+    var name = cleanKey(value, 'unknown_event', 512);
+    if (!/^[a-z]/.test(name)) name = 'event_' + name;
+    if (name.length <= 40) return name;
+    return name.slice(0, 33).replace(/_+$/g, '') + '_' + eventHash(name);
+  }
+
+  function namedEvent() {
+    return directEventName(Array.from(arguments).filter(Boolean).join('_'));
   }
 
   function track(eventName, parameters) {
-    var normalizedName = normalizeEventName(eventName);
+    var analyticsEventName = directEventName(eventName);
     var eventParameters = Object.assign({
       page_path: window.location.pathname,
-      page_title: document.title,
-      source_event: normalizedName === cleanKey(eventName, '') ? undefined : cleanKey(eventName, undefined)
+      page_title: document.title
     }, parameters || {});
 
     Object.keys(eventParameters).forEach(function (key) {
@@ -79,9 +55,9 @@
     });
 
     if (typeof window.gtag === 'function') {
-      window.gtag('event', normalizedName, eventParameters);
+      window.gtag('event', analyticsEventName, eventParameters);
     } else {
-      window.dataLayer.push(Object.assign({ event: normalizedName }, eventParameters));
+      window.dataLayer.push(Object.assign({ event: analyticsEventName }, eventParameters));
     }
   }
 
@@ -94,6 +70,8 @@
     if (path.startsWith('/auth/')) return 'auth';
     if (path.startsWith('/designer/')) return 'designer';
     if (path.startsWith('/3d-models/')) return path.endsWith('/edit') ? 'designer' : 'model_detail';
+    if (path === '/white-mockups') return 'white_mockups_library';
+    if (path.startsWith('/white-mockups/')) return 'white_mockup_detail';
     if (path.startsWith('/tools/')) return 'tool_detail';
     if (path === '/tools') return 'tools';
     return 'content';
@@ -163,14 +141,34 @@
     return 'link';
   }
 
+  function targetKey(target, anchor) {
+    var href = anchor ? destination(anchor) : '';
+    return cleanKey(
+      target.dataset.analyticsItem ||
+      target.dataset.action ||
+      target.dataset.id ||
+      target.dataset.plan ||
+      target.dataset.filter ||
+      target.id ||
+      target.getAttribute('aria-label') ||
+      target.textContent ||
+      href,
+      anchor ? 'link' : 'button'
+    );
+  }
+
   function semanticClick(element) {
     var anchor = element.closest('a[href]');
     var button = element.closest('button, [role="button"]');
     var target = anchor || button;
     if (!target) return;
+    if (target.closest('[data-analytics-managed="true"]')) return;
 
     var href = anchor ? anchor.getAttribute('href') || '' : '';
     var text = cleanText(target.getAttribute('aria-label') || target.textContent);
+    var type = pageType();
+    var location = linkLocation(target);
+    var functionalTarget = targetKey(target, anchor);
     var common = {
       element_text: text,
       element_id: target.id || undefined,
@@ -188,58 +186,62 @@
       }));
     }
 
-    if (href === '/auth/logout') return track('navigation_click', Object.assign(common, { navigation_type: 'logout' }));
+    if (href === '/auth/logout') return track(namedEvent(type, 'logout', 'click'), common);
     if (href.includes('/auth/google')) {
       var googleType = window.location.pathname === '/auth/register' ? 'register' : 'login';
       var googleContext = authContext(googleType, 'google', authReturnPathFromUrl(anchor.href));
       savePendingAuth(googleContext);
-      return track(googleType === 'register' ? 'sign_up_start' : 'login_start', Object.assign(common, googleContext));
+      return track(namedEvent('auth', 'google', googleType, 'start'), Object.assign(common, googleContext));
     }
     if (href.includes('/auth/register')) {
       var registerContext = authContext('register', undefined, authReturnPathFromUrl(anchor.href));
-      return track('sign_up_start', Object.assign(common, registerContext, {
-        plan_name: cleanText(target.dataset.plan || target.closest('.pricing-card')?.querySelector('h2, h3')?.textContent),
+      var planName = cleanKey(target.dataset.plan || target.closest('.pricing-card')?.querySelector('h2, h3')?.textContent, 'account');
+      return track(namedEvent(type, planName, 'signup', 'start'), Object.assign(common, registerContext, {
+        plan_name: planName,
         billing_interval: target.dataset.billing
       }));
     }
     if (href.includes('/auth/login')) {
-      return track('login_start', Object.assign(common,
+      return track(namedEvent(type, 'login', 'start'), Object.assign(common,
         authContext('login', undefined, authReturnPathFromUrl(anchor.href))
       ));
     }
 
-    if (anchor?.hasAttribute('download')) return track('file_download', Object.assign(common, {
+    if (anchor?.hasAttribute('download')) return track(namedEvent(type, functionalTarget, 'download'), Object.assign(common, {
       file_name: href.split('/').pop()?.split('?')[0]
     }));
 
     if (href.startsWith('/designer/') || href.endsWith('/edit') || target.id === 'designNowBtn') {
-      return track('begin_design', Object.assign(common, { design_entry: target.id || 'link' }));
+      return track(namedEvent(type, functionalTarget, 'design', 'start'), Object.assign(common, { design_entry: target.id || 'link' }));
     }
 
-    if (target.matches('.filter-btn[data-filter]')) return track('select_content', Object.assign(common, {
+    if (target.matches('.filter-btn[data-filter]')) return track(namedEvent(type, target.dataset.filter, 'filter', 'select'), Object.assign(common, {
       content_type: 'category_filter',
       item_id: target.dataset.filter
     }));
 
     if (target.closest('.model-card, .pattern-card-link, .popular-card, .tool-card, .gallery-item, .generator-category-card')) {
-      return track('select_content', Object.assign(common, { content_type: contentType(target) }));
+      return track(namedEvent(type, contentType(target), functionalTarget, 'select'), Object.assign(common, { content_type: contentType(target) }));
     }
 
-    if (target.matches('[data-color], [data-pattern], [data-env]')) return track('design_customize', Object.assign(common, {
-      control_type: target.hasAttribute('data-color') ? 'color' : target.hasAttribute('data-pattern') ? 'pattern' : 'environment',
-      selected_value: target.dataset.color || target.dataset.pattern || target.dataset.env
-    }));
+    if (target.matches('[data-color], [data-pattern], [data-env]')) {
+      var designControlType = target.hasAttribute('data-color') ? 'color' : target.hasAttribute('data-pattern') ? 'pattern' : 'environment';
+      return track(namedEvent(type, designControlType, 'change'), Object.assign(common, {
+        control_type: designControlType,
+        selected_value: target.dataset.color || target.dataset.pattern || target.dataset.env
+      }));
+    }
 
     if (target.id === 'downloadBtn' || target.id === 'downloadRenderBtn' || target.id === 'downloadRenderModalBtn' || target.id === 'renderCurrentModelBtn') {
       // A successful export is reported by the export function. This only records intent.
-      return track('tool_interaction', Object.assign(common, { interaction_type: 'export_intent' }));
+      return track(namedEvent(type, functionalTarget, 'export', 'click'), common);
     }
 
     if (anchor || target.closest('.navbar, .mobile-menu, footer')) {
-      return track('navigation_click', common);
+      return track(namedEvent(type, location, functionalTarget, 'click'), common);
     }
 
-    track('ui_interaction', Object.assign(common, { interaction_type: cleanKey(target.dataset.action || target.id || text, 'button') }));
+    track(namedEvent(type, location, functionalTarget, 'click'), common);
   }
 
   function formName(form) {
@@ -250,7 +252,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     var type = pageType();
-    track('page_view', {
+    track(namedEvent(type, 'page', 'view'), {
       page_type: type,
       page_location: window.location.href,
       page_referrer: document.referrer || undefined
@@ -261,7 +263,7 @@
       if (pendingAuth) {
         var authError = document.querySelector('.auth-error, .alert-error, [data-auth-error]');
         if (type !== 'auth') {
-          track(pendingAuth.type === 'register' ? 'sign_up' : 'login', {
+          track(namedEvent('auth', pendingAuth.method || 'email', pendingAuth.type, 'success'), {
             method: pendingAuth.method || 'email',
             auth_entry_path: pendingAuth.auth_entry_path,
             auth_return_path: pendingAuth.auth_return_path || DEFAULT_AUTH_RETURN_PATH,
@@ -272,7 +274,7 @@
           });
           sessionStorage.removeItem('analytics_pending_auth');
         } else if (authError) {
-          track('auth_error', {
+          track(namedEvent('auth', pendingAuth.method || 'email', pendingAuth.type, 'error'), {
             auth_type: pendingAuth.type,
             method: pendingAuth.method || 'email',
             auth_entry_path: pendingAuth.auth_entry_path,
@@ -295,7 +297,7 @@
       var form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
       var name = formName(form);
-      track('form_submit', {
+      track(namedEvent(type, name, 'form', 'submit'), {
         form_name: name,
         form_id: form.id || undefined,
         form_action: form.action
@@ -308,8 +310,9 @@
 
     document.querySelectorAll('input[type="file"]').forEach(function (input) {
       input.addEventListener('change', function () {
+        if (input.closest('[data-analytics-managed="true"]')) return;
         if (!input.files?.length) return;
-        track('upload_artwork', {
+        track(namedEvent(type, input.name || input.id || 'artwork', 'file', 'upload'), {
           input_name: input.name || input.id,
           file_type: input.files[0].type || undefined,
           file_extension: input.files[0].name.split('.').pop()?.toLowerCase()
@@ -319,8 +322,10 @@
 
     document.querySelectorAll('select, input[type="range"], input[type="checkbox"], input[type="radio"]').forEach(function (control) {
       control.addEventListener('change', function () {
-        track('design_customize', {
-          control_name: control.id || control.name || control.classList[0] || control.type,
+        if (control.closest('[data-analytics-managed="true"]')) return;
+        var controlName = control.id || control.name || control.classList[0] || control.type;
+        track(namedEvent(type, controlName, 'change'), {
+          control_name: controlName,
           control_type: control.type || control.tagName.toLowerCase(),
           selected_value: control.type === 'checkbox' || control.type === 'radio' ? String(control.checked) : cleanText(control.value)
         });
@@ -330,13 +335,17 @@
     document.querySelectorAll('input[type="search"], .search-input').forEach(function (control) {
       control.addEventListener('change', function () {
         if (!cleanText(control.value)) return;
-        track('search', { search_term: cleanText(control.value) });
+        track(namedEvent(type, control.id || control.name || 'site', 'search'), { search_term: cleanText(control.value) });
       });
     });
 
     document.querySelectorAll('details').forEach(function (details, index) {
       details.addEventListener('toggle', function () {
-        track('faq_toggle', {
+        var state = details.open ? 'open' : 'close';
+        var configuredName = details.dataset.analyticsEvent
+          ? details.dataset.analyticsEvent.replace(/_toggle$/, '_' + state)
+          : namedEvent(type, 'faq', details.dataset.analyticsItem || String(index + 1), state);
+        track(configuredName, {
           item_id: details.dataset.analyticsItem || String(index + 1),
           item_name: details.dataset.analyticsItem || cleanText(details.querySelector('summary')?.textContent),
           toggle_state: details.open ? 'open' : 'closed'

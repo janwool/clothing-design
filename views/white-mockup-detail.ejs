@@ -63,8 +63,8 @@
             tabindex="0"
             aria-label="Customize <%= displayTitle %> white mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate."
           ></canvas>
-          <button type="button" class="white-detail-stage-reset" id="whiteMockupReset" hidden>Reset artwork</button>
-          <button type="button" class="white-detail-empty" id="whiteMockupEmptyUpload">
+          <button type="button" class="white-detail-stage-reset" id="whiteMockupReset" data-analytics-managed="true" hidden>Reset artwork</button>
+          <button type="button" class="white-detail-empty" id="whiteMockupEmptyUpload" data-analytics-managed="true">
             <span>Place your artwork directly on the garment</span>
             <strong>Upload a design to begin</strong>
           </button>
@@ -80,7 +80,7 @@
         <h1 id="whiteMockupTitle"><%= displayTitle %> White Mockup</h1>
         <p class="white-detail-description">Preview artwork on a natural <%= typeName %> fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>
 
-        <label class="white-detail-upload" id="whiteMockupUploadZone">
+        <label class="white-detail-upload" id="whiteMockupUploadZone" data-analytics-managed="true">
           <input type="file" id="whiteMockupArtworkInput" accept="image/png,image/jpeg,image/webp">
           <span class="white-detail-upload-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
@@ -97,14 +97,14 @@
             <small id="whiteMockupGarmentColorLabel">Original white</small>
           </div>
           <div class="white-detail-garment-swatches" role="group" aria-label="Choose garment color">
-            <button type="button" class="active" data-garment-color="#ffffff" data-label="Original white" aria-label="White garment" aria-pressed="true"><i style="--swatch:#ffffff"></i></button>
-            <button type="button" data-garment-color="#e2d5c2" data-label="Natural ecru" aria-label="Natural ecru garment" aria-pressed="false"><i style="--swatch:#e2d5c2"></i></button>
-            <button type="button" data-garment-color="#a9b5a4" data-label="Soft sage" aria-label="Soft sage garment" aria-pressed="false"><i style="--swatch:#a9b5a4"></i></button>
-            <button type="button" data-garment-color="#9db3c4" data-label="Dusty blue" aria-label="Dusty blue garment" aria-pressed="false"><i style="--swatch:#9db3c4"></i></button>
-            <button type="button" data-garment-color="#a8493f" data-label="Brick red" aria-label="Brick red garment" aria-pressed="false"><i style="--swatch:#a8493f"></i></button>
-            <button type="button" data-garment-color="#27384d" data-label="Deep navy" aria-label="Deep navy garment" aria-pressed="false"><i style="--swatch:#27384d"></i></button>
-            <button type="button" data-garment-color="#252523" data-label="Black" aria-label="Black garment" aria-pressed="false"><i style="--swatch:#252523"></i></button>
-            <label class="white-detail-custom-swatch white-detail-garment-custom-swatch" aria-label="Choose a custom garment color">
+            <button type="button" class="active" data-garment-color="#ffffff" data-label="Original white" data-analytics-managed="true" aria-label="White garment" aria-pressed="true"><i style="--swatch:#ffffff"></i></button>
+            <button type="button" data-garment-color="#e2d5c2" data-label="Natural ecru" data-analytics-managed="true" aria-label="Natural ecru garment" aria-pressed="false"><i style="--swatch:#e2d5c2"></i></button>
+            <button type="button" data-garment-color="#a9b5a4" data-label="Soft sage" data-analytics-managed="true" aria-label="Soft sage garment" aria-pressed="false"><i style="--swatch:#a9b5a4"></i></button>
+            <button type="button" data-garment-color="#9db3c4" data-label="Dusty blue" data-analytics-managed="true" aria-label="Dusty blue garment" aria-pressed="false"><i style="--swatch:#9db3c4"></i></button>
+            <button type="button" data-garment-color="#a8493f" data-label="Brick red" data-analytics-managed="true" aria-label="Brick red garment" aria-pressed="false"><i style="--swatch:#a8493f"></i></button>
+            <button type="button" data-garment-color="#27384d" data-label="Deep navy" data-analytics-managed="true" aria-label="Deep navy garment" aria-pressed="false"><i style="--swatch:#27384d"></i></button>
+            <button type="button" data-garment-color="#252523" data-label="Black" data-analytics-managed="true" aria-label="Black garment" aria-pressed="false"><i style="--swatch:#252523"></i></button>
+            <label class="white-detail-custom-swatch white-detail-garment-custom-swatch" data-analytics-managed="true" aria-label="Choose a custom garment color">
               <input type="color" id="whiteMockupGarmentColor" value="#c9b7a2">
               <i aria-hidden="true"></i>
             </label>
@@ -117,21 +117,21 @@
             <small id="whiteMockupBackgroundLabel">Original studio</small>
           </div>
           <div class="white-detail-swatches" role="group" aria-label="Choose mockup background">
-            <button type="button" class="active" data-background="studio" data-label="Original studio" aria-label="Original studio background" aria-pressed="true"><i class="studio"></i></button>
-            <button type="button" data-background="#f7f7f4" data-label="Soft white" aria-label="Soft white background" aria-pressed="false"><i style="--swatch:#f7f7f4"></i></button>
-            <button type="button" data-background="#d9d3c9" data-label="Warm stone" aria-label="Warm stone background" aria-pressed="false"><i style="--swatch:#d9d3c9"></i></button>
-            <button type="button" data-background="#a8b4a6" data-label="Muted sage" aria-label="Muted sage background" aria-pressed="false"><i style="--swatch:#a8b4a6"></i></button>
-            <button type="button" data-background="#b8c7d0" data-label="Cool gray" aria-label="Cool gray background" aria-pressed="false"><i style="--swatch:#b8c7d0"></i></button>
-            <button type="button" data-background="#242522" data-label="Charcoal" aria-label="Charcoal background" aria-pressed="false"><i style="--swatch:#242522"></i></button>
-            <label class="white-detail-custom-swatch" aria-label="Choose a custom background color">
+            <button type="button" class="active" data-background="studio" data-label="Original studio" data-analytics-managed="true" aria-label="Original studio background" aria-pressed="true"><i class="studio"></i></button>
+            <button type="button" data-background="#f7f7f4" data-label="Soft white" data-analytics-managed="true" aria-label="Soft white background" aria-pressed="false"><i style="--swatch:#f7f7f4"></i></button>
+            <button type="button" data-background="#d9d3c9" data-label="Warm stone" data-analytics-managed="true" aria-label="Warm stone background" aria-pressed="false"><i style="--swatch:#d9d3c9"></i></button>
+            <button type="button" data-background="#a8b4a6" data-label="Muted sage" data-analytics-managed="true" aria-label="Muted sage background" aria-pressed="false"><i style="--swatch:#a8b4a6"></i></button>
+            <button type="button" data-background="#b8c7d0" data-label="Cool gray" data-analytics-managed="true" aria-label="Cool gray background" aria-pressed="false"><i style="--swatch:#b8c7d0"></i></button>
+            <button type="button" data-background="#242522" data-label="Charcoal" data-analytics-managed="true" aria-label="Charcoal background" aria-pressed="false"><i style="--swatch:#242522"></i></button>
+            <label class="white-detail-custom-swatch" data-analytics-managed="true" aria-label="Choose a custom background color">
               <input type="color" id="whiteMockupBackgroundColor" value="#d6d3cb">
               <i aria-hidden="true"></i>
             </label>
           </div>
         </div>
 
-        <button type="button" class="white-detail-save" id="whiteMockupSave" disabled>Save project</button>
-        <button type="button" class="white-detail-download" id="whiteMockupDownload" disabled>
+        <button type="button" class="white-detail-save" id="whiteMockupSave" data-analytics-managed="true" disabled>Save project</button>
+        <button type="button" class="white-detail-download" id="whiteMockupDownload" data-analytics-managed="true" disabled>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
           Download PNG
         </button>
@@ -212,5 +212,5 @@
   </div>
 </div>
 
-<script src="/js/white-mockup-editor.js?v=20260915-gray-white-watermark-v24" defer></script>
+<script src="/js/white-mockup-editor.js?v=20260915-white-detail-events-v26" defer></script>
 <%- include('partials/footer') %>

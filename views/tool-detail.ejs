@@ -402,7 +402,7 @@
             stage.classList.add('is-ready');
             stage.setAttribute('aria-busy', 'false');
             status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';
-            window.trackEvent?.('tool_interaction', {
+            window.trackEvent?.(<%- JSON.stringify(toolPage.slug + '_3d_preview_load') %>, {
               interaction_type: 'load_3d_preview',
               tool_name: <%- JSON.stringify(toolPage.slug) %>
             });
@@ -483,7 +483,7 @@
             status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';
             return;
           }
-          window.trackEvent?.('begin_design', {
+          window.trackEvent?.(<%- JSON.stringify(toolPage.slug + '_artwork_upload_start') %>, {
             design_entry: 'tool_artwork_upload',
             tool_name: <%- JSON.stringify(toolPage.slug) %>
           });
@@ -539,7 +539,7 @@
             link.click();
             link.remove();
             status.textContent = 'Four-color T-shirt mockup sheet downloaded.';
-            window.trackEvent?.('design_export', {
+            window.trackEvent?.(<%- JSON.stringify(toolPage.slug + '_colorway_sheet_download') %>, {
               export_format: 'png',
               export_type: 'colorway_sheet',
               tool_name: <%- JSON.stringify(toolPage.slug) %>
@@ -555,7 +555,7 @@
           link.click();
           link.remove();
           status.textContent = 'Transparent PNG downloaded.';
-          window.trackEvent?.('design_export', {
+          window.trackEvent?.(<%- JSON.stringify(toolPage.slug + '_transparent_preview_download') %>, {
             export_format: 'png',
             export_type: 'transparent_preview',
             tool_name: <%- JSON.stringify(toolPage.slug) %>

@@ -76,19 +76,21 @@ test('connects Pricing checkout and signed webhooks to the entitlement store', (
   assert.match(pricing, /setBilling\(initialBilling\)/);
 });
 
-test('tracks the Pricing selection and checkout funnel with stable ecommerce events', () => {
+test('tracks each Pricing action with a dedicated functional event name', () => {
   const pricingView = read('views/pricing.ejs');
   const pricing = read('public/js/pricing.js');
   assert.match(pricingView, /data-pricing-cta data-plan="free"/);
   assert.match(pricingView, /data-pricing-cta data-plan="business"/);
-  assert.match(pricing, /trackPricing\('view_item_list'/);
+  assert.match(pricing, /trackPricing\('pricing_plans_view'/);
   assert.match(pricing, /pricing_entry_source: query\.get\('source'\) \|\| undefined/);
   assert.match(pricing, /pricing_intent: query\.get\('intent'\) \|\| undefined/);
-  assert.match(pricing, /trackPricing\('select_item'/);
-  assert.match(pricing, /trackPricing\('begin_checkout'/);
+  assert.match(pricing, /pricing_\$\{link\.dataset\.plan\}_checkout_begin/);
   assert.match(pricing, /link\.dataset\.billing = billing/);
-  assert.match(pricing, /interaction_type: 'pricing_billing_change'/);
-  assert.match(pricing, /interaction_type: 'checkout_redirect'/);
-  assert.match(pricing, /interaction_type: 'checkout_error'/);
-  assert.match(pricing, /trackPricing\('generate_lead'/);
+  assert.match(pricing, /pricing_billing_\$\{billing\}_click/);
+  assert.match(pricing, /pricing_\$\{link\.dataset\.plan\}_checkout_redirect/);
+  assert.match(pricing, /pricing_\$\{link\.dataset\.plan\}_checkout_error/);
+  assert.match(pricing, /trackPricing\('pricing_business_contact_click'/);
+  assert.match(pricing, /pricing_\$\{plan\}_signup_start/);
+  assert.match(pricingView, /data-billing-option="monthly" data-analytics-managed="true"/);
+  assert.match(pricingView, /data-plan="pro" data-analytics-managed="true"/);
 });

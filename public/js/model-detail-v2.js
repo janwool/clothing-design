@@ -126,7 +126,7 @@
       } else {
         legacyLaunchButton.click();
       }
-      window.trackEvent?.('begin_design', {
+      window.trackEvent?.('model_detail_mockup_template_open', {
         design_entry: 'ai_model_chooser',
         item_id: template.exportSlug
       });
