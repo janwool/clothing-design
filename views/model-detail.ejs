@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260916-material-previews-v34']
+  pageStyles: ['/css/model-detail-v2.css?v=20260916-commercial-stage-v35']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -64,12 +64,12 @@
               reveal="auto"
               camera-controls
               disable-zoom
-              camera-orbit="-48deg 72deg 142%"
+              camera-orbit="-16deg 72deg 142%"
               camera-target="auto auto auto"
               field-of-view="28deg"
-              shadow-intensity="0"
-              shadow-softness="1"
-              exposure="0.72"
+              shadow-intensity="0.32"
+              shadow-softness="0.9"
+              exposure="0.7"
               environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
               tone-mapping="commerce"
               data-catalog-render-standard="main"
@@ -794,13 +794,14 @@
         <!-- Editor Tool Rail -->
         <div class="designer-toolbar" aria-label="Design tools">
           <div class="toolbar-group">
-            <button class="toolbar-btn active" id="toolSelect" title="Select" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/>
+            <button class="toolbar-btn active" id="toolAppearance" title="Appearance" type="button" aria-controls="designAppearancePanel" aria-pressed="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                <path d="M8 4.5 10 3h4l2 1.5 4 1.8-2.2 4.2-2.3-1.1V21h-7V9.4l-2.3 1.1L4 6.3 8 4.5Z"/>
+                <path d="M16.5 14.5h4M18.5 12.5v4"/>
               </svg>
-              <span>Select</span>
+              <span>Appearance</span>
             </button>
-            <button class="toolbar-btn" id="toolImage" title="Add Image" type="button">
+            <button class="toolbar-btn" id="toolImage" title="Add Image" type="button" aria-controls="imageAssetTray" aria-pressed="false">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                 <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -820,36 +821,23 @@
               </svg>
               <span>Shape</span>
             </button>
-            <button class="toolbar-btn" id="toolColor" title="Garment color" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9">
-                <path d="M12 2.8S5.4 10.2 5.4 15.2a6.6 6.6 0 0 0 13.2 0C18.6 10.2 12 2.8 12 2.8Z"/>
-                <path d="M8.8 16.2c.8 1.4 2 2.1 3.7 2.1"/>
-              </svg>
-              <span>Color</span>
-            </button>
-            <button class="toolbar-btn" id="toolMaterial" title="Garment material" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M7 3v18M12 3v18M17 3v18M3 8h18M3 16h18" opacity=".7"/>
-              </svg>
-              <span>Material</span>
-            </button>
           </div>
         </div>
 
-        <!-- Compact horizontal artwork library -->
+        <!-- Contextual artwork library -->
         <section class="image-asset-tray" id="imageAssetTray" aria-label="Image assets" hidden>
-          <button class="asset-scroll-button asset-scroll-prev" id="assetScrollPrev" type="button" aria-label="Browse images to the left">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+          <div class="image-asset-header">
+            <h3>Images</h3>
+          </div>
+          <button class="image-asset-card image-asset-upload" id="imageAssetUpload" type="button">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>
+            </svg>
+            <span>Upload image</span>
           </button>
+          <strong class="image-asset-library-title">Library</strong>
           <div class="image-asset-viewport" id="imageAssetViewport" tabindex="0">
             <div class="image-asset-track" id="imageAssetTrack">
-              <button class="image-asset-card image-asset-upload" id="imageAssetUpload" type="button">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                  <path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>
-                </svg>
-                <span>Upload image</span>
-              </button>
               <button class="image-asset-card" type="button" data-asset-url="/editor-assets/botanical-line.svg" aria-label="Add botanical line art"><img src="/editor-assets/botanical-line.svg" alt="Botanical line art"></button>
               <button class="image-asset-card" type="button" data-asset-url="/editor-assets/butterfly.svg" aria-label="Add butterfly"><img src="/editor-assets/butterfly.svg" alt="Purple butterfly"></button>
               <button class="image-asset-card" type="button" data-asset-url="/editor-assets/mountain-wash.svg" aria-label="Add watercolor mountains"><img src="/editor-assets/mountain-wash.svg" alt="Blue watercolor mountains"></button>
@@ -859,9 +847,6 @@
               <button class="image-asset-card" type="button" data-asset-url="/editor-assets/delicate-branch.svg" aria-label="Add delicate branch"><img src="/editor-assets/delicate-branch.svg" alt="Blue delicate branch"></button>
             </div>
           </div>
-          <button class="asset-scroll-button asset-scroll-next" id="assetScrollNext" type="button" aria-label="Browse images to the right">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
           <div class="image-asset-actions">
             <button id="imageAssetFilter" type="button" aria-label="Filter images" aria-pressed="false">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7v5l-4 2v-7Z"/></svg>
@@ -877,7 +862,7 @@
         <!-- Main Texture Design Area -->
         <div class="texture-canvas-area">
           <div class="canvas-context">
-            <strong>Pattern canvas</strong>
+            <strong>2D Pattern Canvas</strong>
             <span>Select a garment panel to edit</span>
           </div>
           <div class="texture-canvas-frame" id="textureCanvasFrame">
@@ -947,12 +932,12 @@
                   alt="<%= model.name %>"
                   loading="lazy"
                   camera-controls
-                  camera-orbit="-48deg 72deg 158%"
+                  camera-orbit="-12deg 72deg 158%"
                   camera-target="auto auto auto"
                   field-of-view="28deg"
-                  shadow-intensity="0"
-                  shadow-softness="1"
-                  exposure="0.72"
+                  shadow-intensity="0.32"
+                  shadow-softness="0.9"
+                  exposure="0.7"
                   environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
                   tone-mapping="commerce"
                   data-entitlement-texture-watermark
@@ -1046,15 +1031,15 @@ const heroGradientAngleValue = document.getElementById('heroGradientAngleValue')
 const applyHeroGradient = document.getElementById('applyHeroGradient');
 const modelViewerPromises = new WeakMap();
 const defaultDetailRenderStandard = {
-  version: 'commercial-catalog-cover-v1',
+  version: 'commercial-studio-stage-v3',
   camera: {
-    webOrbit: '-48deg 72deg 142%',
-    webEditorOrbit: '-48deg 72deg 158%',
+    webOrbit: '-16deg 72deg 142%',
+    webEditorOrbit: '-12deg 72deg 158%',
     webFieldOfView: '28deg',
     webTarget: 'auto auto auto'
   },
   material: {
-    neutralizeBaseColor: true,
+    neutralizeBaseColor: false,
     baseColor: [0.96, 0.96, 0.95],
     roughness: 0.68,
     specularIorLevel: 0.32,
@@ -1067,14 +1052,14 @@ const defaultDetailRenderStandard = {
     lightingMode: 'front-back-balanced-product-studio',
     sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
     balanceMethod: '180-degree-lighten-mirror',
-    shadowIntensity: 0,
-    shadowSoftness: 1,
-    exportShadowIntensity: 0.32,
-    exportShadowSoftness: 0.96,
-    exposure: 0.72,
+    shadowIntensity: 0.32,
+    shadowSoftness: 0.9,
+    exportShadowIntensity: 0.46,
+    exportShadowSoftness: 0.88,
+    exposure: 0.7,
     toneMapping: 'commerce',
     material: {
-      neutralizeBaseColor: true,
+      neutralizeBaseColor: false,
       baseColor: [0.82, 0.82, 0.8],
       roughness: 0.62,
       specularIorLevel: 0.28,
@@ -1083,7 +1068,7 @@ const defaultDetailRenderStandard = {
   }
 };
 let detailSceneStandard = defaultDetailRenderStandard;
-const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260907-balanced-exposure-v6')
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260916-balanced-front-back-v9')
   .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
   .then((standard) => {
     detailSceneStandard = {
@@ -1112,9 +1097,9 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
   const webStandard = standard.web || defaultDetailRenderStandard.web;
   const isSideView = element.dataset.catalogRenderStandard === 'side';
   element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);
-  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0));
-  element.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 1));
-  element.setAttribute('exposure', String(webStandard.exposure ?? 0.72));
+  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
+  element.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.9));
+  element.setAttribute('exposure', String(webStandard.exposure ?? 0.7));
   element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
   element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
   element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
@@ -1609,7 +1594,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260915-quick-style-v49',
+      src: '/js/model-designer.js?v=20260917-toolbar-cleanup-v55',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

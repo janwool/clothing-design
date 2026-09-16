@@ -130,11 +130,12 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
               loading="eager"
               reveal="auto"
               camera-controls
-              shadow-intensity="1.45"
-              shadow-softness="0.62"
-              exposure="0.72"
-              environment-image="neutral"
-              camera-orbit="28deg 74deg 108%"
+              shadow-intensity="0.32"
+              shadow-softness="0.9"
+              exposure="0.7"
+              environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+              tone-mapping="commerce"
+              camera-orbit="-16deg 74deg 108%"
             ></model-viewer>
           <% } else { %>
             <img src="<%= model.image_url %>" alt="<%= model.name %>">

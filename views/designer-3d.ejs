@@ -49,11 +49,14 @@
           src="<%= previewModelFileUrl %>" 
           alt="<%= model.name %>"
           camera-controls
-          auto-rotate
-          shadow-intensity="1.55"
-          shadow-softness="0.52"
-          exposure="0.66"
-          environment-image="neutral"
+          camera-orbit="-12deg 72deg 142%"
+          camera-target="auto auto auto"
+          field-of-view="28deg"
+          shadow-intensity="0.32"
+          shadow-softness="0.9"
+          exposure="0.7"
+          environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+          tone-mapping="commerce"
           style="width: 100%; height: 100%;"
         ></model-viewer>
         <div class="model-viewer-spinner" id="designerViewerLoading" role="status" aria-live="polite">
@@ -121,7 +124,7 @@
         <div class="panel-content">
           <div class="control-group">
             <label>Roughness</label>
-            <input type="range" class="range-slider" id="roughnessSlider" min="0" max="1" step="0.1" value="0.5">
+            <input type="range" class="range-slider" id="roughnessSlider" min="0" max="1" step="0.1" value="0.6">
           </div>
           <div class="control-group">
             <label>Metalness</label>
@@ -136,14 +139,14 @@
           <div class="control-group">
             <label>Environment</label>
             <div class="pattern-options">
-              <button class="pattern-btn active" data-env="neutral">Neutral</button>
-              <button class="pattern-btn" data-env="studio">Studio</button>
+              <button class="pattern-btn" data-env="neutral">Neutral</button>
+              <button class="pattern-btn active" data-env="studio">Studio</button>
               <button class="pattern-btn" data-env="outdoor">Outdoor</button>
             </div>
           </div>
           <div class="control-group">
             <label class="checkbox-label">
-              <input type="checkbox" id="autoRotateCheck" checked>
+              <input type="checkbox" id="autoRotateCheck">
               <span>Auto Rotate</span>
             </label>
           </div>
@@ -171,6 +174,7 @@ const designerAiTryOn = document.getElementById('designerAiTryOn');
 const designerProjectState = { id: '', name: '' };
 const designerUserAuthenticated = <%- JSON.stringify(Boolean(user)) %>;
 const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
+const commercialStudioEnvironment = '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr';
 
 function hexToRgba(hex) {
   const safe = /^#[0-9a-f]{6}$/i.test(String(hex || '')) ? hex.slice(1) : 'ffffff';
@@ -259,7 +263,9 @@ envBtns.forEach(btn => {
     document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     if (viewer) {
-      viewer.environmentImage = btn.dataset.env === 'neutral' ? 'neutral' : '';
+      viewer.environmentImage = btn.dataset.env === 'studio'
+        ? commercialStudioEnvironment
+        : (btn.dataset.env === 'neutral' ? 'neutral' : '/environments/commercial-apparel-studio-v3-omnidirectional-20260829.hdr');
     }
     persistDesignerTryOnDesign();
   });
@@ -298,20 +304,20 @@ if (resetBtn) {
     
     // Reset environment
     document.querySelectorAll('.pattern-btn[data-env]').forEach(b => b.classList.remove('active'));
-    document.querySelector('.pattern-btn[data-env="neutral"]').classList.add('active');
+    document.querySelector('.pattern-btn[data-env="studio"]').classList.add('active');
     
     // Reset sliders
-    document.getElementById('roughnessSlider').value = 0.5;
+    document.getElementById('roughnessSlider').value = 0.6;
     document.getElementById('metalnessSlider').value = 0;
     
     // Reset viewer
     if (viewer) {
-      viewer.environmentImage = 'neutral';
-      viewer.autoRotate = true;
-      viewer.cameraOrbit = '0deg 75deg 105%';
-      viewer.shadowIntensity = 1.55;
-      viewer.shadowSoftness = 0.52;
-      viewer.exposure = 0.66;
+      viewer.environmentImage = commercialStudioEnvironment;
+      viewer.autoRotate = false;
+      viewer.cameraOrbit = '-12deg 72deg 142%';
+      viewer.shadowIntensity = 0.32;
+      viewer.shadowSoftness = 0.9;
+      viewer.exposure = 0.7;
     }
     applyDesignerAppearance();
     persistDesignerTryOnDesign();
@@ -323,7 +329,7 @@ function getDesignerProjectData() {
     baseColor: document.querySelector('.color-btn[data-target="base"].active')?.dataset.color || '#ffffff',
     accentColor: document.querySelector('.color-btn[data-target="accent"].active')?.dataset.color || '#ffffff',
     pattern: document.querySelector('.pattern-btn[data-pattern].active')?.dataset.pattern || 'none',
-    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'neutral',
+    environment: document.querySelector('.pattern-btn[data-env].active')?.dataset.env || 'studio',
     roughness: Number(document.getElementById('roughnessSlider').value),
     metalness: Number(document.getElementById('metalnessSlider').value),
     autoRotate: Boolean(autoRotateCheck?.checked)
@@ -380,7 +386,7 @@ async function loadDesignerProject() {
     activate(`.pattern-btn[data-env="${saved.environment}"]`);
     document.getElementById('roughnessSlider').value = Number(saved.roughness) || 0;
     document.getElementById('metalnessSlider').value = Number(saved.metalness) || 0;
-    autoRotateCheck.checked = saved.autoRotate !== false;
+    autoRotateCheck.checked = saved.autoRotate === true;
     if (viewer) viewer.autoRotate = autoRotateCheck.checked;
     designerProjectState.id = project.id;
     designerProjectState.name = project.name;

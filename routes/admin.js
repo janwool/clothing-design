@@ -4,6 +4,7 @@ const path = require('path');
 const db = require('../lib/db');
 const { generateSlug } = require('../lib/slug');
 const { ensureCustomizationInquiriesTable } = require('../lib/customization-inquiries-db');
+const { ensureFeedbackTable } = require('../lib/feedback-db');
 const { ensureUserContentTables } = require('../lib/user-content-db');
 const {
   ensureEntitlementTables,
@@ -297,6 +298,8 @@ function requireAuth(req, res, next) {
 
 const INQUIRY_PAGE_SIZE = 30;
 const INQUIRY_STATUSES = new Set(['all', 'pending', 'contacted', 'completed', 'closed']);
+const FEEDBACK_PAGE_SIZE = 30;
+const FEEDBACK_STATUSES = new Set(['all', 'new', 'reviewed', 'resolved', 'archived']);
 const PROJECT_PAGE_SIZE = 24;
 const PROJECT_TYPES = new Set(['all', '3d', 'white_mockup']);
 const IMAGE_PAGE_SIZE = 30;
@@ -305,6 +308,11 @@ const IMAGE_PURPOSES = new Set(['all', 'artwork', 'project-preview', 'project-te
 function normalizeInquiryStatus(value) {
   const status = String(value || 'all').trim().toLowerCase();
   return INQUIRY_STATUSES.has(status) ? status : 'all';
+}
+
+function normalizeFeedbackStatus(value) {
+  const status = String(value || 'all').trim().toLowerCase();
+  return FEEDBACK_STATUSES.has(status) ? status : 'all';
 }
 
 function normalizeInquiryPage(value) {
@@ -378,6 +386,12 @@ function safeProjectSourceUrl(value) {
   return url;
 }
 
+function safeFeedbackSourceUrl(value) {
+  const url = String(value || '').trim();
+  if (/^\/(?!\/)[^\s]*$/.test(url)) return url;
+  return safeHttpUrl(url);
+}
+
 // Admin Dashboard
 router.get('/', requireAuth, async (req, res) => {
   try {
@@ -388,6 +402,8 @@ router.get('/', requireAuth, async (req, res) => {
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
     const users = await db.get('SELECT COUNT(*) as count FROM users');
     const inquiries = await db.get('SELECT COUNT(*) as count FROM customization_inquiries');
+    await ensureFeedbackTable();
+    const feedback = await db.get('SELECT COUNT(*) as count FROM feedback_submissions');
     await ensureUserContentTables();
     const projects = await db.get('SELECT COUNT(*) as count FROM design_projects');
     const images = await db.get('SELECT COUNT(*) as count FROM user_images');
@@ -402,6 +418,7 @@ router.get('/', requireAuth, async (req, res) => {
         tools: tools ? tools.count : 0,
         users: users ? users.count : 0,
         inquiries: inquiries ? inquiries.count : 0,
+        feedback: feedback ? feedback.count : 0,
         projects: projects ? projects.count : 0,
         images: images ? images.count : 0
       }
@@ -410,7 +427,7 @@ router.get('/', requireAuth, async (req, res) => {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, projects: 0, images: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, feedback: 0, projects: 0, images: 0 }
     });
   }
 });
@@ -494,6 +511,112 @@ router.get('/inquiries', requireAuth, async (req, res) => {
       inquiryStats: { total: 0, pending: 0, handled: 0 },
       error: 'Customization inquiries could not be loaded.'
     });
+  }
+});
+
+// ==================== Product Feedback ====================
+router.get('/feedback', requireAuth, async (req, res) => {
+  const status = normalizeFeedbackStatus(req.query.status);
+  const search = String(req.query.q || '').trim().slice(0, 100);
+  const requestedPage = normalizeInquiryPage(req.query.page);
+
+  try {
+    await ensureFeedbackTable();
+    const where = [];
+    const params = [];
+
+    if (status !== 'all') {
+      where.push('f.status = ?');
+      params.push(status);
+    }
+    if (search) {
+      const pattern = `%${search}%`;
+      where.push('(f.email LIKE ? OR f.message LIKE ? OR f.source_url LIKE ? OR u.email LIKE ? OR u.name LIKE ?)');
+      params.push(pattern, pattern, pattern, pattern, pattern);
+    }
+
+    const whereSql = where.length ? `WHERE ${where.join(' AND ')}` : '';
+    const totalRow = await db.get(
+      `SELECT COUNT(*) as count
+       FROM feedback_submissions f
+       LEFT JOIN users u ON u.id = f.user_id
+       ${whereSql}`,
+      params
+    );
+    const total = Number(totalRow?.count || 0);
+    const pageCount = Math.max(1, Math.ceil(total / FEEDBACK_PAGE_SIZE));
+    const page = Math.min(requestedPage, pageCount);
+    const offset = (page - 1) * FEEDBACK_PAGE_SIZE;
+    const items = await db.all(
+      `SELECT
+        f.id, f.user_id, f.email, f.message, f.source_url,
+        f.status, f.created_at, f.updated_at,
+        u.name as user_name, u.email as user_email
+       FROM feedback_submissions f
+       LEFT JOIN users u ON u.id = f.user_id
+       ${whereSql}
+       ORDER BY f.created_at DESC, f.id DESC
+       LIMIT ? OFFSET ?`,
+      [...params, FEEDBACK_PAGE_SIZE, offset]
+    );
+    const stats = await db.get(`SELECT
+      COUNT(*) as total,
+      SUM(CASE WHEN status = 'new' THEN 1 ELSE 0 END) as new_count,
+      SUM(CASE WHEN status = 'reviewed' THEN 1 ELSE 0 END) as reviewed,
+      SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+      FROM feedback_submissions`);
+
+    res.render('admin/feedback', {
+      title: 'User Feedback',
+      page: 'admin-feedback',
+      items: (items || []).map(item => ({
+        ...item,
+        source_url_safe: safeFeedbackSourceUrl(item.source_url),
+        created_at_display: formatInquiryDate(item.created_at),
+        updated_at_display: formatInquiryDate(item.updated_at)
+      })),
+      feedbackFilters: { status, search },
+      feedbackPagination: { page, pageCount, total },
+      feedbackStats: {
+        total: Number(stats?.total || 0),
+        new: Number(stats?.new_count || 0),
+        reviewed: Number(stats?.reviewed || 0),
+        resolved: Number(stats?.resolved || 0)
+      },
+      error: ''
+    });
+  } catch (err) {
+    console.error('Failed to load product feedback:', err);
+    res.render('admin/feedback', {
+      title: 'User Feedback',
+      page: 'admin-feedback',
+      items: [],
+      feedbackFilters: { status, search },
+      feedbackPagination: { page: 1, pageCount: 1, total: 0 },
+      feedbackStats: { total: 0, new: 0, reviewed: 0, resolved: 0 },
+      error: 'Feedback could not be loaded.'
+    });
+  }
+});
+
+router.put('/feedback/:id/status', requireAuth, async (req, res) => {
+  const status = normalizeFeedbackStatus(req.body?.status);
+  if (status === 'all') {
+    return res.status(400).json({ success: false, error: 'Choose a valid feedback status.' });
+  }
+
+  try {
+    await ensureFeedbackTable();
+    const result = await db.run(
+      'UPDATE feedback_submissions SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [status, req.params.id]
+    );
+    if (!result.changes) {
+      return res.status(404).json({ success: false, error: 'Feedback not found.' });
+    }
+    return res.json({ success: true, status });
+  } catch (err) {
+    return res.status(500).json({ success: false, error: 'Feedback status could not be updated.' });
   }
 });
 

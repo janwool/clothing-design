@@ -2130,6 +2130,7 @@ router.get('/', async (req, res) => {
       metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,
       page: 'home',
+      bodyClass: 'home-canvas-page',
       homeContent
     });
   } catch (err) {
@@ -2141,6 +2142,7 @@ router.get('/', async (req, res) => {
       metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,
       page: 'home',
+      bodyClass: 'home-canvas-page',
       homeContent
     });
   }
@@ -2387,6 +2389,7 @@ router.get('/mockups', async (req, res) => {
         getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
       }),
       page: 'design-3d',
+      pageStyles: ['/css/mockups-library.css?v=20260917-flat-cards-v10'],
       models: displayModels,
       catalogModels: normalizedModels,
       catalogTotal: libraryTotal,
@@ -2417,6 +2420,7 @@ router.get('/mockups', async (req, res) => {
         ]
       }),
       page: 'design-3d',
+      pageStyles: ['/css/mockups-library.css?v=20260917-flat-cards-v10'],
       models: [],
       catalogModels: [],
       catalogTotal: 0,
@@ -2848,14 +2852,57 @@ router.get('/mockups/:slug', async (req, res) => {
       return res.status(404).render('404', { title: 'Not Found', page: '' });
     }
     const normalizedAllModels = normalize3dModels(allModels);
+    const catalogQuery = String(req.query.q || '').trim().slice(0, 80);
+    const catalogSort = ['featured', 'name', 'newest'].includes(req.query.sort) ? req.query.sort : 'featured';
+    const queryNeedle = catalogQuery.toLowerCase();
+    const filteredItems = normalizedItems.filter(model => {
+      if (!queryNeedle) return true;
+      return [model.name, model.category_label, model.category, model.description]
+        .filter(Boolean)
+        .some(value => String(value).toLowerCase().includes(queryNeedle));
+    });
+    if (catalogSort === 'name') {
+      filteredItems.sort((a, b) => String(a.name).localeCompare(String(b.name), 'en'));
+    } else if (catalogSort === 'newest') {
+      filteredItems.sort((a, b) => new Date(b.updated_at || b.created_at || 0) - new Date(a.updated_at || a.created_at || 0));
+    }
+    const total = filteredItems.length;
+    const pageCount = Math.max(1, Math.ceil(total / MOCKUP_PAGE_SIZE));
+    const page = Math.min(normalizeMockupPage(req.query.page), pageCount);
+    const offset = (page - 1) * MOCKUP_PAGE_SIZE;
+    const displayModels = filteredItems.slice(offset, offset + MOCKUP_PAGE_SIZE);
+    const pagination = {
+      page,
+      pageCount,
+      pageSize: MOCKUP_PAGE_SIZE,
+      total,
+      start: total ? offset + 1 : 0,
+      end: Math.min(offset + displayModels.length, total),
+      pages: buildMockupPageNumbers(page, pageCount)
+    };
+    const categoryCounts = normalizedAllModels.reduce((counts, model) => {
+      (model.category_slugs || [model.category_slug || model.category]).forEach(slug => {
+        counts[slug] = (counts[slug] || 0) + 1;
+      });
+      return counts;
+    }, {});
     const seoTitle = categoryMetaTitle(category.name);
     const description = categoryMetaDescription(category.name) || categoryDescription(category.name);
     const categoryImage = firstImage(req, [CATEGORY_IMAGE_ASSETS[category.slug], ...normalizedItems.map(item => item.image_url)]);
     const landingContent = getLandingContent(category);
     const categoryFaqItems = landingContent.faq?.items || [];
-    
-    res.render('category-landing', {
-      title: buildSeoTitle(seoTitle, 'ClozDesign', 65),
+    const collectionParams = new URLSearchParams();
+    if (page > 1) collectionParams.set('page', String(page));
+    if (catalogQuery) collectionParams.set('q', catalogQuery);
+    if (catalogSort !== 'featured') collectionParams.set('sort', catalogSort);
+    const baseCategoryPath = `/mockups/${category.slug}`;
+    const collectionPath = collectionParams.size ? `${baseCategoryPath}?${collectionParams.toString()}` : baseCategoryPath;
+    res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
+
+    res.render('design-3d', {
+      title: page > 1
+        ? `${buildSeoTitle(seoTitle, 'ClozDesign', 65)} — Page ${page}`
+        : buildSeoTitle(seoTitle, 'ClozDesign', 65),
       metaDescription: description,
       metaImage: categoryImage,
       structuredData: [
@@ -2864,7 +2911,7 @@ router.get('/mockups/:slug', async (req, res) => {
           image_url: CATEGORY_IMAGE_ASSETS[category.slug],
           meta_title: seoTitle,
           meta_description: description
-        }, normalizedItems, '3d-models', '3D Models'),
+        }, displayModels, '3d-models', '3D Models'),
         {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
@@ -2879,13 +2926,20 @@ router.get('/mockups/:slug', async (req, res) => {
         }
       ],
       page: 'design-3d',
-      category: { ...category, meta_title: seoTitle, description },
-      items: normalizedItems,
+      pageStyles: ['/css/mockups-library.css?v=20260917-flat-cards-v10'],
+      activeCategory: { ...category, meta_title: seoTitle, description },
+      currentCategoryTotal: normalizedItems.length,
+      models: displayModels,
+      catalogModels: normalizedAllModels,
+      catalogTotal: normalizedAllModels.length,
+      catalogResultTotal: total,
+      catalogQuery: { q: catalogQuery, sort: catalogSort },
+      catalogPagination: pagination,
+      categoryCounts,
       categories: withCategoryImages(categories),
-      models: normalizedAllModels,
       landingContent,
-      resourceType: '3d-models',
-      resourceTypeLabel: '3D Models'
+      featuredModels: [],
+      recentModels: normalizedItems.slice(0, 24)
     });
   } catch (err) {
     res.status(500).render('404', { title: 'Error', page: '' });

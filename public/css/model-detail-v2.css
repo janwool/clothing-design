@@ -227,7 +227,7 @@
 
 .model-product-page .model-detail-poster { padding: clamp(18px, 2vw, 32px); background: transparent; }
 .model-product-page .model-3d-viewer::after { display: none; }
-.model-product-page .model-contact-shadow { position: absolute; right: 35%; bottom: 5%; left: 35%; display: block; height: 4%; z-index: 0; border-radius: 50%; background: radial-gradient(ellipse, rgba(19, 22, 25, 0.3) 0%, rgba(19, 22, 25, 0.18) 44%, rgba(19, 22, 25, 0.04) 68%, transparent 76%); pointer-events: none; }
+.model-product-page .model-contact-shadow { display: none; }
 .model-product-page .model-viewer-natural { --poster-color: transparent; --progress-bar-height: 0px; --progress-bar-color: transparent; position: relative; z-index: 1; background: transparent; filter: none; touch-action: none; }
 
 .model-product-page .model-viewer-controls {
@@ -961,10 +961,7 @@ body.model-login-open { overflow: hidden; }
 }
 
 .model-product-page .model-contact-shadow {
-  right: 33%;
-  bottom: 3.5%;
-  left: 33%;
-  height: 3.5%;
+  display: none;
 }
 
 .model-product-page .viewer-explore-hint {

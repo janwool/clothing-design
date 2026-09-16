@@ -86,7 +86,9 @@ test('closes transient editor overlays before closing the design modal with Esca
 
 test('keeps the compact primary rail focused on visible editor tools', () => {
   assert.match(view, /id="toolImage" title="Add Image"/);
-  assert.match(view, /id="toolColor" title="Garment color"/);
-  assert.match(view, /id="toolMaterial" title="Garment material"/);
+  assert.doesNotMatch(view, /id="toolColor"/);
+  assert.doesNotMatch(view, /id="toolMaterial"/);
+  assert.match(view, /class="design-appearance-card"/);
+  assert.match(view, /class="material-panel"/);
   assert.doesNotMatch(view, /id="toolPan"/);
 });

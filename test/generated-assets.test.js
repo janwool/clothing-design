@@ -86,7 +86,23 @@ test('presents the complete generated material library as real fabric samples', 
   assert.match(designerScript, /getGeneratedMaterials\?\.\(\)/);
   assert.match(designerScript, /material-swatch-preview/);
   assert.match(designerScript, /button\.setAttribute\('aria-label', material\.name\)/);
-  assert.match(designerScript, /preview\.style\.backgroundImage = `url/);
+  assert.match(designerScript, /materialPreviewUrls\[material\.id\] \|\| material\.maps\.baseColor/);
+  [
+    'cotton.webp',
+    'jersey.webp',
+    'french-terry.webp',
+    'fleece.webp',
+    'poplin.webp',
+    'linen.webp',
+    'denim.webp',
+    'twill.webp',
+    'wool-blend.webp',
+    'nylon-ripstop.webp',
+    'satin.webp',
+    'velvet.webp'
+  ].forEach((filename) => {
+    assert.ok(fs.existsSync(path.join(projectRoot, 'public/images/material-previews', filename)), filename);
+  });
   assert.match(designerScript, /includeBaseColorMap: options\.includeBaseColorMap !== false/);
   assert.doesNotMatch(designerScript, /querySelector\('\.material-ball'\)\.style\.background = material\.sphere/);
   assert.match(stylesheet, /grid-auto-columns: 82px/);
@@ -110,18 +126,18 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.match(designerScript, /setSheenRoughnessFactor\?\.\(material\.sheenRoughness/);
   assert.match(designerScript, /setSpecularFactor\?\.\(material\.specular/);
   assert.equal(renderStandard.web.environmentImage, '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr');
-  assert.equal(renderStandard.camera.webEditorOrbit, '-48deg 72deg 158%');
+  assert.equal(renderStandard.camera.webEditorOrbit, '-12deg 72deg 158%');
   assert.equal(renderStandard.web.lightingMode, 'front-back-balanced-product-studio');
   assert.equal(renderStandard.web.sourceEnvironment, '/environments/commercial-apparel-studio-v2-20260829.hdr');
   assert.equal(renderStandard.web.balanceMethod, '180-degree-lighten-mirror');
   assert.deepEqual(renderStandard.web.environmentBake.resolution, [2048, 1024]);
   assert.equal(renderStandard.web.environmentBake.sourceStrength, 1.12);
-  assert.equal(renderStandard.web.shadowIntensity, 0);
-  assert.equal(renderStandard.web.shadowSoftness, 1);
-  assert.equal(renderStandard.web.exportShadowIntensity, 0.58);
-  assert.equal(renderStandard.web.exportShadowSoftness, 0.84);
-  assert.equal(renderStandard.web.exportExposure, 0.78);
-  assert.equal(renderStandard.web.exposure, 0.72);
+  assert.equal(renderStandard.web.shadowIntensity, 0.32);
+  assert.equal(renderStandard.web.shadowSoftness, 0.9);
+  assert.equal(renderStandard.web.exportShadowIntensity, 0.46);
+  assert.equal(renderStandard.web.exportShadowSoftness, 0.88);
+  assert.equal(renderStandard.web.exportExposure, 0.76);
+  assert.equal(renderStandard.web.exposure, 0.7);
   assert.equal(renderStandard.web.toneMapping, 'commerce');
   assert.deepEqual(renderStandard.web.material.baseColor, [0.82, 0.82, 0.8]);
   assert.deepEqual(renderStandard.web.exportMaterial, {
@@ -133,8 +149,8 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   });
   assert.equal(studioEnvironment.toString('ascii', 0, 10), '#?RADIANCE');
   assert.ok(studioEnvironment.length > 100000);
-  assert.match(template, /shadow-intensity="0"/);
-  assert.match(template, /shadow-softness="1"/);
+  assert.match(template, /shadow-intensity="0\.32"/);
+  assert.match(template, /shadow-softness="0\.9"/);
   assert.match(template, /tone-mapping="commerce"/);
 });
 

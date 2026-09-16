@@ -1,20 +1,25 @@
-<%- include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page' }) %>
+<%- include('partials/header', { bodyClass: 'category-catalog-page all-models-catalog-page mockup-library-page' }) %>
 <%
   const mockupPagination = typeof catalogPagination !== 'undefined' && catalogPagination
     ? catalogPagination
     : { page: 1, pageCount: 1, total: models.length, start: models.length ? 1 : 0, end: models.length, pages: [1] };
   const mockupTotal = typeof catalogTotal !== 'undefined' ? catalogTotal : models.length;
-  const mockupResultTotal = typeof catalogResultTotal !== 'undefined' ? catalogResultTotal : mockupPagination.total;
+  const activeMockupCategory = typeof activeCategory !== 'undefined' && activeCategory ? activeCategory : null;
+  const mockupBasePath = activeMockupCategory ? `/mockups/${activeMockupCategory.slug}` : '/mockups';
+  const currentCatalogTotal = activeMockupCategory
+    ? (typeof currentCategoryTotal !== 'undefined' ? currentCategoryTotal : mockupPagination.total)
+    : mockupTotal;
   const mockupQuery = typeof catalogQuery !== 'undefined' && catalogQuery ? catalogQuery : { q: '', sort: 'featured' };
   const mockupPageHref = function(pageNumber) {
     const params = [];
     if (pageNumber > 1) params.push(`page=${pageNumber}`);
     if (mockupQuery.q) params.push(`q=${encodeURIComponent(mockupQuery.q)}`);
     if (mockupQuery.sort && mockupQuery.sort !== 'featured') params.push(`sort=${encodeURIComponent(mockupQuery.sort)}`);
-    return `/mockups${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
+    return `${mockupBasePath}${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
   };
-  const allModelCountLabel = mockupTotal ? `${mockupTotal} free 3D models` : 'Free 3D model library';
-  const allCatalogCountLabel = mockupTotal ? `${mockupTotal} free models` : 'Free model library';
+  const allModelCountLabel = currentCatalogTotal ? `${currentCatalogTotal} free 3D models` : 'Free 3D model library';
+  const masonrySizes = ['compact', 'tall', 'medium', 'compact', 'tall', 'medium', 'compact', 'medium'];
+  const masonryTones = ['ice', 'white', 'mist', 'cloud', 'frost', 'silver'];
   const allCatalogSteps = [
     { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
     { title: 'Inspect & customize', body: 'Rotate, zoom, and explore details and settings.' },
@@ -22,94 +27,120 @@
   ];
 %>
 
-<header class="category-catalog-header">
-  <div class="category-catalog-shell">
-    <span class="category-catalog-kicker">3D model library</span>
-    <div class="category-catalog-heading">
-      <h1>All 3D models</h1>
-      <p>Browse the complete garment library, inspect each shape, and open the browser-based 3D mockup workspace.</p>
-      <span aria-label="<%= allModelCountLabel %>"><%= allCatalogCountLabel %></span>
-    </div>
-  </div>
-</header>
+<div class="mockups-page-shell">
+  <aside class="mockups-sidebar" aria-label="3D model library navigation">
+    <div class="mockups-sidebar-inner">
+      <span class="mockups-sidebar-kicker">3D model library</span>
+      <div class="mockups-sidebar-heading">
+        <strong>Browse</strong>
+        <span><%= mockupTotal %> garments</span>
+      </div>
 
-<nav class="category-catalog-family" aria-label="Garment categories">
-  <div class="category-catalog-family-shell">
-    <button class="category-family-control category-family-control-prev" type="button" aria-label="Scroll categories left" disabled>
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m10 3-5 5 5 5"/></svg>
-    </button>
-    <div class="category-catalog-family-viewport" tabindex="0">
-      <div class="category-catalog-family-track">
-        <a href="/mockups" class="active" aria-current="page">
-          <%- include('partials/category-icon', { slug: 'all', name: t('design3d.filterAll') }) %>
-          <span><%= t('design3d.filterAll') %></span>
+      <nav class="mockups-sidebar-nav" aria-label="Garment categories">
+        <a href="/mockups#free-3d-models" class="<%= activeMockupCategory ? '' : 'is-active' %>" <%= activeMockupCategory ? '' : 'aria-current="page"' %>>
+          <svg class="category-filter-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1"/>
+            <rect x="14" y="3.5" width="6.5" height="6.5" rx="1"/>
+            <rect x="3.5" y="14" width="6.5" height="6.5" rx="1"/>
+            <rect x="14" y="14" width="6.5" height="6.5" rx="1"/>
+          </svg>
+          <span>All models</span>
+          <strong><%= mockupTotal %></strong>
         </a>
         <% categories.forEach(function(cat) { %>
-          <a href="/mockups/<%= cat.slug %>">
+          <a href="/mockups/<%= cat.slug %>" class="<%= activeMockupCategory && cat.slug === activeMockupCategory.slug ? 'is-active' : '' %>" <%= activeMockupCategory && cat.slug === activeMockupCategory.slug ? 'aria-current="page"' : '' %>>
             <%- include('partials/category-icon', { slug: cat.slug, name: cat.name }) %>
             <span><%= cat.name %></span>
+            <strong><%= typeof categoryCounts !== 'undefined' && categoryCounts[cat.slug] ? categoryCounts[cat.slug] : '' %></strong>
           </a>
         <% }); %>
+      </nav>
+
+      <div class="mockups-sidebar-foot" aria-hidden="true">
+        <span>01</span>
+        <i></i>
+        <span>Garment archive</span>
       </div>
     </div>
-    <button class="category-family-control category-family-control-next" type="button" aria-label="Scroll categories right">
-      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5"/></svg>
-    </button>
-  </div>
-</nav>
+  </aside>
 
-<main class="category-catalog-workspace all-catalog-workspace" id="free-3d-models">
-  <div class="category-catalog-shell category-catalog-results">
-    <div class="all-catalog-toolbar-row">
-      <div class="all-catalog-result-copy" aria-live="polite">
-        <strong><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : 'All garments' %></strong>
-        <span>
+  <div class="mockups-content">
+    <header class="mockups-hero" aria-labelledby="mockups-hero-title">
+      <div class="mockups-hero-shell">
+        <div class="mockups-hero-copy">
+          <span class="mockups-eyebrow"><%= activeMockupCategory ? `Free ${activeMockupCategory.name} 3D models` : 'Free 3D clothing models' %></span>
+          <h1 id="mockups-hero-title"><% if (activeMockupCategory) { %>Explore <%= activeMockupCategory.name %> models.<br>Start designing.<% } else { %>Pick a 3D garment.<br>Start designing.<% } %></h1>
+          <p><%= activeMockupCategory ? `Browse free ${activeMockupCategory.name} models, open a style in your browser, and customize colors, materials, and artwork.` : 'Browse free clothing models, open any style in your browser, and customize colors, materials, and artwork.' %></p>
+
+          <div class="mockups-hero-tools">
+            <form class="mockups-search" action="<%= mockupBasePath %>#free-3d-models" method="get" role="search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>
+              <label class="sr-only" for="mockups-search-input">Search 3D garment models</label>
+              <input id="mockups-search-input" type="search" name="q" value="<%= mockupQuery.q %>" placeholder="Search garments and styles" autocomplete="off">
+              <% if (mockupQuery.sort && mockupQuery.sort !== 'featured') { %>
+                <input type="hidden" name="sort" value="<%= mockupQuery.sort %>">
+              <% } %>
+              <button class="sr-only" type="submit">Search models</button>
+            </form>
+            <span class="mockups-model-count" aria-label="<%= allModelCountLabel %>"><strong><%= currentCatalogTotal %></strong> models</span>
+          </div>
+        </div>
+
+        <div class="mockups-hero-media">
+          <picture>
+            <source srcset="/images/hero/mockups-library-fashion-studio-v1.webp" type="image/webp">
+            <img src="/images/hero/mockups-library-fashion-studio-v1.png" alt="Oversized T-shirt, technical jacket, and modern dress in a cool digital fashion studio" width="1536" height="1024" fetchpriority="high" decoding="async">
+          </picture>
+        </div>
+      </div>
+    </header>
+
+    <section class="mockups-catalog" id="free-3d-models">
+  <div class="mockups-catalog-shell">
+    <div class="mockups-catalog-heading">
+      <div>
+        <span class="mockups-catalog-kicker"><%= mockupQuery.q ? 'Search results' : 'Curated garment archive' %></span>
+        <h2><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : (activeMockupCategory ? `${activeMockupCategory.name} collection` : 'Explore the collection') %></h2>
+        <p aria-live="polite">
           <% if (mockupPagination.total) { %>
             Showing <%= mockupPagination.start %>–<%= mockupPagination.end %> of <%= mockupPagination.total %>
           <% } else { %>
             No matching models
           <% } %>
-        </span>
+        </p>
       </div>
 
-      <form class="catalog-toolbar all-catalog-sort-toolbar" action="/mockups#free-3d-models" method="get">
-        <label class="catalog-sort-field">
-          <span class="sr-only">Sort models</span>
-          <select name="sort" onchange="this.form.submit()" aria-label="Sort models">
-            <option value="featured" <%= mockupQuery.sort === 'featured' ? 'selected' : '' %>>Featured</option>
-            <option value="name" <%= mockupQuery.sort === 'name' ? 'selected' : '' %>>Name A–Z</option>
-            <option value="newest" <%= mockupQuery.sort === 'newest' ? 'selected' : '' %>>Newest</option>
-          </select>
-        </label>
+      <form class="mockups-sort" action="<%= mockupBasePath %>#free-3d-models" method="get">
+        <% if (mockupQuery.q) { %><input type="hidden" name="q" value="<%= mockupQuery.q %>"><% } %>
+        <label class="sr-only" for="mockups-sort-select">Sort models</label>
+        <select id="mockups-sort-select" name="sort" onchange="this.form.submit()" aria-label="Sort models">
+          <option value="featured" <%= mockupQuery.sort === 'featured' ? 'selected' : '' %>>Featured</option>
+          <option value="name" <%= mockupQuery.sort === 'name' ? 'selected' : '' %>>Name A–Z</option>
+          <option value="newest" <%= mockupQuery.sort === 'newest' ? 'selected' : '' %>>Newest</option>
+        </select>
       </form>
     </div>
 
-    <div class="models-grid">
+    <div class="models-grid mockups-masonry-grid">
       <% if (models && models.length > 0) { %>
-        <% models.forEach(function(model) { %>
+        <% models.forEach(function(model, index) { %>
           <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
-          <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card" data-category="<%= model.category_slug || model.category %>">
+          <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card mockups-masonry-card mockups-card-<%= masonrySizes[index % masonrySizes.length] %> mockups-card-<%= masonryTones[index % masonryTones.length] %>" data-category="<%= model.category_slug || model.category %>" aria-label="Open <%= modelDisplayName %> 3D model">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
-                <img src="<%= model.image_url %>" alt="Free <%= model.name %> 3D clothing model and apparel mockup" class="model-img" loading="lazy">
+                <img src="<%= model.image_url %>" alt="" class="model-img" loading="lazy" decoding="async">
               <% } else { %>
-                <div class="model-placeholder"><span><%= model.name.charAt(0) %></span></div>
+                <div class="model-placeholder" aria-hidden="true"></div>
               <% } %>
             </div>
-            <div class="model-info">
-              <div>
-                <h3 class="model-name"><%= modelDisplayName %></h3>
-                <span class="category-model-status">Free</span>
-              </div>
-              <span class="category-model-action">Open model <span aria-hidden="true">›</span></span>
-            </div>
+            <span class="sr-only"><%= modelDisplayName %></span>
           </a>
         <% }); %>
       <% } else { %>
         <div class="empty-state all-catalog-empty-state">
           <strong>No garments match this search.</strong>
-          <p>Try a broader garment type or clear the current filters.</p>
-          <a class="btn btn-secondary" href="/mockups#free-3d-models">Clear search</a>
+          <p>Try a broader garment type or clear the current search.</p>
+          <a class="btn btn-secondary" href="<%= mockupBasePath %>#free-3d-models">Clear search</a>
         </div>
       <% } %>
     </div>
@@ -145,7 +176,7 @@
       </div>
     <% } %>
   </div>
-</main>
+</section>
 
 <% if (mockupPagination.page === 1 && !mockupQuery.q) { %>
   <section class="category-field-guide all-catalog-field-guide">
@@ -172,29 +203,7 @@
   </section>
 <% } %>
 
-<script>
-  (function () {
-    var viewport = document.querySelector('.category-catalog-family-viewport');
-    var previous = document.querySelector('.category-family-control-prev');
-    var next = document.querySelector('.category-family-control-next');
-    if (!viewport || !previous || !next) return;
-
-    function updateControls() {
-      var maximum = viewport.scrollWidth - viewport.clientWidth;
-      previous.disabled = viewport.scrollLeft <= 2;
-      next.disabled = viewport.scrollLeft >= maximum - 2 || maximum <= 2;
-    }
-
-    function move(direction) {
-      viewport.scrollBy({ left: direction * Math.max(280, viewport.clientWidth * 0.72), behavior: 'smooth' });
-    }
-
-    previous.addEventListener('click', function () { move(-1); });
-    next.addEventListener('click', function () { move(1); });
-    viewport.addEventListener('scroll', updateControls, { passive: true });
-    window.addEventListener('resize', updateControls);
-    updateControls();
-  }());
-</script>
+  </div>
+</div>
 
 <%- include('partials/footer') %>

@@ -1,247 +1,157 @@
 <%- include('partials/header') %>
-<% const content = homeContent || {}; %>
-<% const heroImages = content.heroImages || []; %>
-<% const stats = content.stats || []; %>
-<% const workflow = content.workflow || []; %>
-<% const useCases = content.useCases || []; %>
-<% const faq = content.faq || []; %>
-<% const featuredModels = content.featuredModels || []; %>
-<% const featuredCategories = content.featuredCategories || []; %>
+<%
+  const activeHomepageTshirt = homeContent && Array.isArray(homeContent.featuredModels)
+    ? homeContent.featuredModels.find(model => model.slug === 'basic-short-sleeve-tshirt-3d-model')
+    : null;
+  const activeHomepageTshirtImage = activeHomepageTshirt && activeHomepageTshirt.image_url
+    ? activeHomepageTshirt.image_url
+    : 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/basic-short-sleeve-tshirt-3d-model.webp';
+%>
 
-<section class="home-hero">
-  <div class="container home-hero-container">
-    <div class="home-hero-content">
-      <span class="generator-eyebrow home-hero-reveal">Free browser apparel studio</span>
-      <h1 class="home-hero-reveal">Put your artwork on a real garment shape.</h1>
-      <p class="home-hero-reveal">
-        Choose a 3D garment, place a graphic, check front and back views,
-        then export a transparent PNG for product pages, POD listings, and review.
-      </p>
-      <div class="hero-actions home-hero-reveal">
-        <a href="/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design" class="btn btn-primary btn-large" data-analytics-event="home_hero_mockup_tool_click">Start with a T-shirt</a>
-        <a href="/mockups" class="btn btn-secondary btn-large" data-analytics-event="home_hero_models_click">Choose another garment</a>
-      </div>
-      <% if (stats.length) { %>
-        <dl class="home-hero-stats home-hero-reveal">
-          <% stats.forEach(function(stat) { %>
-            <div>
-              <dt><%= stat.value %></dt>
-              <dd><%= stat.label %></dd>
-            </div>
-          <% }); %>
-        </dl>
-      <% } %>
-    </div>
-
-    <figure class="home-hero-visual home-hero-reveal">
-      <img src="/images/hero/apparel-design-hero-v3.webp" alt="Oversized cotton T-shirt with an original screen-print design" width="1120" height="1400" decoding="async" fetchpriority="high">
-    </figure>
-  </div>
-</section>
-
-<section class="home-answer-section home-reveal">
-  <div class="container">
-    <div class="home-answer-grid">
-      <div>
-        <span class="generator-eyebrow home-copy-reveal">Quick answer</span>
-        <h2 class="home-copy-reveal">What is ClozDesign?</h2>
-      </div>
-      <p class="home-copy-reveal">
-        ClozDesign is a free 3D clothing model library and browser-based apparel mockup workspace.
-        Choose a garment, preview artwork placement, test colors, and create clean product visuals before
-        samples, photoshoots, or product pages are ready.
-      </p>
-    </div>
-  </div>
-</section>
-
-<section class="generator-section home-tshirt-cluster home-reveal">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">Popular T-shirt workflow</span>
-      <h2 class="home-copy-reveal">Create a free T-shirt mockup from the right starting point</h2>
-      <p class="home-copy-reveal">Choose the generator for a guided workflow, browse every T-shirt fit, or open the classic crew-neck model directly.</p>
-    </div>
-    <div class="generator-output-grid">
-      <a class="generator-output-card home-reveal-card" href="/tools/t-shirt-mockup-generator" data-analytics-event="home_tshirt_generator_click">
-        <h3 class="home-copy-reveal">T-shirt mockup generator</h3>
-        <p class="home-copy-reveal">Test garment colors, artwork placement, viewing angles, and product-image direction in one workflow.</p>
-        <strong>Start a T-shirt mockup →</strong>
+<section class="home-canvas home-entry" aria-labelledby="home-entry-heading">
+  <div class="home-canvas-shell">
+    <header class="home-entry-intro">
+      <span class="home-entry-kicker">3D MODELS · WHITE MOCKUPS</span>
+      <h1 id="home-entry-heading">Create apparel designs with<br> 3D models and white mockups.</h1>
+      <p>Choose a garment, test color and artwork, then see every idea from every angle or on a real silhouette.</p>
+    </header>
+    <div class="home-entry-grid">
+      <a class="home-entry-card home-entry-card-models" href="/mockups" data-analytics-event="home_entry_3d_models_click">
+        <span class="home-entry-copy">
+          <strong>Explore 3D Models</strong>
+          <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
+        </span>
+        <img src="<%= activeHomepageTshirtImage %>" alt="Active white 3D T-shirt model" width="1200" height="1500" fetchpriority="high" decoding="async">
       </a>
-      <a class="generator-output-card home-reveal-card" href="/mockups/t-shirt-mockup" data-analytics-event="home_tshirt_models_click">
-        <h3 class="home-copy-reveal">Free T-shirt 3D models</h3>
-        <p class="home-copy-reveal">Compare classic, oversized, polo, and long-sleeve models before choosing a blank.</p>
-        <strong>Browse T-shirt models →</strong>
-      </a>
-      <a class="generator-output-card home-reveal-card" href="/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design" data-analytics-event="home_tshirt_classic_model_click">
-        <h3 class="home-copy-reveal">Basic short-sleeve T-shirt</h3>
-        <p class="home-copy-reveal">Open a familiar blank directly in the design studio for chest logos, front graphics, back prints, and POD listings.</p>
-        <strong>Customize this T-shirt →</strong>
+      <a class="home-entry-card home-entry-card-mockups" href="/white-mockups" data-analytics-event="home_entry_white_mockups_click">
+        <span class="home-entry-copy">
+          <strong>Browse White Mockups</strong>
+          <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
+        </span>
+        <img src="/images/mockups/on-model/generated/young-western-female-tee-v4-base.png" alt="Model wearing a blank white T-shirt" width="1024" height="1536" fetchpriority="high" decoding="async">
       </a>
     </div>
-  </div>
-</section>
-
-<section class="generator-section home-reveal">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">Mockup workflow</span>
-      <h2 class="home-copy-reveal">From free 3D garment model to finished mockup direction</h2>
-      <p class="home-copy-reveal">A focused browser workflow for apparel teams, print-on-demand stores, merch brands, and product-page planning.</p>
-    </div>
-    <div class="generator-steps">
-      <% workflow.forEach(function(step, index) { %>
-        <article class="generator-step <%= step.image_url ? 'generator-step-with-media' : '' %> home-reveal-card">
-          <% if (step.image_url) { %>
-            <div class="generator-step-media">
-              <img src="<%= step.image_url %>" alt="<%= step.title %> apparel mockup workflow step" loading="lazy">
-            </div>
-          <% } %>
-          <span><%= String(index + 1).padStart(2, '0') %></span>
-          <h3 class="home-copy-reveal"><%= step.title %></h3>
-          <p class="home-copy-reveal"><%= step.text %></p>
-        </article>
-      <% }); %>
+    <div class="home-definition">
+      <h2>What is ClozDesign?</h2>
+      <p>A browser-based apparel mockup workspace built around editable 3D garments and on-model white mockups.</p>
     </div>
   </div>
 </section>
 
-<% if (featuredCategories.length) { %>
-<section class="generator-section generator-section-muted home-reveal">
-  <div class="container">
-    <div class="generator-section-header generator-section-header-row">
-      <span class="generator-eyebrow home-copy-reveal">Free model categories</span>
-      <h2 class="home-copy-reveal">Browse 3D clothing models by garment type</h2>
-      <p class="home-copy-reveal">Find shirts, hoodies, dresses, coats, pants, bags, hats, skirts, and other apparel models for mockup and print placement work.</p>
+<section class="home-canvas home-model-library" aria-labelledby="home-model-heading">
+  <div class="home-canvas-shell home-split-layout">
+    <div class="home-product-stage home-scroll-reveal" data-home-model-stage aria-busy="true">
+      <model-viewer
+        class="home-model-viewer"
+        data-home-model-viewer
+        src="/uploads/glb/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.glb"
+        poster="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp"
+        alt="Interactive white 3D T-shirt model"
+        loading="lazy"
+        reveal="auto"
+        camera-controls
+        interaction-prompt="none"
+        shadow-intensity="0.32"
+        shadow-softness="0.9"
+        exposure="0.7"
+        environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+        tone-mapping="commerce"
+        camera-orbit="-16deg 76deg 108%"
+        min-camera-orbit="auto 55deg 82%"
+        max-camera-orbit="auto 105deg 145%"
+      ></model-viewer>
+      <span class="home-model-loading" data-home-model-loading aria-live="polite"><i aria-hidden="true"></i>Loading 3D</span>
+      <span class="home-model-gesture" aria-hidden="true">Drag to rotate</span>
+      <span class="home-model-caption" aria-hidden="true">Same garment.<br>Every angle.<br>More possibilities.</span>
+      <a class="home-model-editor-link" href="/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design" data-analytics-event="home_3d_tshirt_design_click">Open in 3D editor <span aria-hidden="true">&#8594;</span></a>
+      <span class="home-orbit-mark" aria-hidden="true">
+        <svg viewBox="0 0 120 24" role="presentation"><path d="M3 12c15-12 99-12 114 0-15 12-99 12-114 0Z"/><path d="m110 8 7 4-7 4"/></svg>
+      </span>
     </div>
-    <div class="generator-category-grid">
-      <% featuredCategories.forEach(function(category) { %>
-        <a href="/mockups/<%= category.slug %>" class="generator-category-card home-reveal-card" data-analytics-event="home_category_<%= category.slug %>_select" data-analytics-item="<%= category.name %>" data-analytics-category="<%= category.slug %>">
-          <% if (category.image_url) { %>
-            <div class="generator-category-media">
-              <img src="<%= category.image_url %>" alt="Free <%= category.name %> 3D clothing model mockup category" loading="lazy">
-            </div>
-          <% } %>
-          <div class="generator-category-copy">
-            <small class="home-copy-reveal">Free mockup category</small>
-            <strong class="home-copy-reveal"><%= category.name %></strong>
-          </div>
-          <svg class="generator-category-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M5 12h14"/>
-            <path d="m12 5 7 7-7 7"/>
-          </svg>
+    <div class="home-section-copy home-scroll-reveal">
+      <span class="home-eyebrow">3D LIBRARY</span>
+      <h2 id="home-model-heading">Start with the right shape.</h2>
+      <p>Explore a growing library of editable 3D clothing models. Adjust details, test color and artwork, and view your design from every angle.</p>
+      <nav class="home-category-grid" aria-label="3D model categories">
+        <a class="home-category-card" href="/mockups?q=T-shirt#free-3d-models" data-analytics-event="home_category_tshirts_click">
+          <img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>T-Shirts</span><i aria-hidden="true">&#8594;</i>
         </a>
-      <% }); %>
-    </div>
-  </div>
-</section>
-<% } %>
-
-<section class="generator-section home-tool-links home-reveal">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">Free mockup tools</span>
-      <h2 class="home-copy-reveal">Start with the garment you actually need</h2>
-      <p class="home-copy-reveal">Open a live 3D garment, test colors and views, upload artwork, then export a transparent apparel mockup.</p>
-    </div>
-    <div class="tool-picker-grid home-reveal-card">
-      <a href="/tools/t-shirt-mockup-generator">T-shirt mockup generator</a>
-      <a href="/tools/oversized-t-shirt-mockup-generator">Oversized T-shirt mockup</a>
-      <a href="/tools/front-and-back-t-shirt-mockup">Front and back T-shirt mockup</a>
-      <a href="/tools/dress-designer">Online dress designer</a>
-      <a href="/tools/polo-shirt-mockup-generator">Polo shirt mockup generator</a>
-      <a href="/tools/long-sleeve-shirt-mockup-generator">Long sleeve shirt mockup</a>
-      <a href="/tools/streetwear-hoodie-mockup-generator">Streetwear hoodie mockup</a>
-      <a href="/tools/transparent-apparel-mockup-generator">Transparent apparel mockup</a>
-      <a href="/tools/print-on-demand-mockup-generator">POD clothing mockup generator</a>
-    </div>
-  </div>
-</section>
-
-<% if (featuredModels.length) { %>
-<section class="home-featured-models home-reveal">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">Featured models</span>
-      <h2 class="home-copy-reveal">Popular free 3D apparel models for mockups</h2>
-      <p class="home-copy-reveal">Open a model detail page to view the garment, plan artwork placement, customize colors, and export a clean transparent product image.</p>
-    </div>
-    <div class="models-grid">
-      <% featuredModels.forEach(function(model) { %>
-        <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card home-reveal-card" data-analytics-event="home_model_<%= model.slug %>_select" data-analytics-item="<%= model.name %>" data-analytics-category="<%= model.category_slug || model.category %>">
-          <div class="model-preview-3d">
-            <% if (model.image_url) { %>
-              <img src="<%= model.image_url %>" alt="<%= model.name %>" class="model-img">
-            <% } else { %>
-              <div class="model-placeholder">
-                <span><%= model.name.charAt(0) %></span>
-              </div>
-            <% } %>
-          </div>
-          <div class="model-info">
-            <h3 class="model-name home-copy-reveal"><%= model.name %></h3>
-            <p class="model-meta home-copy-reveal"><%= model.category_label || model.category %></p>
-          </div>
+        <a class="home-category-card" href="/mockups?q=Hoodie#free-3d-models" data-analytics-event="home_category_hoodies_click">
+          <img src="/uploads/preview/classic-pullover-hoodie-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Hoodies</span><i aria-hidden="true">&#8594;</i>
         </a>
-      <% }); %>
-    </div>
-  </div>
-</section>
-<% } %>
-
-<section class="generator-section generator-section-muted home-reveal" id="use-cases">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">Use cases</span>
-      <h2 class="home-copy-reveal">Built for apparel mockups, not generic 3D downloads</h2>
-      <p class="home-copy-reveal">Use ClozDesign when you need free garment models, quick print placement previews, transparent product images, and mockup-ready visuals for real apparel workflows.</p>
-    </div>
-    <div class="generator-output-grid">
-      <% useCases.forEach(function(item) { %>
-        <article class="generator-output-card <%= item.image_url ? 'generator-output-card-with-media' : '' %> home-reveal-card">
-          <% if (item.image_url) { %>
-            <div class="generator-output-media">
-              <img src="<%= item.image_url %>" alt="<%= item.title %> apparel mockup use case" loading="lazy">
-            </div>
-          <% } %>
-          <h3 class="home-copy-reveal"><%= item.title %></h3>
-          <p class="home-copy-reveal"><%= item.text %></p>
-        </article>
-      <% }); %>
+        <a class="home-category-card" href="/mockups?q=Dress#free-3d-models" data-analytics-event="home_category_dresses_click">
+          <img src="/uploads/preview/classic-one-piece-dress-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Dresses</span><i aria-hidden="true">&#8594;</i>
+        </a>
+        <a class="home-category-card" href="/mockups?q=Jacket#free-3d-models" data-analytics-event="home_category_jackets_click">
+          <img src="/uploads/preview/classic-jacket-garment-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Jackets</span><i aria-hidden="true">&#8594;</i>
+        </a>
+        <a class="home-category-card" href="/mockups" data-analytics-event="home_category_more_click">
+          <span class="home-category-count">100+</span><span>More models</span><i aria-hidden="true">&#8594;</i>
+        </a>
+      </nav>
     </div>
   </div>
 </section>
 
-<section class="generator-section generator-faq-section home-reveal">
-  <div class="container">
-    <div class="generator-section-header">
-      <span class="generator-eyebrow home-copy-reveal">FAQ</span>
-      <h2 class="home-copy-reveal">Free 3D clothing model questions</h2>
-    </div>
-    <div class="generator-faq-list">
-      <% faq.forEach(function(item, index) { %>
-        <details class="generator-faq-item home-reveal-card" data-analytics-event="home_faq_<%= index + 1 %>_toggle" data-analytics-item="<%= item.question %>" <%= index === 0 ? 'open' : '' %>>
-          <summary class="home-copy-reveal"><%= item.question %></summary>
-          <p class="home-copy-reveal"><%= item.answer %></p>
-        </details>
-      <% }); %>
-    </div>
-  </div>
-</section>
-
-<section class="pattern-design-cta home-reveal">
-  <div class="container">
-    <div class="pattern-design-cta-inner">
-      <div>
-        <span class="generator-eyebrow home-copy-reveal">Start designing</span>
-        <h2 class="home-copy-reveal">Start with a free 3D clothing model and create a clearer apparel mockup.</h2>
-        <p class="home-copy-reveal">Choose a garment model, test print placement, adjust the surface design, and export product visuals for review or listing pages.</p>
+<section class="home-canvas home-white-mockups" aria-labelledby="home-white-mockups-heading">
+  <div class="home-canvas-shell home-split-layout home-white-layout">
+    <div class="home-mockup-carousel home-scroll-reveal" data-home-carousel aria-roledescription="carousel" aria-label="White mockup examples">
+      <div class="home-carousel-viewport">
+        <div class="home-carousel-track" data-home-carousel-track>
+          <figure class="home-carousel-slide" data-home-carousel-slide><img src="/images/mockups/on-model/generated/young-western-female-tee-v4-base.png" alt="Woman wearing a blank white T-shirt" width="1024" height="1536" loading="lazy" decoding="async"></figure>
+          <figure class="home-carousel-slide" data-home-carousel-slide><img src="/images/mockups/on-model/generated/crewneck-tee-male-front-base.png" alt="Man wearing a blank white T-shirt" width="1024" height="1536" loading="lazy" decoding="async"></figure>
+          <figure class="home-carousel-slide" data-home-carousel-slide><img src="/images/mockups/on-model/generated/young-western-female-hoodie-v5-base.png" alt="Woman wearing a blank white hoodie" width="1024" height="1536" loading="lazy" decoding="async"></figure>
+        </div>
       </div>
-      <div class="generator-final-actions">
-        <a href="/tools/t-shirt-mockup-generator" class="btn btn-primary" data-analytics-event="home_bottom_models_click">Start a guided mockup</a>
+      <button class="home-carousel-control home-carousel-control-prev" type="button" data-home-carousel-prev aria-label="Previous mockup">&#8592;</button>
+      <button class="home-carousel-control home-carousel-control-next" type="button" data-home-carousel-next aria-label="Next mockup">&#8594;</button>
+      <div class="home-carousel-dots" role="group" aria-label="Choose mockup slide">
+        <button type="button" data-home-carousel-dot="0" aria-label="Show mockup 1" aria-current="true"></button>
+        <button type="button" data-home-carousel-dot="1" aria-label="Show mockup 2"></button>
+        <button type="button" data-home-carousel-dot="2" aria-label="Show mockup 3"></button>
       </div>
     </div>
+    <div class="home-section-copy home-scroll-reveal">
+      <span class="home-eyebrow">ON-MODEL WHITE MOCKUPS</span>
+      <h2 id="home-white-mockups-heading">See every idea on a real silhouette.</h2>
+      <p>Switch between people, poses and garment types, then place artwork and adjust color directly in the browser.</p>
+      <a class="home-text-link" href="/white-mockups" data-analytics-event="home_white_mockups_browse_click">Browse White Mockups <span aria-hidden="true">&#8594;</span></a>
+    </div>
   </div>
 </section>
 
+<section class="home-canvas home-production" aria-labelledby="home-production-heading">
+  <div class="home-canvas-shell">
+    <div class="home-production-copy home-scroll-reveal">
+      <span class="home-eyebrow">PRODUCTION</span>
+      <h2 id="home-production-heading">From mockup to what comes next.</h2>
+      <p>A clearer path from design to production.</p>
+    </div>
+    <ol class="home-production-flow home-scroll-reveal">
+      <li>
+        <div class="home-production-media home-production-media-garment"><img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="Designed 3D T-shirt" width="1200" height="1500" loading="lazy"><span class="home-production-print" aria-hidden="true">CLOZ</span></div>
+        <div class="home-production-step-copy"><strong>1. 3D Design</strong><span>Customize a model and finalize your design.</span></div>
+      </li>
+      <li><div class="home-production-media"><img src="/images/mockups/on-model/generated/young-western-female-tee-v4-base.png" alt="On-model white T-shirt review" width="1024" height="1536" loading="lazy"></div><div class="home-production-step-copy"><strong>2. On-Model Review</strong><span>See your design on real silhouettes.</span></div></li>
+      <li><div class="home-production-media"><img src="/images/hero/apparel-design-hero-v3.webp" alt="Apparel collection review visual" width="1120" height="1400" loading="lazy"></div><div class="home-production-step-copy"><strong>3. Collection Review</strong><span>Compare styles and build your range.</span></div></li>
+      <li><div class="home-production-media home-production-package" aria-hidden="true"><span>CLOZDESIGN</span></div><div class="home-production-step-copy"><strong>4. Supplier Handoff</strong><span>Share visuals and specs with your manufacturer.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section class="home-final-cta" aria-labelledby="home-final-heading">
+  <div class="home-final-inner home-scroll-reveal">
+    <div class="home-final-copy">
+      <span class="home-eyebrow">ClozDesign</span>
+      <h2 id="home-final-heading">Start with the right model.<br>Make every apparel idea clearer.</h2>
+      <p>3D models and white mockups for a more confident creative process.</p>
+    </div>
+    <a class="home-final-panel" href="/mockups" data-analytics-event="home_bottom_model_library_click">
+      <img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy">
+      <span>Explore the collection <i aria-hidden="true">&#8594;</i></span>
+    </a>
+  </div>
+</section>
+
+<script src="/js/home-v2.js?v=20260916-active-3d-v1" defer></script>
 <%- include('partials/footer') %>

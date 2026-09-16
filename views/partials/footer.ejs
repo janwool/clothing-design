@@ -62,7 +62,32 @@
     </div>
   </footer>
 
+  <aside class="feedback-widget" data-feedback-widget>
+    <div class="feedback-panel" id="feedbackPanel" data-feedback-panel role="dialog" aria-modal="true" aria-label="Feedback" hidden>
+      <button class="feedback-close" type="button" data-feedback-close aria-label="Close feedback form">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 4 12 12M16 4 4 16"/></svg>
+      </button>
+      <form class="feedback-form" data-feedback-form novalidate>
+        <label class="feedback-sr-only" for="feedbackEmail">Email</label>
+        <input id="feedbackEmail" type="email" name="email" value="<%= user && user.email ? user.email : '' %>" placeholder="Email" autocomplete="email" maxlength="180" required>
+        <label class="feedback-sr-only" for="feedbackMessage">Feedback</label>
+        <textarea id="feedbackMessage" name="message" placeholder="Tell us what you think…" minlength="3" maxlength="2000" required></textarea>
+        <label class="feedback-honeypot" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <input type="hidden" name="sourceUrl" value="">
+        <p class="feedback-status" data-feedback-status role="status" aria-live="polite"></p>
+        <button class="feedback-submit" type="submit">
+          <span>Send feedback</span>
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h13M11 5l5 5-5 5"/></svg>
+        </button>
+      </form>
+    </div>
+    <button class="feedback-launcher" type="button" data-feedback-launcher aria-label="Feedback" aria-controls="feedbackPanel" aria-expanded="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5.5h14v10H9l-4 3v-13Z"/><path d="M9 9h6M9 12h4"/></svg>
+    </button>
+  </aside>
+
   <script src="/js/main.js?v=20260805-overlay-fix"></script>
   <script src="/js/share.js?v=20260915-direct-events-v3" defer></script>
+  <script src="/js/feedback-widget.js?v=20260917-global-v1" defer></script>
 </body>
 </html>

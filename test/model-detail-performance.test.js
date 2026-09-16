@@ -63,9 +63,9 @@ test('enables the Meshopt decoder before loading compressed GLB models', () => {
 test('applies the saved commercial cover scene to detail and editor viewers', () => {
   assert.match(template, /data-catalog-render-standard="main"/);
   assert.doesNotMatch(template, /data-catalog-render-standard="side"/);
-  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260907-balanced-exposure-v6'\)/);
-  assert.match(template, /camera-orbit="-48deg 72deg 142%"/);
-  assert.match(template, /camera-orbit="-48deg 72deg 158%"/);
+  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260916-balanced-front-back-v9'\)/);
+  assert.match(template, /camera-orbit="-16deg 72deg 142%"/);
+  assert.match(template, /camera-orbit="-12deg 72deg 158%"/);
   assert.match(template, /camera-target="auto auto auto"/);
   assert.match(template, /field-of-view="28deg"/);
   assert.match(template, /function applyCatalogRenderAttributes\(element, standard/);
@@ -98,7 +98,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260915-quick-style-v49'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260917-toolbar-cleanup-v55'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -222,7 +222,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260915-quick-style-v49/);
+  assert.match(template, /model-designer\.js\?v=20260917-toolbar-cleanup-v55/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -235,8 +235,9 @@ test('replays only the latest live color or gradient after 3D materials are read
   assert.match(designerRuntime, /if \(state\.pendingTextureUrl\) \{\s+applyTextureToModel\(state\.pendingTextureUrl, state\.textureUpdateId\)/);
 });
 
-test('keeps the hero contact shadow behind and below the garment', () => {
-  assert.match(modelDetailStyles, /\.model-product-page \.model-contact-shadow \{[^}]*bottom: 5%;[^}]*z-index: 0;/);
+test('uses the camera-aware model-viewer shadow instead of a fixed CSS ellipse', () => {
+  assert.match(modelDetailStyles, /\.model-product-page \.model-contact-shadow \{ display: none; \}/);
+  assert.match(template, /shadow-intensity="0\.32"/);
   assert.match(modelDetailStyles, /\.model-product-page \.model-viewer-natural \{[^}]*z-index: 1;/);
 });
 

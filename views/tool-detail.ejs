@@ -42,11 +42,12 @@
               data-model-src="<%= toolPage.heroModel.src %>"
               alt="<%= toolPage.heroModel.alt || toolPage.title %>"
               camera-controls
-              auto-rotate
-              shadow-intensity="1.55"
-              shadow-softness="0.52"
-              exposure="0.66"
-              environment-image="neutral"
+              camera-orbit="-16deg 75deg 110%"
+              shadow-intensity="0.32"
+              shadow-softness="0.9"
+              exposure="0.7"
+              environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+              tone-mapping="commerce"
               aria-label="<%= toolPage.heroModel.alt || toolPage.title %>"
               hidden
             ></model-viewer>

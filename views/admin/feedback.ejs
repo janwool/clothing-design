@@ -1,0 +1,210 @@
+<%- include('partials/header') %>
+
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+
+  <main class="admin-main">
+    <div class="admin-header inquiry-page-header">
+      <div>
+        <span class="admin-eyebrow">Voice of customer</span>
+        <h1 class="admin-title">User Feedback</h1>
+        <p class="admin-subtitle">Review product feedback submitted from the floating site widget.</p>
+      </div>
+      <button class="sidebar-toggle" type="button" aria-label="Open admin navigation">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="feedback-admin-stats">
+      <div class="inquiry-stat inquiry-stat-total"><span>All feedback</span><strong><%= feedbackStats.total %></strong><small>Lifetime submissions</small></div>
+      <div class="inquiry-stat"><span>New</span><strong><%= feedbackStats.new %></strong><small>Waiting for review</small></div>
+      <div class="inquiry-stat"><span>Reviewed</span><strong><%= feedbackStats.reviewed %></strong><small>Triaged by the team</small></div>
+      <div class="inquiry-stat"><span>Resolved</span><strong><%= feedbackStats.resolved %></strong><small>Completed feedback</small></div>
+    </div>
+
+    <section class="data-card inquiry-data-card feedback-admin-card">
+      <div class="data-header inquiry-data-header">
+        <div>
+          <h2 class="data-title">Feedback list</h2>
+          <p><%= feedbackPagination.total %> matching <%= feedbackPagination.total === 1 ? 'submission' : 'submissions' %></p>
+        </div>
+        <form class="inquiry-filters" action="/admin/feedback" method="get">
+          <label>
+            <span class="sr-only">Search feedback</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="search" name="q" value="<%= feedbackFilters.search %>" placeholder="Email, message, source…">
+          </label>
+          <select name="status" aria-label="Filter feedback by status">
+            <option value="all" <%= feedbackFilters.status === 'all' ? 'selected' : '' %>>All statuses</option>
+            <option value="new" <%= feedbackFilters.status === 'new' ? 'selected' : '' %>>New</option>
+            <option value="reviewed" <%= feedbackFilters.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option>
+            <option value="resolved" <%= feedbackFilters.status === 'resolved' ? 'selected' : '' %>>Resolved</option>
+            <option value="archived" <%= feedbackFilters.status === 'archived' ? 'selected' : '' %>>Archived</option>
+          </select>
+          <button type="submit" class="btn btn-primary btn-small">Filter</button>
+          <% if (feedbackFilters.search || feedbackFilters.status !== 'all') { %><a href="/admin/feedback" class="inquiry-clear-filter">Clear</a><% } %>
+        </form>
+      </div>
+
+      <% if (error) { %><div class="inquiry-error" role="alert"><%= error %></div><% } %>
+
+      <% if (items && items.length > 0) { %>
+        <div class="inquiry-table-wrap">
+          <table class="data-table feedback-admin-table">
+            <thead><tr><th>Submitted</th><th>Contact</th><th>Feedback</th><th>Source</th><th>Status</th><th><span class="sr-only">Actions</span></th></tr></thead>
+            <tbody>
+              <% items.forEach(item => { %>
+                <tr>
+                  <td><div class="inquiry-reference-cell"><strong>#<%= item.id %></strong><span><%= item.created_at_display %></span></div></td>
+                  <td>
+                    <div class="feedback-contact-cell">
+                      <a href="mailto:<%= item.email %>"><%= item.email %></a>
+                      <span><%= item.user_id ? (item.user_name || `Signed-in user #${item.user_id}`) : 'Guest submission' %></span>
+                    </div>
+                  </td>
+                  <td><p class="feedback-message-preview"><%= item.message %></p></td>
+                  <td>
+                    <% if (item.source_url_safe) { %><a class="feedback-source-link" href="<%= item.source_url_safe %>" target="_blank" rel="noopener"><%= item.source_url || 'Open page' %> ↗</a><% } else { %><span class="feedback-source-empty">—</span><% } %>
+                  </td>
+                  <td>
+                    <label class="feedback-status-control feedback-status-<%= item.status || 'new' %>" data-feedback-status-shell="<%= item.id %>">
+                      <i aria-hidden="true"></i><span class="sr-only">Status for feedback <%= item.id %></span>
+                      <select data-feedback-status="<%= item.id %>" data-previous-status="<%= item.status || 'new' %>">
+                        <option value="new" <%= item.status === 'new' ? 'selected' : '' %>>New</option>
+                        <option value="reviewed" <%= item.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option>
+                        <option value="resolved" <%= item.status === 'resolved' ? 'selected' : '' %>>Resolved</option>
+                        <option value="archived" <%= item.status === 'archived' ? 'selected' : '' %>>Archived</option>
+                      </select>
+                    </label>
+                  </td>
+                  <td><button type="button" class="inquiry-view-button" data-feedback-open="<%= item.id %>">View <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+
+        <% if (feedbackPagination.pageCount > 1) { %>
+          <nav class="inquiry-pagination" aria-label="Feedback pages">
+            <% if (feedbackPagination.page > 1) { %><a href="/admin/feedback?q=<%= encodeURIComponent(feedbackFilters.search) %>&status=<%= encodeURIComponent(feedbackFilters.status) %>&page=<%= feedbackPagination.page - 1 %>">← Previous</a><% } else { %><span>← Previous</span><% } %>
+            <strong>Page <%= feedbackPagination.page %> of <%= feedbackPagination.pageCount %></strong>
+            <% if (feedbackPagination.page < feedbackPagination.pageCount) { %><a href="/admin/feedback?q=<%= encodeURIComponent(feedbackFilters.search) %>&status=<%= encodeURIComponent(feedbackFilters.status) %>&page=<%= feedbackPagination.page + 1 %>">Next →</a><% } else { %><span>Next →</span><% } %>
+          </nav>
+        <% } %>
+      <% } else if (!error) { %>
+        <div class="empty-state inquiry-empty-state">
+          <div class="inquiry-empty-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 8h8M8 12h5"/></svg></div>
+          <h3><%= feedbackFilters.search || feedbackFilters.status !== 'all' ? 'No matching feedback' : 'No feedback yet' %></h3>
+          <p><%= feedbackFilters.search || feedbackFilters.status !== 'all' ? 'Try a different search or clear the current filter.' : 'New website feedback will appear here automatically.' %></p>
+          <% if (feedbackFilters.search || feedbackFilters.status !== 'all') { %><a href="/admin/feedback" class="btn btn-secondary btn-small">Clear filters</a><% } %>
+        </div>
+      <% } %>
+    </section>
+  </main>
+</div>
+
+<% items.forEach(item => { %>
+  <div class="inquiry-detail-overlay feedback-detail-overlay" id="feedback-detail-<%= item.id %>" hidden aria-hidden="true">
+    <button type="button" class="inquiry-detail-backdrop" data-feedback-close aria-label="Close feedback details"></button>
+    <article class="inquiry-detail-panel feedback-detail-panel" role="dialog" aria-modal="true" aria-labelledby="feedback-detail-title-<%= item.id %>">
+      <header class="inquiry-detail-header">
+        <div><span>User feedback</span><h2 id="feedback-detail-title-<%= item.id %>">Feedback #<%= item.id %></h2><p>Submitted <%= item.created_at_display %></p></div>
+        <button type="button" class="inquiry-detail-close" data-feedback-close aria-label="Close feedback details"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </header>
+      <div class="inquiry-detail-body">
+        <div class="feedback-detail-meta">
+          <div><span>Email</span><a href="mailto:<%= item.email %>"><%= item.email %></a></div>
+          <div><span>User</span><strong><%= item.user_id ? (item.user_name || `User #${item.user_id}`) : 'Guest' %></strong></div>
+          <div><span>Source</span><% if (item.source_url_safe) { %><a href="<%= item.source_url_safe %>" target="_blank" rel="noopener"><%= item.source_url %> ↗</a><% } else { %><strong>—</strong><% } %></div>
+          <div><span>Status</span><select class="feedback-detail-status-select" data-feedback-status="<%= item.id %>" data-previous-status="<%= item.status || 'new' %>"><option value="new" <%= item.status === 'new' ? 'selected' : '' %>>New</option><option value="reviewed" <%= item.status === 'reviewed' ? 'selected' : '' %>>Reviewed</option><option value="resolved" <%= item.status === 'resolved' ? 'selected' : '' %>>Resolved</option><option value="archived" <%= item.status === 'archived' ? 'selected' : '' %>>Archived</option></select></div>
+        </div>
+        <section class="feedback-detail-message"><span>Message</span><p><%= item.message %></p></section>
+      </div>
+    </article>
+  </div>
+<% }) %>
+
+<div class="feedback-admin-toast" data-feedback-admin-toast role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+  let returnFocus = null;
+  const toast = document.querySelector('[data-feedback-admin-toast]');
+  let toastTimer;
+
+  function showToast(message, isError) {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.classList.toggle('is-error', Boolean(isError));
+    toast.classList.add('is-visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2600);
+  }
+
+  function closeDetail(overlay) {
+    if (!overlay) return;
+    overlay.hidden = true;
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    returnFocus?.focus?.();
+  }
+
+  async function updateStatus(select) {
+    const id = select.dataset.feedbackStatus;
+    const previous = select.dataset.previousStatus;
+    const status = select.value;
+    document.querySelectorAll(`[data-feedback-status="${id}"]`).forEach(control => { control.disabled = true; });
+    try {
+      const response = await fetch(`/admin/feedback/${id}/status`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.success) throw new Error(result.error || 'Status could not be updated.');
+      document.querySelectorAll(`[data-feedback-status="${id}"]`).forEach(control => {
+        control.value = status;
+        control.dataset.previousStatus = status;
+      });
+      document.querySelectorAll(`[data-feedback-status-shell="${id}"]`).forEach(shell => {
+        shell.className = `feedback-status-control feedback-status-${status}`;
+      });
+      showToast('Feedback status updated.');
+    } catch (error) {
+      document.querySelectorAll(`[data-feedback-status="${id}"]`).forEach(control => { control.value = previous; });
+      showToast(error.message || 'Status could not be updated.', true);
+    } finally {
+      document.querySelectorAll(`[data-feedback-status="${id}"]`).forEach(control => { control.disabled = false; });
+    }
+  }
+
+  document.addEventListener('change', event => {
+    const select = event.target.closest('[data-feedback-status]');
+    if (select) updateStatus(select);
+  });
+
+  document.addEventListener('click', event => {
+    const openButton = event.target.closest('[data-feedback-open]');
+    if (openButton) {
+      const overlay = document.getElementById(`feedback-detail-${openButton.dataset.feedbackOpen}`);
+      if (!overlay) return;
+      returnFocus = openButton;
+      overlay.hidden = false;
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      overlay.querySelector('.inquiry-detail-close')?.focus();
+      return;
+    }
+    const closeButton = event.target.closest('[data-feedback-close]');
+    if (closeButton) closeDetail(closeButton.closest('.feedback-detail-overlay'));
+  });
+
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape') closeDetail(document.querySelector('.feedback-detail-overlay:not([hidden])'));
+  });
+})();
+</script>
+
+<%- include('partials/footer') %>

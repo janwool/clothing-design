@@ -62,8 +62,7 @@ window.initializeModelDesigner = () => {
   const imageUploadToastText = document.getElementById('imageUploadToastText');
   const designAppearancePanel = document.getElementById('designAppearancePanel');
   const appearancePanelCollapse = document.getElementById('appearancePanelCollapse');
-  const toolColor = document.getElementById('toolColor');
-  const toolMaterial = document.getElementById('toolMaterial');
+  const toolAppearance = document.getElementById('toolAppearance');
   const appearanceColorStart = document.getElementById('appearanceColorStart');
   const appearanceColorEnd = document.getElementById('appearanceColorEnd');
   const appearanceGradientAngle = document.getElementById('appearanceGradientAngle');
@@ -81,6 +80,20 @@ window.initializeModelDesigner = () => {
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const defaultTextContent = modelDesignerConfig.defaultTextContent || 'Text';
   const currentModelCategory = modelDesignerConfig.currentModelCategory || '';
+  const materialPreviewUrls = {
+    'cotton-jersey': '/images/material-previews/cotton.webp',
+    'rib-knit': '/images/material-previews/jersey.webp',
+    'french-terry': '/images/material-previews/french-terry.webp',
+    fleece: '/images/material-previews/fleece.webp',
+    poplin: '/images/material-previews/poplin.webp',
+    linen: '/images/material-previews/linen.webp',
+    denim: '/images/material-previews/denim.webp',
+    twill: '/images/material-previews/twill.webp',
+    'wool-blend': '/images/material-previews/wool-blend.webp',
+    'nylon-ripstop': '/images/material-previews/nylon-ripstop.webp',
+    'satin-silk': '/images/material-previews/satin.webp',
+    velvet: '/images/material-previews/velvet.webp'
+  };
   const minSize = 12;
   const editorTransforms = window.ModelDesignerTransforms;
   if (!editorTransforms) throw new Error('Editor transform helpers are unavailable');
@@ -92,8 +105,8 @@ window.initializeModelDesigner = () => {
   } = editorTransforms;
   const defaultRenderStandard = {
     camera: {
-      webOrbit: '-48deg 72deg 142%',
-      webEditorOrbit: '-48deg 72deg 158%',
+      webOrbit: '-16deg 72deg 142%',
+      webEditorOrbit: '-12deg 72deg 158%',
       webFieldOfView: '28deg',
       webTarget: 'auto auto auto'
     },
@@ -102,13 +115,13 @@ window.initializeModelDesigner = () => {
       lightingMode: 'front-back-balanced-product-studio',
       sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
       balanceMethod: '180-degree-lighten-mirror',
-      shadowIntensity: 0,
-      shadowSoftness: 1,
-      exportShadowIntensity: 0.58,
-      exportShadowSoftness: 0.84,
-      exportExposure: 0.78,
+      shadowIntensity: 0.32,
+      shadowSoftness: 0.9,
+      exportShadowIntensity: 0.46,
+      exportShadowSoftness: 0.88,
+      exportExposure: 0.76,
       exportToneMapping: 'commerce',
-      exposure: 0.72,
+      exposure: 0.7,
       toneMapping: 'commerce',
       exportMaterial: {
         roughness: 0.72,
@@ -129,7 +142,7 @@ window.initializeModelDesigner = () => {
       }
     }
   };
-  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260915-commercial-export-v1')
+  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260916-balanced-front-back-v4')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -422,15 +435,15 @@ window.initializeModelDesigner = () => {
     const webStandard = renderStandard.web || defaultRenderStandard.web;
     const cameraStandard = renderStandard.camera || defaultRenderStandard.camera;
     viewerElement.setAttribute('environment-image', webStandard.environmentImage || defaultRenderStandard.web.environmentImage);
-    viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0));
-    viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 1));
-    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.72));
+    viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
+    viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.9));
+    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.7));
     viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
     viewerElement.setAttribute('camera-target', cameraStandard.webTarget || 'auto auto auto');
     viewerElement.setAttribute('field-of-view', cameraStandard.webFieldOfView || '28deg');
     const cameraOrbit = viewerElement.id === 'designerViewer'
-      ? cameraStandard.webEditorOrbit || '-48deg 72deg 158%'
-      : cameraStandard.webOrbit || '-48deg 72deg 142%';
+      ? cameraStandard.webEditorOrbit || '-12deg 72deg 158%'
+      : cameraStandard.webOrbit || '-16deg 72deg 142%';
     viewerElement.setAttribute('camera-orbit', cameraOrbit);
     viewerElement.autoRotate = false;
     viewerElement.removeAttribute('auto-rotate');
@@ -545,7 +558,7 @@ window.initializeModelDesigner = () => {
       `;
       const preview = button.querySelector('.material-swatch-preview');
       preview.style.backgroundColor = material.color;
-      preview.style.backgroundImage = `url("${material.maps.baseColor}")`;
+      preview.style.backgroundImage = `url("${materialPreviewUrls[material.id] || material.maps.baseColor}")`;
       button.addEventListener('click', () => applyMaterialPreset(material));
       materialSwatchGrid.appendChild(button);
     });
@@ -873,7 +886,14 @@ window.initializeModelDesigner = () => {
   function setAssetTrayOpen(open) {
     if (!imageAssetTray || !textureDesigner) return;
     imageAssetTray.hidden = !open;
+    if (designAppearancePanel) designAppearancePanel.hidden = open;
+    if (!open) designAppearancePanel?.classList.remove('is-mobile-open');
     textureDesigner.classList.toggle('asset-tray-open', open);
+    toolButtons.image?.setAttribute('aria-pressed', String(open));
+    if (open) {
+      toolAppearance?.classList.remove('active');
+      toolAppearance?.setAttribute('aria-pressed', 'false');
+    }
     if (open) {
       requestAnimationFrame(() => {
         updateAssetTrayScrollState();
@@ -907,27 +927,27 @@ window.initializeModelDesigner = () => {
     requestAnimationFrame(fitCanvasZoom);
   }
 
-  function openAppearancePanel(section = 'color') {
+  function openAppearancePanel() {
     if (!designAppearancePanel || !textureDesigner) return;
+    setAssetTrayOpen(false);
+    designAppearancePanel.hidden = false;
     designAppearancePanel.classList.remove('is-collapsed');
     textureDesigner.classList.remove('appearance-collapsed');
     if (window.matchMedia('(max-width: 900px)').matches) {
       designAppearancePanel.classList.add('is-mobile-open');
     }
-    toolColor?.classList.toggle('active', section === 'color');
-    toolMaterial?.classList.toggle('active', section === 'material');
-    const target = section === 'material'
-      ? designAppearancePanel.querySelector('.material-panel')
-      : designAppearancePanel.querySelector('.design-appearance-card');
-    target?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    toolAppearance?.classList.add('active');
+    toolAppearance?.setAttribute('aria-pressed', 'true');
+    designAppearancePanel.querySelector('.design-appearance-card')
+      ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
   function setTool(tool) {
     state.tool = tool;
     state.textClickCandidate = null;
     Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
-    toolColor?.classList.remove('active');
-    toolMaterial?.classList.remove('active');
+    toolAppearance?.classList.remove('active');
+    toolAppearance?.setAttribute('aria-pressed', 'false');
     if (toolButtons[tool]) toolButtons[tool].classList.add('active');
     if (tool !== 'image') setAssetTrayOpen(false);
     textureSvg.classList.toggle('is-drawing', tool === 'draw');
@@ -938,19 +958,14 @@ window.initializeModelDesigner = () => {
     btn?.addEventListener('click', () => setTool(tool));
   });
 
+  toolAppearance?.addEventListener('click', () => {
+    setTool('select');
+    openAppearancePanel();
+  });
+
   designViewSwitcher?.addEventListener('click', (event) => {
     const button = event.target.closest('[data-design-view]');
     if (button) setDesignView(button.dataset.designView);
-  });
-
-  toolColor?.addEventListener('click', () => {
-    setAssetTrayOpen(false);
-    openAppearancePanel('color');
-  });
-
-  toolMaterial?.addEventListener('click', () => {
-    setAssetTrayOpen(false);
-    openAppearancePanel('material');
   });
 
   appearancePanelCollapse?.addEventListener('click', () => {
@@ -958,14 +973,12 @@ window.initializeModelDesigner = () => {
     designAppearancePanel?.classList.toggle('is-collapsed', shouldCollapse);
     designAppearancePanel?.classList.remove('is-mobile-open');
     textureDesigner?.classList.toggle('appearance-collapsed', shouldCollapse);
-    toolColor?.classList.remove('active');
-    toolMaterial?.classList.remove('active');
     requestAnimationFrame(fitCanvasZoom);
   });
 
   designAppearancePanel?.addEventListener('click', (event) => {
     if (designAppearancePanel.classList.contains('is-collapsed') && event.target === designAppearancePanel) {
-      openAppearancePanel('color');
+      openAppearancePanel();
     }
   });
 
@@ -3352,7 +3365,8 @@ window.initializeModelDesigner = () => {
       const width = Math.max(minSize, safeWidth * fitScale);
       const height = Math.max(minSize, safeHeight * fitScale);
       createElement('image', { src: dataUrl, width, height });
-      setTool('select');
+      setTool('image');
+      setAssetTrayOpen(true);
     };
     artworkImage.addEventListener('load', () => {
       createArtwork(artworkImage.naturalWidth, artworkImage.naturalHeight);
@@ -3422,7 +3436,7 @@ window.initializeModelDesigner = () => {
     image.loading = 'lazy';
     image.decoding = 'async';
     button.appendChild(image);
-    imageAssetTrack.insertBefore(button, imageAssetUpload?.nextSibling || null);
+    imageAssetTrack.insertBefore(button, imageAssetTrack.firstElementChild || null);
     renderedUploadedAssetKeys.add(assetKey);
     requestAnimationFrame(updateAssetTrayScrollState);
     return button;
@@ -3556,6 +3570,7 @@ window.initializeModelDesigner = () => {
   imageAssetClose?.addEventListener('click', () => {
     setAssetTrayOpen(false);
     setTool('select');
+    openAppearancePanel();
   });
   imageAssetFilter?.addEventListener('click', () => {
     const nextPressed = imageAssetFilter.getAttribute('aria-pressed') !== 'true';
@@ -4043,6 +4058,7 @@ window.initializeModelDesigner = () => {
       else if (imageAssetTray && !imageAssetTray.hidden) {
         setAssetTrayOpen(false);
         setTool('select');
+        openAppearancePanel();
       }
       else if (designAppearancePanel?.classList.contains('is-mobile-open')) designAppearancePanel.classList.remove('is-mobile-open');
       else closeModal();
