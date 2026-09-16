@@ -17,3 +17,10 @@ test('renders homepage 3D imagery from online model data instead of local upload
   assert.match(homepage, /src="<%= card\.image_url %>"/);
   assert.doesNotMatch(homepage, /\/uploads\/(?:glb|preview)\//);
 });
+
+test('renders homepage white mockups from online asset records', () => {
+  assert.match(homepage, /homeContent\.whiteMockups/);
+  assert.match(homepage, /src="<%= primaryWhiteMockup\.base_image_url %>"/);
+  assert.match(homepage, /src="<%= mockup\.base_image_url %>"/);
+  assert.doesNotMatch(homepage, /\/images\/mockups\/on-model\/generated\//);
+});

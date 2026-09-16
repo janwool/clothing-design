@@ -607,6 +607,14 @@ const HOME_FALLBACK_MODEL = {
   file_url: 'https://cdn.cloz-design.com/catalog/20260912-approved-v1/glb/relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea.glb'
 };
 
+const HOME_WHITE_MOCKUP_DEFINITIONS = [
+  { asset_name: 'young-western-female-tee-v4', alt: 'Woman wearing a blank white T-shirt' },
+  { asset_name: 'crewneck-tee-male-front', alt: 'Man wearing a blank white T-shirt' },
+  { asset_name: 'young-western-female-hoodie-v5', alt: 'Woman wearing a blank white hoodie' }
+];
+
+const HOME_WHITE_MOCKUP_CDN_BASE = 'https://cdn.cloz-design.com/image/mockups/on-model/generated';
+
 function selectHomeFeaturedModels(models = []) {
   const normalizedModels = normalize3dModels(models);
   const selected = [];
@@ -635,7 +643,7 @@ function selectHomeFeaturedModels(models = []) {
   return selected;
 }
 
-function buildHomeContent(req, models = [], categories = [], modelTotal = models.length) {
+function buildHomeContent(req, models = [], categories = [], modelTotal = models.length, whiteMockups = []) {
   const modelCount = Number(modelTotal) || models.length;
   const categoryCount = categories.length;
   const pageUrl = toAbsoluteUrl(req, '/');
@@ -649,6 +657,18 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
       ...card,
       name: model?.name || card.label,
       image_url: model?.image_url || CATEGORY_IMAGE_ASSETS[card.category_slug] || primaryModel.image_url
+    };
+  });
+  const whiteMockupByName = new Map(
+    whiteMockups.filter(Boolean).map(asset => [asset.asset_name, asset])
+  );
+  const homeWhiteMockups = HOME_WHITE_MOCKUP_DEFINITIONS.map(definition => {
+    const asset = whiteMockupByName.get(definition.asset_name);
+    return {
+      ...definition,
+      title: asset?.title || definition.alt,
+      base_image_url: asset?.base_image_url
+        || `${HOME_WHITE_MOCKUP_CDN_BASE}/${definition.asset_name}-base.png`
     };
   });
   const heroImages = featuredModels
@@ -825,6 +845,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     faq,
     primaryModel,
     modelCards,
+    whiteMockups: homeWhiteMockups,
     featuredModels,
     featuredCategories
   };
@@ -2133,7 +2154,7 @@ router.get('/', async (req, res) => {
   try {
     await ensureModelCategoryTable();
     const homeCategoryPlaceholders = HOME_FEATURED_CATEGORY_SLUGS.map(() => '?').join(', ');
-    const [models, categories, modelSummary] = await Promise.all([
+    const [models, categories, modelSummary, whiteMockups] = await Promise.all([
       db.all(`
         ${getModelCategorySelect()}
         WHERE m.status = ?
@@ -2158,9 +2179,18 @@ router.get('/', async (req, res) => {
         ...HOME_FEATURED_CATEGORY_SLUGS
       ]),
       getActive3dCategories(),
-      db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active'])
+      db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active']),
+      Promise.all(HOME_WHITE_MOCKUP_DEFINITIONS.map(definition => (
+        findOnModelMockupAsset(definition.asset_name)
+      )))
     ]);
-    const homeContent = buildHomeContent(req, models || [], categories || [], modelSummary?.count || 0);
+    const homeContent = buildHomeContent(
+      req,
+      models || [],
+      categories || [],
+      modelSummary?.count || 0,
+      whiteMockups || []
+    );
 
     res.render('index', {
       title: req.t('home.title'),
