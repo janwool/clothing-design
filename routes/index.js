@@ -584,12 +584,27 @@ function withCategoryImages(categories = []) {
   }));
 }
 
-const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'shirt', 'hoodie-mockup', 'dress'];
+const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'hoodie-mockup', 'dress', 'jacket'];
 const HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY = {
   't-shirt-mockup': 'basic-short-sleeve-tshirt-3d-model',
-  shirt: 'tailored-long-sleeve-shirt-3d-model',
   'hoodie-mockup': 'tailored-pullover-hoodie-3d-model',
-  dress: 'classic-one-piece-dress-3d-model'
+  dress: 'classic-one-piece-dress-3d-model',
+  jacket: 'classic-jacket-garment-3d-model'
+};
+
+const HOME_MODEL_CARD_DEFINITIONS = [
+  { category_slug: 't-shirt-mockup', label: 'T-Shirts', query: 'T-shirt', analytics: 'home_category_tshirts_click' },
+  { category_slug: 'hoodie-mockup', label: 'Hoodies', query: 'Hoodie', analytics: 'home_category_hoodies_click' },
+  { category_slug: 'dress', label: 'Dresses', query: 'Dress', analytics: 'home_category_dresses_click' },
+  { category_slug: 'jacket', label: 'Jackets', query: 'Jacket', analytics: 'home_category_jackets_click' }
+];
+
+const HOME_FALLBACK_MODEL = {
+  name: 'Relaxed Crewneck Drop-Shoulder Elbow-Sleeve T-Shirt',
+  slug: 'relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea',
+  category_slug: 't-shirt-mockup',
+  image_url: 'https://cdn.cloz-design.com/catalog/20260912-approved-v1/preview/relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea.webp',
+  file_url: 'https://cdn.cloz-design.com/catalog/20260912-approved-v1/glb/relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea.glb'
 };
 
 function selectHomeFeaturedModels(models = []) {
@@ -626,6 +641,16 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
   const pageUrl = toAbsoluteUrl(req, '/');
   const featuredModels = selectHomeFeaturedModels(models);
   const featuredCategories = withCategoryImages(categories).slice(0, 8);
+  const featuredModelByCategory = new Map(featuredModels.map(model => [model.category_slug, model]));
+  const primaryModel = featuredModelByCategory.get('t-shirt-mockup') || featuredModels[0] || HOME_FALLBACK_MODEL;
+  const modelCards = HOME_MODEL_CARD_DEFINITIONS.map(card => {
+    const model = featuredModelByCategory.get(card.category_slug);
+    return {
+      ...card,
+      name: model?.name || card.label,
+      image_url: model?.image_url || CATEGORY_IMAGE_ASSETS[card.category_slug] || primaryModel.image_url
+    };
+  });
   const heroImages = featuredModels
     .filter(model => model.image_url)
     .slice(0, 4)
@@ -798,6 +823,8 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     workflow,
     useCases,
     faq,
+    primaryModel,
+    modelCards,
     featuredModels,
     featuredCategories
   };
@@ -2105,19 +2132,30 @@ router.get('/api/mockup-asset', async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     await ensureModelCategoryTable();
+    const homeCategoryPlaceholders = HOME_FEATURED_CATEGORY_SLUGS.map(() => '?').join(', ');
     const [models, categories, modelSummary] = await Promise.all([
       db.all(`
         ${getModelCategorySelect()}
         WHERE m.status = ?
-          AND m.slug IN (?, ?, ?, ?)
+          AND COALESCE(m.file_url, '') != ''
+          AND COALESCE(m.image_url, '') != ''
+          AND (
+            legacy_category.slug IN (${homeCategoryPlaceholders})
+            OR EXISTS (
+              SELECT 1
+              FROM model_3d_categories mc_home
+              JOIN categories category_home ON category_home.id = mc_home.category_id
+              WHERE mc_home.model_id = m.id
+                AND category_home.resource_type = '3d-models'
+                AND category_home.slug IN (${homeCategoryPlaceholders})
+            )
+          )
         ${getModelCategoryGroupBy()}
-        ORDER BY m.updated_at DESC, m.created_at DESC
+        ORDER BY m.updated_at DESC, m.created_at DESC, m.id DESC
       `, [
         'active',
-        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY['t-shirt-mockup'],
-        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY.shirt,
-        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY['hoodie-mockup'],
-        HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY.dress
+        ...HOME_FEATURED_CATEGORY_SLUGS,
+        ...HOME_FEATURED_CATEGORY_SLUGS
       ]),
       getActive3dCategories(),
       db.get('SELECT COUNT(*) as count FROM models_3d WHERE status = ?', ['active'])

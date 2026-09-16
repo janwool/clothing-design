@@ -16,7 +16,7 @@ const modelDetailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'mode
 
 test('routes public calls to action into a working mockup path', () => {
   assert.match(header, /href="\/tools\/t-shirt-mockup-generator" class="btn btn-primary">Start designing/);
-  assert.match(home, /basic-short-sleeve-tshirt-3d-model#design/);
+  assert.match(home, /activeHomepageModelHref = `\/3d-models\/\$\{activeHomepageModel\.category_slug\}\/\$\{activeHomepageModel\.slug\}#design`/);
   assert.doesNotMatch(header, /\/dashboard\/(?:designs|assets|settings)/);
   assert.match(authRoute, /res\.redirect\('\/tools\/t-shirt-mockup-generator'\)/);
 });

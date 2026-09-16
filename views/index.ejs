@@ -1,11 +1,8 @@
 <%- include('partials/header') %>
 <%
-  const activeHomepageTshirt = homeContent && Array.isArray(homeContent.featuredModels)
-    ? homeContent.featuredModels.find(model => model.slug === 'basic-short-sleeve-tshirt-3d-model')
-    : null;
-  const activeHomepageTshirtImage = activeHomepageTshirt && activeHomepageTshirt.image_url
-    ? activeHomepageTshirt.image_url
-    : 'https://cdn.cloz-design.com/catalog/20260828-commercial-covers-v1/preview/basic-short-sleeve-tshirt-3d-model.webp';
+  const activeHomepageModel = homeContent.primaryModel;
+  const activeHomepageModelHref = `/3d-models/${activeHomepageModel.category_slug}/${activeHomepageModel.slug}#design`;
+  const homepageModelCards = Array.isArray(homeContent.modelCards) ? homeContent.modelCards : [];
 %>
 
 <section class="home-canvas home-entry" aria-labelledby="home-entry-heading">
@@ -21,7 +18,7 @@
           <strong>Explore 3D Models</strong>
           <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
         </span>
-        <img src="<%= activeHomepageTshirtImage %>" alt="Active white 3D T-shirt model" width="1200" height="1500" fetchpriority="high" decoding="async">
+        <img src="<%= activeHomepageModel.image_url %>" alt="<%= activeHomepageModel.name %> 3D model" width="1200" height="1500" fetchpriority="high" decoding="async">
       </a>
       <a class="home-entry-card home-entry-card-mockups" href="/white-mockups" data-analytics-event="home_entry_white_mockups_click">
         <span class="home-entry-copy">
@@ -44,9 +41,9 @@
       <model-viewer
         class="home-model-viewer"
         data-home-model-viewer
-        src="/uploads/glb/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.glb"
-        poster="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp"
-        alt="Interactive white 3D T-shirt model"
+        src="<%= activeHomepageModel.file_url %>"
+        poster="<%= activeHomepageModel.image_url %>"
+        alt="Interactive <%= activeHomepageModel.name %> 3D model"
         loading="lazy"
         reveal="auto"
         camera-controls
@@ -63,7 +60,7 @@
       <span class="home-model-loading" data-home-model-loading aria-live="polite"><i aria-hidden="true"></i>Loading 3D</span>
       <span class="home-model-gesture" aria-hidden="true">Drag to rotate</span>
       <span class="home-model-caption" aria-hidden="true">Same garment.<br>Every angle.<br>More possibilities.</span>
-      <a class="home-model-editor-link" href="/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design" data-analytics-event="home_3d_tshirt_design_click">Open in 3D editor <span aria-hidden="true">&#8594;</span></a>
+      <a class="home-model-editor-link" href="<%= activeHomepageModelHref %>" data-analytics-event="home_3d_tshirt_design_click">Open in 3D editor <span aria-hidden="true">&#8594;</span></a>
       <span class="home-orbit-mark" aria-hidden="true">
         <svg viewBox="0 0 120 24" role="presentation"><path d="M3 12c15-12 99-12 114 0-15 12-99 12-114 0Z"/><path d="m110 8 7 4-7 4"/></svg>
       </span>
@@ -73,18 +70,11 @@
       <h2 id="home-model-heading">Start with the right shape.</h2>
       <p>Explore a growing library of editable 3D clothing models. Adjust details, test color and artwork, and view your design from every angle.</p>
       <nav class="home-category-grid" aria-label="3D model categories">
-        <a class="home-category-card" href="/mockups?q=T-shirt#free-3d-models" data-analytics-event="home_category_tshirts_click">
-          <img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>T-Shirts</span><i aria-hidden="true">&#8594;</i>
-        </a>
-        <a class="home-category-card" href="/mockups?q=Hoodie#free-3d-models" data-analytics-event="home_category_hoodies_click">
-          <img src="/uploads/preview/classic-pullover-hoodie-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Hoodies</span><i aria-hidden="true">&#8594;</i>
-        </a>
-        <a class="home-category-card" href="/mockups?q=Dress#free-3d-models" data-analytics-event="home_category_dresses_click">
-          <img src="/uploads/preview/classic-one-piece-dress-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Dresses</span><i aria-hidden="true">&#8594;</i>
-        </a>
-        <a class="home-category-card" href="/mockups?q=Jacket#free-3d-models" data-analytics-event="home_category_jackets_click">
-          <img src="/uploads/preview/classic-jacket-garment-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy"><span>Jackets</span><i aria-hidden="true">&#8594;</i>
-        </a>
+        <% homepageModelCards.forEach(function(card) {%>
+          <a class="home-category-card" href="/mockups?q=<%= encodeURIComponent(card.query) %>#free-3d-models" data-analytics-event="<%= card.analytics %>">
+            <img src="<%= card.image_url %>" alt="" width="1200" height="1500" loading="lazy"><span><%= card.label %></span><i aria-hidden="true">&#8594;</i>
+          </a>
+        <% });%>
         <a class="home-category-card" href="/mockups" data-analytics-event="home_category_more_click">
           <span class="home-category-count">100+</span><span>More models</span><i aria-hidden="true">&#8594;</i>
         </a>
@@ -129,7 +119,7 @@
     </div>
     <ol class="home-production-flow home-scroll-reveal">
       <li>
-        <div class="home-production-media home-production-media-garment"><img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="Designed 3D T-shirt" width="1200" height="1500" loading="lazy"><span class="home-production-print" aria-hidden="true">CLOZ</span></div>
+        <div class="home-production-media home-production-media-garment"><img src="<%= activeHomepageModel.image_url %>" alt="Designed 3D T-shirt" width="1200" height="1500" loading="lazy"><span class="home-production-print" aria-hidden="true">CLOZ</span></div>
         <div class="home-production-step-copy"><strong>1. 3D Design</strong><span>Customize a model and finalize your design.</span></div>
       </li>
       <li><div class="home-production-media"><img src="/images/mockups/on-model/generated/young-western-female-tee-v4-base.png" alt="On-model white T-shirt review" width="1024" height="1536" loading="lazy"></div><div class="home-production-step-copy"><strong>2. On-Model Review</strong><span>See your design on real silhouettes.</span></div></li>
@@ -147,7 +137,7 @@
       <p>3D models and white mockups for a more confident creative process.</p>
     </div>
     <a class="home-final-panel" href="/mockups" data-analytics-event="home_bottom_model_library_click">
-      <img src="/uploads/preview/basic-short-sleeve-tshirt-3d-model-fabric-v2-neutral-v1.webp" alt="" width="1200" height="1500" loading="lazy">
+      <img src="<%= activeHomepageModel.image_url %>" alt="" width="1200" height="1500" loading="lazy">
       <span>Explore the collection <i aria-hidden="true">&#8594;</i></span>
     </a>
   </div>
