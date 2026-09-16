@@ -586,7 +586,7 @@ function withCategoryImages(categories = []) {
 
 const HOME_FEATURED_CATEGORY_SLUGS = ['t-shirt-mockup', 'hoodie-mockup', 'dress', 'jacket'];
 const HOME_FEATURED_MODEL_SLUGS_BY_CATEGORY = {
-  't-shirt-mockup': 'basic-short-sleeve-tshirt-3d-model',
+  't-shirt-mockup': 'relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea',
   'hoodie-mockup': 'tailored-pullover-hoodie-3d-model',
   dress: 'classic-one-piece-dress-3d-model',
   jacket: 'classic-jacket-garment-3d-model'

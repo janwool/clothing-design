@@ -4,6 +4,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const homepage = fs.readFileSync(path.join(__dirname, '..', 'views', 'index.ejs'), 'utf8');
+const homepageRoute = fs.readFileSync(path.join(__dirname, '..', 'routes', 'index.js'), 'utf8');
+
+test('pins the selected relaxed drop-shoulder T-shirt as the homepage model', () => {
+  assert.match(homepageRoute, /'t-shirt-mockup': 'relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea'/);
+});
 
 test('routes homepage garment cards through the stable model collection', () => {
   assert.match(homepage, /homepageModelCards\.forEach/);
