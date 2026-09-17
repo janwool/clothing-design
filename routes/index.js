@@ -1106,11 +1106,12 @@ const TOOL_PAGE_CONTENT = {
   '3d-clothing-mockup-generator': {
     title: 'Free 3D Clothing Design & Mockup Generator',
     eyebrow: 'Free online 3D clothing design',
-    image: modelCover('dress-3d-model-06-29e39d9a.webp'),
+    image: siteImage('categories/t-shirt-mockup.webp'),
     heroModel: {
-      src: `${MOCKUP_GLB_BASE_URL}/dress-3d-model-06-29e39d9a.glb`,
-      alt: 'Classic One-Piece Dress 3D Model'
+      src: 'https://cdn.cloz-design.com/d3/6588/basic-short-sleeve-tshirt-3d-model.glb?v=uv-original-20260606',
+      alt: 'Basic Short Sleeve T-Shirt 3D Model'
     },
+    editorHref: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design',
     subtitle: 'Design clothing online with free 3D garment models for T-shirts, hoodies, dresses, and other apparel, then export transparent mockups for product pages and design review.',
     intent: 'Use the free online 3D clothing design workflow when you need garment shape, product angle, artwork placement, and apparel category variety. Build richer visuals than flat templates while keeping the process browser-based and fast.',
     primaryKeyword: '3D clothing mockup generator',
@@ -1175,12 +1176,12 @@ const TOOL_PAGE_CONTENT = {
       { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
     ],
     relatedSlugs: ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'print-on-demand-mockup-generator'],
-    cta: { label: 'Open 3D Clothing Editor', href: '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model/edit' }
+    cta: { label: 'Open 3D Clothing Editor', href: '/3d-models/t-shirt-mockup/basic-short-sleeve-tshirt-3d-model#design' }
   },
   'bulk-t-shirt-mockup-generator': {
     title: 'Free Bulk T-Shirt Mockup Generator',
     eyebrow: 'Batch T-shirt product visuals',
-    image: modelCover('t-shirt-mockup-3d-model-01-aa09ae0d.webp'),
+    image: siteImage('bulk-tshirt/colorway-hero.webp'),
     heroModel: {
       src: `${MOCKUP_GLB_BASE_URL}/t-shirt-mockup-3d-model-01-aa09ae0d.glb`,
       alt: 'Classic Crew Neck T-Shirt 3D Model'
@@ -3197,7 +3198,11 @@ router.get('/tools/:slug', async (req, res) => {
       ? 'tshirt-generator-landing'
       : isHoodieGenerator
         ? 'hoodie-generator-landing'
-        : 'tool-detail';
+        : req.params.slug === '3d-clothing-mockup-generator'
+          ? '3d-clothing-mockup-landing'
+          : req.params.slug === 'bulk-t-shirt-mockup-generator'
+            ? 'bulk-tshirt-mockup-landing'
+            : 'tool-detail';
     return res.render(viewName, {
       title: buildSeoTitle(toolPage.title, 'ClozDesign'),
       metaDescription: compactText(toolPage.subtitle, 160),

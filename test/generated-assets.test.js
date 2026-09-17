@@ -117,7 +117,7 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   const designerScript = fs.readFileSync(path.join(projectRoot, 'public/js/model-designer.js'), 'utf8');
   const renderStandard = JSON.parse(fs.readFileSync(path.join(projectRoot, 'public/config/design3d-render-standard.json'), 'utf8'));
   const template = fs.readFileSync(path.join(projectRoot, 'views/model-detail.ejs'), 'utf8');
-  const studioEnvironment = fs.readFileSync(path.join(projectRoot, 'public/environments/commercial-apparel-studio-v4-balanced-20260829.hdr'));
+  const studioEnvironment = fs.readFileSync(path.join(projectRoot, 'public/environments/commercial-apparel-studio-v5-front-white-20260917.hdr'));
 
   assert.match(materialScript, /'cotton-jersey': \{ normalScale: 0\.32, textureRepeat: 7/);
   assert.match(materialScript, /'satin-silk': \{ normalScale: 0\.16, textureRepeat: 5, sheenRoughness: 0\.22/);
@@ -125,19 +125,24 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.match(designerScript, /setSheenColorFactor\?\.\(sheenColor\)/);
   assert.match(designerScript, /setSheenRoughnessFactor\?\.\(material\.sheenRoughness/);
   assert.match(designerScript, /setSpecularFactor\?\.\(material\.specular/);
-  assert.equal(renderStandard.web.environmentImage, '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr');
+  assert.equal(renderStandard.web.environmentImage, '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr');
   assert.equal(renderStandard.camera.webEditorOrbit, '-12deg 72deg 158%');
-  assert.equal(renderStandard.web.lightingMode, 'front-back-balanced-product-studio');
+  assert.equal(renderStandard.web.lightingMode, 'camera-relative-45deg-white-softbox');
   assert.equal(renderStandard.web.sourceEnvironment, '/environments/commercial-apparel-studio-v2-20260829.hdr');
-  assert.equal(renderStandard.web.balanceMethod, '180-degree-lighten-mirror');
+  assert.equal(renderStandard.web.balanceMethod, 'camera-relative-azimuth');
+  assert.equal(renderStandard.web.cameraRelativeLighting, true);
+  assert.equal(renderStandard.web.lightReferenceAzimuthDeg, -16);
+  assert.equal(renderStandard.web.lightAzimuthOffsetDeg, 45);
+  assert.equal(renderStandard.web.lightColor, '#ffffff');
+  assert.equal(renderStandard.web.environmentNeutralization, 'luminance-preserving-monochrome');
   assert.deepEqual(renderStandard.web.environmentBake.resolution, [2048, 1024]);
   assert.equal(renderStandard.web.environmentBake.sourceStrength, 1.12);
   assert.equal(renderStandard.web.shadowIntensity, 0.32);
   assert.equal(renderStandard.web.shadowSoftness, 0.9);
   assert.equal(renderStandard.web.exportShadowIntensity, 0.46);
   assert.equal(renderStandard.web.exportShadowSoftness, 0.88);
-  assert.equal(renderStandard.web.exportExposure, 0.76);
-  assert.equal(renderStandard.web.exposure, 0.7);
+  assert.equal(renderStandard.web.exportExposure, 0.82);
+  assert.equal(renderStandard.web.exposure, 0.82);
   assert.equal(renderStandard.web.toneMapping, 'commerce');
   assert.deepEqual(renderStandard.web.material.baseColor, [0.82, 0.82, 0.8]);
   assert.deepEqual(renderStandard.web.exportMaterial, {

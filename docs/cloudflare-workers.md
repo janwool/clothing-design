@@ -20,24 +20,36 @@ Set these in Cloudflare Workers settings:
 - `R2_PUBLIC_URL`
 - `SESSION_SECRET`
 
-Creem subscriptions additionally require Worker secrets named `CREEM_API_KEY` and
-`CREEM_WEBHOOK_SECRET`. The four public product IDs are mapped in server code, so
-they cannot be replaced through browser requests. Configure the secrets with:
+Dodo Payments subscriptions require Worker secrets named `DODO_PAYMENTS_API_KEY`
+and `DODO_PAYMENTS_WEBHOOK_KEY`. Configure them with:
 
 ```sh
-npx wrangler secret put CREEM_API_KEY
-npx wrangler secret put CREEM_WEBHOOK_SECRET
+npx wrangler secret put DODO_PAYMENTS_API_KEY
+npx wrangler secret put DODO_PAYMENTS_WEBHOOK_KEY
 ```
 
-Register this production webhook URL in Creem:
+Create four USD recurring products in Dodo Payments matching the published Pricing
+page: Pro monthly `$9.90`, Pro yearly `$99`, Max monthly `$29`, and Max yearly
+`$299`. Their public product IDs are configured as Worker variables in
+`wrangler.toml` and are only selected by server-side plan mapping, preventing browser
+requests from substituting a different product:
+
+| Plan | Product ID |
+| --- | --- |
+| Pro monthly | `pdt_0NnnhMjKZE0S5y7c74oI6` |
+| Pro yearly | `pdt_0NnnhXqc1hwnNQubQkHRX` |
+| Max monthly | `pdt_0NnnhuSBJVyZWRVe4A3x4` |
+| Max yearly | `pdt_0Nnni73BBrP63K1eCXnH9` |
+
+Register this production webhook URL in Dodo Payments:
 
 ```text
-https://www.cloz-design.com/api/billing/webhooks/creem
+https://www.cloz-design.com/api/billing/webhooks/dodo-payments
 ```
 
 Set `APP_BASE_URL=https://www.cloz-design.com` for the Checkout success redirect.
-For Creem sandbox products, set `CREEM_TEST_MODE=true`; live products must use
-`false` or omit the variable.
+Use `DODO_PAYMENTS_ENVIRONMENT=test_mode` with test products and `live_mode` with
+production products. The Worker defaults to `live_mode` in `wrangler.toml`.
 
 Google sign-in additionally requires Worker secrets named `GOOGLE_CLIENT_ID` and
 `GOOGLE_CLIENT_SECRET`. Create a Google OAuth client with the Web application type

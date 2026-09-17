@@ -55,8 +55,15 @@ test('tracks the white mockup detail funnel with dedicated event names', () => {
   assert.match(detailEditor, /white_mockup_project_\$\{saveMode\}_success/);
   assert.match(detailEditor, /white_mockup_png_download_success/);
   assert.match(detailView, /id="whiteMockupUploadZone" data-analytics-managed="true"/);
-  assert.match(detailView, /id="whiteMockupSave" data-analytics-managed="true"/);
+  assert.doesNotMatch(detailView, /whiteMockupSave|Save project/);
   assert.match(detailView, /id="whiteMockupDownload" data-analytics-managed="true"/);
+  assert.match(detailView, /data-analytics-event="white_mockup_detail_breadcrumb_home_click"/);
+  assert.match(detailView, /data-analytics-event="white_mockup_detail_breadcrumb_library_click"/);
+  assert.match(detailView, /data-analytics-event="white_mockup_detail_faq_toggle"/);
+  assert.match(detailView, /data-analytics-name="<%= item\.question %>"/);
+  assert.match(detailView, /data-analytics-event="white_mockup_detail_related_view_all_click"/);
+  assert.match(detailView, /data-analytics-event="white_mockup_detail_related_select"/);
+  assert.match(detailView, /data-id="<%= item\.asset_name %>"/);
 });
 
 test('offers garment colorways without flattening the mockup shading', () => {
@@ -83,11 +90,18 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
   assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260907-user-projects-v8/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260915-white-detail-events-v26/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260918-white-auto-save-v27/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);
   assert.match(detailView, /data-base-image="<%= editorBaseImageUrl %>"/);
   assert.match(detailView, /src="<%= editorBaseImageUrl %>"/);
   assert.match(detailEditor, /stage\.classList\.add\('is-ready'\)/);
+});
+
+test('automatically records uploaded artwork as a white mockup project', () => {
+  assert.doesNotMatch(detailEditor, /getElementById\('whiteMockupSave'\)/);
+  assert.match(detailEditor, /Promise\.all\(\[artworkLoadPromise, state\.artworkUploadPromise\]\)/);
+  assert.match(detailEditor, /queueProjectSave\(\{ immediate: true \}\)/);
+  assert.match(detailEditor, /Added automatically to your projects\./);
 });

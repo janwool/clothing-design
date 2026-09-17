@@ -35,7 +35,11 @@ must not be the only way to identify which user function occurred.
 ## White Mockup detail funnel
 
 - `white_mockup_detail_page_view`
+- `white_mockup_detail_breadcrumb_home_click`
+- `white_mockup_detail_breadcrumb_library_click`
 - `white_mockup_editor_ready`
+- `white_mockup_empty_stage_upload_click`
+- `white_mockup_artwork_picker_open`
 - `white_mockup_artwork_picker_select`
 - `white_mockup_artwork_drop_select`
 - `white_mockup_artwork_move_complete`
@@ -50,6 +54,10 @@ must not be the only way to identify which user function occurred.
 - `white_mockup_project_update_success`
 - `white_mockup_png_download_begin`
 - `white_mockup_png_download_success`
+- `white_mockup_detail_faq_open`
+- `white_mockup_detail_faq_close`
+- `white_mockup_detail_related_view_all_click`
+- `white_mockup_detail_related_select`
 
 Failure and authentication branches use equally direct `_error`, `_signin_required`, or
 `_session_expired` names. Long names are shortened by the runtime according to the rule

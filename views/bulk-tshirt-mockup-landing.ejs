@@ -1,0 +1,282 @@
+<%- include('partials/header', {
+  bodyClass: 'btg-page',
+  pageStyles: ['/css/bulk-tshirt-mockup-landing.css?v=20260917-commercial-v1']
+}) %>
+
+<%
+  const btgEditorHref = toolPage.editorHref || toolPage.cta.href;
+  const btgColors = [
+    { name: 'Bone', hex: '#eee8dc', key: 'bone' },
+    { name: 'Black', hex: '#171719', key: 'black' },
+    { name: 'Sage', hex: '#78806d', key: 'sage' },
+    { name: 'Terracotta', hex: '#a95f45', key: 'terracotta' }
+  ];
+  const btgChannels = [
+    { name: 'Shopify', label: 'Clean variant sets', className: 'store', image: '/images/bulk-tshirt/colorway-hero.webp' },
+    { name: 'Etsy', label: 'Consistent listing grids', className: 'market', image: '/images/use-cases/pod-merch-listing-images.webp' },
+    { name: 'Launch decks', label: 'Client-ready reviews', className: 'deck', image: '/images/editorial/garment-team-review.webp' }
+  ];
+%>
+
+<div class="btg-landing">
+  <section class="btg-hero" aria-labelledby="btg-title">
+    <div class="btg-shell btg-hero-grid">
+      <div class="btg-hero-copy">
+        <p class="btg-eyebrow">Bulk T-shirt mockup generator</p>
+        <h1 id="btg-title">One design.<br>Every colorway.</h1>
+        <p class="btg-lede">Turn one artwork into a consistent product set for your store, drop, or client review.</p>
+        <div class="btg-actions">
+          <label class="btg-button btg-button-dark" for="btgHeroUpload">Create a colorway set</label>
+          <input id="btgHeroUpload" class="btg-upload-input" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+          <a class="btg-text-link" href="#btg-workflow">See how it works <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="btg-trust"><span>Free to start</span><i>·</i><span>Consistent framing</span><i>·</i><span>Export one PNG sheet</span></p>
+      </div>
+
+      <div class="btg-hero-app" data-editor-href="<%= btgEditorHref %>">
+        <div class="btg-hero-shot" id="btgHeroShot" data-focus="all">
+          <img src="/images/bulk-tshirt/colorway-hero.webp" alt="Four commercial T-shirt mockups in bone, black, sage, and terracotta with the same botanical artwork" width="1536" height="1024" decoding="async" fetchpriority="high">
+          <span class="btg-focus-ring" aria-hidden="true"></span>
+          <div class="btg-shot-badge"><i></i> Same artwork · 4 colors</div>
+        </div>
+
+        <aside class="btg-batch-panel" aria-label="Colorway batch controls">
+          <div class="btg-panel-top">
+            <div class="btg-tabs" role="group" aria-label="Garment side">
+              <button class="active" type="button" data-btg-view="Front">Front</button>
+              <button type="button" data-btg-view="Back">Back</button>
+            </div>
+            <strong>4 variants</strong>
+          </div>
+
+          <div class="btg-artwork-row">
+            <span class="btg-artwork-icon" aria-hidden="true">
+              <svg viewBox="0 0 56 56"><path d="M13 45C16 29 25 17 44 9M19 34C8 31 9 18 10 13c9 1 19 5 21 15M31 24c2-10 9-15 17-16 1 9-2 18-14 23M22 42c10 0 18 3 24 8"/></svg>
+            </span>
+            <span><small>Artwork</small><strong>botanical-leaf.png</strong></span>
+            <button type="button" id="btgReplaceArtwork" aria-label="Replace artwork">↗</button>
+          </div>
+
+          <div class="btg-panel-section">
+            <div class="btg-panel-label"><span>Product colors</span><b id="btgSelectedColor">All selected</b></div>
+            <div class="btg-swatches" role="group" aria-label="Preview product color">
+              <% btgColors.forEach(function(color) { %>
+                <button type="button" data-btg-color="<%= color.key %>" data-btg-name="<%= color.name %>" style="--btg-swatch: <%= color.hex %>" aria-label="Focus <%= color.name %> colorway"></button>
+              <% }); %>
+            </div>
+          </div>
+
+          <div class="btg-queue">
+            <div class="btg-panel-label"><span>Batch queue</span><b>4 of 4</b></div>
+            <div class="btg-queue-bar"><i></i></div>
+            <ul>
+              <% btgColors.forEach(function(color) { %>
+                <li><i style="--btg-dot: <%= color.hex %>"></i><span><%= color.name %></span><b aria-label="Ready">✓</b></li>
+              <% }); %>
+            </ul>
+          </div>
+
+          <button class="btg-export" id="btgExportSheet" type="button">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m0 0 4-4m-4 4L6 8M3 14v3h14v-3"/></svg>
+            Export colorway sheet
+          </button>
+          <p class="btg-status" id="btgStatus" aria-live="polite">Your four-color batch is ready.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="btg-workflow" id="btg-workflow" aria-labelledby="btg-workflow-title">
+    <div class="btg-shell">
+      <div class="btg-section-heading btg-centered">
+        <p class="btg-eyebrow">A faster colorway workflow</p>
+        <h2 id="btg-workflow-title">Build the set once.</h2>
+        <p>Upload one graphic, choose the product colors, and keep every visual aligned.</p>
+      </div>
+      <div class="btg-workflow-board">
+        <div class="btg-workflow-step btg-step-art">
+          <span class="btg-step-number">01</span>
+          <div class="btg-art-tile" aria-hidden="true">
+            <svg viewBox="0 0 84 84"><path d="M18 70C22 45 38 25 69 12M27 53C10 48 12 28 14 20c14 2 30 8 34 24M48 37c3-16 15-24 27-25 1 14-4 29-23 37M31 65c15 0 28 5 38 13"/></svg>
+          </div>
+          <strong>Drop in one artwork</strong>
+          <small>PNG, JPG or SVG</small>
+        </div>
+        <div class="btg-workflow-arrow" aria-hidden="true">→</div>
+        <div class="btg-workflow-step btg-step-colors">
+          <span class="btg-step-number">02</span>
+          <div class="btg-color-stack" aria-hidden="true">
+            <% btgColors.forEach(function(color) { %><i style="--btg-stack: <%= color.hex %>"></i><% }); %>
+          </div>
+          <strong>Pick your product colors</strong>
+          <small>Light, dark, neutral, seasonal</small>
+        </div>
+        <div class="btg-workflow-arrow" aria-hidden="true">→</div>
+        <div class="btg-workflow-output">
+          <span class="btg-step-number">03</span>
+          <img src="/images/bulk-tshirt/catalog-lineup.webp" alt="Six matching T-shirt colorways shown in a consistent catalog lineup" width="2172" height="724" loading="lazy" decoding="async">
+          <div><strong>Generate the full set</strong><small>Consistent scale and placement</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="btg-consistency" aria-labelledby="btg-consistency-title">
+    <div class="btg-shell">
+      <div class="btg-consistency-copy">
+        <p class="btg-eyebrow">Built for product catalogs</p>
+        <h2 id="btg-consistency-title">One catalog.<br>Zero visual drift.</h2>
+        <p>Every shirt keeps the same angle, artwork scale, and visual weight—so the set feels designed, not assembled.</p>
+      </div>
+      <figure class="btg-lineup">
+        <img src="/images/bulk-tshirt/catalog-lineup.webp" alt="Six commercial T-shirt mockups with matching artwork placement" width="2172" height="724" loading="lazy" decoding="async">
+      </figure>
+      <div class="btg-proof-row">
+        <span><i>01</i><strong>Same angle</strong></span>
+        <span><i>02</i><strong>Same artwork scale</strong></span>
+        <span><i>03</i><strong>Ready to list</strong></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="btg-channels" aria-labelledby="btg-channels-title">
+    <div class="btg-shell">
+      <div class="btg-section-heading">
+        <p class="btg-eyebrow">Commerce-ready output</p>
+        <h2 id="btg-channels-title">Made for the places you sell.</h2>
+      </div>
+      <div class="btg-channel-grid">
+        <% btgChannels.forEach(function(channel) { %>
+          <article class="btg-channel-card btg-channel-<%= channel.className %>">
+            <div class="btg-channel-image"><img src="<%= channel.image %>" alt="<%= channel.name %> apparel mockup workflow" width="1200" height="900" loading="lazy" decoding="async"></div>
+            <div><span><%= channel.name %></span><strong><%= channel.label %></strong><a href="<%= btgEditorHref %>" aria-label="Create mockups for <%= channel.name %>">→</a></div>
+          </article>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="btg-review" aria-labelledby="btg-review-title">
+    <div class="btg-shell btg-review-grid">
+      <div class="btg-review-copy">
+        <p class="btg-eyebrow">Review before you publish</p>
+        <h2 id="btg-review-title">See every color before it goes live.</h2>
+        <p>Catch weak contrast and inconsistent product choices while they are still easy to change.</p>
+        <ul>
+          <li><span>01</span><div><strong>Check contrast</strong><small>Make sure the print reads on light and dark bases.</small></div></li>
+          <li><span>02</span><div><strong>Compare the set</strong><small>Review all variants without opening separate files.</small></div></li>
+          <li><span>03</span><div><strong>Share one sheet</strong><small>Send a compact approval view to clients or teammates.</small></div></li>
+        </ul>
+      </div>
+      <figure class="btg-review-photo">
+        <img src="/images/bulk-tshirt/folded-colorways.webp" alt="Folded bone, black, sage, and terracotta T-shirts with matching botanical artwork" width="1536" height="1024" loading="lazy" decoding="async">
+        <figcaption><i></i><span><strong>4 colorways</strong> / one artwork direction</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="btg-faq" aria-labelledby="btg-faq-title">
+    <div class="btg-shell btg-faq-grid">
+      <div class="btg-section-heading">
+        <p class="btg-eyebrow">Quick answers</p>
+        <h2 id="btg-faq-title">Before you build the batch.</h2>
+      </div>
+      <div class="btg-faq-list">
+        <% toolPage.faq.slice(0, 4).forEach(function(item, index) { %>
+          <details<%= index === 0 ? ' open' : '' %>>
+            <summary><%= item.question %><span aria-hidden="true">+</span></summary>
+            <p><%= item.answer %></p>
+          </details>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="btg-final" aria-labelledby="btg-final-title">
+    <div class="btg-shell btg-final-inner">
+      <div class="btg-final-copy">
+        <p class="btg-eyebrow">Start with one artwork</p>
+        <h2 id="btg-final-title">Your next product set,<br>ready in minutes.</h2>
+        <a class="btg-button btg-button-light" href="<%= btgEditorHref %>">Create your colorway set</a>
+        <p>Free to start. No credit card required.</p>
+      </div>
+      <img src="/images/bulk-tshirt/colorway-hero.webp" alt="Four matching T-shirt product mockups" width="1536" height="1024" loading="lazy" decoding="async">
+    </div>
+  </section>
+</div>
+
+<script>
+  (() => {
+    const editorHref = '<%- btgEditorHref %>';
+    const upload = document.getElementById('btgHeroUpload');
+    const replace = document.getElementById('btgReplaceArtwork');
+    const exportButton = document.getElementById('btgExportSheet');
+    const stage = document.getElementById('btgHeroShot');
+    const status = document.getElementById('btgStatus');
+    const selectedColor = document.getElementById('btgSelectedColor');
+
+    const handleUpload = (file) => {
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) {
+        status.textContent = 'Choose an artwork file no larger than 10 MB.';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({ dataUrl: reader.result, name: file.name, createdAt: Date.now() }));
+        } catch (_) {}
+        window.location.href = editorHref;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    upload && upload.addEventListener('change', () => handleUpload(upload.files && upload.files[0]));
+    replace && replace.addEventListener('click', () => upload && upload.click());
+
+    document.querySelectorAll('[data-btg-color]').forEach((button) => {
+      button.addEventListener('click', () => {
+        const active = button.classList.contains('active');
+        document.querySelectorAll('[data-btg-color]').forEach((item) => item.classList.remove('active'));
+        button.classList.toggle('active', !active);
+        stage.dataset.focus = active ? 'all' : button.dataset.btgColor;
+        selectedColor.textContent = active ? 'All selected' : button.dataset.btgName;
+        status.textContent = active ? 'Showing the complete colorway set.' : `${button.dataset.btgName} colorway selected.`;
+      });
+    });
+
+    document.querySelectorAll('[data-btg-view]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[data-btg-view]').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        const view = button.dataset.btgView;
+        status.textContent = view === 'Front' ? 'Front colorway batch selected.' : 'Back placement is ready to refine in the editor.';
+      });
+    });
+
+    exportButton && exportButton.addEventListener('click', () => {
+      const image = new Image();
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        canvas.getContext('2d').drawImage(image, 0, 0);
+        canvas.toBlob((blob) => {
+          if (!blob) return;
+          const link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.download = 'clozdesign-tshirt-colorway-sheet.png';
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+          status.textContent = 'Colorway PNG downloaded.';
+        }, 'image/png');
+      };
+      image.onerror = () => { status.textContent = 'Open the editor to export your custom set.'; };
+      image.src = '/images/bulk-tshirt/colorway-hero.webp';
+    });
+  })();
+</script>
+
+<%- include('partials/footer') %>

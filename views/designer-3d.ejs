@@ -54,8 +54,11 @@
           field-of-view="28deg"
           shadow-intensity="0.32"
           shadow-softness="0.9"
-          exposure="0.7"
-          environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+          exposure="0.82"
+          environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+          data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+          data-studio-light-reference-azimuth="-16"
+          data-studio-light-azimuth-offset="45"
           tone-mapping="commerce"
           style="width: 100%; height: 100%;"
         ></model-viewer>
@@ -174,7 +177,7 @@ const designerAiTryOn = document.getElementById('designerAiTryOn');
 const designerProjectState = { id: '', name: '' };
 const designerUserAuthenticated = <%- JSON.stringify(Boolean(user)) %>;
 const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
-const commercialStudioEnvironment = '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr';
+const commercialStudioEnvironment = '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr';
 
 function hexToRgba(hex) {
   const safe = /^#[0-9a-f]{6}$/i.test(String(hex || '')) ? hex.slice(1) : 'ffffff';

@@ -126,14 +126,14 @@
       }
       if (!response.ok || !payload.checkoutUrl) throw new Error(payload.error || 'Checkout could not be started.');
       trackPricing(`pricing_${link.dataset.plan}_checkout_redirect`, {
-        checkout_provider: 'creem',
+        checkout_provider: 'dodo_payments',
         plan_name: link.dataset.plan,
         billing_interval: selected
       });
       window.location.assign(payload.checkoutUrl);
     } catch (error) {
       trackPricing(`pricing_${link.dataset.plan}_checkout_error`, {
-        checkout_provider: 'creem',
+        checkout_provider: 'dodo_payments',
         plan_name: link.dataset.plan,
         billing_interval: selected,
         error_message: String(error.message || 'Checkout could not be started.').slice(0, 120)

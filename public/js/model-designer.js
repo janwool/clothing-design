@@ -69,7 +69,7 @@ window.initializeModelDesigner = () => {
   const appearanceGradientAngleOutput = document.getElementById('appearanceGradientAngleOutput');
   const appearanceGradientPreview = document.getElementById('appearanceGradientPreview');
   const elementToolbar = document.createElement('div');
-  elementToolbar.className = 'element-toolbar';
+  elementToolbar.className = 'element-toolbar is-canvas-centered';
   elementToolbar.dataset.editorToolbar = 'true';
   textureCanvasArea.appendChild(elementToolbar);
   const colorPopover = document.createElement('div');
@@ -111,17 +111,22 @@ window.initializeModelDesigner = () => {
       webTarget: 'auto auto auto'
     },
     web: {
-      environmentImage: '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr',
-      lightingMode: 'front-back-balanced-product-studio',
+      environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',
+      lightingMode: 'camera-relative-45deg-white-softbox',
       sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
-      balanceMethod: '180-degree-lighten-mirror',
+      balanceMethod: 'camera-relative-azimuth',
+      cameraRelativeLighting: true,
+      lightReferenceAzimuthDeg: -16,
+      lightAzimuthOffsetDeg: 45,
+      lightColor: '#ffffff',
+      environmentNeutralization: 'luminance-preserving-monochrome',
       shadowIntensity: 0.32,
       shadowSoftness: 0.9,
       exportShadowIntensity: 0.46,
       exportShadowSoftness: 0.88,
-      exportExposure: 0.76,
+      exportExposure: 0.82,
       exportToneMapping: 'commerce',
-      exposure: 0.7,
+      exposure: 0.82,
       toneMapping: 'commerce',
       exportMaterial: {
         roughness: 0.72,
@@ -142,7 +147,7 @@ window.initializeModelDesigner = () => {
       }
     }
   };
-  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260916-balanced-front-back-v4')
+  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v9')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -435,9 +440,19 @@ window.initializeModelDesigner = () => {
     const webStandard = renderStandard.web || defaultRenderStandard.web;
     const cameraStandard = renderStandard.camera || defaultRenderStandard.camera;
     viewerElement.setAttribute('environment-image', webStandard.environmentImage || defaultRenderStandard.web.environmentImage);
+    if (webStandard.cameraRelativeLighting !== false) {
+      viewerElement.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultRenderStandard.web.environmentImage;
+      viewerElement.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);
+      viewerElement.dataset.studioLightAzimuthOffset = String(webStandard.lightAzimuthOffsetDeg ?? 0);
+      window.CameraRelativeStudioLight?.install(viewerElement, {
+        environmentImage: viewerElement.dataset.cameraRelativeStudioLight,
+        referenceAzimuthDeg: Number(viewerElement.dataset.studioLightReferenceAzimuth),
+        azimuthOffsetDeg: Number(viewerElement.dataset.studioLightAzimuthOffset)
+      });
+    }
     viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
     viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.9));
-    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.7));
+    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.82));
     viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
     viewerElement.setAttribute('camera-target', cameraStandard.webTarget || 'auto auto auto');
     viewerElement.setAttribute('field-of-view', cameraStandard.webFieldOfView || '28deg');
@@ -1854,6 +1869,7 @@ window.initializeModelDesigner = () => {
     if (typeof viewerElement.jumpCameraToGoal === 'function') {
       viewerElement.jumpCameraToGoal();
     }
+    window.CameraRelativeStudioLight?.sync(viewerElement);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
     return true;
   }
@@ -1862,6 +1878,7 @@ window.initializeModelDesigner = () => {
     const isVisibleCapture = options.visibleCapture === true;
     const isCommercialCapture = options.commercialFrame === true;
     const webStandard = { ...defaultRenderStandard.web, ...(renderStandard.web || {}) };
+    const detailLighting = window.ModelDetailLightingSettings || {};
     const exportViewer = document.createElement('model-viewer');
     exportViewer.src = modelDesignerConfig.previewModelFileUrl || '';
     exportViewer.alt = modelDesignerConfig.modelName || 'Designed 3D model';
@@ -1869,9 +1886,14 @@ window.initializeModelDesigner = () => {
     exportViewer.setAttribute('reveal', 'auto');
     exportViewer.setAttribute('interaction-prompt', 'none');
     exportViewer.setAttribute('environment-image', webStandard.exportEnvironmentImage || webStandard.environmentImage);
+    if (webStandard.cameraRelativeLighting !== false) {
+      exportViewer.dataset.cameraRelativeStudioLight = webStandard.exportEnvironmentImage || webStandard.environmentImage;
+      exportViewer.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);
+      exportViewer.dataset.studioLightAzimuthOffset = String(detailLighting.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);
+    }
     exportViewer.setAttribute('shadow-intensity', String(webStandard.exportShadowIntensity ?? 0.32));
-    exportViewer.setAttribute('shadow-softness', String(webStandard.exportShadowSoftness ?? 0.96));
-    exportViewer.setAttribute('exposure', String(isCommercialCapture ? (webStandard.exportExposure ?? webStandard.exposure) : webStandard.exposure));
+    exportViewer.setAttribute('shadow-softness', String(detailLighting.shadowSoftness ?? webStandard.exportShadowSoftness ?? 0.96));
+    exportViewer.setAttribute('exposure', String(detailLighting.exposure ?? (isCommercialCapture ? (webStandard.exportExposure ?? webStandard.exposure) : webStandard.exposure)));
     exportViewer.setAttribute('tone-mapping', isCommercialCapture ? (webStandard.exportToneMapping || webStandard.toneMapping) : webStandard.toneMapping);
     exportViewer.autoRotate = false;
     exportViewer.removeAttribute('auto-rotate');
@@ -2447,8 +2469,12 @@ window.initializeModelDesigner = () => {
     gradient.setAttribute('x2', `${x2}%`);
     gradient.setAttribute('y2', `${y2}%`);
     gradient.innerHTML = '';
-    gradient.appendChild(createSvg('stop', { offset: '0%', 'stop-color': rgbaFrom(parsed.start, parsed.alpha) }));
-    gradient.appendChild(createSvg('stop', { offset: '100%', 'stop-color': rgbaFrom(parsed.end, parsed.alpha) }));
+    parsed.stops.forEach((stop) => {
+      gradient.appendChild(createSvg('stop', {
+        offset: `${stop.position}%`,
+        'stop-color': rgbaFrom(stop.color, parsed.alpha)
+      }));
+    });
     return `url(#${id})`;
   }
 
@@ -2532,20 +2558,59 @@ window.initializeModelDesigner = () => {
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;
   }
 
+  function normalizeGradientStops(stops, fallbackStart = '#111827', fallbackEnd = '#ffffff') {
+    const normalized = (Array.isArray(stops) ? stops : [])
+      .map((stop, index) => ({
+        id: String(stop?.id || `stop-${index + 1}`),
+        color: normalizeHex(stop?.color || fallbackStart),
+        position: Math.max(0, Math.min(100, Number(stop?.position) || 0))
+      }))
+      .sort((left, right) => left.position - right.position);
+    if (!normalized.length) {
+      return [
+        { id: 'stop-1', color: normalizeHex(fallbackStart), position: 0 },
+        { id: 'stop-2', color: normalizeHex(fallbackEnd), position: 100 }
+      ];
+    }
+    if (normalized.length === 1) {
+      normalized[0].position = 0;
+      normalized.push({ id: 'stop-2', color: normalizeHex(fallbackEnd), position: 100 });
+    }
+    return normalized;
+  }
+
+  function gradientFromStops(stops, alpha = 100, angle = 90) {
+    const normalizedAngle = ((Number(angle) || 0) % 360 + 360) % 360;
+    const normalizedStops = normalizeGradientStops(stops);
+    const stopList = normalizedStops
+      .map((stop) => `${rgbaFrom(stop.color, alpha)} ${Math.round(stop.position * 100) / 100}%`)
+      .join(', ');
+    return `linear-gradient(${normalizedAngle}deg, ${stopList})`;
+  }
+
   function gradientFrom(start, end, alpha, angle = 90) {
-    return `linear-gradient(${angle}deg, ${rgbaFrom(start, alpha)}, ${rgbaFrom(end, alpha)})`;
+    return gradientFromStops([
+      { id: 'stop-1', color: start, position: 0 },
+      { id: 'stop-2', color: end, position: 100 }
+    ], alpha, angle);
   }
 
   function parseCssColorTokens(value) {
     const source = String(value || '');
     const colorRegex = /#[0-9a-fA-F]{6}|rgba?\(\s*([0-9.]+)\s*,\s*([0-9.]+)\s*,\s*([0-9.]+)(?:\s*,\s*([0-9.]+))?\s*\)/g;
     return [...source.matchAll(colorRegex)].map((match) => {
+      const trailing = source.slice((match.index || 0) + match[0].length);
+      const positionMatch = trailing.match(/^\s+(-?[0-9.]+)%/);
       if (match[0].startsWith('#')) {
-        return { hex: normalizeHex(match[0]) };
+        return {
+          hex: normalizeHex(match[0]),
+          position: positionMatch ? parseFloat(positionMatch[1]) : undefined
+        };
       }
       return {
         hex: rgbToHex(parseFloat(match[1]), parseFloat(match[2]), parseFloat(match[3])),
-        alpha: match[4] !== undefined ? Math.round(parseFloat(match[4]) * 100) : undefined
+        alpha: match[4] !== undefined ? Math.round(parseFloat(match[4]) * 100) : undefined,
+        position: positionMatch ? parseFloat(positionMatch[1]) : undefined
       };
     });
   }
@@ -2555,13 +2620,21 @@ window.initializeModelDesigner = () => {
     const isGradient = String(value || '').includes('linear-gradient');
     const angleMatch = String(value || '').match(/linear-gradient\(\s*(-?[0-9.]+)deg/i);
     const start = colorTokens[0]?.hex || normalizeHex(value);
-    const end = colorTokens[1]?.hex || (isGradient ? start : '#ffffff');
+    const end = colorTokens[colorTokens.length - 1]?.hex || (isGradient ? start : '#ffffff');
+    const stops = isGradient
+      ? normalizeGradientStops(colorTokens.map((token, index) => ({
+          id: `stop-${index + 1}`,
+          color: token.hex,
+          position: token.position ?? (colorTokens.length > 1 ? (index / (colorTokens.length - 1)) * 100 : 0)
+        })), start, end)
+      : [{ id: 'stop-1', color: start, position: 0 }];
     const hsv = rgbToHsv(...Object.values(hexToRgb(start)));
     return {
       mode: isGradient ? 'gradient' : 'solid',
-      activeStop: 'start',
+      activeStopId: stops[0].id,
       start,
       end,
+      stops,
       h: hsv.h,
       s: hsv.s,
       v: hsv.v,
@@ -2591,9 +2664,9 @@ window.initializeModelDesigner = () => {
   }
 
   function normalizeSavedPaint(value) {
-    const parsed = parseColorState(String(value || '').slice(0, 300));
+    const parsed = parseColorState(String(value || '').slice(0, 1200));
     return parsed.mode === 'gradient'
-      ? gradientFrom(parsed.start, parsed.end, parsed.alpha, parsed.angle)
+      ? gradientFromStops(parsed.stops, parsed.alpha, parsed.angle)
       : parsed.start;
   }
 
@@ -2988,7 +3061,8 @@ window.initializeModelDesigner = () => {
       button.setAttribute('aria-expanded', String(colorPopover.classList.contains('visible')));
       const valueLabel = document.createElement('span');
       valueLabel.className = 'surface-color-value';
-      valueLabel.textContent = parseColorState(value).start.toUpperCase();
+      const parsedValue = parseColorState(value);
+      valueLabel.textContent = parsedValue.mode === 'gradient' ? 'Gradient' : parsedValue.start.toUpperCase();
       control.appendChild(button);
       control.appendChild(valueLabel);
       elementToolbar.appendChild(title);
@@ -3063,26 +3137,21 @@ window.initializeModelDesigner = () => {
       elementToolbar.classList.remove('visible');
       return;
     }
-    const areaRect = textureCanvasArea.getBoundingClientRect();
     elementToolbar.classList.add('visible');
+    const compact = window.matchMedia('(max-width: 900px)').matches;
+    const edgeInset = compact ? 10 : 18;
     const toolbarWidth = elementToolbar.offsetWidth || 320;
-    const toolbarHeight = elementToolbar.offsetHeight || 44;
-    const outlineRect = selectionLayer.querySelector('.selection-outline')?.getBoundingClientRect()
-      || group.getBoundingClientRect();
-    const selectionRect = selectionLayer.querySelector('.selection-box')?.getBoundingClientRect()
-      || outlineRect;
-    const visibleLeft = textureCanvasArea.scrollLeft + 8;
-    const visibleTop = textureCanvasArea.scrollTop + 8;
-    const visibleRight = textureCanvasArea.scrollLeft + textureCanvasArea.clientWidth - 8;
-    const visibleBottom = textureCanvasArea.scrollTop + textureCanvasArea.clientHeight - 8;
-    const left = outlineRect.left - areaRect.left + textureCanvasArea.scrollLeft
-      + outlineRect.width / 2 - toolbarWidth / 2;
-    let top = selectionRect.top - areaRect.top + textureCanvasArea.scrollTop - toolbarHeight - 10;
-    if (top < visibleTop) {
-      top = selectionRect.bottom - areaRect.top + textureCanvasArea.scrollTop + 10;
+    const availableWidth = Math.max(0, textureCanvasArea.clientWidth - edgeInset * 2);
+    const centeredLeft = textureCanvasArea.scrollLeft
+      + edgeInset
+      + Math.max(0, (availableWidth - toolbarWidth) / 2);
+    elementToolbar.style.left = `${centeredLeft}px`;
+    elementToolbar.style.top = `${textureCanvasArea.scrollTop + edgeInset}px`;
+
+    const expandedColorButton = elementToolbar.querySelector('[data-color-prop][aria-expanded="true"]');
+    if (expandedColorButton && colorPopover.classList.contains('visible')) {
+      positionColorPopover(expandedColorButton);
     }
-    elementToolbar.style.left = `${Math.max(visibleLeft, Math.min(visibleRight - toolbarWidth, left))}px`;
-    elementToolbar.style.top = `${Math.max(visibleTop, Math.min(visibleBottom - toolbarHeight, top))}px`;
   }
 
   function closeColorPopover() {
@@ -3099,50 +3168,88 @@ window.initializeModelDesigner = () => {
     const group = state.selected;
     if (!group || !prop) return;
     const current = parseColorState(getColorValue(group, prop));
-    const startHsv = rgbToHsv(...Object.values(hexToRgb(current.start)));
-    const endHsv = rgbToHsv(...Object.values(hexToRgb(current.end)));
+    const stops = normalizeGradientStops(current.stops, current.start, current.end).map((stop, index) => ({
+      ...stop,
+      id: `gradient-stop-${index + 1}`
+    }));
+    const activeStopId = stops[0].id;
+    const activeHsv = rgbToHsv(...Object.values(hexToRgb(stops[0].color)));
     state.colorPicker = {
       prop,
       mode: current.mode,
-      activeStop: current.activeStop,
-      start: current.start,
-      end: current.end,
-      stopHsv: {
-        start: startHsv,
-        end: endHsv
-      },
-      h: current.h,
-      s: current.s,
-      v: current.v,
+      solidColor: current.start,
+      stops,
+      activeStopId,
+      nextStopId: stops.length + 1,
+      angle: current.angle,
+      h: activeHsv.h,
+      s: activeHsv.s,
+      v: activeHsv.v,
       alpha: current.alpha
     };
 
-    const buttonRect = button.getBoundingClientRect();
-    const areaRect = textureCanvasArea.getBoundingClientRect();
     colorPopover.innerHTML = `
-      <div class="color-mode" role="group">
-        <button type="button" data-mode="solid" class="${current.mode === 'solid' ? 'active' : ''}">Solid</button>
-        <button type="button" data-mode="gradient" class="${current.mode === 'gradient' ? 'active' : ''}">Gradient</button>
+      <div class="color-mode" role="group" aria-label="Color type">
+        <button type="button" data-mode="solid" aria-pressed="${current.mode === 'solid'}">Solid</button>
+        <button type="button" data-mode="gradient" aria-pressed="${current.mode === 'gradient'}">Gradient</button>
       </div>
-      <div class="gradient-stops">
-        <button type="button" data-stop="start" class="active"><span style="background:${current.start}"></span> A</button>
-        <button type="button" data-stop="end"><span style="background:${current.end}"></span> B</button>
+      <div class="gradient-editor" data-gradient-editor>
+        <div class="gradient-editor-row">
+          <div class="gradient-stop-track" data-gradient-track role="group" aria-label="Gradient color stops">
+            <div class="gradient-stop-layer" data-gradient-stop-layer></div>
+          </div>
+          <button class="gradient-icon-button" type="button" data-add-gradient-stop aria-label="Add gradient stop">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+          <button class="gradient-icon-button" type="button" data-reverse-gradient aria-label="Reverse gradient">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h12m0 0-3-3m3 3-3 3M17 17H5m0 0 3 3m-3-3 3-3"/></svg>
+          </button>
+        </div>
+        <div class="gradient-angle-row">
+          <label class="gradient-angle-field"><span>Angle</span><input type="number" min="0" max="359" data-color-field="angle" value="${current.angle}"><i>°</i></label>
+          <div class="gradient-angle-dial" data-angle-dial role="slider" tabindex="0" aria-label="Gradient angle" aria-valuemin="0" aria-valuemax="359"><span aria-hidden="true"></span></div>
+          <button class="gradient-icon-button gradient-delete-stop" type="button" data-delete-gradient-stop aria-label="Delete selected gradient stop">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+          </button>
+        </div>
       </div>
-      <div class="color-area" data-color-area><span class="color-area-cursor"></span></div>
-      <div class="hue-row">
-        <span>Hue</span>
-        <div class="hue-field" data-hue-field><span class="hue-field-cursor"></span></div>
+      <div class="color-spectrum">
+        <div class="color-area" data-color-area><span class="color-area-cursor"></span></div>
+        <div class="hue-field" data-hue-field aria-label="Hue"><span class="hue-field-cursor"></span></div>
       </div>
       <div class="slider-row">
-        <span>Alpha</span>
+        <span>Opacity</span>
         <input class="alpha-slider" type="range" min="0" max="100" value="${current.alpha}" data-color-field="alpha">
+        <output data-alpha-output>${current.alpha}</output>
       </div>
-      <label class="color-field">HEX <input data-color-field="hex" value="${current.start}" maxlength="7"></label>
-      <div class="color-preview"></div>
+      <div class="color-value-row">
+        <label class="color-field"><span>HEX</span><input data-color-field="hex" value="${current.start}" maxlength="7"></label>
+        <button class="eyedropper-button" type="button" data-eyedropper aria-label="Pick a color from the screen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m19 3 2 2-3.5 3.5-2-2L19 3ZM14.5 7.5l2 2-8.8 8.8-3.8.8.8-3.8 8.8-8.8Z"/></svg>
+        </button>
+      </div>
+      <div class="recent-colors">
+        <span>Recent</span>
+        <div role="group" aria-label="Recent colors">
+          ${['#111827', '#2563eb', '#22b8cf', '#7cb5ff', '#d6d9de', '#5b6069', '#ffffff'].map((color) => `
+            <button type="button" data-recent-color="${color}" style="--recent-color:${color}" aria-label="Use ${color}"></button>
+          `).join('')}
+        </div>
+      </div>
     `;
+    if (!('EyeDropper' in window)) colorPopover.querySelector('[data-eyedropper]')?.setAttribute('hidden', '');
     colorPopover.classList.add('visible');
-    const popoverWidth = colorPopover.offsetWidth || 260;
-    const popoverHeight = colorPopover.offsetHeight || 420;
+    positionColorPopover(button);
+    button.setAttribute('aria-expanded', 'true');
+    renderColorPopover();
+  }
+
+  function positionColorPopover(button) {
+    if (!button || !colorPopover.classList.contains('visible')) return;
+    const buttonRect = button.getBoundingClientRect();
+    const areaRect = textureCanvasArea.getBoundingClientRect();
+    const popoverWidth = colorPopover.offsetWidth || 336;
+    const popoverHeight = colorPopover.offsetHeight || 560;
     const visibleLeft = textureCanvasArea.scrollLeft + 8;
     const visibleTop = textureCanvasArea.scrollTop + 8;
     const visibleRight = textureCanvasArea.scrollLeft + textureCanvasArea.clientWidth - 8;
@@ -3154,29 +3261,148 @@ window.initializeModelDesigner = () => {
     }
     colorPopover.style.left = `${Math.max(visibleLeft, Math.min(visibleRight - popoverWidth, left))}px`;
     colorPopover.style.top = `${Math.max(visibleTop, Math.min(visibleBottom - popoverHeight, top))}px`;
-    button.setAttribute('aria-expanded', 'true');
-    renderColorPopover();
   }
 
   function getPickerCss() {
     if (!state.colorPicker) return '#111827';
     return state.colorPicker.mode === 'gradient'
-      ? gradientFrom(state.colorPicker.start, state.colorPicker.end, state.colorPicker.alpha)
-      : rgbaFrom(state.colorPicker.start, state.colorPicker.alpha);
+      ? gradientFromStops(state.colorPicker.stops, state.colorPicker.alpha, state.colorPicker.angle)
+      : rgbaFrom(state.colorPicker.solidColor, state.colorPicker.alpha);
+  }
+
+  function getActivePickerStop() {
+    if (!state.colorPicker) return null;
+    return state.colorPicker.stops.find((stop) => stop.id === state.colorPicker.activeStopId) || state.colorPicker.stops[0] || null;
+  }
+
+  function getActivePickerColor() {
+    if (!state.colorPicker) return '#111827';
+    return state.colorPicker.mode === 'gradient'
+      ? getActivePickerStop()?.color || '#111827'
+      : state.colorPicker.solidColor;
+  }
+
+  function syncPickerHsvFromActiveColor() {
+    if (!state.colorPicker) return;
+    const hsv = rgbToHsv(...Object.values(hexToRgb(getActivePickerColor())));
+    state.colorPicker.h = hsv.h;
+    state.colorPicker.s = hsv.s;
+    state.colorPicker.v = hsv.v;
+  }
+
+  function mixHexColors(from, to, ratio) {
+    const left = hexToRgb(from);
+    const right = hexToRgb(to);
+    return rgbToHex(
+      left.r + (right.r - left.r) * ratio,
+      left.g + (right.g - left.g) * ratio,
+      left.b + (right.b - left.b) * ratio
+    );
+  }
+
+  function colorAtGradientPosition(position) {
+    const stops = [...state.colorPicker.stops].sort((left, right) => left.position - right.position);
+    const nextIndex = stops.findIndex((stop) => stop.position >= position);
+    if (nextIndex <= 0) return stops[0]?.color || '#111827';
+    if (nextIndex < 0) return stops[stops.length - 1]?.color || '#111827';
+    const left = stops[nextIndex - 1];
+    const right = stops[nextIndex];
+    const span = Math.max(0.001, right.position - left.position);
+    return mixHexColors(left.color, right.color, (position - left.position) / span);
+  }
+
+  function addGradientStop(position) {
+    if (!state.colorPicker || state.colorPicker.stops.length >= 12) return;
+    const nextPosition = Math.max(0, Math.min(100, Number(position) || 0));
+    const stop = {
+      id: `gradient-stop-${state.colorPicker.nextStopId++}`,
+      color: colorAtGradientPosition(nextPosition),
+      position: nextPosition
+    };
+    state.colorPicker.stops.push(stop);
+    state.colorPicker.stops.sort((left, right) => left.position - right.position);
+    state.colorPicker.activeStopId = stop.id;
+    syncPickerHsvFromActiveColor();
+    renderColorPopover();
+    applyColorPicker(false);
+  }
+
+  function addGradientStopInLargestGap() {
+    const stops = [...state.colorPicker.stops].sort((left, right) => left.position - right.position);
+    let position = 50;
+    let largestGap = -1;
+    for (let index = 1; index < stops.length; index += 1) {
+      const gap = stops[index].position - stops[index - 1].position;
+      if (gap > largestGap) {
+        largestGap = gap;
+        position = stops[index - 1].position + gap / 2;
+      }
+    }
+    addGradientStop(position);
+  }
+
+  function deleteActiveGradientStop() {
+    if (!state.colorPicker || state.colorPicker.stops.length <= 2) return;
+    const index = state.colorPicker.stops.findIndex((stop) => stop.id === state.colorPicker.activeStopId);
+    if (index < 0) return;
+    state.colorPicker.stops.splice(index, 1);
+    const next = state.colorPicker.stops[Math.min(index, state.colorPicker.stops.length - 1)];
+    state.colorPicker.activeStopId = next.id;
+    syncPickerHsvFromActiveColor();
+    renderColorPopover();
+    applyColorPicker(true);
+  }
+
+  function reverseGradientStops() {
+    if (!state.colorPicker) return;
+    state.colorPicker.stops.forEach((stop) => { stop.position = 100 - stop.position; });
+    state.colorPicker.stops.sort((left, right) => left.position - right.position);
+    renderColorPopover();
+    applyColorPicker(true);
+  }
+
+  function updateGradientAngle(value, commit = false) {
+    if (!state.colorPicker) return;
+    state.colorPicker.angle = ((Math.round(Number(value) || 0) % 360) + 360) % 360;
+    renderColorPopover();
+    applyColorPicker(commit);
   }
 
   function renderColorPopover() {
     if (!state.colorPicker) return;
     colorPopover.querySelectorAll('[data-mode]').forEach((button) => {
-      button.classList.toggle('active', button.dataset.mode === state.colorPicker.mode);
+      const active = button.dataset.mode === state.colorPicker.mode;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
-    const stops = colorPopover.querySelector('.gradient-stops');
-    if (stops) stops.style.display = state.colorPicker.mode === 'gradient' ? 'grid' : 'none';
-    colorPopover.querySelectorAll('[data-stop]').forEach((button) => {
-      button.classList.toggle('active', button.dataset.stop === state.colorPicker.activeStop);
-      const swatch = button.querySelector('span');
-      if (swatch) swatch.style.background = state.colorPicker[button.dataset.stop];
-    });
+    const gradientEditor = colorPopover.querySelector('[data-gradient-editor]');
+    if (gradientEditor) gradientEditor.hidden = state.colorPicker.mode !== 'gradient';
+    const gradientTrack = colorPopover.querySelector('[data-gradient-track]');
+    if (gradientTrack) gradientTrack.style.background = gradientFromStops(state.colorPicker.stops, 100, 90);
+    const stopLayer = colorPopover.querySelector('[data-gradient-stop-layer]');
+    if (stopLayer) {
+      stopLayer.innerHTML = state.colorPicker.stops.map((stop) => `
+        <button
+          type="button"
+          class="gradient-stop-handle${stop.id === state.colorPicker.activeStopId ? ' active' : ''}"
+          data-gradient-stop="${stop.id}"
+          style="--stop-position:${stop.position}%;--stop-color:${stop.color}"
+          aria-label="Gradient stop at ${Math.round(stop.position)}%"
+          aria-pressed="${stop.id === state.colorPicker.activeStopId}"
+        ><span></span></button>
+      `).join('');
+    }
+    const addStopButton = colorPopover.querySelector('[data-add-gradient-stop]');
+    if (addStopButton) addStopButton.disabled = state.colorPicker.stops.length >= 12;
+    const deleteStopButton = colorPopover.querySelector('[data-delete-gradient-stop]');
+    if (deleteStopButton) deleteStopButton.disabled = state.colorPicker.stops.length <= 2;
+    const angleInput = colorPopover.querySelector('[data-color-field="angle"]');
+    if (angleInput) angleInput.value = String(state.colorPicker.angle);
+    const angleDial = colorPopover.querySelector('[data-angle-dial]');
+    if (angleDial) {
+      angleDial.style.setProperty('--gradient-angle', `${state.colorPicker.angle}deg`);
+      angleDial.setAttribute('aria-valuenow', String(state.colorPicker.angle));
+    }
     const hue = hsvToHex(state.colorPicker.h, 1, 1);
     const area = colorPopover.querySelector('.color-area');
     if (area) area.style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;
@@ -3186,13 +3412,16 @@ window.initializeModelDesigner = () => {
       cursor.style.top = `${(1 - state.colorPicker.v) * 100}%`;
     }
     const hexInput = colorPopover.querySelector('[data-color-field="hex"]');
-    if (hexInput) hexInput.value = state.colorPicker[state.colorPicker.activeStop];
+    if (hexInput) hexInput.value = getActivePickerColor().toUpperCase();
     const hueCursor = colorPopover.querySelector('.hue-field-cursor');
-    if (hueCursor) hueCursor.style.left = `${(state.colorPicker.h / 360) * 100}%`;
+    if (hueCursor) hueCursor.style.top = `${(state.colorPicker.h / 360) * 100}%`;
     const alphaInput = colorPopover.querySelector('[data-color-field="alpha"]');
     if (alphaInput) alphaInput.value = state.colorPicker.alpha;
-    const preview = colorPopover.querySelector('.color-preview');
-    if (preview) preview.style.background = getPickerCss();
+    const alphaOutput = colorPopover.querySelector('[data-alpha-output]');
+    if (alphaOutput) alphaOutput.textContent = String(Math.round(Number(state.colorPicker.alpha) || 0));
+    colorPopover.querySelectorAll('[data-recent-color]').forEach((button) => {
+      button.classList.toggle('active', normalizeHex(button.dataset.recentColor) === normalizeHex(getActivePickerColor()));
+    });
   }
 
   function applyColorPicker(commit = false) {
@@ -3207,29 +3436,31 @@ window.initializeModelDesigner = () => {
     if (surfaceValue) {
       surfaceValue.textContent = state.colorPicker.mode === 'gradient'
         ? 'Gradient'
-        : state.colorPicker.start.toUpperCase();
+        : state.colorPicker.solidColor.toUpperCase();
     }
   }
 
   function setActiveColorFromHex(hex) {
     if (!state.colorPicker) return;
     const normalized = normalizeHex(hex);
-    state.colorPicker[state.colorPicker.activeStop] = normalized;
+    if (state.colorPicker.mode === 'gradient') {
+      const stop = getActivePickerStop();
+      if (stop) stop.color = normalized;
+    } else {
+      state.colorPicker.solidColor = normalized;
+    }
     const rgb = hexToRgb(normalized);
     const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
-    state.colorPicker.stopHsv[state.colorPicker.activeStop] = hsv;
     state.colorPicker.h = hsv.h;
     state.colorPicker.s = hsv.s;
     state.colorPicker.v = hsv.v;
   }
 
-  function setActiveStop(stop) {
+  function setActiveStop(stopId) {
     if (!state.colorPicker) return;
-    state.colorPicker.activeStop = stop;
-    const hsv = state.colorPicker.stopHsv[stop] || rgbToHsv(...Object.values(hexToRgb(state.colorPicker[stop])));
-    state.colorPicker.h = hsv.h;
-    state.colorPicker.s = hsv.s;
-    state.colorPicker.v = hsv.v;
+    if (!state.colorPicker.stops.some((stop) => stop.id === stopId)) return;
+    state.colorPicker.activeStopId = stopId;
+    syncPickerHsvFromActiveColor();
   }
 
   function setPickerHue(event) {
@@ -3237,14 +3468,9 @@ window.initializeModelDesigner = () => {
     const field = colorPopover.querySelector('[data-hue-field]');
     if (!field) return;
     const rect = field.getBoundingClientRect();
-    const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+    const ratio = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
     state.colorPicker.h = ratio * 360;
-    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v);
-    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {
-      h: state.colorPicker.h,
-      s: state.colorPicker.s,
-      v: state.colorPicker.v
-    };
+    setActiveColorFromHex(hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v));
     renderColorPopover();
     applyColorPicker(false);
   }
@@ -3258,12 +3484,7 @@ window.initializeModelDesigner = () => {
     const v = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
     state.colorPicker.s = s;
     state.colorPicker.v = v;
-    state.colorPicker[state.colorPicker.activeStop] = hsvToHex(state.colorPicker.h, s, v);
-    state.colorPicker.stopHsv[state.colorPicker.activeStop] = {
-      h: state.colorPicker.h,
-      s,
-      v
-    };
+    setActiveColorFromHex(hsvToHex(state.colorPicker.h, s, v));
     renderColorPopover();
     applyColorPicker(false);
   }
@@ -3924,12 +4145,35 @@ window.initializeModelDesigner = () => {
   colorPopover.addEventListener('pointerdown', (event) => event.stopPropagation());
   colorPopover.addEventListener('click', (event) => {
     const modeButton = event.target.closest('[data-mode]');
-    const stopButton = event.target.closest('[data-stop]');
+    const stopButton = event.target.closest('[data-gradient-stop]');
+    const recentButton = event.target.closest('[data-recent-color]');
     if (!state.colorPicker) return;
     if (modeButton) {
+      if (modeButton.dataset.mode === 'solid' && state.colorPicker.mode === 'gradient') {
+        state.colorPicker.solidColor = getActivePickerColor();
+      }
       state.colorPicker.mode = modeButton.dataset.mode;
+      syncPickerHsvFromActiveColor();
     } else if (stopButton) {
-      setActiveStop(stopButton.dataset.stop);
+      setActiveStop(stopButton.dataset.gradientStop);
+    } else if (event.target.closest('[data-add-gradient-stop]')) {
+      addGradientStopInLargestGap();
+      return;
+    } else if (event.target.closest('[data-reverse-gradient]')) {
+      reverseGradientStops();
+      return;
+    } else if (event.target.closest('[data-delete-gradient-stop]')) {
+      deleteActiveGradientStop();
+      return;
+    } else if (recentButton) {
+      setActiveColorFromHex(recentButton.dataset.recentColor);
+    } else if (event.target.closest('[data-eyedropper]') && 'EyeDropper' in window) {
+      new window.EyeDropper().open().then((result) => {
+        setActiveColorFromHex(result.sRGBHex);
+        renderColorPopover();
+        applyColorPicker(true);
+      }).catch(() => {});
+      return;
     } else {
       return;
     }
@@ -3942,6 +4186,9 @@ window.initializeModelDesigner = () => {
     const key = field.dataset.colorField;
     if (key === 'alpha') {
       state.colorPicker[key] = field.value;
+    } else if (key === 'angle') {
+      updateGradientAngle(field.value, false);
+      return;
     } else {
       if (!/^#?[0-9a-fA-F]{6}$/.test(field.value)) return;
       setActiveColorFromHex(field.value);
@@ -3950,6 +4197,67 @@ window.initializeModelDesigner = () => {
     applyColorPicker(false);
   });
   colorPopover.addEventListener('change', () => applyColorPicker(true));
+  colorPopover.addEventListener('keydown', (event) => {
+    const dial = event.target.closest('[data-angle-dial]');
+    if (!dial || !state.colorPicker || !['ArrowLeft', 'ArrowDown', 'ArrowRight', 'ArrowUp'].includes(event.key)) return;
+    event.preventDefault();
+    const direction = event.key === 'ArrowLeft' || event.key === 'ArrowDown' ? -1 : 1;
+    updateGradientAngle(state.colorPicker.angle + direction * (event.shiftKey ? 15 : 1), true);
+  });
+  colorPopover.addEventListener('pointerdown', (event) => {
+    const stopButton = event.target.closest('[data-gradient-stop]');
+    const track = event.target.closest('[data-gradient-track]');
+    if (!track || !state.colorPicker || state.colorPicker.mode !== 'gradient') return;
+    event.preventDefault();
+    const trackRect = track.getBoundingClientRect();
+    const positionFromEvent = (pointerEvent) => Math.max(0, Math.min(100,
+      ((pointerEvent.clientX - trackRect.left) / Math.max(1, trackRect.width)) * 100
+    ));
+    if (!stopButton) {
+      addGradientStop(positionFromEvent(event));
+      applyColorPicker(true);
+      return;
+    }
+    const stopId = stopButton.dataset.gradientStop;
+    setActiveStop(stopId);
+    renderColorPopover();
+    const handleMove = (moveEvent) => {
+      const stop = state.colorPicker?.stops.find((item) => item.id === stopId);
+      if (!stop) return;
+      stop.position = positionFromEvent(moveEvent);
+      state.colorPicker.stops.sort((left, right) => left.position - right.position);
+      renderColorPopover();
+      applyColorPicker(false);
+    };
+    const handleUp = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+      applyColorPicker(true);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+  });
+  colorPopover.addEventListener('pointerdown', (event) => {
+    const dial = event.target.closest('[data-angle-dial]');
+    if (!dial || !state.colorPicker || state.colorPicker.mode !== 'gradient') return;
+    event.preventDefault();
+    const updateFromPointer = (pointerEvent) => {
+      const rect = dial.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const angle = Math.atan2(pointerEvent.clientY - centerY, pointerEvent.clientX - centerX) * 180 / Math.PI + 90;
+      updateGradientAngle(angle, false);
+    };
+    updateFromPointer(event);
+    const handleMove = (moveEvent) => updateFromPointer(moveEvent);
+    const handleUp = () => {
+      window.removeEventListener('pointermove', handleMove);
+      window.removeEventListener('pointerup', handleUp);
+      applyColorPicker(true);
+    };
+    window.addEventListener('pointermove', handleMove);
+    window.addEventListener('pointerup', handleUp);
+  });
   colorPopover.addEventListener('pointerdown', (event) => {
     if (!event.target.closest('[data-color-area]')) return;
     event.preventDefault();

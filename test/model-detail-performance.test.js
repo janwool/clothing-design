@@ -63,7 +63,7 @@ test('enables the Meshopt decoder before loading compressed GLB models', () => {
 test('applies the saved commercial cover scene to detail and editor viewers', () => {
   assert.match(template, /data-catalog-render-standard="main"/);
   assert.doesNotMatch(template, /data-catalog-render-standard="side"/);
-  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260916-balanced-front-back-v9'\)/);
+  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260917-white-45deg-v14'\)/);
   assert.match(template, /camera-orbit="-16deg 72deg 142%"/);
   assert.match(template, /camera-orbit="-12deg 72deg 158%"/);
   assert.match(template, /camera-target="auto auto auto"/);
@@ -75,6 +75,28 @@ test('applies the saved commercial cover scene to detail and editor viewers', ()
   assert.match(template, /element\.removeAttribute\('auto-rotate'\)/);
   assert.doesNotMatch(template, /90000, '3D model timed out'/);
   assert.match(template, /readyViewer\.cameraOrbit = catalogOrbitForAzimuth\(detailSceneStandard, button\.dataset\.orbit\)/);
+});
+
+test('offers camera-relative lighting controls on the model detail page', () => {
+  assert.match(template, /class="viewer-lighting-panel" id="quickLightingPanel"/);
+  assert.doesNotMatch(template, /viewer-explore-hint|Drag to explore 360°|id="quickLightingToggle"/);
+  assert.match(template, /data-light-angle="-45"/);
+  assert.match(template, /data-light-angle="0"/);
+  assert.match(template, /data-light-angle="45"/);
+  assert.match(template, /id="quickLightExposure" type="range" min="55" max="120" step="1" value="82"/);
+  assert.match(template, /id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90"/);
+  assert.match(template, /window\.ModelDetailLightingSettings = detailLightState/);
+  assert.match(template, /function applyDetailLightingSettings\(\)/);
+  assert.match(template, /CameraRelativeStudioLight\?\.install\(element/);
+  assert.match(designerRuntime, /const detailLighting = window\.ModelDetailLightingSettings \|\| \{\}/);
+  assert.match(designerRuntime, /detailLighting\.azimuthOffsetDeg \?\? webStandard\.lightAzimuthOffsetDeg/);
+  assert.match(designerRuntime, /detailLighting\.exposure \?\?/);
+  assert.match(modelDetailStyles, /\.viewer-lighting-panel \{/);
+  assert.match(modelDetailStyles, /\.model-3d-viewer model-viewer \{[\s\S]*?width: calc\(100% - clamp\(/);
+  assert.match(modelDetailStyles, /@media \(max-width: 820px\) \{[\s\S]*?\.model-3d-viewer model-viewer \{ width: calc\(100% - 202px\) !important; \}/);
+  assert.match(modelDetailStyles, /@media \(max-width: 520px\) \{[\s\S]*?\.model-3d-viewer model-viewer \{ width: calc\(100% - 158px\) !important; \}/);
+  assert.doesNotMatch(modelDetailStyles, /\.viewer-lighting-panel \{ position: static; width: 100%;/);
+  assert.match(modelDetailStyles, /\.quick-light-range \{/);
 });
 
 test('removes the redundant three-column model showcase module', () => {
@@ -98,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260917-toolbar-cleanup-v55'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260918-gradient-picker-v63'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -222,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260917-toolbar-cleanup-v55/);
+  assert.match(template, /model-designer\.js\?v=20260918-gradient-picker-v63/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -363,6 +385,28 @@ test('opens a surface color toolbar when a UV path is selected', () => {
   assert.match(designerRuntime, /fillPath\.style\.setProperty\('fill', paint, 'important'\)/);
   assert.match(designerRuntime, /setTemplateFillPaint\(fillPath, getSvgPaint\(group, color, 'fill'\)\)/);
   assert.match(designerRuntime, /scheduleTexturePreviewUpdate\(\)/);
+});
+
+test('supports unlabeled multi-stop gradients in the contextual color picker', () => {
+  assert.match(designerRuntime, /function gradientFromStops\(stops, alpha = 100, angle = 90\)/);
+  assert.match(designerRuntime, /parsed\.stops\.forEach\(\(stop\) => \{/);
+  assert.match(designerRuntime, /data-gradient-stop-layer/);
+  assert.match(designerRuntime, /function addGradientStop\(position\)/);
+  assert.match(designerRuntime, /function deleteActiveGradientStop\(\)/);
+  assert.match(designerRuntime, /function reverseGradientStops\(\)/);
+  assert.match(designerRuntime, /state\.colorPicker\.stops\.length >= 12/);
+  assert.match(designerRuntime, /state\.colorPicker\.stops\.length <= 2/);
+  assert.doesNotMatch(designerRuntime, /data-stop="(?:start|end)"[^>]*>\s*[AB]\s*</);
+  assert.match(styles, /\.gradient-stop-handle\.active \{/);
+  assert.match(styles, /\.gradient-angle-dial \{/);
+});
+
+test('keeps element and surface toolbars centered in the visible canvas', () => {
+  assert.match(designerRuntime, /elementToolbar\.className = 'element-toolbar is-canvas-centered'/);
+  assert.match(designerRuntime, /const centeredLeft = textureCanvasArea\.scrollLeft/);
+  assert.match(designerRuntime, /elementToolbar\.style\.top = `\$\{textureCanvasArea\.scrollTop \+ edgeInset\}px`/);
+  assert.match(designerRuntime, /positionColorPopover\(expandedColorButton\)/);
+  assert.match(styles, /\.element-toolbar \{[\s\S]*?max-width: calc\(100% - 36px\);[\s\S]*?backdrop-filter: blur\(18px\)/);
 });
 
 test('keeps UV guide outlines out of garment fills and makes the 3D stage full height', () => {

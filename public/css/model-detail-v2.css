@@ -964,21 +964,6 @@ body.model-login-open { overflow: hidden; }
   display: none;
 }
 
-.model-product-page .viewer-explore-hint {
-  position: absolute;
-  top: 27%;
-  right: 3%;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  gap: 7px;
-  color: rgba(17, 17, 15, 0.52);
-  font-size: 10px;
-  pointer-events: none;
-}
-.model-product-page .viewer-explore-hint svg { width: 34px; height: 23px; }
-
 .model-product-page .model-quick-style {
   position: relative;
   z-index: 5;
@@ -1147,6 +1132,47 @@ body.model-login-open { overflow: hidden; }
 }
 .model-product-page .quick-background-swatches button.active { border-color: #9da917; box-shadow: 0 0 0 1px #9da917; }
 
+.model-product-page .viewer-lighting-panel {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  z-index: 4;
+  width: clamp(210px, 19vw, 238px);
+  padding: 16px;
+  color: var(--md-ink);
+  border: 1px solid rgba(17, 17, 15, 0.14);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.93);
+  box-shadow: 0 14px 36px rgba(17, 17, 15, 0.1);
+  transform: translateY(calc(-50% - 34px));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.model-product-page .model-3d-viewer model-viewer {
+  width: calc(100% - clamp(230px, 21vw, 258px)) !important;
+}
+.model-product-page .quick-light-panel-header { display: flex; min-height: 24px; align-items: center; justify-content: space-between; gap: 12px; }
+.model-product-page .quick-light-panel-header strong { font-size: 9px; font-weight: 780; letter-spacing: .13em; text-transform: uppercase; }
+.model-product-page .quick-light-panel-header svg { width: 19px; height: 19px; color: #42423f; }
+.model-product-page .quick-light-color { display: flex; align-items: center; gap: 10px; margin-top: 15px; padding: 10px; border: 1px solid rgba(17, 17, 15, 0.1); background: #faf9f6; }
+.model-product-page .quick-light-color > i { width: 28px; height: 28px; flex: 0 0 auto; border: 1px solid rgba(17, 17, 15, 0.22); border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 4px #f4f3ef; }
+.model-product-page .quick-light-color span { display: grid; gap: 2px; }
+.model-product-page .quick-light-color strong { font-size: 11px; }
+.model-product-page .quick-light-color small { color: #77756e; font-size: 8px; }
+.model-product-page .quick-light-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 11px; }
+.model-product-page .quick-light-presets button { min-height: 66px; padding: 8px 4px; display: grid; place-items: center; gap: 5px; color: #5f5d57; border: 1px solid var(--md-line); border-radius: 5px; background: #fff; font-size: 9px; font-weight: 700; }
+.model-product-page .quick-light-presets button i { position: relative; width: 21px; height: 21px; display: block; border: 1px solid currentColor; border-radius: 50%; }
+.model-product-page .quick-light-presets button i::before,
+.model-product-page .quick-light-presets button i::after { position: absolute; inset: 4px -4px; content: ''; border-top: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg); }
+.model-product-page .quick-light-presets button i::after { transform: rotate(-45deg); }
+.model-product-page .quick-light-presets button:hover,
+.model-product-page .quick-light-presets button.active { color: var(--md-ink); border-color: #899b0f; background: rgba(207, 255, 53, 0.09); box-shadow: inset 0 -3px var(--md-lime); }
+.model-product-page .quick-light-range { display: grid; gap: 7px; margin: 13px -16px 0; padding: 13px 16px 14px; color: #4e4d48; border-top: 1px solid rgba(17, 17, 15, 0.1); font-size: 9px; font-weight: 700; letter-spacing: .01em; }
+.model-product-page .quick-light-range + .quick-light-range { margin: 0 -16px -16px; }
+.model-product-page .quick-light-range > span { display: flex; align-items: center; justify-content: space-between; }
+.model-product-page .quick-light-range output { color: var(--md-ink); font-variant-numeric: tabular-nums; }
+.model-product-page .quick-light-range input { width: 100%; accent-color: var(--md-ink); cursor: pointer; }
+
 .model-product-page .quick-style-upgrade {
   display: flex;
   min-width: 0;
@@ -1190,9 +1216,30 @@ body.model-login-open { overflow: hidden; }
   .model-product-page .model-detail-grid { display: flex; min-height: 0; flex-direction: column; gap: 26px; padding-top: 18px; }
   .model-product-page .model-viewer-section { order: -1; width: 100%; height: auto; padding: 0; }
   .model-product-page .model-3d-viewer { min-height: 0; aspect-ratio: 4/5; }
-  .model-product-page .viewer-explore-hint { top: 22%; right: 4px; }
   .model-product-page .model-quick-style { grid-template-columns: 1fr; width: 100%; margin-top: 10px; }
   .model-product-page .quick-style-shelf { grid-template-columns: repeat(3, minmax(170px, 1fr)); overflow-x: auto; }
+  .model-product-page .model-3d-viewer model-viewer { width: calc(100% - 202px) !important; }
+  .model-product-page .viewer-lighting-panel {
+    position: absolute;
+    top: 40%;
+    right: 0;
+    width: 188px;
+    margin: 0;
+    display: block;
+    padding: 12px;
+    transform: translateY(calc(-50% - 34px));
+  }
+  .model-product-page .viewer-lighting-panel .quick-light-color,
+  .model-product-page .viewer-lighting-panel .quick-light-presets { margin-top: 9px; }
+  .model-product-page .viewer-lighting-panel .quick-light-range {
+    margin: 10px -12px 0;
+    padding: 10px 12px 11px;
+    border-top: 1px solid rgba(17, 17, 15, 0.1);
+    border-left: 0;
+  }
+  .model-product-page .viewer-lighting-panel .quick-light-range + .quick-light-range { margin: 0 -12px -12px; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets button { min-height: 52px; padding: 6px 2px; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets button i { width: 16px; height: 16px; }
   .model-product-page .quick-style-upgrade { min-height: 72px; }
   .model-product-page .model-info-section { max-width: 520px; padding: 0; }
   .model-product-page .model-detail-title { max-width: 500px; font-size: clamp(36px, 9vw, 50px); }
@@ -1202,8 +1249,32 @@ body.model-login-open { overflow: hidden; }
 @media (max-width: 520px) {
   .model-product-page .model-detail-title { font-size: clamp(34px, 10vw, 44px); }
   .model-product-page .model-3d-viewer { aspect-ratio: 1/1.12; }
-  .model-product-page .viewer-explore-hint { display: none; }
   .model-product-page .quick-style-shelf { grid-template-columns: repeat(3, minmax(148px, 1fr)); }
+  .model-product-page .model-3d-viewer model-viewer { width: calc(100% - 158px) !important; }
+  .model-product-page .viewer-lighting-panel {
+    top: 39%;
+    width: 148px;
+    padding: 10px;
+    transform: translateY(calc(-50% - 24px));
+  }
+  .model-product-page .viewer-lighting-panel .quick-light-panel-header { min-height: 18px; }
+  .model-product-page .viewer-lighting-panel .quick-light-panel-header svg { width: 15px; height: 15px; }
+  .model-product-page .viewer-lighting-panel .quick-light-color { gap: 7px; margin-top: 8px; padding: 7px; }
+  .model-product-page .viewer-lighting-panel .quick-light-color > i { width: 22px; height: 22px; }
+  .model-product-page .viewer-lighting-panel .quick-light-color strong { font-size: 9px; }
+  .model-product-page .viewer-lighting-panel .quick-light-color small { display: none; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets { gap: 3px; margin-top: 7px; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets button { min-height: 42px; padding: 5px 1px; font-size: 7px; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets button i { width: 12px; height: 12px; }
+  .model-product-page .viewer-lighting-panel .quick-light-presets button i::before,
+  .model-product-page .viewer-lighting-panel .quick-light-presets button i::after { inset: 3px -3px; }
+  .model-product-page .viewer-lighting-panel .quick-light-range {
+    gap: 5px;
+    margin: 8px -10px 0;
+    padding: 8px 10px 9px;
+    font-size: 7px;
+  }
+  .model-product-page .viewer-lighting-panel .quick-light-range + .quick-light-range { margin: 0 -10px -10px; }
   .model-product-page .quick-style-fabric,
   .model-product-page .quick-style-control { padding: 12px; }
   .model-product-page .detail-action { min-height: 52px; }

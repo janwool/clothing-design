@@ -16,8 +16,8 @@
 <div class="white-detail-main">
   <div class="white-detail-shell">
     <nav class="white-detail-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Home</a><span aria-hidden="true">›</span>
-      <a href="/white-mockups">White Mockups</a><span aria-hidden="true">›</span>
+      <a href="/" data-analytics-event="white_mockup_detail_breadcrumb_home_click" data-analytics-item="Home">Home</a><span aria-hidden="true">›</span>
+      <a href="/white-mockups" data-analytics-event="white_mockup_detail_breadcrumb_library_click" data-analytics-item="White Mockups">White Mockups</a><span aria-hidden="true">›</span>
       <span aria-current="page"><%= displayTitle %></span>
     </nav>
 
@@ -130,7 +130,6 @@
           </div>
         </div>
 
-        <button type="button" class="white-detail-save" id="whiteMockupSave" data-analytics-managed="true" disabled>Save project</button>
         <button type="button" class="white-detail-download" id="whiteMockupDownload" data-analytics-managed="true" disabled>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
           Download PNG
@@ -184,7 +183,12 @@
       </div>
       <div class="white-detail-faq-list">
         <% whiteFaqItems.forEach(function(item, index) { %>
-          <details <%= index === 0 ? 'open' : '' %>>
+          <details
+            data-analytics-event="white_mockup_detail_faq_toggle"
+            data-analytics-item="faq_<%= index + 1 %>"
+            data-analytics-name="<%= item.question %>"
+            <%= index === 0 ? 'open' : '' %>
+          >
             <summary><%= item.question %><span aria-hidden="true">+</span></summary>
             <p><%= item.answer %></p>
           </details>
@@ -196,11 +200,22 @@
       <section class="white-detail-related">
         <div class="white-detail-related-heading">
           <div><span>Continue browsing</span><h2>Related <%= typeLabel.toLowerCase() %> white mockups</h2></div>
-          <a href="/white-mockups?type=<%= asset.garment_type %>">View all <span aria-hidden="true">›</span></a>
+          <a
+            href="/white-mockups?type=<%= asset.garment_type %>"
+            data-analytics-event="white_mockup_detail_related_view_all_click"
+            data-analytics-item="<%= typeLabel %>"
+            data-analytics-category="<%= asset.garment_type %>"
+          >View all <span aria-hidden="true">›</span></a>
         </div>
         <div class="white-detail-related-grid">
           <% relatedAssets.forEach(function(item) { %>
-            <a href="/white-mockups/<%= item.asset_name %>">
+            <a
+              href="/white-mockups/<%= item.asset_name %>"
+              data-analytics-event="white_mockup_detail_related_select"
+              data-id="<%= item.asset_name %>"
+              data-analytics-item="<%= cleanRelatedTitle(item) %>"
+              data-analytics-category="<%= item.garment_type %>"
+            >
               <figure><img src="<%= item.base_image_url %>" alt="<%= cleanRelatedTitle(item) %> white mockup" loading="lazy" width="<%= item.canvas_width %>" height="<%= item.canvas_height %>"></figure>
               <h3><%= cleanRelatedTitle(item) %></h3>
               <span>Open mockup ›</span>
@@ -212,5 +227,5 @@
   </div>
 </div>
 
-<script src="/js/white-mockup-editor.js?v=20260915-white-detail-events-v26" defer></script>
+<script src="/js/white-mockup-editor.js?v=20260918-white-auto-save-v27" defer></script>
 <%- include('partials/footer') %>

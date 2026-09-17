@@ -1,0 +1,332 @@
+<%- include('partials/header', {
+  bodyClass: 'cmg-page',
+  pageStyles: ['/css/3d-clothing-mockup-landing.css?v=20260917-commercial-v2']
+}) %>
+
+<%
+  const editorHref = toolPage.editorHref || toolPage.cta.href;
+  const cmgCategories = [
+    { title: 'T-Shirts', image: '/images/categories/t-shirt-mockup.webp', href: '/mockups/t-shirt-mockup', tone: 'sand' },
+    { title: 'Hoodies', image: '/images/categories/hoodie-mockup.webp', href: '/mockups/hoodie-mockup', tone: 'mist' },
+    { title: 'Jackets', image: '/images/categories/jacket.webp', href: '/mockups/jacket', tone: 'sage' },
+    { title: 'Dresses', image: '/images/categories/dress.webp', href: '/mockups/dress', tone: 'clay' }
+  ];
+  const cmgWorkflow = [
+    { number: '01', label: 'Choose', image: '/images/workflow/choose-garment-model.webp', alt: 'A selection of editable 3D garment models' },
+    { number: '02', label: 'Design', image: '/images/workflow/place-artwork-prints.webp', alt: 'Artwork being positioned on a 3D T-shirt' },
+    { number: '03', label: 'Export', image: '/images/hero/apparel-design-hero-v3.webp', alt: 'Finished graphic T-shirt styled for a product campaign' }
+  ];
+%>
+
+<div class="cmg-landing">
+  <section class="cmg-hero" aria-labelledby="cmg-title">
+    <div class="cmg-shell cmg-hero-grid">
+      <div class="cmg-hero-copy">
+        <p class="cmg-eyebrow">Free online 3D clothing design</p>
+        <h1 id="cmg-title">Design clothing in 3D.<br>Launch with confidence.</h1>
+        <p class="cmg-hero-lede">Create realistic apparel mockups in your browser, refine every angle, and bring the collection to life before production.</p>
+        <div class="cmg-actions">
+          <a class="cmg-button cmg-button-dark" href="<%= editorHref %>">Start designing — free</a>
+          <a class="cmg-text-link" href="/mockups">Browse 260+ models <span aria-hidden="true">→</span></a>
+        </div>
+        <p class="cmg-trust">No download <span>·</span> No credit card <span>·</span> Export transparent PNG</p>
+      </div>
+
+      <div class="cmg-studio tool-live-preview" data-editor-href="<%= editorHref %>" aria-label="Interactive 3D clothing mockup preview">
+        <div class="cmg-model-stage" id="toolModelStage" aria-busy="true">
+          <div class="cmg-stage-label"><span>Live garment</span><strong>Drag to rotate</strong></div>
+          <model-viewer
+            id="toolHeroModelViewer"
+            class="cmg-model-viewer"
+            src="<%= toolPage.heroModel.src %>"
+            alt="<%= toolPage.heroModel.alt %>"
+            loading="eager"
+            reveal="auto"
+            camera-controls
+            interaction-prompt="none"
+            camera-orbit="-16deg 76deg 108%"
+            min-camera-orbit="auto 55deg 86%"
+            max-camera-orbit="auto 105deg 140%"
+            shadow-intensity="0.32"
+            shadow-softness="0.9"
+            exposure="0.82"
+            environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+            data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+            data-studio-light-reference-azimuth="-16"
+            data-studio-light-azimuth-offset="45"
+            tone-mapping="commerce"
+          ></model-viewer>
+          <div class="cmg-model-loading" id="toolModelLoading" aria-live="polite">
+            <i aria-hidden="true"></i><span>Loading 3D garment</span>
+          </div>
+          <div class="cmg-rotate-mark" aria-hidden="true">
+            <svg viewBox="0 0 180 32"><path d="M7 18c22 13 143 13 166 0"/><path d="m12 10-6 8 10 2M168 20l7-2-5-7"/></svg>
+            <span>Drag to rotate</span>
+          </div>
+        </div>
+
+        <aside class="cmg-controls" aria-label="Quick 3D mockup controls">
+          <div class="cmg-control-heading">
+            <div><span>Quick editor</span><strong>3D preview</strong></div>
+            <a href="<%= editorHref %>" aria-label="Open full editor">↗</a>
+          </div>
+
+          <div class="cmg-control-block">
+            <span class="cmg-control-label">View</span>
+            <div class="tool-angle-controls cmg-view-tabs" aria-label="Model view">
+              <button type="button" class="active" data-orbit="0deg 76deg 108%"><i class="cmg-mini-shirt cmg-mini-front" aria-hidden="true"></i>Front</button>
+              <button type="button" data-orbit="90deg 76deg 108%"><i class="cmg-mini-shirt cmg-mini-side" aria-hidden="true"></i>Side</button>
+              <button type="button" data-orbit="180deg 76deg 108%"><i class="cmg-mini-shirt cmg-mini-back" aria-hidden="true"></i>Back</button>
+            </div>
+          </div>
+
+          <div class="cmg-control-block">
+            <span class="cmg-control-label">Garment color</span>
+            <div class="cmg-swatches">
+              <% [
+                ['#ece8df', 'Bone'],
+                ['#d7cbbb', 'Sand'],
+                ['#667266', 'Sage'],
+                ['#a7a7a5', 'Stone'],
+                ['#171719', 'Black']
+              ].forEach(function(color, index) { %>
+                <button
+                  type="button"
+                  class="tool-color-swatch<%= index === 2 ? ' active' : '' %>"
+                  data-color="<%= color[0] %>"
+                  style="--swatch-color: <%= color[0] %>"
+                  aria-label="Set garment color to <%= color[1] %>"
+                ></button>
+              <% }); %>
+            </div>
+          </div>
+
+          <div class="cmg-control-block">
+            <span class="cmg-control-label">Layers</span>
+            <label class="cmg-layer-card" for="toolArtworkUpload">
+              <span class="cmg-artwork-thumb" aria-hidden="true">
+                <svg viewBox="0 0 52 52"><path d="M13 42c2-13 9-23 25-31M18 33C8 30 8 18 9 13c8 1 18 4 20 13M27 25c2-11 10-15 17-16 1 8-1 18-13 22M20 40c10 0 17 3 22 9"/></svg>
+              </span>
+              <span><strong>Upload artwork</strong><small>PNG, JPG or SVG · 10 MB</small></span>
+              <b aria-hidden="true">+</b>
+              <input id="toolArtworkUpload" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden>
+            </label>
+          </div>
+
+          <button class="cmg-export" type="button" id="toolDownloadPreview">
+            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2v10m0 0 4-4m-4 4L6 8M3 14v3h14v-3"/></svg>
+            Export PNG
+          </button>
+          <p class="cmg-preview-status" id="toolPreviewStatus" aria-live="polite">Interactive 3D ready.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="cmg-category-section" aria-labelledby="cmg-category-title">
+    <div class="cmg-shell">
+      <div class="cmg-section-heading cmg-section-heading-row">
+        <div>
+          <p class="cmg-eyebrow">One connected model library</p>
+          <h2 id="cmg-category-title">One studio. Every garment.</h2>
+        </div>
+        <a class="cmg-text-link" href="/mockups">View all models <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="cmg-category-grid">
+        <% cmgCategories.forEach(function(category) { %>
+          <a class="cmg-category-card cmg-tone-<%= category.tone %>" href="<%= category.href %>">
+            <img src="<%= category.image %>" alt="<%= category.title %> 3D clothing model" width="960" height="720" loading="lazy" decoding="async">
+            <span><strong><%= category.title %></strong><b aria-hidden="true">→</b></span>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cmg-workflow" aria-labelledby="cmg-workflow-title">
+    <div class="cmg-shell">
+      <div class="cmg-workflow-heading">
+        <p class="cmg-eyebrow">A complete apparel workflow</p>
+        <h2 id="cmg-workflow-title">From blank garment to campaign-ready.</h2>
+        <p>Move from a real garment shape to finished product imagery without leaving the browser.</p>
+      </div>
+      <div class="cmg-workflow-grid">
+        <% cmgWorkflow.forEach(function(item, index) { %>
+          <figure class="cmg-workflow-card">
+            <div class="cmg-workflow-image">
+              <img src="<%= item.image %>" alt="<%= item.alt %>" width="1200" height="900" loading="lazy" decoding="async">
+            </div>
+            <figcaption><span><%= item.number %></span><strong><%= item.label %></strong></figcaption>
+            <% if (index < cmgWorkflow.length - 1) { %><i class="cmg-workflow-arrow" aria-hidden="true">→</i><% } %>
+          </figure>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cmg-teams" aria-labelledby="cmg-teams-title">
+    <div class="cmg-shell">
+      <div class="cmg-section-heading">
+        <p class="cmg-eyebrow">Built for real apparel work</p>
+        <h2 id="cmg-teams-title">Made for the way fashion teams work.</h2>
+      </div>
+      <div class="cmg-team-gallery">
+        <figure>
+          <img src="/images/editorial/apparel-designer-studio.webp" alt="Apparel designer comparing a physical shirt with a digital garment preview" width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption><strong>Design with product context</strong><span>See how shape, color, and fabric direction work together.</span></figcaption>
+        </figure>
+        <figure>
+          <img src="/images/editorial/garment-team-review.webp" alt="Fashion team reviewing a garment and its digital mockup" width="1200" height="900" loading="lazy" decoding="async">
+          <figcaption><strong>Review before the sample</strong><span>Give clients and teammates a clearer direction earlier.</span></figcaption>
+        </figure>
+      </div>
+      <div class="cmg-proof-grid">
+        <div>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="m14 3 9 5v11l-9 6-9-6V8l9-5Zm0 0v10m9-5-9 5-9-5m9 5v12"/></svg>
+          <span><strong>Real-time 3D preview</strong><small>Inspect the garment from every angle.</small></span>
+        </div>
+        <div>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M14 3v14m0 0 5-5m-5 5-5-5M5 19v5h18v-5"/></svg>
+          <span><strong>Transparent PNG export</strong><small>Move straight into listings and decks.</small></span>
+        </div>
+        <div>
+          <svg viewBox="0 0 28 28" aria-hidden="true"><path d="M7 3h10l5 5v17H7V3Zm10 0v6h5M10 15h9m-9 5h7"/></svg>
+          <span><strong>Commercial-use mockups</strong><small>Create visuals made for brand work.</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cmg-faq" aria-labelledby="cmg-faq-title">
+    <div class="cmg-shell cmg-faq-grid">
+      <div class="cmg-section-heading">
+        <p class="cmg-eyebrow">Before you start</p>
+        <h2 id="cmg-faq-title">The essentials, answered.</h2>
+        <p>Start free, work in the browser, and move into the full editor whenever the concept is ready.</p>
+      </div>
+      <div class="cmg-faq-list">
+        <% toolPage.faq.slice(0, 4).forEach(function(item, index) { %>
+          <details<%= index === 0 ? ' open' : '' %>>
+            <summary><%= item.question %><span aria-hidden="true">+</span></summary>
+            <p><%= item.answer %></p>
+          </details>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="cmg-final" aria-labelledby="cmg-final-title">
+    <div class="cmg-shell cmg-final-inner">
+      <img class="cmg-final-garment cmg-final-tee" src="/images/categories/t-shirt-mockup.webp" alt="" width="960" height="720" loading="lazy" decoding="async" aria-hidden="true">
+      <img class="cmg-final-garment cmg-final-hoodie" src="/images/categories/hoodie-mockup.webp" alt="" width="960" height="720" loading="lazy" decoding="async" aria-hidden="true">
+      <div class="cmg-final-copy">
+        <p class="cmg-eyebrow">Free browser apparel studio</p>
+        <h2 id="cmg-final-title">Your next collection<br>starts here.</h2>
+        <a class="cmg-button cmg-button-dark" href="<%= editorHref %>">Create your first mockup</a>
+        <p>Free to start. Built for real apparel work.</p>
+      </div>
+      <img class="cmg-final-garment cmg-final-jacket" src="/images/categories/jacket.webp" alt="" width="960" height="720" loading="lazy" decoding="async" aria-hidden="true">
+      <img class="cmg-final-garment cmg-final-dress" src="/images/categories/dress.webp" alt="" width="960" height="720" loading="lazy" decoding="async" aria-hidden="true">
+    </div>
+  </section>
+</div>
+
+<script type="module" src="/vendor/model-viewer/model-viewer.min.js"></script>
+<script>
+  (() => {
+    const viewer = document.getElementById('toolHeroModelViewer');
+    const stage = document.getElementById('toolModelStage');
+    const loading = document.getElementById('toolModelLoading');
+    const preview = document.querySelector('.tool-live-preview');
+    const upload = document.getElementById('toolArtworkUpload');
+    const download = document.getElementById('toolDownloadPreview');
+    const status = document.getElementById('toolPreviewStatus');
+    if (!viewer || !stage || !preview) return;
+
+    const hexFactor = (hex) => {
+      const value = parseInt(String(hex).replace('#', ''), 16);
+      return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];
+    };
+
+    const applyColor = (hex) => {
+      const materials = viewer.model && viewer.model.materials ? viewer.model.materials : [];
+      materials.forEach((material) => material.pbrMetallicRoughness && material.pbrMetallicRoughness.setBaseColorFactor(hexFactor(hex)));
+    };
+
+    viewer.addEventListener('load', () => {
+      stage.setAttribute('aria-busy', 'false');
+      stage.classList.add('is-ready');
+      if (loading) loading.hidden = true;
+      applyColor('#667266');
+      status.textContent = 'Interactive 3D ready. Rotate, recolor, or export.';
+    }, { once: true });
+
+    viewer.addEventListener('error', () => {
+      stage.setAttribute('aria-busy', 'false');
+      stage.classList.add('is-error');
+      if (loading) loading.innerHTML = '<span>3D preview unavailable. Open the full editor to continue.</span>';
+      status.textContent = 'Open the full editor to continue.';
+    }, { once: true });
+
+    document.querySelectorAll('.tool-color-swatch').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        applyColor(button.dataset.color);
+        status.textContent = 'Garment color updated.';
+      });
+    });
+
+    document.querySelectorAll('.tool-angle-controls button').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        viewer.cameraOrbit = button.dataset.orbit;
+        viewer.jumpCameraToGoal && viewer.jumpCameraToGoal();
+        status.textContent = `${button.textContent.trim()} view selected.`;
+      });
+    });
+
+    upload && upload.addEventListener('change', () => {
+      const file = upload.files && upload.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) {
+        status.textContent = 'Choose an artwork file no larger than 10 MB.';
+        upload.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({
+            dataUrl: reader.result,
+            name: file.name,
+            createdAt: Date.now()
+          }));
+          window.location.href = preview.dataset.editorHref;
+        } catch (_) {
+          status.textContent = 'Open the full editor and upload the artwork there.';
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    download && download.addEventListener('click', () => {
+      try {
+        const dataUrl = viewer.toDataURL && viewer.toDataURL('image/png');
+        if (!dataUrl) throw new Error('Preview export unavailable');
+        const link = document.createElement('a');
+        link.href = dataUrl;
+        link.download = 'clozdesign-3d-clothing-preview.png';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        status.textContent = 'Transparent PNG downloaded.';
+      } catch (_) {
+        status.textContent = 'Open the full editor to export this model.';
+      }
+    });
+  })();
+</script>
+
+<%- include('partials/footer') %>

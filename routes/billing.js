@@ -1,29 +1,33 @@
 const express = require('express');
 const db = require('../lib/db');
 const {
-  createCreemCheckout,
-  extractCreemEventData,
+  createDodoCheckout,
+  extractDodoEventData,
   getAccessForProduct,
-  verifyCreemSignature
-} = require('../lib/creem-billing');
+  unwrapDodoWebhook
+} = require('../lib/dodo-billing');
 const { ensureEntitlementTables } = require('../lib/user-entitlements');
 
 const router = express.Router();
 const ACTIVE_EVENTS = new Set([
-  'checkout.completed',
+  'payment.succeeded',
   'subscription.active',
-  'subscription.paid',
-  'subscription.trialing',
-  'subscription.update',
-  'subscription.scheduled_cancel',
+  'subscription.renewed',
+  'subscription.updated',
+  'subscription.unpaused',
+  'subscription.plan_changed',
   'subscription.past_due'
 ]);
 const INACTIVE_EVENTS = new Set([
-  'subscription.canceled',
-  'subscription.expired',
+  'subscription.on_hold',
   'subscription.paused',
-  'refund.created',
-  'dispute.created'
+  'subscription.cancelled',
+  'subscription.failed',
+  'subscription.expired',
+  'refund.succeeded',
+  'dispute.opened',
+  'dispute.accepted',
+  'dispute.lost'
 ]);
 
 function requireUser(req, res, next) {
@@ -40,15 +44,34 @@ function getPublicOrigin(req) {
   return String(configured || `${req.protocol}://${req.get('host')}`).replace(/\/+$/, '');
 }
 
-function statusForEvent(eventType, subscriptionStatus) {
-  if (eventType === 'subscription.trialing') return 'trialing';
+function checkoutFailure(error) {
+  const upstreamMessage = String(error?.message || '');
+  const upstreamCode = String(error?.code || error?.error?.code || '');
+  if (error?.status === 403 && (
+    upstreamCode === 'MERCHANT_NOT_LIVE'
+    || upstreamMessage.includes('Live payments not enabled for merchant')
+  )) {
+    return {
+      status: 503,
+      message: 'Payments are temporarily unavailable while billing verification is completed.'
+    };
+  }
+  return {
+    status: error?.status === 503 ? 503 : 502,
+    message: error?.status === 503 ? error.message : 'Checkout could not be started. Please try again.'
+  };
+}
+
+function statusForEvent(eventType, subscriptionStatus, cancelAtNextBillingDate) {
   if (eventType === 'subscription.past_due') return 'past_due';
-  if (eventType === 'subscription.scheduled_cancel') return 'scheduled_cancel';
-  if (eventType === 'subscription.canceled') return 'canceled';
+  if (eventType === 'subscription.cancelled') return 'canceled';
   if (eventType === 'subscription.expired') return 'expired';
   if (eventType === 'subscription.paused') return 'paused';
-  if (eventType === 'refund.created') return 'refunded';
-  if (eventType === 'dispute.created') return 'disputed';
+  if (eventType === 'subscription.on_hold') return 'on_hold';
+  if (eventType === 'subscription.failed') return 'failed';
+  if (eventType === 'refund.succeeded') return 'refunded';
+  if (eventType.startsWith('dispute.')) return 'disputed';
+  if (cancelAtNextBillingDate) return 'scheduled_cancel';
   if (['active', 'trialing', 'past_due', 'scheduled_cancel'].includes(subscriptionStatus)) return subscriptionStatus;
   return 'active';
 }
@@ -68,37 +91,39 @@ async function findWebhookUser(data) {
 router.post('/checkout', requireUser, async (req, res) => {
   try {
     const origin = getPublicOrigin(req);
-    const checkout = await createCreemCheckout({
+    const checkout = await createDodoCheckout({
       plan: req.body?.plan,
       billingInterval: req.body?.billingInterval,
       user: req.session.user,
-      successUrl: `${origin}/account?checkout=success`
+      successUrl: `${origin}/account?checkout=success`,
+      cancelUrl: `${origin}/pricing?checkout=cancelled`
     });
     res.set('Cache-Control', 'private, no-store');
     return res.json({ success: true, checkoutUrl: checkout.checkoutUrl });
   } catch (error) {
-    console.error('Creem checkout failed:', error.message);
-    return res.status(error.status || 502).json({
+    console.error('Dodo Payments checkout failed:', error.message);
+    const failure = checkoutFailure(error);
+    return res.status(failure.status).json({
       success: false,
-      error: error.status === 503 ? error.message : 'Checkout could not be started. Please try again.'
+      error: failure.message
     });
   }
 });
 
-router.post('/webhooks/creem', async (req, res) => {
+router.post('/webhooks/dodo-payments', async (req, res) => {
   const rawBody = typeof req.rawBody === 'string' ? req.rawBody : JSON.stringify(req.body || {});
-  if (!verifyCreemSignature(rawBody, req.get('creem-signature'))) {
+  let event;
+  try {
+    event = unwrapDodoWebhook(rawBody, {
+      'webhook-id': req.get('webhook-id'),
+      'webhook-signature': req.get('webhook-signature'),
+      'webhook-timestamp': req.get('webhook-timestamp')
+    });
+  } catch (error) {
     return res.status(401).json({ success: false, error: 'Invalid webhook signature.' });
   }
 
-  let event;
-  try {
-    event = JSON.parse(rawBody);
-  } catch (error) {
-    return res.status(400).json({ success: false, error: 'Invalid webhook payload.' });
-  }
-
-  const data = extractCreemEventData(event);
+  const data = extractDodoEventData(event, req.get('webhook-id'));
   if (!data.eventId || !data.eventType) {
     return res.status(400).json({ success: false, error: 'Webhook event identity is required.' });
   }
@@ -124,12 +149,12 @@ router.post('/webhooks/creem', async (req, res) => {
         `INSERT INTO user_subscriptions
          (user_id, plan, billing_interval, status, provider, provider_customer_id,
           provider_subscription_id, provider_product_id, current_period_start, current_period_end)
-         VALUES (?, ?, ?, ?, 'creem', ?, ?, ?, ?, ?)
+         VALUES (?, ?, ?, ?, 'dodo_payments', ?, ?, ?, ?, ?)
          ON CONFLICT(user_id) DO UPDATE SET
            plan = excluded.plan,
            billing_interval = excluded.billing_interval,
            status = excluded.status,
-           provider = 'creem',
+           provider = 'dodo_payments',
            provider_customer_id = COALESCE(excluded.provider_customer_id, provider_customer_id),
            provider_subscription_id = COALESCE(excluded.provider_subscription_id, provider_subscription_id),
            provider_product_id = excluded.provider_product_id,
@@ -140,7 +165,7 @@ router.post('/webhooks/creem', async (req, res) => {
           user.id,
           access.plan,
           access.billingInterval,
-          statusForEvent(data.eventType, data.subscriptionStatus),
+          statusForEvent(data.eventType, data.subscriptionStatus, data.cancelAtNextBillingDate),
           data.customerId || null,
           data.subscriptionId || null,
           access.productId,
@@ -153,7 +178,7 @@ router.post('/webhooks/creem', async (req, res) => {
         `UPDATE user_subscriptions SET status = ?,
          current_period_end = COALESCE(?, current_period_end), updated_at = CURRENT_TIMESTAMP
          WHERE user_id = ?`,
-        [statusForEvent(data.eventType, data.subscriptionStatus), data.periodEnd, user.id]
+        [statusForEvent(data.eventType, data.subscriptionStatus, data.cancelAtNextBillingDate), data.periodEnd, user.id]
       );
     }
 
@@ -163,7 +188,7 @@ router.post('/webhooks/creem', async (req, res) => {
     );
     return res.json({ success: true, applied: Boolean(user && (access || INACTIVE_EVENTS.has(data.eventType))) });
   } catch (error) {
-    console.error('Creem webhook failed:', error);
+    console.error('Dodo Payments webhook failed:', error);
     return res.status(500).json({ success: false, error: 'Webhook processing failed.' });
   }
 });

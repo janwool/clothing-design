@@ -61,7 +61,7 @@ test('keeps in-page render exports invisible while preserving visible cover capt
 });
 
 test('uses the saved reference lighting standard for user render exports', () => {
-  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260916-balanced-front-back-v4'\)/);
+  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260917-white-45deg-v9'\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('environment-image', webStandard\.exportEnvironmentImage \|\| webStandard\.environmentImage\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-intensity', String\(webStandard\.exportShadowIntensity \?\? 0\.32\)\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-softness', String\(webStandard\.exportShadowSoftness \?\? 0\.96\)\)/);
@@ -77,6 +77,10 @@ test('uses the saved commercial camera and lighting in the live design preview',
   assert.match(runtime, /viewerElement\.setAttribute\('camera-orbit', cameraOrbit\)/);
   assert.match(runtime, /viewerElement\.removeAttribute\('auto-rotate'\)/);
   assert.match(runtime, /viewerElement\.jumpCameraToGoal\?\.\(\)/);
+  assert.match(runtime, /CameraRelativeStudioLight\?\.install\(viewerElement/);
+  assert.match(runtime, /CameraRelativeStudioLight\?\.sync\(viewerElement\)/);
+  assert.match(runtime, /exportViewer\.dataset\.cameraRelativeStudioLight/);
+  assert.match(runtime, /dataset\.studioLightAzimuthOffset/);
 });
 
 test('does not replace native model materials until the user selects a preset', () => {

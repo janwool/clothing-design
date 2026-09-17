@@ -16,7 +16,6 @@
   const gestureHint = document.getElementById('whiteMockupGestureHint');
   const resetButton = document.getElementById('whiteMockupReset');
   const downloadButton = document.getElementById('whiteMockupDownload');
-  const saveButton = document.getElementById('whiteMockupSave');
   const status = document.getElementById('whiteMockupStatus');
   const backgroundLabel = document.getElementById('whiteMockupBackgroundLabel');
   const backgroundButtons = [...editor.querySelectorAll('[data-background]')];
@@ -80,9 +79,14 @@
     artworkUrl: '',
     artworkDataUrl: '',
     artworkUploadPromise: null,
+    artworkRevision: 0,
+    autoSaveTimer: null,
+    saveInProgress: false,
+    savePending: false,
     watermarkEnabled: false,
     projectId: '',
-    projectName: ''
+    projectName: '',
+    projectPreviewUrl: ''
   };
 
   const baseCanvas = document.createElement('canvas');
@@ -552,7 +556,10 @@
     canvas.classList.remove('is-interacting');
     setStatus('Artwork placement reset.');
     scheduleRender({ forceQuality: true });
-    if (trackAction) trackWhiteMockup('white_mockup_artwork_reset_click');
+    if (trackAction) {
+      trackWhiteMockup('white_mockup_artwork_reset_click');
+      queueProjectSave();
+    }
   }
 
   function setArtworkImage(image, name, source = 'external') {
@@ -564,7 +571,6 @@
     gestureHint.hidden = false;
     resetButton.hidden = false;
     downloadButton.disabled = false;
-    saveButton.disabled = false;
     canvas.classList.add('has-artwork');
     resetTransform();
     setStatus('Design added. Adjust it directly on the garment.');
@@ -581,12 +587,13 @@
     });
   }
 
-  async function storeArtwork(dataUrl, name) {
+  async function storeArtwork(dataUrl, name, revision) {
     if (editor.dataset.authenticated !== 'true' || !window.UserProjects) return null;
     setStatus('Uploading artwork securely…');
     const image = await window.UserProjects.uploadImage(dataUrl, name, 'artwork');
+    if (revision !== state.artworkRevision) return image;
     state.artworkUrl = image.url;
-    setStatus('Artwork saved. Continue designing or save the project.');
+    setStatus('Artwork uploaded. Adding it to your projects…');
     trackWhiteMockup('white_mockup_artwork_cloud_save_success', {
       file_name: name || undefined
     });
@@ -611,23 +618,32 @@
     });
     const reader = new FileReader();
     reader.onload = () => {
+      const revision = state.artworkRevision + 1;
+      state.artworkRevision = revision;
       state.artworkDataUrl = reader.result;
       state.artworkUrl = '';
-      loadArtworkDataUrl(reader.result, file.name, source).catch((error) => {
+      state.projectPreviewUrl = '';
+      const artworkLoadPromise = loadArtworkDataUrl(reader.result, file.name, source).catch((error) => {
         console.error(error);
         setStatus('The selected image could not be opened.', true);
         trackWhiteMockup(`white_mockup_artwork_${source}_load_error`, {
           error_message: String(error.message || 'Selected image could not be opened.').slice(0, 120)
         });
+        throw error;
       });
-      state.artworkUploadPromise = storeArtwork(reader.result, file.name).catch((error) => {
+      state.artworkUploadPromise = storeArtwork(reader.result, file.name, revision).catch((error) => {
         console.error(error);
         setStatus(error.message || 'Artwork could not be saved.', true);
         trackWhiteMockup('white_mockup_artwork_cloud_upload_error', {
           error_message: String(error.message || 'Artwork could not be saved.').slice(0, 120)
         });
-        return null;
+        throw error;
       });
+      Promise.all([artworkLoadPromise, state.artworkUploadPromise])
+        .then(() => {
+          if (revision === state.artworkRevision) queueProjectSave({ immediate: true });
+        })
+        .catch(() => {});
     };
     reader.onerror = () => {
       setStatus('The selected image could not be read.', true);
@@ -730,6 +746,7 @@
     try { canvas.releasePointerCapture?.(event.pointerId); } catch (error) { /* Pointer capture may already be released. */ }
     setStatus('Artwork placement updated.');
     scheduleRender({ forceQuality: true });
+    queueProjectSave();
     trackWhiteMockup(`white_mockup_artwork_${completedInteraction.mode}_complete`, {
       artwork_offset_x: Math.round(state.offsetX),
       artwork_offset_y: Math.round(state.offsetY),
@@ -748,6 +765,7 @@
     });
     customBackgroundSwatch.classList.toggle('active', selectedButton === customBackgroundSwatch);
     scheduleRender({ forceQuality: true });
+    queueProjectSave();
     if (analyticsEventName) {
       trackWhiteMockup(analyticsEventName, { background_name: label, background_value: value });
     }
@@ -764,6 +782,7 @@
     customGarmentColorSwatch.classList.toggle('active', selectedControl === customGarmentColorSwatch);
     setStatus(`${label} garment color applied.`);
     scheduleRender({ forceQuality: true });
+    queueProjectSave();
     if (analyticsEventName) {
       trackWhiteMockup(analyticsEventName, { color_name: label, color_value: value });
     }
@@ -806,36 +825,56 @@
     }
   }
 
+  function queueProjectSave({ immediate = false } = {}) {
+    if (editor.dataset.authenticated !== 'true' || !state.artworkImage || !window.UserProjects) return;
+    window.clearTimeout(state.autoSaveTimer);
+    state.autoSaveTimer = window.setTimeout(saveProject, immediate ? 0 : 700);
+  }
+
   async function saveProject() {
-    if (editor.dataset.authenticated !== 'true') {
-      trackWhiteMockup('white_mockup_save_signin_required');
-      window.UserProjects?.goToSignIn();
+    state.autoSaveTimer = null;
+    if (!state.artworkImage || !window.UserProjects) return;
+    if (!state.ready) {
+      state.autoSaveTimer = window.setTimeout(saveProject, 250);
       return;
     }
-    if (!state.ready || !state.artworkImage || !window.UserProjects) return;
+    if (state.saveInProgress) {
+      state.savePending = true;
+      return;
+    }
+    state.saveInProgress = true;
+    const revision = state.artworkRevision;
     const saveMode = state.projectId ? 'update' : 'create';
     trackWhiteMockup(`white_mockup_project_${saveMode}_begin`);
-    saveButton.disabled = true;
-    setStatus('Saving project…');
+    setStatus(saveMode === 'create' ? 'Adding project to your account…' : 'Saving changes…');
     try {
       if (state.artworkUploadPromise) await state.artworkUploadPromise;
+      if (revision !== state.artworkRevision) return;
       if (!state.artworkUrl && state.artworkDataUrl) {
-        await storeArtwork(state.artworkDataUrl, state.artworkName);
+        state.artworkUploadPromise = storeArtwork(state.artworkDataUrl, state.artworkName, revision);
+        await state.artworkUploadPromise;
       }
       if (!state.artworkUrl) throw new Error('Artwork must finish uploading before this project can be saved.');
-      render({ overlay: false, forceQuality: true });
-      const preview = await window.UserProjects.uploadImage(
-        canvas.toDataURL('image/jpeg', 0.86),
-        `${template.assetName}-preview.jpg`,
-        'project-preview'
-      );
+      let previewImageUrl = state.projectPreviewUrl;
+      if (!previewImageUrl) {
+        render({ overlay: false, forceQuality: true });
+        const preview = await window.UserProjects.uploadImage(
+          canvas.toDataURL('image/jpeg', 0.86),
+          `${template.assetName}-preview.jpg`,
+          'project-preview'
+        );
+        if (revision !== state.artworkRevision) return;
+        previewImageUrl = preview.url;
+        state.projectPreviewUrl = previewImageUrl;
+      }
+      if (revision !== state.artworkRevision) return;
       const project = await window.UserProjects.saveProject({
         id: state.projectId || undefined,
         projectType: 'white_mockup',
         name: state.projectName || `${state.artworkName.replace(/\.[^.]+$/, '')} — ${template.assetName}`,
         sourceId: template.assetName,
         sourceUrl: window.location.pathname,
-        previewImageUrl: preview.url,
+        previewImageUrl,
         designData: {
           artworkUrl: state.artworkUrl,
           artworkName: state.artworkName,
@@ -851,27 +890,32 @@
       });
       state.projectId = project.id;
       state.projectName = project.name;
+      state.projectPreviewUrl = project.previewImageUrl || state.projectPreviewUrl;
       const url = new URL(window.location.href);
       url.searchParams.set('project', project.id);
       window.history.replaceState({}, '', url);
-      setStatus('Project saved to your account.');
+      setStatus(saveMode === 'create' ? 'Added automatically to your projects.' : 'Changes saved automatically.');
       trackWhiteMockup(`white_mockup_project_${saveMode}_success`, {
         project_id: project.id
       });
     } catch (error) {
       console.error(error);
       if (error.status === 401) {
-        trackWhiteMockup('white_mockup_save_session_expired');
-        window.UserProjects.goToSignIn();
+        setStatus('Your session expired. Sign in again to keep saving this project.', true);
+        trackWhiteMockup('white_mockup_autosave_session_expired');
       } else {
-        setStatus(error.message || 'Project could not be saved.', true);
+        setStatus(error.message || 'Project could not be saved automatically.', true);
         trackWhiteMockup(`white_mockup_project_${saveMode}_error`, {
           error_message: String(error.message || 'Project could not be saved.').slice(0, 120)
         });
       }
     } finally {
-      saveButton.disabled = false;
+      state.saveInProgress = false;
       scheduleRender({ forceQuality: true });
+      if (state.savePending || revision !== state.artworkRevision) {
+        state.savePending = false;
+        queueProjectSave({ immediate: true });
+      }
     }
   }
 
@@ -887,6 +931,7 @@
       state.artworkUrl = saved.artworkUrl;
       state.projectId = project.id;
       state.projectName = project.name;
+      state.projectPreviewUrl = project.previewImageUrl || '';
       state.background = saved.background || 'studio';
       state.garmentColor = saved.garmentColor || '#ffffff';
       state.offsetX = Number(saved.offsetX) || 0;
@@ -922,7 +967,6 @@
     input.click();
   });
   resetButton.addEventListener('click', () => resetTransform(true));
-  saveButton.addEventListener('click', saveProject);
   downloadButton.addEventListener('click', downloadMockup);
 
   ['dragenter', 'dragover'].forEach((eventName) => {
@@ -998,6 +1042,7 @@
     if (!handled) return;
     event.preventDefault();
     scheduleRender({ forceQuality: true });
+    queueProjectSave();
     const keyboardAction = event.key.startsWith('Arrow') ? 'move' : (event.key === '[' || event.key === ']') ? 'rotate' : 'scale';
     trackWhiteMockup(`white_mockup_artwork_keyboard_${keyboardAction}`, {
       keyboard_key: event.key

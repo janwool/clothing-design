@@ -305,7 +305,7 @@ function workerBodyParser(req, res, next) {
 
   readRequestBody(req, JSON_BODY_LIMIT_BYTES)
     .then(text => {
-      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/creem') {
+      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/dodo-payments') {
         req.rawBody = text;
       }
       if (contentType === 'application/json') {
@@ -341,7 +341,7 @@ if (isWorkerRuntime) {
   app.use(express.json({
     limit: JSON_BODY_LIMIT_BYTES,
     verify(req, res, buffer) {
-      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/creem') {
+      if (String(req.originalUrl || '').split('?')[0] === '/api/billing/webhooks/dodo-payments') {
         req.rawBody = buffer.toString('utf8');
       }
     }

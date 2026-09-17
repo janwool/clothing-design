@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260916-commercial-stage-v35']
+  pageStyles: ['/css/model-detail-v2.css?v=20260918-fixed-lighting-v40']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -57,6 +57,7 @@
           <% if (previewModelFileUrl) { %>
             <model-viewer 
               class="model-viewer-natural"
+              data-entitlement-texture-watermark
               src="<%= previewModelFileUrl %>"
               poster="<%= model.image_url %>"
               alt="<%= model.name %> interactive 3D clothing model and apparel mockup"
@@ -69,11 +70,13 @@
               field-of-view="28deg"
               shadow-intensity="0.32"
               shadow-softness="0.9"
-              exposure="0.7"
-              environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+              exposure="0.82"
+              environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+              data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+              data-studio-light-reference-azimuth="-16"
+              data-studio-light-azimuth-offset="45"
               tone-mapping="commerce"
               data-catalog-render-standard="main"
-              data-entitlement-texture-watermark
               style="width: 100%; height: 100%;"
             ></model-viewer>
             <span class="model-contact-shadow" aria-hidden="true"></span>
@@ -87,10 +90,26 @@
             </div>
           <% } %>
         </div>
-        <div class="viewer-explore-hint" aria-hidden="true">
-          <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M7 7C3.5 9 2 11 2 12.5 2 15 7.8 18 18 18s16-3 16-5.5c0-1.6-1.7-3.7-5.5-5.7"/><path d="m7.5 3-1 4.5L11 9M28.5 3l1 4.5L25 9"/></svg>
-          <span>Drag to explore 360°</span>
-        </div>
+        <aside class="viewer-lighting-panel" id="quickLightingPanel" aria-label="Studio lighting">
+          <div class="quick-light-panel-header">
+            <strong>Lighting</strong>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+          </div>
+          <div class="quick-light-color"><i aria-hidden="true"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>
+          <div class="quick-light-presets" role="group" aria-label="Light direction presets">
+            <button type="button" data-light-angle="-45" aria-pressed="false"><i aria-hidden="true"></i><span>−45°</span></button>
+            <button type="button" data-light-angle="0" aria-pressed="false"><i aria-hidden="true"></i><span>Front</span></button>
+            <button type="button" class="active" data-light-angle="45" aria-pressed="true"><i aria-hidden="true"></i><span>+45°</span></button>
+          </div>
+          <label class="quick-light-range">
+            <span>Brightness <output id="quickLightExposureOutput">82%</output></span>
+            <input id="quickLightExposure" type="range" min="55" max="120" step="1" value="82">
+          </label>
+          <label class="quick-light-range">
+            <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
+            <input id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90">
+          </label>
+        </aside>
         <div class="model-quick-style" aria-label="Quick garment styling">
           <div class="quick-style-shelf">
             <div class="quick-style-fabric">
@@ -861,10 +880,6 @@
 
         <!-- Main Texture Design Area -->
         <div class="texture-canvas-area">
-          <div class="canvas-context">
-            <strong>2D Pattern Canvas</strong>
-            <span>Select a garment panel to edit</span>
-          </div>
           <div class="texture-canvas-frame" id="textureCanvasFrame">
             <svg id="textureSvg" xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
               <defs>
@@ -916,12 +931,6 @@
         <!-- Live 3D preview -->
         <div class="preview-3d-panel">
           <section class="design-inspector-card design-preview-card">
-            <div class="inspector-card-header">
-              <div>
-                <h3>3D Preview</h3>
-              </div>
-              <span class="preview-live-indicator">LIVE</span>
-            </div>
             <div class="preview-model-stage">
               <% if (previewModelFileUrl) { %>
                 <model-viewer
@@ -937,8 +946,11 @@
                   field-of-view="28deg"
                   shadow-intensity="0.32"
                   shadow-softness="0.9"
-                  exposure="0.7"
-                  environment-image="/environments/commercial-apparel-studio-v4-balanced-20260829.hdr"
+                  exposure="0.82"
+                  environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+                  data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+                  data-studio-light-reference-azimuth="-16"
+                  data-studio-light-azimuth-offset="45"
                   tone-mapping="commerce"
                   data-entitlement-texture-watermark
                   style="width: 100%; height: 100%;"
@@ -1029,6 +1041,11 @@ const heroGradientTo = document.getElementById('heroGradientTo');
 const heroGradientAngle = document.getElementById('heroGradientAngle');
 const heroGradientAngleValue = document.getElementById('heroGradientAngleValue');
 const applyHeroGradient = document.getElementById('applyHeroGradient');
+const quickLightExposure = document.getElementById('quickLightExposure');
+const quickLightExposureOutput = document.getElementById('quickLightExposureOutput');
+const quickLightSoftness = document.getElementById('quickLightSoftness');
+const quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');
+const quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];
 const modelViewerPromises = new WeakMap();
 const defaultDetailRenderStandard = {
   version: 'commercial-studio-stage-v3',
@@ -1048,15 +1065,20 @@ const defaultDetailRenderStandard = {
     normalStrengthMax: 0.45
   },
   web: {
-    environmentImage: '/environments/commercial-apparel-studio-v4-balanced-20260829.hdr',
-    lightingMode: 'front-back-balanced-product-studio',
+    environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',
+    lightingMode: 'camera-relative-45deg-white-softbox',
     sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',
-    balanceMethod: '180-degree-lighten-mirror',
+    balanceMethod: 'camera-relative-azimuth',
+    cameraRelativeLighting: true,
+    lightReferenceAzimuthDeg: -16,
+    lightAzimuthOffsetDeg: 45,
+    lightColor: '#ffffff',
+    environmentNeutralization: 'luminance-preserving-monochrome',
     shadowIntensity: 0.32,
     shadowSoftness: 0.9,
     exportShadowIntensity: 0.46,
     exportShadowSoftness: 0.88,
-    exposure: 0.7,
+    exposure: 0.82,
     toneMapping: 'commerce',
     material: {
       neutralizeBaseColor: false,
@@ -1067,8 +1089,14 @@ const defaultDetailRenderStandard = {
     }
   }
 };
+const detailLightState = {
+  azimuthOffsetDeg: 45,
+  exposure: 0.82,
+  shadowSoftness: 0.9
+};
+window.ModelDetailLightingSettings = detailLightState;
 let detailSceneStandard = defaultDetailRenderStandard;
-const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260916-balanced-front-back-v9')
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v14')
   .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
   .then((standard) => {
     detailSceneStandard = {
@@ -1097,9 +1125,19 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
   const webStandard = standard.web || defaultDetailRenderStandard.web;
   const isSideView = element.dataset.catalogRenderStandard === 'side';
   element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);
+  if (webStandard.cameraRelativeLighting !== false) {
+    element.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage;
+    element.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);
+    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);
+    window.CameraRelativeStudioLight?.install(element, {
+      environmentImage: element.dataset.cameraRelativeStudioLight,
+      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth),
+      azimuthOffsetDeg: Number(element.dataset.studioLightAzimuthOffset)
+    });
+  }
   element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
-  element.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.9));
-  element.setAttribute('exposure', String(webStandard.exposure ?? 0.7));
+  element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));
+  element.setAttribute('exposure', String(detailLightState.exposure ?? webStandard.exposure ?? 0.82));
   element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
   element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
   element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
@@ -1149,6 +1187,49 @@ detailRenderStandardPromise.then((standard) => {
     applyCatalogMaterialResponse(element, standard);
   });
 });
+
+function renderDetailLightingControls() {
+  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
+  const exposurePercent = Math.round(Math.max(0.55, Math.min(1.2, Number(detailLightState.exposure) || 0.82)) * 100);
+  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
+  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
+  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);
+  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;
+  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;
+  quickLightPresetButtons.forEach((button) => {
+    const isActive = Number(button.dataset.lightAngle) === angle;
+    button.classList.toggle('active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+function applyDetailLightingSettings() {
+  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {
+    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);
+    element.setAttribute('exposure', String(detailLightState.exposure));
+    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));
+    window.CameraRelativeStudioLight?.install(element, {
+      environmentImage: element.dataset.cameraRelativeStudioLight,
+      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),
+      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg
+    });
+  });
+  renderDetailLightingControls();
+}
+
+quickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {
+  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);
+  applyDetailLightingSettings();
+}));
+quickLightExposure?.addEventListener('input', () => {
+  detailLightState.exposure = Number(quickLightExposure.value) / 100;
+  applyDetailLightingSettings();
+});
+quickLightSoftness?.addEventListener('input', () => {
+  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;
+  applyDetailLightingSettings();
+});
+renderDetailLightingControls();
 
 function syncHeroColumnHeights() {
   if (!modelInfoSection || !modelViewerSection) return;
@@ -1594,7 +1675,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260917-toolbar-cleanup-v55',
+      src: '/js/model-designer.js?v=20260918-gradient-picker-v63',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

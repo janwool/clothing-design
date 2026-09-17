@@ -18,10 +18,12 @@ test('uses one commercial studio treatment across public interactive garment sta
 
   views.forEach((viewPath) => {
     const view = read(viewPath);
-    assert.match(view, /environment-image="\/environments\/commercial-apparel-studio-v4-balanced-20260829\.hdr"/, viewPath);
+    assert.match(view, /environment-image="\/environments\/commercial-apparel-studio-v5-front-white-20260917\.hdr"/, viewPath);
+    assert.match(view, /data-camera-relative-studio-light="\/environments\/commercial-apparel-studio-v5-front-white-20260917\.hdr"/, viewPath);
+    assert.match(view, /data-studio-light-azimuth-offset="45"/, viewPath);
     assert.match(view, /shadow-intensity="0\.32"/, viewPath);
     assert.match(view, /shadow-softness="0\.9"/, viewPath);
-    assert.match(view, /exposure="0\.7"/, viewPath);
+    assert.match(view, /exposure="0\.82"/, viewPath);
     assert.match(view, /tone-mapping="commerce"/, viewPath);
   });
 });
@@ -44,6 +46,11 @@ test('preserves native garment base colors in the commercial render standard', (
   assert.equal(standard.web.material.neutralizeBaseColor, false);
   assert.equal(standard.web.shadowIntensity, 0.32);
   assert.equal(standard.web.shadowSoftness, 0.9);
-  assert.equal(standard.web.lightingMode, 'front-back-balanced-product-studio');
-  assert.equal(standard.web.balanceMethod, '180-degree-lighten-mirror');
+  assert.equal(standard.web.lightingMode, 'camera-relative-45deg-white-softbox');
+  assert.equal(standard.web.balanceMethod, 'camera-relative-azimuth');
+  assert.equal(standard.web.cameraRelativeLighting, true);
+  assert.equal(standard.web.lightReferenceAzimuthDeg, -16);
+  assert.equal(standard.web.lightAzimuthOffsetDeg, 45);
+  assert.equal(standard.web.lightColor, '#ffffff');
+  assert.equal(standard.web.environmentNeutralization, 'luminance-preserving-monochrome');
 });

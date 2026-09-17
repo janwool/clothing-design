@@ -95,10 +95,15 @@
     }
   ],
   "web": {
-    "environmentImage": "/environments/commercial-apparel-studio-v4-balanced-20260829.hdr",
-    "lightingMode": "front-back-balanced-product-studio",
+    "environmentImage": "/environments/commercial-apparel-studio-v5-front-white-20260917.hdr",
+    "lightingMode": "camera-relative-45deg-white-softbox",
     "sourceEnvironment": "/environments/commercial-apparel-studio-v2-20260829.hdr",
-    "balanceMethod": "180-degree-lighten-mirror",
+    "balanceMethod": "camera-relative-azimuth",
+    "cameraRelativeLighting": true,
+    "lightReferenceAzimuthDeg": -16,
+    "lightAzimuthOffsetDeg": 45,
+    "lightColor": "#ffffff",
+    "environmentNeutralization": "luminance-preserving-monochrome",
     "environmentBake": {
       "engine": "CYCLES",
       "resolution": [2048, 1024],
@@ -108,9 +113,9 @@
     "shadowSoftness": 0.9,
     "exportShadowIntensity": 0.46,
     "exportShadowSoftness": 0.88,
-    "exportExposure": 0.76,
+    "exportExposure": 0.82,
     "exportToneMapping": "commerce",
-    "exposure": 0.7,
+    "exposure": 0.82,
     "toneMapping": "commerce",
     "material": {
       "neutralizeBaseColor": false,

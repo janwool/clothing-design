@@ -347,7 +347,7 @@
           : namedEvent(type, 'faq', details.dataset.analyticsItem || String(index + 1), state);
         track(configuredName, {
           item_id: details.dataset.analyticsItem || String(index + 1),
-          item_name: details.dataset.analyticsItem || cleanText(details.querySelector('summary')?.textContent),
+          item_name: details.dataset.analyticsName || details.dataset.analyticsItem || cleanText(details.querySelector('summary')?.textContent),
           toggle_state: details.open ? 'open' : 'closed'
         });
       });

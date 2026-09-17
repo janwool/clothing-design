@@ -6,7 +6,11 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 DB_TYPE = "d1"
 APP_BASE_URL = "https://www.cloz-design.com"
-CREEM_TEST_MODE = "false"
+DODO_PAYMENTS_ENVIRONMENT = "live_mode"
+DODO_PRO_MONTHLY_PRODUCT_ID = "pdt_0NnnhMjKZE0S5y7c74oI6"
+DODO_PRO_YEARLY_PRODUCT_ID = "pdt_0NnnhXqc1hwnNQubQkHRX"
+DODO_MAX_MONTHLY_PRODUCT_ID = "pdt_0NnnhuSBJVyZWRVe4A3x4"
+DODO_MAX_YEARLY_PRODUCT_ID = "pdt_0Nnni73BBrP63K1eCXnH9"
 
 [ai]
 binding = "AI"
