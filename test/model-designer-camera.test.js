@@ -64,7 +64,7 @@ test('uses the saved reference lighting standard for user render exports', () =>
   assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260917-white-45deg-v9'\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('environment-image', webStandard\.exportEnvironmentImage \|\| webStandard\.environmentImage\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-intensity', String\(webStandard\.exportShadowIntensity \?\? 0\.32\)\)/);
-  assert.match(runtime, /exportViewer\.setAttribute\('shadow-softness', String\(webStandard\.exportShadowSoftness \?\? 0\.96\)\)/);
+  assert.match(runtime, /exportViewer\.setAttribute\('shadow-softness', String\(detailLighting\.shadowSoftness \?\? webStandard\.exportShadowSoftness \?\? 0\.96\)\)/);
   assert.match(runtime, /webStandard\.exportExposure \?\? webStandard\.exposure/);
   assert.match(runtime, /webStandard\.exportToneMapping \|\| webStandard\.toneMapping/);
 });

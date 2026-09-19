@@ -32,6 +32,7 @@ const { isAiTryOnEnabled } = require('../lib/feature-flags');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
 const { targetForLegacyPattern, targetForLegacyPatternId } = require('../lib/legacy-patterns');
 const svgMaskQueueManifest = require('../public/config/on-model-svg-mask-queue.json');
+const { FASHION_MOCKUP_CATEGORIES, getFashionMockupCategory } = require('../lib/fashion-mockup-categories');
 
 const MOCKUP_WORKFLOW_IMAGES = [
   siteImage('workflow/choose-garment-model.webp'),
@@ -48,13 +49,7 @@ const MOCKUP_USE_CASE_IMAGES = [
 
 const MOCKUP_PAGE_SIZE = 48;
 const WHITE_MOCKUP_PAGE_SIZE = 30;
-const WHITE_MOCKUP_CATEGORIES = [
-  { slug: 'upper', label: 'Tops', description: 'Tees, shirts, jackets and layered tops' },
-  { slug: 'lower', label: 'Bottoms', description: 'Pants, shorts and skirts' },
-  { slug: 'full', label: 'Full looks', description: 'Dresses, suits and one-piece garments' },
-  { slug: 'head', label: 'Headwear', description: 'Hats and head pieces' },
-  { slug: 'accessory', label: 'Accessories', description: 'Garment-adjacent styling pieces' }
-];
+const WHITE_MOCKUP_CATEGORIES = FASHION_MOCKUP_CATEGORIES;
 
 function formatWhiteMockupTitle(value) {
   return String(value || 'On-model garment')
@@ -64,18 +59,12 @@ function formatWhiteMockupTitle(value) {
     .trim();
 }
 
-function getWhiteMockupTypeLabel(garmentType) {
-  return WHITE_MOCKUP_CATEGORIES.find(category => category.slug === garmentType)?.label || 'Garment';
+function getWhiteMockupTypeLabel(asset) {
+  return getFashionMockupCategory(asset).label;
 }
 
-function getWhiteMockupTypeName(garmentType) {
-  return {
-    upper: 'top',
-    lower: 'bottom',
-    full: 'full-look garment',
-    head: 'headwear style',
-    accessory: 'accessory'
-  }[garmentType] || 'garment';
+function getWhiteMockupTypeName(asset) {
+  return getFashionMockupCategory(asset).singular;
 }
 
 function normalizeMockupPage(value) {
@@ -398,6 +387,71 @@ async function getActiveHoodieModelStarters(req) {
       title,
       shortTitle: hoodieStarterShortTitle(title),
       body: sanitizePublicModelDescription(model.description),
+      href: `/3d-models/${categorySlug}/${model.slug}`,
+      image: model.image_url,
+      modelSrc: getPreviewModelFileUrl(model, req)
+    };
+  });
+}
+
+const DRESS_STARTER_METADATA = {
+  'classic-one-piece-dress-3d-model': {
+    shortTitle: 'Classic',
+    body: 'A timeless one-piece silhouette with a softly shaped waist and fluid skirt.'
+  },
+  'tailored-one-piece-dress-3d-model': {
+    shortTitle: 'Tailored',
+    body: 'A clean two-piece-inspired shape for sharper, more structured concepts.'
+  },
+  'layered-one-piece-dress-3d-model': {
+    shortTitle: 'Layered',
+    body: 'A detailed layered construction for directional collection ideas.'
+  },
+  'minimal-one-piece-dress-3d-model': {
+    shortTitle: 'Minimal',
+    body: 'A dramatic cape-led silhouette for minimal, volume-focused styling.'
+  }
+};
+
+async function getActiveDressModelStarters(req) {
+  await ensureModelCategoryTable();
+  const models = await db.all(`
+    ${getModelCategorySelect()}
+    WHERE m.status = ?
+      AND COALESCE(m.file_url, '') != ''
+      AND COALESCE(m.image_url, '') != ''
+      AND (
+        legacy_category.slug = ?
+        OR EXISTS (
+          SELECT 1
+          FROM model_3d_categories mc_dress
+          JOIN categories category_dress ON category_dress.id = mc_dress.category_id
+          WHERE mc_dress.model_id = m.id
+            AND category_dress.resource_type = '3d-models'
+            AND category_dress.slug = ?
+        )
+      )
+    ${getModelCategoryGroupBy()}
+    ORDER BY
+      CASE m.slug
+        WHEN 'classic-one-piece-dress-3d-model' THEN 0
+        WHEN 'tailored-one-piece-dress-3d-model' THEN 1
+        WHEN 'layered-one-piece-dress-3d-model' THEN 2
+        WHEN 'minimal-one-piece-dress-3d-model' THEN 3
+        ELSE 4
+      END,
+      m.updated_at DESC,
+      m.created_at DESC,
+      m.id ASC
+  `, ['active', 'dress', 'dress']);
+
+  return normalize3dModels(models).slice(0, 8).map(model => {
+    const metadata = DRESS_STARTER_METADATA[model.slug] || {};
+    const categorySlug = model.category_slug || 'dress';
+    return {
+      title: String(model.name || 'Dress model').replace(/\s+3D(?:\s+Garment)?\s+Model$/i, '').trim(),
+      shortTitle: metadata.shortTitle || String(model.name || 'Dress').split(/\s+/).slice(0, 2).join(' '),
+      body: metadata.body || 'A browser-ready 3D dress for color, artwork, and 360° review.',
       href: `/3d-models/${categorySlug}/${model.slug}`,
       image: model.image_url,
       modelSrc: getPreviewModelFileUrl(model, req)
@@ -1389,7 +1443,7 @@ const TOOL_PAGE_CONTENT = {
     cta: { label: 'Browse Hoodie Models', href: '/mockups/hoodie-mockup' }
   },
   'dress-designer': {
-    title: 'Free Online Dress Designer & 3D Mockup Tool',
+    title: 'Free Online Dress Designer – Create 3D Dress Mockups',
     eyebrow: 'Design a dress online for free',
     image: modelCover('dress-3d-model-06-29e39d9a.webp'),
     heroModel: {
@@ -1397,7 +1451,7 @@ const TOOL_PAGE_CONTENT = {
       alt: 'Free online one-piece dress designer 3D model'
     },
     editorHref: '/3d-models/dress/classic-one-piece-dress-3d-model#design',
-    subtitle: 'Design a dress online for free with an editable 3D garment model, color controls, artwork upload, multiple viewing angles, and transparent mockup export.',
+    subtitle: 'Design a dress online for free with editable 3D models. Change colors, review every angle, add artwork, and export a transparent dress mockup.',
     intent: 'Move a dress idea from early planning into a usable 3D visual preview. Choose a dress model, compare silhouette and color direction, upload artwork, review multiple angles, and export a mockup before sampling or photography.',
     primaryKeyword: 'online dress designer tool free',
     keywords: ['design a dress online free', 'free dress design tool online', 'dress mockup maker', 'design your own dress online', '3D dress designer', 'fashion dress design tool'],
@@ -1739,6 +1793,23 @@ function buildToolStructuredData(req, toolPage) {
         name: model.title,
         description: model.body,
         url: toAbsoluteUrl(req, model.href)
+      }))
+    });
+  }
+
+  if (toolPage.slug === 'dress-designer' && toolPage.modelStarters?.length) {
+    structuredData.push({
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name: 'Editable 3D dress models',
+      numberOfItems: toolPage.modelStarters.length,
+      itemListElement: toolPage.modelStarters.map((model, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        name: model.title,
+        description: model.body,
+        url: toAbsoluteUrl(req, model.href),
+        image: firstImage(req, [model.image])
       }))
     });
   }
@@ -2230,7 +2301,7 @@ router.get('/white-mockups', async (req, res) => {
     await ensureModelCategoryTable();
     const [library, summary] = await Promise.all([
       listOnModelMockupAssets({
-        garmentType: activeType,
+        fashionCategory: activeType,
         page: normalizeMockupPage(req.query.page),
         pageSize: WHITE_MOCKUP_PAGE_SIZE
       }),
@@ -2241,16 +2312,16 @@ router.get('/white-mockups', async (req, res) => {
     if (library.page > 1) params.set('page', String(library.page));
     const collectionPath = params.size ? `/white-mockups?${params.toString()}` : '/white-mockups';
     const activeCategory = WHITE_MOCKUP_CATEGORIES.find(category => category.slug === activeType) || null;
-    const description = 'Browse customizable on-model white garment mockups by clothing type. Review pose, fit and silhouette, upload artwork, change the background, and export a clean PNG.';
+    const description = 'Browse customizable on-model fashion mockups by clothing type. Review pose, fit and silhouette, upload artwork, change the background, and export a clean PNG.';
     res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
     res.render('white-mockups', {
       title: activeCategory
-        ? `${activeCategory.label} White Mockups | ClozDesign`
-        : 'On-Model White Mockup Library | ClozDesign',
+        ? `${activeCategory.label} Fashion Mockups | ClozDesign`
+        : 'On-Model Fashion Mockups | ClozDesign',
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260825-commercial-v6'],
+      pageStyles: ['/css/white-mockups.css?v=20260919-editorial-catalog-v8'],
       assets: library.assets,
       assetSummary: summary,
       activeType,
@@ -2267,10 +2338,10 @@ router.get('/white-mockups', async (req, res) => {
   } catch (err) {
     console.error('Error loading white mockup library:', err);
     res.status(500).render('white-mockups', {
-      title: 'On-Model White Mockup Library | ClozDesign',
-      metaDescription: 'Browse customizable on-model white garment mockups by clothing type.',
+      title: 'On-Model Fashion Mockups | ClozDesign',
+      metaDescription: 'Browse customizable on-model fashion mockups by clothing type.',
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260825-commercial-v6'],
+      pageStyles: ['/css/white-mockups.css?v=20260919-editorial-catalog-v8'],
       assets: [],
       assetSummary: { total: 0, mappedModels: 0, counts: {} },
       activeType: '',
@@ -2290,13 +2361,13 @@ router.get('/white-mockups/:assetName', async (req, res) => {
 
     const relatedAssets = await findRelatedOnModelMockupAssets(asset);
     const displayTitle = formatWhiteMockupTitle(asset.title || asset.asset_name);
-    const typeLabel = getWhiteMockupTypeLabel(asset.garment_type);
-    const typeName = getWhiteMockupTypeName(asset.garment_type);
+    const typeLabel = getWhiteMockupTypeLabel(asset);
+    const typeName = getWhiteMockupTypeName(asset);
     const path = `/white-mockups/${asset.asset_name}`;
-    const description = `Customize the ${displayTitle} on-model white mockup online. Upload artwork, position it directly on the garment, change garment and background colors, and download a high-resolution PNG.`;
+    const description = `Customize the ${displayTitle} on-model fashion mockup online. Upload artwork, position it directly on the garment, change garment and background colors, and download a high-resolution PNG.`;
     const faqItems = [
       {
-        question: `How do I customize this ${typeName} white mockup?`,
+        question: `How do I customize this ${typeName} fashion mockup?`,
         answer: 'Upload a PNG, JPG, or WebP design, then drag it directly on the garment. Use the corner handles to resize it and the top handle to rotate it.'
       },
       {
@@ -2305,7 +2376,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       },
       {
         question: 'Does my artwork leave the browser?',
-        answer: 'No. Artwork placement and image compositing happen in your browser for a private, immediate preview.'
+        answer: 'The live preview is created in your browser. When you are signed in, your artwork and project settings are also saved securely to your account so you can continue later.'
       },
       {
         question: 'What file will I download?',
@@ -2315,24 +2386,24 @@ router.get('/white-mockups/:assetName', async (req, res) => {
 
     res.locals.canonicalUrl = toAbsoluteUrl(req, path);
     res.render('white-mockup-detail', {
-      title: `${displayTitle} White Mockup Editor | ClozDesign`,
+      title: `${displayTitle} Fashion Mockup Editor | ClozDesign`,
       metaDescription: description,
       metaImage: firstImage(req, [asset.base_image_url]),
       structuredData: [
         ...pageStructuredData(req, {
           type: 'WebPage',
-          name: `${displayTitle} On-Model White Mockup`,
+          name: `${displayTitle} On-Model Fashion Mockup`,
           description,
           path,
           image: asset.base_image_url,
           breadcrumbs: [
             { name: 'Home', url: '/' },
-            { name: 'White Mockups', url: '/white-mockups' },
+            { name: 'Fashion Mockups', url: '/white-mockups' },
             { name: displayTitle, url: path }
           ],
           mainEntity: {
             '@type': 'SoftwareApplication',
-            name: `${displayTitle} White Mockup Editor`,
+            name: `${displayTitle} Fashion Mockup Editor`,
             applicationCategory: 'DesignApplication',
             operatingSystem: 'Web browser',
             image: firstImage(req, [asset.base_image_url]),
@@ -2357,8 +2428,8 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       ],
       page: 'white-mockups',
       pageStyles: [
-        '/css/white-mockups.css?v=20260825-commercial-v6',
-        '/css/white-mockup-detail.css?v=20260907-user-projects-v8'
+        '/css/white-mockups.css?v=20260919-editorial-catalog-v8',
+        '/css/white-mockup-detail.css?v=20260919-signin-modal-v9'
       ],
       asset,
       displayTitle,
@@ -3190,6 +3261,32 @@ router.get('/tools/:slug', async (req, res) => {
         console.error('Error loading active Hoodie generator models:', error);
       }
     }
+    const isDressDesigner = req.params.slug === 'dress-designer';
+    if (isDressDesigner) {
+      try {
+        const activeModelStarters = await getActiveDressModelStarters(req);
+        if (activeModelStarters.length) {
+          const primaryModel = activeModelStarters.find(model => model.shortTitle === 'Classic') || activeModelStarters[0];
+          renderedToolPage = {
+            ...toolPage,
+            image: primaryModel.image,
+            modelStarters: activeModelStarters,
+            primaryModel,
+            heroModel: {
+              src: primaryModel.modelSrc,
+              alt: `${primaryModel.title} editable 3D dress model`
+            },
+            editorHref: `${primaryModel.href}#design`,
+            cta: {
+              ...toolPage.cta,
+              href: `${primaryModel.href}#design`
+            }
+          };
+        }
+      } catch (error) {
+        console.error('Error loading active Dress designer models:', error);
+      }
+    }
     const isIndexableTool = Boolean(
       TOOL_VARIANT_CONTENT[req.params.slug]
       || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
@@ -3198,6 +3295,8 @@ router.get('/tools/:slug', async (req, res) => {
       ? 'tshirt-generator-landing'
       : isHoodieGenerator
         ? 'hoodie-generator-landing'
+        : isDressDesigner
+          ? 'dress-designer-landing'
         : req.params.slug === '3d-clothing-mockup-generator'
           ? '3d-clothing-mockup-landing'
           : req.params.slug === 'bulk-t-shirt-mockup-generator'
@@ -3206,10 +3305,12 @@ router.get('/tools/:slug', async (req, res) => {
     return res.render(viewName, {
       title: buildSeoTitle(toolPage.title, 'ClozDesign'),
       metaDescription: compactText(toolPage.subtitle, 160),
-      metaImage: firstImage(req, [toolPage.image]),
+      metaImage: firstImage(req, [renderedToolPage.image]),
       structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
+      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20260919-seo-3d-v2'] : undefined,
+      bodyClass: isDressDesigner ? 'dress-designer-page' : '',
       toolPage: renderedToolPage
     });
   }

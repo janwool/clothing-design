@@ -11,8 +11,8 @@ const detailView = fs.readFileSync(path.join(root, 'views', 'white-mockup-detail
 const detailEditor = fs.readFileSync(path.join(root, 'public', 'js', 'white-mockup-editor.js'), 'utf8');
 const data = fs.readFileSync(path.join(root, 'lib', 'on-model-mockups.js'), 'utf8');
 
-test('places the white mockup library beside 3D Models in desktop and mobile navigation', () => {
-  assert.match(header, /href="\/mockups"[\s\S]*?3D Models[\s\S]*?href="\/white-mockups"[\s\S]*?White Mockups/);
+test('places the fashion mockup library beside 3D Models in desktop and mobile navigation', () => {
+  assert.match(header, /href="\/mockups"[\s\S]*?3D Models[\s\S]*?href="\/white-mockups"[\s\S]*?Fashion Mockups/);
   assert.equal((header.match(/href="\/white-mockups"/g) || []).length, 2);
 });
 
@@ -22,7 +22,8 @@ test('renders the white mockup category page from database asset records', () =>
   assert.match(data, /FROM on_model_mockup_assets a/);
   assert.match(data, /a\.garment_type = \?/);
   assert.match(view, /asset\.base_image_url/);
-  assert.match(view, /Upload · place · export/);
+  assert.match(view, /Explore the collection/);
+  assert.match(view, /Catalog index/);
   assert.match(view, /href="\/white-mockups\/<%= asset\.asset_name %>"/);
 });
 
@@ -33,7 +34,7 @@ test('provides an indexable commercial detail page for every white mockup asset'
   assert.match(data, /findOnModelMockupAsset/);
   assert.match(data, /findRelatedOnModelMockupAssets/);
   assert.match(detailView, /About this mockup/);
-  assert.match(detailView, /Related <%= typeLabel\.toLowerCase\(\) %> white mockups/);
+  assert.match(detailView, /Related <%= typeLabel\.toLowerCase\(\) %> fashion mockups/);
 });
 
 test('keeps technical maps internal and uses direct canvas transforms', () => {
@@ -87,10 +88,10 @@ test('cache-busts commercial white mockup assets consistently', () => {
     .map(match => match[1]);
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
-  assert.match(libraryVersions[0], /^20260825-commercial-v6$/);
-  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260907-user-projects-v8/);
+  assert.match(libraryVersions[0], /^20260919-editorial-catalog-v8$/);
+  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260919-signin-modal-v9/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260918-white-auto-save-v27/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260919-white-signin-modal-v29/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);

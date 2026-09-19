@@ -11,24 +11,24 @@
 %>
 <%- include('partials/workspace-shell', {
   currentView: 'whiteMockups',
-  headerEyebrow: 'White mockup library',
+  headerEyebrow: 'Fashion mockup library',
   headerDetail: 'Continue saved on-model compositions.'
 }) %>
 
-    <section class="workspace-section workspace-page-section workspace-project-list" aria-label="Saved white mockups">
+    <section class="workspace-section workspace-page-section workspace-project-list" aria-label="Saved fashion mockups">
       <div class="workspace-project-grid" id="workspaceProjectGrid">
         <% visibleProjects.forEach(function(project, index) { %>
           <article class="workspace-project-card" data-project-id="<%= project.id %>" data-project-type="<%= project.projectType %>" data-project-name="<%= project.name.toLowerCase() %>">
             <a class="workspace-project-image" href="<%= projectUrl(project) %>">
               <% if (project.previewImageUrl) { %><img src="<%= project.previewImageUrl %>" alt="<%= project.name %> preview" loading="lazy"><% } else { %><span class="workspace-card-placeholder"><b><%= String(index + 1).padStart(2, '0') %></b>Saved composition</span><% } %>
-              <span class="workspace-project-type">WHITE</span><span class="workspace-project-open">Open ↗</span>
+              <span class="workspace-project-type">FASHION</span><span class="workspace-project-open">Open ↗</span>
             </a>
             <div class="workspace-project-details"><div><span><%= formatDate(project.updatedAt) %></span><h3 data-project-title><a href="<%= projectUrl(project) %>"><%= project.name %></a></h3></div><button type="button" class="workspace-more" data-project-menu-button aria-label="Project actions" aria-expanded="false">•••</button></div>
             <div class="workspace-card-menu" hidden><button type="button" data-project-action="rename">Rename</button><button type="button" data-project-action="duplicate">Duplicate</button><a href="<%= projectUrl(project) %>">Open project</a><button class="is-danger" type="button" data-project-action="delete">Delete</button></div>
           </article>
         <% }); %>
       </div>
-      <% if (!visibleProjects.length) { %><div class="workspace-empty-archive"><span>EMPTY ARCHIVE</span><h3>No white mockups saved—yet.</h3><p>Your saved white mockup compositions will collect here.</p><div><a class="btn btn-primary" href="/white-mockups">Create a white mockup</a></div></div><% } %>
+      <% if (!visibleProjects.length) { %><div class="workspace-empty-archive"><span>EMPTY ARCHIVE</span><h3>No fashion mockups saved—yet.</h3><p>Your saved fashion mockup compositions will collect here.</p><div><a class="btn btn-primary" href="/white-mockups">Create a fashion mockup</a></div></div><% } %>
     </section>
 
     <dialog class="workspace-dialog" id="workspaceRenameDialog"><form method="dialog"><button class="workspace-dialog-close" value="cancel" aria-label="Close">×</button><span>Project details</span><h2>Rename this study</h2><label><span>Project name</span><input id="workspaceRenameInput" maxlength="120" required></label><div><button value="cancel">Cancel</button><button id="workspaceRenameConfirm" value="default">Save name</button></div></form></dialog>

@@ -2,7 +2,7 @@
 <%
   const typeLabels = Object.fromEntries(categories.map(category => [category.slug, category.label]));
   const cleanAssetTitle = function(asset) {
-    return String(asset.title || asset.asset_name || 'White garment mockup')
+    return String(asset.title || asset.asset_name || 'Fashion mockup')
       .replace(/^Model\s+\d+\s+/i, '')
       .replace(/\s+From3d(?:\s+V\d+)?/i, '')
       .replace(/\s+/g, ' ')
@@ -14,75 +14,115 @@
     if (pageNumber > 1) params.push(`page=${pageNumber}`);
     return `/white-mockups${params.length ? `?${params.join('&')}` : ''}#white-mockup-library`;
   };
+  const heroAssets = assets.slice(0, 3);
+  const activeLabel = activeCategory ? activeCategory.label : 'All garments';
 %>
 
 <header class="white-library-hero">
   <div class="category-catalog-shell white-library-hero-grid">
     <div class="white-library-title">
-      <span class="category-catalog-kicker">On-model white library</span>
-      <h1><%= activeCategory ? `${activeCategory.label}, in white.` : 'See the garment before the graphic.' %></h1>
-      <p>Compare silhouette, fit, pose and drape on clean white garments. Choose a look, place your artwork directly on the garment, and create a product-ready visual.</p>
+      <div class="white-library-edition">
+        <span>Fashion mockups</span>
+        <span>Edition 01 / <%= new Date().getFullYear() %></span>
+      </div>
+      <% if (activeCategory) { %>
+        <h1><%= activeCategory.label %>,<br><em>in context.</em></h1>
+      <% } else { %>
+        <h1>Design it.<br><em>See it worn.</em></h1>
+      <% } %>
+      <p>Place your artwork on real silhouettes, compare the drape, and turn a flat idea into a campaign-ready visual.</p>
+      <div class="white-library-hero-actions">
+        <a href="#white-mockup-library">Explore the collection <span aria-hidden="true">↘</span></a>
+        <dl>
+          <div><dt><%= assetSummary.total %></dt><dd>on-model looks</dd></div>
+          <div><dt><%= categories.filter(category => category.count > 0).length %></dt><dd>garment groups</dd></div>
+        </dl>
+      </div>
     </div>
-    <dl class="white-library-stats" aria-label="White mockup library summary">
-      <div><dt><%= assetSummary.total %></dt><dd>white mockups</dd></div>
-      <div><dt><%= assetSummary.mappedModels %></dt><dd>curated profiles</dd></div>
-      <div><dt><%= categories.filter(category => category.count > 0).length %></dt><dd>garment groups</dd></div>
-    </dl>
+
+    <div class="white-library-hero-visual" aria-label="Selected fashion mockups">
+      <% if (heroAssets.length) { %>
+        <% heroAssets.forEach(function(asset, index) { %>
+          <figure class="white-library-hero-look white-library-hero-look-<%= index + 1 %>">
+            <img src="<%= asset.base_image_url %>" alt="<%= cleanAssetTitle(asset) %> fashion mockup" width="<%= asset.canvas_width %>" height="<%= asset.canvas_height %>" <%= index === 0 ? 'fetchpriority="high"' : 'loading="eager"' %>>
+            <figcaption><span>0<%= index + 1 %></span><%= typeLabels[asset.fashion_category_slug] || 'Fashion' %></figcaption>
+          </figure>
+        <% }); %>
+      <% } else { %>
+        <div class="white-library-hero-placeholder"><span>Collection loading</span></div>
+      <% } %>
+      <span class="white-library-hero-stamp">On-model / ready to customize</span>
+    </div>
   </div>
 </header>
 
-<nav class="white-library-categories" aria-label="White mockup categories">
-  <div class="category-catalog-shell white-library-category-track">
-    <a href="/white-mockups#white-mockup-library" class="<%= !activeType ? 'active' : '' %>" <%= !activeType ? 'aria-current="page"' : '' %>>
-      <span>All garments</span><small><%= assetSummary.total %></small>
-    </a>
-    <% categories.forEach(function(category) { %>
-      <a href="/white-mockups?type=<%= category.slug %>#white-mockup-library" class="<%= activeType === category.slug ? 'active' : '' %>" <%= activeType === category.slug ? 'aria-current="page"' : '' %>>
-        <span><%= category.label %></span><small><%= category.count %></small>
+<nav class="white-library-categories" aria-label="Fashion mockup categories">
+  <div class="category-catalog-shell">
+    <div class="white-library-category-heading">
+      <span>Catalog index</span>
+      <span>Choose a garment</span>
+    </div>
+    <div class="white-library-category-track">
+      <a href="/white-mockups#white-mockup-library" class="<%= !activeType ? 'active' : '' %>" <% if (!activeType) { %>aria-current="page"<% } %>>
+        <span class="white-category-number">00</span>
+        <strong>All garments</strong>
+        <small><%= assetSummary.total %></small>
       </a>
-    <% }); %>
+      <% categories.forEach(function(category, index) { %>
+        <a href="/white-mockups?type=<%= category.slug %>#white-mockup-library" class="<%= activeType === category.slug ? 'active' : '' %>" <% if (activeType === category.slug) { %>aria-current="page"<% } %>>
+          <span class="white-category-number"><%= String(index + 1).padStart(2, '0') %></span>
+          <strong><%= category.label %></strong>
+          <small><%= category.count %></small>
+        </a>
+      <% }); %>
+    </div>
   </div>
 </nav>
 
-<main class="white-library-main" id="white-mockup-library">
+<section class="white-library-main" id="white-mockup-library">
   <div class="category-catalog-shell">
     <div class="white-library-results-heading">
-      <div>
-        <span><%= activeCategory ? activeCategory.description : 'Full on-model collection' %></span>
-        <strong><%= pagination.total ? `Showing ${pagination.start}–${pagination.end} of ${pagination.total}` : 'No white mockups in this group' %></strong>
+      <div class="white-library-results-title">
+        <span>Lookbook / <%= activeLabel %></span>
+        <h2><%= activeCategory ? activeCategory.label : 'The full collection' %></h2>
       </div>
-      <p>Upload · place · export</p>
+      <div class="white-library-results-copy">
+        <p><%= activeCategory ? activeCategory.description : 'Browse every silhouette, from everyday essentials to statement outerwear.' %></p>
+        <strong><%= pagination.total ? `${pagination.start}–${pagination.end} / ${pagination.total}` : 'No looks in this group' %></strong>
+      </div>
     </div>
 
     <% if (assets.length) { %>
       <div class="white-library-grid">
-        <% assets.forEach(function(asset) { %>
-          <a class="white-mockup-card" href="/white-mockups/<%= asset.asset_name %>" aria-label="Open <%= cleanAssetTitle(asset) %> white mockup">
+        <% assets.forEach(function(asset, index) { %>
+          <a class="white-mockup-card" href="/white-mockups/<%= asset.asset_name %>" aria-label="Open <%= cleanAssetTitle(asset) %> fashion mockup">
             <figure class="white-mockup-image">
-              <img src="<%= asset.base_image_url %>" alt="<%= cleanAssetTitle(asset) %> white garment mockup" loading="lazy" width="<%= asset.canvas_width %>" height="<%= asset.canvas_height %>">
-              <span class="white-mockup-type"><%= typeLabels[asset.garment_type] || 'Garment' %></span>
-              <span class="white-mockup-ready">Customize</span>
+              <img src="<%= asset.base_image_url %>" alt="<%= cleanAssetTitle(asset) %> fashion mockup" loading="lazy" width="<%= asset.canvas_width %>" height="<%= asset.canvas_height %>">
+              <span class="white-mockup-index">Look <%= String(pagination.start + index).padStart(3, '0') %></span>
+              <span class="white-mockup-type"><%= typeLabels[asset.fashion_category_slug] || 'Fashion' %></span>
+              <span class="white-mockup-ready">Open mockup <span aria-hidden="true">↗</span></span>
             </figure>
             <div class="white-mockup-meta">
               <div>
-                <h2><%= cleanAssetTitle(asset) %></h2>
-                <span>Customize online</span>
+                <h3><%= cleanAssetTitle(asset) %></h3>
+                <span>On-model · customizable</span>
               </div>
-              <span class="white-mockup-card-action">Open mockup ›</span>
+              <span class="white-mockup-card-action" aria-hidden="true">↗</span>
             </div>
           </a>
         <% }); %>
       </div>
     <% } else { %>
       <div class="white-library-empty">
-        <strong>No white mockups found.</strong>
+        <span>00 / Empty</span>
+        <strong>No fashion mockups found.</strong>
         <p>Choose another garment group to continue browsing.</p>
-        <a class="btn btn-secondary" href="/white-mockups">View all white mockups</a>
+        <a class="btn btn-secondary" href="/white-mockups">View all fashion mockups</a>
       </div>
     <% } %>
 
     <% if (pagination.pageCount > 1) { %>
-      <nav class="white-library-pagination" aria-label="White mockup pages">
+      <nav class="white-library-pagination" aria-label="Fashion mockup pages">
         <% if (pagination.page > 1) { %>
           <a class="white-page-direction" href="<%= pageHref(pagination.page - 1) %>" rel="prev">← Previous</a>
         <% } else { %>
@@ -107,16 +147,19 @@
       </nav>
     <% } %>
   </div>
-</main>
+</section>
 
 <section class="white-library-note">
   <div class="category-catalog-shell">
-    <span>Built for apparel</span>
+    <span class="white-library-note-number">01</span>
     <div>
-      <h2>More useful than a flat template.</h2>
-      <p>Each white mockup gives you a believable pose, garment shape, and commercial composition before you add artwork. Open a look, customize it directly, and export a clean visual for review or product-page planning.</p>
+      <span>Built for apparel</span>
+      <h2>From blank garment<br>to believable campaign.</h2>
     </div>
-    <a href="/mockups">Browse 3D Models <span aria-hidden="true">↗</span></a>
+    <div class="white-library-note-copy">
+      <p>Every look gives you a convincing pose, garment shape and commercial composition before you add artwork.</p>
+      <a href="/mockups">Explore 3D Models <span aria-hidden="true">↗</span></a>
+    </div>
   </div>
 </section>
 

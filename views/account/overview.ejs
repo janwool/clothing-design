@@ -89,7 +89,7 @@
     <section class="workspace-metrics" aria-label="Workspace summary">
       <article><span>All projects</span><strong><%= workspaceStats.totalProjects %></strong><small>Across every collection</small></article>
       <article><span>3D studies</span><strong><%= workspaceStats.projects3d %></strong><small>Garment and material work</small></article>
-      <article><span>White mockups</span><strong><%= workspaceStats.whiteMockups %></strong><small>On-model compositions</small></article>
+      <article><span>Fashion mockups</span><strong><%= workspaceStats.whiteMockups %></strong><small>On-model compositions</small></article>
       <article><span>R2 storage</span><strong><%= formatBytes(workspaceStats.storageBytes) %></strong><small>Project assets stored securely</small></article>
     </section>
 
@@ -101,7 +101,7 @@
             <% if (recentProject.previewImageUrl) { %><img src="<%= recentProject.previewImageUrl %>" alt="<%= recentProject.name %> preview"><% } else { %><div class="workspace-preview-empty"><span><%= initial %></span><small>Preview pending</small></div><% } %>
             <span class="workspace-project-index">LAST EDITED</span>
           </a>
-          <div class="workspace-featured-copy"><span><%= recentProject.projectType === '3d' ? '3D garment project' : 'White mockup project' %></span><h3><%= recentProject.name %></h3><p>Updated <%= formatDate(recentProject.updatedAt) %>. Your saved design settings are ready to continue.</p><a href="<%= projectUrl(recentProject) %>">Continue designing <b>→</b></a></div>
+          <div class="workspace-featured-copy"><span><%= recentProject.projectType === '3d' ? '3D garment project' : 'Fashion mockup project' %></span><h3><%= recentProject.name %></h3><p>Updated <%= formatDate(recentProject.updatedAt) %>. Your saved design settings are ready to continue.</p><a href="<%= projectUrl(recentProject) %>">Continue designing <b>→</b></a></div>
         </article>
       <% } else { %>
         <div class="workspace-first-project"><span>01</span><div><h3>Your first piece starts with a silhouette.</h3><p>Choose a garment model, customize the design, and save it back to this workspace.</p></div><a href="/mockups">Browse garment models →</a></div>

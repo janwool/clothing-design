@@ -4,7 +4,7 @@ const test = require('node:test');
 const workerTemplates = require('../src/worker-templates.cjs');
 
 const sharedLocals = {
-  title: 'White Mockups',
+  title: 'Fashion Mockups',
   page: 'white-mockups',
   user: null,
   pageStyles: [],
@@ -23,8 +23,9 @@ test('renders the white mockup library with the Worker template runtime', () => 
     pagination: { page: 1, pageCount: 1, total: 0, start: 0, end: 0, pages: [1] }
   });
 
-  assert.match(html, /On-model white library/);
-  assert.match(html, /No white mockups found/);
+  assert.match(html, /Design it\./);
+  assert.match(html, /Catalog index/);
+  assert.match(html, /No fashion mockups found/);
   assert.match(html, /<body class="category-catalog-page white-mockup-library-page">/);
 });
 
@@ -57,7 +58,7 @@ test('renders a white mockup detail page with the Worker template runtime', () =
     whiteFaqItems: []
   });
 
-  assert.match(html, /Crew-neck T-shirt White Mockup/);
+  assert.match(html, /Crew-neck T-shirt Fashion Mockup/);
   assert.match(html, /whiteMockupCanvas/);
   assert.match(html, /crewneck-tee-male-front-mask\.png\?v=direct-alpha-edge-v4/);
   assert.match(html, /<body class="category-catalog-page white-mockup-detail-page">/);

@@ -1,5 +1,56 @@
 <%- include('partials/header') %>
 
+<%
+const toolDirectory = [
+  {
+    href: '/tools/t-shirt-mockup-generator',
+    title: 'T-Shirt Mockup Generator',
+    description: 'Start from T-shirt models and plan product-page mockups',
+    image: 'https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png',
+    featured: true
+  },
+  {
+    href: '/tools/hoodie-mockup-generator',
+    title: 'Hoodie Mockup Generator',
+    description: 'Preview streetwear fits and hoodie artwork zones',
+    image: 'https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png',
+    featured: true
+  },
+  {
+    href: '/tools/bulk-t-shirt-mockup-generator',
+    title: 'Bulk T-Shirt Mockup Generator',
+    description: 'Compare POD colorways and product variants',
+    image: 'https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png',
+    featured: true
+  },
+  {
+    href: '/tools/print-on-demand-mockup-generator',
+    title: 'Print-on-Demand Mockup Generator',
+    description: 'Plan listing visuals for Shopify and Etsy drafts',
+    image: 'https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png',
+    featured: true
+  },
+  { href: '/tools/dress-designer', title: t('tools.dressDesigner') },
+  { href: '/tools/3d-clothing-mockup-generator', title: '3D Clothing Design & Mockup Generator' },
+  { href: '/tools/oversized-t-shirt-mockup-generator', title: 'Oversized T-Shirt Mockup Generator' },
+  { href: '/tools/front-and-back-t-shirt-mockup', title: 'Front and Back T-Shirt Mockup' },
+  { href: '/tools/polo-shirt-mockup-generator', title: 'Polo Shirt Mockup Generator' },
+  { href: '/tools/long-sleeve-shirt-mockup-generator', title: 'Long-Sleeve Shirt Mockup Generator' },
+  { href: '/tools/streetwear-hoodie-mockup-generator', title: 'Streetwear Hoodie Mockup Generator' },
+  { href: '/tools/transparent-apparel-mockup-generator', title: 'Transparent Apparel Mockup Generator' }
+];
+
+// Keep each destination in one place even if the directory is edited later.
+const seenToolHrefs = new Set();
+const uniqueTools = toolDirectory.filter(tool => {
+  if (seenToolHrefs.has(tool.href)) return false;
+  seenToolHrefs.add(tool.href);
+  return true;
+});
+const featuredTools = uniqueTools.filter(tool => tool.featured);
+const additionalTools = uniqueTools.filter(tool => !tool.featured);
+%>
+
 <section class="page-header">
   <div class="container">
     <h1 class="page-title"><%= t('tools.pageTitle') %></h1>
@@ -9,130 +60,63 @@
 
 <section class="content-section">
   <div class="container">
-    <!-- Tools Grid -->
-    <div class="tools-grid">
-      <!-- Design Tools -->
-      <div class="tool-card">
-        <div class="tool-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 19l7-7 3 3-7 7-3-3z"/>
-            <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/>
-            <path d="M2 2l7.586 7.586"/>
-            <circle cx="11" cy="11" r="2"/>
-          </svg>
-        </div>
-        <h3><%= t('tools.designTools') %></h3>
-        <ul>
-          <li><a href="/tools/t-shirt-mockup-generator">Free T-Shirt Mockup Generator</a></li>
-          <li><a href="/tools/hoodie-mockup-generator">Free Hoodie Mockup Generator</a></li>
-          <li><a href="/tools/dress-designer"><%= t('tools.dressDesigner') %></a></li>
-        </ul>
-      </div>
-
-      <!-- Mockup Generators -->
-      <div class="tool-card">
-        <div class="tool-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-        </div>
-        <h3><%= t('tools.mockupGenerators') %></h3>
-        <ul>
-          <li><a href="/tools/t-shirt-mockup-generator">T-Shirt Mockup Generator</a></li>
-          <li><a href="/tools/hoodie-mockup-generator">Hoodie Mockup Generator</a></li>
-          <li><a href="/tools/3d-clothing-mockup-generator">3D Clothing Design & Mockup Generator</a></li>
-          <li><a href="/tools/bulk-t-shirt-mockup-generator">Bulk T-Shirt Mockup Generator</a></li>
-          <li><a href="/tools/print-on-demand-mockup-generator">Print-on-Demand Mockup Generator</a></li>
-          <li><a href="/tools/transparent-apparel-mockup-generator">Transparent Apparel Mockups</a></li>
-          <li><a href="/tools/2d-mockup"><%= t('tools.mockup2d') %></a></li>
-        </ul>
-      </div>
-
-      <!-- Free Downloads -->
-      <div class="tool-card">
-        <div class="tool-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-        </div>
-        <h3><%= t('tools.freeDownloads') %></h3>
-        <ul>
-          <li><a href="/mockups">Free 3D Clothing Models</a></li>
-        </ul>
-      </div>
-
-      <!-- Learn -->
-      <div class="tool-card">
-        <div class="tool-icon">
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
-            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
-          </svg>
-        </div>
-        <h3><%= t('tools.learn') %></h3>
-        <ul>
-          <li><a href="/blog/how-to-choose-a-3d-clothing-model">Choose a 3D Clothing Model</a></li>
-          <li><a href="/blog/3d-apparel-mockup-workflow">3D Apparel Mockup Workflow</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Popular Tools Section -->
-    <div class="popular-tools">
+    <div class="popular-tools tools-directory-section">
       <h2 class="section-title"><%= t('tools.popularTools') %></h2>
       <div class="popular-grid">
-        <a href="/tools/t-shirt-mockup-generator" class="popular-card">
-          <div class="popular-image">
-            <img src="https://cdn.cloz-design.com/image/mockups/t-shirt-mockup-generator.png" alt="T-Shirt Mockup Generator">
-          </div>
-          <div class="popular-info">
-            <h4>T-Shirt Mockup Generator</h4>
-            <p>Start from T-shirt models and plan product-page mockups</p>
-          </div>
-        </a>
-        <a href="/tools/hoodie-mockup-generator" class="popular-card">
-          <div class="popular-image">
-            <img src="https://cdn.cloz-design.com/image/mockups/hoodie-mockup-generator.png" alt="Hoodie Mockup Generator">
-          </div>
-          <div class="popular-info">
-            <h4>Hoodie Mockup Generator</h4>
-            <p>Preview streetwear fits and hoodie artwork zones</p>
-          </div>
-        </a>
-        <a href="/tools/bulk-t-shirt-mockup-generator" class="popular-card">
-          <div class="popular-image">
-            <img src="https://cdn.cloz-design.com/image/mockups/bulk-t-shirt-mockup-generator.png" alt="Bulk T-Shirt Mockup Generator">
-          </div>
-          <div class="popular-info">
-            <h4>Bulk T-Shirt Mockup Generator</h4>
-            <p>Compare POD colorways and product variants</p>
-          </div>
-        </a>
-        <a href="/tools/print-on-demand-mockup-generator" class="popular-card">
-          <div class="popular-image">
-            <img src="https://cdn.cloz-design.com/image/mockups/print-on-demand-mockup-generator.png" alt="Print-on-Demand Mockup Generator">
-          </div>
-          <div class="popular-info">
-            <h4>Print-on-Demand Mockup Generator</h4>
-            <p>Plan listing visuals for Shopify and Etsy drafts</p>
-          </div>
-        </a>
+        <% featuredTools.forEach(tool => { %>
+          <a href="<%= tool.href %>" class="popular-card">
+            <div class="popular-image">
+              <img src="<%= tool.image %>" alt="<%= tool.title %>">
+            </div>
+            <div class="popular-info">
+              <h4><%= tool.title %></h4>
+              <p><%= tool.description %></p>
+            </div>
+          </a>
+        <% }) %>
       </div>
     </div>
 
-    <div class="popular-tools">
-      <h2 class="section-title">Free garment-specific mockup tools</h2>
+    <div class="popular-tools tools-directory-section">
+      <h2 class="section-title">More free clothing design tools</h2>
       <div class="tool-picker-grid">
-        <a href="/tools/oversized-t-shirt-mockup-generator">Oversized T-shirt mockups</a>
-        <a href="/tools/front-and-back-t-shirt-mockup">Front and back T-shirt views</a>
-        <a href="/tools/polo-shirt-mockup-generator">Polo shirt mockups</a>
-        <a href="/tools/long-sleeve-shirt-mockup-generator">Long-sleeve shirt mockups</a>
-        <a href="/tools/streetwear-hoodie-mockup-generator">Streetwear hoodie mockups</a>
-        <a href="/tools/transparent-apparel-mockup-generator">Transparent apparel PNGs</a>
+        <% additionalTools.forEach(tool => { %>
+          <a href="<%= tool.href %>"><%= tool.title %></a>
+        <% }) %>
+      </div>
+    </div>
+
+    <div class="tools-resources">
+      <h2 class="section-title">Free resources</h2>
+      <div class="tools-grid tools-resource-grid">
+        <div class="tool-card">
+          <div class="tool-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+          </div>
+          <h3><%= t('tools.freeDownloads') %></h3>
+          <ul>
+            <li><a href="/mockups">Free 3D Clothing Models</a></li>
+            <li><a href="/white-mockups">Fashion Mockup Library</a></li>
+          </ul>
+        </div>
+
+        <div class="tool-card">
+          <div class="tool-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+              <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </div>
+          <h3><%= t('tools.learn') %></h3>
+          <ul>
+            <li><a href="/blog/how-to-choose-a-3d-clothing-model">Choose a 3D Clothing Model</a></li>
+            <li><a href="/blog/3d-apparel-mockup-workflow">3D Apparel Mockup Workflow</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

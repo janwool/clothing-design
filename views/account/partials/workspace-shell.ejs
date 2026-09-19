@@ -13,8 +13,9 @@
     <nav class="workspace-nav">
       <a class="<%= currentView === 'overview' ? 'is-active' : '' %>" href="/account" aria-label="Overview"<% if (currentView === 'overview') { %> aria-current="page"<% } %>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zm10 0h6v10h-6zM4 14h6v6H4zm10 4h6v2h-6z"/></svg><span>Overview</span></a>
       <a class="<%= currentView === 'projects3d' ? 'is-active' : '' %>" href="/account/projects/3d" aria-label="3D Projects"<% if (currentView === 'projects3d') { %> aria-current="page"<% } %>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9"/></svg><span>3D Projects</span><b><%= workspaceStats.projects3d %></b></a>
-      <a class="<%= currentView === 'whiteMockups' ? 'is-active' : '' %>" href="/account/projects/white-mockups" aria-label="White Mockups"<% if (currentView === 'whiteMockups') { %> aria-current="page"<% } %>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 4 6l-2 4 3 2 1-2v10h12V10l1 2 3-2-2-4-4-2c-.8 1.3-2.1 2-4 2S8.8 5.3 8 4Z"/></svg><span>White Mockups</span><b><%= workspaceStats.whiteMockups %></b></a>
+      <a class="<%= currentView === 'whiteMockups' ? 'is-active' : '' %>" href="/account/projects/white-mockups" aria-label="Fashion Mockups"<% if (currentView === 'whiteMockups') { %> aria-current="page"<% } %>><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4 4 6l-2 4 3 2 1-2v10h12V10l1 2 3-2-2-4-4-2c-.8 1.3-2.1 2-4 2S8.8 5.3 8 4Z"/></svg><span>Fashion Mockups</span><b><%= workspaceStats.whiteMockups %></b></a>
       <a class="<%= currentView === 'settings' ? 'is-active' : '' %>" href="/account/settings" aria-label="Account"<% if (currentView === 'settings') { %> aria-current="page"<% } %>><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4.5 21c.8-4.5 3.3-7 7.5-7s6.7 2.5 7.5 7"/></svg><span>Account</span></a>
+      <a href="/auth/logout" aria-label="Sign out" title="Sign out" data-analytics-event="workspace_logout_click"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5H5v14h4M13 8l4 4-4 4M9 12h12" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Sign out</span></a>
     </nav>
     <div class="workspace-sidebar-note"><i></i><span>Cloud sync</span><strong>Active</strong></div>
   </aside>
@@ -22,5 +23,5 @@
   <main class="workspace-main" data-workspace-view="<%= currentView %>">
     <header class="workspace-topbar">
       <div><span><%= headerEyebrow %></span><p><%= headerDetail %></p></div>
-      <div class="workspace-top-actions"><a href="/white-mockups">New white mockup</a><a class="workspace-primary-action" href="/mockups"><span>New 3D project</span><b>+</b></a></div>
+      <div class="workspace-top-actions"><a href="/white-mockups">New fashion mockup</a><a class="workspace-primary-action" href="/mockups"><span>New 3D project</span><b>+</b></a></div>
     </header>

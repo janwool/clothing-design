@@ -1,0 +1,226 @@
+<%- include('partials/header') %>
+
+<% const dressModels = toolPage.modelStarters || []; %>
+<div class="dress-page">
+  <main>
+    <section class="dress-hero" aria-labelledby="dress-hero-title">
+      <div class="container dress-hero-grid">
+        <div class="dress-hero-copy dress-reveal">
+          <nav class="dress-breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">ClozDesign</a><span>/</span><a href="/tools">Tools</a><span>/</span><span>Dress Designer</span>
+          </nav>
+          <p class="dress-kicker"><span></span> Free online 3D dress maker</p>
+          <h1 id="dress-hero-title">Design a Dress<br>Online in 3D <em>— Free</em></h1>
+          <p class="dress-hero-lede">Change color, review every angle, add artwork, and export a transparent dress mockup.</p>
+          <div class="dress-hero-actions">
+            <a class="dress-button dress-button-primary" href="<%= toolPage.editorHref %>">Design a Dress Free <span aria-hidden="true">↗</span></a>
+            <a class="dress-button dress-button-quiet" href="#dress-models">Browse Dress Models</a>
+          </div>
+          <ul class="dress-proof" aria-label="Dress designer benefits">
+            <li><strong>Free</strong><span>Browser tool</span></li>
+            <li><strong>Live</strong><span>3D preview</span></li>
+            <li><strong>PNG</strong><span>Transparent export</span></li>
+          </ul>
+        </div>
+
+        <div class="dress-hero-stage dress-reveal" style="--delay:100ms">
+          <div class="dress-stage-top"><span>3D MODEL / 01</span><span><%= toolPage.primaryModel?.shortTitle || 'DRESS MODEL' %></span></div>
+          <span class="dress-orbit-ring" aria-hidden="true"></span>
+          <img src="<%= toolPage.image %>" alt="<%= toolPage.heroModel.alt %>" width="1200" height="1500" fetchpriority="high" decoding="async">
+          <div class="dress-hero-orbits" aria-label="Choose a 3D preview angle">
+            <button type="button" class="active" data-hero-orbit="0deg 75deg 110%">Front</button>
+            <button type="button" data-hero-orbit="90deg 75deg 110%">Side</button>
+            <button type="button" data-hero-orbit="180deg 75deg 110%">Back</button>
+          </div>
+          <a class="dress-stage-link" href="#studio">Explore live 3D <span>↓</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="dress-studio-section" id="studio" aria-labelledby="studio-title">
+      <div class="container">
+        <div class="dress-section-heading dress-reveal">
+          <div><p class="dress-kicker"><span></span> Interactive preview</p><h2 id="studio-title">Customize a Real 3D Dress Model</h2></div>
+          <p>Try the essentials here, then open the full editor for artwork placement and export.</p>
+        </div>
+
+        <div class="dress-studio dress-reveal">
+          <aside class="dress-control-panel" aria-label="Dress appearance controls">
+            <div class="dress-control-group">
+              <span class="dress-control-label">01 / Color</span>
+              <div class="dress-palette">
+                <% [
+                  ['#eee7da', 'Ivory'], ['#202020', 'Noir'], ['#852c36', 'Oxblood'], ['#68766a', 'Sage']
+                ].forEach(function(color, index) { %>
+                  <button class="dress-swatch<%= index === 2 ? ' active' : '' %>" type="button" data-color="<%= color[0] %>" aria-label="Preview <%= color[1] %>" style="--swatch:<%= color[0] %>"><span></span><small><%= color[1] %></small></button>
+                <% }) %>
+              </div>
+            </div>
+            <div class="dress-control-group">
+              <span class="dress-control-label">02 / Material finish</span>
+              <div class="dress-segmented dress-material-tabs">
+                <button type="button" class="active" data-material="matte">Matte</button>
+                <button type="button" data-material="satin">Satin</button>
+                <button type="button" data-material="linen">Linen</button>
+                <button type="button" data-material="twill">Twill</button>
+              </div>
+            </div>
+            <a class="dress-inline-link" href="<%= toolPage.editorHref %>">Add artwork in full editor <span>↗</span></a>
+          </aside>
+
+          <div class="dress-model-stage" id="dressModelStage" aria-busy="false">
+            <div class="dress-canvas-meta"><span><%= toolPage.primaryModel?.shortTitle || 'DRESS MODEL' %></span><span>REAL-TIME 3D</span></div>
+            <img class="dress-model-poster" src="<%= toolPage.image %>" alt="<%= toolPage.heroModel.alt %>" width="1200" height="1500" loading="lazy" decoding="async">
+            <model-viewer
+              id="dressModelViewer"
+              class="dress-model-viewer"
+              data-model-src="<%= toolPage.heroModel.src %>"
+              alt="<%= toolPage.heroModel.alt %>"
+              camera-controls
+              camera-orbit="0deg 75deg 110%"
+              shadow-intensity="0.45"
+              shadow-softness="0.9"
+              exposure="0.9"
+              environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+              tone-mapping="commerce"
+              hidden
+            ></model-viewer>
+            <button class="dress-load-model" id="dressLoadModel" type="button"><span>Load Live 3D</span><small>Rotate and customize the model</small></button>
+            <div class="dress-canvas-footer"><span id="dressPreviewStatus">Preview ready</span><strong>DRAG TO ROTATE</strong></div>
+          </div>
+
+          <aside class="dress-control-panel dress-control-panel-right" aria-label="Dress view and export controls">
+            <div class="dress-control-group">
+              <span class="dress-control-label">03 / View</span>
+              <div class="dress-segmented dress-view-tabs">
+                <button type="button" class="active" data-orbit="0deg 75deg 110%">Front</button>
+                <button type="button" data-orbit="90deg 75deg 110%">Side</button>
+                <button type="button" data-orbit="180deg 75deg 110%">Back</button>
+              </div>
+            </div>
+            <div class="dress-control-group">
+              <span class="dress-control-label">04 / Lighting</span>
+              <div class="dress-segmented dress-light-tabs">
+                <button type="button" class="active" data-exposure="0.9" data-shadow="0.45">Studio</button>
+                <button type="button" data-exposure="1.15" data-shadow="0.25">Soft</button>
+                <button type="button" data-exposure="0.72" data-shadow="0.8">Contrast</button>
+              </div>
+            </div>
+            <button class="dress-export-button" id="dressExportPreview" type="button">Export PNG <span>↓</span></button>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="dress-models-section" id="dress-models" aria-labelledby="models-title">
+      <div class="container">
+        <div class="dress-section-heading dress-reveal">
+          <div><p class="dress-kicker"><span></span> Online dress library</p><h2 id="models-title">Choose a Dress Model to Customize</h2></div>
+          <a class="dress-inline-link" href="/3d-models?category=dress">View all dress models <span>→</span></a>
+        </div>
+        <div class="dress-model-grid">
+          <% dressModels.slice(0, 4).forEach(function(model, index) { %>
+            <article class="dress-model-card dress-reveal" style="--delay:<%= index * 60 %>ms">
+              <a class="dress-model-image" href="<%= model.href %>#design" aria-label="Customize <%= model.title %>">
+                <img src="<%= model.image %>" alt="<%= model.title %> 3D dress model" width="900" height="900" loading="lazy" decoding="async">
+                <span><%= String(index + 1).padStart(2, '0') %></span>
+              </a>
+              <div><h3><a href="<%= model.href %>#design"><%= model.shortTitle %></a></h3><p><%= model.body %></p><a href="<%= model.href %>#design">Customize model <span>↗</span></a></div>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="dress-capabilities-section" aria-labelledby="capabilities-title">
+      <div class="container">
+        <div class="dress-section-heading dress-reveal">
+          <div><p class="dress-kicker"><span></span> Clear design decisions</p><h2 id="capabilities-title">Preview Color, Artwork, and Every Angle</h2></div>
+          <p>Use one consistent 3D model from first colorway to final presentation.</p>
+        </div>
+        <div class="dress-capability-grid">
+          <% [
+            ['Live colorways', 'Compare palette directions directly on the dress silhouette.'],
+            ['360° review', 'Check the front, side, and back before committing to a sample.'],
+            ['Transparent PNG', 'Export a clean visual for decks, stores, and approvals.']
+          ].forEach(function(item, index) { const visual = dressModels[index] || dressModels[0]; %>
+            <article class="dress-capability-card dress-reveal" style="--delay:<%= index * 70 %>ms">
+              <% if (visual) { %><div class="dress-capability-visual"><img src="<%= visual.image %>" alt="<%= item[0] %> shown on a 3D dress model" width="800" height="800" loading="lazy" decoding="async"><span>0<%= index + 1 %></span></div><% } %>
+              <h3><%= item[0] %></h3><p><%= item[1] %></p>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+    </section>
+
+    <section class="dress-workflow-section" aria-labelledby="workflow-title">
+      <div class="container">
+        <div class="dress-workflow-heading dress-reveal">
+          <p class="dress-kicker dress-kicker-light"><span></span> Simple workflow</p>
+          <h2 id="workflow-title">How to Design a Dress Online</h2>
+        </div>
+        <ol class="dress-workflow-list">
+          <% toolPage.steps.forEach(function(step, index) { const visual = dressModels[index % Math.max(dressModels.length, 1)]; %>
+            <li class="dress-reveal" style="--delay:<%= index * 60 %>ms">
+              <span class="dress-step-number"><%= String(index + 1).padStart(2, '0') %></span>
+              <% if (visual) { %><img src="<%= visual.image %>" alt="" width="360" height="360" loading="lazy" decoding="async"><% } %>
+              <div><h3><%= step.title %></h3><p><%= step.body %></p></div>
+            </li>
+          <% }) %>
+        </ol>
+      </div>
+    </section>
+
+    <section class="dress-audience-faq-section">
+      <div class="container dress-audience-faq-grid">
+        <div class="dress-audience dress-reveal">
+          <p class="dress-kicker"><span></span> Made for real work</p>
+          <h2>3D Dress Mockups for Planning and Review</h2>
+          <p>Build visuals for a capsule collection, boutique review, fashion portfolio, or client presentation.</p>
+          <nav aria-label="Related dress design resources">
+            <a href="/3d-models?category=dress"><span>Dress 3D models</span><strong>→</strong></a>
+            <a href="/tools/3d-clothing-mockup"><span>3D clothing mockups</span><strong>→</strong></a>
+            <a href="/tools/transparent-mockup-maker"><span>Transparent mockups</span><strong>→</strong></a>
+            <a href="/blog/how-to-design-clothes-online"><span>Online clothing design guide</span><strong>→</strong></a>
+          </nav>
+        </div>
+        <div class="dress-faq dress-reveal" style="--delay:80ms">
+          <p class="dress-kicker"><span></span> Common questions</p>
+          <h2>Online Dress Designer FAQ</h2>
+          <div class="dress-faq-list">
+            <% toolPage.faq.forEach(function(item, index) { %>
+              <details class="dress-faq-item" <%= index === 0 ? 'open' : '' %>>
+                <summary><span><%= String(index + 1).padStart(2, '0') %></span><%= item.question %><i></i></summary>
+                <p><%= item.answer %></p>
+              </details>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="dress-final-cta" aria-labelledby="final-cta-title">
+      <div class="container dress-final-grid dress-reveal">
+        <div>
+          <p class="dress-kicker dress-kicker-light"><span></span> No install. Free to start.</p>
+          <h2 id="final-cta-title">Start Your 3D<br>Dress Design</h2>
+          <p>Choose a real model, shape the look, and turn your idea into a presentation-ready mockup.</p>
+          <a class="dress-button dress-button-light" href="<%= toolPage.editorHref %>">Design a Dress Free <span>↗</span></a>
+        </div>
+        <div class="dress-final-model">
+          <span class="dress-orbit-ring" aria-hidden="true"></span>
+          <img src="<%= toolPage.image %>" alt="3D dress model ready to customize in ClozDesign" width="900" height="1100" loading="lazy" decoding="async">
+        </div>
+        <nav aria-label="Explore more ClozDesign tools">
+          <a href="/3d-models?category=dress">Dress models</a>
+          <a href="/tools/3d-clothing-mockup">3D mockups</a>
+          <a href="/tools/transparent-mockup-maker">PNG export</a>
+          <a href="/blog">Design guides</a>
+        </nav>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="/js/dress-designer-landing.js?v=20260919-seo-3d-v2" defer></script>
+<%- include('partials/footer') %>

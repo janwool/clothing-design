@@ -2865,6 +2865,19 @@ img {
   margin-bottom: var(--spacing-4xl);
 }
 
+.tools-directory-section:first-child {
+  padding-top: 0;
+}
+
+.tools-resources {
+  padding-top: var(--spacing-4xl);
+}
+
+.tools-resource-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 0;
+}
+
 .tool-card {
   background-color: var(--color-white);
   padding: var(--spacing-xl);
@@ -3714,6 +3727,10 @@ img {
   }
 
   .tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tools-resource-grid {
     grid-template-columns: 1fr;
   }
 

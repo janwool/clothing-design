@@ -1,7 +1,7 @@
 <%- include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) %>
 <%
   const cleanRelatedTitle = function(item) {
-    return String(item.title || item.asset_name || 'White garment mockup')
+    return String(item.title || item.asset_name || 'Fashion mockup')
       .replace(/^Model\s+\d+\s+/i, '')
       .replace(/\s+From3d(?:\s+V\d+)?/i, '')
       .replace(/\s+/g, ' ')
@@ -17,7 +17,7 @@
   <div class="white-detail-shell">
     <nav class="white-detail-breadcrumb" aria-label="Breadcrumb">
       <a href="/" data-analytics-event="white_mockup_detail_breadcrumb_home_click" data-analytics-item="Home">Home</a><span aria-hidden="true">›</span>
-      <a href="/white-mockups" data-analytics-event="white_mockup_detail_breadcrumb_library_click" data-analytics-item="White Mockups">White Mockups</a><span aria-hidden="true">›</span>
+      <a href="/white-mockups" data-analytics-event="white_mockup_detail_breadcrumb_library_click" data-analytics-item="Fashion Mockups">Fashion Mockups</a><span aria-hidden="true">›</span>
       <span aria-current="page"><%= displayTitle %></span>
     </nav>
 
@@ -50,7 +50,7 @@
             class="white-detail-stage-poster"
             crossorigin="anonymous"
             src="<%= editorBaseImageUrl %>"
-            alt="<%= displayTitle %> white mockup preview"
+            alt="<%= displayTitle %> fashion mockup preview"
             width="<%= asset.canvas_width %>"
             height="<%= asset.canvas_height %>"
             fetchpriority="high"
@@ -61,12 +61,12 @@
             width="<%= asset.canvas_width %>"
             height="<%= asset.canvas_height %>"
             tabindex="0"
-            aria-label="Customize <%= displayTitle %> white mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate."
+            aria-label="Customize <%= displayTitle %> fashion mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate."
           ></canvas>
           <button type="button" class="white-detail-stage-reset" id="whiteMockupReset" data-analytics-managed="true" hidden>Reset artwork</button>
           <button type="button" class="white-detail-empty" id="whiteMockupEmptyUpload" data-analytics-managed="true">
             <span>Place your artwork directly on the garment</span>
-            <strong>Upload a design to begin</strong>
+            <strong><%= user ? 'Upload a design to begin' : 'Sign in to start designing' %></strong>
           </button>
           <div class="white-detail-loading" id="whiteMockupLoading" aria-live="polite">
             <i aria-hidden="true"></i><span>Preparing your mockup</span>
@@ -76,8 +76,8 @@
       </div>
 
       <aside class="white-detail-purchase" aria-labelledby="whiteMockupTitle">
-        <span class="white-detail-eyebrow">On-model white mockup</span>
-        <h1 id="whiteMockupTitle"><%= displayTitle %> White Mockup</h1>
+        <span class="white-detail-eyebrow">On-model fashion mockup</span>
+        <h1 id="whiteMockupTitle"><%= displayTitle %> Fashion Mockup</h1>
         <p class="white-detail-description">Preview artwork on a natural <%= typeName %> fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>
 
         <label class="white-detail-upload" id="whiteMockupUploadZone" data-analytics-managed="true">
@@ -86,7 +86,7 @@
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
           </span>
           <span>
-            <strong id="whiteMockupUploadLabel">Upload your design</strong>
+            <strong id="whiteMockupUploadLabel"><%= user ? 'Upload your design' : 'Sign in to upload your design' %></strong>
             <small>PNG, JPG or WebP · up to 10 MB</small>
           </span>
         </label>
@@ -153,7 +153,7 @@
       </aside>
     </section>
 
-    <section class="white-detail-benefits" aria-label="White mockup features">
+    <section class="white-detail-benefits" aria-label="Fashion mockup features">
       <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>
       <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>
       <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>
@@ -165,7 +165,7 @@
         <h2>A commercial <%= typeName %> mockup built around the garment.</h2>
       </div>
       <div class="white-detail-about-copy">
-        <p>The <%= displayTitle %> white mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>
+        <p>The <%= displayTitle %> fashion mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>
         <p>Upload your design and position it directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a <%= asset.canvas_width %> × <%= asset.canvas_height %> PNG without installing design software.</p>
       </div>
       <ol class="white-detail-steps">
@@ -179,7 +179,7 @@
     <section class="white-detail-faq">
       <div class="white-detail-section-heading">
         <span>FAQ</span>
-        <h2>Using this white mockup</h2>
+        <h2>Using this fashion mockup</h2>
       </div>
       <div class="white-detail-faq-list">
         <% whiteFaqItems.forEach(function(item, index) { %>
@@ -199,7 +199,7 @@
     <% if (relatedAssets.length) { %>
       <section class="white-detail-related">
         <div class="white-detail-related-heading">
-          <div><span>Continue browsing</span><h2>Related <%= typeLabel.toLowerCase() %> white mockups</h2></div>
+          <div><span>Continue browsing</span><h2>Related <%= typeLabel.toLowerCase() %> fashion mockups</h2></div>
           <a
             href="/white-mockups?type=<%= asset.garment_type %>"
             data-analytics-event="white_mockup_detail_related_view_all_click"
@@ -216,7 +216,7 @@
               data-analytics-item="<%= cleanRelatedTitle(item) %>"
               data-analytics-category="<%= item.garment_type %>"
             >
-              <figure><img src="<%= item.base_image_url %>" alt="<%= cleanRelatedTitle(item) %> white mockup" loading="lazy" width="<%= item.canvas_width %>" height="<%= item.canvas_height %>"></figure>
+              <figure><img src="<%= item.base_image_url %>" alt="<%= cleanRelatedTitle(item) %> fashion mockup" loading="lazy" width="<%= item.canvas_width %>" height="<%= item.canvas_height %>"></figure>
               <h3><%= cleanRelatedTitle(item) %></h3>
               <span>Open mockup ›</span>
             </a>
@@ -227,5 +227,25 @@
   </div>
 </div>
 
-<script src="/js/white-mockup-editor.js?v=20260918-white-auto-save-v27" defer></script>
+<dialog class="white-signin-dialog" id="whiteMockupSignIn" aria-labelledby="whiteMockupSignInTitle" aria-describedby="whiteMockupSignInDescription">
+  <button type="button" class="white-signin-close" id="whiteMockupSignInClose" aria-label="Close sign in">×</button>
+  <span class="white-detail-eyebrow">Your design workspace</span>
+  <h2 id="whiteMockupSignInTitle">Sign in to start designing</h2>
+  <p id="whiteMockupSignInDescription">Upload your artwork and keep your mockup saved in your account.</p>
+  <form id="whiteMockupSignInForm" data-analytics-managed="true">
+    <div class="form-group">
+      <label class="form-label" for="whiteMockupSignInEmail">Email</label>
+      <input class="form-input" id="whiteMockupSignInEmail" type="email" name="email" autocomplete="email" required autofocus>
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="whiteMockupSignInPassword">Password</label>
+      <input class="form-input" id="whiteMockupSignInPassword" type="password" name="password" autocomplete="current-password" required>
+    </div>
+    <p class="auth-error" id="whiteMockupSignInError" role="alert" hidden></p>
+    <button type="submit" class="btn btn-primary btn-full">Sign in</button>
+  </form>
+  <p class="white-signin-footer">New to ClozDesign? <a href="/auth/register?next=<%= encodeURIComponent('/white-mockups/' + asset.asset_name) %>">Create an account</a></p>
+</dialog>
+
+<script src="/js/white-mockup-editor.js?v=20260919-white-signin-modal-v29" defer></script>
 <%- include('partials/footer') %>

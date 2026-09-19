@@ -8,7 +8,7 @@
       <div>
         <span class="admin-eyebrow">Operations / Saved work</span>
         <h1 class="admin-title">User Projects</h1>
-        <p class="admin-subtitle">A visual library of every 3D study and white mockup saved by your users.</p>
+        <p class="admin-subtitle">A visual library of every 3D study and fashion mockup saved by your users.</p>
       </div>
       <button class="sidebar-toggle" type="button" aria-label="Open admin navigation">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -31,7 +31,7 @@
         <small>Garment and material projects</small>
       </article>
       <article class="project-stat">
-        <span>White mockups</span>
+        <span>Fashion mockups</span>
         <strong><%= projectStats.whiteMockups %></strong>
         <small>Print-ready composition work</small>
       </article>
@@ -60,7 +60,7 @@
           <select name="type" aria-label="Filter by project type">
             <option value="all" <%= projectFilters.type === 'all' ? 'selected' : '' %>>All project types</option>
             <option value="3d" <%= projectFilters.type === '3d' ? 'selected' : '' %>>3D studies</option>
-            <option value="white_mockup" <%= projectFilters.type === 'white_mockup' ? 'selected' : '' %>>White mockups</option>
+            <option value="white_mockup" <%= projectFilters.type === 'white_mockup' ? 'selected' : '' %>>Fashion mockups</option>
           </select>
           <button type="submit" class="btn btn-primary btn-small">Filter</button>
           <% if (projectFilters.search || projectFilters.type !== 'all') {%>
@@ -89,7 +89,7 @@
                   </div>
                 <% }%>
                 <span class="project-type-chip project-type-<%= item.project_type === '3d' ? '3d' : 'mockup' %>">
-                  <i aria-hidden="true"></i><%= item.project_type === '3d' ? '3D study' : 'White mockup' %>
+                  <i aria-hidden="true"></i><%= item.project_type === '3d' ? '3D study' : 'Fashion mockup' %>
                 </span>
                 <button class="project-delete-button" type="button" data-delete-project="<%= item.id %>" data-project-name="<%= item.name %>" aria-label="Delete <%= item.name %>">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">

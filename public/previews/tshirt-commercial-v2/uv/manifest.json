@@ -1,0 +1,90 @@
+{
+  "source": "tshirt-v16-sleeves-connected.glb",
+  "sha256": "88222a3c8dfd24ef9f8e4b7f63af104123732b834c99c01e5e081fc81cb240b0",
+  "orientation": "Online packed SVG display convention; texture scale (1,-1), offset (0,1)",
+  "defaultBaseColorImage": null,
+  "defaultColorPreview": "Generated from existing material colors, not an embedded base color texture",
+  "parts": [
+    {
+      "material": "01 • Combed cotton / warm chalk.001",
+      "uvChannel": "TEXCOORD_0",
+      "unique_uv_triangles": 142624,
+      "outline_segments": 10774,
+      "u_range": [
+        0.0030060273129493,
+        0.994003176689148
+      ],
+      "v_range": [
+        0.011322200298309326,
+        0.9969940781593323
+      ]
+    },
+    {
+      "material": "02 • Dense rib neckband.001",
+      "uvChannel": "TEXCOORD_0",
+      "unique_uv_triangles": 6094,
+      "outline_segments": 264,
+      "u_range": [
+        0.0030060273129493,
+        0.8710307478904724
+      ],
+      "v_range": [
+        0.060959815979003906,
+        0.15199512243270874
+      ]
+    }
+  ],
+  "onlineSource": {
+    "page": "https://www.cloz-design.com/3d-models/t-shirt-mockup/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447",
+    "glb": "https://cdn.cloz-design.com/catalog/20260912-approved-v1/glb/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.glb",
+    "svg": "https://cdn.cloz-design.com/catalog/20260912-approved-v1/texture-canvas-1024-v4/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.svg",
+    "verifiedAt": "2026-09-19T11:16:48.911323+00:00",
+    "onlineGlbSha256": "58df94953b139f003ca040478f98ba8d25f3417c95da5b50b6ead1f872e38bdb",
+    "initialDownloadedSourceMatchesOnline": true,
+    "onlineSvgSha256": "abfa1d05b48c5e11662cb2f3b2bec52feb6d39c91c410206fc08ef06823cfd56",
+    "displayedModel": "Local modified V16, not the production original",
+    "correction": "Removed incorrectly selected basic-short-sleeve-tshirt SVG from this preview.",
+    "svgApplication": "An additional copy has a white background inserted within its original viewBox for opaque material preview."
+  },
+  "baselineSource": "tshirt-web-v16.glb",
+  "baselineSha256": "8b3752f8288d060320113c5e2b70fd6b0a4457e75e3282551db7420c547c8bc0",
+  "method": "Interactive Blender MCP: original online fabric topology, native Shrinkwrap fit to V16, unchanged original print UV",
+  "printOverlap": {
+    "overlap_pairs": 0,
+    "affected_faces": 0,
+    "summed_intersection_area": 0,
+    "top_faces": [],
+    "examples": []
+  },
+  "surfaceDifferenceSampleMm": {
+    "median": 0.11895,
+    "p95": 0.59403,
+    "max": 2.61014
+  },
+  "sleeveConnectivity": {
+    "sleeve_remaining_boundaries": [
+      {
+        "vertices": 33,
+        "closed_loop": true,
+        "z_range": [
+          0.05391789600253105,
+          0.08429218083620071
+        ],
+        "side": "left"
+      },
+      {
+        "vertices": 38,
+        "closed_loop": true,
+        "z_range": [
+          0.059160489588975906,
+          0.08470079302787781
+        ],
+        "side": "right"
+      }
+    ],
+    "print_uv_unchanged": true,
+    "faces_before": 23823,
+    "faces_after": 23823,
+    "vertices_welded": 247
+  }
+}

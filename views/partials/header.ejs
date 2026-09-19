@@ -71,7 +71,7 @@
   <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png?v=20260719">
   <link rel="alternate" type="application/rss+xml" title="ClozDesign apparel mockup guides" href="/feed.xml">
-  <link rel="stylesheet" href="/css/style.css?v=20260918-gradient-stop-compact-v25">
+  <link rel="stylesheet" href="/css/style.css?v=20260919-tools-dedupe-v26">
   <link rel="stylesheet" href="/css/growth.css?v=20260913-loading-spinner-v2">
   <link rel="stylesheet" href="/css/product-refresh.css?v=20260915-navbar-type-v10">
   <link rel="stylesheet" href="/css/feedback-widget.css?v=20260917-global-v1">
@@ -98,13 +98,10 @@
           3D Models
         </a>
         <a href="/white-mockups" class="nav-link <%= typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' %>">
-          White Mockups
+          Fashion Mockups
         </a>
         <a href="/pricing" class="nav-link <%= typeof page !== 'undefined' && page === 'pricing' ? 'active' : '' %>">
           Pricing
-        </a>
-        <a href="/blog" class="nav-link <%= typeof page !== 'undefined' && page === 'blog' ? 'active' : '' %>">
-          Guides
         </a>
         <!-- Tools Dropdown -->
         <div class="nav-dropdown">
@@ -151,6 +148,10 @@
                     <span>POD Mockup Generator</span>
                     <small>Prepare marketplace listing images.</small>
                   </a>
+                  <a href="/tools/transparent-apparel-mockup-generator" class="dropdown-item">
+                    <span>Transparent Apparel Mockups</span>
+                    <small>Export clean transparent product visuals.</small>
+                  </a>
                 </div>
                 <div class="dropdown-section">
                   <span class="dropdown-label"><%= t('tools.designTools') %></span>
@@ -162,9 +163,17 @@
                     <span>Polo Shirt Mockups</span>
                     <small>Preview uniforms and chest logos.</small>
                   </a>
-                  <a href="/tools/dress-designer" class="dropdown-item">
-                    <span><%= t('tools.dressDesigner') %></span>
-                    <small>Explore dress design directions.</small>
+                  <a href="/tools/front-and-back-t-shirt-mockup" class="dropdown-item">
+                    <span>Front &amp; Back T-Shirt Mockups</span>
+                    <small>Review both sides of a garment together.</small>
+                  </a>
+                  <a href="/tools/long-sleeve-shirt-mockup-generator" class="dropdown-item">
+                    <span>Long-Sleeve Shirt Mockups</span>
+                    <small>Place artwork across sleeves and body.</small>
+                  </a>
+                  <a href="/tools/streetwear-hoodie-mockup-generator" class="dropdown-item">
+                    <span>Streetwear Hoodie Mockups</span>
+                    <small>Build relaxed streetwear presentations.</small>
                   </a>
                 </div>
                 <div class="dropdown-section">
@@ -173,13 +182,9 @@
                     <span>Free 3D Models</span>
                     <small>Browse editable garment models.</small>
                   </a>
-                  <a href="/tools/2d-mockup" class="dropdown-item">
-                    <span><%= t('tools.mockup2d') %></span>
-                    <small>Make flat apparel mockup concepts.</small>
-                  </a>
-                  <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">
-                    <span>3D Clothing Mockups</span>
-                    <small>Design across garment categories.</small>
+                  <a href="/blog" class="dropdown-item">
+                    <span>Clothing Design Guides</span>
+                    <small>Learn mockup and apparel workflows.</small>
                   </a>
                 </div>
               </div>
@@ -210,9 +215,8 @@
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileNavigation">
       <a href="/mockups" class="mobile-link">3D Models</a>
-      <a href="/white-mockups" class="mobile-link">White Mockups</a>
+      <a href="/white-mockups" class="mobile-link">Fashion Mockups</a>
       <a href="/pricing" class="mobile-link">Pricing</a>
-      <a href="/blog" class="mobile-link">Guides</a>
       <a href="/tools" class="mobile-link"><%= t('nav.tools') %></a>
       <div class="mobile-divider"></div>
       <% if (user) { %>

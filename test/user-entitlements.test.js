@@ -69,7 +69,7 @@ test('enforces allowances at project, storage, try-on, and export boundaries', (
   assert.doesNotMatch(whiteMockupDetail, /data-entitlement-watermark/);
   assert.match(designerRuntime, /ExportEntitlements\.prepareTexture\(originalSourceUrl\)/);
   assert.doesNotMatch(designerRuntime, /ExportEntitlements\.prepareExport\(renderUrl\)/);
-  assert.match(whiteMockupRuntime, /function buildGarmentWatermark\(\)/);
+  assert.match(whiteMockupRuntime, /function buildGarmentWatermark\(refresh = false\)/);
   assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
   assert.match(exportRuntime, /options\.color \|\| '#c5c7c4'/);
   assert.match(whiteMockupRuntime, /markContext\.fillStyle = '#c5c7c4'/);

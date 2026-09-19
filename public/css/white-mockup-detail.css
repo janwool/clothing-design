@@ -899,3 +899,16 @@
     transition: none;
   }
 }
+
+/* In-place sign in keeps the garment preview visible behind the form. */
+.white-signin-dialog { width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); box-sizing: border-box; overflow: auto; padding: 36px; border: 1px solid #e5e3dd; border-radius: 18px; background: #fff; color: #242522; box-shadow: 0 24px 80px #0003; }
+.white-signin-dialog::backdrop { background: #181b2066; backdrop-filter: blur(3px); }
+.white-signin-dialog h2 { margin: 14px 0 10px; font-size: 27px; line-height: 1.2; letter-spacing: -.7px; }
+.white-signin-dialog p { line-height: 1.6; }
+.white-signin-dialog form { margin-top: 24px; }
+.white-signin-dialog .form-group { margin-bottom: 18px; }
+.white-signin-close { position: absolute; top: 10px; right: 12px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: transparent; font-size: 26px; cursor: pointer; }
+.white-signin-close:hover { background: #f1f1ed; }
+.white-signin-footer { margin: 20px 0 0; font-size: 14px; text-align: center; }
+.white-signin-footer a { text-decoration: underline; text-underline-offset: 3px; }
+.white-signin-dialog [hidden] { display: none; }

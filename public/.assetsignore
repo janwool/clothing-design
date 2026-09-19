@@ -2,3 +2,6 @@
 /uploads/
 /generated-glb/
 /images/mockups/on-model/generated/
+
+# Local model experiments are kept in git, outside production assets.
+/previews/

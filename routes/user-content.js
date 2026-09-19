@@ -301,8 +301,8 @@ const workspacePages = {
   },
   whiteMockups: {
     template: 'account/white-mockups',
-    title: 'White Mockups - ClozDesign Workspace',
-    description: 'Organize and continue your saved white mockup projects.'
+    title: 'Fashion Mockups - ClozDesign Workspace',
+    description: 'Organize and continue your saved fashion mockup projects.'
   },
   settings: {
     template: 'account/settings',

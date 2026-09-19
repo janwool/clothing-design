@@ -56,6 +56,64 @@
     });
   }
 
+  const signInDialog = document.getElementById('whiteMockupSignIn');
+  const signInForm = document.getElementById('whiteMockupSignInForm');
+  const signInError = document.getElementById('whiteMockupSignInError');
+  let signInBusy = false;
+
+  function requireEditorSignIn(action) {
+    if (editor.dataset.authenticated === 'true') return true;
+    if (!signInDialog.open) {
+      trackWhiteMockup('white_mockup_signin_required', { attempted_action: action });
+      signInError.hidden = true;
+      signInDialog.showModal();
+    }
+    return false;
+  }
+
+  document.getElementById('whiteMockupSignInClose').addEventListener('click', () => signInDialog.close());
+  signInDialog.addEventListener('click', (event) => {
+    if (event.target !== signInDialog) return;
+    const bounds = signInDialog.getBoundingClientRect();
+    if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) signInDialog.close();
+  });
+  signInForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (signInBusy) return;
+    signInBusy = true;
+    const submit = signInForm.querySelector('[type="submit"]');
+    submit.disabled = true;
+    submit.textContent = 'Signing in…';
+    signInError.hidden = true;
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ email: signInForm.elements.email.value, password: signInForm.elements.password.value })
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error(result.error || 'Unable to sign in. Please try again.');
+      editor.dataset.authenticated = 'true';
+      signInForm.reset();
+      signInDialog.close();
+      uploadLabel.textContent = 'Upload your design';
+      emptyUpload.querySelector('strong').textContent = 'Upload a design to begin';
+      setStatus('Signed in. Upload your design to begin.');
+      trackWhiteMockup('white_mockup_signin_success');
+      await buildGarmentWatermark(true);
+      scheduleRender({ forceQuality: true });
+    } catch (error) {
+      if (editor.dataset.authenticated === 'true') return;
+      signInError.textContent = error.message || 'Unable to sign in. Please try again.';
+      signInError.hidden = false;
+    } finally {
+      signInBusy = false;
+      submit.disabled = false;
+      submit.textContent = 'Sign in';
+    }
+  });
+
   const state = {
     ready: false,
     renderQueued: false,
@@ -176,8 +234,8 @@
     garmentMaskContext.putImageData(output, 0, 0);
   }
 
-  async function buildGarmentWatermark() {
-    const entitlements = window.ExportEntitlements?.getEntitlements
+  async function buildGarmentWatermark(refresh = false) {
+    const entitlements = !refresh && window.ExportEntitlements?.getEntitlements
       ? await window.ExportEntitlements.getEntitlements()
       : await fetch('/api/account/entitlements', {
         credentials: 'same-origin',
@@ -534,7 +592,7 @@
       render({ forceQuality: true });
       stage.classList.add('is-ready');
       loading.hidden = true;
-      setStatus('Ready for your design.');
+      setStatus(editor.dataset.authenticated === 'true' ? 'Ready for your design.' : 'Sign in to upload your design and save your project.');
       trackWhiteMockup('white_mockup_editor_ready');
     } catch (error) {
       console.error(error);
@@ -548,6 +606,7 @@
   }
 
   function resetTransform(trackAction = false) {
+    if (trackAction && !requireEditorSignIn('reset')) return;
     state.offsetX = 0;
     state.offsetY = 0;
     state.scale = template.defaultScale;
@@ -581,6 +640,7 @@
   }
 
   function loadArtworkDataUrl(dataUrl, name, source = 'external') {
+    if (!requireEditorSignIn('upload')) return Promise.resolve(null);
     return loadImage(dataUrl).then((image) => {
       setArtworkImage(image, name, source);
       return image;
@@ -601,6 +661,7 @@
   }
 
   function handleArtworkFile(file, source = 'picker') {
+    if (!requireEditorSignIn('upload')) return;
     if (!file) return;
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
       setStatus('Choose a PNG, JPG, or WebP image.', true);
@@ -696,6 +757,7 @@
   }
 
   function beginInteraction(event) {
+    if (!requireEditorSignIn('edit')) return;
     if (!state.ready || !state.artworkImage || event.button > 0) return;
     const point = eventPoint(event);
     const geometry = artworkGeometry();
@@ -756,6 +818,7 @@
   }
 
   function selectBackground(value, label, selectedButton, analyticsEventName) {
+    if (!requireEditorSignIn('background')) return;
     state.background = value;
     backgroundLabel.textContent = label;
     backgroundButtons.forEach((button) => {
@@ -772,6 +835,7 @@
   }
 
   function selectGarmentColor(value, label, selectedControl, analyticsEventName) {
+    if (!requireEditorSignIn('garment_color')) return;
     state.garmentColor = value;
     garmentColorLabel.textContent = label;
     garmentColorButtons.forEach((button) => {
@@ -789,6 +853,7 @@
   }
 
   async function downloadMockup() {
+    if (!requireEditorSignIn('download')) return;
     if (!state.ready || !state.artworkImage) return;
     trackWhiteMockup('white_mockup_png_download_begin');
     render({ overlay: false, forceQuality: true });
@@ -924,7 +989,7 @@
     try {
       const project = await window.UserProjects.loadProjectFromUrl('white_mockup');
       if (!project) return;
-      if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another white mockup.');
+      if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another fashion mockup.');
       const saved = project.designData || {};
       if (!saved.artworkUrl) throw new Error('The saved artwork is unavailable.');
       await loadArtworkDataUrl(saved.artworkUrl, saved.artworkName || project.name, 'saved_project');
@@ -960,9 +1025,16 @@
     }
   }
 
-  input.addEventListener('click', () => trackWhiteMockup('white_mockup_artwork_picker_open'));
+  input.addEventListener('click', (event) => {
+    if (!requireEditorSignIn('upload')) {
+      event.preventDefault();
+      return;
+    }
+    trackWhiteMockup('white_mockup_artwork_picker_open');
+  });
   input.addEventListener('change', () => handleArtworkFile(input.files?.[0], 'picker'));
   emptyUpload.addEventListener('click', () => {
+    if (!requireEditorSignIn('upload')) return;
     trackWhiteMockup('white_mockup_empty_stage_upload_click');
     input.click();
   });
@@ -993,10 +1065,14 @@
       );
     });
   });
+  customBackground.addEventListener('click', (event) => {
+    if (!requireEditorSignIn('background')) event.preventDefault();
+  });
   customBackground.addEventListener('input', () => {
     selectBackground(customBackground.value, 'Custom color', customBackgroundSwatch);
   });
   customBackground.addEventListener('change', () => {
+    if (!requireEditorSignIn('background')) return;
     trackWhiteMockup('white_mockup_bg_custom_select', {
       background_name: 'Custom color',
       background_value: customBackground.value
@@ -1012,10 +1088,14 @@
       );
     });
   });
+  customGarmentColor.addEventListener('click', (event) => {
+    if (!requireEditorSignIn('garment_color')) event.preventDefault();
+  });
   customGarmentColor.addEventListener('input', () => {
     selectGarmentColor(customGarmentColor.value, 'Custom color', customGarmentColorSwatch);
   });
   customGarmentColor.addEventListener('change', () => {
+    if (!requireEditorSignIn('garment_color')) return;
     trackWhiteMockup('white_mockup_color_custom_select', {
       color_name: 'Custom color',
       color_value: customGarmentColor.value
@@ -1027,6 +1107,7 @@
   canvas.addEventListener('pointerup', endInteraction);
   canvas.addEventListener('pointercancel', endInteraction);
   canvas.addEventListener('keydown', (event) => {
+    if (!requireEditorSignIn('edit')) return;
     if (!state.artworkImage) return;
     const step = event.shiftKey ? 20 : 5;
     let handled = true;
