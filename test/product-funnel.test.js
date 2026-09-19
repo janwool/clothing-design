@@ -56,7 +56,7 @@ test('uses concise product actions that apply, render, and request production', 
   assert.match(designer, /saveCloudProject\(\{ closeAfterSave: true \}\)/);
   assert.match(designer, /if \(options\.closeAfterSave\) closeModal\(\)/);
   assert.match(modelDetail, /id="renderCurrentModelBtn"/);
-  assert.match(modelDetail, /渲染图片/);
+  assert.match(modelDetail, /Render Image/);
   assert.doesNotMatch(modelDetail, /2D Pattern Canvas|3D Preview/);
   assert.match(modelDetail, /Production/);
   assert.match(modelDetail, /No Watermark/);
