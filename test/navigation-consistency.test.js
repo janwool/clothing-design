@@ -35,5 +35,5 @@ test('shows signed-in users a direct Workbench navigation button', () => {
 });
 
 test('loads the user image library runtime with the current cache version', () => {
-  assert.match(header, /user-projects\.js\?v=20260921-upgrade-v5/);
+  assert.match(header, /user-projects\.js\?v=20260923-save-analytics-v6/);
 });

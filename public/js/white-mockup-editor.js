@@ -913,6 +913,7 @@
     state.saveInProgress = true;
     const revision = state.artworkRevision;
     const saveMode = state.projectId ? 'update' : 'create';
+    let saveStage = 'wait_artwork_upload';
     trackWhiteMockup(`white_mockup_project_${saveMode}_begin`);
     setStatus(saveMode === 'create' ? 'Adding project to your account…' : 'Saving changes…');
     try {
@@ -939,6 +940,7 @@
       // Create the project before uploading its generated cover so a failed project
       // insert cannot leave an unowned preview in storage.
       if (!state.projectId) {
+        saveStage = 'reserve_project';
         const reservedProject = await window.UserProjects.saveProject({
           projectType: 'white_mockup',
           name: projectName,
@@ -952,7 +954,9 @@
       }
       let previewImageUrl = state.projectPreviewUrl;
       if (!previewImageUrl) {
+        saveStage = 'render_preview';
         render({ overlay: false, forceQuality: true });
+        saveStage = 'upload_preview';
         const preview = await window.UserProjects.uploadImage(
           canvas.toDataURL('image/jpeg', 0.86),
           `${template.assetName}-preview.jpg`,
@@ -963,6 +967,7 @@
         state.projectPreviewUrl = previewImageUrl;
       }
       if (revision !== state.artworkRevision) return;
+      saveStage = 'finalize_project';
       const project = await window.UserProjects.saveProject({
         id: state.projectId,
         projectType: 'white_mockup',
@@ -986,11 +991,15 @@
       console.error(error);
       if (error.status === 401) {
         setStatus('Your session expired. Sign in again to keep saving this project.', true);
-        trackWhiteMockup('white_mockup_autosave_session_expired');
+        trackWhiteMockup('white_mockup_autosave_session_expired', {
+          project_id: state.projectId || undefined,
+          ...window.UserProjects?.projectSaveFailureContext?.(error, saveStage)
+        });
       } else {
         setStatus(error.message || 'Project could not be saved automatically.', true);
         trackWhiteMockup(`white_mockup_project_${saveMode}_error`, {
-          error_message: String(error.message || 'Project could not be saved.').slice(0, 120)
+          project_id: state.projectId || undefined,
+          ...window.UserProjects?.projectSaveFailureContext?.(error, saveStage)
         });
       }
     } finally {

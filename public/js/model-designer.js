@@ -1521,6 +1521,14 @@ window.initializeModelDesigner = () => {
     state.textEditor?.commit();
     clearHoveredTemplatePreview();
     setDesignSaveStatus(modelDesignerConfig.userAuthenticated ? 'Saving project…' : 'Applying…');
+    const saveMode = state.projectId ? 'update' : 'create';
+    let saveStage = 'render_texture';
+    if (modelDesignerConfig.userAuthenticated) {
+      window.trackEvent?.(`designer_project_${saveMode}_begin`, {
+        item_id: String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || ''),
+        project_id: state.projectId || undefined
+      });
+    }
     try {
       const textureDataUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
       state.finalTextureUrl = textureDataUrl;
@@ -1531,7 +1539,9 @@ window.initializeModelDesigner = () => {
         if (options.closeAfterSave) closeModal();
         return true;
       }
+      saveStage = 'wait_artwork_uploads';
       await waitForPendingArtworkUploads();
+      saveStage = 'serialize_design';
       const elements = serializeProjectElements();
       const projectName = state.projectName || `${modelDesignerConfig.modelName || 'Garment'} Design`;
       const projectSourceId = String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || '');
@@ -1548,6 +1558,7 @@ window.initializeModelDesigner = () => {
       // Reserve the project before uploading generated texture and cover files. This
       // prevents an allowance or database failure from leaving orphan project assets.
       if (!state.projectId) {
+        saveStage = 'reserve_project';
         setDesignSaveStatus('Creating project…');
         const reservedProject = await window.UserProjects.saveProject({
           projectType: '3d',
@@ -1564,6 +1575,7 @@ window.initializeModelDesigner = () => {
         window.history.replaceState({}, '', reservedUrl);
         window.syncModelTryOnLinks?.(reservedProject.id);
       }
+      saveStage = 'render_preview';
       setDesignSaveStatus('Rendering 3D project cover…');
       const cameraSnapshot = captureViewerCamera(designerViewer);
       const previewDataUrl = await renderDesignedModelImageWithFallback(textureDataUrl, {
@@ -1571,6 +1583,7 @@ window.initializeModelDesigner = () => {
         quality: 0.88,
         cameraSnapshot
       });
+      saveStage = 'upload_generated_assets';
       setDesignSaveStatus('Saving project…');
       const [texture, preview] = await Promise.all([
         window.UserProjects.uploadImage(
@@ -1584,6 +1597,7 @@ window.initializeModelDesigner = () => {
           'project-preview'
         )
       ]);
+      saveStage = 'finalize_project';
       const project = await window.UserProjects.saveProject({
         id: state.projectId,
         projectType: '3d',
@@ -1605,10 +1619,21 @@ window.initializeModelDesigner = () => {
       persistTryOnDesign(texture.url);
       window.syncModelTryOnLinks?.(project.id);
       setDesignSaveStatus('Saved to your account');
+      window.trackEvent?.(`designer_project_${saveMode}_success`, {
+        item_id: projectSourceId,
+        project_id: project.id
+      });
       if (options.closeAfterSave) closeModal();
       return true;
     } catch (error) {
       console.error(error);
+      if (modelDesignerConfig.userAuthenticated) {
+        window.trackEvent?.(`designer_project_${saveMode}_error`, {
+          item_id: String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || ''),
+          project_id: state.projectId || undefined,
+          ...window.UserProjects?.projectSaveFailureContext?.(error, saveStage)
+        });
+      }
       if (error.status === 401) window.UserProjects.goToSignIn();
       else setDesignSaveStatus(error.message || 'Project could not be saved', true);
       return false;

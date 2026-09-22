@@ -16,6 +16,30 @@
     window.location.assign(`/auth/login?next=${encodeURIComponent(currentReturnUrl())}`);
   }
 
+  function projectSaveFailureContext(error, saveStage) {
+    const status = Number(error?.status) || undefined;
+    const code = String(error?.code || '').slice(0, 80) || undefined;
+    const resource = String(error?.resource || '').slice(0, 40) || undefined;
+    const message = String(error?.message || '').toLowerCase();
+    let failureReason = 'unknown';
+    if (status === 401) failureReason = 'session_expired';
+    else if (status === 403 && (resource === 'projects' || code === 'PLAN_LIMIT')) failureReason = 'project_limit';
+    else if (status === 403 && resource === 'storage') failureReason = 'storage_limit';
+    else if (status === 400) failureReason = 'validation_failed';
+    else if (status === 404) failureReason = 'project_not_found';
+    else if (status >= 500) failureReason = 'server_error';
+    else if (/timed out|timeout/.test(message)) failureReason = 'timeout';
+    else if (String(saveStage || '').startsWith('upload_')) failureReason = 'asset_upload_failed';
+    else if (!status) failureReason = 'network_or_client_error';
+    return {
+      failure_reason: failureReason,
+      save_stage: saveStage || 'unknown',
+      error_status: status,
+      error_code: code,
+      limit_resource: resource
+    };
+  }
+
   async function request(url, options) {
     if (isAdminPreview && !['GET', 'HEAD'].includes(String(options?.method || 'GET').toUpperCase())) {
       throw new Error('Administrator preview does not save changes.');
@@ -93,5 +117,15 @@
     document.body.appendChild(notice);
   }
 
-  window.UserProjects = Object.freeze({ isAdminPreview, textureUrl, goToSignIn, listImages, loadProjectFromUrl, request, saveProject, uploadImage });
+  window.UserProjects = Object.freeze({
+    isAdminPreview,
+    textureUrl,
+    goToSignIn,
+    listImages,
+    loadProjectFromUrl,
+    projectSaveFailureContext,
+    request,
+    saveProject,
+    uploadImage
+  });
 }());

@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const root = path.join(__dirname, '..');
 
@@ -37,4 +38,44 @@ test('white mockup editor reserves a project before uploading its generated prev
   assert.ok(previewUpload > reservation, 'preview upload should happen after project reservation');
   assert.match(saveFlow, /previewImageUrl: '',[\s\S]*designData: projectDesignData\(\)/);
   assert.match(saveFlow, /id: state\.projectId,[\s\S]*previewImageUrl/);
+});
+
+test('project save analytics record standardized failure reasons and the failed stage', () => {
+  const projectClient = read('public/js/user-projects.js');
+  const modelDesigner = read('public/js/model-designer.js');
+  const whiteMockup = read('public/js/white-mockup-editor.js');
+
+  assert.match(projectClient, /failure_reason: failureReason/);
+  assert.match(projectClient, /save_stage: saveStage \|\| 'unknown'/);
+  assert.match(projectClient, /status === 403[\s\S]*failureReason = 'project_limit'/);
+  assert.match(modelDesigner, /designer_project_\$\{saveMode\}_begin/);
+  assert.match(modelDesigner, /designer_project_\$\{saveMode\}_success/);
+  assert.match(modelDesigner, /designer_project_\$\{saveMode\}_error/);
+  assert.match(modelDesigner, /projectSaveFailureContext\?\.\(error, saveStage\)/);
+  assert.match(whiteMockup, /projectSaveFailureContext\?\.\(error, saveStage\)/);
+
+  const window = {
+    location: { hash: '', pathname: '/3d-models/t-shirt/example', search: '', assign() {} },
+    setTimeout,
+    clearTimeout
+  };
+  vm.runInNewContext(projectClient, {
+    AbortController,
+    URLSearchParams,
+    console,
+    document: {},
+    fetch: async () => { throw new Error('unused'); },
+    window
+  });
+  const projectLimit = window.UserProjects.projectSaveFailureContext(
+    { status: 403, code: 'PLAN_LIMIT', resource: 'projects' },
+    'reserve_project'
+  );
+  assert.equal(projectLimit.failure_reason, 'project_limit');
+  assert.equal(projectLimit.save_stage, 'reserve_project');
+  assert.equal(projectLimit.error_status, 403);
+  assert.equal(
+    window.UserProjects.projectSaveFailureContext(new Error('fetch failed'), 'finalize_project').failure_reason,
+    'network_or_client_error'
+  );
 });
