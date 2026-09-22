@@ -1,38 +1,7 @@
 <%- include('partials/header') %>
 
 <%
-const tryOnModels = [
-  {
-    id: 'mara',
-    name: 'Mara',
-    image: '/images/mockups/on-model/generated/model-pose-contrapposto-v3-base.png'
-  },
-  {
-    id: 'leo',
-    name: 'Leo',
-    image: '/images/mockups/on-model/generated/model-pose-walking-v3-base.png'
-  },
-  {
-    id: 'imani',
-    name: 'Imani',
-    image: '/images/mockups/on-model/generated/young-western-female-shirt-v4-base.png'
-  },
-  {
-    id: 'noor',
-    name: 'Noor',
-    image: '/images/mockups/on-model/generated/turtleneck-nonbinary-front-base.png'
-  },
-  {
-    id: 'alex',
-    name: 'Alex',
-    image: '/images/mockups/on-model/generated/long-coat-male-walking-base.png'
-  },
-  {
-    id: 'zuri',
-    name: 'Zuri',
-    image: '/images/mockups/on-model/generated/tank-top-female-front-base.png'
-  }
-];
+const tryOnModels = personModels;
 const currentModelFile = model.preview_file_url || model.file_url || '';
 const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
 %>
@@ -40,6 +9,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
 <section
   class="ai-tryon"
   id="aiTryOnApp"
+  data-credit-cost="<%= tryOnCreditCost %>"
   data-model-name="<%= model.name %>"
   data-model-id="<%= model.id || '' %>"
   data-model-slug="<%= model.slug || '' %>"
@@ -48,9 +18,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
 >
   <header class="ai-tryon__bar">
     <div class="ai-tryon__crumbs" aria-label="Breadcrumb">
-      <strong>Design Studio</strong>
-      <span aria-hidden="true">/</span>
-      <span>AI Try-on</span>
+      <strong>AI Try-on</strong>
     </div>
 
     <div class="ai-tryon__status" role="status">
@@ -59,7 +27,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     </div>
 
     <div class="ai-tryon__actions">
-      <button class="ai-button ai-button--primary" type="button" data-generate>Generate try-on</button>
+
       <a class="ai-tryon__close" href="<%= detailHref %>" aria-label="Close AI try-on">
         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>
       </a>
@@ -78,8 +46,8 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
       >
 
       <div class="tryon-result__toggle" role="group" aria-label="Preview state">
-        <button type="button" class="is-active" data-preview-state="before">Before</button>
-        <button type="button" data-preview-state="after" data-after-result hidden>After</button>
+        <button type="button" class="is-active" data-preview-state="before">Original</button>
+        <button type="button" data-preview-state="after" data-after-result hidden>Try-on</button>
       </div>
 
       <span class="tryon-result__ai-label" data-after-result hidden>
@@ -101,7 +69,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
         </button>
         <button type="button" data-generate>
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15"/></svg>
-          <span>Generate try-on</span>
+          <span>Generate try-on · <%= tryOnCreditCost %> credits</span>
         </button>
         <button type="button" id="downloadTryOn" disabled aria-disabled="true">
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>
@@ -113,7 +81,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     <aside class="tryon-flow" aria-label="AI try-on steps">
       <section class="tryon-step tryon-step--design">
         <div class="tryon-step__title">
-          <span class="tryon-step__number">1</span>
+
           <div>
             <h2>Your design</h2>
             <p><%= model.name %></p>
@@ -163,10 +131,10 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
       <section class="tryon-step tryon-step--models">
         <div class="tryon-step__heading-row">
           <div class="tryon-step__title">
-            <span class="tryon-step__number">2</span>
-            <h2>Choose a model</h2>
+
+            <h2>Model</h2>
           </div>
-          <button type="button" class="tryon-step__view-all">View all</button>
+          <select id="tryOnStyleFilter" aria-label="Model style"><option value="">All styles</option><% [...new Set(tryOnModels.map(person => person.style))].forEach(style => { %><option value="<%= style %>"><%= style %></option><% }); %></select>
         </div>
 
         <div class="model-picker" role="listbox" aria-label="Choose a model">
@@ -178,25 +146,28 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
               aria-selected="<%= index === 0 ? 'true' : 'false' %>"
               data-model-card
               data-model-id="<%= person.id %>"
+              data-model-style="<%= person.style %>"
               data-model-name="<%= person.name %>"
               data-model-image="<%= person.image %>"
             >
-              <img src="<%= person.image %>" alt="<%= person.name %>, full-body model" loading="<%= index > 2 ? 'lazy' : 'eager' %>">
+              <img src="<%= person.thumbnail %>" alt="<%= person.name %>, full-body model" loading="<%= index > 2 ? 'lazy' : 'eager' %>">
               <span class="model-card__check" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="m6 12 4 4 8-9"/></svg>
               </span>
-              <span class="sr-only"><%= person.name %></span>
+              <span class="model-card__name"><%= person.name %></span>
             </button>
           <% }); %>
         </div>
       </section>
 
       <div class="tryon-flow__generate">
+        <button type="button" class="tryon-upload" id="tryOnUploadButton">↑ Upload photo</button>
+        <input type="file" id="tryOnPhoto" accept="image/png,image/jpeg,image/webp" hidden>
         <button class="ai-button ai-button--primary ai-button--wide" type="button" data-generate>
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"/></svg>
-          <span>Generate try-on</span>
+          <span>Generate try-on · <%= tryOnCreditCost %> credits</span>
         </button>
-        <p id="tryOnTimeHint">Usually takes 20–30 sec</p>
+        <p id="tryOnTimeHint"></p>
       </div>
     </aside>
   </div>
@@ -212,6 +183,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
   window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
 </script>
 <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
-<script src="/js/ai-try-on.js?v=20260914-result-history-v10" defer></script>
+<script src="/js/ai-try-on.js?v=20260921-credits-v14" defer></script>
 
 <%- include('partials/footer') %>

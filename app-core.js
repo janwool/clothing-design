@@ -362,7 +362,9 @@ if (isWorkerRuntime) {
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;
   res.locals.user = req.session.user || null;
+  res.locals.tryOnCreditCost = require('./lib/user-entitlements').TRY_ON_CREDIT_COST;
   res.locals.authLoginUrl = getHeaderLoginUrl(req);
+  res.locals.openingOffer = require('./lib/opening-offer').getOpeningOffer();
   res.locals.googleAuthEnabled = isGoogleAuthConfigured();
   res.locals.canonicalUrl = canonicalUrl(req.path || '/');
   res.locals.defaultMetaImage = DEFAULT_SOCIAL_IMAGE;

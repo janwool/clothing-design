@@ -2,6 +2,8 @@
 
 日期：2026-09-19。范围：产品规划，不涉及上线或修改套餐。
 
+补充：同日已读取 GSC、Bing Webmaster 与 GA4，新增 [SEO / GEO 数据复盘与规划](seo-geo-plan-2026-09-19.md)。本文下述“尚未获取数据”是初版背景；搜索与内容优先级以新规划为准，尤其补入 Dress Designer、已有 AI 引用教程及统计修复。付费与留存假设仍待业务数据验证。
+
 ## 结论与假设
 
 建议定位：面向独立服装品牌与小型电商卖家的服装商品图工作台。近期以 T-shirt、Oversized T-shirt、Hoodie 为主，让用户从一张印花开始，制作可重复编辑的服装展示图；中期把同一设计连接到 3D、真人 Mockup、多颜色和商品图导出。
@@ -14,7 +16,7 @@
 | --- | --- | --- |
 | 首页以浏览 3D Models 与 Fashion Mockups 为主要入口 | 用户需要先理解工具分类，再寻找自己的任务 | views/index.ejs |
 | 首页展示 Supplier Handoff，当前审阅尚未确认完整规格交付流程 | 应把已支持的视觉沟通与生产规格交付区分清楚 | views/index.ejs |
-| Free 为 5 个总项目；Pro 为 $9.90/月、28 项目/月；Max 为 $29/月、99 项目/月 | 套餐围绕容量展开，对商品图产出效率的解释不足 | views/pricing.ejs、lib/user-entitlements.js |
+| Free 为 3 个总项目；Pro 为 $9.90/月、28 项目/月；Max 为 $29/月、99 项目/月 | 套餐围绕容量展开，对商品图产出效率的解释不足 | views/pricing.ejs、lib/user-entitlements.js |
 | Pro 与 Max 都去水印，AI 权益受功能开关控制 | AI 不可用时，两档主要差异是项目数和存储；高档价值待强化 | views/pricing.ejs、lib/feature-flags.js |
 | 批量 T 恤页导出固定示例图，上传跳转编辑器 | 存在批量功能预期落差，需在推广前修正或明确标记示例 | views/bulk-tshirt-mockup-landing.ejs |
 | 真人 Mockup 下载函数可直接生成 PNG，保存接口要求登录 | 已有先体验再保存的基础，无需先强制所有操作注册 | public/js/white-mockup-editor.js、routes/user-content.js |

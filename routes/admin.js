@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const path = require('path');
 const db = require('../lib/db');
+const { parseProjectRow } = require('../lib/user-projects');
+const { requireProjectAdmin } = require('../lib/project-admin-auth');
 const { generateSlug } = require('../lib/slug');
 const { ensureCustomizationInquiriesTable } = require('../lib/customization-inquiries-db');
 const { ensureFeedbackTable } = require('../lib/feedback-db');
@@ -622,6 +624,7 @@ router.put('/feedback/:id/status', requireAuth, async (req, res) => {
 
 // ==================== User Projects ====================
 router.get('/projects', requireAuth, async (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
   const type = normalizeProjectType(req.query.type);
   const search = String(req.query.q || '').trim().slice(0, 100);
   const requestedPage = normalizeInquiryPage(req.query.page);
@@ -656,7 +659,7 @@ router.get('/projects', requireAuth, async (req, res) => {
     const items = await db.all(
       `SELECT
         p.id, p.user_id, p.project_type, p.name, p.source_id, p.source_url,
-        p.preview_image_url, p.created_at, p.updated_at,
+        p.preview_image_url, p.created_at, p.updated_at, p.deleted_at,
         u.email as user_email, u.name as user_name
        FROM design_projects p
        LEFT JOIN users u ON u.id = p.user_id
@@ -680,7 +683,8 @@ router.get('/projects', requireAuth, async (req, res) => {
         preview_image_url_safe: safeProjectPreviewUrl(item.preview_image_url),
         source_url_safe: safeProjectSourceUrl(item.source_url),
         created_at_display: formatInquiryDate(item.created_at),
-        updated_at_display: formatInquiryDate(item.updated_at)
+        updated_at_display: formatInquiryDate(item.updated_at),
+        deleted_at_display: item.deleted_at ? formatInquiryDate(item.deleted_at) : null
       })),
       projectFilters: { type, search },
       projectPagination: { page, pageCount, total },
@@ -703,6 +707,59 @@ router.get('/projects', requireAuth, async (req, res) => {
       projectStats: { total: 0, projects3d: 0, whiteMockups: 0, creators: 0 },
       error: 'User projects could not be loaded.'
     });
+  }
+});
+
+// Admin inspection uses a separate read-only API; user ownership checks stay intact.
+router.get('/projects/:id/design', requireProjectAdmin, async (req, res) => {
+  try {
+    await ensureUserContentTables();
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ?', [req.params.id]);
+    if (!row) return res.status(404).json({ success: false, error: 'Project not found.' });
+    res.set('Cache-Control', 'private, no-store');
+    return res.json({ success: true, project: { ...parseProjectRow(row), deletedAt: row.deleted_at || null } });
+  } catch (error) {
+    return res.status(500).json({ success: false, error: 'Project could not be loaded.' });
+  }
+});
+
+router.get('/projects/:id/texture', requireProjectAdmin, async (req, res) => {
+  try {
+    await ensureUserContentTables();
+    const image = await db.get(
+      `SELECT i.url, i.mime_type FROM user_images i
+       JOIN design_projects p ON p.user_id = i.user_id
+       WHERE p.id = ? AND i.url = ? LIMIT 1`,
+      [req.params.id, String(req.query.url || '')]
+    );
+    if (!image || !/^image\/(?:png|jpe?g|webp)$/i.test(image.mime_type || '')) {
+      return res.status(404).json({ success: false, error: 'Project texture not found.' });
+    }
+    const response = await fetch(image.url);
+    if (!response.ok) throw new Error('Stored texture unavailable');
+    res.set('Cache-Control', 'private, no-store');
+    res.set('X-Content-Type-Options', 'nosniff');
+    return res.type(image.mime_type).send(Buffer.from(await response.arrayBuffer()));
+  } catch (error) {
+    return res.status(502).json({ success: false, error: 'Project texture could not be loaded.' });
+  }
+});
+
+router.get('/projects/:id/view', requireProjectAdmin, async (req, res) => {
+  try {
+    await ensureUserContentTables();
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ?', [req.params.id]);
+    if (!row) return res.status(404).send('Project not found.');
+    const source = safeProjectSourceUrl(row.source_url);
+    if (!source) return res.status(404).send('Project source is unavailable.');
+    const url = new URL(source, 'https://www.cloz-design.com');
+    if (url.origin !== 'https://www.cloz-design.com') return res.status(400).send('Invalid project source.');
+    url.searchParams.delete('project');
+    url.searchParams.set('adminProject', row.id);
+    res.set('Cache-Control', 'private, no-store');
+    return res.redirect(`${url.pathname}${url.search}`);
+  } catch (error) {
+    return res.status(500).send('Project could not be opened.');
   }
 });
 

@@ -325,3 +325,9 @@
   .pricing-cta,
   .billing-switch button { transition: none; }
 }
+
+.pricing-annual-saving { display: flex; align-items: center; gap: 10px; margin: 8px 0; font-size: 12px; }
+.pricing-annual-saving[hidden] { display: none; }
+.pricing-annual-saving s { color: var(--pricing-copy); }
+.pricing-annual-saving span { padding: 4px 7px; border-radius: 3px; background: #ececea; color: var(--pricing-ink); font-weight: 650; }
+.pricing-card-featured .pricing-annual-saving s { color: #d0d0d3; }

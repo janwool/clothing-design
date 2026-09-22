@@ -7,7 +7,7 @@
   const planAccess = typeof entitlements !== 'undefined' ? entitlements : {
     plan: { id: 'free', name: 'Free' },
     features: { removeWatermarks: false, allModels: false },
-    projects: { period: 'lifetime', limit: 5, used: workspaceStats.totalProjects, remaining: Math.max(0, 5 - workspaceStats.totalProjects) },
+    projects: { period: 'lifetime', limit: 3, used: workspaceStats.totalProjects, remaining: Math.max(0, 3 - workspaceStats.totalProjects) },
     tryOnCredits: { limit: 0, used: 0, remaining: 0 },
     storage: { limitBytes: 100 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 100 * 1024 * 1024 - workspaceStats.storageBytes) }
   };
@@ -64,7 +64,7 @@
         <div><span>Current plan</span><h2 id="workspacePlanTitle"><%= planAccess.plan.name %></h2></div>
         <div class="workspace-plan-actions">
           <span class="workspace-plan-feature"><%= planAccess.features.removeWatermarks ? 'Watermark-free exports' : 'Watermarked exports' %></span>
-          <a href="/pricing"><%= planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' %> <b>→</b></a>
+          <a href="/pricing" data-upgrade-resource="plan"><%= planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' %> <b>→</b></a>
         </div>
       </div>
       <div class="workspace-plan-usage<%= aiTryOnAvailable ? '' : ' is-ai-disabled' %>">

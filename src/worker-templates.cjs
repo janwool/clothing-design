@@ -31,6 +31,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -229,6 +235,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -339,6 +351,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -420,7 +438,7 @@ title = __locals.title,
   const planAccess = typeof entitlements !== 'undefined' ? entitlements : {
     plan: { id: 'free', name: 'Free' },
     features: { removeWatermarks: false, allModels: false },
-    projects: { period: 'lifetime', limit: 5, used: workspaceStats.totalProjects, remaining: Math.max(0, 5 - workspaceStats.totalProjects) },
+    projects: { period: 'lifetime', limit: 3, used: workspaceStats.totalProjects, remaining: Math.max(0, 3 - workspaceStats.totalProjects) },
     tryOnCredits: { limit: 0, used: 0, remaining: 0 },
     storage: { limitBytes: 100 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 100 * 1024 * 1024 - workspaceStats.storageBytes) }
   };
@@ -472,7 +490,7 @@ title = __locals.title,
     ; __append(escapeFn( planAccess.plan.name ))
     ; __append("</h2></div>\n        <div class=\"workspace-plan-actions\">\n          <span class=\"workspace-plan-feature\">")
     ; __append(escapeFn( planAccess.features.removeWatermarks ? 'Watermark-free exports' : 'Watermarked exports' ))
-    ; __append("</span>\n          <a href=\"/pricing\">")
+    ; __append("</span>\n          <a href=\"/pricing\" data-upgrade-resource=\"plan\">")
     ; __append(escapeFn( planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' ))
     ; __append(" <b>→</b></a>\n        </div>\n      </div>\n      <div class=\"workspace-plan-usage")
     ; __append(escapeFn( aiTryOnAvailable ? '' : ' is-ai-disabled' ))
@@ -569,6 +587,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -641,7 +665,7 @@ title = __locals.title,
   updatedAt = __locals.updatedAt,
   sections = __locals.sections,
   footerVariant = __locals.footerVariant;
-    ; __append("  </main>\n</div>\n\n<div class=\"workspace-toast\" id=\"workspaceToast\" role=\"status\" aria-live=\"polite\"></div>\n<script src=\"/js/account-workspace.js?v=20260913-route-pages-v6\" defer></script>\n")
+    ; __append("  </main>\n</div>\n\n<div class=\"workspace-toast\" id=\"workspaceToast\" role=\"status\" aria-live=\"polite\"></div>\n<script src=\"/js/account-workspace.js?v=20260920-soft-delete-v7\" defer></script>\n")
     ; __append( include('../../partials/footer') )
     ; __append("\n")
   return __output;
@@ -678,6 +702,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -831,6 +861,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -993,6 +1029,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1125,6 +1167,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1287,6 +1335,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1435,6 +1489,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1565,6 +1625,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -1847,6 +1913,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2003,6 +2075,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2243,6 +2321,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2541,6 +2625,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2699,6 +2789,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2877,6 +2973,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -2984,6 +3086,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3062,7 +3170,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260917-feedback-v4\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260920-project-view-v5\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },
@@ -3097,6 +3205,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3226,6 +3340,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3361,7 +3481,7 @@ title = __locals.title,
     ; __append(escapeFn( item.id ))
     ; __append("\" data-project-name=\"")
     ; __append(escapeFn( item.name ))
-    ; __append("\" aria-label=\"Delete ")
+    ; __append("\" aria-label=\"Permanently delete ")
     ; __append(escapeFn( item.name ))
     ; __append("\">\n                  <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                    <path d=\"M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6\"/>\n                  </svg>\n                </button>\n              </div>\n              <div class=\"project-admin-content\">\n                <div class=\"project-admin-owner\">\n                  <span class=\"project-owner-avatar\">")
     ; __append(escapeFn( String(item.user_name || item.user_email || '?').charAt(0).toUpperCase() ))
@@ -3381,7 +3501,15 @@ title = __locals.title,
     ; __append(escapeFn( item.name ))
     ; __append("\">↗</a>\n                  ")
     ;  }
-    ; __append("\n                </div>\n                <dl class=\"project-admin-meta\">\n                  <div><dt>Project ID</dt><dd title=\"")
+    ; __append("\n                </div>\n                <dl class=\"project-admin-meta\">\n                  <div><dt>Status</dt><dd>")
+    ; __append(escapeFn( item.deleted_at ? 'Deleted by user' : 'Active' ))
+    ; __append("</dd></div>\n                  ")
+    ;  if (item.deleted_at) {
+    ; __append("\n                    <div><dt>Deleted at</dt><dd>")
+    ; __append(escapeFn( item.deleted_at_display ))
+    ; __append("</dd></div>\n                  ")
+    ;  }
+    ; __append("\n                  <div><dt>Project ID</dt><dd title=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">")
     ; __append(escapeFn( item.id ))
@@ -3389,7 +3517,9 @@ title = __locals.title,
     ; __append(escapeFn( item.source_id || '—' ))
     ; __append("\">")
     ; __append(escapeFn( item.source_id || '—' ))
-    ; __append("</dd></div>\n                </dl>\n              </div>\n            </article>\n          ")
+    ; __append("</dd></div>\n                </dl>\n                <a class=\"project-view-design\" href=\"/admin/projects/")
+    ; __append(escapeFn( encodeURIComponent(item.id) ))
+    ; __append("/view\" target=\"_blank\" rel=\"noopener\">\n                  <span>查看设计 / View design</span><span aria-hidden=\"true\">↗</span>\n                </a>\n              </div>\n            </article>\n          ")
     ;  });
     ; __append("\n        </div>\n\n        ")
     ;  if (projectPagination.pageCount > 1) {
@@ -3435,7 +3565,7 @@ title = __locals.title,
     ;  }
     ; __append("\n        </div>\n      ")
     ;  }
-    ; __append("\n    </section>\n\n    <p class=\"project-action-message\" id=\"projectActionMessage\" role=\"status\" aria-live=\"polite\"></p>\n  </main>\n</div>\n\n<script>\n(() => {\n  const grid = document.getElementById('projectAdminGrid');\n  const message = document.getElementById('projectActionMessage');\n\n  grid?.addEventListener('click', async event => {\n    const button = event.target.closest('[data-delete-project]');\n    if (!button) return;\n\n    const projectId = button.dataset.deleteProject;\n    const projectName = button.dataset.projectName || 'this project';\n    if (!window.confirm(`Delete “${projectName}”? This removes the saved project for its user and cannot be undone.`)) return;\n\n    button.disabled = true;\n    try {\n      const response = await fetch(`/admin/projects/${encodeURIComponent(projectId)}`, {\n        method: 'DELETE',\n        headers: { Accept: 'application/json' }\n      });\n      const result = await response.json();\n      if (!response.ok || !result.success) throw new Error(result.error || 'Project could not be deleted.');\n\n      const card = button.closest('[data-project-card]');\n      card?.classList.add('is-removing');\n      window.setTimeout(() => window.location.reload(), 220);\n    } catch (error) {\n      button.disabled = false;\n      message.textContent = error.message || 'Project could not be deleted.';\n      message.classList.add('is-visible');\n    }\n  });\n})();\n</script>\n\n")
+    ; __append("\n    </section>\n\n    <p class=\"project-action-message\" id=\"projectActionMessage\" role=\"status\" aria-live=\"polite\"></p>\n  </main>\n</div>\n\n<script>\n(() => {\n  const grid = document.getElementById('projectAdminGrid');\n  const message = document.getElementById('projectActionMessage');\n\n  grid?.addEventListener('click', async event => {\n    const button = event.target.closest('[data-delete-project]');\n    if (!button) return;\n\n    const projectId = button.dataset.deleteProject;\n    const projectName = button.dataset.projectName || 'this project';\n    if (!window.confirm(`Permanently delete “${projectName}”? This removes the database record, releases its project allowance, and cannot be undone.`)) return;\n\n    button.disabled = true;\n    try {\n      const response = await fetch(`/admin/projects/${encodeURIComponent(projectId)}`, {\n        method: 'DELETE',\n        headers: { Accept: 'application/json' }\n      });\n      const result = await response.json();\n      if (!response.ok || !result.success) throw new Error(result.error || 'Project could not be deleted.');\n\n      const card = button.closest('[data-project-card]');\n      card?.classList.add('is-removing');\n      window.setTimeout(() => window.location.reload(), 220);\n    } catch (error) {\n      button.disabled = false;\n      message.textContent = error.message || 'Project could not be deleted.';\n      message.classList.add('is-visible');\n    }\n  });\n})();\n</script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -3472,6 +3602,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3630,6 +3766,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3786,6 +3928,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -3861,42 +4009,13 @@ title = __locals.title,
     ; __append( include('partials/header') )
     ; __append("\n\n")
     ; 
-const tryOnModels = [
-  {
-    id: 'mara',
-    name: 'Mara',
-    image: '/images/mockups/on-model/generated/model-pose-contrapposto-v3-base.png'
-  },
-  {
-    id: 'leo',
-    name: 'Leo',
-    image: '/images/mockups/on-model/generated/model-pose-walking-v3-base.png'
-  },
-  {
-    id: 'imani',
-    name: 'Imani',
-    image: '/images/mockups/on-model/generated/young-western-female-shirt-v4-base.png'
-  },
-  {
-    id: 'noor',
-    name: 'Noor',
-    image: '/images/mockups/on-model/generated/turtleneck-nonbinary-front-base.png'
-  },
-  {
-    id: 'alex',
-    name: 'Alex',
-    image: '/images/mockups/on-model/generated/long-coat-male-walking-base.png'
-  },
-  {
-    id: 'zuri',
-    name: 'Zuri',
-    image: '/images/mockups/on-model/generated/tank-top-female-front-base.png'
-  }
-];
+const tryOnModels = personModels;
 const currentModelFile = model.preview_file_url || model.file_url || '';
 const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
 
-    ; __append("\n\n<section\n  class=\"ai-tryon\"\n  id=\"aiTryOnApp\"\n  data-model-name=\"")
+    ; __append("\n\n<section\n  class=\"ai-tryon\"\n  id=\"aiTryOnApp\"\n  data-credit-cost=\"")
+    ; __append(escapeFn( tryOnCreditCost ))
+    ; __append("\"\n  data-model-name=\"")
     ; __append(escapeFn( model.name ))
     ; __append("\"\n  data-model-id=\"")
     ; __append(escapeFn( model.id || '' ))
@@ -3906,13 +4025,15 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     ; __append(escapeFn( model.image_url || '' ))
     ; __append("\"\n  data-texture-template-url=\"")
     ; __append(escapeFn( model.texture_url || '' ))
-    ; __append("\"\n>\n  <header class=\"ai-tryon__bar\">\n    <div class=\"ai-tryon__crumbs\" aria-label=\"Breadcrumb\">\n      <strong>Design Studio</strong>\n      <span aria-hidden=\"true\">/</span>\n      <span>AI Try-on</span>\n    </div>\n\n    <div class=\"ai-tryon__status\" role=\"status\">\n      <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n      <span>Design ready</span>\n    </div>\n\n    <div class=\"ai-tryon__actions\">\n      <button class=\"ai-button ai-button--primary\" type=\"button\" data-generate>Generate try-on</button>\n      <a class=\"ai-tryon__close\" href=\"")
+    ; __append("\"\n>\n  <header class=\"ai-tryon__bar\">\n    <div class=\"ai-tryon__crumbs\" aria-label=\"Breadcrumb\">\n      <strong>AI Try-on</strong>\n    </div>\n\n    <div class=\"ai-tryon__status\" role=\"status\">\n      <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n      <span>Design ready</span>\n    </div>\n\n    <div class=\"ai-tryon__actions\">\n\n      <a class=\"ai-tryon__close\" href=\"")
     ; __append(escapeFn( detailHref ))
     ; __append("\" aria-label=\"Close AI try-on\">\n        <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg>\n      </a>\n    </div>\n  </header>\n\n  <div class=\"ai-tryon__workspace\">\n    <section class=\"tryon-result\" aria-labelledby=\"tryonResultTitle\">\n      <h1 class=\"sr-only\" id=\"tryonResultTitle\">AI try-on preview</h1>\n      <img\n        class=\"tryon-result__image\"\n        id=\"tryOnResultImage\"\n        src=\"")
     ; __append(escapeFn( tryOnModels[0].image ))
     ; __append("\"\n        alt=\"")
     ; __append(escapeFn( tryOnModels[0].name ))
-    ; __append(", selected model for AI try-on\"\n        data-fit=\"contain\"\n      >\n\n      <div class=\"tryon-result__toggle\" role=\"group\" aria-label=\"Preview state\">\n        <button type=\"button\" class=\"is-active\" data-preview-state=\"before\">Before</button>\n        <button type=\"button\" data-preview-state=\"after\" data-after-result hidden>After</button>\n      </div>\n\n      <span class=\"tryon-result__ai-label\" data-after-result hidden>\n        <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n        AI generated\n      </span>\n\n      <div class=\"tryon-result__loading\" id=\"tryOnLoading\" hidden>\n        <span class=\"tryon-result__spinner\" aria-hidden=\"true\"></span>\n        <strong>Creating your try-on</strong>\n        <small>Matching shape, fabric and drape…</small>\n      </div>\n\n      <div class=\"tryon-result__toolbar\" role=\"toolbar\" aria-label=\"Try-on preview tools\">\n        <button type=\"button\" id=\"fitViewButton\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5\"/></svg>\n          <span>Fill view</span>\n          <svg class=\"toolbar-chevron\" aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m8 10 4 4 4-4\"/></svg>\n        </button>\n        <button type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n          <span>Generate try-on</span>\n        </button>\n        <button type=\"button\" id=\"downloadTryOn\" disabled aria-disabled=\"true\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 20h14\"/></svg>\n          <span>Download</span>\n        </button>\n      </div>\n    </section>\n\n    <aside class=\"tryon-flow\" aria-label=\"AI try-on steps\">\n      <section class=\"tryon-step tryon-step--design\">\n        <div class=\"tryon-step__title\">\n          <span class=\"tryon-step__number\">1</span>\n          <div>\n            <h2>Your design</h2>\n            <p>")
+    ; __append(", selected model for AI try-on\"\n        data-fit=\"contain\"\n      >\n\n      <div class=\"tryon-result__toggle\" role=\"group\" aria-label=\"Preview state\">\n        <button type=\"button\" class=\"is-active\" data-preview-state=\"before\">Original</button>\n        <button type=\"button\" data-preview-state=\"after\" data-after-result hidden>Try-on</button>\n      </div>\n\n      <span class=\"tryon-result__ai-label\" data-after-result hidden>\n        <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n        AI generated\n      </span>\n\n      <div class=\"tryon-result__loading\" id=\"tryOnLoading\" hidden>\n        <span class=\"tryon-result__spinner\" aria-hidden=\"true\"></span>\n        <strong>Creating your try-on</strong>\n        <small>Matching shape, fabric and drape…</small>\n      </div>\n\n      <div class=\"tryon-result__toolbar\" role=\"toolbar\" aria-label=\"Try-on preview tools\">\n        <button type=\"button\" id=\"fitViewButton\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5\"/></svg>\n          <span>Fill view</span>\n          <svg class=\"toolbar-chevron\" aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m8 10 4 4 4-4\"/></svg>\n        </button>\n        <button type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n          <span>Generate try-on · ")
+    ; __append(escapeFn( tryOnCreditCost ))
+    ; __append(" credits</span>\n        </button>\n        <button type=\"button\" id=\"downloadTryOn\" disabled aria-disabled=\"true\">\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 3v12m0 0 4-4m-4 4-4-4M5 20h14\"/></svg>\n          <span>Download</span>\n        </button>\n      </div>\n    </section>\n\n    <aside class=\"tryon-flow\" aria-label=\"AI try-on steps\">\n      <section class=\"tryon-step tryon-step--design\">\n        <div class=\"tryon-step__title\">\n\n          <div>\n            <h2>Your design</h2>\n            <p>")
     ; __append(escapeFn( model.name ))
     ; __append("</p>\n          </div>\n        </div>\n\n        <div class=\"tryon-viewer\" id=\"tryOnViewerPanel\">\n          ")
     ;  if (currentModelFile) { 
@@ -3930,7 +4051,15 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     ; __append(escapeFn( model.name ))
     ; __append("\">\n          ")
     ;  } 
-    ; __append("\n\n          <div class=\"tryon-viewer__controls\">\n            <button type=\"button\" id=\"resetTryOnViewer\" aria-label=\"Reset 3D view\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n            </button>\n            <button type=\"button\" id=\"fullscreenTryOnViewer\" aria-label=\"View 3D design fullscreen\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/></svg>\n            </button>\n          </div>\n\n          <span class=\"tryon-viewer__hint\">\n            <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 11V7a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v7c0 4-3 7-7 7h-1c-2 0-3.4-.8-4.6-2.3L3.8 14a2 2 0 0 1 3-2.6L8 13\"/></svg>\n            Drag to rotate\n          </span>\n        </div>\n      </section>\n\n      <section class=\"tryon-step tryon-step--models\">\n        <div class=\"tryon-step__heading-row\">\n          <div class=\"tryon-step__title\">\n            <span class=\"tryon-step__number\">2</span>\n            <h2>Choose a model</h2>\n          </div>\n          <button type=\"button\" class=\"tryon-step__view-all\">View all</button>\n        </div>\n\n        <div class=\"model-picker\" role=\"listbox\" aria-label=\"Choose a model\">\n          ")
+    ; __append("\n\n          <div class=\"tryon-viewer__controls\">\n            <button type=\"button\" id=\"resetTryOnViewer\" aria-label=\"Reset 3D view\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n            </button>\n            <button type=\"button\" id=\"fullscreenTryOnViewer\" aria-label=\"View 3D design fullscreen\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/></svg>\n            </button>\n          </div>\n\n          <span class=\"tryon-viewer__hint\">\n            <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 11V7a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v7c0 4-3 7-7 7h-1c-2 0-3.4-.8-4.6-2.3L3.8 14a2 2 0 0 1 3-2.6L8 13\"/></svg>\n            Drag to rotate\n          </span>\n        </div>\n      </section>\n\n      <section class=\"tryon-step tryon-step--models\">\n        <div class=\"tryon-step__heading-row\">\n          <div class=\"tryon-step__title\">\n\n            <h2>Model</h2>\n          </div>\n          <select id=\"tryOnStyleFilter\" aria-label=\"Model style\"><option value=\"\">All styles</option>")
+    ;  [...new Set(tryOnModels.map(person => person.style))].forEach(style => { 
+    ; __append("<option value=\"")
+    ; __append(escapeFn( style ))
+    ; __append("\">")
+    ; __append(escapeFn( style ))
+    ; __append("</option>")
+    ;  }); 
+    ; __append("</select>\n        </div>\n\n        <div class=\"model-picker\" role=\"listbox\" aria-label=\"Choose a model\">\n          ")
     ;  tryOnModels.forEach(function(person, index) { 
     ; __append("\n            <button\n              class=\"model-card ")
     ; __append(escapeFn( index === 0 ? 'is-selected' : '' ))
@@ -3938,21 +4067,25 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     ; __append(escapeFn( index === 0 ? 'true' : 'false' ))
     ; __append("\"\n              data-model-card\n              data-model-id=\"")
     ; __append(escapeFn( person.id ))
+    ; __append("\"\n              data-model-style=\"")
+    ; __append(escapeFn( person.style ))
     ; __append("\"\n              data-model-name=\"")
     ; __append(escapeFn( person.name ))
     ; __append("\"\n              data-model-image=\"")
     ; __append(escapeFn( person.image ))
     ; __append("\"\n            >\n              <img src=\"")
-    ; __append(escapeFn( person.image ))
+    ; __append(escapeFn( person.thumbnail ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( person.name ))
     ; __append(", full-body model\" loading=\"")
     ; __append(escapeFn( index > 2 ? 'lazy' : 'eager' ))
-    ; __append("\">\n              <span class=\"model-card__check\" aria-hidden=\"true\">\n                <svg viewBox=\"0 0 24 24\"><path d=\"m6 12 4 4 8-9\"/></svg>\n              </span>\n              <span class=\"sr-only\">")
+    ; __append("\">\n              <span class=\"model-card__check\" aria-hidden=\"true\">\n                <svg viewBox=\"0 0 24 24\"><path d=\"m6 12 4 4 8-9\"/></svg>\n              </span>\n              <span class=\"model-card__name\">")
     ; __append(escapeFn( person.name ))
     ; __append("</span>\n            </button>\n          ")
     ;  }); 
-    ; __append("\n        </div>\n      </section>\n\n      <div class=\"tryon-flow__generate\">\n        <button class=\"ai-button ai-button--primary ai-button--wide\" type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n          <span>Generate try-on</span>\n        </button>\n        <p id=\"tryOnTimeHint\">Usually takes 20–30 sec</p>\n      </div>\n    </aside>\n  </div>\n\n  <div class=\"tryon-toast\" id=\"tryOnToast\" role=\"status\" aria-live=\"polite\" hidden>\n    <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n    Try-on ready\n  </div>\n</section>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n<script src=\"/js/ai-try-on.js?v=20260914-result-history-v10\" defer></script>\n\n")
+    ; __append("\n        </div>\n      </section>\n\n      <div class=\"tryon-flow__generate\">\n        <button type=\"button\" class=\"tryon-upload\" id=\"tryOnUploadButton\">↑ Upload photo</button>\n        <input type=\"file\" id=\"tryOnPhoto\" accept=\"image/png,image/jpeg,image/webp\" hidden>\n        <button class=\"ai-button ai-button--primary ai-button--wide\" type=\"button\" data-generate>\n          <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z\"/></svg>\n          <span>Generate try-on · ")
+    ; __append(escapeFn( tryOnCreditCost ))
+    ; __append(" credits</span>\n        </button>\n        <p id=\"tryOnTimeHint\"></p>\n      </div>\n    </aside>\n  </div>\n\n  <div class=\"tryon-toast\" id=\"tryOnToast\" role=\"status\" aria-live=\"polite\" hidden>\n    <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n    Try-on ready\n  </div>\n</section>\n\n<script>\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n</script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n<script src=\"/js/ai-try-on.js?v=20260921-credits-v14\" defer></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -3989,6 +4122,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4127,6 +4266,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4267,6 +4412,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4548,6 +4699,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4698,6 +4855,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -4886,6 +5049,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5212,6 +5381,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5376,6 +5551,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5690,6 +5871,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -5846,6 +6033,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6076,6 +6269,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6185,6 +6384,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6299,6 +6504,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6542,6 +6753,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6702,6 +6919,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6838,6 +7061,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -6962,6 +7191,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -7036,7 +7271,7 @@ title = __locals.title,
   footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260918-fixed-lighting-v40']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42']
 }) )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {}; 
@@ -7084,6 +7319,12 @@ title = __locals.title,
     ;  if (previewModelFileUrl) { 
     ; __append("\n            <button class=\"detail-action\" id=\"renderCurrentModelBtn\" type=\"button\">\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"1\"/><circle cx=\"9\" cy=\"10\" r=\"2\"/><path d=\"m5 17 4-4 3 3 2-2 5 3\"/></svg>\n              <span>Render Image</span>\n            </button>\n          ")
     ;  } 
+    ; __append("\n          ")
+    ;  if (aiTryOnAvailable && previewModelFileUrl) { 
+    ; __append("\n            <a class=\"detail-action\" id=\"detailAiTryOnBtn\" href=\"")
+    ; __append(escapeFn( aiTryOnPath ))
+    ; __append("\" data-ai-try-on-link>\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><path d=\"m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z\"/></svg>\n              <span>AI Try-on</span>\n            </a>\n          ")
+    ;  } 
     ; __append("\n          <button class=\"detail-action\" id=\"customizationInquiryBtn\" type=\"button\">\n            <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" aria-hidden=\"true\"><path d=\"M4 20V8l4-3v4l5-4v4l7-4v15H4Z\"/><path d=\"M8 14h2m3 0h2m3 0h2\"/></svg>\n            <span>Production</span>\n          </button>\n        </div>\n        <span class=\"download-render-status\" id=\"downloadRenderStatus\" aria-live=\"polite\"></span>\n      </div>\n\n      <div class=\"model-viewer-section\">\n        <div class=\"model-3d-viewer")
     ; __append(escapeFn( previewModelFileUrl ? ' is-loading' : '' ))
     ; __append("\" id=\"model3dViewer\" aria-busy=\"")
@@ -7104,7 +7345,7 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  } 
-    ; __append("\n        </div>\n        <aside class=\"viewer-lighting-panel\" id=\"quickLightingPanel\" aria-label=\"Studio lighting\">\n          <div class=\"quick-light-panel-header\">\n            <strong>Lighting</strong>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\"/><circle cx=\"16\" cy=\"7\" r=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2\"/></svg>\n          </div>\n          <div class=\"quick-light-color\"><i aria-hidden=\"true\"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>\n          <div class=\"quick-light-presets\" role=\"group\" aria-label=\"Light direction presets\">\n            <button type=\"button\" data-light-angle=\"-45\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>−45°</span></button>\n            <button type=\"button\" data-light-angle=\"0\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>Front</span></button>\n            <button type=\"button\" class=\"active\" data-light-angle=\"45\" aria-pressed=\"true\"><i aria-hidden=\"true\"></i><span>+45°</span></button>\n          </div>\n          <label class=\"quick-light-range\">\n            <span>Brightness <output id=\"quickLightExposureOutput\">82%</output></span>\n            <input id=\"quickLightExposure\" type=\"range\" min=\"55\" max=\"120\" step=\"1\" value=\"82\">\n          </label>\n          <label class=\"quick-light-range\">\n            <span>Softness <output id=\"quickLightSoftnessOutput\">90%</output></span>\n            <input id=\"quickLightSoftness\" type=\"range\" min=\"50\" max=\"100\" step=\"1\" value=\"90\">\n          </label>\n        </aside>\n        <div class=\"model-quick-style\" aria-label=\"Quick garment styling\">\n          <div class=\"quick-style-shelf\">\n            <div class=\"quick-style-fabric\">\n              <button class=\"quick-style-fabric-toggle\" id=\"quickFabricToggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"quickFabricMenu\">\n                <span class=\"quick-style-label\">Fabric</span>\n                <span class=\"quick-style-value\"><i id=\"quickFabricPreview\" aria-hidden=\"true\"></i><strong id=\"quickFabricName\">Cotton</strong><svg viewBox=\"0 0 12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" aria-hidden=\"true\"><path d=\"m2.5 4.5 3.5 3 3.5-3\"/></svg></span>\n              </button>\n              <div class=\"quick-fabric-menu\" id=\"quickFabricMenu\" hidden>\n                ")
+    ; __append("\n        </div>\n        <aside class=\"viewer-lighting-panel\" id=\"quickLightingPanel\" aria-label=\"Studio lighting\">\n          <div class=\"quick-light-panel-header\">\n            <strong>Lighting</strong>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\"/><circle cx=\"16\" cy=\"7\" r=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2\"/></svg>\n          </div>\n          <div class=\"quick-light-color\"><i aria-hidden=\"true\"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>\n          <div class=\"quick-light-presets\" role=\"group\" aria-label=\"Light direction presets\">\n            <button type=\"button\" data-light-angle=\"-45\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>−45°</span></button>\n            <button type=\"button\" data-light-angle=\"0\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>Front</span></button>\n            <button type=\"button\" class=\"active\" data-light-angle=\"45\" aria-pressed=\"true\"><i aria-hidden=\"true\"></i><span>+45°</span></button>\n          </div>\n          <label class=\"quick-light-range\">\n            <span>Brightness <output id=\"quickLightExposureOutput\">82%</output></span>\n            <input id=\"quickLightExposure\" type=\"range\" min=\"55\" max=\"300\" step=\"1\" value=\"82\">\n          </label>\n          <label class=\"quick-light-range\">\n            <span>Softness <output id=\"quickLightSoftnessOutput\">90%</output></span>\n            <input id=\"quickLightSoftness\" type=\"range\" min=\"50\" max=\"100\" step=\"1\" value=\"90\">\n          </label>\n        </aside>\n        <div class=\"model-quick-style\" aria-label=\"Quick garment styling\">\n          <div class=\"quick-style-shelf\">\n            <div class=\"quick-style-fabric\">\n              <button class=\"quick-style-fabric-toggle\" id=\"quickFabricToggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"quickFabricMenu\">\n                <span class=\"quick-style-label\">Fabric</span>\n                <span class=\"quick-style-value\"><i id=\"quickFabricPreview\" aria-hidden=\"true\"></i><strong id=\"quickFabricName\">Cotton</strong><svg viewBox=\"0 0 12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" aria-hidden=\"true\"><path d=\"m2.5 4.5 3.5 3 3.5-3\"/></svg></span>\n              </button>\n              <div class=\"quick-fabric-menu\" id=\"quickFabricMenu\" hidden>\n                ")
     ;  [
                   ['cotton-jersey', 'Cotton', '/images/material-previews/cotton.webp'],
                   ['rib-knit', 'Jersey', '/images/material-previews/jersey.webp'],
@@ -7149,7 +7390,7 @@ title = __locals.title,
     ; __append(escapeFn( index === 0 ? 'true' : 'false' ))
     ; __append("\"></button>\n                ")
     ;  }); 
-    ; __append("\n              </div>\n            </div>\n            <div class=\"quick-style-control quick-style-background\" role=\"group\" aria-label=\"Scene background\">\n              <span class=\"quick-style-label\">Background</span>\n              <div class=\"quick-background-swatches\">\n                <button type=\"button\" class=\"active\" data-hero-background=\"#f5f3ef\" style=\"--swatch:#f5f3ef\" aria-label=\"Warm studio\" aria-pressed=\"true\"></button>\n                <button type=\"button\" data-hero-background=\"#ffffff\" style=\"--swatch:#ffffff\" aria-label=\"White studio\" aria-pressed=\"false\"></button>\n                <button type=\"button\" data-hero-background=\"#d8d9d7\" style=\"--swatch:#d8d9d7\" aria-label=\"Soft gray\" aria-pressed=\"false\"></button>\n                <button type=\"button\" data-hero-background=\"#a8aaa8\" style=\"--swatch:#a8aaa8\" aria-label=\"Slate gray\" aria-pressed=\"false\"></button>\n              </div>\n            </div>\n          </div>\n          <a\n            class=\"quick-style-upgrade\"\n            id=\"removeWatermarkBtn\"\n            href=\"/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=")
+    ; __append("\n              </div>\n            </div>\n            <div class=\"quick-style-control quick-style-background\" role=\"group\" aria-label=\"Scene background\">\n              <span class=\"quick-style-label\">Background</span>\n              <div class=\"quick-background-swatches\">\n                <button type=\"button\" class=\"active\" data-hero-background=\"#f5f3ef\" style=\"--swatch:#f5f3ef\" aria-label=\"Warm studio\" aria-pressed=\"true\"></button>\n                <button type=\"button\" data-hero-background=\"#ffffff\" style=\"--swatch:#ffffff\" aria-label=\"White studio\" aria-pressed=\"false\"></button>\n                <button type=\"button\" data-hero-background=\"#d8d9d7\" style=\"--swatch:#d8d9d7\" aria-label=\"Soft gray\" aria-pressed=\"false\"></button>\n                <button type=\"button\" data-hero-background=\"#a8aaa8\" style=\"--swatch:#a8aaa8\" aria-label=\"Slate gray\" aria-pressed=\"false\"></button>\n              </div>\n            </div>\n          </div>\n          <a\n            class=\"quick-style-upgrade\"\n            id=\"removeWatermarkBtn\"\n            data-upgrade-resource=\"watermark\"\n            href=\"/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=")
     ; __append(escapeFn( encodeURIComponent(model.slug) ))
     ; __append("\"\n            data-analytics-event=\"remove_watermark_upgrade_click\"\n            data-analytics-item=\"Watermark-free exports\"\n            data-analytics-category=\"upgrade\"\n            data-id=\"")
     ; __append(escapeFn( model.slug ))
@@ -7345,17 +7586,9 @@ title = __locals.title,
     ;  } 
     ; __append("\n\n")
     ;  if (!user) { 
-    ; __append("\n<div class=\"model-login-modal\" id=\"modelLoginModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modelLoginTitle\" aria-hidden=\"true\" hidden>\n  <button class=\"model-login-backdrop\" id=\"modelLoginBackdrop\" type=\"button\" aria-label=\"Close sign in\"></button>\n  <section class=\"model-login-panel\" aria-describedby=\"modelLoginDescription\">\n    <button class=\"model-login-close\" id=\"modelLoginClose\" type=\"button\" aria-label=\"Close sign in\">\n      <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>\n    </button>\n    <span class=\"model-login-kicker\">ClozDesign account</span>\n    <h2 id=\"modelLoginTitle\">Sign in to customize</h2>\n    <p id=\"modelLoginDescription\">Save this garment as a project and continue editing it from your Workbench.</p>\n    ")
-    ;  if (googleAuthEnabled) { 
-    ; __append("\n      <a class=\"model-google-login\" id=\"modelGoogleLogin\" href=\"/auth/google?next=")
-    ; __append(escapeFn( encodeURIComponent(modelDetailPath) ))
-    ; __append("\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#4285F4\" d=\"M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z\"/><path fill=\"#34A853\" d=\"M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z\"/><path fill=\"#FBBC05\" d=\"M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z\"/><path fill=\"#EA4335\" d=\"M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z\"/></svg>\n        <span>Continue with Google</span>\n      </a>\n      <div class=\"model-login-divider\"><span>or use email</span></div>\n    ")
-    ;  } 
-    ; __append("\n    <form class=\"model-login-form\" id=\"modelLoginForm\" action=\"/auth/login\" method=\"post\">\n      <input type=\"hidden\" name=\"next\" value=\"")
-    ; __append(escapeFn( modelDetailPath ))
-    ; __append("\">\n      <label>\n        <span>Email</span>\n        <input id=\"modelLoginEmail\" type=\"email\" name=\"email\" autocomplete=\"email\" inputmode=\"email\" required placeholder=\"you@example.com\">\n      </label>\n      <label>\n        <span>Password</span>\n        <input type=\"password\" name=\"password\" autocomplete=\"current-password\" required placeholder=\"Enter your password\">\n      </label>\n      <p class=\"model-login-error\" id=\"modelLoginError\" role=\"alert\" aria-live=\"polite\" hidden></p>\n      <button class=\"model-login-submit\" id=\"modelLoginSubmit\" type=\"submit\"><span>Sign in and customize</span></button>\n    </form>\n    <p class=\"model-login-register\">New to ClozDesign? <a href=\"/auth/register?next=")
-    ; __append(escapeFn( encodeURIComponent(modelDetailPath) ))
-    ; __append("\">Create an account</a></p>\n  </section>\n</div>\n")
+    ; __append("\n")
+    ; __append( include('partials/model-login', { loginReturnPath: modelDetailPath }) )
+    ; __append("\n")
     ;  } 
     ; __append("\n\n<!-- Customization Inquiry Modal -->\n<div class=\"customization-modal\" id=\"customizationInquiryModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"customizationInquiryTitle\" aria-hidden=\"true\">\n  <button class=\"customization-modal-overlay\" id=\"customizationInquiryOverlay\" type=\"button\" aria-label=\"Close customization request\"></button>\n  <div class=\"customization-modal-content\">\n    <header class=\"customization-modal-header\">\n      <div>\n        <span>Production inquiry</span>\n        <h2 id=\"customizationInquiryTitle\">Request customization</h2>\n        <p>Tell us how to reach you, where the order is going, and the quantity you need. Your current design will be attached automatically.</p>\n      </div>\n      <button class=\"customization-modal-close\" id=\"customizationInquiryClose\" type=\"button\" aria-label=\"Close customization request\">\n        <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n          <path d=\"M18 6L6 18M6 6l12 12\"/>\n        </svg>\n      </button>\n    </header>\n\n    <div class=\"customization-modal-body\">\n      <form class=\"customization-form\" id=\"customizationInquiryForm\">\n        <div class=\"customization-form-grid\">\n          <label class=\"customization-field\">\n            <span>Contact name <b>*</b></span>\n            <input type=\"text\" name=\"name\" autocomplete=\"name\" maxlength=\"100\" required placeholder=\"Your name\">\n          </label>\n          <label class=\"customization-field\">\n            <span>Email <b>*</b></span>\n            <input type=\"email\" name=\"email\" autocomplete=\"email\" maxlength=\"180\" required placeholder=\"you@example.com\">\n          </label>\n          <label class=\"customization-field customization-field-wide\">\n            <span>Delivery address <b>*</b></span>\n            <input type=\"text\" name=\"address\" autocomplete=\"street-address\" maxlength=\"300\" required placeholder=\"Street, city, state/province, postal code, country\">\n          </label>\n          <label class=\"customization-field customization-field-quantity\">\n            <span>Customization quantity <b>*</b></span>\n            <input type=\"number\" name=\"quantity\" min=\"1\" max=\"1000000\" step=\"1\" inputmode=\"numeric\" required placeholder=\"e.g. 500\">\n          </label>\n          <label class=\"customization-field customization-field-wide\">\n            <span>Requirements</span>\n            <textarea name=\"notes\" maxlength=\"3000\" rows=\"4\" placeholder=\"Tell us about fabric, colors, sizes, delivery market, timeline, or other production requirements.\"></textarea>\n          </label>\n          <label class=\"customization-honeypot\" aria-hidden=\"true\">\n            <span>Website</span>\n            <input type=\"text\" name=\"website\" tabindex=\"-1\" autocomplete=\"off\">\n          </label>\n        </div>\n\n        <section class=\"customization-attachments\" aria-labelledby=\"customizationAttachmentsTitle\">\n          <div class=\"customization-section-heading\">\n            <div>\n              <span>Design attachments</span>\n              <h3 id=\"customizationAttachmentsTitle\">Current 3D and 2D design</h3>\n            </div>\n            <button type=\"button\" class=\"customization-refresh\" id=\"customizationRefreshSnapshots\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M20 11a8 8 0 10-2.34 5.66M20 4v7h-7\"/>\n              </svg>\n              Refresh\n            </button>\n          </div>\n          <div class=\"customization-preview-grid\">\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview3d\" alt=\"Current 3D clothing design screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview3dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Rendering 3D view…</span>\n                </div>\n              </div>\n              <figcaption><strong>3D design</strong><span>High-resolution garment view</span></figcaption>\n            </figure>\n            <figure class=\"customization-preview-card\">\n              <div class=\"customization-preview-media\">\n                <img id=\"customizationPreview2d\" alt=\"Current 2D texture layout screenshot\">\n                <div class=\"customization-preview-loading\" id=\"customizationPreview2dLoading\">\n                  <span class=\"customization-spinner\" aria-hidden=\"true\"></span>\n                  <span>Capturing 2D layout…</span>\n                </div>\n              </div>\n              <figcaption><strong>2D design</strong><span>Artwork and panel layout</span></figcaption>\n            </figure>\n          </div>\n        </section>\n\n        <p class=\"customization-form-status\" id=\"customizationInquiryStatus\" role=\"alert\" aria-live=\"polite\"></p>\n        <footer class=\"customization-form-actions\">\n          <p>We use these details only to respond to this customization request.</p>\n          <div>\n            <button type=\"button\" class=\"btn btn-secondary\" id=\"customizationInquiryCancel\">Cancel</button>\n            <button type=\"submit\" class=\"btn btn-primary\" id=\"customizationInquirySubmit\" disabled>\n              <span>Submit request</span>\n              <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n                <path d=\"M5 12h14M13 6l6 6-6 6\"/>\n              </svg>\n            </button>\n          </div>\n        </footer>\n      </form>\n\n      <section class=\"customization-success\" id=\"customizationInquirySuccess\" hidden>\n        <div class=\"customization-success-icon\">\n          <svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n            <path d=\"M20 6L9 17l-5-5\"/>\n          </svg>\n        </div>\n        <span>Request received</span>\n        <h3>Thank you — we’ll be in touch.</h3>\n        <p>Our team will reply within <strong>3 business days</strong>. Please watch your email messages.</p>\n        <div class=\"customization-reference\">\n          <span>Reference</span>\n          <strong id=\"customizationInquiryReference\">—</strong>\n        </div>\n        <button type=\"button\" class=\"btn btn-primary\" id=\"customizationInquiryDone\">Done</button>\n      </section>\n    </div>\n  </div>\n</div>\n\n")
     ;  if (supportsOnModelMockup) { 
@@ -7448,7 +7681,9 @@ title = __locals.title,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n                </div>\n              ")
     ;  } 
-    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n        </div>\n\n        <!-- Garment appearance and material inspector -->\n        <aside class=\"design-appearance-panel\" id=\"designAppearancePanel\" aria-label=\"Garment appearance\">\n          <section class=\"design-appearance-card\">\n            <div class=\"appearance-panel-header\">\n              <h3>Appearance</h3>\n              <button id=\"appearancePanelCollapse\" type=\"button\" aria-label=\"Collapse appearance panel\">\n                <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n              </button>\n            </div>\n            <div class=\"appearance-scope-switch\" role=\"group\" aria-label=\"Color scope\">\n              <button type=\"button\" class=\"active\" data-fill-scope=\"whole\" aria-pressed=\"true\">Whole garment</button>\n              <button type=\"button\" data-fill-scope=\"panel\" aria-pressed=\"false\">Panel</button>\n            </div>\n            <div class=\"appearance-section\">\n              <strong>Fill</strong>\n              <div class=\"appearance-fill-switch\" role=\"group\" aria-label=\"Fill type\">\n                <button type=\"button\" data-fill-mode=\"solid\" aria-pressed=\"false\">Solid</button>\n                <button type=\"button\" class=\"active\" data-fill-mode=\"gradient\" aria-pressed=\"true\">Gradient</button>\n              </div>\n              <div class=\"appearance-gradient-preview\" id=\"appearanceGradientPreview\"></div>\n              <div class=\"appearance-color-stops\">\n                <label><span>Start</span><input id=\"appearanceColorStart\" type=\"color\" value=\"#5f89f4\"></label>\n                <label><span>End</span><input id=\"appearanceColorEnd\" type=\"color\" value=\"#c39bea\"></label>\n              </div>\n              <label class=\"appearance-angle-control\">\n                <span>Angle</span>\n                <input id=\"appearanceGradientAngle\" type=\"range\" min=\"0\" max=\"360\" value=\"135\">\n                <output id=\"appearanceGradientAngleOutput\">135°</output>\n              </label>\n            </div>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </aside>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst zoomBtn = document.getElementById('zoomBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelInfoSection = document.querySelector('.model-info-section');\nconst modelViewerSection = document.querySelector('.model-viewer-section');\nconst heroSection = document.querySelector('.model-detail-hero');\nconst backgroundBtn = document.getElementById('backgroundBtn');\nconst heroBackgroundPopover = document.getElementById('heroBackgroundPopover');\nconst heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];\nconst heroGradientFrom = document.getElementById('heroGradientFrom');\nconst heroGradientTo = document.getElementById('heroGradientTo');\nconst heroGradientAngle = document.getElementById('heroGradientAngle');\nconst heroGradientAngleValue = document.getElementById('heroGradientAngleValue');\nconst applyHeroGradient = document.getElementById('applyHeroGradient');\nconst quickLightExposure = document.getElementById('quickLightExposure');\nconst quickLightExposureOutput = document.getElementById('quickLightExposureOutput');\nconst quickLightSoftness = document.getElementById('quickLightSoftness');\nconst quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');\nconst quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];\nconst modelViewerPromises = new WeakMap();\nconst defaultDetailRenderStandard = {\n  version: 'commercial-studio-stage-v3',\n  camera: {\n    webOrbit: '-16deg 72deg 142%',\n    webEditorOrbit: '-12deg 72deg 158%',\n    webFieldOfView: '28deg',\n    webTarget: 'auto auto auto'\n  },\n  material: {\n    neutralizeBaseColor: false,\n    baseColor: [0.96, 0.96, 0.95],\n    roughness: 0.68,\n    specularIorLevel: 0.32,\n    sheenWeight: 0.32,\n    normalStrengthMultiplier: 2.8,\n    normalStrengthMax: 0.45\n  },\n  web: {\n    environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',\n    lightingMode: 'camera-relative-45deg-white-softbox',\n    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',\n    balanceMethod: 'camera-relative-azimuth',\n    cameraRelativeLighting: true,\n    lightReferenceAzimuthDeg: -16,\n    lightAzimuthOffsetDeg: 45,\n    lightColor: '#ffffff',\n    environmentNeutralization: 'luminance-preserving-monochrome',\n    shadowIntensity: 0.32,\n    shadowSoftness: 0.9,\n    exportShadowIntensity: 0.46,\n    exportShadowSoftness: 0.88,\n    exposure: 0.82,\n    toneMapping: 'commerce',\n    material: {\n      neutralizeBaseColor: false,\n      baseColor: [0.82, 0.82, 0.8],\n      roughness: 0.62,\n      specularIorLevel: 0.28,\n      sheenWeight: 0.12\n    }\n  }\n};\nconst detailLightState = {\n  azimuthOffsetDeg: 45,\n  exposure: 0.82,\n  shadowSoftness: 0.9\n};\nwindow.ModelDetailLightingSettings = detailLightState;\nlet detailSceneStandard = defaultDetailRenderStandard;\nconst detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v14')\n  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)\n  .then((standard) => {\n    detailSceneStandard = {\n      ...defaultDetailRenderStandard,\n      ...standard,\n      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },\n      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },\n      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }\n    };\n    return detailSceneStandard;\n  })\n  .catch(() => defaultDetailRenderStandard);\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction catalogOrbitForAzimuth(standard, azimuth) {\n  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)\n    .trim()\n    .split(/\\s+/);\n  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;\n}\n\nfunction applyCatalogRenderAttributes(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard) return;\n  const webStandard = standard.web || defaultDetailRenderStandard.web;\n  const isSideView = element.dataset.catalogRenderStandard === 'side';\n  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);\n  if (webStandard.cameraRelativeLighting !== false) {\n    element.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage;\n    element.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth),\n      azimuthOffsetDeg: Number(element.dataset.studioLightAzimuthOffset)\n    });\n  }\n  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));\n  element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));\n  element.setAttribute('exposure', String(detailLightState.exposure ?? webStandard.exposure ?? 0.82));\n  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');\n  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');\n  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');\n  element.setAttribute(\n    'camera-orbit',\n    isSideView\n      ? catalogOrbitForAzimuth(standard, '90deg')\n      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit\n  );\n  element.autoRotate = false;\n  element.removeAttribute('auto-rotate');\n  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;\n}\n\nfunction applyCatalogMaterialResponse(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard || !element.model) return;\n  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;\n  const baseColor = Array.isArray(materialStandard.baseColor)\n    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))\n    : defaultDetailRenderStandard.material.baseColor;\n  const neutralFactor = [...baseColor, 1];\n\n  (element.model.materials || []).forEach((material) => {\n    const pbr = material.pbrMetallicRoughness;\n    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);\n    pbr?.setMetallicFactor?.(0);\n    if (!pbr?.metallicRoughnessTexture?.texture) {\n      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));\n    }\n    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);\n    try {\n      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);\n    } catch (error) {\n      // Some GLBs do not declare the optional sheen extension.\n    }\n    try {\n      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));\n    } catch (error) {\n      // Some GLBs do not declare the optional specular extension.\n    }\n  });\n}\n\ndetailRenderStandardPromise.then((standard) => {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    applyCatalogRenderAttributes(element, standard);\n    applyCatalogMaterialResponse(element, standard);\n  });\n});\n\nfunction renderDetailLightingControls() {\n  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));\n  const exposurePercent = Math.round(Math.max(0.55, Math.min(1.2, Number(detailLightState.exposure) || 0.82)) * 100);\n  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);\n  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);\n  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);\n  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;\n  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;\n  quickLightPresetButtons.forEach((button) => {\n    const isActive = Number(button.dataset.lightAngle) === angle;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction applyDetailLightingSettings() {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);\n    element.setAttribute('exposure', String(detailLightState.exposure));\n    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),\n      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg\n    });\n  });\n  renderDetailLightingControls();\n}\n\nquickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {\n  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);\n  applyDetailLightingSettings();\n}));\nquickLightExposure?.addEventListener('input', () => {\n  detailLightState.exposure = Number(quickLightExposure.value) / 100;\n  applyDetailLightingSettings();\n});\nquickLightSoftness?.addEventListener('input', () => {\n  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;\n  applyDetailLightingSettings();\n});\nrenderDetailLightingControls();\n\nfunction syncHeroColumnHeights() {\n  if (!modelInfoSection || !modelViewerSection) return;\n  if (window.matchMedia('(max-width: 820px)').matches) {\n    modelViewerSection.style.removeProperty('--model-viewer-height');\n    return;\n  }\n  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);\n}\n\nrequestAnimationFrame(syncHeroColumnHeights);\nwindow.addEventListener('resize', syncHeroColumnHeights, { passive: true });\nif ('ResizeObserver' in window && modelInfoSection) {\n  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);\n}\n\nfunction setHeroBackground(value, activePreset = null) {\n  if (!heroSection || !value) return;\n  heroSection.style.setProperty('--hero-background', value);\n  backgroundBtn?.style.setProperty('--control-background', value);\n  heroBackgroundPresets.forEach((button) => {\n    const isActive = button === activePreset;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction customHeroGradient() {\n  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;\n}\n\nfunction closeHeroBackgroundPopover({ restoreFocus = false } = {}) {\n  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;\n  heroBackgroundPopover.hidden = true;\n  backgroundBtn?.setAttribute('aria-expanded', 'false');\n  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });\n}\n\nbackgroundBtn?.addEventListener('click', () => {\n  const shouldOpen = heroBackgroundPopover?.hidden;\n  if (!heroBackgroundPopover) return;\n  heroBackgroundPopover.hidden = !shouldOpen;\n  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));\n  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });\n});\n\nheroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {\n  setHeroBackground(button.dataset.heroBackground, button);\n}));\n\n[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {\n  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;\n  setHeroBackground(customHeroGradient());\n}));\n\napplyHeroGradient?.addEventListener('click', () => {\n  setHeroBackground(customHeroGradient());\n  closeHeroBackgroundPopover({ restoreFocus: true });\n});\n\ndocument.addEventListener('pointerdown', (event) => {\n  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;\n  closeHeroBackgroundPopover();\n});\n\ndocument.addEventListener('keydown', (event) => {\n  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {\n    event.preventDefault();\n    closeHeroBackgroundPopover({ restoreFocus: true });\n  }\n});\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const renderStandardReady = element.dataset.catalogRenderStandard\n    ? detailRenderStandardPromise\n    : Promise.resolve(null);\n  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {\n    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;\n    if (!modelSource) throw new Error('3D model source unavailable');\n    if (element.getAttribute('src') && element.loaded && element.model) return element;\n    return new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);\n    });\n  }).then(async (readyViewer) => {\n    readyViewer.dismissPoster?.();\n    readyViewer.removeAttribute('poster');\n    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);\n    configureGarmentSoftnessAnimation(readyViewer);\n    if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {\n      await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);\n    }\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    delete modelViewerStage.dataset.loadError;\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';\n    throw error;\n  }\n}\n\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.(fabricMotionEnabled\n      ? 'model_detail_fabric_motion_enable'\n      : 'model_detail_fabric_motion_disable', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
+    ; __append("\n            </div>\n            <p class=\"preview-rotate-hint\">\n              <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\">\n                <path d=\"M20 7v5h-5\"/>\n                <path d=\"M4 17v-5h5\"/>\n                <path d=\"M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1\"/>\n              </svg>\n              Drag to rotate\n            </p>\n          </section>\n        </div>\n\n        <!-- Garment appearance and material inspector -->\n        <aside class=\"design-appearance-panel\" id=\"designAppearancePanel\" aria-label=\"Garment appearance\">\n          <section class=\"design-appearance-card\">\n            <div class=\"appearance-panel-header\">\n              <h3>Appearance</h3>\n              <button id=\"appearancePanelCollapse\" type=\"button\" aria-label=\"Collapse appearance panel\">\n                <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"m15 18-6-6 6-6\"/></svg>\n              </button>\n            </div>\n            <div class=\"appearance-scope-switch\" role=\"group\" aria-label=\"Color scope\">\n              <button type=\"button\" class=\"active\" data-fill-scope=\"whole\" aria-pressed=\"true\">Whole garment</button>\n              <button type=\"button\" data-fill-scope=\"panel\" aria-pressed=\"false\">Panel</button>\n            </div>\n            <div class=\"appearance-section\">\n              <strong>Fill</strong>\n              <div class=\"appearance-fill-switch\" role=\"group\" aria-label=\"Fill type\">\n                <button type=\"button\" data-fill-mode=\"solid\" aria-pressed=\"false\">Solid</button>\n                <button type=\"button\" class=\"active\" data-fill-mode=\"gradient\" aria-pressed=\"true\">Gradient</button>\n              </div>\n              <div class=\"appearance-gradient-preview\" id=\"appearanceGradientPreview\"></div>\n              <div class=\"appearance-color-stops\">\n                <label><span>Start</span><input id=\"appearanceColorStart\" type=\"color\" value=\"#5f89f4\"></label>\n                <label><span>End</span><input id=\"appearanceColorEnd\" type=\"color\" value=\"#c39bea\"></label>\n              </div>\n              <label class=\"appearance-angle-control\">\n                <span>Angle</span>\n                <input id=\"appearanceGradientAngle\" type=\"range\" min=\"0\" max=\"360\" value=\"135\">\n                <output id=\"appearanceGradientAngleOutput\">135°</output>\n              </label>\n            </div>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </aside>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst zoomBtn = document.getElementById('zoomBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelInfoSection = document.querySelector('.model-info-section');\nconst modelViewerSection = document.querySelector('.model-viewer-section');\nconst heroSection = document.querySelector('.model-detail-hero');\nconst backgroundBtn = document.getElementById('backgroundBtn');\nconst heroBackgroundPopover = document.getElementById('heroBackgroundPopover');\nconst heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];\nconst heroGradientFrom = document.getElementById('heroGradientFrom');\nconst heroGradientTo = document.getElementById('heroGradientTo');\nconst heroGradientAngle = document.getElementById('heroGradientAngle');\nconst heroGradientAngleValue = document.getElementById('heroGradientAngleValue');\nconst applyHeroGradient = document.getElementById('applyHeroGradient');\nconst quickLightExposure = document.getElementById('quickLightExposure');\nconst quickLightExposureOutput = document.getElementById('quickLightExposureOutput');\nconst quickLightSoftness = document.getElementById('quickLightSoftness');\nconst quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');\nconst quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];\nconst modelViewerPromises = new WeakMap();\nconst defaultDetailRenderStandard = {\n  version: 'commercial-studio-stage-v3',\n  camera: {\n    webOrbit: '-16deg 72deg 142%',\n    webEditorOrbit: '-12deg 72deg 158%',\n    webFieldOfView: '28deg',\n    webTarget: 'auto auto auto'\n  },\n  material: {\n    neutralizeBaseColor: false,\n    baseColor: [0.96, 0.96, 0.95],\n    roughness: 0.68,\n    specularIorLevel: 0.32,\n    sheenWeight: 0.32,\n    normalStrengthMultiplier: 2.8,\n    normalStrengthMax: 0.45\n  },\n  web: {\n    environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',\n    lightingMode: 'camera-relative-45deg-white-softbox',\n    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',\n    balanceMethod: 'camera-relative-azimuth',\n    cameraRelativeLighting: true,\n    lightReferenceAzimuthDeg: -16,\n    lightAzimuthOffsetDeg: 45,\n    lightColor: '#ffffff',\n    environmentNeutralization: 'luminance-preserving-monochrome',\n    shadowIntensity: 0.32,\n    shadowSoftness: 0.9,\n    exportShadowIntensity: 0.46,\n    exportShadowSoftness: 0.88,\n    exposure: 0.82,\n    toneMapping: 'commerce',\n    material: {\n      neutralizeBaseColor: false,\n      baseColor: [0.82, 0.82, 0.8],\n      roughness: 0.62,\n      specularIorLevel: 0.28,\n      sheenWeight: 0.12\n    }\n  }\n};\nconst detailLightState = {\n  azimuthOffsetDeg: 45,\n  exposure: 0.82,\n  shadowSoftness: 0.9\n};\nwindow.ModelDetailLightingSettings = detailLightState;\nlet detailSceneStandard = defaultDetailRenderStandard;\nconst detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260919-tshirt225-lighting-v1')\n  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)\n  .then((standard) => {\n    detailSceneStandard = {\n      ...defaultDetailRenderStandard,\n      ...standard,\n      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },\n      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },\n      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }\n    };\n    const modelOverride = standard.modelOverrides?.[")
+    ; __append( JSON.stringify(String(model.id)) )
+    ; __append("];\n    if (modelOverride) {\n      detailSceneStandard = {\n        ...detailSceneStandard,\n        ...modelOverride,\n        camera: { ...detailSceneStandard.camera, ...(modelOverride.camera || {}) },\n        web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }\n      };\n    }\n    Object.assign(detailLightState, {\n      azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,\n      exposure: detailSceneStandard.web.exposure,\n      shadowSoftness: detailSceneStandard.web.shadowSoftness\n    });\n    renderDetailLightingControls();\n    return detailSceneStandard;\n  })\n  .catch(() => defaultDetailRenderStandard);\nwindow.ModelDetailRenderStandardPromise = detailRenderStandardPromise;\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction catalogOrbitForAzimuth(standard, azimuth) {\n  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)\n    .trim()\n    .split(/\\s+/);\n  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;\n}\n\nfunction applyCatalogRenderAttributes(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard) return;\n  const webStandard = standard.web || defaultDetailRenderStandard.web;\n  const isSideView = element.dataset.catalogRenderStandard === 'side';\n  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);\n  if (webStandard.cameraRelativeLighting !== false) {\n    element.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage;\n    element.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth),\n      azimuthOffsetDeg: Number(element.dataset.studioLightAzimuthOffset)\n    });\n  }\n  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));\n  element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));\n  element.setAttribute('exposure', String(detailLightState.exposure ?? webStandard.exposure ?? 0.82));\n  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');\n  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');\n  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');\n  element.setAttribute(\n    'camera-orbit',\n    isSideView\n      ? catalogOrbitForAzimuth(standard, '90deg')\n      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit\n  );\n  element.autoRotate = false;\n  element.removeAttribute('auto-rotate');\n  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;\n}\n\nfunction applyCatalogMaterialResponse(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard || !element.model) return;\n  if (standard.web?.preserveNativeMaterials) return;\n  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;\n  const baseColor = Array.isArray(materialStandard.baseColor)\n    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))\n    : defaultDetailRenderStandard.material.baseColor;\n  const neutralFactor = [...baseColor, 1];\n\n  (element.model.materials || []).forEach((material) => {\n    const pbr = material.pbrMetallicRoughness;\n    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);\n    pbr?.setMetallicFactor?.(0);\n    if (!pbr?.metallicRoughnessTexture?.texture) {\n      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));\n    }\n    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);\n    try {\n      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);\n    } catch (error) {\n      // Some GLBs do not declare the optional sheen extension.\n    }\n    try {\n      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));\n    } catch (error) {\n      // Some GLBs do not declare the optional specular extension.\n    }\n  });\n}\n\ndetailRenderStandardPromise.then((standard) => {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    applyCatalogRenderAttributes(element, standard);\n    applyCatalogMaterialResponse(element, standard);\n  });\n});\n\nfunction renderDetailLightingControls() {\n  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));\n  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 0.82)) * 100);\n  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);\n  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);\n  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);\n  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;\n  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;\n  quickLightPresetButtons.forEach((button) => {\n    const isActive = Number(button.dataset.lightAngle) === angle;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction applyDetailLightingSettings() {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);\n    element.setAttribute('exposure', String(detailLightState.exposure));\n    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),\n      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg\n    });\n  });\n  renderDetailLightingControls();\n}\n\nquickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {\n  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);\n  applyDetailLightingSettings();\n}));\nquickLightExposure?.addEventListener('input', () => {\n  detailLightState.exposure = Number(quickLightExposure.value) / 100;\n  applyDetailLightingSettings();\n});\nquickLightSoftness?.addEventListener('input', () => {\n  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;\n  applyDetailLightingSettings();\n});\nrenderDetailLightingControls();\n\nfunction syncHeroColumnHeights() {\n  if (!modelInfoSection || !modelViewerSection) return;\n  if (window.matchMedia('(max-width: 820px)').matches) {\n    modelViewerSection.style.removeProperty('--model-viewer-height');\n    return;\n  }\n  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);\n}\n\nrequestAnimationFrame(syncHeroColumnHeights);\nwindow.addEventListener('resize', syncHeroColumnHeights, { passive: true });\nif ('ResizeObserver' in window && modelInfoSection) {\n  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);\n}\n\nfunction setHeroBackground(value, activePreset = null) {\n  if (!heroSection || !value) return;\n  heroSection.style.setProperty('--hero-background', value);\n  backgroundBtn?.style.setProperty('--control-background', value);\n  heroBackgroundPresets.forEach((button) => {\n    const isActive = button === activePreset;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction customHeroGradient() {\n  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;\n}\n\nfunction closeHeroBackgroundPopover({ restoreFocus = false } = {}) {\n  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;\n  heroBackgroundPopover.hidden = true;\n  backgroundBtn?.setAttribute('aria-expanded', 'false');\n  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });\n}\n\nbackgroundBtn?.addEventListener('click', () => {\n  const shouldOpen = heroBackgroundPopover?.hidden;\n  if (!heroBackgroundPopover) return;\n  heroBackgroundPopover.hidden = !shouldOpen;\n  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));\n  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });\n});\n\nheroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {\n  setHeroBackground(button.dataset.heroBackground, button);\n}));\n\n[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {\n  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;\n  setHeroBackground(customHeroGradient());\n}));\n\napplyHeroGradient?.addEventListener('click', () => {\n  setHeroBackground(customHeroGradient());\n  closeHeroBackgroundPopover({ restoreFocus: true });\n});\n\ndocument.addEventListener('pointerdown', (event) => {\n  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;\n  closeHeroBackgroundPopover();\n});\n\ndocument.addEventListener('keydown', (event) => {\n  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {\n    event.preventDefault();\n    closeHeroBackgroundPopover({ restoreFocus: true });\n  }\n});\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const renderStandardReady = element.dataset.catalogRenderStandard\n    ? detailRenderStandardPromise\n    : Promise.resolve(null);\n  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {\n    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;\n    if (!modelSource) throw new Error('3D model source unavailable');\n    if (element.getAttribute('src') && element.loaded && element.model) return element;\n    return new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);\n    });\n  }).then(async (readyViewer) => {\n    readyViewer.dismissPoster?.();\n    readyViewer.removeAttribute('poster');\n    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);\n    configureGarmentSoftnessAnimation(readyViewer);\n    if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {\n      await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);\n    }\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    delete modelViewerStage.dataset.loadError;\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';\n    throw error;\n  }\n}\n\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.(fabricMotionEnabled\n      ? 'model_detail_fabric_motion_enable'\n      : 'model_detail_fabric_motion_disable', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
     ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (zoomBtn && viewer) {\n  let viewerZoomed = false;\n  let viewerBaseRadius = null;\n  zoomBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    const orbit = readyViewer?.getCameraOrbit?.();\n    if (!orbit) return;\n    if (!viewerBaseRadius) viewerBaseRadius = orbit.radius;\n    viewerZoomed = !viewerZoomed;\n    const radius = viewerZoomed ? viewerBaseRadius * 0.8 : viewerBaseRadius;\n    readyViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${radius}m`;\n    readyViewer.jumpCameraToGoal?.();\n    zoomBtn.classList.toggle('active', viewerZoomed);\n    zoomBtn.setAttribute('aria-pressed', String(viewerZoomed));\n  });\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
@@ -7470,9 +7705,13 @@ title = __locals.title,
     ; __append( JSON.stringify(model.name || '') )
     ; __append(",\n  userAuthenticated: ")
     ; __append( JSON.stringify(Boolean(user)) )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];\n\n  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {\n    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';\n    aiTryOnLinks.forEach((link) => {\n      const destination = new URL(link.href, window.location.origin);\n      if (safeProjectId) destination.searchParams.set('project', safeProjectId);\n      else destination.searchParams.delete('project');\n      link.href = `${destination.pathname}${destination.search}`;\n    });\n  }\n\n  window.syncModelTryOnLinks = syncModelTryOnLinks;\n  syncModelTryOnLinks();\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    loginModal.hidden = false;\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || loginModal.hidden) return;\n    loginModal.hidden = true;\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  googleLogin?.addEventListener('click', () => {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  });\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260918-gradient-picker-v63',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  const quickFabricToggle = document.getElementById('quickFabricToggle');\n  const quickFabricMenu = document.getElementById('quickFabricMenu');\n  const quickFabricName = document.getElementById('quickFabricName');\n  const quickFabricPreview = document.getElementById('quickFabricPreview');\n  const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];\n  const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];\n\n  function closeQuickFabricMenu({ restoreFocus = false } = {}) {\n    if (!quickFabricMenu || quickFabricMenu.hidden) return;\n    quickFabricMenu.hidden = true;\n    quickFabricToggle?.setAttribute('aria-expanded', 'false');\n    if (restoreFocus) quickFabricToggle?.focus({ preventScroll: true });\n  }\n\n  quickFabricToggle?.addEventListener('click', () => {\n    const shouldOpen = quickFabricMenu?.hidden;\n    if (!quickFabricMenu) return;\n    quickFabricMenu.hidden = !shouldOpen;\n    quickFabricToggle.setAttribute('aria-expanded', String(shouldOpen));\n    if (shouldOpen) quickFabricMenu.querySelector('button')?.focus({ preventScroll: true });\n  });\n\n  quickMaterialButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickMaterial?.(button.dataset.quickMaterial);\n      quickMaterialButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n      if (quickFabricName) quickFabricName.textContent = button.dataset.materialName || 'Fabric';\n      if (quickFabricPreview) quickFabricPreview.style.backgroundImage = `url(\"${button.dataset.materialPreview || ''}\")`;\n      closeQuickFabricMenu({ restoreFocus: true });\n    } catch (error) {\n      console.error('Failed to apply quick material:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  quickColorButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickColor?.(button.dataset.quickColor);\n      quickColorButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n    } catch (error) {\n      console.error('Failed to apply quick color:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  document.addEventListener('pointerdown', (event) => {\n    if (quickFabricMenu?.hidden || quickFabricMenu?.contains(event.target) || quickFabricToggle?.contains(event.target)) return;\n    closeQuickFabricMenu();\n  });\n\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && quickFabricMenu && !quickFabricMenu.hidden) {\n      event.preventDefault();\n      closeQuickFabricMenu({ restoreFocus: true });\n    }\n  });\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        await window.renderCurrentModelImage?.();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const hasSavedProject = new URLSearchParams(window.location.search).has('project');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];\n\n  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {\n    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';\n    aiTryOnLinks.forEach((link) => {\n      const destination = new URL(link.href, window.location.origin);\n      if (safeProjectId) destination.searchParams.set('project', safeProjectId);\n      else destination.searchParams.delete('project');\n      link.href = `${destination.pathname}${destination.search}`;\n    });\n  }\n\n  window.syncModelTryOnLinks = syncModelTryOnLinks;\n  syncModelTryOnLinks();\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    if (!loginModal.open) loginModal.showModal();\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || !loginModal.open) return;\n    loginModal.close();\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginModal?.addEventListener('cancel', (event) => { event.preventDefault(); closeLoginModal(); });\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && loginModal.open) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  googleLogin?.addEventListener('click', () => {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  });\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260920-admin-preview-v65',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  const quickFabricToggle = document.getElementById('quickFabricToggle');\n  const quickFabricMenu = document.getElementById('quickFabricMenu');\n  const quickFabricName = document.getElementById('quickFabricName');\n  const quickFabricPreview = document.getElementById('quickFabricPreview');\n  const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];\n  const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];\n\n  function closeQuickFabricMenu({ restoreFocus = false } = {}) {\n    if (!quickFabricMenu || quickFabricMenu.hidden) return;\n    quickFabricMenu.hidden = true;\n    quickFabricToggle?.setAttribute('aria-expanded', 'false');\n    if (restoreFocus) quickFabricToggle?.focus({ preventScroll: true });\n  }\n\n  quickFabricToggle?.addEventListener('click', () => {\n    const shouldOpen = quickFabricMenu?.hidden;\n    if (!quickFabricMenu) return;\n    quickFabricMenu.hidden = !shouldOpen;\n    quickFabricToggle.setAttribute('aria-expanded', String(shouldOpen));\n    if (shouldOpen) quickFabricMenu.querySelector('button')?.focus({ preventScroll: true });\n  });\n\n  quickMaterialButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickMaterial?.(button.dataset.quickMaterial);\n      quickMaterialButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n      if (quickFabricName) quickFabricName.textContent = button.dataset.materialName || 'Fabric';\n      if (quickFabricPreview) quickFabricPreview.style.backgroundImage = `url(\"${button.dataset.materialPreview || ''}\")`;\n      closeQuickFabricMenu({ restoreFocus: true });\n    } catch (error) {\n      console.error('Failed to apply quick material:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  quickColorButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickColor?.(button.dataset.quickColor);\n      quickColorButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n    } catch (error) {\n      console.error('Failed to apply quick color:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  document.addEventListener('pointerdown', (event) => {\n    if (quickFabricMenu?.hidden || quickFabricMenu?.contains(event.target) || quickFabricToggle?.contains(event.target)) return;\n    closeQuickFabricMenu();\n  });\n\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && quickFabricMenu && !quickFabricMenu.hidden) {\n      event.preventDefault();\n      closeQuickFabricMenu({ restoreFocus: true });\n    }\n  });\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        await window.renderCurrentModelImage?.();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const projectParams = new URLSearchParams(window.location.search);\n  const hasSavedProject = projectParams.has('project') || projectParams.has('adminProject');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
     ;  if (supportsOnModelMockup) { 
     ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260915-direct-events-v3';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
+    ;  } 
+    ; __append("\n\n")
+    ;  if (aiTryOnAvailable) { 
+    ; __append("\n<dialog id=\"detailTryOnDialog\" class=\"detail-tryon-dialog\" aria-label=\"AI Try-on editor\">\n  <p class=\"detail-tryon-message\" role=\"status\">Loading editor…</p>\n  <iframe id=\"detailTryOnFrame\" title=\"AI Try-on editor\" allow=\"fullscreen\" ></iframe>\n  <button type=\"button\" class=\"detail-tryon-loading-close\" aria-label=\"Close AI Try-on\">×</button>\n</dialog>\n<script src=\"/js/detail-try-on.js?v=20260922-generation-gate-v4\" defer></script>\n")
     ;  } 
     ; __append("\n\n")
     ; __append( include('partials/footer') )
@@ -7511,6 +7750,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -7684,6 +7929,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -7811,6 +8062,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -8093,6 +8350,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -8167,7 +8430,9 @@ title = __locals.title,
   footerVariant = __locals.footerVariant;
     ; __append("<!DOCTYPE html>\n<html lang=\"")
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
-    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260917-white-detail-events-v2\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260913-upload-timeout-v3\" defer></script>\n  <script src=\"/js/export-entitlements.js?v=20260915-gray-white-watermark-v9\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260917-white-detail-events-v2\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/model-login.css?v=20260922-v1\">\n  <link rel=\"stylesheet\" href=\"/css/upgrade-modal.css?v=20260922-slide-v5\">\n  <script src=\"/js/login-dialog.js?v=20260921-v1\" data-google-auth=\"")
+    ; __append(escapeFn( typeof googleAuthEnabled !== 'undefined' && googleAuthEnabled ? 'true' : 'false' ))
+    ; __append("\" defer></script>\n  <script src=\"/js/upgrade-modal.js?v=20260923-granted-credits-v10\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260921-upgrade-v5\" defer></script>\n  <script src=\"/js/export-entitlements.js?v=20260915-gray-white-watermark-v9\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
@@ -8238,9 +8503,18 @@ title = __locals.title,
     ;  if (typeof page !== 'undefined' && page === 'home') { 
     ; __append("\n    <link rel=\"stylesheet\" href=\"/css/home-v2.css?v=20260916-imagegen-build-v5\">\n  ")
     ;  } 
-    ; __append("\n</head>\n<body class=\"")
+    ; __append("\n  <link rel=\"stylesheet\" href=\"/css/opening-offer.css?v=20260922-v2\">\n  <script src=\"/js/opening-offer.js?v=20260922-v1\" defer></script>\n</head>\n")
+    ;  const activeOpeningOffer = typeof openingOffer !== 'undefined' ? openingOffer : null; 
+    ; __append("\n<body class=\"")
     ; __append(escapeFn( typeof bodyClass !== 'undefined' && bodyClass ? bodyClass : '' ))
-    ; __append("\">\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClozDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
+    ; __append(escapeFn( activeOpeningOffer ? ' has-opening-offer' : '' ))
+    ; __append("\">\n  <a class=\"skip-link\" href=\"#main-content\">Skip to main content</a>\n  <nav class=\"navbar\">\n    ")
+    ;  if (activeOpeningOffer) { 
+    ; __append("\n      <a class=\"opening-offer-banner\" href=\"/pricing\" data-offer-expires=\"")
+    ; __append(escapeFn( activeOpeningOffer.expiresAt ))
+    ; __append("\" aria-label=\"Opening offer: 50% off your first Pro or Max payment with OPEN50. Ends November 30, 2026 at 23:59 UTC+8.\">\n        <span class=\"opening-offer-label\">Opening offer</span><strong>50% off your first payment</strong><span class=\"opening-offer-code\">OPEN50</span><span class=\"opening-offer-deadline\">Ends Nov 30<span class=\"opening-offer-timezone\"> · 23:59 UTC+8</span></span><span aria-hidden=\"true\">↗</span>\n      </a>\n    ")
+    ;  } 
+    ; __append("\n    <div class=\"navbar-container\">\n      <!-- Logo -->\n      <a href=\"/\" class=\"navbar-logo\">\n        <span class=\"logo-text\">ClozDesign</span>\n      </a>\n\n      <!-- Desktop Navigation -->\n      <div class=\"navbar-menu\">\n        <a href=\"/mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'design-3d' ? 'active' : '' ))
     ; __append("\">\n          3D Models\n        </a>\n        <a href=\"/white-mockups\" class=\"nav-link ")
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'white-mockups' ? 'active' : '' ))
@@ -8280,6 +8554,129 @@ title = __locals.title,
   return __output;
 
 },
+  "partials/model-login.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  authLoginUrl = __locals.authLoginUrl,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  feedbackFilters = __locals.feedbackFilters,
+  feedbackPagination = __locals.feedbackPagination,
+  feedbackStats = __locals.feedbackStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  imageFilters = __locals.imageFilters,
+  imagePagination = __locals.imagePagination,
+  imageStats = __locals.imageStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append("<dialog class=\"model-login-modal\" id=\"modelLoginModal\" role=\"dialog\" aria-modal=\"true\" aria-labelledby=\"modelLoginTitle\">\n  <button class=\"model-login-backdrop\" id=\"modelLoginBackdrop\" type=\"button\" aria-label=\"Close sign in\"></button>\n  <section class=\"model-login-panel\" aria-describedby=\"modelLoginDescription\">\n    <button class=\"model-login-close\" id=\"modelLoginClose\" type=\"button\" aria-label=\"Close sign in\">\n      <svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" aria-hidden=\"true\"><path d=\"M18 6 6 18M6 6l12 12\"/></svg>\n    </button>\n    <span class=\"model-login-kicker\">ClozDesign account</span>\n    <h2 id=\"modelLoginTitle\">Sign in to customize</h2>\n    <p id=\"modelLoginDescription\">Save this garment as a project and continue editing it from your Workbench.</p>\n    ")
+    ;  if (googleAuthEnabled) { 
+    ; __append("\n      <a class=\"model-google-login\" id=\"modelGoogleLogin\" href=\"/auth/google?next=")
+    ; __append(escapeFn( encodeURIComponent(loginReturnPath) ))
+    ; __append("\">\n        <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path fill=\"#4285F4\" d=\"M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z\"/><path fill=\"#34A853\" d=\"M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z\"/><path fill=\"#FBBC05\" d=\"M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z\"/><path fill=\"#EA4335\" d=\"M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z\"/></svg>\n        <span>Continue with Google</span>\n      </a>\n      <div class=\"model-login-divider\"><span>or use email</span></div>\n    ")
+    ;  } 
+    ; __append("\n    <form class=\"model-login-form\" id=\"modelLoginForm\" action=\"/auth/login\" method=\"post\">\n      <input type=\"hidden\" name=\"next\" value=\"")
+    ; __append(escapeFn( loginReturnPath ))
+    ; __append("\">\n      <label>\n        <span>Email</span>\n        <input id=\"modelLoginEmail\" type=\"email\" name=\"email\" autocomplete=\"email\" inputmode=\"email\" required placeholder=\"you@example.com\">\n      </label>\n      <label>\n        <span>Password</span>\n        <input type=\"password\" name=\"password\" autocomplete=\"current-password\" required placeholder=\"Enter your password\">\n      </label>\n      <p class=\"model-login-error\" id=\"modelLoginError\" role=\"alert\" aria-live=\"polite\" hidden></p>\n      <button class=\"model-login-submit\" id=\"modelLoginSubmit\" type=\"submit\"><span>Sign in and customize</span></button>\n    </form>\n    <p class=\"model-login-register\">New to ClozDesign? <a href=\"/auth/register?next=")
+    ; __append(escapeFn( encodeURIComponent(loginReturnPath) ))
+    ; __append("\">Create an account</a></p>\n  </section>\n</dialog>\n")
+  return __output;
+
+},
   "partials/share-panel.ejs": function anonymous(locals, escapeFn, include, rethrow
 ) {
 escapeFn = escapeFn || function (markup) {
@@ -8311,6 +8708,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -8428,6 +8831,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -8502,21 +8911,21 @@ title = __locals.title,
   footerVariant = __locals.footerVariant;
     ; __append( include('partials/header', {
   bodyClass: 'pricing-page',
-  pageStyles: ['/css/pricing.css?v=20260917-dodo-v1']
+  pageStyles: ['/css/pricing.css?v=20260922-annual-v3']
 }) )
     ; __append("\n")
     ;  const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled); 
-    ; __append("\n\n<section class=\"pricing-hero\" aria-labelledby=\"pricingTitle\">\n  <div class=\"container pricing-hero-inner\">\n    <span class=\"pricing-eyebrow\">Plans for every workflow</span>\n    <h1 id=\"pricingTitle\">Choose the space<br>your ideas need.</h1>\n    <p>Start with five projects, or unlock more room for mockups, exports, and image storage.</p>\n  </div>\n</section>\n\n<section class=\"pricing-plans\" aria-label=\"ClozDesign plans\" data-pricing-plans data-authenticated=\"")
+    ; __append("\n\n<section class=\"pricing-hero\" aria-labelledby=\"pricingTitle\">\n  <div class=\"container pricing-hero-inner\">\n    <span class=\"pricing-eyebrow\">Plans for every workflow</span>\n    <h1 id=\"pricingTitle\">Choose the space<br>your ideas need.</h1>\n    <p>Start with three projects, or unlock more room for mockups, exports, and image storage.</p>\n  </div>\n</section>\n\n<section class=\"pricing-plans\" aria-label=\"ClozDesign plans\" data-pricing-plans data-authenticated=\"")
     ; __append(escapeFn( user ? 'true' : 'false' ))
-    ; __append("\">\n  <div class=\"container pricing-billing\">\n    <div class=\"billing-switch\" role=\"group\" aria-label=\"Billing frequency\">\n      <button class=\"is-active\" type=\"button\" data-billing-option=\"monthly\" data-analytics-managed=\"true\" aria-pressed=\"true\">Monthly</button>\n      <button type=\"button\" data-billing-option=\"yearly\" data-analytics-managed=\"true\" aria-pressed=\"false\">Yearly</button>\n    </div>\n    <p class=\"billing-caption\" aria-live=\"polite\" data-billing-caption>Flexible monthly billing. Change plans anytime.</p>\n  </div>\n\n  <div class=\"container pricing-grid\">\n    <article class=\"pricing-card pricing-card-free\">\n      <div class=\"pricing-card-heading\"><h2>Free</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>$0</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 5 projects total</li>\n        <li><span aria-hidden=\"true\">✓</span> 100 MB image storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Watermarked exports</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register\" data-pricing-cta data-plan=\"free\" data-analytics-managed=\"true\">Start free</a>\n    </article>\n\n    <article class=\"pricing-card\">\n      <div class=\"pricing-card-heading\"><h2>Pro</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$9.90\" data-yearly=\"$99\">$9.90</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ year\">/ month</span>\n        </div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"$99 / year\" data-yearly=\"$9.90 / month\">$99 / year</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 28 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        ")
+    ; __append("\">\n  <div class=\"container pricing-billing\">\n    <div class=\"billing-switch\" role=\"group\" aria-label=\"Billing frequency\">\n      <button class=\"is-active\" type=\"button\" data-billing-option=\"monthly\" data-analytics-managed=\"true\" aria-pressed=\"true\">Monthly</button>\n      <button type=\"button\" data-billing-option=\"yearly\" data-analytics-managed=\"true\" aria-pressed=\"false\">Yearly</button>\n    </div>\n    <p class=\"billing-caption\" aria-live=\"polite\" data-billing-caption>Flexible monthly billing. Change plans anytime.</p>\n  </div>\n\n  <div class=\"container pricing-grid\">\n    <article class=\"pricing-card pricing-card-free\">\n      <div class=\"pricing-card-heading\"><h2>Free</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>$0</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 3 projects total</li>\n        <li><span aria-hidden=\"true\">✓</span> 100 MB image storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Watermarked exports</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register\" data-pricing-cta data-plan=\"free\" data-analytics-managed=\"true\">Start free</a>\n    </article>\n\n    <article class=\"pricing-card\">\n      <div class=\"pricing-card-heading\"><h2>Pro</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$9.90\" data-yearly=\"$6.67\">$9.90</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ month\">/ month</span>\n        </div>\n        <div class=\"pricing-annual-saving\" data-plan-saving hidden><s>$9.90 / month</s><span>Save 32.7%</span></div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"Billed monthly\" data-yearly=\"$80 billed annually\">Billed monthly</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 28 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        ")
     ;  if (aiTryOnAvailable) { 
-    ; __append("<li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 150 Try-on Credits</li>")
+    ; __append("<li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 250 Try-on Credits</li>")
     ;  } 
-    ; __append("\n        <li><span aria-hidden=\"true\">✓</span> 1 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register?plan=pro&amp;billing=monthly\" data-pricing-cta data-plan-link data-plan=\"pro\" data-analytics-managed=\"true\">Choose Pro</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-featured\">\n      <div class=\"pricing-popular\">Most popular</div>\n      <div class=\"pricing-card-heading\"><h2>Max</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$29\" data-yearly=\"$299\">$29</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ year\">/ month</span>\n        </div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"$299 / year\" data-yearly=\"$29 / month\">$299 / year</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 99 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        ")
+    ; __append("\n        <li><span aria-hidden=\"true\">✓</span> 1 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"/auth/register?plan=pro&amp;billing=monthly\" data-pricing-cta data-plan-link data-plan=\"pro\" data-analytics-managed=\"true\">Choose Pro</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-featured\">\n      <div class=\"pricing-popular\">Most popular</div>\n      <div class=\"pricing-card-heading\"><h2>Max</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\">\n          <strong data-plan-price data-monthly=\"$29\" data-yearly=\"$19.67\">$29</strong>\n          <span data-plan-period data-monthly=\"/ month\" data-yearly=\"/ month\">/ month</span>\n        </div>\n        <div class=\"pricing-annual-saving\" data-plan-saving hidden><s>$29 / month</s><span>Save 32.2%</span></div>\n        <span class=\"pricing-alt-price\" data-plan-alt data-monthly=\"Billed monthly\" data-yearly=\"$236 billed annually\">Billed monthly</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> 99 projects / month</li>\n        <li><span aria-hidden=\"true\">✓</span> Remove watermarks</li>\n        ")
     ;  if (aiTryOnAvailable) { 
     ; __append("<li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 1,000 Try-on Credits</li>")
     ;  } 
-    ; __append("\n        <li><span aria-hidden=\"true\">✓</span> 100 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-inverse\" href=\"/auth/register?plan=max&amp;billing=monthly\" data-pricing-cta data-plan-link data-plan=\"max\" data-analytics-managed=\"true\">Choose Max</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-business\">\n      <div class=\"pricing-card-heading\"><h2>Business</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>Custom</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> Custom projects &amp; limits</li>\n        <li><span aria-hidden=\"true\">✓</span> Custom storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Priority support</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry\" data-pricing-cta data-plan=\"business\" data-analytics-managed=\"true\">Contact sales</a>\n    </article>\n  </div>\n\n  <div class=\"container pricing-inline-note\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">\n      <ellipse cx=\"12\" cy=\"5\" rx=\"8\" ry=\"3\"></ellipse>\n      <path d=\"M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5\"></path>\n      <path d=\"M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7\"></path>\n    </svg>\n    <span aria-hidden=\"true\"></span>\n    <p>Projects refresh monthly. Storage stays with you.</p>\n  </div>\n</section>\n\n<script src=\"/js/pricing.js?v=20260917-dodo-v1\" defer></script>\n")
+    ; __append("\n        <li><span aria-hidden=\"true\">✓</span> 100 GB image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-inverse\" href=\"/auth/register?plan=max&amp;billing=monthly\" data-pricing-cta data-plan-link data-plan=\"max\" data-analytics-managed=\"true\">Choose Max</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-business\">\n      <div class=\"pricing-card-heading\"><h2>Business</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>Custom</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> Custom projects &amp; limits</li>\n        <li><span aria-hidden=\"true\">✓</span> Custom storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Priority support</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry\" data-pricing-cta data-plan=\"business\" data-analytics-managed=\"true\">Contact sales</a>\n    </article>\n  </div>\n\n  <div class=\"container pricing-inline-note\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">\n      <ellipse cx=\"12\" cy=\"5\" rx=\"8\" ry=\"3\"></ellipse>\n      <path d=\"M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5\"></path>\n      <path d=\"M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7\"></path>\n    </svg>\n    <span aria-hidden=\"true\"></span>\n    <p>Projects refresh monthly. Storage stays with you.</p>\n  </div>\n</section>\n\n<script src=\"/js/pricing.js?v=20260922-annual-v3\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -8553,6 +8962,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -8709,6 +9124,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -9098,6 +9519,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -9291,6 +9718,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -9496,6 +9929,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,
@@ -9703,9 +10142,9 @@ title = __locals.title,
     ;  }); 
     ; __append("\n        </div>\n      </section>\n    ")
     ;  } 
-    ; __append("\n  </div>\n</div>\n\n<dialog class=\"white-signin-dialog\" id=\"whiteMockupSignIn\" aria-labelledby=\"whiteMockupSignInTitle\" aria-describedby=\"whiteMockupSignInDescription\">\n  <button type=\"button\" class=\"white-signin-close\" id=\"whiteMockupSignInClose\" aria-label=\"Close sign in\">×</button>\n  <span class=\"white-detail-eyebrow\">Your design workspace</span>\n  <h2 id=\"whiteMockupSignInTitle\">Sign in to start designing</h2>\n  <p id=\"whiteMockupSignInDescription\">Upload your artwork and keep your mockup saved in your account.</p>\n  <form id=\"whiteMockupSignInForm\" data-analytics-managed=\"true\">\n    <div class=\"form-group\">\n      <label class=\"form-label\" for=\"whiteMockupSignInEmail\">Email</label>\n      <input class=\"form-input\" id=\"whiteMockupSignInEmail\" type=\"email\" name=\"email\" autocomplete=\"email\" required autofocus>\n    </div>\n    <div class=\"form-group\">\n      <label class=\"form-label\" for=\"whiteMockupSignInPassword\">Password</label>\n      <input class=\"form-input\" id=\"whiteMockupSignInPassword\" type=\"password\" name=\"password\" autocomplete=\"current-password\" required>\n    </div>\n    <p class=\"auth-error\" id=\"whiteMockupSignInError\" role=\"alert\" hidden></p>\n    <button type=\"submit\" class=\"btn btn-primary btn-full\">Sign in</button>\n  </form>\n  <p class=\"white-signin-footer\">New to ClozDesign? <a href=\"/auth/register?next=")
-    ; __append(escapeFn( encodeURIComponent('/white-mockups/' + asset.asset_name) ))
-    ; __append("\">Create an account</a></p>\n</dialog>\n\n<script src=\"/js/white-mockup-editor.js?v=20260919-white-signin-modal-v29\" defer></script>\n")
+    ; __append("\n  </div>\n</div>\n\n")
+    ; __append( include('partials/model-login', { loginReturnPath: '/white-mockups/' + asset.asset_name }) )
+    ; __append("\n\n<script src=\"/js/white-mockup-editor.js?v=20260922-shared-login-v31\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -9742,6 +10181,12 @@ title = __locals.title,
   authLoginUrl = __locals.authLoginUrl,
   googleAuthEnabled = __locals.googleAuthEnabled,
   googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
   metaDescription = __locals.metaDescription,
   metaRobots = __locals.metaRobots,
   metaImage = __locals.metaImage,

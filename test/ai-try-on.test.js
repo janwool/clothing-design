@@ -8,9 +8,11 @@ const { isAiTryOnEnabled } = require('../lib/feature-flags');
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 
-test('keeps AI try-on disabled unless the feature flag is explicitly enabled', () => {
+test('enables AI try-on by default and respects an explicit kill switch', () => {
   const previousValue = process.env.AI_TRY_ON_ENABLED;
   delete process.env.AI_TRY_ON_ENABLED;
+  assert.equal(isAiTryOnEnabled(), true);
+  process.env.AI_TRY_ON_ENABLED = 'false';
   assert.equal(isAiTryOnEnabled(), false);
   process.env.AI_TRY_ON_ENABLED = 'true';
   assert.equal(isAiTryOnEnabled(), true);

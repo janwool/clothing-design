@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260918-fixed-lighting-v40']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -43,6 +43,12 @@
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
               <span>Render Image</span>
             </button>
+          <% } %>
+          <% if (aiTryOnAvailable && previewModelFileUrl) { %>
+            <a class="detail-action" id="detailAiTryOnBtn" href="<%= aiTryOnPath %>" data-ai-try-on-link>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5Z"/></svg>
+              <span>AI Try-on</span>
+            </a>
           <% } %>
           <button class="detail-action" id="customizationInquiryBtn" type="button">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 20V8l4-3v4l5-4v4l7-4v15H4Z"/><path d="M8 14h2m3 0h2m3 0h2"/></svg>
@@ -103,7 +109,7 @@
           </div>
           <label class="quick-light-range">
             <span>Brightness <output id="quickLightExposureOutput">82%</output></span>
-            <input id="quickLightExposure" type="range" min="55" max="120" step="1" value="82">
+            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="82">
           </label>
           <label class="quick-light-range">
             <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
@@ -159,6 +165,7 @@
           <a
             class="quick-style-upgrade"
             id="removeWatermarkBtn"
+            data-upgrade-resource="watermark"
             href="/pricing?source=model-detail&amp;intent=remove-watermark&amp;model=<%= encodeURIComponent(model.slug) %>"
             data-analytics-event="remove_watermark_upgrade_click"
             data-analytics-item="Watermark-free exports"
@@ -448,38 +455,7 @@
 <% } %>
 
 <% if (!user) { %>
-<div class="model-login-modal" id="modelLoginModal" role="dialog" aria-modal="true" aria-labelledby="modelLoginTitle" aria-hidden="true" hidden>
-  <button class="model-login-backdrop" id="modelLoginBackdrop" type="button" aria-label="Close sign in"></button>
-  <section class="model-login-panel" aria-describedby="modelLoginDescription">
-    <button class="model-login-close" id="modelLoginClose" type="button" aria-label="Close sign in">
-      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-    <span class="model-login-kicker">ClozDesign account</span>
-    <h2 id="modelLoginTitle">Sign in to customize</h2>
-    <p id="modelLoginDescription">Save this garment as a project and continue editing it from your Workbench.</p>
-    <% if (googleAuthEnabled) { %>
-      <a class="model-google-login" id="modelGoogleLogin" href="/auth/google?next=<%= encodeURIComponent(modelDetailPath) %>">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.54h3.24c1.9-1.75 2.98-4.33 2.98-7.41Z"/><path fill="#34A853" d="M12 22c2.7 0 4.98-.9 6.63-2.36l-3.24-2.54c-.9.6-2.05.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.04v2.62A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.39 13.93A6.02 6.02 0 0 1 6.08 12c0-.67.11-1.32.31-1.93V7.45H3.04A10 10 0 0 0 2 12c0 1.61.38 3.14 1.04 4.55l3.35-2.62Z"/><path fill="#EA4335" d="M12 5.94c1.47 0 2.79.5 3.83 1.5l2.87-2.88A9.65 9.65 0 0 0 12 2a10 10 0 0 0-8.96 5.45l3.35 2.62C7.18 7.7 9.39 5.94 12 5.94Z"/></svg>
-        <span>Continue with Google</span>
-      </a>
-      <div class="model-login-divider"><span>or use email</span></div>
-    <% } %>
-    <form class="model-login-form" id="modelLoginForm" action="/auth/login" method="post">
-      <input type="hidden" name="next" value="<%= modelDetailPath %>">
-      <label>
-        <span>Email</span>
-        <input id="modelLoginEmail" type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
-      </label>
-      <label>
-        <span>Password</span>
-        <input type="password" name="password" autocomplete="current-password" required placeholder="Enter your password">
-      </label>
-      <p class="model-login-error" id="modelLoginError" role="alert" aria-live="polite" hidden></p>
-      <button class="model-login-submit" id="modelLoginSubmit" type="submit"><span>Sign in and customize</span></button>
-    </form>
-    <p class="model-login-register">New to ClozDesign? <a href="/auth/register?next=<%= encodeURIComponent(modelDetailPath) %>">Create an account</a></p>
-  </section>
-</div>
+<%- include('partials/model-login', { loginReturnPath: modelDetailPath }) %>
 <% } %>
 
 <!-- Customization Inquiry Modal -->
@@ -1096,7 +1072,7 @@ const detailLightState = {
 };
 window.ModelDetailLightingSettings = detailLightState;
 let detailSceneStandard = defaultDetailRenderStandard;
-const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v14')
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260919-tshirt225-lighting-v1')
   .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
   .then((standard) => {
     detailSceneStandard = {
@@ -1106,9 +1082,25 @@ const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json
       material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },
       web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }
     };
+    const modelOverride = standard.modelOverrides?.[<%- JSON.stringify(String(model.id)) %>];
+    if (modelOverride) {
+      detailSceneStandard = {
+        ...detailSceneStandard,
+        ...modelOverride,
+        camera: { ...detailSceneStandard.camera, ...(modelOverride.camera || {}) },
+        web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }
+      };
+    }
+    Object.assign(detailLightState, {
+      azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,
+      exposure: detailSceneStandard.web.exposure,
+      shadowSoftness: detailSceneStandard.web.shadowSoftness
+    });
+    renderDetailLightingControls();
     return detailSceneStandard;
   })
   .catch(() => defaultDetailRenderStandard);
+window.ModelDetailRenderStandardPromise = detailRenderStandardPromise;
 let modelViewerModulePromise = null;
 let fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 let fabricMotionResumeTimer = null;
@@ -1154,6 +1146,7 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
 
 function applyCatalogMaterialResponse(element, standard = detailSceneStandard) {
   if (!element?.dataset.catalogRenderStandard || !element.model) return;
+  if (standard.web?.preserveNativeMaterials) return;
   const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;
   const baseColor = Array.isArray(materialStandard.baseColor)
     ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))
@@ -1190,7 +1183,7 @@ detailRenderStandardPromise.then((standard) => {
 
 function renderDetailLightingControls() {
   const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
-  const exposurePercent = Math.round(Math.max(0.55, Math.min(1.2, Number(detailLightState.exposure) || 0.82)) * 100);
+  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 0.82)) * 100);
   const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
   if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
   if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);
@@ -1567,24 +1560,25 @@ window.ModelDesignerConfig = Object.freeze({
     loginReturnFocus = document.activeElement;
     loginError.hidden = true;
     loginError.textContent = '';
-    loginModal.hidden = false;
+    if (!loginModal.open) loginModal.showModal();
     loginModal.setAttribute('aria-hidden', 'false');
     document.body.classList.add('model-login-open');
     requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));
   }
 
   function closeLoginModal() {
-    if (!loginModal || loginModal.hidden) return;
-    loginModal.hidden = true;
+    if (!loginModal || !loginModal.open) return;
+    loginModal.close();
     loginModal.setAttribute('aria-hidden', 'true');
     document.body.classList.remove('model-login-open');
     loginReturnFocus?.focus?.({ preventScroll: true });
   }
 
+  loginModal?.addEventListener('cancel', (event) => { event.preventDefault(); closeLoginModal(); });
   loginBackdrop?.addEventListener('click', closeLoginModal);
   loginClose?.addEventListener('click', closeLoginModal);
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && loginModal && !loginModal.hidden) {
+    if (event.key === 'Escape' && loginModal && loginModal.open) {
       event.preventDefault();
       closeLoginModal();
     }
@@ -1675,7 +1669,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260918-gradient-picker-v63',
+      src: '/js/model-designer.js?v=20260920-admin-preview-v65',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1835,7 +1829,8 @@ window.ModelDesignerConfig = Object.freeze({
   } catch (error) {
     hasPendingArtwork = false;
   }
-  const hasSavedProject = new URLSearchParams(window.location.search).has('project');
+  const projectParams = new URLSearchParams(window.location.search);
+  const hasSavedProject = projectParams.has('project') || projectParams.has('adminProject');
   if (hasPendingArtwork || hasSavedProject) {
     const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));
     if (document.readyState === 'loading') {
@@ -1927,6 +1922,15 @@ window.ModelDesignerConfig = Object.freeze({
     launchButtons.forEach((button) => button.addEventListener('click', openStudio));
   })();
   </script>
+<% } %>
+
+<% if (aiTryOnAvailable) { %>
+<dialog id="detailTryOnDialog" class="detail-tryon-dialog" aria-label="AI Try-on editor">
+  <p class="detail-tryon-message" role="status">Loading editor…</p>
+  <iframe id="detailTryOnFrame" title="AI Try-on editor" allow="fullscreen" ></iframe>
+  <button type="button" class="detail-tryon-loading-close" aria-label="Close AI Try-on">×</button>
+</dialog>
+<script src="/js/detail-try-on.js?v=20260922-generation-gate-v4" defer></script>
 <% } %>
 
 <%- include('partials/footer') %>

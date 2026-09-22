@@ -1,0 +1,86 @@
+[
+  {
+    "id": "freja",
+    "name": "Freja",
+    "style": "Scandi",
+    "image": "/images/try-on/freja.webp",
+    "thumbnail": "/images/try-on/freja-thumb.webp"
+  },
+  {
+    "id": "leo",
+    "name": "Leo",
+    "style": "Everyday",
+    "image": "/images/try-on/leo.webp",
+    "thumbnail": "/images/try-on/leo-thumb.webp"
+  },
+  {
+    "id": "marcus",
+    "name": "Marcus",
+    "style": "Street",
+    "image": "/images/try-on/marcus.webp",
+    "thumbnail": "/images/try-on/marcus-thumb.webp"
+  },
+  {
+    "id": "mei",
+    "name": "Mei",
+    "style": "Editorial",
+    "image": "/images/try-on/mei.webp",
+    "thumbnail": "/images/try-on/mei-thumb.webp"
+  },
+  {
+    "id": "noah",
+    "name": "Noah",
+    "style": "Indie",
+    "image": "/images/try-on/noah.webp",
+    "thumbnail": "/images/try-on/noah-thumb.webp"
+  },
+  {
+    "id": "sofia",
+    "name": "Sofia",
+    "style": "Everyday",
+    "image": "/images/try-on/sofia.webp",
+    "thumbnail": "/images/try-on/sofia-thumb.webp"
+  },
+  {
+    "id": "arjun",
+    "name": "Arjun",
+    "style": "Sport",
+    "image": "/images/try-on/arjun.webp",
+    "thumbnail": "/images/try-on/arjun-thumb.webp"
+  },
+  {
+    "id": "ella",
+    "name": "Ella",
+    "style": "Editorial",
+    "image": "/images/try-on/ella.webp",
+    "thumbnail": "/images/try-on/ella-thumb.webp"
+  },
+  {
+    "id": "finn",
+    "name": "Finn",
+    "style": "Coastal",
+    "image": "/images/try-on/finn.webp",
+    "thumbnail": "/images/try-on/finn-thumb.webp"
+  },
+  {
+    "id": "clara",
+    "name": "Clara",
+    "style": "Sport",
+    "image": "/images/try-on/clara.webp",
+    "thumbnail": "/images/try-on/clara-thumb.webp"
+  },
+  {
+    "id": "max",
+    "name": "Max",
+    "style": "Editorial",
+    "image": "/images/try-on/max.webp",
+    "thumbnail": "/images/try-on/max-thumb.webp"
+  },
+  {
+    "id": "ruby",
+    "name": "Ruby",
+    "style": "Everyday",
+    "image": "/images/try-on/ruby.webp",
+    "thumbnail": "/images/try-on/ruby-thumb.webp"
+  }
+]

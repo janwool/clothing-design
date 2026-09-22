@@ -52,9 +52,15 @@ test('renders the user project library in the Worker template runtime', () => {
       preview_image_url_safe: '',
       user_email: 'maker@example.com',
       user_name: 'Maker',
-      updated_at_display: '13 Sep 2026, 12:00'
+      updated_at_display: '13 Sep 2026, 12:00',
+      deleted_at: '2026-09-20 10:00:00',
+      deleted_at_display: '20 Sep 2026, 10:00'
     }]
   });
   assert.match(html, /Test Jacket/);
+  assert.match(html, /class="project-view-design" href="\/admin\/projects\/project-test\/view"/);
+  assert.match(html, /查看设计 \/ View design/);
+  assert.match(html, /Deleted by user/);
+  assert.match(html, /20 Sep 2026, 10:00/);
   assert.match(html, /data-delete-project="project-test"/);
 });

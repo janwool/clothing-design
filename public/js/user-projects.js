@@ -1,6 +1,13 @@
 (function initializeUserProjects() {
   'use strict';
 
+  const adminProjectId = new URLSearchParams(window.location.search).get('adminProject');
+  const isAdminPreview = Boolean(adminProjectId);
+  function textureUrl(url) {
+    const endpoint = isAdminPreview ? `/admin/projects/${encodeURIComponent(adminProjectId)}/texture` : '/api/project-texture';
+    return `${endpoint}?url=${encodeURIComponent(url)}`;
+  }
+
   function currentReturnUrl() {
     return `${window.location.pathname}${window.location.search}${window.location.hash}`;
   }
@@ -10,6 +17,9 @@
   }
 
   async function request(url, options) {
+    if (isAdminPreview && !['GET', 'HEAD'].includes(String(options?.method || 'GET').toUpperCase())) {
+      throw new Error('Administrator preview does not save changes.');
+    }
     const controller = options?.signal ? null : new AbortController();
     const timeout = controller ? window.setTimeout(() => controller.abort(), 45000) : null;
     try {
@@ -29,6 +39,7 @@
         requestError.resource = result.resource;
         requestError.upgradeUrl = result.upgradeUrl;
         requestError.entitlements = result.entitlements;
+        window.UpgradeModal?.handleLimit(result);
         throw requestError;
       }
       return result;
@@ -60,12 +71,27 @@
   }
 
   async function loadProjectFromUrl(expectedType) {
-    const projectId = new URLSearchParams(window.location.search).get('project');
+    const projectId = adminProjectId || new URLSearchParams(window.location.search).get('project');
     if (!projectId) return null;
-    const result = await request(`/api/projects/${encodeURIComponent(projectId)}`);
+    const result = await request(isAdminPreview
+      ? `/admin/projects/${encodeURIComponent(projectId)}/design`
+      : `/api/projects/${encodeURIComponent(projectId)}`);
     if (result.project?.projectType !== expectedType) throw new Error('This project belongs to a different editor.');
     return result.project;
   }
 
-  window.UserProjects = Object.freeze({ goToSignIn, listImages, loadProjectFromUrl, request, saveProject, uploadImage });
+  if (isAdminPreview) {
+    const notice = document.createElement('div');
+    notice.setAttribute('role', 'status');
+    notice.textContent = 'Administrator preview — changes are not saved. ';
+    notice.style.cssText = 'position:fixed;bottom:16px;left:16px;z-index:100000;padding:12px 18px;background:#17252a;color:white;border-radius:8px;font:14px sans-serif';
+    const back = document.createElement('a');
+    back.href = '/admin/projects';
+    back.textContent = 'Back to projects';
+    back.style.color = 'white';
+    notice.appendChild(back);
+    document.body.appendChild(notice);
+  }
+
+  window.UserProjects = Object.freeze({ isAdminPreview, textureUrl, goToSignIn, listImages, loadProjectFromUrl, request, saveProject, uploadImage });
 }());

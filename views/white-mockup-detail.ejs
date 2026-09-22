@@ -227,25 +227,7 @@
   </div>
 </div>
 
-<dialog class="white-signin-dialog" id="whiteMockupSignIn" aria-labelledby="whiteMockupSignInTitle" aria-describedby="whiteMockupSignInDescription">
-  <button type="button" class="white-signin-close" id="whiteMockupSignInClose" aria-label="Close sign in">×</button>
-  <span class="white-detail-eyebrow">Your design workspace</span>
-  <h2 id="whiteMockupSignInTitle">Sign in to start designing</h2>
-  <p id="whiteMockupSignInDescription">Upload your artwork and keep your mockup saved in your account.</p>
-  <form id="whiteMockupSignInForm" data-analytics-managed="true">
-    <div class="form-group">
-      <label class="form-label" for="whiteMockupSignInEmail">Email</label>
-      <input class="form-input" id="whiteMockupSignInEmail" type="email" name="email" autocomplete="email" required autofocus>
-    </div>
-    <div class="form-group">
-      <label class="form-label" for="whiteMockupSignInPassword">Password</label>
-      <input class="form-input" id="whiteMockupSignInPassword" type="password" name="password" autocomplete="current-password" required>
-    </div>
-    <p class="auth-error" id="whiteMockupSignInError" role="alert" hidden></p>
-    <button type="submit" class="btn btn-primary btn-full">Sign in</button>
-  </form>
-  <p class="white-signin-footer">New to ClozDesign? <a href="/auth/register?next=<%= encodeURIComponent('/white-mockups/' + asset.asset_name) %>">Create an account</a></p>
-</dialog>
+<%- include('partials/model-login', { loginReturnPath: '/white-mockups/' + asset.asset_name }) %>
 
-<script src="/js/white-mockup-editor.js?v=20260919-white-signin-modal-v29" defer></script>
+<script src="/js/white-mockup-editor.js?v=20260922-shared-login-v31" defer></script>
 <%- include('partials/footer') %>

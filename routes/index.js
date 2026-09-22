@@ -2429,7 +2429,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       page: 'white-mockups',
       pageStyles: [
         '/css/white-mockups.css?v=20260919-editorial-catalog-v8',
-        '/css/white-mockup-detail.css?v=20260919-signin-modal-v9'
+        '/css/white-mockup-detail.css?v=20260922-shared-login-v11'
       ],
       asset,
       displayTitle,
@@ -2833,9 +2833,9 @@ router.get('/pricing', (req, res) => {
         itemListElement: [
           { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro monthly', price: '9.90', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Pro yearly', price: '99', priceCurrency: 'USD' },
+          { '@type': 'Offer', name: 'Pro yearly', price: '80', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Max monthly', price: '29', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Max yearly', price: '299', priceCurrency: 'USD' }
+          { '@type': 'Offer', name: 'Max yearly', price: '236', priceCurrency: 'USD' }
         ]
       }
     }),
@@ -3430,8 +3430,9 @@ router.get('/3d-models/:category/:slug/try-on', async (req, res) => {
       metaDescription: description,
       metaRobots: 'noindex,follow',
       metaImage: firstImage(req, [normalizedModel.image_url]),
-      pageStyles: ['/css/ai-try-on.css?v=20260914-original-before-v7'],
+      pageStyles: ['/css/ai-try-on.css?v=20260920-fullscreen-v11'],
       bodyClass: 'ai-tryon-body',
+      personModels: require('../lib/try-on-models.json'),
       page: 'designer',
       model: normalizedModel,
       categorySlug

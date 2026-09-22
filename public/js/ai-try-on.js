@@ -234,7 +234,7 @@
   }
 
   function refreshGenerateLabels() {
-    const idleLabel = generatedImageUrl ? 'Regenerate' : 'Generate try-on';
+    const idleLabel = `${generatedImageUrl ? 'Regenerate' : 'Generate try-on'} · ${Number(root.dataset.creditCost) || 10} credits`;
     generateButtons.forEach(button => {
       const label = button.querySelector('span');
       if (label) label.textContent = generating ? 'Generating…' : idleLabel;
@@ -298,7 +298,10 @@
       button.disabled = isGenerating;
     });
     refreshGenerateLabels();
-    timeHint.textContent = isGenerating ? 'Matching the garment to your model…' : 'Usually takes 20–30 sec';
+    timeHint.textContent = isGenerating ? 'Generating…' : '';
+    document.getElementById('tryOnPhoto').disabled = isGenerating;
+    document.getElementById('tryOnUploadButton').disabled = isGenerating;
+    document.getElementById('tryOnStyleFilter').disabled = isGenerating;
   }
 
   async function imageUrlToDataUri(url) {
@@ -347,6 +350,10 @@
     if (generating || !selectedModel) return;
     setGenerating(true);
     try {
+      if (!(await window.UpgradeModal.requireTryOnAccess())) {
+        setGenerating(false);
+        return;
+      }
       const [personImage, garmentImage] = await Promise.all([
         imageUrlToDataUri(personImageUrl),
         captureGarmentImage()
@@ -374,6 +381,10 @@
           window.location.href = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`;
           return;
         }
+        if (window.UpgradeModal?.handleLimit(payload)) {
+          setGenerating(false);
+          return;
+        }
         throw new Error(payload.error || `Try-on failed (${response.status}).`);
       }
 
@@ -393,6 +404,40 @@
   }
 
   modelCards.forEach(card => card.addEventListener('click', () => selectModel(card)));
+  document.getElementById('tryOnStyleFilter')?.addEventListener('change', event => {
+    modelCards.forEach(card => { card.hidden = Boolean(event.target.value && card.dataset.modelStyle !== event.target.value); });
+  });
+  let uploadedPhotoUrl = '';
+  document.getElementById('tryOnUploadButton')?.addEventListener('click', () => document.getElementById('tryOnPhoto').click());
+  document.getElementById('tryOnPhoto')?.addEventListener('change', async event => {
+    const file = event.target.files?.[0];
+    if (!file || generating) return;
+    if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024) {
+      showToast('Choose a PNG, JPEG or WebP photo under 10 MB.', true);
+      event.target.value = '';
+      return;
+    }
+    const nextUrl = URL.createObjectURL(file);
+    try {
+      const image = new Image();
+      image.src = nextUrl;
+      await image.decode();
+      if (uploadedPhotoUrl) URL.revokeObjectURL(uploadedPhotoUrl);
+      uploadedPhotoUrl = nextUrl;
+      selectModel({ dataset: { modelId: 'upload', modelName: 'Your photo', modelImage: nextUrl } });
+    } catch {
+      URL.revokeObjectURL(nextUrl);
+      showToast('This photo could not be opened.', true);
+    }
+    event.target.value = '';
+  });
+  function closeEditor(event) {
+    if (window.parent === window) return;
+    event?.preventDefault();
+    window.parent.postMessage({ type: 'tryon:close' }, location.origin);
+  }
+  root.querySelector('.ai-tryon__close')?.addEventListener('click', closeEditor);
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeEditor(event); });
   previewButtons.forEach(button => button.addEventListener('click', () => setPreviewState(button.dataset.previewState)));
   generateButtons.forEach(button => button.addEventListener('click', generateTryOn));
 

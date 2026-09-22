@@ -147,7 +147,7 @@ window.initializeModelDesigner = () => {
       }
     }
   };
-  const renderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v9')
+  const renderStandardPromise = window.ModelDetailRenderStandardPromise || fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v9')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -412,7 +412,7 @@ window.initializeModelDesigner = () => {
   }
 
   function applyCommercialExportMaterialResponse(viewerElement, renderStandard = defaultRenderStandard) {
-    if (!viewerElement?.model || state.selectedMaterial) return;
+    if (!viewerElement?.model || state.selectedMaterial || renderStandard.web?.preserveNativeMaterials) return;
     const materialStandard = {
       ...defaultRenderStandard.web.exportMaterial,
       ...(renderStandard.web?.exportMaterial || {})
@@ -1150,7 +1150,7 @@ window.initializeModelDesigner = () => {
 
   function getViewerTextureUrl(textureUrl) {
     if (!state.projectId || !/^https:\/\//i.test(textureUrl)) return textureUrl;
-    return `/api/project-texture?url=${encodeURIComponent(textureUrl)}`;
+    return window.UserProjects.textureUrl(textureUrl);
   }
 
   function loadViewerTextureImage(textureUrl) {
@@ -1511,6 +1511,10 @@ window.initializeModelDesigner = () => {
   }
 
   async function saveCloudProject(options = {}) {
+    if (window.UserProjects?.isAdminPreview) {
+      setDesignSaveStatus('Administrator preview: changes are not saved.');
+      return false;
+    }
     if (!saveDesignModal) return false;
     saveDesignModal.disabled = true;
     saveDesignModal.classList.add('is-loading');
@@ -3609,7 +3613,7 @@ window.initializeModelDesigner = () => {
   async function resolveArtworkDataUrl(source) {
     if (/^data:image\//i.test(String(source || ''))) return source;
     const sourceUrl = /^https:\/\//i.test(String(source || ''))
-      ? `/api/project-texture?url=${encodeURIComponent(source)}`
+      ? window.UserProjects.textureUrl(source)
       : source;
     const response = await fetch(sourceUrl, { credentials: 'same-origin' });
     if (!response.ok) throw new Error('Unable to load artwork');

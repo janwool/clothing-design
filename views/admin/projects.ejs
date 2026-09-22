@@ -91,7 +91,7 @@
                 <span class="project-type-chip project-type-<%= item.project_type === '3d' ? '3d' : 'mockup' %>">
                   <i aria-hidden="true"></i><%= item.project_type === '3d' ? '3D study' : 'Fashion mockup' %>
                 </span>
-                <button class="project-delete-button" type="button" data-delete-project="<%= item.id %>" data-project-name="<%= item.name %>" aria-label="Delete <%= item.name %>">
+                <button class="project-delete-button" type="button" data-delete-project="<%= item.id %>" data-project-name="<%= item.name %>" aria-label="Permanently delete <%= item.name %>">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                     <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
                   </svg>
@@ -115,9 +115,16 @@
                   <% }%>
                 </div>
                 <dl class="project-admin-meta">
+                  <div><dt>Status</dt><dd><%= item.deleted_at ? 'Deleted by user' : 'Active' %></dd></div>
+                  <% if (item.deleted_at) {%>
+                    <div><dt>Deleted at</dt><dd><%= item.deleted_at_display %></dd></div>
+                  <% }%>
                   <div><dt>Project ID</dt><dd title="<%= item.id %>"><%= item.id %></dd></div>
                   <div><dt>Source</dt><dd title="<%= item.source_id || '—' %>"><%= item.source_id || '—' %></dd></div>
                 </dl>
+                <a class="project-view-design" href="/admin/projects/<%= encodeURIComponent(item.id) %>/view" target="_blank" rel="noopener">
+                  <span>查看设计 / View design</span><span aria-hidden="true">↗</span>
+                </a>
               </div>
             </article>
           <% });%>
@@ -170,7 +177,7 @@
 
     const projectId = button.dataset.deleteProject;
     const projectName = button.dataset.projectName || 'this project';
-    if (!window.confirm(`Delete “${projectName}”? This removes the saved project for its user and cannot be undone.`)) return;
+    if (!window.confirm(`Permanently delete “${projectName}”? This removes the database record, releases its project allowance, and cannot be undone.`)) return;
 
     button.disabled = true;
     try {

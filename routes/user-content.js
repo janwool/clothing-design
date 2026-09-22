@@ -132,7 +132,7 @@ router.get('/api/projects', requireUser, async (req, res) => {
     await ensureUserContentTables();
     const type = ['3d', 'white_mockup'].includes(req.query.type) ? req.query.type : '';
     const rows = await db.all(
-      `SELECT * FROM design_projects WHERE user_id = ?${type ? ' AND project_type = ?' : ''} ORDER BY updated_at DESC LIMIT 100`,
+      `SELECT * FROM design_projects WHERE user_id = ? AND deleted_at IS NULL${type ? ' AND project_type = ?' : ''} ORDER BY updated_at DESC LIMIT 100`,
       type ? [req.session.user.id, type] : [req.session.user.id]
     );
     return res.json({ success: true, projects: rows.map(row => parseProjectRow(row, false)) });
@@ -156,7 +156,7 @@ router.get('/api/account/entitlements', requireUser, async (req, res) => {
 router.get('/api/projects/:id', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
-    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [req.params.id, req.session.user.id]);
     if (!row) return res.status(404).json({ success: false, error: 'Project not found.' });
     return res.json({ success: true, project: parseProjectRow(row) });
   } catch (error) {
@@ -172,14 +172,15 @@ router.post('/api/projects', requireUser, async (req, res) => {
   const project = parsed.value;
   try {
     await ensureUserContentTables();
-    const existing = await db.get('SELECT id FROM design_projects WHERE id = ? AND user_id = ?', [projectId, req.session.user.id]);
+    const existing = await db.get('SELECT id FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [projectId, req.session.user.id]);
     if (req.body?.id && !existing) return res.status(404).json({ success: false, error: 'Project not found.' });
     if (existing) {
-      await db.run(
+      const result = await db.run(
         `UPDATE design_projects SET project_type = ?, name = ?, source_id = ?, source_url = ?,
-         preview_image_url = ?, design_data = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?`,
+         preview_image_url = ?, design_data = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ? AND deleted_at IS NULL`,
         [project.projectType, project.name, project.sourceId, project.sourceUrl, project.previewImageUrl, project.serialized, projectId, req.session.user.id]
       );
+      if (!result.changes) return res.status(404).json({ success: false, error: 'Project not found.' });
     } else {
       const projectAccess = await canCreateProject(req.session.user.id);
       if (!projectAccess.allowed) {
@@ -191,7 +192,7 @@ router.post('/api/projects', requireUser, async (req, res) => {
         [projectId, req.session.user.id, project.projectType, project.name, project.sourceId, project.sourceUrl, project.previewImageUrl, project.serialized]
       );
     }
-    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [projectId, req.session.user.id]);
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [projectId, req.session.user.id]);
     return res.status(existing ? 200 : 201).json({ success: true, project: parseProjectRow(row) });
   } catch (error) {
     console.error('Project save failed:', error);
@@ -205,11 +206,11 @@ router.patch('/api/projects/:id', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
     const result = await db.run(
-      'UPDATE design_projects SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?',
+      'UPDATE design_projects SET name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ? AND deleted_at IS NULL',
       [name, req.params.id, req.session.user.id]
     );
     if (!result.changes) return res.status(404).json({ success: false, error: 'Project not found.' });
-    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [req.params.id, req.session.user.id]);
     return res.json({ success: true, project: parseProjectRow(row) });
   } catch (error) {
     console.error('Project rename failed:', error);
@@ -220,7 +221,7 @@ router.patch('/api/projects/:id', requireUser, async (req, res) => {
 router.post('/api/projects/:id/duplicate', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
-    const source = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
+    const source = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [req.params.id, req.session.user.id]);
     if (!source) return res.status(404).json({ success: false, error: 'Project not found.' });
     const projectAccess = await canCreateProject(req.session.user.id);
     if (!projectAccess.allowed) {
@@ -233,7 +234,7 @@ router.post('/api/projects/:id/duplicate', requireUser, async (req, res) => {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [projectId, req.session.user.id, source.project_type, copyName, source.source_id, source.source_url, source.preview_image_url, source.design_data]
     );
-    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ?', [projectId, req.session.user.id]);
+    const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [projectId, req.session.user.id]);
     return res.status(201).json({ success: true, project: parseProjectRow(row) });
   } catch (error) {
     console.error('Project duplicate failed:', error);
@@ -244,7 +245,7 @@ router.post('/api/projects/:id/duplicate', requireUser, async (req, res) => {
 router.delete('/api/projects/:id', requireUser, async (req, res) => {
   try {
     await ensureUserContentTables();
-    const result = await db.run('DELETE FROM design_projects WHERE id = ? AND user_id = ?', [req.params.id, req.session.user.id]);
+    const result = await db.run('UPDATE design_projects SET deleted_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [req.params.id, req.session.user.id]);
     if (!result.changes) return res.status(404).json({ success: false, error: 'Project not found.' });
     return res.json({ success: true });
   } catch (error) {
@@ -315,7 +316,7 @@ async function renderWorkspace(req, res, pageKey = 'overview') {
   try {
     await ensureUserContentTables();
     const [projectRows, imageRows, account, entitlements] = await Promise.all([
-      db.all('SELECT * FROM design_projects WHERE user_id = ? ORDER BY updated_at DESC LIMIT 100', [req.session.user.id]),
+      db.all('SELECT * FROM design_projects WHERE user_id = ? AND deleted_at IS NULL ORDER BY updated_at DESC LIMIT 100', [req.session.user.id]),
       db.all(`SELECT id, url, original_name, mime_type, size_bytes, purpose, created_at
               FROM user_images WHERE user_id = ? ORDER BY created_at DESC LIMIT 100`, [req.session.user.id]),
       db.get('SELECT id, email, name, created_at FROM users WHERE id = ?', [req.session.user.id]),

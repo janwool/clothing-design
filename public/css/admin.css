@@ -1976,3 +1976,26 @@
     transition: none;
   }
 }
+
+/* Primary action stays visible on every project card, without a hover state. */
+.project-view-design {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 42px;
+  margin-top: 16px;
+  padding: 11px 14px;
+  border: 1px solid #334238;
+  border-radius: 8px;
+  background: #334238;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+}
+.project-view-design:hover { background: #243329; color: #fff; }
+.project-view-design:focus-visible { outline: 3px solid #91af91; outline-offset: 3px; }

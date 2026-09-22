@@ -49,8 +49,8 @@ test('protects the Google callback and reuses the existing account session', () 
 test('offers Google sign-in on account pages and in the model login modal', () => {
   assert.match(loginView, /googleAuthEnabled[\s\S]*Continue with Google/);
   assert.match(registerView, /googleAuthEnabled[\s\S]*Continue with Google/);
-  assert.match(modelDetail, /googleAuthEnabled[\s\S]*id="modelGoogleLogin"[\s\S]*Continue with Google/);
+  assert.match(fs.readFileSync(path.join(root, 'views/partials/model-login.ejs'), 'utf8'), /googleAuthEnabled[\s\S]*id="modelGoogleLogin"[\s\S]*Continue with Google/);
   assert.match(modelDetail, /googleLogin\?\.addEventListener\('click'[\s\S]*sessionStorage\.setItem\(resumeCustomizeKey/);
-  assert.match(modelDetailStyles, /\.model-google-login \{[\s\S]*?display: flex;/);
+  assert.match(fs.readFileSync(path.join(root, 'public/css/model-login.css'), 'utf8'), /\.model-google-login \{[\s\S]*?display: flex;/);
   assert.match(workerTemplateBuilder, /'oauthError',[\s\S]*'googleAuthEnabled',[\s\S]*'googleAuthUrl'/);
 });

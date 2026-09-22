@@ -673,56 +673,6 @@
   .model-picker { overflow-x: auto; grid-template-columns: repeat(6, 64px); }
 }
 
-@media (max-width: 900px) {
-  .ai-tryon-body { overflow: auto; }
-
-  .ai-tryon {
-    height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
-    margin: 0;
-    width: 100vw;
-    overflow: visible;
-  }
-
-  .ai-tryon__bar {
-    height: auto;
-    min-height: 64px;
-    grid-template-columns: 1fr auto;
-    padding: 10px 14px;
-  }
-
-  .ai-tryon__status { display: none; }
-  .ai-tryon__actions > [data-generate] { display: none; }
-  .ai-tryon__crumbs { gap: 10px; font-size: 14px; }
-  .ai-tryon__crumbs strong { font-size: 16px; }
-  .ai-button { height: 38px; padding: 0 13px; }
-
-  .ai-tryon__workspace {
-    height: auto;
-    grid-template-columns: 1fr;
-    padding: 10px;
-  }
-
-  .tryon-result { height: min(72vh, 680px); }
-  .tryon-flow { grid-template-rows: 380px 260px auto; overflow: visible; }
-  .model-picker { grid-template-columns: repeat(6, minmax(72px, 1fr)); }
-}
-
-@media (max-width: 620px) {
-  .ai-tryon__crumbs span:last-child,
-  .ai-tryon__crumbs > span[aria-hidden="true"] { display: none; }
-  .ai-tryon__close { width: 38px; height: 38px; }
-  .tryon-result { height: 62vh; min-height: 470px; }
-  .tryon-result__toolbar { min-width: 0; width: calc(100% - 24px); }
-  .tryon-result__toolbar button { gap: 5px; padding: 0 7px; font-size: 11px; }
-  .tryon-result__toolbar button svg { width: 17px; height: 17px; }
-  .tryon-result__toggle { top: 12px; left: 12px; width: 150px; }
-  .tryon-result__ai-label { top: 12px; right: 12px; }
-  .tryon-flow { grid-template-rows: 330px 235px auto; }
-  .model-picker { grid-template-columns: repeat(6, 72px); overflow-x: auto; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .ai-tryon,
   .tryon-result__image,
@@ -732,3 +682,64 @@
     transition: none;
   }
 }
+
+/* Fullscreen tool — approved 3D design / model picker layout. */
+.ai-tryon { min-height: 0; animation: none; }
+.ai-tryon__bar { height: 56px; grid-template-columns: 1fr auto; background: #fff; }
+.ai-tryon__status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.ai-tryon__workspace { height: calc(100% - 56px); padding: 0; gap: 0; grid-template-columns: minmax(0, 1fr) minmax(340px, 32%); }
+.tryon-result, .tryon-flow, .tryon-step { border: 0; border-radius: 0; }
+.tryon-result { background: #e9e5df; }
+.tryon-result__toggle { left: 50%; transform: translateX(-50%); }
+.tryon-result__toolbar { left: auto; right: 20px; transform: none; }
+.tryon-result__toolbar [data-generate] { display: none; }
+.tryon-flow { border-left: 1px solid #dedbd5; gap: 16px; padding: 20px; grid-template-rows: minmax(200px, 43%) minmax(120px, 1fr) auto; }
+.tryon-step--design, .tryon-step--models { padding: 0; }
+.tryon-step--design { border-bottom: 1px solid #dedbd5; padding-bottom: 14px; }
+.tryon-viewer { border-radius: 6px; }
+.tryon-viewer model-viewer { min-height: 0; }
+.tryon-step__title p { font-size: 12px; }
+.model-picker { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 142px; align-content: start; overflow-y: auto; overflow-x: hidden; padding: 2px; }
+.model-card { min-height: 0; height: 142px; border-radius: 5px; background: #ece8e2; }
+.model-card[hidden] { display: none; }
+.model-card img { height: 116px; object-fit: cover; object-position: center 15%; }
+.model-card__name { display: block; height: 24px; background: #fff; text-align: left; padding: 3px 5px; font-size: 12px; color: #111; }
+.model-card.is-selected { border-color: #111; box-shadow: none; }
+.model-card__check { background: #cfff35; color: #111; box-shadow: none; }
+#tryOnStyleFilter { max-width: 150px; padding: 6px 10px; background: #fff; border: 1px solid #dedbd5; border-radius: 4px; font: inherit; font-size: 12px; }
+.tryon-flow__generate { padding: 0; }
+.tryon-upload { display: block; border: 1px solid #aaa; border-radius: 5px; text-align: center; padding: 10px; margin-bottom: 12px; cursor: pointer; font-size: 14px; }
+.tryon-upload:focus-within { outline: 2px solid #111; }
+.ai-button--primary { background: #cfff35; color: #111; border-color: #a8bc53; box-shadow: none; border-radius: 5px; }
+.ai-button--primary:hover { background: #bde927; box-shadow: none; }
+#tryOnTimeHint:empty { display: none; }
+.ai-tryon button:focus-visible, .ai-tryon a:focus-visible, .ai-tryon select:focus-visible { outline: 2px solid #111; outline-offset: 3px; }
+@media (max-width: 760px) {
+  .ai-tryon-body { overflow: hidden; }
+  .ai-tryon { width: 100%; height: 100dvh; min-height: 0; }
+  .ai-tryon__bar { height: 52px; padding: 0 16px; }
+  .ai-tryon__workspace { height: calc(100% - 52px); display: grid; grid-template-columns: 1fr; grid-template-rows: minmax(240px, 45%) 1fr; overflow-y: auto; }
+  .tryon-result { min-height: 240px; }
+  .tryon-flow { border-left: 0; border-top: 1px solid #dedbd5; display: grid; grid-template-columns: minmax(130px, .8fr) minmax(0, 1.2fr); grid-template-rows: minmax(200px, 1fr) auto; gap: 12px; padding: 12px; overflow: visible; }
+  .tryon-step--design { border: 0; padding: 0; }
+  .tryon-viewer model-viewer { min-height: 150px; }
+  .model-picker { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 100px; overflow-y: auto; }
+  .model-card { height: 100px; }
+  .model-card img { height: 74px; }
+  .tryon-flow__generate { grid-column: 1/-1; display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; }
+  .tryon-upload { margin: 0; align-content: center; }
+  #tryOnTimeHint { grid-column: 1/-1; }
+  .tryon-result__toolbar { right: 10px; bottom: 10px; }
+  .tryon-viewer__hint { font-size: 9px; }
+  .tryon-step__heading-row { gap: 6px; }
+  #tryOnStyleFilter { max-width: 105px; }
+}
+@media (prefers-reduced-motion: reduce) { .ai-tryon *, .ai-tryon *::before { animation: none !important; transition: none !important; } }
+.tryon-upload { width: 100%; background: #fff; color: #111; }
+.tryon-upload:disabled { opacity: .5; cursor: wait; }
+.ai-tryon-body .feedback-widget { display: none; }
+.tryon-result__toolbar { min-width: 0; width: auto; height: 44px; padding: 3px; grid-template-columns: repeat(2, auto); border-radius: 6px; box-shadow: none; }
+.tryon-result__toolbar button { min-width: 0; padding: 0 12px; font-size: 12px; }
+@media (max-width: 760px) { .ai-tryon__bar { min-height: 0; } .tryon-result { height: 100%; } .tryon-result__toolbar { bottom: 8px; height: 36px; } .tryon-result__toolbar button { font-size: 10px; padding: 0 8px; } }
+.tryon-result__ai-label { top: auto; right: auto; bottom: 16px; left: 16px; padding: 5px 8px; font-size: 10px; border-radius: 4px; }
+@media (max-width: 760px) { .tryon-result__ai-label { bottom: 52px; left: 10px; } .tryon-toast { bottom: auto; top: 62px; } }

@@ -1,0 +1,116 @@
+html.upgrade-open { overflow: hidden; }
+.upgrade-dialog {
+  --upgrade-ink: #171719;
+  --upgrade-copy: #626269;
+  --upgrade-line: #d1d1d5;
+  --upgrade-paper: #f5f5f3;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: var(--upgrade-ink);
+  background: var(--upgrade-paper);
+  font-family: var(--font-family);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.upgrade-dialog[open] {
+  animation: upgrade-slide-up 360ms cubic-bezier(.22, 1, .36, 1);
+}
+.upgrade-dialog::backdrop {
+  background: rgba(17, 17, 15, .4);
+  animation: upgrade-backdrop-in 360ms ease-out;
+}
+@keyframes upgrade-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes upgrade-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .upgrade-dialog[open], .upgrade-dialog::backdrop { animation: none; }
+}
+.upgrade-shell { min-height: 100%; display: flex; flex-direction: column; }
+.upgrade-header, .upgrade-controls, .upgrade-plan-heading, .upgrade-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.upgrade-header { position: sticky; top: 0; z-index: 2; min-height: 76px; padding: 16px 36px; background: #fff; border-bottom: 1px solid var(--upgrade-line); }
+.upgrade-eyebrow { display: flex; align-items: center; gap: 28px; font-size: 24px; font-weight: 750; letter-spacing: -1px; }
+.upgrade-eyebrow span { padding-left: 28px; border-left: 1px solid var(--upgrade-line); color: var(--upgrade-copy); font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.upgrade-close { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border: 1px solid var(--upgrade-line); border-radius: 6px; background: #fff; color: inherit; font-size: 27px; line-height: 1; cursor: pointer; }
+.upgrade-close:hover { background: var(--upgrade-paper); }
+.upgrade-content { width: min(100%, 960px); padding: 44px 32px 32px; margin: auto; }
+.upgrade-dialog h2 { margin: 0 0 10px; font-family: var(--font-family); font-size: clamp(30px, 3vw, 44px); letter-spacing: -.045em; line-height: 1.1; font-weight: 730; }
+#upgradeReason { margin: 0; font-size: 14px; line-height: 1.6; color: var(--upgrade-copy); }
+.upgrade-controls { margin: 28px 0 20px; }
+.upgrade-current { font-size: 13px; color: var(--upgrade-copy); }
+.upgrade-billing { display: flex; padding: 4px; border: 1px solid var(--upgrade-ink); border-radius: 6px; background: #fff; gap: 4px; }
+.upgrade-billing[hidden] { display: none; }
+.upgrade-billing button { min-height: 40px; padding: 10px 16px; border: 0; border-radius: 3px; background: transparent; color: var(--upgrade-ink); font: inherit; font-size: 13px; font-weight: 650; cursor: pointer; }
+.upgrade-billing button[aria-pressed=true] { color: #fff; background: var(--upgrade-ink); }
+.upgrade-billing small { margin-left: 6px; font-size: 10px; font-weight: 400; }
+.upgrade-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.upgrade-plans.is-single { grid-template-columns: 1fr; }
+.upgrade-plan { display: flex; flex-direction: column; padding: 30px; border: 1px solid var(--upgrade-line); border-radius: 7px; background: #fff; }
+.upgrade-plan.is-recommended { color: #fff; background: var(--upgrade-ink); border-color: var(--upgrade-ink); }
+.upgrade-plan h3, .upgrade-business h3 { margin: 0; font-size: 30px; line-height: 1.1; letter-spacing: -.045em; font-weight: 700; }
+.upgrade-plan-heading>span { padding: 7px 9px; border: 1px solid #fff6; font-size: 9px; text-transform: uppercase; letter-spacing: .12em; }
+.upgrade-price { margin: 26px 0 6px; font-size: 48px; line-height: 1; letter-spacing: -.06em; font-weight: 690; }
+.upgrade-price small { font-size: 14px; letter-spacing: 0; font-weight: 400; }
+.upgrade-renewal { margin: 0; padding-bottom: 22px; border-bottom: 1px solid var(--upgrade-line); color: var(--upgrade-copy); font-size: 13px; }
+.is-recommended .upgrade-renewal { border-color: #67676b; color: #d0d0d3; }
+.upgrade-plan ul { display: grid; gap: 14px; margin: 24px 0 30px; padding: 0; list-style: none; font-size: 14px; }
+.upgrade-plan li::before { content: '✓'; margin-right: 12px; }
+.upgrade-plan strong { font-weight: 650; }
+.upgrade-cta { box-sizing: border-box; display: block; width: 100%; margin-top: auto; padding: 14px 16px; border: 1px solid var(--upgrade-ink); border-radius: 5px; color: #fff; background: var(--upgrade-ink); font: inherit; font-size: 14px; font-weight: 650; text-align: center; text-decoration: none; cursor: pointer; }
+.is-recommended .upgrade-cta { border-color: #fff; color: var(--upgrade-ink); background: #fff; }
+.upgrade-cta:hover { opacity: .85; }
+.upgrade-dialog button:disabled { opacity: .55; cursor: wait; }
+.upgrade-dialog :focus-visible { outline: 3px solid #0066cc; outline-offset: 3px; }
+.upgrade-error { margin: 16px 0 0; font-size: 13px; line-height: 1.5; color: #b33428; }
+.upgrade-error:empty { display: none; }
+.upgrade-footer { margin-top: 24px; font-size: 12px; color: #77777d; }
+.upgrade-footer a { color: var(--upgrade-ink); text-decoration: underline; text-underline-offset: 4px; }
+.upgrade-business { padding: 32px; border: 1px solid var(--upgrade-line); border-radius: 7px; background: #fff; }
+.upgrade-business p { margin: 14px 0 28px; color: var(--upgrade-copy); font-size: 14px; }
+@media(max-width: 600px) {
+  .upgrade-header { min-height: 64px; padding: 12px 20px; }
+  .upgrade-eyebrow { font-size: 21px; gap: 14px; }
+  .upgrade-eyebrow span { padding-left: 14px; font-size: 12px; }
+  .upgrade-close { width: 36px; height: 36px; }
+  .upgrade-content { padding: 28px 20px; }
+  .upgrade-controls { align-items: flex-start; flex-direction: column; gap: 16px; margin-top: 22px; }
+  .upgrade-billing { width: 100%; }
+  .upgrade-billing button { flex: 1; padding: 10px; }
+  .upgrade-plans { grid-template-columns: 1fr; }
+  .upgrade-plan { padding: 24px; }
+  .upgrade-footer { align-items: flex-start; flex-direction: column; gap: 12px; }
+}
+.account-login-dialog { position: fixed; inset: 0; margin: auto; width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); padding: 36px; border: 1px solid #d1d1d5; border-radius: 7px; color: #171719; background: #fff; font-family: var(--font-family); overflow: auto; }
+.account-login-dialog::backdrop { background: #1118; }
+.account-login-close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; border: 0; background: transparent; font-size: 26px; cursor: pointer; }
+.account-login-brand { font-size: 20px; font-weight: 750; letter-spacing: -.8px; }
+.account-login-dialog h2 { margin: 26px 0; font-size: 28px; letter-spacing: -.04em; }
+.account-login-dialog form, .account-login-dialog label { display: grid; gap: 10px; }
+.account-login-dialog form { gap: 18px; }
+.account-login-dialog label { font-size: 13px; font-weight: 600; }
+.account-login-dialog input { width: 100%; padding: 12px; border: 1px solid #d1d1d5; border-radius: 5px; font: inherit; }
+.account-login-submit, .account-login-google { display: block; width: 100%; padding: 13px; border: 1px solid #171719; border-radius: 5px; background: #171719; color: #fff; font: inherit; font-size: 14px; font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; }
+.account-login-google { background: #fff; color: #171719; }
+.account-login-submit:disabled { opacity: .5; cursor: wait; }
+.account-login-divider, .account-login-register { margin: 20px 0; color: #626269; font-size: 12px; text-align: center; }
+.account-login-register { margin-bottom: 0; }
+.account-login-register a { color: #171719; text-decoration: underline; }
+.account-login-error { color: #b33428; font-size: 13px; }
+.account-login-error:empty { display: none; }
+.account-login-dialog :focus-visible { outline: 2px solid #0066cc; outline-offset: 3px; }
+.upgrade-annual-saving { display: flex; align-items: center; gap: 10px; margin: 8px 0 12px; font-size: 12px; }
+.upgrade-annual-saving s { opacity: .7; }
+.upgrade-annual-saving span { padding: 4px 7px; border-radius: 3px; background: #ececea; color: #171719; font-weight: 650; }

@@ -10,8 +10,8 @@
   const authenticated = plansRoot?.dataset.authenticated === 'true';
   const planDetails = {
     free: { name: 'Free', monthly: 0, yearly: 0 },
-    pro: { name: 'Pro', monthly: 9.9, yearly: 99 },
-    max: { name: 'Max', monthly: 29, yearly: 299 },
+    pro: { name: 'Pro', monthly: 9.9, yearly: 80 },
+    max: { name: 'Max', monthly: 29, yearly: 236 },
     business: { name: 'Business' }
   };
 
@@ -71,6 +71,10 @@
       price.textContent = price.dataset[billing];
     });
 
+    document.querySelectorAll('[data-plan-saving]').forEach(saving => {
+      saving.hidden = billing !== 'yearly';
+    });
+
     planLinks.forEach(link => {
       const params = new URLSearchParams({ plan: link.dataset.plan, billing });
       const returnPath = `/pricing?${params.toString()}&checkout=resume`;
@@ -82,7 +86,7 @@
 
     if (caption) {
       caption.textContent = billing === 'yearly'
-        ? 'One annual payment. All plans are billed in USD.'
+        ? 'Monthly equivalent, billed annually. All prices in USD.'
         : 'Flexible monthly billing. Change plans anytime.';
     }
 

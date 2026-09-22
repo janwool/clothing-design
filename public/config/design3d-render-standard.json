@@ -141,5 +141,21 @@
       "contrast": 1.08,
       "saturation": 1.02
     }
+  },
+  "modelOverrides": {
+    "225": {
+      "version": "tshirt-225-preview-lighting-20260919",
+      "web": {
+        "exposure": 1.55,
+        "toneMapping": "aces",
+        "shadowIntensity": 0.2,
+        "shadowSoftness": 0.9,
+        "exportExposure": 1.55,
+        "exportToneMapping": "aces",
+        "exportShadowIntensity": 0.2,
+        "exportShadowSoftness": 0.9,
+        "preserveNativeMaterials": true
+      }
+    }
   }
 }

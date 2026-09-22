@@ -56,9 +56,9 @@
     });
   }
 
-  const signInDialog = document.getElementById('whiteMockupSignIn');
-  const signInForm = document.getElementById('whiteMockupSignInForm');
-  const signInError = document.getElementById('whiteMockupSignInError');
+  const signInDialog = document.getElementById('modelLoginModal');
+  const signInForm = document.getElementById('modelLoginForm');
+  const signInError = document.getElementById('modelLoginError');
   let signInBusy = false;
 
   function requireEditorSignIn(action) {
@@ -71,7 +71,8 @@
     return false;
   }
 
-  document.getElementById('whiteMockupSignInClose').addEventListener('click', () => signInDialog.close());
+  document.getElementById('modelLoginClose').addEventListener('click', () => signInDialog.close());
+  document.getElementById('modelLoginBackdrop').addEventListener('click', () => signInDialog.close());
   signInDialog.addEventListener('click', (event) => {
     if (event.target !== signInDialog) return;
     const bounds = signInDialog.getBoundingClientRect();
@@ -110,7 +111,7 @@
     } finally {
       signInBusy = false;
       submit.disabled = false;
-      submit.textContent = 'Sign in';
+      submit.textContent = 'Sign in and customize';
     }
   });
 
@@ -891,12 +892,14 @@
   }
 
   function queueProjectSave({ immediate = false } = {}) {
+    if (window.UserProjects?.isAdminPreview) return;
     if (editor.dataset.authenticated !== 'true' || !state.artworkImage || !window.UserProjects) return;
     window.clearTimeout(state.autoSaveTimer);
     state.autoSaveTimer = window.setTimeout(saveProject, immediate ? 0 : 700);
   }
 
   async function saveProject() {
+    if (window.UserProjects?.isAdminPreview) return;
     state.autoSaveTimer = null;
     if (!state.artworkImage || !window.UserProjects) return;
     if (!state.ready) {
@@ -992,7 +995,7 @@
       if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another fashion mockup.');
       const saved = project.designData || {};
       if (!saved.artworkUrl) throw new Error('The saved artwork is unavailable.');
-      await loadArtworkDataUrl(saved.artworkUrl, saved.artworkName || project.name, 'saved_project');
+      await loadArtworkDataUrl(window.UserProjects.isAdminPreview ? window.UserProjects.textureUrl(saved.artworkUrl) : saved.artworkUrl, saved.artworkName || project.name, 'saved_project');
       state.artworkUrl = saved.artworkUrl;
       state.projectId = project.id;
       state.projectName = project.name;

@@ -29,3 +29,17 @@ Set `SESSION_SECRET` to a long random Worker secret (`npx wrangler secret put SE
   }
 ]
 ```
+
+## Project deletion
+
+User deletion sets `design_projects.deleted_at` and preserves the project data and uploaded assets. Deleted projects are excluded from user lists and cannot be opened, saved, renamed, or duplicated by the user. The admin project library includes them and displays their deletion time.
+
+Creation allowances count all project records, including deleted ones: Free remains limited to three lifetime creations; paid monthly creation counts also include deletions. Administrator permanent deletion still removes the record and releases its counted allowance.
+
+Migration `0011_project_soft_delete.sql` adds the nullable deletion timestamp. Apply it before starting the updated app when using SQL migrations. The runtime schema initializer also upgrades existing SQLite/D1 tables automatically if the column is missing; do not reapply the ALTER migration after that automatic upgrade. Previously hard-deleted records cannot be recovered by this change.
+
+## Administrator design preview
+
+The admin project library has a **View design** link that opens the source editor and loads saved design data, including soft-deleted projects. This preview disables project saves and image writes through the shared project client, as well as mockup autosave. It does not impersonate the owner.
+
+Set `ADMIN_EMAILS` to a comma-separated list of administrator login emails (Worker secret or local environment). The preview, design-data, and owner-scoped texture endpoints deny access unless the current database user's email is on that list. With no list configured they deny all access. The pre-existing admin dashboard still uses its existing login-only gate; this change adds stricter authorization to design inspection.

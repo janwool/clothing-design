@@ -78,7 +78,7 @@
       }
       return;
     }
-    if (action === 'delete' && window.confirm('Delete this project? Its uploaded files will remain stored.')) {
+    if (action === 'delete' && window.confirm('Delete this project? It will be removed from your workspace but still counts toward your project creation allowance. Its uploaded files will remain stored.')) {
       try {
         await api(`/api/projects/${encodeURIComponent(card.dataset.projectId)}`, { method: 'DELETE' });
         card.style.opacity = '0';

@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
+const read = file => fs.readFileSync(path.join(__dirname, "..", file), "utf8");
 const root = path.join(__dirname, '..');
 const route = fs.readFileSync(path.join(root, 'routes', 'index.js'), 'utf8');
 const authRoute = fs.readFileSync(path.join(root, 'routes', 'auth.js'), 'utf8');
@@ -22,21 +23,21 @@ test('routes public calls to action into a working mockup path', () => {
 });
 
 test('publishes the current Free, Pro, Max, and Business pricing', () => {
-  assert.match(pricing, /5 projects total/);
+  assert.match(pricing, /3 projects total/);
   assert.match(pricing, /28 projects \/ month/);
   assert.match(pricing, /99 projects \/ month/);
-  assert.match(pricing, /150 Try-on Credits/);
+  assert.match(pricing, /250 Try-on Credits/);
   assert.match(pricing, /1,000 Try-on Credits/);
   assert.match(pricing, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
   assert.match(pricing, /<% if \(aiTryOnAvailable\) \{ %><li><span aria-hidden="true">✓<\/span> All AI models<\/li>/);
-  assert.match(pricing, /data-yearly="\$99"/);
-  assert.match(pricing, /data-yearly="\$299"/);
-  assert.match(pricing, /data-plan-alt data-monthly="\$99 \/ year" data-yearly="\$9\.90 \/ month"/);
+  assert.match(pricing, /data-yearly="\$6\.67"/);
+  assert.match(pricing, /data-yearly="\$19\.67"/);
+  assert.match(pricing, /data-plan-alt data-monthly="Billed monthly" data-yearly="\$80 billed annually"/);
   assert.match(pricing, /mailto:support@cloz-design\.com\?subject=ClozDesign%20Business/);
   assert.match(route, /name: 'Pro monthly', price: '9\.90'/);
-  assert.match(route, /name: 'Pro yearly', price: '99', priceCurrency: 'USD'/);
+  assert.match(route, /name: 'Pro yearly', price: '80', priceCurrency: 'USD'/);
   assert.match(route, /name: 'Max monthly', price: '29', priceCurrency: 'USD'/);
-  assert.match(route, /name: 'Max yearly', price: '299'/);
+  assert.match(route, /name: 'Max yearly', price: '236'/);
 });
 
 test('provides live trust routes linked from the footer', () => {
@@ -79,8 +80,10 @@ test('uses concise product actions that apply, render, and request production', 
 });
 
 test('requires an inline sign-in before an anonymous user customizes a model', () => {
-  assert.match(modelDetail, /<% if \(!user\) \{ %>[\s\S]*id="modelLoginModal"/);
-  assert.match(modelDetail, /id="modelLoginForm" action="\/auth\/login" method="post"/);
+  assert.match(modelDetail, /include\('partials\/model-login'/);
+  const sharedLogin = read('views/partials/model-login.ejs');
+  const sharedLoginStyles = read('public/css/model-login.css');
+  assert.match(sharedLogin, /id="modelLoginForm" action="\/auth\/login" method="post"/);
   assert.match(modelDetail, /if \(!window\.ModelDesignerConfig\.userAuthenticated && entryId === 'designNowBtn'\) \{\s+openLoginModal\(\);\s+return;/);
   assert.match(modelDetail, /headers: \{ 'Accept': 'application\/json', 'Content-Type': 'application\/json' \}/);
   assert.match(modelDetail, /sessionStorage\.setItem\(resumeCustomizeKey/);
@@ -88,6 +91,6 @@ test('requires an inline sign-in before an anonymous user customizes a model', (
   assert.match(authRoute, /function wantsJson\(req\)/);
   assert.match(authRoute, /return res\.status\(401\)\.json\(\{ success: false, error: req\.t\('auth\.invalidCredentials'\) \}\)/);
   assert.match(authRoute, /return res\.json\(\{ success: true, next: nextPath \|\| '\/tools\/t-shirt-mockup-generator' \}\)/);
-  assert.match(modelDetailStyles, /\.model-login-modal \{[\s\S]*?position: fixed;[\s\S]*?place-items: center;/);
-  assert.match(modelDetailStyles, /\.model-login-modal\[hidden\] \{ display: none; \}/);
+  assert.match(sharedLoginStyles, /\.model-login-modal \{[\s\S]*?position: fixed;[\s\S]*?place-items: center;/);
+  assert.match(sharedLoginStyles, /\.model-login-modal:not\(\[open\]\) \{ display: none; \}/);
 });
