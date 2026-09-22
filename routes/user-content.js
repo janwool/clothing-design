@@ -167,7 +167,16 @@ router.get('/api/projects/:id', requireUser, async (req, res) => {
 
 router.post('/api/projects', requireUser, async (req, res) => {
   const parsed = validateProjectPayload(req.body);
-  if (!parsed.valid) return res.status(400).json({ success: false, error: parsed.error });
+  if (!parsed.valid) {
+    console.warn('Project save validation failed:', {
+      userId: req.session.user.id,
+      projectId: req.body?.id || null,
+      projectType: req.body?.projectType || null,
+      sourceId: req.body?.sourceId || null,
+      reason: parsed.error
+    });
+    return res.status(400).json({ success: false, error: parsed.error });
+  }
   const projectId = String(req.body?.id || '').match(/^[a-f0-9-]{36}$/i) ? String(req.body.id) : randomUUID();
   const project = parsed.value;
   try {
@@ -184,6 +193,13 @@ router.post('/api/projects', requireUser, async (req, res) => {
     } else {
       const projectAccess = await canCreateProject(req.session.user.id);
       if (!projectAccess.allowed) {
+        console.warn('Project save allowance rejected:', {
+          userId: req.session.user.id,
+          projectType: project.projectType,
+          sourceId: project.sourceId,
+          used: projectAccess.entitlements.projects.used,
+          limit: projectAccess.entitlements.projects.limit
+        });
         return res.status(403).json(limitError('projects', projectAccess.entitlements));
       }
       await db.run(
@@ -195,7 +211,13 @@ router.post('/api/projects', requireUser, async (req, res) => {
     const row = await db.get('SELECT * FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL', [projectId, req.session.user.id]);
     return res.status(existing ? 200 : 201).json({ success: true, project: parseProjectRow(row) });
   } catch (error) {
-    console.error('Project save failed:', error);
+    console.error('Project save failed:', {
+      userId: req.session.user.id,
+      projectId,
+      projectType: project.projectType,
+      sourceId: project.sourceId,
+      error
+    });
     return res.status(500).json({ success: false, error: 'Project could not be saved.' });
   }
 });

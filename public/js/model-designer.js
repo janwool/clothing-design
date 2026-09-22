@@ -1533,6 +1533,37 @@ window.initializeModelDesigner = () => {
       }
       await waitForPendingArtworkUploads();
       const elements = serializeProjectElements();
+      const projectName = state.projectName || `${modelDesignerConfig.modelName || 'Garment'} Design`;
+      const projectSourceId = String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || '');
+      const projectSourceUrl = window.location.pathname;
+      const baseDesignData = {
+        elements,
+        materialId: state.selectedMaterial?.id || null,
+        fillScope: state.fillScope,
+        fillMode: state.fillMode,
+        appearance: serializeAppearanceState(),
+        textureTransform: state.artworkTextureTransform,
+        textureUrl: state.finalTextureUrl && /^https:\/\//i.test(state.finalTextureUrl) ? state.finalTextureUrl : null
+      };
+      // Reserve the project before uploading generated texture and cover files. This
+      // prevents an allowance or database failure from leaving orphan project assets.
+      if (!state.projectId) {
+        setDesignSaveStatus('Creating project…');
+        const reservedProject = await window.UserProjects.saveProject({
+          projectType: '3d',
+          name: projectName,
+          sourceId: projectSourceId,
+          sourceUrl: projectSourceUrl,
+          previewImageUrl: '',
+          designData: baseDesignData
+        });
+        state.projectId = reservedProject.id;
+        state.projectName = reservedProject.name;
+        const reservedUrl = new URL(window.location.href);
+        reservedUrl.searchParams.set('project', reservedProject.id);
+        window.history.replaceState({}, '', reservedUrl);
+        window.syncModelTryOnLinks?.(reservedProject.id);
+      }
       setDesignSaveStatus('Rendering 3D project cover…');
       const cameraSnapshot = captureViewerCamera(designerViewer);
       const previewDataUrl = await renderDesignedModelImageWithFallback(textureDataUrl, {
@@ -1554,19 +1585,14 @@ window.initializeModelDesigner = () => {
         )
       ]);
       const project = await window.UserProjects.saveProject({
-        id: state.projectId || undefined,
+        id: state.projectId,
         projectType: '3d',
-        name: state.projectName || `${modelDesignerConfig.modelName || 'Garment'} Design`,
-        sourceId: String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || ''),
-        sourceUrl: window.location.pathname,
+        name: projectName,
+        sourceId: projectSourceId,
+        sourceUrl: projectSourceUrl,
         previewImageUrl: preview.url,
         designData: {
-          elements,
-          materialId: state.selectedMaterial?.id || null,
-          fillScope: state.fillScope,
-          fillMode: state.fillMode,
-          appearance: serializeAppearanceState(),
-          textureTransform: state.artworkTextureTransform,
+          ...baseDesignData,
           textureUrl: texture.url
         }
       });

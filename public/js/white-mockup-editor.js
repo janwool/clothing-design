@@ -923,6 +923,33 @@
         await state.artworkUploadPromise;
       }
       if (!state.artworkUrl) throw new Error('Artwork must finish uploading before this project can be saved.');
+      const projectName = state.projectName || `${state.artworkName.replace(/\.[^.]+$/, '')} — ${template.assetName}`;
+      const projectDesignData = () => ({
+        artworkUrl: state.artworkUrl,
+        artworkName: state.artworkName,
+        background: state.background,
+        garmentColor: state.garmentColor,
+        offsetX: state.offsetX,
+        offsetY: state.offsetY,
+        scale: state.scale,
+        rotation: state.rotation,
+        warp: state.warp,
+        opacity: state.opacity
+      });
+      // Create the project before uploading its generated cover so a failed project
+      // insert cannot leave an unowned preview in storage.
+      if (!state.projectId) {
+        const reservedProject = await window.UserProjects.saveProject({
+          projectType: 'white_mockup',
+          name: projectName,
+          sourceId: template.assetName,
+          sourceUrl: window.location.pathname,
+          previewImageUrl: '',
+          designData: projectDesignData()
+        });
+        state.projectId = reservedProject.id;
+        state.projectName = reservedProject.name;
+      }
       let previewImageUrl = state.projectPreviewUrl;
       if (!previewImageUrl) {
         render({ overlay: false, forceQuality: true });
@@ -937,24 +964,13 @@
       }
       if (revision !== state.artworkRevision) return;
       const project = await window.UserProjects.saveProject({
-        id: state.projectId || undefined,
+        id: state.projectId,
         projectType: 'white_mockup',
-        name: state.projectName || `${state.artworkName.replace(/\.[^.]+$/, '')} — ${template.assetName}`,
+        name: projectName,
         sourceId: template.assetName,
         sourceUrl: window.location.pathname,
         previewImageUrl,
-        designData: {
-          artworkUrl: state.artworkUrl,
-          artworkName: state.artworkName,
-          background: state.background,
-          garmentColor: state.garmentColor,
-          offsetX: state.offsetX,
-          offsetY: state.offsetY,
-          scale: state.scale,
-          rotation: state.rotation,
-          warp: state.warp,
-          opacity: state.opacity
-        }
+        designData: projectDesignData()
       });
       state.projectId = project.id;
       state.projectName = project.name;
