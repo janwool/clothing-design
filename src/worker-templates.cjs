@@ -3170,7 +3170,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260920-project-view-v5\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20260923-users-scroll-v6\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },
@@ -3849,7 +3849,7 @@ title = __locals.title,
     ; __append( include('partials/sidebar') )
     ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Users</h1>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Users</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
     ;  if (items && items.length > 0) { 
-    ; __append("\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Plan</th>\n              <th>Projects</th>\n              <th>Image storage</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
+    ; __append("\n        <div class=\"users-table-scroll\" role=\"region\" aria-label=\"Users table\" tabindex=\"0\">\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Plan</th>\n              <th>Projects</th>\n              <th>Image storage</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
     ;  items.forEach(item => { 
     ; __append("\n              <tr data-id=\"")
     ; __append(escapeFn( item.id ))
@@ -3891,7 +3891,7 @@ title = __locals.title,
     ; __append(escapeFn( item.id ))
     ; __append("\">Delete</button>\n                  </div>\n                </td>\n              </tr>\n            ")
     ;  }) 
-    ; __append("\n          </tbody>\n        </table>\n      ")
+    ; __append("\n          </tbody>\n        </table>\n        </div>\n      ")
     ;  } else { 
     ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          <h3>No users yet</h3>\n          <p>Users will appear here once they register.</p>\n        </div>\n      ")
     ;  } 
