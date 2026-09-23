@@ -9,7 +9,7 @@
     features: { removeWatermarks: false, allModels: false },
     projects: { period: 'lifetime', limit: 3, used: workspaceStats.totalProjects, remaining: Math.max(0, 3 - workspaceStats.totalProjects) },
     tryOnCredits: { limit: 0, used: 0, remaining: 0 },
-    storage: { limitBytes: 100 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 100 * 1024 * 1024 - workspaceStats.storageBytes) }
+    storage: { limitBytes: 20 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 20 * 1024 * 1024 - workspaceStats.storageBytes) }
   };
   const formatBytes = function(bytes) {
     const value = Number(bytes) || 0;

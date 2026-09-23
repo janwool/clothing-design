@@ -24,6 +24,8 @@
               <th>Username</th>
               <th>Email</th>
               <th>Plan</th>
+              <th>Projects</th>
+              <th>Image storage</th>
               <th>Created</th>
               <th>Actions</th>
             </tr>
@@ -48,6 +50,8 @@
                     <button class="btn btn-secondary btn-small" type="button" data-action="save-plan" data-id="<%= item.id %>">Save</button>
                   </div>
                 </td>
+                <td><%= item.project_count %></td>
+                <td><%= item.storage_display %></td>
                 <td><%= new Date(item.created_at).toLocaleDateString() %></td>
                 <td>
                   <div class="table-actions">

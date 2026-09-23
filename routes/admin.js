@@ -1126,13 +1126,17 @@ router.delete('/tools/:id', requireAuth, async (req, res) => {
 // ==================== Users Management ====================
 router.get('/users', requireAuth, async (req, res) => {
   try {
-    await ensureEntitlementTables();
+    await Promise.all([ensureEntitlementTables(), ensureUserContentTables()]);
     const items = await db.all(`SELECT u.id, u.email, u.name, u.created_at,
       COALESCE(s.plan, 'free') AS plan, s.billing_interval, s.status AS subscription_status,
-      s.current_period_end
+      s.current_period_end,
+      (SELECT COUNT(*) FROM design_projects p WHERE p.user_id = u.id AND p.deleted_at IS NULL) AS project_count,
+      (SELECT COALESCE(SUM(i.size_bytes), 0) FROM user_images i WHERE i.user_id = u.id) AS storage_bytes
       FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id
       ORDER BY u.created_at DESC`);
-    res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: items || [] });
+    res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: (items || []).map(item => ({
+      ...item, storage_display: formatImageBytes(item.storage_bytes)
+    })) });
   } catch (err) {
     res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: [] });
   }

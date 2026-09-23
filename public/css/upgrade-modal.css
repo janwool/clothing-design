@@ -46,7 +46,7 @@ html.upgrade-open { overflow: hidden; }
 .upgrade-eyebrow span { padding-left: 28px; border-left: 1px solid var(--upgrade-line); color: var(--upgrade-copy); font-size: 13px; font-weight: 500; letter-spacing: 0; }
 .upgrade-close { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border: 1px solid var(--upgrade-line); border-radius: 6px; background: #fff; color: inherit; font-size: 27px; line-height: 1; cursor: pointer; }
 .upgrade-close:hover { background: var(--upgrade-paper); }
-.upgrade-content { width: min(100%, 960px); padding: 44px 32px 32px; margin: auto; }
+.upgrade-content { width: min(100%, 1160px); padding: 44px 32px 32px; margin: auto; }
 .upgrade-dialog h2 { margin: 0 0 10px; font-family: var(--font-family); font-size: clamp(30px, 3vw, 44px); letter-spacing: -.045em; line-height: 1.1; font-weight: 730; }
 #upgradeReason { margin: 0; font-size: 14px; line-height: 1.6; color: var(--upgrade-copy); }
 .upgrade-controls { margin: 28px 0 20px; }
@@ -57,7 +57,7 @@ html.upgrade-open { overflow: hidden; }
 .upgrade-billing button[aria-pressed=true] { color: #fff; background: var(--upgrade-ink); }
 .upgrade-billing small { margin-left: 6px; font-size: 10px; font-weight: 400; }
 .upgrade-plans { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.upgrade-plans.is-single { grid-template-columns: 1fr; }
+.upgrade-plans.has-three-plans { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .upgrade-plan { display: flex; flex-direction: column; padding: 30px; border: 1px solid var(--upgrade-line); border-radius: 7px; background: #fff; }
 .upgrade-plan.is-recommended { color: #fff; background: var(--upgrade-ink); border-color: var(--upgrade-ink); }
 .upgrade-plan h3, .upgrade-business h3 { margin: 0; font-size: 30px; line-height: 1.1; letter-spacing: -.045em; font-weight: 700; }
@@ -114,3 +114,20 @@ html.upgrade-open { overflow: hidden; }
 .upgrade-annual-saving { display: flex; align-items: center; gap: 10px; margin: 8px 0 12px; font-size: 12px; }
 .upgrade-annual-saving s { opacity: .7; }
 .upgrade-annual-saving span { padding: 4px 7px; border-radius: 3px; background: #ececea; color: #171719; font-weight: 650; }
+
+.upgrade-plan-free { min-height: 458px; padding: 34px 28px 24px; }
+.upgrade-plan-free h3 { font-size: clamp(29px, 2.25vw, 36px); line-height: 1; }
+.upgrade-free-price-block { min-height: 108px; margin-top: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--upgrade-line); }
+.upgrade-plan-free .upgrade-price { min-height: 54px; margin: 0; font-size: clamp(38px, 3.2vw, 48px); }
+.upgrade-free-price-spacer { display: block; min-height: 22px; margin-top: 2px; }
+.upgrade-plan-free ul { margin: 20px 0 24px; gap: 10px; line-height: 1.35; }
+.upgrade-plan-free li { display: grid; grid-template-columns: 18px 1fr; gap: 7px; }
+.upgrade-plan-free li::before { margin: 0; font-size: 12px; font-weight: 800; }
+.upgrade-plan-free .upgrade-cta { min-height: 52px; padding: 13px 18px; display: flex; align-items: center; justify-content: center; border-radius: 4px; color: var(--upgrade-ink); background: #fff; font-weight: 700; }
+.upgrade-plan-free a.upgrade-cta:hover { opacity: 1; background: #ececea; }
+.upgrade-free-status { cursor: default; }
+.upgrade-free-status:hover { opacity: 1; }
+@media (max-width: 900px) {
+  .upgrade-plans, .upgrade-plans.has-three-plans { grid-template-columns: 1fr; }
+  .upgrade-plan-free { min-height: 380px; }
+}
