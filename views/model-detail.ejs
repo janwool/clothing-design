@@ -1552,6 +1552,7 @@ window.ModelDesignerConfig = Object.freeze({
   const loginError = document.getElementById('modelLoginError');
   const loginSubmit = document.getElementById('modelLoginSubmit');
   const googleLogin = document.getElementById('modelGoogleLogin');
+  const registerLink = loginModal?.querySelector('.model-login-register a');
   const resumeCustomizeKey = 'clozdesign_resume_customize';
   let loginReturnFocus = null;
 
@@ -1584,9 +1585,12 @@ window.ModelDesignerConfig = Object.freeze({
     }
   });
 
-  googleLogin?.addEventListener('click', () => {
+  function rememberCustomizeIntent() {
     sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));
-  });
+  }
+
+  googleLogin?.addEventListener('click', rememberCustomizeIntent);
+  registerLink?.addEventListener('click', rememberCustomizeIntent);
 
   loginForm?.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -1669,7 +1673,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260923-save-analytics-v66',
+      src: '/js/model-designer.js?v=20260923-small-project-preview-v67',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1804,10 +1808,17 @@ window.ModelDesignerConfig = Object.freeze({
       const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');
       const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;
       sessionStorage.removeItem(resumeCustomizeKey);
-      if (isFresh) requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());
+      if (isFresh && window.location.hash !== '#design') requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());
     } catch (error) {
       sessionStorage.removeItem(resumeCustomizeKey);
     }
+  }
+
+  // Tool landing pages link directly to the editor using #design.
+  if (window.location.hash === '#design') {
+    const enterDesigner = () => requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enterDesigner, { once: true });
+    else enterDesigner();
   }
 
   const exportProxies = [

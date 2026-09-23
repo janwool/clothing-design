@@ -20,10 +20,11 @@ test('3D editor reserves a project before uploading generated project assets', (
   const previewUpload = saveFlow.indexOf("'project-preview'");
 
   assert.ok(reservation >= 0, 'new projects should be reserved in the database');
-  assert.ok(textureUpload > reservation, 'texture upload should happen after project reservation');
+  assert.equal(textureUpload, -1, 'saving should not upload a generated 2D texture');
   assert.ok(previewUpload > reservation, 'preview upload should happen after project reservation');
   assert.match(saveFlow, /previewImageUrl: '',[\s\S]*designData: baseDesignData/);
-  assert.match(saveFlow, /id: state\.projectId,[\s\S]*textureUrl: texture\.url/);
+  assert.match(saveFlow, /id: state\.projectId,[\s\S]*designData: baseDesignData/);
+  assert.doesNotMatch(saveFlow, /textureUrl:/);
 });
 
 test('white mockup editor reserves a project before uploading its generated preview', () => {

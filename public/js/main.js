@@ -144,4 +144,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-window.addEventListener('pageshow', clearStaleOverlays);
+window.addEventListener('pageshow', (event) => {
+  // Initial pageshow can arrive after a user has already opened the editor.
+  // Only restored pages can contain overlays left over from an earlier visit.
+  if (event.persisted) clearStaleOverlays();
+});

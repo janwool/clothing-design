@@ -1552,10 +1552,9 @@ window.initializeModelDesigner = () => {
         fillScope: state.fillScope,
         fillMode: state.fillMode,
         appearance: serializeAppearanceState(),
-        textureTransform: state.artworkTextureTransform,
-        textureUrl: state.finalTextureUrl && /^https:\/\//i.test(state.finalTextureUrl) ? state.finalTextureUrl : null
+        textureTransform: state.artworkTextureTransform
       };
-      // Reserve the project before uploading generated texture and cover files. This
+      // Reserve the project before uploading its lightweight 3D cover. This
       // prevents an allowance or database failure from leaving orphan project assets.
       if (!state.projectId) {
         saveStage = 'reserve_project';
@@ -1577,26 +1576,14 @@ window.initializeModelDesigner = () => {
       }
       saveStage = 'render_preview';
       setDesignSaveStatus('Rendering 3D project cover…');
-      const cameraSnapshot = captureViewerCamera(designerViewer);
-      const previewDataUrl = await renderDesignedModelImageWithFallback(textureDataUrl, {
-        mimeType: 'image/webp',
-        quality: 0.88,
-        cameraSnapshot
-      });
-      saveStage = 'upload_generated_assets';
+      const previewDataUrl = await captureProjectPreview();
+      saveStage = 'upload_preview';
       setDesignSaveStatus('Saving project…');
-      const [texture, preview] = await Promise.all([
-        window.UserProjects.uploadImage(
-          textureDataUrl,
-          `${modelDesignerConfig.modelSlug || '3d-design'}-texture.png`,
-          'project-texture'
-        ),
-        window.UserProjects.uploadImage(
-          previewDataUrl,
-          `${modelDesignerConfig.modelSlug || '3d-design'}-preview.webp`,
-          'project-preview'
-        )
-      ]);
+      const preview = await window.UserProjects.uploadImage(
+        previewDataUrl,
+        `${modelDesignerConfig.modelSlug || '3d-design'}-preview.${previewDataUrl.startsWith('data:image/webp;') ? 'webp' : 'jpg'}`,
+        'project-preview'
+      );
       saveStage = 'finalize_project';
       const project = await window.UserProjects.saveProject({
         id: state.projectId,
@@ -1605,18 +1592,15 @@ window.initializeModelDesigner = () => {
         sourceId: projectSourceId,
         sourceUrl: projectSourceUrl,
         previewImageUrl: preview.url,
-        designData: {
-          ...baseDesignData,
-          textureUrl: texture.url
-        }
+        designData: baseDesignData
       });
       state.projectId = project.id;
       state.projectName = project.name;
-      state.finalTextureUrl = texture.url;
+      state.finalTextureUrl = textureDataUrl;
       const url = new URL(window.location.href);
       url.searchParams.set('project', project.id);
       window.history.replaceState({}, '', url);
-      persistTryOnDesign(texture.url);
+      persistTryOnDesign(textureDataUrl);
       window.syncModelTryOnLinks?.(project.id);
       setDesignSaveStatus('Saved to your account');
       window.trackEvent?.(`designer_project_${saveMode}_success`, {
@@ -1710,6 +1694,48 @@ window.initializeModelDesigner = () => {
       return canvas.toDataURL(mimeType, quality);
     }
     throw new Error('This browser cannot export the 3D render.');
+  }
+
+  async function captureProjectPreview() {
+    // Reuse the already rendered model; saving must not load a second GLB/viewer.
+    const viewerElement = getActiveRenderViewer();
+    if (!viewerElement) throw new Error('The 3D preview is not ready. Please try again.');
+    // A display:none mobile preview retains its previous canvas. Make the existing
+    // editor visible while capturing, then restore the user's editing view.
+    const previousView = textureDesigner?.dataset.designView;
+    const revealPreview = viewerElement === designerViewer && !viewerElement.getBoundingClientRect().width;
+    try {
+      if (revealPreview) textureDesigner.dataset.designView = '3d';
+      await viewerElement.updateComplete;
+      await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await waitForVisibleModelRender(viewerElement);
+      const source = await captureModelViewerImage(viewerElement, { mimeType: 'image/webp', quality: 0.72 });
+      return await compressProjectPreview(source);
+    } finally {
+      if (revealPreview) textureDesigner.dataset.designView = previousView;
+    }
+  }
+
+  async function compressProjectPreview(source) {
+    const image = await loadRenderImage(source);
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Project preview could not be prepared.');
+    const maxBytes = 48 * 1024;
+    for (const edge of [512, 384, 256]) {
+      const scale = Math.min(1, edge / Math.max(image.naturalWidth, image.naturalHeight));
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+      context.fillStyle = '#f5f5f7';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+      for (const quality of [0.65, 0.5, 0.4]) {
+        let dataUrl = canvas.toDataURL('image/webp', quality);
+        if (!dataUrl.startsWith('data:image/webp;')) dataUrl = canvas.toDataURL('image/jpeg', quality);
+        if (Math.ceil(dataUrl.split(',')[1].length * 3 / 4) <= maxBytes) return dataUrl;
+      }
+    }
+    throw new Error('Project preview could not be compressed. Please try again.');
   }
 
   function loadRenderImage(dataUrl) {
@@ -4534,11 +4560,14 @@ window.initializeModelDesigner = () => {
       state.projectName = project.name;
       state.fillScope = saved.fillScope || 'whole';
       state.fillMode = saved.fillMode || 'gradient';
-      state.finalTextureUrl = saved.textureUrl || project.previewImageUrl || null;
-      persistTryOnDesign(state.finalTextureUrl);
+      state.finalTextureUrl = saved.textureUrl || null;
       window.syncModelTryOnLinks?.(project.id);
       if (saved.appearance) restoreAppearanceState(saved.appearance);
-      else await restoreLegacyAppearanceFromTexture(state.finalTextureUrl);
+      else if (saved.textureUrl) await restoreLegacyAppearanceFromTexture(saved.textureUrl);
+      if (!saved.textureUrl) {
+        state.finalTextureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
+      }
+      persistTryOnDesign(state.finalTextureUrl);
       const elementIds = [...textureElements.querySelectorAll('.texture-element')]
         .map(element => Number.parseInt(String(element.id || '').replace('element-', ''), 10))
         .filter(Number.isFinite);

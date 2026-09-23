@@ -87,7 +87,7 @@ test('requires an inline sign-in before an anonymous user customizes a model', (
   assert.match(modelDetail, /if \(!window\.ModelDesignerConfig\.userAuthenticated && entryId === 'designNowBtn'\) \{\s+openLoginModal\(\);\s+return;/);
   assert.match(modelDetail, /headers: \{ 'Accept': 'application\/json', 'Content-Type': 'application\/json' \}/);
   assert.match(modelDetail, /sessionStorage\.setItem\(resumeCustomizeKey/);
-  assert.match(modelDetail, /if \(isFresh\) requestAnimationFrame\(\(\) => document\.getElementById\('designNowBtn'\)\?\.click\(\)\)/);
+  assert.match(modelDetail, /if \(isFresh && window\.location\.hash !== '#design'\) requestAnimationFrame\(\(\) => document\.getElementById\('designNowBtn'\)\?\.click\(\)\)/);
   assert.match(authRoute, /function wantsJson\(req\)/);
   assert.match(authRoute, /return res\.status\(401\)\.json\(\{ success: false, error: req\.t\('auth\.invalidCredentials'\) \}\)/);
   assert.match(authRoute, /return res\.json\(\{ success: true, next: nextPath \|\| '\/tools\/t-shirt-mockup-generator' \}\)/);

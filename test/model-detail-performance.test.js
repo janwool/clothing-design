@@ -120,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260923-save-analytics-v66'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260923-small-project-preview-v67'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -165,7 +165,7 @@ test('normalizes dimensionless SVG viewBoxes to a usable 1024px editor canvas', 
 
 test('keeps ordinary detail-page navigation out of the editor', () => {
   assert.doesNotMatch(designerRuntime, /window\.location\.hash !== '#design'/);
-  assert.doesNotMatch(template, /window\.location\.hash === '#design'/);
+  assert.match(template, /if \(window\.location\.hash === '#design'\)/);
   assert.doesNotMatch(designerRuntime, /shouldOpenSavedProject/);
   assert.match(designerRuntime, /if \(!pendingArtworkIsFresh\) return;/);
   assert.match(template, /hasPendingArtwork \|\| hasSavedProject/);
@@ -182,7 +182,7 @@ test('applies a saved project to the detail viewer without opening the editor', 
   assert.match(loadProjectBlock, /parseSavedProjectElements\(saved\.elements\)/);
   assert.match(loadProjectBlock, /replaceTextureElements\(wrapper\)/);
   assert.match(loadProjectBlock, /if \(saved\.appearance\) restoreAppearanceState\(saved\.appearance\)/);
-  assert.match(loadProjectBlock, /else await restoreLegacyAppearanceFromTexture\(state\.finalTextureUrl\)/);
+  assert.match(loadProjectBlock, /else if \(saved\.textureUrl\) await restoreLegacyAppearanceFromTexture\(saved\.textureUrl\)/);
   assert.match(loadProjectBlock, /window\.Design3DMaterials\.materials\.find\(item => item\.id === saved\.materialId\)/);
   assert.doesNotMatch(loadProjectBlock, /document\.createElement\('div'\)/);
   assert.doesNotMatch(loadProjectBlock, /openModal\(/);
@@ -244,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260923-save-analytics-v66/);
+  assert.match(template, /model-designer\.js\?v=20260923-small-project-preview-v67/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {

@@ -21,6 +21,7 @@
   let generating = false;
   let toastTimer;
   let designLoadPromise = Promise.resolve(false);
+  let savedProjectPreviewUrl = '';
   const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
 
   function trackTryOn(eventName, parameters = {}) {
@@ -93,7 +94,14 @@
         const project = await window.UserProjects.loadProjectFromUrl('3d');
         if (!projectMatchesCurrentModel(project)) throw new Error('This design belongs to another 3D model.');
         if (project?.designData) {
+          // Same-tab handoff retains the full-resolution in-memory design.
+          const transfer = readTransferredDesign();
+          if (!project.designData.textureUrl && transfer?.textureUrl) {
+            const pending = JSON.parse(sessionStorage.getItem(tryOnDesignTransferKey) || 'null');
+            if (pending?.projectId === project.id) return transfer;
+          }
           return {
+            previewImageUrl: project.designData.textureUrl ? '' : project.previewImageUrl,
             textureUrl: project.designData.textureUrl || '',
             appearance: project.designData,
             textureTransform: sanitizeTextureTransform(project.designData.textureTransform)
@@ -189,7 +197,18 @@
   }
 
   async function applyCurrentDesign(design) {
-    if (!design || !viewer) return false;
+    if (!design) return false;
+    if (!design.textureUrl && design.previewImageUrl) {
+      const previewUrl = window.UserProjects.textureUrl(design.previewImageUrl);
+      const image = await loadTextureImage(previewUrl);
+      image.alt = 'Saved 3D design';
+      const panel = document.getElementById('tryOnViewerPanel');
+      panel.querySelectorAll('model-viewer, img, .tryon-viewer__controls, .tryon-viewer__hint').forEach(node => { node.hidden = true; node.style.display = 'none'; });
+      panel.appendChild(image);
+      savedProjectPreviewUrl = previewUrl;
+      return true;
+    }
+    if (!viewer) return false;
     const model = await waitForViewerModel();
     let texture = null;
     let textureTransform = design.textureTransform;
@@ -358,6 +377,7 @@
 
   async function captureGarmentImage() {
     await designLoadPromise;
+    if (savedProjectPreviewUrl) return imageUrlToDataUri(savedProjectPreviewUrl);
     const fallbackImage = root.dataset.garmentFallback;
     if (!viewer?.toDataURL) {
       if (fallbackImage) return imageUrlToDataUri(fallbackImage);

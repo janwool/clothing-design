@@ -28,12 +28,12 @@ test('saves a rendered 3D garment image as the Workbench project cover', () => {
   const saveStart = runtime.indexOf('async function saveCloudProject(options = {})');
   const saveEnd = runtime.indexOf('\n  function setRenderStatus', saveStart);
   const saveBlock = runtime.slice(saveStart, saveEnd);
-  assert.match(saveBlock, /captureViewerCamera\(designerViewer\)/);
-  assert.match(saveBlock, /renderDesignedModelImageWithFallback\(textureDataUrl, \{[\s\S]*mimeType: 'image\/webp'[\s\S]*cameraSnapshot/);
+  assert.match(saveBlock, /await captureProjectPreview\(\)/);
+  assert.doesNotMatch(saveBlock, /renderDesignedModelImageWithFallback/);
   assert.match(saveBlock, /'project-preview'/);
   assert.match(saveBlock, /previewImageUrl: preview\.url/);
   assert.doesNotMatch(saveBlock, /previewImageUrl: texture\.url/);
-  assert.match(saveBlock, /textureUrl: texture\.url/);
+  assert.doesNotMatch(saveBlock, /textureUrl:|project-texture/);
 });
 
 test('downloads the current-view render directly without opening a preview dialog', () => {
