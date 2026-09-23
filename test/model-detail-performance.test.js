@@ -120,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260923-small-project-preview-v67'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260924-single-scene-v72'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -234,7 +234,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /texture\.source\.update\?\.\(\);/);
   assert.ok(saveBlock.indexOf('clearHoveredTemplatePreview();') < saveBlock.indexOf('rasterizeModelTexture'));
   assert.ok(saveBlock.indexOf('await applyFinalTextureToViewers(textureDataUrl);') < saveBlock.indexOf('closeModal();'));
-  assert.match(saveBlock, /if \(!modelDesignerConfig\.userAuthenticated \|\| !window\.UserProjects\)/);
+  assert.match(saveBlock, /if \(!modelDesignerConfig\.userAuthenticated\)/);
   assert.match(saveBlock, /materialId: state\.selectedMaterial\?\.id \|\| null/);
   assert.match(saveBlock, /appearance: serializeAppearanceState\(\)/);
   assert.match(designerRuntime, /panelFills: \[\.\.\.textureSvg\.querySelectorAll\('\.texture-template-path\[data-color\]'\)\]/);
@@ -244,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260923-small-project-preview-v67/);
+  assert.match(template, /model-designer\.js\?v=20260924-single-scene-v72/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {

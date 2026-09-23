@@ -7745,6 +7745,40 @@ body {
   background: transparent;
 }
 
+.element-toolbar-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.element-toolbar-action {
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: #454750;
+}
+
+.element-toolbar-action:hover:not(:disabled) {
+  background: #f0f1f4;
+  color: #17181c;
+}
+
+.element-toolbar-action:focus-visible {
+  outline: 2px solid #5878bc;
+  outline-offset: -2px;
+}
+
+.element-toolbar-action:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
 .element-toolbar-delete {
   width: 34px;
   height: 34px;
@@ -7769,6 +7803,20 @@ body {
     min-height: 44px;
     padding: 5px 6px;
     border-radius: 11px;
+  }
+
+  .element-toolbar:not(.is-surface-toolbar) {
+    width: calc(100% - 20px);
+    flex-wrap: wrap;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .element-toolbar-actions {
+    flex-basis: 100%;
+    justify-content: center;
+    padding-top: 5px;
+    border-top: 1px solid rgba(29, 29, 31, 0.08);
   }
 
   .element-toolbar-control {

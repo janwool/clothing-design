@@ -1,6 +1,6 @@
 {
-  "source": "tshirt-v16-sleeves-connected.glb",
-  "sha256": "88222a3c8dfd24ef9f8e4b7f63af104123732b834c99c01e5e081fc81cb240b0",
+  "source": "tshirt-v16-cuff-continuous.glb",
+  "sha256": "6ef753620fc6f32b3cd220ed64aced8dea17c4a28bfb97e1234003cc2a98b94d",
   "orientation": "Online packed SVG display convention; texture scale (1,-1), offset (0,1)",
   "defaultBaseColorImage": null,
   "defaultColorPreview": "Generated from existing material colors, not an embedded base color texture",
@@ -86,5 +86,44 @@
     "faces_before": 23823,
     "faces_after": 23823,
     "vertices_welded": 247
-  }
+  },
+  "productionAcceptance": {
+    "id": 225,
+    "file_url": "https://cdn.cloz-design.com/catalog/20260919-tshirt225-cuff-v2/glb/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.glb",
+    "texture_url": "https://cdn.cloz-design.com/catalog/20260919-tshirt225-qualified-v1/texture/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.svg",
+    "model_id": 225,
+    "review_status": "qualified",
+    "skip_processing": 1,
+    "approved_file_url": "https://cdn.cloz-design.com/catalog/20260919-tshirt225-cuff-v2/glb/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.glb",
+    "approved_texture_url": "https://cdn.cloz-design.com/catalog/20260919-tshirt225-qualified-v1/texture/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.svg",
+    "glb_sha256": "6ef753620fc6f32b3cd220ed64aced8dea17c4a28bfb97e1234003cc2a98b94d",
+    "svg_sha256": "abfa1d05b48c5e11662cb2f3b2bec52feb6d39c91c410206fc08ef06823cfd56",
+    "reviewed_at": "2026-09-19 14:08:00",
+    "reviewed_by": "user_explicit_approval",
+    "review_notes": "用户明确要求将袖口连续连接修复版 GLB 更新到线上；保留 SVG 和合格、后续跳过处理状态。",
+    "verification_json": "{\"blend\":\"/Users/chengwuxue/projects/clothing-design/artifacts/v16-online-uv/v16-cuff-continuous.blend\",\"glb\":\"/Users/chengwuxue/projects/clothing-design/public/previews/tshirt-commercial-v2/tshirt-v16-cuff-continuous.glb\",\"uv_layers_unchanged\":{\"UVMap\":true,\"FabricWeave\":true},\"faces_before\":23823,\"faces_after\":23823,\"shared_cuff_sleeve_edges\":{\"(0, 3)\":38,\"(1, 4)\":38},\"nonmanifold_edges\":0,\"stitch_components_seated\":408,\"max_stitch_move_mm\":2.23290347153607}"
+  },
+  "uvAssetExtractionSource": {
+    "source": "tshirt-v16-sleeves-connected.glb",
+    "sha256": "88222a3c8dfd24ef9f8e4b7f63af104123732b834c99c01e5e081fc81cb240b0",
+    "note": "SVG and default-color previews retained; base mesh UV0 and UV1 corner coordinates are unchanged by cuff repair."
+  },
+  "cuffRepair": {
+    "blend": "/Users/chengwuxue/projects/clothing-design/artifacts/v16-online-uv/v16-cuff-continuous.blend",
+    "glb": "/Users/chengwuxue/projects/clothing-design/public/previews/tshirt-commercial-v2/tshirt-v16-cuff-continuous.glb",
+    "uv_layers_unchanged": {
+      "UVMap": true,
+      "FabricWeave": true
+    },
+    "faces_before": 23823,
+    "faces_after": 23823,
+    "shared_cuff_sleeve_edges": {
+      "(0, 3)": 38,
+      "(1, 4)": 38
+    },
+    "nonmanifold_edges": 0,
+    "stitch_components_seated": 408,
+    "max_stitch_move_mm": 2.23290347153607
+  },
+  "previewStatus": "cuff repair published; qualified and excluded from future processing"
 }

@@ -76,6 +76,7 @@ window.initializeModelDesigner = () => {
   colorPopover.className = 'color-popover';
   colorPopover.dataset.editorToolbar = 'true';
   textureCanvasArea.appendChild(colorPopover);
+  let externalColorPicker = null;
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const defaultTextContent = modelDesignerConfig.defaultTextContent || 'Text';
@@ -195,7 +196,7 @@ window.initializeModelDesigner = () => {
   };
   const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
 
-  function persistTryOnDesign(textureUrl = state.finalTextureUrl || state.appliedTextureUrl) {
+  function persistTryOnDesign(textureUrl = state.finalTextureUrl) {
     if (!textureUrl) return false;
     try {
       sessionStorage.setItem(tryOnDesignTransferKey, JSON.stringify({
@@ -499,6 +500,7 @@ window.initializeModelDesigner = () => {
     try {
       await waitForModelViewerReady(viewerElement);
       const materials = viewerElement.model?.materials || [];
+      await Promise.all(materials.map(modelMaterial => modelMaterial.ensureLoaded?.()));
       const maps = await loadMaterialMaps(viewerElement, material, {
         includeBaseColorMap: options.includeBaseColorMap !== false
       });
@@ -529,7 +531,7 @@ window.initializeModelDesigner = () => {
     }
   }
 
-  async function applyMaterialPreset(material) {
+  async function applyMaterialPreset(material, { previewOnly = false } = {}) {
     state.selectedMaterial = material;
     setDesignSaveStatus('Unapplied changes', true);
     materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
@@ -537,7 +539,7 @@ window.initializeModelDesigner = () => {
       button.classList.toggle('active', isActive);
       button.setAttribute('aria-pressed', String(isActive));
     });
-    const loadedViewers = getLoadedDesignViewers();
+    const loadedViewers = previewOnly ? [designerViewer].filter(viewer => viewer?.model) : getLoadedDesignViewers();
     await Promise.all(loadedViewers.map((viewerElement) => applyMaterialToViewer(viewerElement, material)));
     if (state.appliedTextureUrl) {
       await Promise.all(loadedViewers.map((viewerElement) => applyTextureToViewer(viewerElement, state.appliedTextureUrl)));
@@ -574,7 +576,7 @@ window.initializeModelDesigner = () => {
       const preview = button.querySelector('.material-swatch-preview');
       preview.style.backgroundColor = material.color;
       preview.style.backgroundImage = `url("${materialPreviewUrls[material.id] || material.maps.baseColor}")`;
-      button.addEventListener('click', () => applyMaterialPreset(material));
+      button.addEventListener('click', () => applyMaterialPreset(material, { previewOnly: true }));
       materialSwatchGrid.appendChild(button);
     });
   }
@@ -1210,6 +1212,7 @@ window.initializeModelDesigner = () => {
       const model = viewerElement.model;
       const materials = model?.materials || [];
       if (!materials.length) return false;
+      await Promise.all(materials.map(material => material.ensureLoaded?.()));
       const texture = options.texture || await createViewerTexture(viewerElement, textureUrl);
       const materialMaps = state.selectedMaterial
         ? await loadMaterialMaps(viewerElement, state.selectedMaterial)
@@ -1531,14 +1534,15 @@ window.initializeModelDesigner = () => {
     }
     try {
       const textureDataUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
-      state.finalTextureUrl = textureDataUrl;
-      await applyFinalTextureToViewers(textureDataUrl);
-      persistTryOnDesign(textureDataUrl);
-      if (!modelDesignerConfig.userAuthenticated || !window.UserProjects) {
+      if (!modelDesignerConfig.userAuthenticated) {
+        await applyFinalTextureToViewers(textureDataUrl);
+        state.finalTextureUrl = textureDataUrl;
+        persistTryOnDesign(textureDataUrl);
         setDesignSaveStatus('Applied');
         if (options.closeAfterSave) closeModal();
         return true;
       }
+      if (!window.UserProjects) throw new Error('Project saving is unavailable. Please reload and try again.');
       saveStage = 'wait_artwork_uploads';
       await waitForPendingArtworkUploads();
       saveStage = 'serialize_design';
@@ -1576,13 +1580,15 @@ window.initializeModelDesigner = () => {
       }
       saveStage = 'render_preview';
       setDesignSaveStatus('Rendering 3D project cover…');
+      await applyTextureToModel(textureDataUrl);
       const previewDataUrl = await captureProjectPreview();
       saveStage = 'upload_preview';
       setDesignSaveStatus('Saving project…');
       const preview = await window.UserProjects.uploadImage(
         previewDataUrl,
         `${modelDesignerConfig.modelSlug || '3d-design'}-preview.${previewDataUrl.startsWith('data:image/webp;') ? 'webp' : 'jpg'}`,
-        'project-preview'
+        'project-preview',
+        state.projectId
       );
       saveStage = 'finalize_project';
       const project = await window.UserProjects.saveProject({
@@ -1596,7 +1602,11 @@ window.initializeModelDesigner = () => {
       });
       state.projectId = project.id;
       state.projectName = project.name;
+      // Only a successful cloud save may publish the editor draft to the detail
+      // page or the try-on handoff. A rejected save leaves the last saved design intact.
+      saveStage = 'apply_saved_design';
       state.finalTextureUrl = textureDataUrl;
+      await applyFinalTextureToViewers(textureDataUrl);
       const url = new URL(window.location.href);
       url.searchParams.set('project', project.id);
       window.history.replaceState({}, '', url);
@@ -1658,7 +1668,7 @@ window.initializeModelDesigner = () => {
     }
 
     const startedAt = Date.now();
-    while (!viewerElement.model && Date.now() - startedAt < 45000) {
+    while ((!viewerElement.model || !viewerElement.loaded) && Date.now() - startedAt < 45000) {
       await new Promise((resolve, reject) => {
         const timer = setTimeout(resolve, 160);
         const handleLoad = () => {
@@ -1675,11 +1685,18 @@ window.initializeModelDesigner = () => {
       await viewerElement.updateComplete;
     }
 
-    if (!viewerElement.model) {
+    if (!viewerElement.model || !viewerElement.loaded) {
       throw new Error('3D model render timed out');
     }
 
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+
+  async function getLoadedViewerMaterials(viewerElement) {
+    await waitForModelViewerReady(viewerElement);
+    const materials = viewerElement.model?.materials || [];
+    await Promise.all(materials.map(material => material.ensureLoaded?.()));
+    return materials;
   }
 
   async function captureModelViewerImage(viewerElement, options = {}) {
@@ -2889,7 +2906,7 @@ window.initializeModelDesigner = () => {
 
   function setElementOpacity(group, value) {
     if (!group) return;
-    group.setAttribute('opacity', String(Math.max(0, Math.min(100, parseFloat(value) || 100)) / 100));
+    group.setAttribute('opacity', String(Math.max(0, Math.min(100, (Number.isFinite(parseFloat(value)) ? parseFloat(value) : 100))) / 100));
   }
 
   function setElementLineWidth(group, value) {
@@ -3202,13 +3219,34 @@ window.initializeModelDesigner = () => {
       addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
     }
 
+    const actions = document.createElement('div');
+    actions.className = 'element-toolbar-actions';
+    actions.setAttribute('role', 'group');
+    actions.setAttribute('aria-label', 'Element actions');
+    const addAction = (action, label, icon, disabled = false) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'element-toolbar-action';
+      button.dataset.elementAction = action;
+      button.title = label;
+      button.setAttribute('aria-label', label);
+      button.disabled = disabled;
+      button.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">${icon}</svg>`;
+      actions.appendChild(button);
+    };
+    if (type === 'text') addAction('edit', 'Edit text', '<path d="M4 7V4h16v3M9 20h6M12 4v16"/>');
+    addAction('duplicate', 'Duplicate', '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>');
+    addAction('backward', 'Send backward', '<path d="M4 4h16M12 8v12m-5-5 5 5 5-5"/>', !group.previousElementSibling);
+    addAction('forward', 'Bring forward', '<path d="M4 20h16M12 16V4m-5 5 5-5 5 5"/>', !group.nextElementSibling);
+
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
     deleteButton.className = 'element-toolbar-delete';
     deleteButton.dataset.deleteElement = 'true';
     deleteButton.setAttribute('aria-label', 'Delete selected element');
     deleteButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
-    elementToolbar.appendChild(deleteButton);
+    actions.appendChild(deleteButton);
+    elementToolbar.appendChild(actions);
 
     positionElementToolbar(group);
   }
@@ -3239,16 +3277,20 @@ window.initializeModelDesigner = () => {
     colorPopover.classList.remove('visible');
     colorPopover.innerHTML = '';
     state.colorPicker = null;
+    externalColorPicker = null;
+    if (colorPopover.parentElement !== textureCanvasArea) textureCanvasArea.appendChild(colorPopover);
     elementToolbar.querySelectorAll('[data-color-prop]').forEach((button) => {
       button.setAttribute('aria-expanded', 'false');
     });
   }
 
-  function openColorPopover(button) {
+  function openColorPopover(button, external = null) {
     const prop = button.dataset.colorProp;
     const group = state.selected;
-    if (!group || !prop) return;
-    const current = parseColorState(getColorValue(group, prop));
+    if (!external && (!group || !prop)) return;
+    externalColorPicker = external;
+    if (external) external.container.appendChild(colorPopover);
+    const current = parseColorState(external ? external.value : getColorValue(group, prop));
     const stops = normalizeGradientStops(current.stops, current.start, current.end).map((stop, index) => ({
       ...stop,
       id: `gradient-stop-${index + 1}`
@@ -3327,6 +3369,15 @@ window.initializeModelDesigner = () => {
 
   function positionColorPopover(button) {
     if (!button || !colorPopover.classList.contains('visible')) return;
+    if (externalColorPicker) {
+      const anchor = button.getBoundingClientRect();
+      const container = externalColorPicker.container.getBoundingClientRect();
+      const width = colorPopover.offsetWidth || 284;
+      const height = colorPopover.offsetHeight || 370;
+      colorPopover.style.left = `${Math.max(8, Math.min(container.width - width - 8, anchor.left - container.left - width / 2))}px`;
+      colorPopover.style.top = `${Math.max(8, anchor.top - container.top - height - 12)}px`;
+      return;
+    }
     const buttonRect = button.getBoundingClientRect();
     const areaRect = textureCanvasArea.getBoundingClientRect();
     const popoverWidth = colorPopover.offsetWidth || 336;
@@ -3508,6 +3559,16 @@ window.initializeModelDesigner = () => {
   function applyColorPicker(commit = false) {
     if (!state.colorPicker) return;
     const value = getPickerCss();
+    if (externalColorPicker) {
+      externalColorPicker.onChange(value, {
+        mode: state.colorPicker.mode,
+        color: state.colorPicker.solidColor,
+        stops: state.colorPicker.stops.map(stop => ({ color: stop.color, position: stop.position })),
+        angle: state.colorPicker.angle,
+        alpha: state.colorPicker.alpha
+      });
+      return;
+    }
     updateSelectedElement({ [state.colorPicker.prop]: value }, { commit });
     elementToolbar.querySelectorAll(`[data-color-prop="${state.colorPicker.prop}"]`).forEach((button) => {
       button.dataset.colorValue = value;
@@ -3644,7 +3705,11 @@ window.initializeModelDesigner = () => {
       }));
     }
     selectionLayer.appendChild(box);
-    buildElementToolbar(state.selected);
+    // Keep numeric controls mounted while typing; rebuilding loses focus and
+    // can prevent the change event from committing the edit to history.
+    if (elementToolbar.contains(document.activeElement) && document.activeElement.matches('input')) {
+      positionElementToolbar(state.selected);
+    } else buildElementToolbar(state.selected);
   }
 
   toolButtons.text?.addEventListener('click', () => {
@@ -4203,12 +4268,23 @@ window.initializeModelDesigner = () => {
   });
 
   elementToolbar.addEventListener('pointerdown', (event) => {
+    if (event.target.closest('button')) event.preventDefault();
     if (event.target.closest('[data-editor-toolbar]')) {
       event.stopPropagation();
     }
   });
 
   elementToolbar.addEventListener('click', (event) => {
+    const actionButton = event.target.closest('[data-element-action]');
+    if (actionButton) {
+      event.preventDefault();
+      event.stopPropagation();
+      const action = actionButton.dataset.elementAction;
+      if (action === 'edit') editTextElement(state.selected);
+      else if (action === 'duplicate') duplicateSelected();
+      else reorderSelected(action);
+      return;
+    }
     const deleteButton = event.target.closest('[data-delete-element]');
     if (deleteButton) {
       event.preventDefault();
@@ -4417,9 +4493,59 @@ window.initializeModelDesigner = () => {
     }
   }
 
+  function editableSelection() {
+    return state.selected?.classList.contains('texture-element') && state.selected.parentNode === textureElements
+      ? state.selected : null;
+  }
+
+  function duplicateSelected() {
+    state.textEditor?.commit();
+    const original = editableSelection();
+    if (!original) return;
+    const copy = original.cloneNode(true);
+    copy.id = `element-${++state.elementCounter}`;
+    copy.classList.remove('selected');
+    textureElements.insertBefore(copy, original.nextSibling);
+    const data = getData(original);
+    setData(copy, constrainToCanvas({ ...data, x: data.x + 16, y: data.y + 16 }));
+    // Recreate SVG paints under the new ID so later edits remain independent.
+    if (copy.dataset.color) setElementColor(copy, copy.dataset.color);
+    if (copy.dataset.strokeColor) setElementStrokeColor(copy, copy.dataset.strokeColor);
+    selectElement(copy);
+    saveHistory();
+  }
+
+  function reorderSelected(direction) {
+    state.textEditor?.commit();
+    const group = editableSelection();
+    if (!group) return;
+    const sibling = direction === 'forward' ? group.nextElementSibling : group.previousElementSibling;
+    if (!sibling) return;
+    if (direction === 'forward') textureElements.insertBefore(sibling, group);
+    else textureElements.insertBefore(group, sibling);
+    renderSelection();
+    saveHistory();
+  }
+
+  function nudgeSelected(key, step) {
+    const group = editableSelection();
+    if (!group) return;
+    const offset = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[key];
+    if (!offset) return;
+    // Arrow directions follow the screen, including a rotated canvas.
+    const angle = -(state.canvasRotation || 0) * Math.PI / 180;
+    const data = getData(group);
+    setData(group, constrainToCanvas({ ...data,
+      x: data.x + offset[0] * Math.cos(angle) - offset[1] * Math.sin(angle),
+      y: data.y + offset[0] * Math.sin(angle) + offset[1] * Math.cos(angle)
+    }));
+    renderSelection();
+    saveHistory();
+  }
+
   function deleteSelected() {
     state.textEditor?.cancel();
-    if (!state.selected) return;
+    if (!editableSelection()) return;
     state.selected.remove();
     clearSelection();
     saveHistory();
@@ -4441,6 +4567,7 @@ window.initializeModelDesigner = () => {
       return;
     }
     if (!designModal.classList.contains('active')) return;
+    if (event.isComposing || event.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
     if (event.key === 'Escape') {
       event.preventDefault();
       if (colorPopover.classList.contains('visible')) closeColorPopover();
@@ -4454,7 +4581,16 @@ window.initializeModelDesigner = () => {
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
       event.shiftKey ? redo() : undo();
-    } else if ((event.key === 'Delete' || event.key === 'Backspace') && state.selected) {
+    } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'd' && editableSelection()) {
+      event.preventDefault();
+      duplicateSelected();
+    } else if (!event.metaKey && !event.ctrlKey && !event.altKey && event.key.startsWith('Arrow') && editableSelection()) {
+      event.preventDefault();
+      nudgeSelected(event.key, event.shiftKey ? 10 : 1);
+    } else if (event.key === 'Enter' && !event.target.closest?.('button, a') && state.selected?.dataset.type === 'text') {
+      event.preventDefault();
+      editTextElement(state.selected);
+    } else if ((event.key === 'Delete' || event.key === 'Backspace') && editableSelection()) {
       event.preventDefault();
       deleteSelected();
     }
@@ -4469,13 +4605,13 @@ window.initializeModelDesigner = () => {
     scheduleTexturePreviewUpdate({ requireArtwork: true });
   });
   detailViewer?.addEventListener('load', () => {
-    const designedTexture = state.finalTextureUrl || state.appliedTextureUrl;
+    const designedTexture = state.finalTextureUrl;
     if (designedTexture) {
       applyTextureToViewer(detailViewer, designedTexture);
     }
   });
   saveDesignModal?.addEventListener('click', saveDesignAndClose);
-  renderCurrentModelBtn?.addEventListener('click', renderCurrentModelImage);
+  renderCurrentModelBtn?.addEventListener('click', () => window.ModelExportModal?.open());
   customizationInquiryBtn?.addEventListener('click', openCustomizationInquiry);
   customizationInquiryOverlay?.addEventListener('click', closeCustomizationInquiry);
   customizationInquiryClose?.addEventListener('click', closeCustomizationInquiry);
@@ -4617,6 +4753,49 @@ window.initializeModelDesigner = () => {
   window.addEventListener('load', openDesignFromNavigation, { once: true });
   window.openModelDesigner = openModal;
   window.renderCurrentModelImage = renderCurrentModelImage;
+  const exportMaterialStates = new WeakMap();
+  window.ModelDesignerExport = {
+    openColorPicker(button, options) {
+      closeColorPopover();
+      openColorPopover(button, options);
+    },
+    closeColorPicker: closeColorPopover,
+    async prepareViewer(viewer) {
+      await loadModelViewerModule();
+      const materials = await getLoadedViewerMaterials(viewer);
+      const savedMaterials = exportMaterialStates.get(viewer)?.materials;
+      if (!savedMaterials || savedMaterials.length !== materials.length || savedMaterials.some((material, index) => material !== materials[index])) {
+        exportMaterialStates.set(viewer, {
+          materials,
+          original: materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null),
+          designed: []
+        });
+      }
+      const textureUrl = await createFinalRenderTexture();
+      if (textureUrl) await applyTextureToViewer(viewer, textureUrl, { trackApplied: false });
+      else if (state.selectedMaterial) await applyMaterialToViewer(viewer, state.selectedMaterial);
+      if (!textureUrl) await window.ExportEntitlements?.applyModelViewerWatermark?.(viewer);
+      await viewer.updateComplete;
+      exportMaterialStates.get(viewer).designed = materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null);
+      return viewer;
+    },
+    setBeforeAfter(viewer, before) {
+      const materials = viewer.model?.materials || [];
+      const saved = exportMaterialStates.get(viewer);
+      if (!saved || !materials.length || saved.materials[0] !== materials[0]) return;
+      materials.forEach((material, index) => material.pbrMetallicRoughness?.baseColorTexture?.setTexture?.((before ? saved.original : saved.designed)[index] || null));
+      viewer.requestUpdate?.();
+    },
+    capture: captureModelViewerImage,
+    async exportGlb(viewer) {
+      await this.prepareViewer(viewer);
+      const blob = await viewer.exportScene();
+      if (!(blob instanceof Blob) || !blob.size) throw new Error('Could not create the 3D file.');
+      return blob;
+    },
+    getProjectId: () => state.projectId || '',
+    getActiveCamera: () => captureViewerCamera()
+  };
   window.openModelCustomizationInquiry = openCustomizationInquiry;
 };
 })();

@@ -53,6 +53,7 @@
     "i18next-fs-backend": "^2.6.0",
     "i18next-http-middleware": "^3.7.1",
     "multer": "^2.1.1",
+    "qrcode": "^1.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "sqlite3": "^5.1.7"

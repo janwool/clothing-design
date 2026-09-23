@@ -960,7 +960,8 @@
         const preview = await window.UserProjects.uploadImage(
           canvas.toDataURL('image/jpeg', 0.86),
           `${template.assetName}-preview.jpg`,
-          'project-preview'
+          'project-preview',
+          state.projectId
         );
         if (revision !== state.artworkRevision) return;
         previewImageUrl = preview.url;

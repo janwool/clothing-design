@@ -348,16 +348,27 @@ async function saveDesignerProject() {
   designerSaveBtn.disabled = true;
   designerSaveStatus.textContent = 'Saving…';
   try {
-    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);
-    const preview = await window.UserProjects.uploadImage(previewDataUrl, '<%= model.slug %>-preview.jpg', 'project-preview');
-    const project = await window.UserProjects.saveProject({
-      id: designerProjectState.id || undefined,
+    const projectData = {
       projectType: '3d',
       name: designerProjectState.name || <%- JSON.stringify(`${model.name || 'Garment'} Design`) %>,
       sourceId: <%- JSON.stringify(String(model.id || model.slug || '')) %>,
       sourceUrl: window.location.pathname,
-      previewImageUrl: preview.url,
       designData: getDesignerProjectData()
+    };
+    if (!designerProjectState.id) {
+      const reservedProject = await window.UserProjects.saveProject({ ...projectData, previewImageUrl: '' });
+      designerProjectState.id = reservedProject.id;
+      designerProjectState.name = reservedProject.name;
+      const reservedUrl = new URL(window.location.href);
+      reservedUrl.searchParams.set('project', reservedProject.id);
+      window.history.replaceState({}, '', reservedUrl);
+    }
+    const previewDataUrl = viewer.toDataURL('image/jpeg', 0.86);
+    const preview = await window.UserProjects.uploadImage(previewDataUrl, '<%= model.slug %>-preview.jpg', 'project-preview', designerProjectState.id);
+    const project = await window.UserProjects.saveProject({
+      ...projectData,
+      id: designerProjectState.id,
+      previewImageUrl: preview.url
     });
     designerProjectState.id = project.id;
     designerProjectState.name = project.name;

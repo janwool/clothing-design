@@ -1,0 +1,29 @@
+{
+  "tool": "built-in image_gen",
+  "assets": [
+    {
+      "name": "minimal-white-east-asian-woman",
+      "prompt": "Use case: product-mockup. Create ONE photorealistic fashion e-commerce model cutout for an AI Try-on project. Actual transparent background with alpha channel, NOT a checkerboard drawn into the image, no studio backdrop, no floor, no shadow behind the subject. Portrait 2:3 composition, complete head through mid-thigh, centered, front-facing, arms resting slightly apart from torso so the entire T-shirt silhouette and hem are visible, hands fully visible, relaxed confident expression. Realistic skin and cotton fabric, soft even studio illumination, sharp natural detail, no logos, no text, no watermark, no props. Single adult person only. Subject: adult East Asian woman, age about 28, straight dark hair tucked behind shoulders. Outfit: minimalist premium white crew-neck T-shirt, regular fit, short sleeves, untucked with fully visible hem, medium-blue jeans.",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a0bf0f-c036-7d43-9edf-bc923fa0f558/exec-5c1712b6-3d92-4b46-97b8-22096aa95828.png",
+      "file": "minimal-white-east-asian-woman.png"
+    },
+    {
+      "name": "streetwear-black-black-man",
+      "prompt": "Use case: product-mockup. Create ONE photorealistic fashion e-commerce model cutout for an AI Try-on project. Actual transparent background with alpha channel, NOT a checkerboard drawn into the image, no studio backdrop, no floor, no shadow behind the subject. Portrait 2:3 composition, complete head through mid-thigh, centered, front-facing, arms resting slightly apart from torso so the entire T-shirt silhouette and hem are visible, hands fully visible, relaxed confident expression. Realistic skin and cotton fabric, soft even studio illumination, sharp natural detail, no logos, no text, no watermark, no props. Single adult person only. Subject: adult Black man, age about 30, dark brown skin, short textured hair. Outfit: washed charcoal oversized streetwear T-shirt, drop shoulders, elbow-length sleeves, subtle distressed fabric finish, untucked hem fully visible, light stone cargo trousers.",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a0bf0f-c036-7d43-9edf-bc923fa0f558/exec-958b19e8-04f3-4ccb-8f5f-534064a056f2.png",
+      "file": "streetwear-black-black-man.png"
+    },
+    {
+      "name": "retro-ringer-white-woman",
+      "prompt": "Use case: product-mockup. Create ONE photorealistic fashion e-commerce model cutout for an AI Try-on project. Actual transparent background with alpha channel, NOT a checkerboard drawn into the image, no studio backdrop, no floor, no shadow behind the subject. Portrait 2:3 composition, complete head through mid-thigh, centered, front-facing, arms resting slightly apart from torso so the entire T-shirt silhouette and hem are visible, hands fully visible, relaxed confident expression. Realistic skin and cotton fabric, soft even studio illumination, sharp natural detail, no logos, no text, no watermark, no props. Single adult person only. Subject: adult white European woman, age about 30, fair skin, short wavy auburn bob, average build. Outfit: vintage cream ringer T-shirt with burgundy ribbed neck and sleeve trim, fitted but comfortable silhouette, no graphic, untucked hem fully visible, dark-indigo jeans.",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a0bf0f-c036-7d43-9edf-bc923fa0f558/exec-f69e7f91-946e-46c5-9369-cf18435ef3e5.png",
+      "file": "retro-ringer-white-woman.png"
+    },
+    {
+      "name": "sport-colorblock-south-asian-man",
+      "prompt": "Use case: product-mockup. Create ONE photorealistic fashion e-commerce model cutout for an AI Try-on project. Actual transparent background with alpha channel, NOT a checkerboard drawn into the image, no studio backdrop, no floor, no shadow behind the subject. Portrait 2:3 composition, complete head through mid-thigh, centered, front-facing, arms resting slightly apart from torso so the entire T-shirt silhouette and hem are visible, hands fully visible, relaxed confident expression. Realistic skin and cotton fabric, soft even studio illumination, sharp natural detail, no logos, no text, no watermark, no props. Single adult person only. Subject: adult South Asian man, age about 28, medium brown skin, short black hair, athletic average build. Outfit: modern sporty T-shirt in muted sage green with off-white raglan short sleeves, structured regular fit, breathable knit texture, untucked hem fully visible, charcoal athletic trousers.",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a0bf0f-c036-7d43-9edf-bc923fa0f558/exec-d94f0211-7bed-47a3-be33-a6bdf96d773a.png",
+      "file": "sport-colorblock-south-asian-man.png"
+    }
+  ]
+}

@@ -12,7 +12,7 @@ const detailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'model-det
 
 test('uses one navigation treatment across standard pages', () => {
   assert.match(header, /product-refresh\.css\?v=20260915-navbar-type-v10/);
-  assert.match(header, /style\.css\?v=20260919-tools-dedupe-v26/);
+  assert.match(header, /style\.css\?v=20260923-element-actions-v27/);
   assert.match(routes, /model-detail-v2\.css\?v=20260916-material-previews-v34/);
   assert.match(styles, /--navbar-height: 76px/);
   assert.match(refreshStyles, /\.navbar-logo \{[^}]*font-size: 28px;[^}]*font-weight: 720;/s);
@@ -35,5 +35,5 @@ test('shows signed-in users a direct Workbench navigation button', () => {
 });
 
 test('loads the user image library runtime with the current cache version', () => {
-  assert.match(header, /user-projects\.js\?v=20260923-save-analytics-v6/);
+  assert.match(header, /user-projects\.js\?v=20260923-cover-project-v7/);
 });

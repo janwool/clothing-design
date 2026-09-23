@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <meta name="description" content="A clothing design shared from ClozDesign.">
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh;background:#f3f4f6;color:#131b25;font-family:Inter,Arial,sans-serif}header{display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,4vw,60px);background:#fff;border-bottom:1px solid #e1e5eb}header a{color:inherit;text-decoration:none;font-weight:700}header a:first-child{font-size:22px}main{max-width:860px;margin:48px auto;padding:0 20px}h1{font-size:clamp(28px,4vw,42px);margin:0 0 18px}.preview{display:grid;place-items:center;min-height:440px;background:#fff;border:1px solid #e2e5ea;border-radius:12px;overflow:hidden}.preview img{display:block;max-width:100%;max-height:70vh;object-fit:contain}.preview model-viewer{display:block;width:100%;height:min(70vh,680px);min-height:440px;background:#f5f6f8}.actions{margin-top:20px}.actions a{display:inline-block;padding:13px 20px;border-radius:6px;background:#101820;color:#fff;text-decoration:none;font-weight:600}p{color:#667080}
+  </style>
+</head>
+<body>
+  <header><a href="/">ClozDesign</a><span>Shared design · View only</span></header>
+  <main>
+    <h1><%= share.name %></h1>
+    <div class="preview">
+      <% if (share.model_url) { %>
+        <model-viewer src="<%= share.model_url %>" poster="<%= share.preview_image_url %>" alt="Interactive 3D preview of <%= share.name %>" camera-controls loading="eager" reveal="auto" camera-orbit="-16deg 72deg 142%" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer>
+      <% } else { %>
+        <img src="<%= share.preview_image_url %>" alt="Preview of <%= share.name %>">
+      <% } %>
+    </div>
+    <p><%= share.model_url ? 'Drag to inspect the shared 3D design.' : 'This is a saved preview of the design.' %></p>
+    <div class="actions"><a href="<%= share.source_url %>">Explore the 3D model</a></div>
+  </main>
+  <% if (share.model_url) { %>
+    <script>window.ModelViewerElement=window.ModelViewerElement||{};window.ModelViewerElement.meshoptDecoderLocation='/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';</script>
+    <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
+  <% } %>
+</body>
+</html>

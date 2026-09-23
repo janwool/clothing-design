@@ -75,10 +75,10 @@
     }
   }
 
-  async function uploadImage(dataUrl, name, purpose) {
+  async function uploadImage(dataUrl, name, purpose, projectId) {
     const result = await request('/api/user-images', {
       method: 'POST',
-      body: JSON.stringify({ dataUrl, name, purpose: purpose || 'artwork' })
+      body: JSON.stringify({ dataUrl, name, purpose: purpose || 'artwork', projectId })
     });
     return result.image;
   }

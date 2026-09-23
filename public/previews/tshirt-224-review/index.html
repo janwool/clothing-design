@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>T-shirt 224 · 商业模型优化检查</title>
+  <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
+  <script src="/js/camera-relative-studio-light.js?v=20260917-front-white-v5"></script>
+  <style>
+    :root{--ink:#171714;--muted:#62625c;--line:#c9c9c2;--paper:#f8f7f2;--blue:#315fcf}
+    *{box-sizing:border-box}
+    body{margin:0;background:#dedfd9;color:var(--ink);font-family:Arial,"PingFang SC",sans-serif}
+    header{height:86px;display:flex;align-items:center;justify-content:space-between;padding:0 30px;border-bottom:1px solid var(--line);background:#f5f4f0}
+    header small,.eyebrow{letter-spacing:.16em}
+    h1{margin:5px 0 0;font-size:22px}
+    main{display:grid;grid-template-columns:minmax(0,1fr) 360px;height:calc(100vh - 86px)}
+    .stage{position:relative;min-width:0;background:radial-gradient(ellipse at 50% 38%,#f2f2ee 0%,#d8dad5 100%)}
+    model-viewer{width:100%;height:100%;--poster-color:transparent}
+    .badge{position:absolute;left:24px;top:22px;padding:8px 10px;background:rgba(255,255,255,.82);border:1px solid rgba(0,0,0,.16);font-size:12px;letter-spacing:.1em;backdrop-filter:blur(10px)}
+    .loading{position:absolute;left:24px;bottom:20px;font-size:12px;color:#484842}
+    aside{padding:26px;background:var(--paper);border-left:1px solid var(--line);overflow:auto}
+    h2{margin:8px 0 12px;font-size:19px}h3{font-size:13px;margin:0 0 8px;letter-spacing:.08em}
+    p{font-size:14px;line-height:1.65;color:var(--muted);margin:0 0 16px}
+    .controls{display:flex;flex-wrap:wrap;margin:0 -4px 16px}
+    button{padding:9px 13px;margin:4px;border:1px solid #aaa;background:#fff;color:#1a1a18;cursor:pointer}
+    button:hover,button.active{border-color:var(--blue);color:var(--blue);background:#f1f5ff}
+    .panel{margin-top:16px;padding:15px;border:1px solid var(--line);background:#fff}
+    .metric{display:grid;grid-template-columns:1fr auto;gap:8px;padding:7px 0;border-bottom:1px solid #e4e4de;font-size:13px}
+    .metric:last-child{border-bottom:0}.metric b{font-weight:600}.good{color:#1c713d}
+    .gallery{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .gallery a{display:block;border:1px solid var(--line);background:#e6e8e5}.gallery img{display:block;width:100%;aspect-ratio:1/1.08;object-fit:cover}
+    .template{display:block;margin-top:10px;width:100%;max-height:240px;object-fit:contain;background:#eee;border:1px solid var(--line)}
+    @media(max-width:880px){header{height:auto;padding:16px 18px}header>small{display:none}main{display:block;height:auto}.stage{height:65vh}aside{border-left:0;border-top:1px solid var(--line)}}
+  </style>
+</head>
+<body>
+  <header>
+    <div><small>CLOZ / MODEL REVIEW</small><h1>Crewneck Cuffed Short-Sleeve T-Shirt</h1></div>
+    <small>MODEL 224 · ONLINE UV + SEATED SLEEVES V26</small>
+  </header>
+  <main>
+    <section class="stage">
+      <model-viewer id="viewer" src="/previews/tshirt-224-review/optimized.glb?v=26" camera-controls interaction-prompt="none" camera-orbit="-16deg 72deg 142%" field-of-view="28deg" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="aces" exposure="1.35" shadow-intensity="0.24" shadow-softness="0.9"></model-viewer>
+      <div class="badge" id="modeLabel">商业材质</div>
+      <div class="loading" id="loadState">正在载入优化模型…</div>
+    </section>
+    <aside>
+      <div class="eyebrow">01 / REVIEW</div>
+      <h2>可交互优化预览</h2>
+      <p>领口已按线上 SVG 的原始窄条 UV 岛重建；左右袖山与衣身袖笼经过局部手工平滑和一级曲面细分，并将袖片内收 16 mm、袖山根部再局部贴合 15 mm，消除袖子与衣身之间的透空。衣身、袖口和下摆保留 3.2 mm 厚度。</p>
+      <h3>材质检查</h3>
+      <div class="controls">
+        <button class="mode active" data-src="/previews/tshirt-224-review/optimized.glb?v=26" data-label="商业材质">商业材质</button>
+        <button class="mode" data-src="/previews/tshirt-224-review/checker.glb?v=26" data-label="UV 方格">UV 方格</button>
+      </div>
+      <h3>视角</h3>
+      <div class="controls">
+        <button data-orbit="0deg 75deg 142%">正面</button><button data-orbit="90deg 75deg 142%">侧面</button><button data-orbit="180deg 75deg 142%">背面</button><button data-orbit="-16deg 72deg 142%">全貌</button>
+        <button data-target="0.65m .45m 0m" data-orbit="0deg 76deg 72%">右袖</button><button data-target="-0.65m .45m 0m" data-orbit="0deg 76deg 72%">左袖</button><button data-target="0m .88m 0m" data-orbit="0deg 73deg 72%">领口</button>
+      </div>
+      <div class="panel">
+        <h3>结构变化</h3>
+        <div class="metric"><span>文件大小</span><b>3.9 MB → 2.1 MB</b></div>
+        <div class="metric"><span>顶点</span><b>465,981 → 46,990</b></div>
+        <div class="metric"><span>面</span><b>786,415 → 65,589</b></div>
+        <div class="metric"><span>主体厚度</span><b class="good">3.2 mm</b></div>
+        <div class="metric"><span>领口交接</span><b class="good">52 段连续四边面</b></div>
+        <div class="metric"><span>UV0</span><b class="good">匹配线上 SVG</b></div>
+        <div class="metric"><span>袖笼尖角</span><b class="good">已手工平滑</b></div>
+        <div class="metric"><span>袖笼间距</span><b class="good">已闭合</b></div>
+        <div class="metric"><span>非流形重叠边</span><b class="good">0</b></div>
+        <p style="margin:10px 0 0">当前为本地 Online UV + Seated Sleeves V26，等待外观确认后再处理线上资源。</p>
+      </div>
+      <div class="panel">
+        <h3>Blender 渲染核对</h3>
+        <div class="gallery">
+          <a href="/previews/tshirt-224-review/commercial-front.png" target="_blank"><img src="/previews/tshirt-224-review/commercial-front.png" alt="商业材质正面"></a>
+          <a href="/previews/tshirt-224-review/uv-checker-front.png" target="_blank"><img src="/previews/tshirt-224-review/uv-checker-front.png" alt="UV 方格正面"></a>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>线上 SVG 模板</h3>
+        <a href="/previews/tshirt-224-review/template.svg" target="_blank"><img class="template" src="/previews/tshirt-224-review/template.svg" alt="线上 SVG UV 模板"></a>
+      </div>
+    </aside>
+  </main>
+  <script>
+    const viewer=document.querySelector('#viewer');
+    const state=document.querySelector('#loadState');
+    const label=document.querySelector('#modeLabel');
+    viewer.addEventListener('load',()=>{
+      state.textContent='模型已载入 · 可拖动旋转';
+      window.CameraRelativeStudioLight?.install(viewer,{environmentImage:viewer.environmentImage,referenceAzimuthDeg:-16,azimuthOffsetDeg:45});
+    });
+    viewer.addEventListener('error',()=>state.textContent='模型载入失败，请刷新页面');
+    document.querySelectorAll('.mode').forEach(button=>button.onclick=()=>{
+      document.querySelectorAll('.mode').forEach(item=>item.classList.remove('active'));
+      button.classList.add('active');label.textContent=button.dataset.label;state.textContent='正在切换…';viewer.src=button.dataset.src;
+    });
+    document.querySelectorAll('[data-orbit]').forEach(button=>button.onclick=()=>{
+      viewer.cameraTarget=button.dataset.target||'auto auto auto';viewer.cameraOrbit=button.dataset.orbit;viewer.jumpCameraToGoal?.();
+    });
+  </script>
+</body>
+</html>

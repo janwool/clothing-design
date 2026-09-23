@@ -88,6 +88,6 @@ test('does not replace native model materials until the user selects a preset', 
   const renderMaterialsEnd = runtime.indexOf('\n  function parseSvgLength', renderMaterialsStart);
   const renderMaterials = runtime.slice(renderMaterialsStart, renderMaterialsEnd);
   assert.ok(renderMaterialsStart >= 0 && renderMaterialsEnd > renderMaterialsStart);
-  assert.match(renderMaterials, /button\.addEventListener\('click', \(\) => applyMaterialPreset\(material\)\)/);
+  assert.match(renderMaterials, /button\.addEventListener\('click', \(\) => applyMaterialPreset\(material, \{ previewOnly: true \}\)\)/);
   assert.doesNotMatch(renderMaterials, /state\.selectedMaterial\s*=/);
 });

@@ -154,6 +154,7 @@
     await viewer.updateComplete;
     const materials = viewer.model?.materials || [];
     if (!materials.length || typeof viewer.createCanvasTexture !== 'function') return false;
+    await Promise.all(materials.map(material => material.ensureLoaded?.()));
 
     const tile = await loadWatermarkTile().catch(() => null);
     let appliedCount = 0;

@@ -1,8 +1,9 @@
 const express = require('express');
 const { randomUUID } = require('node:crypto');
 const { Buffer } = require('node:buffer');
+const QRCode = require('qrcode/lib/browser');
 const db = require('../lib/db');
-const { deleteObject, uploadImageDataUrl } = require('../lib/object-storage');
+const { deleteObject, uploadBinary, uploadImageDataUrl } = require('../lib/object-storage');
 const { ensureUserContentTables } = require('../lib/user-content-db');
 const {
   canCreateProject,
@@ -56,6 +57,23 @@ router.post('/api/user-images', requireUser, async (req, res) => {
   let uploaded;
   try {
     await ensureUserContentTables();
+    if (purpose === 'project-preview') {
+      // A project reservation has already passed the server-side creation limit.
+      // Require it here too so cached clients cannot upload orphan covers.
+      const projectId = String(req.body?.projectId || '');
+      if (!projectId) {
+        const projectAccess = await canCreateProject(req.session.user.id);
+        if (!projectAccess.allowed) {
+          return res.status(403).json(limitError('projects', projectAccess.entitlements));
+        }
+        return res.status(400).json({ success: false, error: 'Save the project before uploading its cover. Please reload and try again.' });
+      }
+      const project = await db.get(
+        'SELECT id FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL',
+        [projectId, req.session.user.id]
+      );
+      if (!project) return res.status(404).json({ success: false, error: 'Project not found.' });
+    }
     const incomingBytes = imageDataUrlBytes(req.body?.dataUrl);
     const storageAccess = await canStoreImage(req.session.user.id, incomingBytes);
     if (!storageAccess.allowed) {
@@ -162,6 +180,100 @@ router.get('/api/projects/:id', requireUser, async (req, res) => {
   } catch (error) {
     console.error('Project load failed:', error);
     return res.status(500).json({ success: false, error: 'Project could not be loaded.' });
+  }
+});
+
+router.post('/api/projects/:id/share', requireUser, async (req, res) => {
+  try {
+    await ensureUserContentTables();
+    const project = await db.get('SELECT id, name, source_url, preview_image_url FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL AND project_type = ?', [req.params.id, req.session.user.id, '3d']);
+    if (!project) return res.status(404).json({ success: false, error: 'Saved design not found.' });
+    if (!project.preview_image_url) return res.status(409).json({ success: false, error: 'Save the design preview before sharing.' });
+    let share = await db.get('SELECT token FROM project_shares WHERE project_id = ? AND user_id = ? AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1', [project.id, req.session.user.id]);
+    if (!share) {
+      share = { token: randomUUID() };
+      await db.run('INSERT INTO project_shares (token, project_id, user_id, name, source_url, preview_image_url) VALUES (?, ?, ?, ?, ?, ?)', [share.token, project.id, req.session.user.id, project.name, project.source_url, project.preview_image_url]);
+    } else {
+      await db.run('UPDATE project_shares SET name = ?, source_url = ?, preview_image_url = ? WHERE token = ?', [project.name, project.source_url, project.preview_image_url, share.token]);
+    }
+    return res.json({ success: true, url: `/share/${share.token}`, token: share.token });
+  } catch (error) {
+    console.error('Project share failed:', error);
+    return res.status(500).json({ success: false, error: 'Share link could not be created.' });
+  }
+});
+
+router.put('/api/projects/:id/share/model', requireUser, express.raw({ type: 'model/gltf-binary', limit: '25mb' }), async (req, res) => {
+  const bytes = req.body;
+  if (!Buffer.isBuffer(bytes) || bytes.length < 12 || bytes.toString('ascii', 0, 4) !== 'glTF') {
+    return res.status(400).json({ success: false, error: 'A valid GLB file is required.' });
+  }
+  try {
+    await ensureUserContentTables();
+    const share = await db.get('SELECT token, model_storage_key FROM project_shares WHERE project_id = ? AND user_id = ? AND revoked_at IS NULL ORDER BY created_at DESC LIMIT 1', [req.params.id, req.session.user.id]);
+    if (!share) return res.status(404).json({ success: false, error: 'Create a share link first.' });
+    const key = `users/${req.session.user.id}/shares/${share.token}/model-${randomUUID()}.glb`;
+    const stored = await uploadBinary(bytes, { key, contentType: 'model/gltf-binary' });
+    const updated = await db.run('UPDATE project_shares SET model_url = ?, model_storage_key = ? WHERE token = ? AND user_id = ? AND revoked_at IS NULL', [stored.url, stored.key, share.token, req.session.user.id]);
+    if (!updated.changes) {
+      await deleteObject(stored.key);
+      return res.status(409).json({ success: false, error: 'The share link was revoked while uploading.' });
+    }
+    if (share.model_storage_key && share.model_storage_key !== stored.key) {
+      deleteObject(share.model_storage_key).catch(error => console.error('Previous shared model cleanup failed:', error));
+    }
+    return res.json({ success: true, modelUrl: stored.url });
+  } catch (error) {
+    console.error('Shared model upload failed:', error);
+    return res.status(error.status || 500).json({ success: false, error: error.status ? error.message : '3D share preview could not be uploaded.' });
+  }
+});
+
+router.delete('/api/projects/:id/share', requireUser, async (req, res) => {
+  try {
+    await ensureUserContentTables();
+    const shares = await db.all('SELECT model_storage_key FROM project_shares WHERE project_id = ? AND user_id = ? AND revoked_at IS NULL', [req.params.id, req.session.user.id]);
+    await db.run('UPDATE project_shares SET revoked_at = CURRENT_TIMESTAMP WHERE project_id = ? AND user_id = ? AND revoked_at IS NULL', [req.params.id, req.session.user.id]);
+    const deletions = await Promise.allSettled(shares.filter(share => share.model_storage_key).map(share => deleteObject(share.model_storage_key)));
+    deletions.filter(result => result.status === 'rejected').forEach(result => console.error('Revoked model cleanup failed:', result.reason));
+    return res.json({ success: true });
+  } catch (error) {
+    console.error('Project share revoke failed:', error);
+    return res.status(500).json({ success: false, error: 'Share link could not be revoked.' });
+  }
+});
+
+router.get('/share/:token', async (req, res) => {
+  if (!/^[a-f0-9-]{36}$/i.test(req.params.token)) return res.status(404).send('Design not found');
+  try {
+    await ensureUserContentTables();
+    const share = await db.get('SELECT name, source_url, preview_image_url, model_url FROM project_shares WHERE token = ? AND revoked_at IS NULL', [req.params.token]);
+    if (!share) return res.status(404).send('Design not found');
+    return res.render('shared-design', { title: `${share.name} | ClozDesign`, share });
+  } catch (error) {
+    console.error('Shared design load failed:', error);
+    return res.status(500).send('Design unavailable');
+  }
+});
+
+router.get('/api/share/qr', async (req, res) => {
+  try {
+    const origin = `${req.protocol}://${req.get('host')}`;
+    const target = new URL(String(req.query.url || ''), origin);
+    if (target.origin !== origin || target.search || target.hash) return res.status(400).send('Invalid share link');
+    const shareToken = target.pathname.match(/^\/share\/([a-f0-9-]{36})$/i)?.[1];
+    if (shareToken) {
+      await ensureUserContentTables();
+      const share = await db.get('SELECT token FROM project_shares WHERE token = ? AND revoked_at IS NULL', [shareToken]);
+      if (!share) return res.status(404).send('Share link not found');
+    } else if (!/^\/3d-models\/[a-z0-9-]+\/[a-z0-9-]+\/?$/i.test(target.pathname)) {
+      return res.status(400).send('Invalid share link');
+    }
+    const svg = await QRCode.toString(target.href, { type: 'svg', width: 156, margin: 1, errorCorrectionLevel: 'M' });
+    return res.type('image/svg+xml').set('Cache-Control', 'no-store').send(svg);
+  } catch (error) {
+    console.error('Share QR generation failed:', error);
+    return res.status(400).send('QR code could not be created');
   }
 });
 

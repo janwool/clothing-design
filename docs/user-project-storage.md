@@ -43,3 +43,9 @@ Migration `0011_project_soft_delete.sql` adds the nullable deletion timestamp. A
 The admin project library has a **View design** link that opens the source editor and loads saved design data, including soft-deleted projects. This preview disables project saves and image writes through the shared project client, as well as mockup autosave. It does not impersonate the owner.
 
 Set `ADMIN_EMAILS` to a comma-separated list of administrator login emails (Worker secret or local environment). The preview, design-data, and owner-scoped texture endpoints deny access unless the current database user's email is on that list. With no list configured they deny all access. The pre-existing admin dashboard still uses its existing login-only gate; this change adds stricter authorization to design inspection.
+
+## Cover upload authorization
+
+A `project-preview` upload to `/api/user-images` must include `projectId` for an existing, non-deleted project owned by the signed-in user. Each editor first creates the project through `/api/projects`, which enforces creation allowances, then uploads its cover with that ID. A rejected creation or dismissed upgrade dialog must not trigger cover rendering/upload. After upgrading, retrying creation checks the server's current entitlement before proceeding.
+
+Existing projects can replace their covers without consuming another creation allowance; storage limits still apply. Older clients sending no project ID receive a project-limit response if over quota, or a reload-required validation error otherwise. They cannot upload an orphan cover.

@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/model-export-modal.css?v=20260924-single-scene-v5']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -41,7 +41,7 @@
           <% if (previewModelFileUrl) { %>
             <button class="detail-action" id="renderCurrentModelBtn" type="button">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><circle cx="9" cy="10" r="2"/><path d="m5 17 4-4 3 3 2-2 5 3"/></svg>
-              <span>Render Image</span>
+              <span>Export</span>
             </button>
           <% } %>
           <% if (aiTryOnAvailable && previewModelFileUrl) { %>
@@ -1516,6 +1516,9 @@ window.ModelDesignerConfig = Object.freeze({
   modelId: <%- JSON.stringify(model.id || null) %>,
   modelSlug: <%- JSON.stringify(model.slug || '') %>,
   modelName: <%- JSON.stringify(model.name || '') %>,
+  previewImageUrl: <%- JSON.stringify(model.image_url || '') %>,
+  aiTryOnAvailable: <%- JSON.stringify(aiTryOnAvailable) %>,
+  aiTryOnPath: <%- JSON.stringify(aiTryOnPath) %>,
   userAuthenticated: <%- JSON.stringify(Boolean(user)) %>
 });
 
@@ -1673,7 +1676,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260923-small-project-preview-v67',
+      src: '/js/model-designer.js?v=20260924-single-scene-v72',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1784,7 +1787,7 @@ window.ModelDesignerConfig = Object.freeze({
       await loadModelDesignerRuntime();
       entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));
       if (entryId === 'renderCurrentModelBtn') {
-        await window.renderCurrentModelImage?.();
+        window.ModelExportModal?.open();
       } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {
         window.openModelCustomizationInquiry?.();
       } else {
@@ -1943,5 +1946,8 @@ window.ModelDesignerConfig = Object.freeze({
 </dialog>
 <script src="/js/detail-try-on.js?v=20260923-analytics-v5" defer></script>
 <% } %>
+
+<script src="/js/model-export-scene.js?v=20260924-v1" defer></script>
+<script src="/js/model-export-modal.js?v=20260924-lighting-sync-v6" defer></script>
 
 <%- include('partials/footer') %>

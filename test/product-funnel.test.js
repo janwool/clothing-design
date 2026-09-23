@@ -49,7 +49,7 @@ test('provides live trust routes linked from the footer', () => {
   assert.match(footer, /href="\/terms"/);
 });
 
-test('uses concise product actions that apply, render, and request production', () => {
+test('uses concise product actions that apply, export, and request production', () => {
   assert.match(modelDetail, /Edit in 3D/);
   assert.match(modelDetail, /id="saveDesignModal"/);
   assert.doesNotMatch(modelDetail, /id="saveProjectButton"/);
@@ -57,7 +57,7 @@ test('uses concise product actions that apply, render, and request production', 
   assert.match(designer, /saveCloudProject\(\{ closeAfterSave: true \}\)/);
   assert.match(designer, /if \(options\.closeAfterSave\) closeModal\(\)/);
   assert.match(modelDetail, /id="renderCurrentModelBtn"/);
-  assert.match(modelDetail, /Render Image/);
+  assert.match(modelDetail, /<span>Export<\/span>/);
   assert.doesNotMatch(modelDetail, /2D Pattern Canvas|3D Preview/);
   assert.match(modelDetail, /Production/);
   assert.match(modelDetail, /No Watermark/);
