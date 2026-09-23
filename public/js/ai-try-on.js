@@ -23,6 +23,28 @@
   let designLoadPromise = Promise.resolve(false);
   const tryOnDesignTransferKey = 'clozdesign_tryon_design_v1';
 
+  function trackTryOn(eventName, parameters = {}) {
+    window.trackEvent?.(eventName, {
+      item_id: String(root.dataset.modelId || root.dataset.modelSlug || ''),
+      item_category: 'ai_try_on',
+      model_slug: root.dataset.modelSlug || undefined,
+      person_model_id: selectedModel?.dataset?.modelId || undefined,
+      ...parameters
+    });
+  }
+
+  function generationFailureContext(error, stage) {
+    const status = Number(error?.status) || undefined;
+    let failureReason = 'unknown';
+    if (status === 401) failureReason = 'session_expired';
+    else if (status === 403) failureReason = 'credits_or_plan_limit';
+    else if (status === 400) failureReason = 'validation_failed';
+    else if (status >= 500) failureReason = 'generation_service_error';
+    else if (/timed out|timeout/i.test(String(error?.message || ''))) failureReason = 'timeout';
+    else if (!status) failureReason = stage === 'prepare_inputs' ? 'input_preparation_failed' : 'network_or_client_error';
+    return { failure_reason: failureReason, generation_stage: stage, error_status: status };
+  }
+
   function sanitizeTextureTransform(value) {
     const scale = value?.scale;
     const offset = value?.offset;
@@ -217,18 +239,25 @@
   }
 
   async function loadCurrentDesign() {
-    const design = await resolveCurrentDesign();
-    if (!design) return false;
-    if (designStatusText) designStatusText.textContent = 'Loading current design…';
     try {
+      const design = await resolveCurrentDesign();
+      if (!design) {
+        trackTryOn('ai_tryon_design_missing');
+        return false;
+      }
+      if (designStatusText) designStatusText.textContent = 'Loading current design…';
       await applyCurrentDesign(design);
       root.dataset.designLoaded = 'true';
       if (designStatusText) designStatusText.textContent = 'Current design loaded';
+      trackTryOn('ai_tryon_design_load_success', {
+        design_source: new URLSearchParams(window.location.search).has('project') ? 'project' : 'session_transfer'
+      });
       return true;
     } catch (error) {
       console.error(error);
       if (designStatusText) designStatusText.textContent = 'Original garment loaded';
       showToast(error.message || 'The current design could not be restored.', true);
+      trackTryOn('ai_tryon_design_load_error', { failure_reason: 'design_restore_failed' });
       return false;
     }
   }
@@ -262,6 +291,11 @@
     selectedModel = card;
     personImageUrl = card.dataset.modelImage;
     generatedImageUrl = '';
+    trackTryOn('ai_tryon_person_model_select', {
+      person_model_id: card.dataset.modelId,
+      model_style: card.dataset.modelStyle || undefined,
+      selection_source: card.dataset.modelId === 'upload' ? 'upload' : 'library'
+    });
     setResultAvailability(false);
     resultImage.classList.add('is-updating');
     window.setTimeout(() => {
@@ -348,16 +382,32 @@
 
   async function generateTryOn() {
     if (generating || !selectedModel) return;
+    const isRegeneration = Boolean(generatedImageUrl);
+    const startedAt = performance.now();
+    let generationStage = 'access_check';
+    trackTryOn('ai_tryon_generate_click', {
+      credit_cost: Number(root.dataset.creditCost) || 10,
+      is_regeneration: isRegeneration
+    });
     setGenerating(true);
     try {
       if (!(await window.UpgradeModal.requireTryOnAccess())) {
+        trackTryOn('ai_tryon_generate_access_blocked', {
+          credit_cost: Number(root.dataset.creditCost) || 10
+        });
         setGenerating(false);
         return;
       }
+      generationStage = 'prepare_inputs';
       const [personImage, garmentImage] = await Promise.all([
         imageUrlToDataUri(personImageUrl),
         captureGarmentImage()
       ]);
+      generationStage = 'request_generation';
+      trackTryOn('ai_tryon_generate_begin', {
+        credit_cost: Number(root.dataset.creditCost) || 10,
+        is_regeneration: isRegeneration
+      });
       const response = await fetch('/api/ai-try-on', {
         method: 'POST',
         headers: {
@@ -376,16 +426,28 @@
         })
       });
       const payload = await response.json().catch(() => ({}));
+      generationStage = 'handle_response';
       if (!response.ok || !payload.success || !payload.image) {
         if (response.status === 401) {
+          trackTryOn('ai_tryon_generate_error', {
+            ...generationFailureContext({ status: 401 }, generationStage),
+            duration_ms: Math.round(performance.now() - startedAt)
+          });
           window.location.href = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`;
           return;
         }
         if (window.UpgradeModal?.handleLimit(payload)) {
+          trackTryOn('ai_tryon_generate_access_blocked', {
+            failure_reason: 'credits_or_plan_limit',
+            error_status: response.status,
+            limit_resource: payload.resource
+          });
           setGenerating(false);
           return;
         }
-        throw new Error(payload.error || `Try-on failed (${response.status}).`);
+        const requestError = new Error(payload.error || `Try-on failed (${response.status}).`);
+        requestError.status = response.status;
+        throw requestError;
       }
 
       generatedImageUrl = payload.image;
@@ -394,25 +456,45 @@
       setResultAvailability(true);
       setPreviewState('after');
       showToast('Try-on ready');
+      trackTryOn('ai_tryon_generate_success', {
+        duration_ms: Math.round(performance.now() - startedAt),
+        credit_cost: Number(root.dataset.creditCost) || 10,
+        credits_remaining: payload.usage?.tryOnCreditsRemaining,
+        ai_model: payload.model || undefined,
+        is_regeneration: isRegeneration
+      });
     } catch (error) {
       console.error(error);
       setGenerating(false);
       setResultAvailability(false);
       setPreviewState('before');
       showToast(error.message || 'AI try-on failed. Please try again.', true);
+      trackTryOn('ai_tryon_generate_error', {
+        ...generationFailureContext(error, generationStage),
+        duration_ms: Math.round(performance.now() - startedAt),
+        is_regeneration: isRegeneration
+      });
     }
   }
 
   modelCards.forEach(card => card.addEventListener('click', () => selectModel(card)));
   document.getElementById('tryOnStyleFilter')?.addEventListener('change', event => {
     modelCards.forEach(card => { card.hidden = Boolean(event.target.value && card.dataset.modelStyle !== event.target.value); });
+    trackTryOn('ai_tryon_model_filter_change', { model_style: event.target.value || 'all' });
   });
   let uploadedPhotoUrl = '';
-  document.getElementById('tryOnUploadButton')?.addEventListener('click', () => document.getElementById('tryOnPhoto').click());
+  document.getElementById('tryOnUploadButton')?.addEventListener('click', () => {
+    trackTryOn('ai_tryon_photo_upload_click');
+    document.getElementById('tryOnPhoto').click();
+  });
   document.getElementById('tryOnPhoto')?.addEventListener('change', async event => {
     const file = event.target.files?.[0];
     if (!file || generating) return;
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type) || file.size > 10 * 1024 * 1024) {
+      trackTryOn('ai_tryon_photo_upload_invalid', {
+        file_type: file.type || 'unknown',
+        file_size: file.size
+      });
       showToast('Choose a PNG, JPEG or WebP photo under 10 MB.', true);
       event.target.value = '';
       return;
@@ -425,9 +507,11 @@
       if (uploadedPhotoUrl) URL.revokeObjectURL(uploadedPhotoUrl);
       uploadedPhotoUrl = nextUrl;
       selectModel({ dataset: { modelId: 'upload', modelName: 'Your photo', modelImage: nextUrl } });
+      trackTryOn('ai_tryon_photo_upload_success', { file_type: file.type, file_size: file.size });
     } catch {
       URL.revokeObjectURL(nextUrl);
       showToast('This photo could not be opened.', true);
+      trackTryOn('ai_tryon_photo_upload_error', { failure_reason: 'image_decode_failed' });
     }
     event.target.value = '';
   });
@@ -438,7 +522,10 @@
   }
   root.querySelector('.ai-tryon__close')?.addEventListener('click', closeEditor);
   document.addEventListener('keydown', event => { if (event.key === 'Escape') closeEditor(event); });
-  previewButtons.forEach(button => button.addEventListener('click', () => setPreviewState(button.dataset.previewState)));
+  previewButtons.forEach(button => button.addEventListener('click', () => {
+    setPreviewState(button.dataset.previewState);
+    trackTryOn('ai_tryon_preview_toggle', { preview_state: button.dataset.previewState });
+  }));
   generateButtons.forEach(button => button.addEventListener('click', generateTryOn));
 
   document.getElementById('resetTryOnViewer')?.addEventListener('click', () => {
@@ -469,6 +556,7 @@
 
   downloadButton?.addEventListener('click', () => {
     if (!generatedImageUrl) return;
+    trackTryOn('ai_tryon_result_download');
     const link = document.createElement('a');
     link.href = generatedImageUrl;
     link.download = `${selectedModel?.dataset.modelName || 'model'}-${root.dataset.modelName || 'garment'}-try-on.png`
@@ -485,5 +573,9 @@
 
   setResultAvailability(false);
   setPreviewState('before');
+  trackTryOn('ai_tryon_editor_view', {
+    has_project: new URLSearchParams(window.location.search).has('project'),
+    initial_person_model_id: selectedModel?.dataset?.modelId
+  });
   designLoadPromise = loadCurrentDesign();
 })();

@@ -138,3 +138,49 @@ test('enables the Meshopt decoder before loading the Try-on model viewer', () =>
   assert.ok(viewerModule > decoderAssignment);
   assert.match(view, /poster="<%= model\.image_url \|\| '' %>"/);
 });
+
+test('tracks the complete AI try-on entry, access, generation, and result funnel', () => {
+  const browser = read('public/js/ai-try-on.js');
+  const entry = read('public/js/detail-try-on.js');
+  const access = read('public/js/upgrade-modal.js');
+  const view = read('views/ai-try-on.ejs');
+  const modelDetail = read('views/model-detail.ejs');
+  const header = read('views/partials/header.ejs');
+
+  [
+    'ai_tryon_editor_view',
+    'ai_tryon_design_load_success',
+    'ai_tryon_person_model_select',
+    'ai_tryon_photo_upload_success',
+    'ai_tryon_generate_click',
+    'ai_tryon_generate_begin',
+    'ai_tryon_generate_success',
+    'ai_tryon_generate_error',
+    'ai_tryon_generate_access_blocked',
+    'ai_tryon_preview_toggle',
+    'ai_tryon_result_download'
+  ].forEach(eventName => assert.match(browser, new RegExp(eventName)));
+  assert.match(browser, /failure_reason: failureReason, generation_stage: stage, error_status: status/);
+  assert.match(browser, /duration_ms: Math\.round\(performance\.now\(\) - startedAt\)/);
+
+  [
+    'ai_tryon_entry_click',
+    'ai_tryon_editor_open',
+    'ai_tryon_editor_load_success',
+    'ai_tryon_editor_load_error',
+    'ai_tryon_editor_close'
+  ].forEach(eventName => assert.match(entry, new RegExp(eventName)));
+
+  [
+    'ai_tryon_access_login_required',
+    'ai_tryon_access_login_success',
+    'ai_tryon_access_login_cancel',
+    'ai_tryon_access_credits_blocked',
+    'ai_tryon_access_granted',
+    'ai_tryon_access_check_error'
+  ].forEach(eventName => assert.match(access, new RegExp(eventName)));
+
+  assert.match(view, /ai-try-on\.js\?v=20260923-analytics-v15/);
+  assert.match(modelDetail, /detail-try-on\.js\?v=20260923-analytics-v5/);
+  assert.match(header, /upgrade-modal\.js\?v=20260923-tryon-analytics-v11/);
+});

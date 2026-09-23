@@ -3,6 +3,9 @@
   let dialog, trigger, access, resource, billing = 'monthly', busy = false, checkoutPending = false, planReady = false, revision = 0;
   const plans = { pro: { name: 'Pro', monthly: '9.90', yearly: '80', credits: '250', projects: '28', storage: '1 GB' }, max: { name: 'Max', monthly: '29', yearly: '236', credits: '1,000', projects: '99', storage: '100 GB' } };
   const contact = 'mailto:support@cloz-design.com?subject=ClozDesign%20plan%20upgrade';
+  function trackTryOnAccess(eventName, parameters = {}) {
+    window.trackEvent?.(eventName, { item_category: 'ai_try_on', ...parameters });
+  }
   function mount() {
     if (dialog) return;
     dialog = document.createElement('dialog');
@@ -112,23 +115,58 @@
     } finally { checkoutPending = false; busy = false; if (dialog.open) render(); }
   }
   async function requireTryOnAccess({ checkCredits = true } = {}, afterLogin = false) {
-    const response = await fetch('/api/account/entitlements', { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(15000) });
-    const result = await response.json().catch(() => ({}));
+    let response;
+    let result;
+    try {
+      response = await fetch('/api/account/entitlements', { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(15000) });
+      result = await response.json().catch(() => ({}));
+    } catch (error) {
+      trackTryOnAccess('ai_tryon_access_check_error', {
+        failure_reason: error?.name === 'TimeoutError' ? 'timeout' : 'network_error'
+      });
+      throw error;
+    }
     if (response.status === 401) {
-      if (afterLogin) throw new Error('Your session could not be verified. Please try again.');
+      trackTryOnAccess('ai_tryon_access_login_required');
+      if (afterLogin) {
+        trackTryOnAccess('ai_tryon_access_login_error');
+        throw new Error('Your session could not be verified. Please try again.');
+      }
       const signedIn = await window.AccountLoginDialog.open();
+      trackTryOnAccess(signedIn ? 'ai_tryon_access_login_success' : 'ai_tryon_access_login_cancel');
       return signedIn ? requireTryOnAccess({ checkCredits }, true) : false;
     }
     const entitlements = result.entitlements;
     if (!response.ok || !entitlements) {
+      trackTryOnAccess('ai_tryon_access_check_error', {
+        error_status: response.status,
+        failure_reason: response.status >= 500 ? 'server_error' : 'invalid_response'
+      });
       throw new Error('Could not check your Try-on credits. Please try again.');
     }
-    if (!checkCredits) return true;
+    if (!checkCredits) {
+      trackTryOnAccess('ai_tryon_access_granted', {
+        plan_id: entitlements.plan?.id,
+        credits_checked: false
+      });
+      return true;
+    }
     const credits = entitlements.tryOnCredits;
     if (!credits || (credits.remaining !== null && Number(credits.remaining) < (Number(credits.costPerGeneration) || 10))) {
+      trackTryOnAccess('ai_tryon_access_credits_blocked', {
+        plan_id: entitlements.plan?.id,
+        credits_remaining: credits?.remaining,
+        credits_required: Number(credits?.costPerGeneration) || 10
+      });
       await open({ resource: 'tryOnCredits', entitlements });
       return false;
     }
+    trackTryOnAccess('ai_tryon_access_granted', {
+      plan_id: entitlements.plan?.id,
+      credits_checked: true,
+      credits_remaining: credits.remaining,
+      credits_required: Number(credits.costPerGeneration) || 10
+    });
     return true;
   }
   window.UpgradeModal = { open, requireTryOnAccess, handleLimit(result) { if (result?.code !== 'ENTITLEMENT_LIMIT_REACHED') return false; open(result); return true; } };
