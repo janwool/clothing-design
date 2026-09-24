@@ -3419,16 +3419,24 @@ img {
   max-width: 300px;
 }
 
-.footer-launch-badge {
-  display: inline-block;
-  max-width: 100%;
+.footer-launch-badges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
   margin-top: var(--spacing-lg);
+}
+
+.footer-launch-badge {
+  display: inline-flex;
+  max-width: 100%;
 }
 
 .footer-launch-badge img {
   display: block;
   max-width: 100%;
-  height: auto;
+  width: auto;
+  height: 32px;
 }
 
 .footer-launch-badge:focus-visible {
