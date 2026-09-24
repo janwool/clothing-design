@@ -15,8 +15,8 @@
     "direction": [-0.42, -1.0, 0.16],
     "distanceScale": 2.3,
     "orthographicScale": 1.16,
-    "webOrbit": "-16deg 72deg 142%",
-    "webEditorOrbit": "-12deg 72deg 158%",
+    "webOrbit": "0deg 72deg 142%",
+    "webEditorOrbit": "0deg 72deg 158%",
     "webFieldOfView": "28deg",
     "webTarget": "auto auto auto"
   },
@@ -113,9 +113,9 @@
     "shadowSoftness": 0.9,
     "exportShadowIntensity": 0.46,
     "exportShadowSoftness": 0.88,
-    "exportExposure": 0.82,
+    "exportExposure": 0.7,
     "exportToneMapping": "commerce",
-    "exposure": 0.82,
+    "exposure": 0.7,
     "toneMapping": "commerce",
     "material": {
       "neutralizeBaseColor": false,
@@ -144,14 +144,15 @@
   },
   "modelOverrides": {
     "225": {
-      "version": "tshirt-225-preview-lighting-20260919",
+      "version": "tshirt-225-color-fidelity-20260925",
       "web": {
-        "exposure": 1.55,
-        "toneMapping": "aces",
+        "exposure": 1.0,
+        "designExposure": 1.45,
+        "toneMapping": "commerce",
         "shadowIntensity": 0.2,
         "shadowSoftness": 0.9,
-        "exportExposure": 1.55,
-        "exportToneMapping": "aces",
+        "exportExposure": 1.0,
+        "exportToneMapping": "commerce",
         "exportShadowIntensity": 0.2,
         "exportShadowSoftness": 0.9,
         "preserveNativeMaterials": true

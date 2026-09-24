@@ -126,7 +126,7 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.match(designerScript, /setSheenRoughnessFactor\?\.\(material\.sheenRoughness/);
   assert.match(designerScript, /setSpecularFactor\?\.\(material\.specular/);
   assert.equal(renderStandard.web.environmentImage, '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr');
-  assert.equal(renderStandard.camera.webEditorOrbit, '-12deg 72deg 158%');
+  assert.equal(renderStandard.camera.webEditorOrbit, '0deg 72deg 158%');
   assert.equal(renderStandard.web.lightingMode, 'camera-relative-45deg-white-softbox');
   assert.equal(renderStandard.web.sourceEnvironment, '/environments/commercial-apparel-studio-v2-20260829.hdr');
   assert.equal(renderStandard.web.balanceMethod, 'camera-relative-azimuth');
@@ -141,9 +141,12 @@ test('renders generated materials with textile-scale detail and soft studio ligh
   assert.equal(renderStandard.web.shadowSoftness, 0.9);
   assert.equal(renderStandard.web.exportShadowIntensity, 0.46);
   assert.equal(renderStandard.web.exportShadowSoftness, 0.88);
-  assert.equal(renderStandard.web.exportExposure, 0.82);
-  assert.equal(renderStandard.web.exposure, 0.82);
+  assert.equal(renderStandard.web.exportExposure, 0.7);
+  assert.equal(renderStandard.web.exposure, 0.7);
   assert.equal(renderStandard.web.toneMapping, 'commerce');
+  assert.equal(renderStandard.modelOverrides['225'].web.exposure, 1);
+  assert.equal(renderStandard.modelOverrides['225'].web.designExposure, 1.45);
+  assert.equal(renderStandard.modelOverrides['225'].web.toneMapping, 'commerce');
   assert.deepEqual(renderStandard.web.material.baseColor, [0.82, 0.82, 0.8]);
   assert.deepEqual(renderStandard.web.exportMaterial, {
     roughness: 0.72,

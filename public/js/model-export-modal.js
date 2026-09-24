@@ -14,34 +14,54 @@
     ['reveal', 'Design reveal'], ['before-after', 'Before / after'], ['social', 'Social cover'], ['story', 'Product story']
   ];
   const colors = [['transparent', 'Transparent', 'transparent'], ['white', 'White', '#ffffff'], ['ivory', 'Warm ivory', '#f9f5eb'], ['sand', 'Sand', '#d8d1c5'], ['slate', 'Slate', '#858b95'], ['charcoal', 'Charcoal', '#444444'], ['custom', 'Custom color', '#b9a38e']];
-  const camera = { front: '-16deg 72deg 142%', back: '164deg 72deg 142%', side: '74deg 72deg 142%', other: '-106deg 72deg 142%', detail: '-20deg 67deg 88%', sleeve: '65deg 66deg 94%' };
-  const state = { tab: 'images', layout: 'front-back', background: 'sand', videoBackground: 'slate', customColor: '#B9A38E', customCss: '', pickerSpec: null, opacity: 100, format: 'png', size: 2048, video: 'orbit', duration: 10, ratio: '16:9', quality: 1080, motion: 'clockwise', share: 'model', shareUrl: '', busy: false, running: false };
-  let dialog, viewer, status, animationFrame = 0, returnFocus;
-  let baseSceneBlob = null, baseDimensions = null;
+  const camera = { front: '0deg 72deg 142%', back: '180deg 72deg 142%', side: '90deg 72deg 142%', other: '-90deg 72deg 142%', detail: '0deg 67deg 88%', sleeve: '90deg 66deg 94%' };
+  const state = { tab: 'images', layout: 'front-back', background: 'sand', customColor: '#B9A38E', customCss: '', pickerSpec: null, opacity: 100, format: 'png', size: 2048, video: 'orbit', duration: 10, ratio: '16:9', quality: 1080, shareUrl: '', busy: false, running: false };
+  let dialog, viewer, status, animationFrame = 0, returnFocus, exportDropdown, videoBounds;
+  let videoRenderGeneration = 0;
+  let stopVideoThumbnails = () => {};
+  const thumbnailsPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let baseSceneBlob = null, baseDimensions = null, baseCenter = null;
   const layoutSceneUrls = new Map();
+  let videoSceneUrl = null;
+  let registeredVideoSceneUrl = null;
   const esc = (s) => String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
   const waitFrame = () => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   function download(data, filename) {
     const url = data instanceof Blob ? URL.createObjectURL(data) : data;
-    const a = document.createElement('a'); a.href = url; a.download = filename; document.body.append(a); a.click(); a.remove();
-    if (data instanceof Blob) setTimeout(() => URL.revokeObjectURL(url), 60000);
+    const a = document.createElement('a'); a.href = url; a.download = filename;
+    // Keep the download link inside the active modal; the rest of the document is inert.
+    a.hidden = true;
+    (dialog?.open ? dialog : document.body).append(a);
+    a.click();
+    // Give browsers time to consume the file before removing the link and URL.
+    setTimeout(() => { a.remove(); if (data instanceof Blob) URL.revokeObjectURL(url); }, 60000);
   }
   function colorValue() {
     if (state.background === 'transparent') return null;
     if (state.background === 'custom') return state.customCss || state.customColor;
     return colors.find(item => item[0] === state.background)?.[2] || '#ffffff';
   }
-  function setStatus(message, error = false) { if (status) { status.textContent = message; status.dataset.error = String(error); } }
+  const transparentPreview = 'repeating-conic-gradient(#e1e4e9 0% 25%, #fff 0% 50%) 50% / 22px 22px';
+  function backgroundSwatches() {
+    return `<div class="export-swatches">${colors.map(([key,label,value]) => `<button type="button" class="export-swatch ${state.background === key ? 'selected' : ''}" data-background="${key}" aria-label="${label}" aria-pressed="${state.background === key}"><i style="--swatch:${key === 'custom' ? 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)' : value}"></i></button>`).join('')}</div>`;
+  }
+  function previewBackground() {
+    dialog.querySelector('.export-visual').style.background = colorValue() || transparentPreview;
+  }
+  function setStatus(message, error = false) {
+    if (status) { status.textContent = message; status.dataset.error = String(error); }
+    const shareMessage=dialog?.querySelector('.export-share-message');
+    if (shareMessage) { shareMessage.textContent = message; shareMessage.dataset.error = String(error); }
+  }
   function cardImage(kind) {
-    const image = esc(config.previewImageUrl);
-    return `<span class="export-mini export-mini-${kind}">${(layouts.find(item => item[0] === kind)?.[2] || ['front']).map((_, i) => `<img src="${image}" alt="" style="--i:${i}">`).join('')}</span>`;
+    return `<span class="export-mini"><img src="/images/export-layouts/${kind}.webp" alt="" width="480" height="320" decoding="async"></span>`;
   }
   function create() {
     dialog = document.createElement('dialog'); dialog.id = 'modelExportDialog'; dialog.className = 'model-export-dialog'; dialog.setAttribute('aria-label', 'Export design');
     dialog.innerHTML = `<div class="export-shell">
-      <div class="export-header"><div class="export-tabs" role="tablist" aria-label="Export options">${[['images','Images'],['video','Video'],['model','3D File'],['tryon','AI Try-on'],['share','Share']].map(([key,label]) => `<button type="button" role="tab" data-tab="${key}" aria-selected="false">${label}</button>`).join('')}</div><button class="export-close" type="button" aria-label="Close export dialog">×</button></div>
-      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.82" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><span class="export-live-label" hidden><i></i>Live 3D preview · 360° rotation running</span><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div><div class="export-preview-caption" hidden></div></div><div class="export-options"></div></div>
+      <div class="export-header"><div class="export-tabs" role="tablist" aria-label="Export options">${[['images','Images'],['video','Video'],['model','3D File'],['share','Share']].map(([key,label]) => `<button type="button" role="tab" data-tab="${key}" aria-selected="false">${label}</button>`).join('')}</div><button class="export-close" type="button" aria-label="Close export dialog">×</button></div>
+      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls disable-tap interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.7" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><span class="export-live-label" hidden><i></i>Live 3D preview · 360° rotation running</span><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div><div class="export-preview-caption" hidden></div></div><div class="export-options"></div></div>
       <div class="export-footer"><span class="export-status" role="status" aria-live="polite"></span><div class="export-actions"></div></div>
     </div>`;
     document.body.append(dialog);
@@ -49,13 +69,17 @@
     dialog.querySelector('.export-close').addEventListener('click', close);
     dialog.addEventListener('cancel', e => { e.preventDefault(); close(); });
     dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
+    dialog.addEventListener('click', e => { if (!e.target.closest('.cloz-dropdown')) exportDropdown.close(); });
     dialog.querySelector('.export-tabs').addEventListener('click', e => { const tab = e.target.closest('[data-tab]'); if (tab) switchTab(tab.dataset.tab); });
     dialog.querySelector('.export-expand').addEventListener('click', () => dialog.querySelector('.export-visual').requestFullscreen?.());
     dialog.querySelector('.export-options').addEventListener('click', handleOptionsClick);
-    dialog.querySelector('.export-options').addEventListener('change', handleOptionsChange);
+    exportDropdown = window.ClozDropdown.bind(dialog.querySelector('.export-options'), handleDropdownChange, { isDisabled: () => state.busy });
     dialog.querySelector('.export-footer').addEventListener('click', handleAction);
   }
   function render({ refreshPreview = true } = {}) {
+    hidePicker();
+    stopVideoThumbnails();
+    const videoGeneration = refreshPreview ? ++videoRenderGeneration : videoRenderGeneration;
     dialog.querySelectorAll('[data-tab]').forEach(el => { const selected = el.dataset.tab === state.tab; el.setAttribute('aria-selected', String(selected)); el.tabIndex = selected ? 0 : -1; });
     const options = dialog.querySelector('.export-options');
     const footer = dialog.querySelector('.export-actions');
@@ -66,32 +90,65 @@
     const caption = dialog.querySelector('.export-preview-caption');
     caption.hidden = state.tab !== 'model' && !imagePreview; caption.textContent = 'Drag to inspect the 3D model';
     if (state.tab === 'images') {
-      options.innerHTML = `<div class="export-group"><h3>View layout</h3><p>Choose how many views to export.</p><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-pressed="${state.layout === key}">${cardImage(key)}<span>${label}</span></button>`).join('')}</div></div>
-        <div class="export-group"><h3>Background</h3><div class="export-swatches">${colors.map(([key,label,value]) => `<button type="button" class="export-swatch ${state.background === key ? 'selected' : ''}" data-background="${key}" aria-label="${label}" aria-pressed="${state.background === key}"><i style="--swatch:${key === 'custom' ? 'conic-gradient(red,yellow,lime,cyan,blue,magenta,red)' : value}"></i><span>${label}</span></button>`).join('')}</div></div>
-        <div class="export-form-row"><div class="export-group"><h3>Format</h3><div class="export-segment"><button type="button" data-format="png" class="${state.format === 'png' ? 'selected' : ''}">PNG</button><button type="button" data-format="jpg" class="${state.format === 'jpg' ? 'selected' : ''}">JPG</button></div></div><div class="export-group"><h3>Size</h3><select data-size aria-label="Image size">${[1024,2048,4096].map(n => `<option value="${n}" ${state.size === n ? 'selected' : ''}>${n} px</option>`).join('')}</select></div></div>`;
-      footer.innerHTML = '<button type="button" data-action="all">Export all views</button><button type="button" class="primary" data-action="image">Export image</button>';
+      options.innerHTML = `<div class="export-group"><h3>View layout</h3><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-label="${esc(label)}" aria-pressed="${state.layout === key}">${cardImage(key)}</button>`).join('')}</div></div>
+        <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
+        <div class="export-form-row"><div class="export-group"><h3>Format</h3><div class="export-segment"><button type="button" data-format="png" class="${state.format === 'png' ? 'selected' : ''}">PNG</button><button type="button" data-format="jpg" class="${state.format === 'jpg' ? 'selected' : ''}">JPG</button></div></div><div class="export-group"><h3>Size</h3>${window.ClozDropdown.render({ name:'size', label:'Image size', value:state.size, options:[{value:1024,label:'1024 px'},{value:2048,label:'2048 px'},{value:4096,label:'4096 px'}] })}</div></div>`;
+      footer.innerHTML = '<button type="button" class="primary" data-action="image">Export image</button>';
       if (refreshPreview) updateImagePreview();
     } else if (state.tab === 'video') {
-      state.running=false; cancelAnimationFrame(animationFrame);
-      options.innerHTML = `<div class="export-group"><h3>Animation template</h3><div class="export-video-grid">${videos.map(([key,label],i) => `<button type="button" class="export-video-card ${state.video === key ? 'selected' : ''}" data-video="${key}" aria-pressed="${state.video === key}"><span class="export-video-thumb"><img src="${esc(config.previewImageUrl)}" alt=""><b>${['↻','⇄','⋯','⌕','↑','↕','□','◈'][i]}</b></span><span>${label}</span></button>`).join('')}</div></div><div class="export-form-row"><div class="export-group"><h3>Camera motion</h3><select data-motion><option value="clockwise" ${state.motion === 'clockwise'?'selected':''}>Orbit clockwise</option><option value="counterclockwise" ${state.motion === 'counterclockwise'?'selected':''}>Orbit counterclockwise</option></select></div><div class="export-group"><h3>Duration</h3><div class="export-segment">${[5,10,15].map(n => `<button type="button" data-duration="${n}" class="${state.duration === n ? 'selected':''}">${n}s</button>`).join('')}</div></div></div><div class="export-form-row"><div class="export-group"><h3>Ratio</h3><div class="export-segment">${['1:1','9:16','16:9'].map(n => `<button type="button" data-ratio="${n}" class="${state.ratio === n ? 'selected':''}">${n}</button>`).join('')}</div></div><div class="export-group"><h3>Background</h3><select data-video-background><option value="slate" ${state.videoBackground === 'slate'?'selected':''}>Studio gray</option><option value="white" ${state.videoBackground === 'white'?'selected':''}>White</option><option value="sand" ${state.videoBackground === 'sand'?'selected':''}>Sand</option><option value="charcoal" ${state.videoBackground === 'charcoal'?'selected':''}>Charcoal</option></select></div></div><div class="export-group"><h3>Quality</h3><select data-quality><option value="720" ${state.quality === 720?'selected':''}>720p</option><option value="1080" ${state.quality === 1080?'selected':''}>1080p</option></select></div>`;
+      if (refreshPreview) { state.running=false; cancelAnimationFrame(animationFrame); }
+      options.innerHTML = `<div class="export-group"><h3>Animation template</h3><div class="export-video-grid">${videos.map(([key,label]) => `<button type="button" class="export-video-card ${state.video === key ? 'selected' : ''}" data-video="${key}" aria-label="${esc(label)}" aria-pressed="${state.video === key}"><span class="export-video-thumb"><video src="/videos/export-templates/${key}.mp4" poster="/videos/export-templates/${key}.jpg" muted loop playsinline preload="none" disablepictureinpicture aria-hidden="true"></video><b aria-hidden="true">▶</b></span></button>`).join('')}</div></div>
+        <div class="export-form-row"><div class="export-group"><h3>Duration</h3><div class="export-segment">${[5,10,15].map(n => `<button type="button" data-duration="${n}" class="${state.duration === n ? 'selected':''}">${n}s</button>`).join('')}</div></div><div class="export-group"><h3>Quality</h3>${window.ClozDropdown.render({ name:'quality', label:'Video quality', value:state.quality, options:[{value:720,label:'720p'},{value:1080,label:'1080p'}] })}</div></div>
+        <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
+        <div class="export-group"><h3>Ratio</h3><div class="export-segment">${['1:1','9:16','16:9'].map(n => `<button type="button" data-ratio="${n}" class="${state.ratio === n ? 'selected':''}">${n}</button>`).join('')}</div></div>`;
+      startVideoThumbnails(options);
       footer.innerHTML = '<button type="button" class="primary" data-action="video">Export video →</button>';
-      previewRun.then(() => readyViewer()).then(() => { if (dialog.open && state.tab === 'video') startAnimation(); }).catch(error => setStatus(error.message,true));
+      const current = () => videoGeneration === videoRenderGeneration && dialog.open && state.tab === 'video';
+      if (refreshPreview) previewRun.then(() => showVideoScene(current)).then(async () => {
+        if (!current()) return;
+        if (state.video === 'before-after') {
+          await window.ModelDesignerExport.prepareBeforeAfterReveal(viewer);
+          if (!current()) return;
+        }
+        if (current()) startAnimation();
+      }).catch(error => { if (videoGeneration === videoRenderGeneration) setStatus(error.message, true); });
     } else if (state.tab === 'model') {
       options.innerHTML = `<div class="export-group"><h2>3D model file</h2><h3>Format</h3><div class="export-format-card selected"><strong>◉ &nbsp; GLB</strong><span>Model + textures in one file</span></div></div><div class="export-group"><h3>Include</h3><div class="export-checks"><span>✓ &nbsp; Current material</span><span>✓ &nbsp; Applied artwork</span><span>✓ &nbsp; Texture maps</span></div></div><div class="export-group export-file-info"><p>A visual 3D model for presentation and preview.</p></div>`;
       footer.innerHTML = '<button type="button" class="primary" data-action="glb">Download GLB</button>';
-    } else if (state.tab === 'tryon') {
-      options.innerHTML = `<div class="export-group"><h2>Create an AI Try-on</h2><p>Generate a realistic try-on image with AI using your 3D design.</p></div><div class="export-tryon-illustration"><div class="export-tryon-garment"><img src="${esc(config.previewImageUrl)}" alt="Current garment"></div><span>→</span><div class="export-tryon-result"><span>◇</span>Preview appears after generation</div></div><p class="export-note">${config.aiTryOnAvailable ? 'Your 3D design will be used for the try-on.' : 'AI Try-on is currently unavailable.'}</p>`;
-      footer.innerHTML = `<button type="button" class="primary" data-action="tryon" ${config.aiTryOnAvailable ? '' : 'disabled'}>Open AI Try-on →</button>`;
     } else {
-      const shareUrl=getShareUrl();
+      const shareUrl=state.shareUrl;
       const qrUrl=shareUrl ? `/api/share/qr?url=${encodeURIComponent(shareUrl)}` : '';
-      options.innerHTML = `<div class="export-group"><h2>Share your design</h2><div class="export-segment"><button type="button" data-share="model" class="${state.share === 'model'?'selected':''}">Model page</button><button type="button" data-share="design" class="${state.share === 'design'?'selected':''}">My current design</button></div><p>${state.share === 'model' ? 'Share this model page.' : 'Share an interactive, read-only view of your saved design.'}</p></div><div class="export-group"><h3>Share link</h3><div class="export-link-row"><input readonly aria-label="Share link" value="${esc(shareUrl)}" placeholder="Create a link to share"><button type="button" ${state.share === 'design' && !state.shareUrl ? 'data-share-create' : 'data-share-copy'}>${state.share === 'design' && !state.shareUrl ? 'Create link' : 'Copy link'}</button></div></div>${shareUrl ? `<div class="export-qr-card"><img src="${esc(qrUrl)}" alt="QR code for share link"><div><strong>Scan to view</strong><p>Open this link on your phone.</p></div><a href="${esc(qrUrl)}" download="design-qr.svg">Download QR</a></div>` : ''}${state.share === 'design' && !window.ModelDesignerExport?.getProjectId() ? '<p class="export-note">Save your design before creating a link. <button type="button" data-share-save>Save design</button></p>' : ''}${state.share === 'design' && state.shareUrl ? '<button type="button" class="export-revoke" data-share-revoke>Revoke link</button>' : ''}`;
+      options.innerHTML = `<div class="export-group"><h2>Share your design</h2></div><div class="export-group"><h3>Share link</h3><div class="export-link-row"><input readonly aria-label="Share link" value="${esc(shareUrl)}" placeholder="Create a link to share"><button type="button" ${shareUrl ? 'data-share-copy' : 'data-share-create'}>${shareUrl ? 'Copy link' : 'Create link'}</button></div><p class="export-share-message" role="status" aria-live="polite"></p></div>${shareUrl ? `<div class="export-qr-card"><img src="${esc(qrUrl)}" alt="QR code for share link"><div><strong>Scan to view</strong><p>Open this link on your phone.</p></div><a href="${esc(qrUrl)}" download="design-qr.svg">Download QR</a></div>` : ''}${shareUrl ? '<button type="button" class="export-revoke" data-share-revoke>Revoke link</button>' : ''}`;
       footer.innerHTML = '<button type="button" class="primary" data-action="done">Done</button>';
     }
-    if (state.tab !== 'images') hidePicker();
-    visual.style.background = state.tab === 'images' ? (colorValue() || 'repeating-conic-gradient(#e1e4e9 0% 25%, #fff 0% 50%) 50% / 22px 22px') : state.tab === 'video' ? (colors.find(c=>c[0]===state.videoBackground)?.[2] || '#858b95') : '#f2f3f6';
+    if (state.tab === 'images' || state.tab === 'video') previewBackground();
+    else visual.style.background = '#f2f3f6';
   }
-  function getShareUrl() { return state.share === 'model' ? location.origin + location.pathname : state.shareUrl; }
+  function startVideoThumbnails(options) {
+    const clips = [...options.querySelectorAll('.export-video-thumb video')];
+    const visible = new Set();
+    let stopped = false;
+    const sync = () => {
+      clips.forEach(clip => {
+        if (!stopped && !thumbnailsPaused && !document.hidden && dialog.open && visible.has(clip)) {
+          clip.muted = true;
+          clip.play().catch(() => {}); // Keep the template-specific poster if autoplay is blocked.
+        } else clip.pause();
+      });
+    };
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target));
+      sync();
+    }, { root: options, threshold: .1 });
+    clips.forEach(clip => observer.observe(clip));
+    document.addEventListener('visibilitychange', sync);
+    stopVideoThumbnails = () => {
+      stopped = true;
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', sync);
+      clips.forEach(clip => { clip.pause(); clip.removeAttribute('src'); clip.load(); });
+    };
+  }
   async function syncExportLighting() {
     await window.ModelDetailRenderStandardPromise?.catch(() => null);
     const detailViewer = document.querySelector('#model3dViewer model-viewer');
@@ -114,6 +171,7 @@
   }
   async function useViewerSource(source) {
     if (viewer.getAttribute('src') === source && viewer.loaded) return;
+    if (source !== videoSceneUrl) registeredVideoSceneUrl = null;
     const loaded = new Promise((resolve, reject) => {
       const timer = setTimeout(() => finish(reject, new Error('3D scene loading timed out.')), 45000);
       const onLoad = () => finish(resolve);
@@ -139,16 +197,28 @@
     await window.ModelDesignerExport.prepareViewer(viewer);
     await viewer.updateComplete; await waitFrame();
   }
-  function setOrbit(name) { viewer.cameraOrbit = camera[name] || camera.front; viewer.jumpCameraToGoal?.(); }
   async function ensureBaseScene(generation) {
     if (baseSceneBlob) return true;
-    await readyViewer();
+    if (!window.ModelDesignerExport) await window.loadModelDesignerRuntime?.();
+    if (!window.ModelDesignerExport) throw new Error('3D export is unavailable.');
+    const detailViewer = document.querySelector('#model3dViewer model-viewer');
+    let sceneViewer = detailViewer?.loaded && detailViewer.model ? detailViewer : null;
+    if (sceneViewer) {
+      await syncExportLighting();
+      await sceneViewer.updateComplete;
+      await waitFrame();
+    } else {
+      await readyViewer();
+      sceneViewer = viewer;
+    }
     if (generation !== null && (generation !== previewGeneration || !dialog.open || state.tab !== 'images')) return false;
-    const dimensions = viewer.getDimensions();
-    const scene = await viewer.exportScene();
+    const dimensions = sceneViewer.getDimensions();
+    const center = sceneViewer.getBoundingBoxCenter();
+    const scene = await sceneViewer.exportScene();
     if (generation !== null && (generation !== previewGeneration || !dialog.open || state.tab !== 'images')) return false;
     if (!(scene instanceof Blob) || !scene.size) throw new Error('Could not prepare the 3D scene.');
     baseDimensions = dimensions;
+    baseCenter = center;
     baseSceneBlob = scene;
     return true;
   }
@@ -157,7 +227,7 @@
     if (generation !== null && (generation !== previewGeneration || !dialog.open || state.tab !== 'images')) return;
     let sceneUrl = layoutSceneUrls.get(layoutKey);
     if (!sceneUrl) {
-      const scene = await window.ModelExportScene.buildLayoutGlb(baseSceneBlob, layoutKey, baseDimensions);
+      const scene = await window.ModelExportScene.buildLayoutGlb(baseSceneBlob, layoutKey, baseDimensions, baseCenter);
       sceneUrl = URL.createObjectURL(scene);
       layoutSceneUrls.set(layoutKey, sceneUrl);
     }
@@ -166,8 +236,22 @@
     await useViewerSource(sceneUrl);
     if (sceneChanged || generation !== null) {
       viewer.cameraTarget = 'auto auto auto';
-      viewer.cameraOrbit = layoutKey === 'single' ? camera.front : '-16deg 72deg 100%';
+      viewer.cameraOrbit = layoutKey === 'single' ? camera.front : '0deg 72deg 100%';
       viewer.jumpCameraToGoal?.();
+    }
+    await viewer.updateComplete;
+    await waitFrame();
+  }
+  async function showVideoScene(isCurrent = () => true) {
+    if (!await ensureBaseScene(null) || !isCurrent()) return;
+    if (!videoSceneUrl) videoSceneUrl = URL.createObjectURL(baseSceneBlob);
+    if (viewer.getAttribute('src') !== videoSceneUrl) {
+      await useViewerSource(videoSceneUrl);
+      if (!isCurrent()) return;
+    }
+    if (registeredVideoSceneUrl !== videoSceneUrl) {
+      await window.ModelDesignerExport.registerPreparedVideoViewer(viewer);
+      registeredVideoSceneUrl = videoSceneUrl;
     }
     await viewer.updateComplete;
     await waitFrame();
@@ -176,25 +260,85 @@
     viewer.removeAttribute('src');
     layoutSceneUrls.forEach(url => URL.revokeObjectURL(url));
     layoutSceneUrls.clear();
+    if (videoSceneUrl) URL.revokeObjectURL(videoSceneUrl);
+    videoSceneUrl = null;
+    registeredVideoSceneUrl = null;
     baseSceneBlob = null;
     baseDimensions = null;
+    baseCenter = null;
   }
-  async function captureAngle(name, dimension = 0) {
-    const previousWidth = viewer.style.width;
-    const previousHeight = viewer.style.height;
-    if (dimension) { viewer.style.width = `${dimension}px`; viewer.style.height = `${dimension}px`; }
-    try { if (name) setOrbit(name); await viewer.updateComplete; await waitFrame(); return await window.ModelDesignerExport.capture(viewer); }
-    finally { viewer.style.width = previousWidth; viewer.style.height = previousHeight; }
+  async function capturePreview(size) {
+    const bounds = viewer.getBoundingClientRect();
+    const scale = size / Math.max(bounds.width, bounds.height);
+    const width = Math.max(1, Math.round(bounds.width * scale));
+    const height = Math.max(1, Math.round(bounds.height * scale));
+    // model-viewer multiplies CSS dimensions by devicePixelRatio; size is already in output pixels.
+    const renderPixelRatio = Math.max(1, window.devicePixelRatio || 1);
+    const orbit = viewer.getCameraOrbit();
+    const target = viewer.getCameraTarget();
+    const fieldOfView = viewer.fieldOfView; // Preserve the configured FOV; getFieldOfView() already includes aspect correction.
+    const previous = { width: viewer.style.width, height: viewer.style.height, pointerEvents: viewer.style.pointerEvents };
+    const cameraSettings = { orbit: `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`, target: `${target.x}m ${target.y}m ${target.z}m`, fieldOfView };
+    try {
+      viewer.style.pointerEvents = 'none';
+      viewer.style.width = `${width / renderPixelRatio}px`;
+      viewer.style.height = `${height / renderPixelRatio}px`;
+      await waitFrame(); // Let ResizeObserver update the render surface before restoring the camera.
+      viewer.cameraTarget = `${target.x}m ${target.y}m ${target.z}m`;
+      viewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${orbit.radius}m`;
+      viewer.fieldOfView = fieldOfView;
+      await viewer.updateComplete;
+      viewer.jumpCameraToGoal?.();
+      window.CameraRelativeStudioLight?.sync(viewer);
+      await waitFrame();
+      return { image: await loadImage(await window.ModelDesignerExport.capture(viewer)), width, height };
+    } finally {
+      Object.assign(viewer.style, previous);
+      await waitFrame();
+      viewer.cameraTarget = cameraSettings.target;
+      viewer.cameraOrbit = cameraSettings.orbit;
+      viewer.fieldOfView = cameraSettings.fieldOfView;
+      await viewer.updateComplete;
+      viewer.jumpCameraToGoal?.();
+      window.CameraRelativeStudioLight?.sync(viewer);
+      await waitFrame();
+    }
   }
   function loadImage(url) { return new Promise((resolve,reject) => { const img = new Image(); img.onload = () => resolve(img); img.onerror = reject; img.src = url; }); }
+  function paintBackground(ctx, width, height, whiteBacking = false) {
+    ctx.clearRect(0, 0, width, height);
+    if (whiteBacking) { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, width, height); }
+    const bg = colorValue();
+    if (!bg) return;
+    if (state.background === 'custom' && state.pickerSpec?.mode === 'gradient') {
+      const spec = state.pickerSpec;
+      const angle = spec.angle * Math.PI / 180;
+      const dx = Math.sin(angle), dy = -Math.cos(angle);
+      const length = Math.abs(width * dx) + Math.abs(height * dy);
+      const gradient = ctx.createLinearGradient(width / 2 - dx * length / 2, height / 2 - dy * length / 2, width / 2 + dx * length / 2, height / 2 + dy * length / 2);
+      spec.stops.forEach(stop => gradient.addColorStop(Math.max(0, Math.min(1, stop.position / 100)), stop.color));
+      ctx.fillStyle = gradient;
+    } else ctx.fillStyle = state.background === 'custom' ? (state.pickerSpec?.color || state.customColor) : bg;
+    ctx.globalAlpha = state.background === 'custom' ? state.opacity / 100 : 1;
+    ctx.fillRect(0, 0, width, height);
+    ctx.globalAlpha = 1;
+  }
   async function compose(layoutKey, size) {
     await showLiveLayout(layoutKey);
-    const image = await loadImage(await captureAngle(null, size));
-    const canvas = document.createElement('canvas'); canvas.width = size; canvas.height = size;
+    const { image, width, height } = await capturePreview(size);
+    const canvas = document.createElement('canvas'); canvas.width = width; canvas.height = height;
     const ctx = canvas.getContext('2d');
-    const bg = colorValue(); if (bg) { if (state.background === 'custom' && state.pickerSpec?.mode === 'gradient') { const spec=state.pickerSpec; const angle=spec.angle*Math.PI/180; const dx=Math.cos(angle)*size/2,dy=Math.sin(angle)*size/2; const g=ctx.createLinearGradient(size/2-dx,size/2-dy,size/2+dx,size/2+dy); spec.stops.forEach(stop=>g.addColorStop(Math.max(0,Math.min(1,stop.position/100)),stop.color)); ctx.fillStyle=g; } else ctx.fillStyle=state.background === 'custom' ? (state.pickerSpec?.color || state.customColor) : bg; ctx.globalAlpha = state.background === 'custom' ? state.opacity / 100 : 1; ctx.fillRect(0,0,size,size); ctx.globalAlpha=1; }
-    ctx.drawImage(image, 0, 0, size, size);
-    return canvas.toDataURL(state.format === 'jpg' ? 'image/jpeg' : 'image/png', .94);
+    // JPEG has no alpha channel; keep its white backing for transparent colors.
+    paintBackground(ctx, width, height, state.format === 'jpg');
+    ctx.drawImage(image, 0, 0, width, height);
+    const mimeType = state.format === 'jpg' ? 'image/jpeg' : 'image/png';
+    // Avoid oversized data URLs, which can fail as download links in embedded browsers.
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob?.size) resolve(blob);
+        else reject(new Error('The image could not be encoded. Please try a smaller size.'));
+      }, mimeType, .94);
+    });
   }
   let previewGeneration = 0;
   let previewRun = Promise.resolve();
@@ -215,27 +359,27 @@
   function startAnimation() {
     cancelAnimationFrame(animationFrame); state.running = true;
     const label = dialog.querySelector('.export-live-label'); if (label) label.innerHTML = `<i></i>Live 3D preview · ${videos.find(v=>v[0]===state.video)?.[1]} running`;
+    videoBounds = { dimensions: viewer.getDimensions(), center: viewer.getBoundingBoxCenter() };
+    applyVideoPose(0);
     const started = performance.now();
-    function tick(now) { if (!dialog.open || state.tab !== 'video' || !state.running) return; const p = ((now-started)/1000 % state.duration)/state.duration; applyVideoPhase(p); const deg = orbitDegrees(p); viewer.cameraOrbit = `${deg}deg ${state.video === 'detail' ? 66 : 72}deg ${state.video === 'detail' ? 95 : 142}%`; viewer.jumpCameraToGoal?.(); animationFrame=requestAnimationFrame(tick); }
+    function tick(now) { if (!dialog.open || state.tab !== 'video' || !state.running) return; const p = ((now-started)/1000 % state.duration)/state.duration; applyVideoPose(p); animationFrame=requestAnimationFrame(tick); }
     animationFrame=requestAnimationFrame(tick);
   }
   let showingBefore = null;
-  function applyVideoPhase(p) {
-    const before = state.video === 'before-after' && p < .5;
-    if (before === showingBefore) return;
-    showingBefore = before;
-    window.ModelDesignerExport?.setBeforeAfter(viewer, before);
-    if (state.video === 'before-after') dialog.querySelector('.export-live-label').innerHTML = `<i></i>Live 3D preview · ${before ? 'Before' : 'After'}`;
-  }
-  function orbitDegrees(p) {
-    const reverse = state.motion === 'counterclockwise' ? -1 : 1;
-    if (state.video === 'front-back') return p < .5 ? -16 : 164;
-    if (state.video === 'before-after') return -16 + Math.sin(p * Math.PI * 2) * 8;
-    if (state.video === 'three' || state.video === 'story') return [-16,74,164][Math.min(2,Math.floor(p*3))];
-    if (state.video === 'detail') return -20 + Math.sin(p*Math.PI*2)*50;
-    if (state.video === 'social') return -16 + Math.sin(p*Math.PI*2)*15;
-    if (state.video === 'reveal') return 164 + 180*p*reverse;
-    return -16 + 360*p*reverse;
+  function applyVideoPose(p) {
+    const pose = window.ModelExportVideo.sample(state.video, p);
+    if (state.video === 'before-after') {
+      window.ModelDesignerExport?.setBeforeAfterReveal(viewer, pose.reveal);
+      dialog.querySelector('.export-live-label').innerHTML = `<i></i>Live 3D preview · ${pose.reveal < 1 ? 'Before → After' : 'After'}`;
+    } else if (showingBefore !== false) {
+      showingBefore = false;
+      window.ModelDesignerExport?.setBeforeAfter(viewer, false);
+    }
+    const { center, dimensions } = videoBounds || { center: viewer.getBoundingBoxCenter(), dimensions: viewer.getDimensions() };
+    viewer.cameraTarget = `${center.x + pose.target[0] * dimensions.x}m ${center.y + pose.target[1] * dimensions.y}m ${center.z + pose.target[2] * dimensions.z}m`;
+    viewer.cameraOrbit = `${pose.azimuth}deg ${pose.polar}deg ${pose.distance}%`;
+    viewer.jumpCameraToGoal?.();
+    return pose;
   }
   function switchTab(tab) {
     if (state.busy) return;
@@ -245,14 +389,23 @@
     cancelAnimationFrame(animationFrame);
     showingBefore = null;
     window.ModelDesignerExport?.setBeforeAfter(viewer, false);
+    if (tab !== 'video') viewer.cameraTarget = 'auto auto auto';
     render();
     if (tab !== 'images' && tab !== 'video') {
       previewRun = previewRun.catch(() => {}).then(() => readyViewer());
       previewRun.catch(error => setStatus(error.message, true));
     }
     window.trackEvent?.('export_tab_view', { tab, item_id: config.modelSlug || '' });
+    if (tab === 'share' && !state.shareUrl && (/^[a-f0-9-]{36}$/i.test(new URLSearchParams(location.search).get('project') || '') || window.ModelDesignerExport?.getProjectId())) createShare();
   }
   function handleOptionsClick(e) {
+    const shareInput=e.target.closest('.export-link-row input');
+    if (shareInput) {
+      if (state.shareUrl) copyShareLink();
+      else if (state.busy) setStatus('Preparing your share link…');
+      else createShare();
+      return;
+    }
     if (state.busy) return;
     const button=e.target.closest('button'); if (!button) return;
     if (button.dataset.layout) { state.layout=button.dataset.layout; render(); }
@@ -261,21 +414,34 @@
     else if (button.dataset.video) { state.video=button.dataset.video; showingBefore=null; window.ModelDesignerExport?.setBeforeAfter(viewer,false); render(); }
     else if (button.dataset.duration) { state.duration=Number(button.dataset.duration); render(); }
     else if (button.dataset.ratio) { state.ratio=button.dataset.ratio; render(); }
-    else if (button.dataset.share) { state.share=button.dataset.share; render(); }
     else if (button.matches('[data-share-create]')) createShare();
     else if (button.matches('[data-share-revoke]')) revokeShare();
-    else if (button.matches('[data-share-save]')) { close(); document.getElementById('saveDesignModal')?.click(); }
-    else if (button.matches('[data-share-copy]')) { const url=getShareUrl(); if (!url) { setStatus('Create a design link first.', true); return; } navigator.clipboard.writeText(url).then(()=>setStatus('Link copied.')).catch(()=>setStatus('Could not copy link.',true)); }
+    else if (button.matches('[data-share-copy]')) copyShareLink();
+  }
+  function copyShareLink() {
+    if (!state.shareUrl) { setStatus('Create a design link first.', true); return; }
+    const input=dialog.querySelector('.export-link-row input');
+    input?.focus();
+    input?.select();
+    if (!navigator.clipboard?.writeText) { setStatus('Link selected. Copy it with your keyboard.'); return; }
+    navigator.clipboard.writeText(state.shareUrl)
+      .then(() => setStatus('Link copied.'))
+      .catch(() => setStatus('Link selected. Copy it with your keyboard.'));
   }
   async function createShare() {
     if (state.busy) return;
-    const projectId=window.ModelDesignerExport?.getProjectId();
-    if (!projectId) { setStatus('Save your design before sharing.',true); return; }
     state.busy=true;
-    dialog.querySelector('[data-share-create]').disabled=true;
-    setStatus('Creating share link…');
+    const createButton=dialog.querySelector('[data-share-create]');
+    if (createButton) { createButton.disabled=true; createButton.textContent='Creating…'; }
+    const shareInput=dialog.querySelector('.export-link-row input');
+    if (shareInput) shareInput.placeholder='Preparing share link…';
+    setStatus('Preparing your design…');
     try {
       await previewRun;
+      if (!window.ModelDesignerExport) await window.loadModelDesignerRuntime?.();
+      if (!window.ModelDesignerExport?.ensureSavedProjectForShare) throw new Error('3D sharing is unavailable. Please reload and try again.');
+      const projectId=await window.ModelDesignerExport.ensureSavedProjectForShare();
+      setStatus('Creating share link…');
       const base=`/api/projects/${encodeURIComponent(projectId)}/share`;
       const response=await fetch(base,{method:'POST',credentials:'same-origin',headers:{Accept:'application/json'}});
       const result=await response.json();
@@ -290,27 +456,30 @@
       render(); setStatus('Interactive 3D link created.');
     }
     catch(error){setStatus(error.message,true);}
-    finally { state.busy=false; const button=dialog.querySelector('[data-share-create]'); if(button) button.disabled=false; }
+    finally { state.busy=false; const button=dialog.querySelector('[data-share-create]'); if(button) { button.disabled=false; button.textContent='Create link'; } const input=dialog.querySelector('.export-link-row input'); if(input && !state.shareUrl) input.placeholder='Create a link to share'; }
   }
   async function revokeShare() {
     const projectId=window.ModelDesignerExport?.getProjectId(); if(!projectId)return;
     try { const response=await fetch(`/api/projects/${encodeURIComponent(projectId)}/share`,{method:'DELETE',credentials:'same-origin',headers:{Accept:'application/json'}}); if(!response.ok)throw new Error('Link could not be revoked.'); state.shareUrl=''; render(); setStatus('Link revoked.'); }
     catch(error){setStatus(error.message,true);}
   }
-  function handleOptionsChange(e) { if (state.busy) return; const t=e.target; if (t.matches('[data-size]')) state.size=Number(t.value); else if (t.matches('[data-motion]')) state.motion=t.value; else if (t.matches('[data-video-background]')) { state.videoBackground=t.value; dialog.querySelector('.export-visual').style.background=colors.find(c=>c[0]===t.value)?.[2] || '#858b95'; } else if (t.matches('[data-quality]')) state.quality=Number(t.value); }
+  function handleDropdownChange(name, value) {
+    if (state.busy) return;
+    if (name === 'size') state.size = Number(value);
+    else if (name === 'quality') state.quality = Number(value);
+  }
   async function handleAction(e) {
     const button=e.target.closest('[data-action]'); if (!button || state.busy) return;
     const action=button.dataset.action;
     if (action === 'done') { close(); return; }
-    if (action === 'tryon') { if (!config.aiTryOnAvailable) return; close(); const link=document.getElementById('detailAiTryOnBtn'); if(link) link.click(); else location.href=config.aiTryOnPath; return; }
     state.busy=true; dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=true);
     try {
       await previewRun;
-      if (action === 'image' || action === 'all') {
-        setStatus('Rendering images…'); const keys=action==='all' ? layouts.map(x=>x[0]) : [state.layout];
-        try { for (const [index, key] of keys.entries()) { setStatus(`Rendering images… ${index + 1}/${keys.length}`); const data=await compose(key,state.size); download(data,`${config.modelSlug || 'design'}-${key}.${state.format}`); await sleep(180); } }
-        finally { if (action === 'all') await showLiveLayout(state.layout); }
-        setStatus(keys.length === 1 ? 'Image downloaded.' : `${keys.length} layouts downloaded.`);
+      if (action === 'image') {
+        setStatus('Rendering image…');
+        const data = await compose(state.layout, state.size);
+        download(data, `${config.modelSlug || 'design'}-${state.layout}.${state.format}`);
+        setStatus('Image download started.');
       } else if (action === 'glb') { setStatus('Preparing 3D model…'); await readyViewer(); const blob=await window.ModelDesignerExport.exportGlb(viewer); download(blob,`${config.modelSlug || 'design'}.glb`); setStatus('GLB downloaded.'); }
       else if (action === 'video') await recordVideo();
       window.trackEvent?.('model_export_download', { export_type: action, item_id: config.modelSlug || '' });
@@ -319,27 +488,30 @@
   }
   async function recordVideo() {
     if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) throw new Error('Video recording is unavailable in this browser.');
-    await readyViewer(); state.running=false; cancelAnimationFrame(animationFrame);
+    state.running=false; cancelAnimationFrame(animationFrame); await showVideoScene();
+    if (state.video === 'before-after') await window.ModelDesignerExport.prepareBeforeAfterReveal(viewer);
+    videoBounds = { dimensions: viewer.getDimensions(), center: viewer.getBoundingBoxCenter() };
     const ratio = state.ratio === '9:16' ? [9,16] : state.ratio === '1:1' ? [1,1] : [16,9];
     const canvas=document.createElement('canvas'); const edge=state.quality === 1080 ? 1080 : 720; canvas.width=Math.round(edge*ratio[0]/Math.min(...ratio)); canvas.height=Math.round(edge*ratio[1]/Math.min(...ratio));
     const ctx=canvas.getContext('2d');
     const paintFrame=(frame)=>{
-      ctx.fillStyle=colors.find(c=>c[0]===state.videoBackground)?.[2] || '#858b95';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
+      paintBackground(ctx, canvas.width, canvas.height);
       const scale=Math.min(canvas.width/frame.width,canvas.height/frame.height);
       const w=frame.width*scale,h=frame.height*scale;
       ctx.drawImage(frame,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
     };
-    showingBefore=null; applyVideoPhase(0);
+    showingBefore=null; applyVideoPose(0);
     await viewer.updateComplete;
     paintFrame(await loadImage(await window.ModelDesignerExport.capture(viewer)));
     const stream=canvas.captureStream(24);
-    const mime=['video/mp4;codecs=avc1','video/webm;codecs=vp9','video/webm'].find(type=>MediaRecorder.isTypeSupported(type));
-    if (!mime) throw new Error('This browser does not support video export.');
+    const needsAlpha = state.background === 'transparent' || (state.background === 'custom' && state.opacity < 100);
+    const formats = needsAlpha ? ['video/webm;codecs=vp9'] : ['video/mp4;codecs=avc1', 'video/webm;codecs=vp9', 'video/webm'];
+    const mime=formats.find(type=>MediaRecorder.isTypeSupported(type));
+    if (!mime) throw new Error(needsAlpha ? 'Transparent video requires WebM support in this browser.' : 'This browser does not support video export.');
     const recorder=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:5_000_000}); const chunks=[]; recorder.ondataavailable=e=>{if(e.data.size) chunks.push(e.data);};
     const done=new Promise((resolve,reject)=>{recorder.onstop=resolve;recorder.onerror=()=>reject(new Error('Video recording failed.'));});
     recorder.start(); const began=performance.now(); const duration=state.duration*1000;
-    try { while (performance.now()-began < duration) { const p=(performance.now()-began)/duration; applyVideoPhase(p); viewer.cameraOrbit=`${orbitDegrees(p)}deg ${state.video==='detail'?66:72}deg ${state.video==='detail'?95:142}%`; viewer.jumpCameraToGoal?.(); await viewer.updateComplete; await waitFrame(); const frame=await loadImage(await window.ModelDesignerExport.capture(viewer)); paintFrame(frame); setStatus(`Recording 3D animation… ${Math.min(100,Math.round(p*100))}%`); await sleep(20); } }
+    try { while (performance.now()-began < duration) { const p=(performance.now()-began)/duration; applyVideoPose(p); await viewer.updateComplete; await waitFrame(); paintFrame(await loadImage(await window.ModelDesignerExport.capture(viewer))); setStatus(`Recording 3D animation… ${Math.min(100,Math.round(p*100))}%`); await sleep(20); } }
     finally { recorder.stop(); await done; stream.getTracks().forEach(t=>t.stop()); }
     const extension=mime.startsWith('video/mp4')?'mp4':'webm'; download(new Blob(chunks,{type:mime}),`${config.modelSlug||'design'}-${state.video}.${extension}`); setStatus(`Video downloaded as ${extension.toUpperCase()}.`); showingBefore=null; window.ModelDesignerExport.setBeforeAfter(viewer,false); startAnimation();
   }
@@ -352,12 +524,12 @@
         state.pickerSpec = spec;
         state.customColor = spec.color;
         state.opacity = Number(spec.alpha);
-        dialog.querySelector('.export-visual').style.background = colorValue();
+        previewBackground();
       }
     });
   }
   function hidePicker() { window.ModelDesignerExport?.closeColorPicker?.(); }
-  function open(){ if (!dialog) create(); returnFocus=document.activeElement; dialog.showModal(); document.body.classList.add('model-export-open'); state.tab='images'; render(); window.trackEvent?.('model_export_modal_open',{item_id:config.modelSlug||''}); }
-  function close(){if(!dialog?.open)return;previewGeneration++;previewRun=Promise.resolve();state.running=false;cancelAnimationFrame(animationFrame);hidePicker();dialog.close();clearLiveLayout();document.body.classList.remove('model-export-open');returnFocus?.focus?.({preventScroll:true});}
+  function open(){ if (!dialog) create(); returnFocus=document.activeElement; dialog.showModal(); document.body.classList.add('model-export-open'); state.tab='images'; state.shareUrl=''; setStatus(''); render(); window.trackEvent?.('model_export_modal_open',{item_id:config.modelSlug||''}); }
+  function close(){if(!dialog?.open)return;stopVideoThumbnails();previewGeneration++;videoRenderGeneration++;previewRun=Promise.resolve();state.running=false;cancelAnimationFrame(animationFrame);exportDropdown?.close();hidePicker();dialog.close();clearLiveLayout();document.body.classList.remove('model-export-open');returnFocus?.focus?.({preventScroll:true});}
   window.ModelExportModal={open,close};
 })();

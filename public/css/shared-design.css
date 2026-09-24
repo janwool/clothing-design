@@ -1,0 +1,26 @@
+:root { color-scheme: light; --ink: #171c1b; --accent: #d9e7a6; }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body { margin: 0; overflow: hidden; background: #f7f6f1; color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+a { color: inherit; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.share-page, .share-stage { width: 100%; height: 100dvh; min-height: 100%; }
+.share-page { position: relative; }
+.share-stage { position: relative; overflow: hidden; background: radial-gradient(ellipse 42% 38% at 50% 48%, #fffefa 0%, #f7f6f1 72%, #edeee9 100%); }
+.share-stage model-viewer { display: block; width: 100%; height: 100%; background: transparent; --poster-color: transparent; }
+.share-poster { display: block; width: 100%; height: 100%; object-fit: contain; }
+.share-footer { position: absolute; z-index: 2; right: clamp(20px, 3.2vw, 52px); bottom: max(24px, env(safe-area-inset-bottom)); left: clamp(20px, 3.2vw, 52px); display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; pointer-events: none; }
+.share-footer a { pointer-events: auto; }
+.share-brand { display: inline-flex; align-items: center; gap: 10px; min-height: 54px; padding: 7px 16px 7px 7px; border: 1px solid #ffffffa6; border-radius: 6px; background: #ffffffdf; box-shadow: 0 4px 20px #1b24200f; backdrop-filter: blur(12px); text-decoration: none; font-size: 19px; font-weight: 700; letter-spacing: -.045em; }
+.share-brand img { display: block; width: 40px; height: 40px; border-radius: 4px; object-fit: cover; }
+.share-create { display: inline-flex; align-items: center; justify-content: space-between; gap: 38px; min-height: 54px; padding: 0 17px 0 21px; border: 1px solid var(--ink); border-radius: 4px; background: var(--ink); box-shadow: 0 5px 22px #151d1829; color: #fff; font-size: 13px; font-weight: 650; letter-spacing: .015em; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
+.share-create span { font-size: 20px; font-weight: 400; line-height: 1; }
+.share-create:hover { transform: translateY(-2px); background: var(--accent); color: var(--ink); }
+.share-create:focus-visible, .share-brand:focus-visible { outline: 2px solid #1c67da; outline-offset: 4px; }
+@media (max-width: 640px) {
+  .share-footer { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); left: 16px; align-items: stretch; flex-direction: column-reverse; gap: 10px; }
+  .share-create { width: 100%; }
+  .share-brand { align-self: flex-start; min-height: 44px; padding: 5px 12px 5px 5px; font-size: 16px; }
+  .share-brand img { width: 32px; height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) { .share-create { transition: none; } }

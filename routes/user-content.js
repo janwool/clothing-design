@@ -249,6 +249,7 @@ router.get('/share/:token', async (req, res) => {
     await ensureUserContentTables();
     const share = await db.get('SELECT name, source_url, preview_image_url, model_url FROM project_shares WHERE token = ? AND revoked_at IS NULL', [req.params.token]);
     if (!share) return res.status(404).send('Design not found');
+    res.set('Cache-Control', 'no-store');
     return res.render('shared-design', { title: `${share.name} | ClozDesign`, share });
   } catch (error) {
     console.error('Shared design load failed:', error);

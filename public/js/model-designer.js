@@ -106,8 +106,8 @@ window.initializeModelDesigner = () => {
   } = editorTransforms;
   const defaultRenderStandard = {
     camera: {
-      webOrbit: '-16deg 72deg 142%',
-      webEditorOrbit: '-12deg 72deg 158%',
+      webOrbit: '0deg 72deg 142%',
+      webEditorOrbit: '0deg 72deg 158%',
       webFieldOfView: '28deg',
       webTarget: 'auto auto auto'
     },
@@ -125,9 +125,9 @@ window.initializeModelDesigner = () => {
       shadowSoftness: 0.9,
       exportShadowIntensity: 0.46,
       exportShadowSoftness: 0.88,
-      exportExposure: 0.82,
+      exportExposure: 0.7,
       exportToneMapping: 'commerce',
-      exposure: 0.82,
+      exposure: 0.7,
       toneMapping: 'commerce',
       exportMaterial: {
         roughness: 0.72,
@@ -148,7 +148,7 @@ window.initializeModelDesigner = () => {
       }
     }
   };
-  const renderStandardPromise = window.ModelDetailRenderStandardPromise || fetch('/config/design3d-render-standard.json?v=20260917-white-45deg-v9')
+  const renderStandardPromise = window.ModelDetailRenderStandardPromise || fetch('/config/design3d-render-standard.json?v=20260925-zero-azimuth-v1')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -353,6 +353,21 @@ window.initializeModelDesigner = () => {
     return [1, 1, 1, 1];
   }
 
+  function applyDesignedTextureExposure(viewerElement, renderStandard) {
+    const web = renderStandard?.web;
+    const baseExposure = Number(web?.exposure);
+    const designExposure = Number(web?.designExposure);
+    if (!Number.isFinite(baseExposure) || baseExposure <= 0 || !Number.isFinite(designExposure) || designExposure <= 0) return;
+    const previousRatio = Number(viewerElement.dataset.designExposureRatio) || 1;
+    const currentExposure = Number(viewerElement.getAttribute('exposure'));
+    const userExposure = Number.isFinite(currentExposure) && currentExposure > 0
+      ? currentExposure / previousRatio
+      : baseExposure;
+    const ratio = designExposure / baseExposure;
+    viewerElement.dataset.designExposureRatio = String(ratio);
+    viewerElement.setAttribute('exposure', String(userExposure * ratio));
+  }
+
   function getViewerTextureCache(viewerElement) {
     let cache = state.materialTextureCache.get(viewerElement);
     if (!cache) {
@@ -453,13 +468,14 @@ window.initializeModelDesigner = () => {
     }
     viewerElement.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
     viewerElement.setAttribute('shadow-softness', String(webStandard.shadowSoftness ?? 0.9));
-    viewerElement.setAttribute('exposure', String(webStandard.exposure ?? 0.82));
+    const designExposureRatio = Number(viewerElement.dataset.designExposureRatio) || 1;
+    viewerElement.setAttribute('exposure', String((webStandard.exposure ?? 0.7) * designExposureRatio));
     viewerElement.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
     viewerElement.setAttribute('camera-target', cameraStandard.webTarget || 'auto auto auto');
     viewerElement.setAttribute('field-of-view', cameraStandard.webFieldOfView || '28deg');
     const cameraOrbit = viewerElement.id === 'designerViewer'
-      ? cameraStandard.webEditorOrbit || '-12deg 72deg 158%'
-      : cameraStandard.webOrbit || '-16deg 72deg 142%';
+      ? cameraStandard.webEditorOrbit || '0deg 72deg 158%'
+      : cameraStandard.webOrbit || '0deg 72deg 142%';
     viewerElement.setAttribute('camera-orbit', cameraOrbit);
     viewerElement.autoRotate = false;
     viewerElement.removeAttribute('auto-rotate');
@@ -1225,9 +1241,17 @@ window.initializeModelDesigner = () => {
           if (!options.preserveMaterial && pbr?.setBaseColorFactor) {
             pbr.setBaseColorFactor(getDesignedTextureFactor());
           }
-          if (!options.preserveMaterial && state.selectedMaterial) {
-            pbr?.setMetallicFactor?.(state.selectedMaterial.metalness ?? 0);
-            pbr?.setRoughnessFactor?.(state.selectedMaterial.roughness ?? 0.8);
+          if (!options.preserveMaterial) {
+            pbr?.setMetallicFactor?.(state.selectedMaterial?.metalness ?? 0);
+            if (!pbr?.metallicRoughnessTexture?.texture || state.selectedMaterial) {
+              pbr?.setRoughnessFactor?.(state.selectedMaterial?.roughness ?? 0.86);
+            }
+            try {
+              material.setEmissiveFactor?.([0, 0, 0]);
+              material.emissiveTexture?.setTexture?.(null);
+            } catch (error) {
+              // An optional emissive extension must not block the artwork texture.
+            }
           }
           const baseColorTexture = pbr?.baseColorTexture;
           if (baseColorTexture?.setTexture) {
@@ -1241,13 +1265,15 @@ window.initializeModelDesigner = () => {
           if (!options.preserveMaterial) {
             if (state.selectedMaterial) {
               applyFabricSurfaceResponse(material, state.selectedMaterial);
-            }
-            setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
-            material.normalTexture?.setScale?.(state.selectedMaterial?.normalScale ?? 0.1);
-            setFabricTextureRepeat(material.normalTexture, state.selectedMaterial?.textureRepeat);
-            if (materialMaps.roughness) {
-              setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
-              setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial?.textureRepeat);
+              setMaterialTextureSlot(material.normalTexture, materialMaps.normal);
+              material.normalTexture?.setScale?.(state.selectedMaterial.normalScale ?? 0.1);
+              setFabricTextureRepeat(material.normalTexture, state.selectedMaterial.textureRepeat);
+              if (materialMaps.roughness) {
+                setMaterialTextureSlot(pbr?.metallicRoughnessTexture, materialMaps.roughness);
+                setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial.textureRepeat);
+              }
+            } else {
+              applyFabricSurfaceResponse(material, { sheen: 0.12, sheenRoughness: 0.82, specular: 0.28 });
             }
           }
         } catch (error) {
@@ -1256,6 +1282,7 @@ window.initializeModelDesigner = () => {
       });
       if (appliedMaterialCount === 0) return false;
       if (options.trackApplied !== false) state.appliedTextureUrl = textureUrl;
+      applyDesignedTextureExposure(viewerElement, await renderStandardPromise);
       viewerElement.requestUpdate?.();
       await viewerElement.updateComplete;
       return true;
@@ -1703,6 +1730,17 @@ window.initializeModelDesigner = () => {
     await waitForModelViewerReady(viewerElement);
     const mimeType = options.mimeType || 'image/png';
     const quality = options.quality ?? 0.95;
+    if (typeof viewerElement.toBlob === 'function') {
+      // model-viewer shares a WebGL canvas between viewers. toBlob crops to this
+      // viewer's viewport; toDataURL can include another viewer's larger canvas.
+      const blob = await viewerElement.toBlob({ mimeType, qualityArgument: quality, idealAspect: false });
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('The 3D render could not be read.'));
+        reader.readAsDataURL(blob);
+      });
+    }
     if (typeof viewerElement.toDataURL === 'function') {
       return viewerElement.toDataURL(mimeType, quality);
     }
@@ -4754,6 +4792,22 @@ window.initializeModelDesigner = () => {
   window.openModelDesigner = openModal;
   window.renderCurrentModelImage = renderCurrentModelImage;
   const exportMaterialStates = new WeakMap();
+  function copyExportSampler(sampler) {
+    return {
+      rotation: sampler?.rotation || 0,
+      scale: copySamplerVector(sampler?.scale) || { u: 1, v: 1 },
+      offset: copySamplerVector(sampler?.offset) || { u: 0, v: 0 },
+      wrapS: sampler?.wrapS,
+      wrapT: sampler?.wrapT
+    };
+  }
+  function setExportSampler(sampler, settings) {
+    sampler?.setRotation?.(settings.rotation);
+    sampler?.setScale?.(settings.scale);
+    sampler?.setOffset?.(settings.offset);
+    if (settings.wrapS != null) sampler?.setWrapS?.(settings.wrapS);
+    if (settings.wrapT != null) sampler?.setWrapT?.(settings.wrapT);
+  }
   window.ModelDesignerExport = {
     openColorPicker(button, options) {
       closeColorPopover();
@@ -4776,14 +4830,115 @@ window.initializeModelDesigner = () => {
       else if (state.selectedMaterial) await applyMaterialToViewer(viewer, state.selectedMaterial);
       if (!textureUrl) await window.ExportEntitlements?.applyModelViewerWatermark?.(viewer);
       await viewer.updateComplete;
-      exportMaterialStates.get(viewer).designed = materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null);
+      const saved = exportMaterialStates.get(viewer);
+      saved.designed = materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null);
+      saved.reveal = null;
       return viewer;
+    },
+    async registerPreparedVideoViewer(viewer) {
+      const materials = await getLoadedViewerMaterials(viewer);
+      exportMaterialStates.set(viewer, {
+        materials,
+        original: materials.map(() => null),
+        designed: materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null),
+        reveal: null
+      });
+    },
+    async prepareBeforeAfterReveal(viewer) {
+      const saved = exportMaterialStates.get(viewer);
+      if (!saved || saved.reveal) return Boolean(saved?.reveal);
+      const entries = [];
+      for (let index = 0; index < saved.materials.length; index++) {
+        const original = saved.original[index];
+        const designed = saved.designed[index];
+        if (!designed || original === designed) continue;
+        const texture = viewer.createCanvasTexture();
+        const canvas = texture?.source?.element;
+        const context = canvas?.getContext?.('2d');
+        if (!canvas || !context) throw new Error('Texture animation is unavailable.');
+        const source = designed.source.element;
+        canvas.width = Math.min(1536, Math.max(1024, source?.width || state.svgWidth));
+        canvas.height = Math.min(1536, Math.max(1024, source?.height || state.svgHeight));
+        const designedSampler = copyExportSampler(designed.sampler);
+        setExportSampler(texture.sampler, designedSampler);
+        const loadThumbnail = async (candidate, sampleTransform) => {
+          if (!candidate) return null;
+          const sampler = candidate.sampler;
+          const previous = copyExportSampler(sampler);
+          let url;
+          try {
+            setExportSampler(sampler, { ...previous, ...sampleTransform });
+            url = await candidate.source.createThumbnail(canvas.width, canvas.height);
+            return await loadViewerTextureImage(url);
+          } finally {
+            setExportSampler(sampler, previous);
+            if (url) URL.revokeObjectURL(url);
+          }
+        };
+        const originalSampler = copyExportSampler(original?.sampler);
+        const relativeScale = {
+          u: originalSampler.scale.u / designedSampler.scale.u,
+          v: originalSampler.scale.v / designedSampler.scale.v
+        };
+        const before = await loadThumbnail(original, {
+          rotation: originalSampler.rotation - designedSampler.rotation,
+          scale: relativeScale,
+          offset: {
+            u: originalSampler.offset.u - relativeScale.u * designedSampler.offset.u,
+            v: originalSampler.offset.v - relativeScale.v * designedSampler.offset.v
+          }
+        });
+        const after = await loadThumbnail(designed, { rotation: 0, scale: { u: 1, v: 1 }, offset: { u: 0, v: 0 } });
+        entries.push({ slot: saved.materials[index].pbrMetallicRoughness?.baseColorTexture, original, designed, texture, canvas, context, before, after, beforeColor: state.selectedMaterial?.color || getModelTextureBackingPaint(), active: designed });
+      }
+      saved.reveal = entries;
+      return true;
+    },
+    setBeforeAfterReveal(viewer, amount) {
+      const saved = exportMaterialStates.get(viewer);
+      if (!saved?.reveal) return;
+      const progress = Math.max(0, Math.min(1, amount));
+      for (const entry of saved.reveal) {
+        let texture = entry.texture;
+        if (progress <= 0 && entry.original) texture = entry.original;
+        else if (progress >= 1) texture = entry.designed;
+        else {
+          const { context, canvas, before, after } = entry;
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          if (before) {
+            context.save();
+            context.translate(0, canvas.height);
+            context.scale(1, -1);
+            context.drawImage(before, 0, 0, canvas.width, canvas.height);
+            context.restore();
+          }
+          else { context.fillStyle = entry.beforeColor; context.fillRect(0, 0, canvas.width, canvas.height); }
+          // Thumbnails are read bottom-up; flip them back for CanvasTexture upload.
+          const height = Math.ceil(canvas.height * progress);
+          context.save();
+          context.beginPath();
+          context.rect(0, 0, canvas.width, height);
+          context.clip();
+          context.clearRect(0, 0, canvas.width, height);
+          context.translate(0, canvas.height);
+          context.scale(1, -1);
+          context.drawImage(after, 0, 0, canvas.width, canvas.height);
+          context.restore();
+          entry.texture.source.update();
+        }
+        if (entry.active !== texture) {
+          entry.slot?.setTexture?.(texture);
+          entry.active = texture;
+        }
+      }
+      viewer.requestUpdate?.();
     },
     setBeforeAfter(viewer, before) {
       const materials = viewer.model?.materials || [];
       const saved = exportMaterialStates.get(viewer);
       if (!saved || !materials.length || saved.materials[0] !== materials[0]) return;
       materials.forEach((material, index) => material.pbrMetallicRoughness?.baseColorTexture?.setTexture?.((before ? saved.original : saved.designed)[index] || null));
+      saved.reveal?.forEach(entry => { entry.active = before ? entry.original : entry.designed; });
       viewer.requestUpdate?.();
     },
     capture: captureModelViewerImage,
@@ -4794,6 +4949,16 @@ window.initializeModelDesigner = () => {
       return blob;
     },
     getProjectId: () => state.projectId || '',
+    async ensureSavedProjectForShare() {
+      await cloudProjectLoadPromise;
+      if (state.projectId) return state.projectId;
+      if (!modelDesignerConfig.userAuthenticated) throw new Error('Sign in to create a design share link.');
+      if (new URLSearchParams(window.location.search).has('project')) throw new Error('The saved design could not be loaded. Please refresh and try again.');
+      if (!await saveCloudProject({ closeAfterSave: false }) || !state.projectId) {
+        throw new Error('The design could not be saved. Please try again.');
+      }
+      return state.projectId;
+    },
     getActiveCamera: () => captureViewerCamera()
   };
   window.openModelCustomizationInquiry = openCustomizationInquiry;

@@ -180,7 +180,7 @@ test('tracks the complete AI try-on entry, access, generation, and result funnel
     'ai_tryon_access_check_error'
   ].forEach(eventName => assert.match(access, new RegExp(eventName)));
 
-  assert.match(view, /ai-try-on\.js\?v=20260923-project-preview-v16/);
+  assert.match(view, /ai-try-on\.js\?v=20260925-zero-azimuth-v1/);
   assert.match(modelDetail, /detail-try-on\.js\?v=20260923-analytics-v5/);
   assert.match(header, /upgrade-modal\.js\?v=[a-z0-9-]+/);
 });

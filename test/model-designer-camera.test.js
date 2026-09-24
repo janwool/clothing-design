@@ -61,7 +61,7 @@ test('keeps in-page render exports invisible while preserving visible cover capt
 });
 
 test('uses the saved reference lighting standard for user render exports', () => {
-  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260917-white-45deg-v9'\)/);
+  assert.match(runtime, /fetch\('\/config\/design3d-render-standard\.json\?v=20260925-zero-azimuth-v1'\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('environment-image', webStandard\.exportEnvironmentImage \|\| webStandard\.environmentImage\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-intensity', String\(webStandard\.exportShadowIntensity \?\? 0\.32\)\)/);
   assert.match(runtime, /exportViewer\.setAttribute\('shadow-softness', String\(detailLighting\.shadowSoftness \?\? webStandard\.exportShadowSoftness \?\? 0\.96\)\)/);
@@ -73,7 +73,7 @@ test('uses the saved commercial camera and lighting in the live design preview',
   assert.match(runtime, /viewerElement\.setAttribute\('camera-target', cameraStandard\.webTarget/);
   assert.match(runtime, /viewerElement\.setAttribute\('field-of-view', cameraStandard\.webFieldOfView/);
   assert.match(runtime, /viewerElement\.id === 'designerViewer'/);
-  assert.match(runtime, /cameraStandard\.webEditorOrbit \|\| '-12deg 72deg 158%'/);
+  assert.match(runtime, /cameraStandard\.webEditorOrbit \|\| '0deg 72deg 158%'/);
   assert.match(runtime, /viewerElement\.setAttribute\('camera-orbit', cameraOrbit\)/);
   assert.match(runtime, /viewerElement\.removeAttribute\('auto-rotate'\)/);
   assert.match(runtime, /viewerElement\.jumpCameraToGoal\?\.\(\)/);

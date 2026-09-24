@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/model-export-modal.css?v=20260924-single-scene-v5']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20260925-share-create-v17']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -70,13 +70,14 @@
               loading="eager"
               reveal="auto"
               camera-controls
+              disable-tap
               disable-zoom
-              camera-orbit="-16deg 72deg 142%"
+              camera-orbit="0deg 72deg 142%"
               camera-target="auto auto auto"
               field-of-view="28deg"
               shadow-intensity="0.32"
               shadow-softness="0.9"
-              exposure="0.82"
+              exposure="2"
               environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-studio-light-reference-azimuth="-16"
@@ -108,8 +109,8 @@
             <button type="button" class="active" data-light-angle="45" aria-pressed="true"><i aria-hidden="true"></i><span>+45°</span></button>
           </div>
           <label class="quick-light-range">
-            <span>Brightness <output id="quickLightExposureOutput">82%</output></span>
-            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="82">
+            <span>Brightness <output id="quickLightExposureOutput">200%</output></span>
+            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="200">
           </label>
           <label class="quick-light-range">
             <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
@@ -917,12 +918,13 @@
                   alt="<%= model.name %>"
                   loading="lazy"
                   camera-controls
-                  camera-orbit="-12deg 72deg 158%"
+                  disable-tap
+                  camera-orbit="0deg 72deg 158%"
                   camera-target="auto auto auto"
                   field-of-view="28deg"
                   shadow-intensity="0.32"
                   shadow-softness="0.9"
-                  exposure="0.82"
+                  exposure="2"
                   environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-studio-light-reference-azimuth="-16"
@@ -1026,8 +1028,8 @@ const modelViewerPromises = new WeakMap();
 const defaultDetailRenderStandard = {
   version: 'commercial-studio-stage-v3',
   camera: {
-    webOrbit: '-16deg 72deg 142%',
-    webEditorOrbit: '-12deg 72deg 158%',
+    webOrbit: '0deg 72deg 142%',
+    webEditorOrbit: '0deg 72deg 158%',
     webFieldOfView: '28deg',
     webTarget: 'auto auto auto'
   },
@@ -1054,7 +1056,7 @@ const defaultDetailRenderStandard = {
     shadowSoftness: 0.9,
     exportShadowIntensity: 0.46,
     exportShadowSoftness: 0.88,
-    exposure: 0.82,
+    exposure: 2,
     toneMapping: 'commerce',
     material: {
       neutralizeBaseColor: false,
@@ -1067,12 +1069,12 @@ const defaultDetailRenderStandard = {
 };
 const detailLightState = {
   azimuthOffsetDeg: 45,
-  exposure: 0.82,
+  exposure: 2,
   shadowSoftness: 0.9
 };
 window.ModelDetailLightingSettings = detailLightState;
 let detailSceneStandard = defaultDetailRenderStandard;
-const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260919-tshirt225-lighting-v1')
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260925-zero-azimuth-v1')
   .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
   .then((standard) => {
     detailSceneStandard = {
@@ -1091,6 +1093,8 @@ const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json
         web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }
       };
     }
+    // Detail pages always start at 200%, including models with lighting overrides.
+    detailSceneStandard.web.exposure = 2;
     Object.assign(detailLightState, {
       azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,
       exposure: detailSceneStandard.web.exposure,
@@ -1129,7 +1133,7 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
   }
   element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
   element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));
-  element.setAttribute('exposure', String(detailLightState.exposure ?? webStandard.exposure ?? 0.82));
+  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 2) * (Number(element.dataset.designExposureRatio) || 1)));
   element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
   element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
   element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
@@ -1183,7 +1187,7 @@ detailRenderStandardPromise.then((standard) => {
 
 function renderDetailLightingControls() {
   const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
-  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 0.82)) * 100);
+  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 2)) * 100);
   const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
   if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
   if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);
@@ -1199,7 +1203,7 @@ function renderDetailLightingControls() {
 function applyDetailLightingSettings() {
   document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {
     element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);
-    element.setAttribute('exposure', String(detailLightState.exposure));
+    element.setAttribute('exposure', String(detailLightState.exposure * (Number(element.dataset.designExposureRatio) || 1)));
     element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));
     window.CameraRelativeStudioLight?.install(element, {
       environmentImage: element.dataset.cameraRelativeStudioLight,
@@ -1676,7 +1680,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260924-single-scene-v72',
+      src: '/js/model-designer.js?v=20260925-share-project-v3',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1947,7 +1951,9 @@ window.ModelDesignerConfig = Object.freeze({
 <script src="/js/detail-try-on.js?v=20260923-analytics-v5" defer></script>
 <% } %>
 
-<script src="/js/model-export-scene.js?v=20260924-v1" defer></script>
-<script src="/js/model-export-modal.js?v=20260924-lighting-sync-v6" defer></script>
+<script src="/js/model-export-scene.js?v=20260925-zero-azimuth-v1" defer></script>
+<script src="/js/model-export-video.js?v=20260925-social-three-turns-v14" defer></script>
+<script src="/js/cloz-dropdown.js?v=20260924-v1" defer></script>
+<script src="/js/model-export-modal.js?v=20260925-share-create-v10" defer></script>
 
 <%- include('partials/footer') %>

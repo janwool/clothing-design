@@ -550,7 +550,7 @@
 
   document.getElementById('resetTryOnViewer')?.addEventListener('click', () => {
     if (!viewer) return;
-    viewer.cameraOrbit = '28deg 74deg 108%';
+    viewer.cameraOrbit = '0deg 74deg 108%';
     viewer.cameraTarget = 'auto auto auto';
     viewer.fieldOfView = 'auto';
     viewer.autoRotate = false;

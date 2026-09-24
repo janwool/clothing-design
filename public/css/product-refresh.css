@@ -47,13 +47,24 @@ body {
 }
 
 .navbar-logo {
-  gap: 0;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 10px;
   color: var(--ui-ink);
   font-size: 28px;
   font-weight: 720;
   letter-spacing: -0.055em;
   line-height: 1;
   transition: opacity 180ms ease;
+}
+
+.navbar-brand-icon {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  object-fit: contain;
 }
 
 .navbar-logo::before {
@@ -1540,6 +1551,12 @@ body {
 
   .navbar-logo {
     font-size: 24px;
+    gap: 8px;
+  }
+
+  .navbar-brand-icon {
+    width: 32px;
+    height: 32px;
   }
 
   .navbar-actions {

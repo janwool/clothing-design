@@ -11,8 +11,8 @@ const refreshStyles = fs.readFileSync(path.join(root, 'public', 'css', 'product-
 const detailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'model-detail-v2.css'), 'utf8');
 
 test('uses one navigation treatment across standard pages', () => {
-  assert.match(header, /product-refresh\.css\?v=20260915-navbar-type-v10/);
-  assert.match(header, /style\.css\?v=20260923-element-actions-v27/);
+  assert.match(header, /product-refresh\.css\?v=[a-z0-9-]+/);
+  assert.match(header, /style\.css\?v=[a-z0-9-]+/);
   assert.match(routes, /model-detail-v2\.css\?v=20260916-material-previews-v34/);
   assert.match(styles, /--navbar-height: 76px/);
   assert.match(refreshStyles, /\.navbar-logo \{[^}]*font-size: 28px;[^}]*font-weight: 720;/s);

@@ -70,14 +70,14 @@
   <% if (typeof structuredData !== 'undefined' && structuredData) { %>
     <script type="application/ld+json"><%- JSON.stringify(structuredData).replace(/</g, '\\u003c') %></script>
   <% } %>
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any">
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" sizes="48x48">
-  <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="https://cdn.cloz-design.com/site/icon.png?v=20260719">
+  <link rel="icon" href="/images/brand/clozdesign-icon.png?v=20260925-round" type="image/png" sizes="400x400">
+  <link rel="icon" href="/favicon.ico?v=20260925-round" type="image/x-icon" sizes="48x48">
+  <link rel="shortcut icon" href="/favicon.ico?v=20260925-round">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260925-round" sizes="180x180">
   <link rel="alternate" type="application/rss+xml" title="ClozDesign apparel mockup guides" href="/feed.xml">
   <link rel="stylesheet" href="/css/style.css?v=20260924-compact-launch-badges">
   <link rel="stylesheet" href="/css/growth.css?v=20260913-loading-spinner-v2">
-  <link rel="stylesheet" href="/css/product-refresh.css?v=20260915-navbar-type-v10">
+  <link rel="stylesheet" href="/css/product-refresh.css?v=20260925-round-image">
   <link rel="stylesheet" href="/css/feedback-widget.css?v=20260917-global-v1">
   <% const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; %>
   <% headPageStyles.forEach(function(stylesheet) { %>
@@ -101,6 +101,7 @@
     <div class="navbar-container">
       <!-- Logo -->
       <a href="/" class="navbar-logo">
+        <img class="navbar-brand-icon" src="/images/brand/clozdesign-icon.png?v=20260925-round" alt="" width="40" height="40" decoding="async">
         <span class="logo-text">ClozDesign</span>
       </a>
 

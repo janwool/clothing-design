@@ -106,7 +106,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
               data-studio-light-reference-azimuth="-16"
               data-studio-light-azimuth-offset="45"
               tone-mapping="commerce"
-              camera-orbit="-16deg 74deg 108%"
+              camera-orbit="0deg 74deg 108%"
             ></model-viewer>
           <% } else { %>
             <img src="<%= model.image_url %>" alt="<%= model.name %>">
@@ -183,6 +183,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
   window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
 </script>
 <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
-<script src="/js/ai-try-on.js?v=20260923-project-preview-v16" defer></script>
+<script src="/js/ai-try-on.js?v=20260925-zero-azimuth-v1" defer></script>
 
 <%- include('partials/footer') %>

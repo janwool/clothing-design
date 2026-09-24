@@ -35,8 +35,8 @@ test('keeps the default commercial stages still and close to front-facing', () =
 
   assert.doesNotMatch(home, /\sauto-rotate(?:\s|=)/);
   assert.doesNotMatch(tool, /\sauto-rotate(?:\s|=)/);
-  assert.match(home, /camera-orbit="-16deg 76deg 108%"/);
-  assert.match(designer, /camera-orbit="-12deg 72deg 142%"/);
+  assert.match(home, /camera-orbit="0deg 76deg 108%"/);
+  assert.match(designer, /camera-orbit="0deg 72deg 142%"/);
   assert.match(designer, /<input type="checkbox" id="autoRotateCheck">/);
 });
 

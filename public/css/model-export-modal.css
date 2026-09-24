@@ -8,7 +8,7 @@
 .export-header { display: flex; align-items: stretch; min-height: 52px; border-bottom: 1px solid #dbe1eb; flex: none; }
 .export-close { display: grid; place-items: center; flex: none; align-self: center; width: 40px; height: 40px; margin-left: 8px; border: 0; border-radius: 6px; background: transparent; color: #111827; font-size: 32px !important; line-height: 1; font-weight: 200; }
 .export-close:hover { background: #f2f5f9; }
-.export-tabs { display: grid; grid-template-columns: repeat(5,1fr); flex: 1; min-width: 0; }
+.export-tabs { display: grid; grid-template-columns: repeat(4,1fr); flex: 1; min-width: 0; }
 .export-tabs button { border: 0; border-bottom: 2px solid transparent; background: none; color: #152030; font-size: 16px !important; }
 .export-tabs button[aria-selected="true"] { color: #075ce4; border-bottom-color: #0869ff; font-weight: 650; }
 .export-main { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(360px, 1fr); gap: 22px; min-height: 0; flex: 1; padding: 20px 0; overflow: hidden; }
@@ -26,19 +26,20 @@
 .export-group h3 { margin: 0 0 9px; font-size: 17px; line-height: 1.2; }
 .export-group p, .export-note { margin: 0 0 13px; color: #677386; font-size: 14px; line-height: 1.4; }
 .export-layout-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 11px; }
-.export-layout { display: flex; flex-direction: column; gap: 5px; align-items: center; padding: 4px 4px 8px; min-width: 0; min-height: 118px; border: 1px solid #d9e0eb; border-radius: 7px; background: #fff; color: #172031; font-size: 12px !important; text-align: center; }
+.export-layout { position: relative; display: block; padding: 4px; min-width: 0; border: 1px solid #d9e0eb; border-radius: 7px; background: #fff; color: #172031; font-size: 12px !important; text-align: center; }
+.export-layout::after { position: absolute; z-index: 1; bottom: 9px; left: 50%; padding: 5px 8px; border-radius: 4px; background: #172031e8; color: #fff; content: attr(aria-label); font-size: 11px; line-height: 1.2; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, 4px); transition: opacity .15s ease, transform .15s ease, visibility .15s ease; pointer-events: none; }
+.export-layout:hover::after, .export-layout:focus-visible::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
 .export-layout.selected, .export-video-card.selected, .export-format-card.selected { border-color: #1166ff; box-shadow: 0 0 0 1px #1166ff inset, 0 3px 9px #1a64f626; color: #005fe7; }
-.export-mini { display: flex; align-items: center; justify-content: center; width: 100%; height: 80px; gap: 1px; overflow: hidden; border-radius: 4px; background: #edf0f5; }
-.export-mini img { height: 95%; width: 50%; object-fit: contain; mix-blend-mode: multiply; }
-.export-mini-single img { width: 75%; }
-.export-mini-three img { width: 33%; }
-.export-mini-four { display: grid; grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(2,1fr); }
-.export-mini-four img { width: 100%; height: 100%; }
-.export-mini-editorial img:first-child { width: 60%; height: 130%; }
-.export-mini-editorial img:last-child { width: 40%; }
-.export-mini-detail img { width: 65%; height: 145%; }
+.export-mini { display: block; width: 100%; overflow: hidden; border-radius: 4px; background: #f3f6fa; }
+.export-mini img { display: block; width: 100%; height: auto; }
 .export-swatches { display: flex; justify-content: space-between; gap: 4px; }
-.export-swatch { display: flex; align-items: center; flex-direction: column; gap: 6px; width: 58px; padding: 0; border: 0; background: none; color: #536074; font-size: 10px !important; white-space: nowrap; }
+.export-swatch { position: relative; display: flex; align-items: center; justify-content: center; width: 58px; padding: 0; border: 0; background: none; color: #536074; }
+.export-swatch::after { position: absolute; z-index: 3; top: calc(100% + 7px); left: 50%; padding: 5px 8px; border-radius: 4px; background: #172031e8; color: #fff; content: attr(aria-label); font-size: 11px; line-height: 1.2; white-space: nowrap; opacity: 0; visibility: hidden; transform: translate(-50%, -4px); transition: opacity .15s ease, transform .15s ease, visibility .15s ease; pointer-events: none; }
+.export-swatch:hover::after, .export-swatch:focus-visible::after { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.export-swatch:first-child::after { left: 0; transform: translate(0, -4px); }
+.export-swatch:first-child:hover::after, .export-swatch:first-child:focus-visible::after { transform: translate(0, 0); }
+.export-swatch:last-child::after { right: 0; left: auto; transform: translate(0, -4px); }
+.export-swatch:last-child:hover::after, .export-swatch:last-child:focus-visible::after { transform: translate(0, 0); }
 .export-swatch i { width: 42px; height: 42px; border: 1px solid #dce2eb; border-radius: 50%; background: var(--swatch); }
 .export-swatch[data-background="transparent"] i { background: repeating-conic-gradient(#d4d9e2 0% 25%, #fff 0% 50%) 50% / 14px 14px; }
 .export-swatch.selected i { outline: 2px solid #0b6bff; outline-offset: 2px; }
@@ -48,7 +49,6 @@
 .export-segment { display: flex; gap: 6px; }
 .export-segment button { flex: 1; min-width: 0; height: 43px; border: 1px solid #d8dfeb; border-radius: 6px; background: #fff; color: #203046; font-size: 14px !important; }
 .export-segment button.selected { color: #0863ea; background: #f2f7ff; border-color: #1166ff; box-shadow: 0 0 0 1px #1166ff inset; font-weight: 600; }
-.export-options select { width: 100%; height: 43px; padding: 0 12px; border: 1px solid #d8dfeb; border-radius: 6px; background: #fff; color: #203046; font-size: 14px; }
 .export-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 82px; margin: 0 -28px; padding: 12px 28px; border-top: 1px solid #dbe1eb; flex: none; }
 .export-status { color: #41617c; font-size: 12px; }
 .export-status[data-error="true"] { color: #b32b2b; }
@@ -59,21 +59,21 @@
 .export-video-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
 .export-video-card { display: flex; flex-direction: column; gap: 6px; padding: 3px; border: 1px solid transparent; border-radius: 7px; background: #fff; color: #172031; font-size: 11px !important; text-align: left; }
 .export-video-thumb { position: relative; display: grid; place-items: center; width: 100%; height: 86px; border-radius: 5px; background: #e8ebf1; overflow: hidden; }
-.export-video-thumb img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; }
-.export-video-thumb b { position: absolute; right: 3px; bottom: 2px; color: #0870ff; font-size: 18px; text-shadow: 0 0 2px white; }
+.export-video-thumb video { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.export-video-thumb b { position: absolute; right: 5px; bottom: 5px; padding: 3px 5px; border-radius: 4px; background: #172031b3; color: #fff; font-size: 9px; line-height: 1; pointer-events: none; }
+.export-video-card:focus-visible { outline: 2px solid #1166ff; outline-offset: 3px; }
 .export-format-card { display: flex; flex-direction: column; gap: 3px; padding: 18px; border: 1px solid #cfd9e7; border-radius: 7px; }
 .export-format-card span { padding-left: 28px; color: #687589; font-size: 13px; }
 .export-checks { display: flex; flex-direction: column; gap: 14px; color: #172031; font-size: 14px; }
 .export-checks span::first-letter { color: #0865ed; }
 .export-file-info { border-top: 1px solid #dbe1eb; padding-top: 16px; }
-.export-tryon-illustration { display: grid; grid-template-columns: 1fr 22px 1fr; align-items: center; gap: 7px; margin: 26px 0 13px; }
-.export-tryon-garment, .export-tryon-result { display: grid; place-items: center; height: 235px; border-radius: 8px; background: #f5f6f9; text-align: center; color: #818c9b; font-size: 13px; }
-.export-tryon-garment img { max-width: 95%; max-height: 95%; object-fit: contain; }
-.export-tryon-result { border: 1px dashed #cdd5e4; padding: 16px; }
-.export-tryon-result span { display: block; font-size: 35px; }
 .export-link-row { display: flex; gap: 8px; }
-.export-link-row input { flex: 1; width: 0; padding: 0 12px; border: 1px solid #d8dfeb; border-radius: 6px; color: #455267; background: #fff; }
+.export-link-row input { flex: 1; width: 0; padding: 0 12px; border: 1px solid #d8dfeb; border-radius: 6px; color: #455267; background: #fff; cursor: pointer; }
+.export-link-row input:focus-visible { outline: 2px solid #1166ff; outline-offset: 2px; }
 .export-link-row button { padding: 11px 15px; border: 0; border-radius: 6px; background: #0d5ee7; color: #fff; white-space: nowrap; }
+.export-share-message { margin: 8px 0 0 !important; color: #41617c !important; font-size: 12px !important; }
+.export-share-message:empty { display: none; }
+.export-share-message[data-error="true"] { color: #b32b2b !important; }
 .export-qr-card { display: flex; align-items: center; gap: 12px; padding: 12px; margin: -8px 0 18px; border: 1px solid #d8dfeb; border-radius: 8px; }
 .export-qr-card img { width: 75px; height: 75px; flex: none; }
 .export-qr-card strong { display: block; font-size: 13px; }
@@ -81,4 +81,4 @@
 .export-qr-card a { margin-left: auto; padding: 7px 9px; border-radius: 5px; color: #172031; background: #f4f6f9; font-size: 11px; text-decoration: none; white-space: nowrap; }
 .export-revoke { border: 0; color: #0863ea; background: transparent; font-size: 12px !important; }
 @media (max-width: 860px) { .model-export-dialog { width: calc(100vw - 20px); height: calc(100dvh - 20px); max-height: calc(100dvh - 20px); } .export-shell { padding: 12px 16px 0; } .export-main { grid-template-columns: 1fr; grid-template-rows: minmax(180px, .9fr) minmax(0, 1fr); gap: 14px; } .export-options { padding: 0 8px 0 0; border-left: 0; } .export-footer { margin: 0 -16px; padding: 10px 16px; } .export-tabs button { font-size: 12px !important; } }
-@media (max-width: 520px) { .export-layout-grid { gap: 6px; } .export-layout { font-size: 10px !important; min-height: 100px; } .export-mini { height: 65px; } .export-swatch { width: 44px; font-size: 8px !important; } .export-swatch i { width: 32px; height: 32px; } .export-video-thumb { height: 66px; } .export-actions { gap: 5px; } .export-actions button { min-width: 0; padding: 0 9px; font-size: 12px !important; } }
+@media (max-width: 520px) { .export-layout-grid { gap: 6px; } .export-swatch { width: 44px; } .export-swatch i { width: 32px; height: 32px; } .export-video-thumb { height: 66px; } .export-actions { gap: 5px; } .export-actions button { min-width: 0; padding: 0 9px; font-size: 12px !important; } }
