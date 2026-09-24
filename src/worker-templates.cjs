@@ -8021,7 +8021,7 @@ title = __locals.title,
     ;  const isHoodieFooter = typeof footerVariant !== 'undefined' && footerVariant === 'hoodie'; 
     ; __append("\n  </main>\n\n  <footer class=\"footer")
     ; __append(escapeFn( isHoodieFooter ? ' footer-hoodie' : '' ))
-    ; __append("\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClozDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n          ")
+    ; __append("\">\n    <div class=\"footer-container\">\n      <div class=\"footer-grid\">\n        <!-- Brand -->\n        <div class=\"footer-brand\">\n          <a href=\"/\" class=\"footer-logo\">ClozDesign</a>\n          <p class=\"footer-desc\">Professional clothing design tools and resources for designers worldwide.</p>\n          <a class=\"footer-launch-badge\" href=\"https://launchnest.io/p/clozdesign\" target=\"_blank\" rel=\"noopener noreferrer\">\n            <img src=\"https://launchnest.io/badge/clozdesign.svg?variant=featured\" alt=\"ClozDesign on LaunchNest\" width=\"220\" height=\"56\" loading=\"lazy\" decoding=\"async\">\n          </a>\n          ")
     ;  if (isHoodieFooter) { 
     ; __append("\n            <p class=\"footer-manifesto\">Design. Visualize. Create. Repeat.</p>\n          ")
     ;  } 
@@ -8501,7 +8501,7 @@ title = __locals.title,
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
     ;  } 
-    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClozDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260923-element-actions-v27\">\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260913-loading-spinner-v2\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260915-navbar-type-v10\">\n  <link rel=\"stylesheet\" href=\"/css/feedback-widget.css?v=20260917-global-v1\">\n  ")
+    ; __append("\n  <link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\" sizes=\"any\">\n  <link rel=\"icon\" href=\"/favicon.ico\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico\">\n  <link rel=\"apple-touch-icon\" href=\"https://cdn.cloz-design.com/site/icon.png?v=20260719\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClozDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260924-launchnest-badge\">\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260913-loading-spinner-v2\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260915-navbar-type-v10\">\n  <link rel=\"stylesheet\" href=\"/css/feedback-widget.css?v=20260917-global-v1\">\n  ")
     ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : []; 
     ; __append("\n  ")
     ;  headPageStyles.forEach(function(stylesheet) { 
