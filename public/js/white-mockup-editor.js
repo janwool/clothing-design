@@ -3,7 +3,8 @@
 
   const editor = document.getElementById('whiteMockupEditor');
   if (!editor) return;
-  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v1.png';
+  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v7.png';
+  const WATERMARK_COLOR = '#f2f2f2';
 
   const stage = document.getElementById('whiteMockupStage');
   const canvas = document.getElementById('whiteMockupCanvas');
@@ -252,29 +253,23 @@
     if (!state.watermarkEnabled) return;
 
     const tile = await loadImage(WATERMARK_TILE_URL);
-    const markWidth = Math.max(96, Math.min(220, Math.round(Math.min(canvas.width, canvas.height) * 0.12)));
-    const markHeight = Math.round(markWidth * 0.58);
-    const horizontalStep = Math.round(markWidth * 0.9);
-    const verticalStep = Math.round(markHeight * 0.92);
-    const markCanvas = document.createElement('canvas');
-    markCanvas.width = 650;
-    markCanvas.height = 480;
-    const markContext = markCanvas.getContext('2d');
-    markContext.drawImage(tile, 300, 390, 650, 480, 0, 0, markCanvas.width, markCanvas.height);
-    markContext.globalCompositeOperation = 'source-in';
-    markContext.fillStyle = '#c5c7c4';
-    markContext.fillRect(0, 0, markCanvas.width, markCanvas.height);
+    const tileSize = Math.max(384, Math.min(768, Math.round(Math.min(canvas.width, canvas.height) * 0.5)));
+    const tintedTile = document.createElement('canvas');
+    tintedTile.width = tile.naturalWidth || tile.width;
+    tintedTile.height = tile.naturalHeight || tile.height;
+    const tintedContext = tintedTile.getContext('2d');
+    tintedContext.drawImage(tile, 0, 0);
+    tintedContext.globalCompositeOperation = 'source-in';
+    tintedContext.fillStyle = WATERMARK_COLOR;
+    tintedContext.fillRect(0, 0, tintedTile.width, tintedTile.height);
     watermarkSourceContext.save();
-    watermarkSourceContext.globalAlpha = 0.62;
+    watermarkSourceContext.globalAlpha = 1;
     watermarkSourceContext.imageSmoothingEnabled = true;
     watermarkSourceContext.imageSmoothingQuality = 'high';
-    let row = 0;
-    for (let y = -verticalStep; y < canvas.height + verticalStep; y += verticalStep) {
-      const rowOffset = row % 2 ? -horizontalStep / 2 : 0;
-      for (let x = -horizontalStep; x < canvas.width + horizontalStep; x += horizontalStep) {
-        watermarkSourceContext.drawImage(markCanvas, 0, 0, markCanvas.width, markCanvas.height, x + rowOffset, y, markWidth, markHeight);
+    for (let y = 0; y < canvas.height; y += tileSize) {
+      for (let x = 0; x < canvas.width; x += tileSize) {
+        watermarkSourceContext.drawImage(tintedTile, x, y, tileSize, tileSize);
       }
-      row += 1;
     }
     watermarkSourceContext.restore();
 

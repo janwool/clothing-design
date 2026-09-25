@@ -1,7 +1,8 @@
 (function initializeExportEntitlements() {
   'use strict';
 
-  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v1.png';
+  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v7.png';
+  const WATERMARK_COLOR = '#f2f2f2';
   let entitlementPromise;
   let watermarkTilePromise;
   const watermarkedMaterials = new WeakSet();
@@ -52,9 +53,9 @@
     const verticalStep = Math.max(180, Math.round(fontSize * 6.5));
 
     context.save();
-    context.globalAlpha = options.opacity ?? 0.22;
+    context.globalAlpha = 1;
     context.globalCompositeOperation = options.compositeOperation || 'source-over';
-    context.fillStyle = options.color || '#c5c7c4';
+    context.fillStyle = WATERMARK_COLOR;
     context.font = `600 ${fontSize}px Arial, sans-serif`;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
@@ -81,52 +82,25 @@
     }
 
     const shortestEdge = Math.min(canvas.width, canvas.height);
-    const markWidth = Math.max(96, Math.min(220, Math.round(shortestEdge * (options.tileScale ?? 0.12))));
-    const markHeight = Math.round(markWidth * 0.58);
-    const horizontalStep = Math.round(markWidth * 0.9);
-    const verticalStep = Math.round(markHeight * 0.92);
-    const sourceCrop = { x: 300, y: 390, width: 650, height: 480 };
-    const markCanvas = document.createElement('canvas');
-    markCanvas.width = sourceCrop.width;
-    markCanvas.height = sourceCrop.height;
-    const markContext = markCanvas.getContext('2d');
-    markContext.drawImage(
-      tile,
-      sourceCrop.x,
-      sourceCrop.y,
-      sourceCrop.width,
-      sourceCrop.height,
-      0,
-      0,
-      sourceCrop.width,
-      sourceCrop.height
-    );
-    markContext.globalCompositeOperation = 'source-in';
-    markContext.fillStyle = options.color || '#c5c7c4';
-    markContext.fillRect(0, 0, markCanvas.width, markCanvas.height);
+    const tileSize = Math.max(384, Math.min(768, Math.round(shortestEdge * (options.tileScale ?? 0.5))));
+    const tintedTile = document.createElement('canvas');
+    tintedTile.width = tile.naturalWidth || tile.width;
+    tintedTile.height = tile.naturalHeight || tile.height;
+    const tintedContext = tintedTile.getContext('2d');
+    tintedContext.drawImage(tile, 0, 0);
+    tintedContext.globalCompositeOperation = 'source-in';
+    tintedContext.fillStyle = WATERMARK_COLOR;
+    tintedContext.fillRect(0, 0, tintedTile.width, tintedTile.height);
 
     context.save();
-    context.globalAlpha = options.opacity ?? 0.3;
+    context.globalAlpha = 1;
     context.globalCompositeOperation = options.compositeOperation || 'source-over';
     context.imageSmoothingEnabled = true;
     context.imageSmoothingQuality = 'high';
-    let row = 0;
-    for (let y = -verticalStep; y < canvas.height + verticalStep; y += verticalStep) {
-      const rowOffset = row % 2 ? -horizontalStep / 2 : 0;
-      for (let x = -horizontalStep; x < canvas.width + horizontalStep; x += horizontalStep) {
-        context.drawImage(
-          markCanvas,
-          0,
-          0,
-          markCanvas.width,
-          markCanvas.height,
-          x + rowOffset,
-          y,
-          markWidth,
-          markHeight
-        );
+    for (let y = 0; y < canvas.height; y += tileSize) {
+      for (let x = 0; x < canvas.width; x += tileSize) {
+        context.drawImage(tintedTile, x, y, tileSize, tileSize);
       }
-      row += 1;
     }
     context.restore();
   }
@@ -141,10 +115,8 @@
     const context = canvas.getContext('2d');
     context.drawImage(image, 0, 0, canvas.width, canvas.height);
     await drawTiledWatermark(context, canvas, {
-      opacity: options.opacity ?? 0.62,
-      tileScale: options.tileScale ?? 0.12,
-      compositeOperation: 'source-over',
-      color: '#c5c7c4'
+      tileScale: options.tileScale ?? 0.5,
+      compositeOperation: 'source-over'
     });
     return canvas.toDataURL('image/png');
   }
@@ -192,16 +164,12 @@
       }
       if (tile) {
         await drawTiledWatermark(compositionContext, composition, {
-          opacity: 0.62,
-          tileScale: 0.12,
-          compositeOperation: 'source-over',
-          color: '#c5c7c4'
+          tileScale: 0.5,
+          compositeOperation: 'source-over'
         });
       } else {
         drawFallbackWatermark(compositionContext, composition, {
-          opacity: 0.62,
-          compositeOperation: 'source-over',
-          color: '#c5c7c4'
+          compositeOperation: 'source-over'
         });
       }
 
@@ -240,7 +208,7 @@
   }
 
   function prepareExport(source) {
-    return prepareTexture(source, { opacity: 0.62, tileScale: 0.13 });
+    return prepareTexture(source, { tileScale: 0.5 });
   }
 
   window.ExportEntitlements = Object.freeze({

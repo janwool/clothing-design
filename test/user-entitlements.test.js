@@ -58,9 +58,9 @@ test('enforces allowances at project, storage, try-on, and export boundaries', (
   assert.match(tryOnRoute, /reserveTryOnCredit\(req\.session\.user\.id\)/);
   assert.match(tryOnRoute, /releaseTryOnCredit\(creditReservation\.reservation\)/);
   assert.match(exportRuntime, /features\?\.removeWatermarks/);
-  assert.match(exportRuntime, /clozdesign-watermark-tile-v1\.png/);
+  assert.match(exportRuntime, /clozdesign-watermark-tile-v7\.png/);
   assert.match(exportRuntime, /drawTiledWatermark\(context, canvas, options/);
-  assert.match(exportRuntime, /sourceCrop\.x,[\s\S]*?markWidth,[\s\S]*?markHeight/);
+  assert.match(exportRuntime, /context\.drawImage\(tintedTile, x, y, tileSize, tileSize\)/);
   assert.match(exportRuntime, /applyModelViewerWatermark/);
   assert.match(exportRuntime, /viewer\.createCanvasTexture\(\)/);
   assert.match(exportRuntime, /textureInfo\.setTexture\(viewerTexture\)/);
@@ -71,8 +71,8 @@ test('enforces allowances at project, storage, try-on, and export boundaries', (
   assert.doesNotMatch(designerRuntime, /ExportEntitlements\.prepareExport\(renderUrl\)/);
   assert.match(whiteMockupRuntime, /function buildGarmentWatermark\(refresh = false\)/);
   assert.match(whiteMockupRuntime, /maskOpacityAt\(index\)/);
-  assert.match(exportRuntime, /options\.color \|\| '#c5c7c4'/);
-  assert.match(whiteMockupRuntime, /markContext\.fillStyle = '#c5c7c4'/);
+  assert.match(exportRuntime, /const WATERMARK_COLOR = '#f2f2f2'/);
+  assert.match(whiteMockupRuntime, /watermarkSourceContext\.drawImage\(tintedTile, x, y, tileSize, tileSize\)/);
   assert.match(whiteMockupRuntime, /globalCompositeOperation = 'source-over'/);
   assert.doesNotMatch(whiteMockupRuntime, /ExportEntitlements\.prepareExport\(source\)/);
 });

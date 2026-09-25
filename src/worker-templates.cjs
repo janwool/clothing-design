@@ -8442,7 +8442,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
     ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260917-white-detail-events-v2\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/model-login.css?v=20260922-v1\">\n  <link rel=\"stylesheet\" href=\"/css/upgrade-modal.css?v=20260923-free-card-v7\">\n  <script src=\"/js/login-dialog.js?v=20260921-v1\" data-google-auth=\"")
     ; __append(escapeFn( typeof googleAuthEnabled !== 'undefined' && googleAuthEnabled ? 'true' : 'false' ))
-    ; __append("\" defer></script>\n  <script src=\"/js/upgrade-modal.js?v=20260923-free-card-v14\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260923-cover-project-v7\" defer></script>\n  <script src=\"/js/export-entitlements.js?v=20260924-lazy-materials-v10\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\" defer></script>\n  <script src=\"/js/upgrade-modal.js?v=20260923-free-card-v14\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260923-cover-project-v7\" defer></script>\n  <script src=\"/js/export-entitlements.js?v=20260926-watermark-v14\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) { 
@@ -10295,7 +10295,7 @@ title = __locals.title,
     ;  } 
     ; __append("\n  </div>\n</div>\n\n")
     ; __append( include('partials/model-login', { loginReturnPath: '/white-mockups/' + asset.asset_name }) )
-    ; __append("\n\n<script src=\"/js/white-mockup-editor.js?v=20260923-cover-project-v33\" defer></script>\n")
+    ; __append("\n\n<script src=\"/js/white-mockup-editor.js?v=20260926-watermark-v14\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
