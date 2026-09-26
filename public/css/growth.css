@@ -421,3 +421,6 @@
   font-size: 16px;
   font-weight: 600;
 }
+
+/* Retry is shown only after automatic preview loading fails. */
+.tool-model-load[hidden] { display: none; }

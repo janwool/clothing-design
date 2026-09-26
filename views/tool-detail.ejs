@@ -54,10 +54,9 @@
               aria-label="<%= toolPage.heroModel.alt || toolPage.title %>"
               hidden
             ></model-viewer>
-            <button type="button" class="btn btn-secondary tool-model-load" id="toolLoadPreview">
+            <button type="button" class="btn btn-secondary tool-model-load" id="toolLoadPreview" hidden>
               <i class="tool-model-spinner" aria-hidden="true"></i>
-              <span>Load interactive 3D</span>
-              <small>Loads only when you need it</small>
+              <span>Retry preview</span>
             </button>
           </div>
           <div class="tool-quick-editor" aria-label="Quick 3D mockup controls">
@@ -79,7 +78,7 @@
               </label>
               <button type="button" class="btn btn-secondary" id="toolDownloadPreview"><%= toolPage.slug === 'bulk-t-shirt-mockup-generator' ? 'Download colorway sheet' : 'Download PNG' %></button>
             </div>
-            <p class="tool-preview-status" id="toolPreviewStatus" aria-live="polite">View the fast preview, or load 3D to rotate and export it.</p>
+            <p class="tool-preview-status" id="toolPreviewStatus" aria-live="polite">Preparing preview…</p>
           </div>
         </div>
       <% } else { %>
@@ -88,6 +87,30 @@
     </div>
   </div>
 </section>
+
+<% if (['t-shirt-mockup-generator', '3d-pants-generator'].includes(toolPage.slug) && toolPage.modelStarters && toolPage.modelStarters.length) { %>
+  <section class="generator-section tool-model-starters">
+    <div class="container">
+      <div class="generator-section-header">
+        <span class="generator-eyebrow"><%= toolPage.starterEyebrow || 'Choose a T-shirt model' %></span>
+        <h2><%= toolPage.starterTitle || 'Start your T-shirt mockup with the right fit' %></h2>
+        <p><%= toolPage.starterSubtitle || 'Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.' %></p>
+      </div>
+      <div class="generator-output-grid">
+        <% toolPage.modelStarters.forEach(function(model) { %>
+          <a class="generator-output-card" href="<%= model.href %>">
+            <% if (toolPage.slug === '3d-pants-generator') { %>
+              <img src="<%= model.image %>" alt="<%= model.title %>" width="320" height="320" loading="lazy" class="pants-starter-image">
+            <% } %>
+            <h3><%= model.title %></h3>
+            <% if (toolPage.slug !== '3d-pants-generator') { %><p><%= model.body %></p><% } %>
+            <strong>Open free 3D model →</strong>
+          </a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+<% } %>
 
 <div class="container">
   <%- include('partials/share-panel', {
@@ -133,26 +156,7 @@
   </div>
 </section>
 
-<% if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) { %>
-  <section class="generator-section tool-model-starters">
-    <div class="container">
-      <div class="generator-section-header">
-        <span class="generator-eyebrow">Choose a T-shirt model</span>
-        <h2>Start your T-shirt mockup with the right fit</h2>
-        <p>Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.</p>
-      </div>
-      <div class="generator-output-grid">
-        <% toolPage.modelStarters.forEach(function(model) { %>
-          <a class="generator-output-card" href="<%= model.href %>">
-            <h3><%= model.title %></h3>
-            <p><%= model.body %></p>
-            <strong>Open free 3D model →</strong>
-          </a>
-        <% }); %>
-      </div>
-    </div>
-  </section>
-<% } %>
+
 
 <section class="generator-section generator-section-muted">
   <div class="container">
@@ -175,6 +179,7 @@
 <% const pickerLinks = [
   ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
   ['/tools/hoodie-mockup-generator', 'Hoodie mockups'],
+  ['/tools/3d-pants-generator', '3D Pants Generator'],
   ['/tools/dress-designer', 'Online dress designer'],
   ['/tools/3d-clothing-mockup-generator', '3D clothing mockups'],
   ['/tools/bulk-t-shirt-mockup-generator', 'Bulk colorways'],
@@ -188,6 +193,7 @@
   ['/mockups', 'All 3D models']
 ].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); %>
 <% const toolGuideMap = {
+  '3d-pants-generator': [['/blog/3d-pants-design-and-mockup-guide', '3D pants design and mockup guide']],
   'dress-designer': [
     ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
     ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
@@ -347,7 +353,7 @@
       const download = document.getElementById('toolDownloadPreview');
       const status = document.getElementById('toolPreviewStatus');
       const isBulkTool = <%- JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') %>;
-      const modelViewerSrc = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';
+      const modelViewerSrc = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';
       let viewerReadyPromise = null;
       if (!viewer || !stage || !preview) return;
 
@@ -393,8 +399,8 @@
         stage.classList.remove('is-error');
         stage.classList.add('is-loading');
         stage.setAttribute('aria-busy', 'true');
-        if (loadPreview) loadPreview.querySelector('span').textContent = 'Loading 3D preview…';
-        status.textContent = 'Loading the interactive garment only once…';
+        if (loadPreview) loadPreview.hidden = true;
+        status.textContent = 'Preparing preview…';
 
         viewerReadyPromise = loadModelViewerModule()
           .then(() => {
@@ -419,8 +425,8 @@
             stage.classList.remove('is-loading');
             stage.classList.add('is-error');
             stage.setAttribute('aria-busy', 'false');
-            if (loadPreview) loadPreview.querySelector('span').textContent = 'Retry interactive 3D';
-            status.textContent = 'The fast preview is still available. Retry 3D or open the full editor.';
+            if (loadPreview) loadPreview.hidden = false;
+            status.textContent = 'Preview unavailable. Try again or open the editor.';
             throw error;
           });
 
@@ -437,6 +443,8 @@
         materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));
         status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';
       };
+
+      ensureViewerReady().catch(() => {});
 
       loadPreview?.addEventListener('click', () => {
         ensureViewerReady().catch(() => {});

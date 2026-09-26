@@ -18,6 +18,7 @@ const robotsPath = path.resolve(__dirname, '..', 'public', 'robots.txt');
 const staticToolPaths = [
   '/tools/t-shirt-mockup-generator',
   '/tools/hoodie-mockup-generator',
+  '/tools/3d-pants-generator',
   '/tools/dress-designer',
   '/tools/3d-clothing-mockup-generator',
   '/tools/bulk-t-shirt-mockup-generator',
@@ -31,6 +32,7 @@ const staticToolPaths = [
 ];
 
 const staticToolImages = {
+  '/tools/3d-pants-generator': siteImage('categories/pants.webp'),
   '/tools/t-shirt-mockup-generator': siteImage('mockups/t-shirt-mockup-generator.webp'),
   '/tools/hoodie-mockup-generator': siteImage('mockups/hoodie-mockup-generator.webp'),
   '/tools/dress-designer': modelCover('dress-3d-model-06-29e39d9a.webp'),

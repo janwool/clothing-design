@@ -5168,7 +5168,7 @@ title = __locals.title,
         ['/mockups/coat', 'Coat and outerwear 3D models']
       ],
       'pants': [
-        ['/tools/3d-clothing-mockup-generator', 'Free 3D pants design tool'],
+        ['/tools/3d-pants-generator', '3D Pants Generator'],
         ['/tools/transparent-apparel-mockup-generator', 'Transparent pants mockups'],
         ['/mockups/top', 'Pair with free 3D top models']
       ],
@@ -7729,6 +7729,271 @@ title = __locals.title,
   return __output;
 
 },
+  "pants-generator-landing.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  authLoginUrl = __locals.authLoginUrl,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  feedbackFilters = __locals.feedbackFilters,
+  feedbackPagination = __locals.feedbackPagination,
+  feedbackStats = __locals.feedbackStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  imageFilters = __locals.imageFilters,
+  imagePagination = __locals.imagePagination,
+  imageStats = __locals.imageStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant;
+    ; __append( include('partials/header', { pageStyles: ['/css/pants-generator.css?v=3-workflow'] }) )
+    ; __append("\n")
+    ; 
+const pgModels = toolPage.modelStarters || [];
+const first = pgModels[0];
+const editor = first ? first.href + '#design' : '/mockups/pants';
+const colors = [['#e8e7e2','Bone'],['#747968','Olive'],['#54565a','Slate'],['#272727','Black']];
+
+    ; __append("\n<div class=\"pg\">\n  <section class=\"pg-hero pg-shell\" aria-labelledby=\"pg-title\">\n    <div class=\"pg-hero-copy\">\n      <nav class=\"pg-breadcrumb\" aria-label=\"Breadcrumb\"><a href=\"/tools\">Tools</a><span>/</span><span>3D Pants Generator</span></nav>\n      <p class=\"pg-label\">3D pants generator</p>\n      <h1 id=\"pg-title\">Design your pants.<br><span>See every angle.</span></h1>\n      <p class=\"pg-lede\">Choose a silhouette, explore colors, and place your artwork on a 3D pants model. Preview your design before the first sample.</p>\n      <div class=\"pg-actions\"><a href=\"")
+    ; __append(escapeFn( editor ))
+    ; __append("\" class=\"pg-button pg-button-dark\" data-pg-editor>Open pants editor <span aria-hidden=\"true\">↗</span></a><a href=\"/mockups/pants\" class=\"pg-button pg-button-outline\">Explore fits <span aria-hidden=\"true\">↗</span></a></div>\n      <div class=\"pg-hero-notes\"><span>360° garment views</span><span>Custom artwork</span><span>Browser-based editor</span></div>\n    </div>\n    <div class=\"pg-studio\" id=\"pants-studio\" aria-label=\"Pants preview\">\n      <div class=\"pg-studio-head\"><span class=\"pg-live\"><i></i>3D preview</span><span data-pg-title>")
+    ; __append(escapeFn( first ? first.title : 'Pants collection' ))
+    ; __append("</span></div>\n      ")
+    ;  if (first) { 
+    ; __append("\n        <div class=\"pg-stage\" aria-busy=\"true\">\n          <img class=\"pg-poster\" src=\"")
+    ; __append(escapeFn( first.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( first.title ))
+    ; __append("\" width=\"640\" height=\"640\" fetchpriority=\"high\">\n          <model-viewer id=\"pantsViewer\" src=\"")
+    ; __append(escapeFn( first.modelSrc ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( first.title ))
+    ; __append(" interactive preview\" camera-controls touch-action=\"pan-y\" interaction-prompt=\"none\" loading=\"eager\" reveal=\"auto\" camera-orbit=\"0deg 78deg 112%\" shadow-intensity=\"0.32\" shadow-softness=\"0.9\" exposure=\"0.82\" environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\" tone-mapping=\"commerce\"></model-viewer>\n          <div class=\"pg-angles\" aria-label=\"Viewing angle\">")
+    ;  ['Front','Side','Back'].forEach((angle,i)=>{ 
+    ; __append("<button type=\"button\" data-pg-angle=\"")
+    ; __append(escapeFn( i * 90 ))
+    ; __append("\" aria-pressed=\"")
+    ; __append(escapeFn( i === 0 ))
+    ; __append("\">")
+    ; __append(escapeFn( angle ))
+    ; __append("</button>")
+    ;  }); 
+    ; __append("</div>\n          <button class=\"pg-retry\" type=\"button\" hidden>Retry preview</button>\n        </div>\n        <div class=\"pg-studio-controls\"><div class=\"pg-colors\" aria-label=\"Garment colors\"><span>Color</span>")
+    ;  colors.forEach((color,i)=>{ 
+    ; __append("<button type=\"button\" style=\"--swatch:")
+    ; __append(escapeFn( color[0] ))
+    ; __append("\" data-pg-color=\"")
+    ; __append(escapeFn( color[0] ))
+    ; __append("\" aria-label=\"")
+    ; __append(escapeFn( color[1] ))
+    ; __append("\" aria-pressed=\"")
+    ; __append(escapeFn( i === 0 ))
+    ; __append("\"></button>")
+    ;  }); 
+    ; __append("</div><a class=\"pg-button pg-button-dark pg-customize\" href=\"")
+    ; __append(escapeFn( editor ))
+    ; __append("\" data-pg-editor>Customize <span aria-hidden=\"true\">↗</span></a></div>\n        <div class=\"pg-studio-foot\"><span data-pg-status role=\"status\">Preparing preview…</span><span>Drag to rotate · Scroll to zoom</span></div>\n      ")
+    ;  } else { 
+    ; __append("\n        <div class=\"pg-empty\"><img src=\"")
+    ; __append(escapeFn( toolPage.image ))
+    ; __append("\" alt=\"Pants collection\" width=\"400\" height=\"400\"><p>Explore the pants collection to find your starting point.</p><a href=\"/mockups/pants\" class=\"pg-button pg-button-dark\">Browse pants</a></div>\n      ")
+    ;  } 
+    ; __append("\n    </div>\n  </section>\n  <section class=\"pg-shell pg-section\" id=\"pants-fits\" aria-labelledby=\"pg-fit-title\">\n    <div class=\"pg-section-heading\"><div><p class=\"pg-label\">Explore fits</p><h2 id=\"pg-fit-title\">Start with the<br>right silhouette.</h2></div><a href=\"/mockups/pants\" class=\"pg-text-link\">View all pants models <span aria-hidden=\"true\">↗</span></a></div>\n    <div class=\"pg-model-grid\">")
+    ;  pgModels.forEach((model,i)=>{ 
+    ; __append("<article class=\"pg-model-card")
+    ; __append(escapeFn( i === 0 ? ' is-selected' : '' ))
+    ; __append("\"><button type=\"button\" class=\"pg-model-select\" data-pg-model data-src=\"")
+    ; __append(escapeFn( model.modelSrc ))
+    ; __append("\" data-image=\"")
+    ; __append(escapeFn( model.image ))
+    ; __append("\" data-title=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" data-href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("#design\" aria-label=\"Preview ")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" aria-pressed=\"")
+    ; __append(escapeFn( i === 0 ))
+    ; __append("\"><span class=\"pg-selected-tag\">")
+    ; __append(escapeFn( i === 0 ? 'Selected' : 'Preview in 3D' ))
+    ; __append("</span><img src=\"")
+    ; __append(escapeFn( model.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" width=\"400\" height=\"460\" loading=\"lazy\"><span class=\"pg-model-name\">")
+    ; __append(escapeFn( model.title.replace(/ Pants$/i,'') ))
+    ; __append("<span aria-hidden=\"true\">↗</span></span></button><a class=\"pg-model-edit\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("#design\">Customize this fit <span aria-hidden=\"true\">→</span></a></article>")
+    ;  }); 
+    ; __append("</div>\n    ")
+    ;  if (!pgModels.length) { 
+    ; __append("<p class=\"pg-muted\">Browse the full collection for available pants models.</p>")
+    ;  } 
+    ; __append("\n  </section>\n  <section class=\"pg-workflow pg-section\" aria-labelledby=\"pg-workflow-title\"><div class=\"pg-shell\">\n    <div class=\"pg-section-heading\"><div><p class=\"pg-label\">How it works</p><h2 id=\"pg-workflow-title\">From a blank model<br>to your design.</h2></div><p class=\"pg-aside\">Choose your fit here.<br>Finish the details in the editor.</p></div>\n    <ol class=\"pg-step-grid pg-workflow-stages\">\n      ")
+    ;  [
+        ['Choose your base', 'Select a pants silhouette as the starting point for your design.', 'Blank cargo pants before customization', 'Base model'],
+        ['Add your artwork', 'Set the garment color, then position and scale your logo or graphic.', 'The same cargo pants in olive with a STUDIO 01 graphic selected for placement', 'Artwork placement'],
+        ['Export your view', 'Review the finished design and choose your export options in the editor.', 'The finished olive cargo pants with the same STUDIO 01 graphic, without editing controls', 'Finished preview']
+      ].forEach((step,i)=>{ 
+    ; __append("\n        <li>\n          <div class=\"pg-step-copy\"><span class=\"pg-number\">0")
+    ; __append(escapeFn( i+1 ))
+    ; __append("</span><h3>")
+    ; __append(escapeFn( step[0] ))
+    ; __append("</h3><p>")
+    ; __append(escapeFn( step[1] ))
+    ; __append("</p></div>\n          <div class=\"pg-workflow-image\" role=\"img\" aria-label=\"")
+    ; __append(escapeFn( step[2] ))
+    ; __append("\" style=\"--stage:")
+    ; __append(escapeFn( i ))
+    ; __append("\"></div>\n          <div class=\"pg-workflow-caption\"><span>")
+    ; __append(escapeFn( step[3] ))
+    ; __append("</span>")
+    ;  if (i === 0) { 
+    ; __append("<span class=\"pg-workflow-badge\">Selected</span>")
+    ;  } else if (i === 1) { 
+    ; __append("<span class=\"pg-workflow-swatch\" aria-label=\"Olive garment color\"></span>")
+    ;  } else { 
+    ; __append("<span>PNG ↗</span>")
+    ;  } 
+    ; __append("</div>\n        </li>\n      ")
+    ;  }); 
+    ; __append("\n    </ol>\n  </div></section>\n  <section class=\"pg-shell pg-section pg-usecases\" aria-labelledby=\"pg-use-title\">\n    <div class=\"pg-detail-image\">")
+    ;  if (first) { 
+    ; __append("<img src=\"")
+    ; __append(escapeFn( first.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( first.title ))
+    ; __append(" garment details\" width=\"640\" height=\"640\" loading=\"lazy\">")
+    ;  } 
+    ; __append("<div class=\"pg-palette\"><span>Color studies</span><div>")
+    ;  colors.forEach(color=>{ 
+    ; __append("<i style=\"background:")
+    ; __append(escapeFn( color[0] ))
+    ; __append("\"></i>")
+    ;  }); 
+    ; __append("</div></div><span class=\"pg-image-caption\">PANTS / DESIGN STUDY</span></div>\n    <div class=\"pg-use-copy\"><p class=\"pg-label\">Made for your workflow</p><h2 id=\"pg-use-title\">Preview the product.<br>Refine the details.</h2>")
+    ;  [['Collection planning','Compare colors and graphics before committing to samples.'],['Product imagery','Create consistent garment views for catalog and listing drafts.'],['Team reviews','Share a clear reference for artwork scale and placement.']].forEach((item,i)=>{ 
+    ; __append("<div class=\"pg-use-row\"><span class=\"pg-number\">0")
+    ; __append(escapeFn( i+1 ))
+    ; __append("</span><div><h3>")
+    ; __append(escapeFn( item[0] ))
+    ; __append("</h3><p>")
+    ; __append(escapeFn( item[1] ))
+    ; __append("</p></div></div>")
+    ;  }); 
+    ; __append("</div>\n  </section>\n  <section class=\"pg-faq pg-section\"><div class=\"pg-shell pg-faq-grid\"><div><p class=\"pg-label\">Questions &amp; answers</p><h2>Before you start.</h2><p class=\"pg-aside\">A few details about models,<br>artwork, and exports.</p></div><div>")
+    ;  toolPage.faq.forEach(item=>{ 
+    ; __append("<details><summary>")
+    ; __append(escapeFn( item.question ))
+    ; __append("<span aria-hidden=\"true\">+</span></summary><p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p></details>")
+    ;  }); 
+    ; __append("</div></div></section>\n  <section class=\"pg-shell pg-closing\"><div class=\"pg-cta\"><div><p class=\"pg-label\">Ready to design?</p><h2>Create your pants mockup.</h2><p>Start with a model. Make it your own.</p></div><a class=\"pg-button pg-button-lime\" href=\"")
+    ; __append(escapeFn( editor ))
+    ; __append("\" data-pg-editor>Open pants editor <span aria-hidden=\"true\">↗</span></a></div><nav class=\"pg-related\" aria-label=\"Related tools\"><span>Keep designing</span><a href=\"/tools/t-shirt-mockup-generator\">T-shirt mockups ↗</a><a href=\"/tools/hoodie-mockup-generator\">Hoodie mockups ↗</a><a href=\"/blog/3d-pants-design-and-mockup-guide\">Pants design guide ↗</a></nav></section>\n</div>\n")
+    ;  if (first) { 
+    ; __append("\n<script>window.ModelViewerElement = window.ModelViewerElement || {}; window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';</script>\n<script src=\"/js/pants-generator.js?v=2\" defer></script>\n<script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n")
+    ;  } 
+    ; __append("\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
   "partials/category-icon.ejs": function anonymous(locals, escapeFn, include, rethrow
 ) {
 escapeFn = escapeFn || function (markup) {
@@ -8534,7 +8799,7 @@ title = __locals.title,
     ; __append(escapeFn( typeof page !== 'undefined' && page === 'tools' ? 'active' : '' ))
     ; __append("\" type=\"button\" aria-expanded=\"false\">\n            ")
     ; __append(escapeFn( t('nav.tools') ))
-    ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, colorways, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>Online Dress Designer</span>\n                    <small>Design a dress on a live 3D garment model.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Design & Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                  <a href=\"/tools/transparent-apparel-mockup-generator\" class=\"dropdown-item\">\n                    <span>Transparent Apparel Mockups</span>\n                    <small>Export clean transparent product visuals.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">")
+    ; __append("\n            <svg class=\"dropdown-arrow\" width=\"12\" height=\"12\" viewBox=\"0 0 12 12\" fill=\"none\">\n              <path d=\"M2.5 4.5L6 8L9.5 4.5\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n            </svg>\n          </button>\n          <div class=\"dropdown-menu tools-mega-menu\">\n            <div class=\"tools-mega-inner\">\n              <div class=\"tools-mega-intro\">\n                <span class=\"tools-mega-eyebrow\">Free clothing design tools</span>\n                <strong>Pick a mockup workflow</strong>\n                <p>Browser-based tools for apparel mockups, print placement, colorways, and product listing visuals.</p>\n              </div>\n              <div class=\"tools-mega-grid\">\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Mockup generators</span>\n                  <a href=\"/tools/t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>T-Shirt Mockup Generator</span>\n                    <small>Free front, back, and colorway mockups.</small>\n                  </a>\n                  <a href=\"/tools/hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Hoodie Mockup Generator</span>\n                    <small>Build hoodie previews for print tests.</small>\n                  </a>\n                  <a href=\"/tools/3d-pants-generator\" class=\"dropdown-item\"><span>3D Pants Generator</span></a>\n                  <a href=\"/tools/dress-designer\" class=\"dropdown-item\">\n                    <span>Online Dress Designer</span>\n                    <small>Design a dress on a live 3D garment model.</small>\n                  </a>\n                  <a href=\"/tools/3d-clothing-mockup-generator\" class=\"dropdown-item\">\n                    <span>3D Clothing Design & Mockup Generator</span>\n                    <small>Use 3D models for apparel mockups.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Production previews</span>\n                  <a href=\"/tools/bulk-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Bulk T-Shirt Mockup Generator</span>\n                    <small>Create many colorways faster.</small>\n                  </a>\n                  <a href=\"/tools/print-on-demand-mockup-generator\" class=\"dropdown-item\">\n                    <span>POD Mockup Generator</span>\n                    <small>Prepare marketplace listing images.</small>\n                  </a>\n                  <a href=\"/tools/transparent-apparel-mockup-generator\" class=\"dropdown-item\">\n                    <span>Transparent Apparel Mockups</span>\n                    <small>Export clean transparent product visuals.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">")
     ; __append(escapeFn( t('tools.designTools') ))
     ; __append("</span>\n                  <a href=\"/tools/oversized-t-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Oversized T-Shirt Mockups</span>\n                    <small>Design on a relaxed drop-shoulder fit.</small>\n                  </a>\n                  <a href=\"/tools/polo-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Polo Shirt Mockups</span>\n                    <small>Preview uniforms and chest logos.</small>\n                  </a>\n                  <a href=\"/tools/front-and-back-t-shirt-mockup\" class=\"dropdown-item\">\n                    <span>Front &amp; Back T-Shirt Mockups</span>\n                    <small>Review both sides of a garment together.</small>\n                  </a>\n                  <a href=\"/tools/long-sleeve-shirt-mockup-generator\" class=\"dropdown-item\">\n                    <span>Long-Sleeve Shirt Mockups</span>\n                    <small>Place artwork across sleeves and body.</small>\n                  </a>\n                  <a href=\"/tools/streetwear-hoodie-mockup-generator\" class=\"dropdown-item\">\n                    <span>Streetwear Hoodie Mockups</span>\n                    <small>Build relaxed streetwear presentations.</small>\n                  </a>\n                </div>\n                <div class=\"dropdown-section\">\n                  <span class=\"dropdown-label\">Free resources</span>\n                  <a href=\"/mockups\" class=\"dropdown-item\">\n                    <span>Free 3D Models</span>\n                    <small>Browse editable garment models.</small>\n                  </a>\n                  <a href=\"/blog\" class=\"dropdown-item\">\n                    <span>Clothing Design Guides</span>\n                    <small>Learn mockup and apparel workflows.</small>\n                  </a>\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>\n      </div>\n\n      <!-- Right Side -->\n      <div class=\"navbar-actions\">\n        ")
     ;  if (user) { 
@@ -9057,7 +9322,7 @@ title = __locals.title,
     ; __append("</h1>\n    <section class=\"share-stage\" aria-label=\"")
     ; __append(escapeFn( share.name ))
     ; __append(" 3D design\">\n      ")
-    ;  if (share.model_url) {
+    ;  if (share.model_url) { 
     ; __append("\n        <model-viewer\n          src=\"")
     ; __append(escapeFn( share.model_url ))
     ; __append("\"\n          poster=\"")
@@ -9065,19 +9330,19 @@ title = __locals.title,
     ; __append("\"\n          alt=\"Interactive 3D view of ")
     ; __append(escapeFn( share.name ))
     ; __append("\"\n          camera-controls\n          disable-tap\n          interaction-prompt=\"none\"\n          loading=\"eager\"\n          reveal=\"auto\"\n          camera-orbit=\"0deg 72deg 142%\"\n          field-of-view=\"28deg\"\n          shadow-intensity=\"0.32\"\n          shadow-softness=\"0.9\"\n          exposure=\"0.7\"\n          environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n          tone-mapping=\"commerce\"\n        ></model-viewer>\n      ")
-    ;  } else {
+    ;  } else { 
     ; __append("\n        <img class=\"share-poster\" src=\"")
     ; __append(escapeFn( share.preview_image_url ))
     ; __append("\" alt=\"Preview of ")
     ; __append(escapeFn( share.name ))
     ; __append("\">\n      ")
-    ;  }
+    ;  } 
     ; __append("\n      <footer class=\"share-footer\">\n        <a class=\"share-brand\" href=\"/\" aria-label=\"ClozDesign home\">\n          <img src=\"/images/brand/clozdesign-icon.png\" alt=\"\" width=\"40\" height=\"40\">\n          <span>ClozDesign</span>\n        </a>\n        <a class=\"share-create\" href=\"")
     ; __append(escapeFn( share.source_url ))
     ; __append("\">\n          I want to design too <span aria-hidden=\"true\">↗</span>\n        </a>\n      </footer>\n    </section>\n  </main>\n  ")
-    ;  if (share.model_url) {
+    ;  if (share.model_url) { 
     ; __append("\n    <script>window.ModelViewerElement=window.ModelViewerElement||{};window.ModelViewerElement.meshoptDecoderLocation='/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';</script>\n    <script type=\"module\" src=\"/vendor/model-viewer/model-viewer.min.js?v=4.3.1\"></script>\n  ")
-    ;  }
+    ;  } 
     ; __append("\n</body>\n</html>\n")
   return __output;
 
@@ -9390,7 +9655,7 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
     ; __append("\"\n              camera-controls\n              camera-orbit=\"0deg 75deg 110%\"\n              shadow-intensity=\"0.32\"\n              shadow-softness=\"0.9\"\n              exposure=\"0.82\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-camera-relative-studio-light=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-studio-light-reference-azimuth=\"-16\"\n              data-studio-light-azimuth-offset=\"45\"\n              tone-mapping=\"commerce\"\n              aria-label=\"")
     ; __append(escapeFn( toolPage.heroModel.alt || toolPage.title ))
-    ; __append("\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary tool-model-load\" id=\"toolLoadPreview\">\n              <i class=\"tool-model-spinner\" aria-hidden=\"true\"></i>\n              <span>Load interactive 3D</span>\n              <small>Loads only when you need it</small>\n            </button>\n          </div>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
+    ; __append("\"\n              hidden\n            ></model-viewer>\n            <button type=\"button\" class=\"btn btn-secondary tool-model-load\" id=\"toolLoadPreview\" hidden>\n              <i class=\"tool-model-spinner\" aria-hidden=\"true\"></i>\n              <span>Retry preview</span>\n            </button>\n          </div>\n          <div class=\"tool-quick-editor\" aria-label=\"Quick 3D mockup controls\">\n            <div class=\"tool-control-group tool-color-controls\">\n              <span>Color</span>\n              ")
     ;  ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) { 
     ; __append("\n                <button type=\"button\" class=\"tool-color-swatch")
     ; __append(escapeFn( index === 0 ? ' active' : '' ))
@@ -9404,7 +9669,7 @@ title = __locals.title,
     ;  }); 
     ; __append("\n            </div>\n            <div class=\"tool-control-group tool-angle-controls\" aria-label=\"Model view\">\n              <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n              <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n              <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n            </div>\n            <div class=\"tool-preview-actions\">\n              <label class=\"btn btn-primary tool-upload-button\">\n                Upload artwork\n                <input id=\"toolArtworkUpload\" type=\"file\" accept=\"image/png,image/jpeg,image/webp,image/svg+xml\" hidden>\n              </label>\n              <button type=\"button\" class=\"btn btn-secondary\" id=\"toolDownloadPreview\">")
     ; __append(escapeFn( toolPage.slug === 'bulk-t-shirt-mockup-generator' ? 'Download colorway sheet' : 'Download PNG' ))
-    ; __append("</button>\n            </div>\n            <p class=\"tool-preview-status\" id=\"toolPreviewStatus\" aria-live=\"polite\">View the fast preview, or load 3D to rotate and export it.</p>\n          </div>\n        </div>\n      ")
+    ; __append("</button>\n            </div>\n            <p class=\"tool-preview-status\" id=\"toolPreviewStatus\" aria-live=\"polite\">Preparing preview…</p>\n          </div>\n        </div>\n      ")
     ;  } else { 
     ; __append("\n        <img src=\"")
     ; __append(escapeFn( toolPage.image ))
@@ -9412,7 +9677,39 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.title ))
     ; __append(" preview image\">\n      ")
     ;  } 
-    ; __append("\n    </div>\n  </div>\n</section>\n\n<div class=\"container\">\n  ")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n")
+    ;  if (['t-shirt-mockup-generator', '3d-pants-generator'].includes(toolPage.slug) && toolPage.modelStarters && toolPage.modelStarters.length) { 
+    ; __append("\n  <section class=\"generator-section tool-model-starters\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">")
+    ; __append(escapeFn( toolPage.starterEyebrow || 'Choose a T-shirt model' ))
+    ; __append("</span>\n        <h2>")
+    ; __append(escapeFn( toolPage.starterTitle || 'Start your T-shirt mockup with the right fit' ))
+    ; __append("</h2>\n        <p>")
+    ; __append(escapeFn( toolPage.starterSubtitle || 'Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.' ))
+    ; __append("</p>\n      </div>\n      <div class=\"generator-output-grid\">\n        ")
+    ;  toolPage.modelStarters.forEach(function(model) { 
+    ; __append("\n          <a class=\"generator-output-card\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("\">\n            ")
+    ;  if (toolPage.slug === '3d-pants-generator') { 
+    ; __append("\n              <img src=\"")
+    ; __append(escapeFn( model.image ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( model.title ))
+    ; __append("\" width=\"320\" height=\"320\" loading=\"lazy\" class=\"pants-starter-image\">\n            ")
+    ;  } 
+    ; __append("\n            <h3>")
+    ; __append(escapeFn( model.title ))
+    ; __append("</h3>\n            ")
+    ;  if (toolPage.slug !== '3d-pants-generator') { 
+    ; __append("<p>")
+    ; __append(escapeFn( model.body ))
+    ; __append("</p>")
+    ;  } 
+    ; __append("\n            <strong>Open free 3D model →</strong>\n          </a>\n        ")
+    ;  }); 
+    ; __append("\n      </div>\n    </div>\n  </section>\n")
+    ;  } 
+    ; __append("\n\n<div class=\"container\">\n  ")
     ; __append( include('partials/share-panel', {
     shareSurface: 'tool',
     shareTitle: toolPage.title,
@@ -9447,21 +9744,7 @@ title = __locals.title,
     ; __append(escapeFn( toolPage.planningTitle || 'Turn a garment idea into a clearer mockup direction' ))
     ; __append("</h2>\n      </div>\n      <p>")
     ; __append(escapeFn( toolPage.intent ))
-    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n")
-    ;  if (toolPage.slug === 't-shirt-mockup-generator' && toolPage.modelStarters && toolPage.modelStarters.length) { 
-    ; __append("\n  <section class=\"generator-section tool-model-starters\">\n    <div class=\"container\">\n      <div class=\"generator-section-header\">\n        <span class=\"generator-eyebrow\">Choose a T-shirt model</span>\n        <h2>Start your T-shirt mockup with the right fit</h2>\n        <p>Pick a classic, oversized, polo, or long-sleeve model before testing garment colors and artwork placement.</p>\n      </div>\n      <div class=\"generator-output-grid\">\n        ")
-    ;  toolPage.modelStarters.forEach(function(model) { 
-    ; __append("\n          <a class=\"generator-output-card\" href=\"")
-    ; __append(escapeFn( model.href ))
-    ; __append("\">\n            <h3>")
-    ; __append(escapeFn( model.title ))
-    ; __append("</h3>\n            <p>")
-    ; __append(escapeFn( model.body ))
-    ; __append("</p>\n            <strong>Open free 3D model →</strong>\n          </a>\n        ")
-    ;  }); 
-    ; __append("\n      </div>\n    </div>\n  </section>\n")
-    ;  } 
-    ; __append("\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
+    ; __append("</p>\n    </div>\n  </div>\n</section>\n\n\n\n<section class=\"generator-section generator-section-muted\">\n  <div class=\"container\">\n    <div class=\"generator-section-header\">\n      <span class=\"generator-eyebrow\">")
     ; __append(escapeFn( toolPage.benefitsEyebrow || 'Why teams use it' ))
     ; __append("</span>\n      <h2>")
     ; __append(escapeFn( toolPage.benefitsTitle || 'Preview the product before you spend on samples' ))
@@ -9479,6 +9762,7 @@ title = __locals.title,
     ;  const pickerLinks = [
   ['/tools/t-shirt-mockup-generator', 'T-shirt mockups'],
   ['/tools/hoodie-mockup-generator', 'Hoodie mockups'],
+  ['/tools/3d-pants-generator', '3D Pants Generator'],
   ['/tools/dress-designer', 'Online dress designer'],
   ['/tools/3d-clothing-mockup-generator', '3D clothing mockups'],
   ['/tools/bulk-t-shirt-mockup-generator', 'Bulk colorways'],
@@ -9493,6 +9777,7 @@ title = __locals.title,
 ].filter(function(link) { return link[0] !== `/tools/${toolPage.slug}`; }); 
     ; __append("\n")
     ;  const toolGuideMap = {
+  '3d-pants-generator': [['/blog/3d-pants-design-and-mockup-guide', '3D pants design and mockup guide']],
   'dress-designer': [
     ['/blog/how-to-design-a-dress-online-free', 'How to design a dress online for free'],
     ['/blog/plan-a-clothing-collection-online-free', 'Plan a clothing collection online'],
@@ -9613,11 +9898,11 @@ title = __locals.title,
     ;  if (toolPage.heroModel && toolPage.heroModel.src) { 
     ; __append("\n  <script>\n    (() => {\n      const viewer = document.getElementById('toolHeroModelViewer');\n      const stage = document.getElementById('toolModelStage');\n      const loadPreview = document.getElementById('toolLoadPreview');\n      const preview = document.querySelector('.tool-live-preview');\n      const upload = document.getElementById('toolArtworkUpload');\n      const download = document.getElementById('toolDownloadPreview');\n      const status = document.getElementById('toolPreviewStatus');\n      const isBulkTool = ")
     ; __append( JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') )
-    ; __append(";\n      const modelViewerSrc = 'https://unpkg.com/@google/model-viewer@4.3.1/dist/model-viewer.min.js';\n      let viewerReadyPromise = null;\n      if (!viewer || !stage || !preview) return;\n\n      const withTimeout = (promise, milliseconds, message) => Promise.race([\n        promise,\n        new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n      ]);\n\n      const loadModelViewerModule = () => {\n        if (customElements.get('model-viewer')) return Promise.resolve();\n        const existing = document.querySelector('script[data-tool-model-viewer]');\n        const scriptReady = existing\n          ? new Promise((resolve, reject) => {\n              existing.addEventListener('load', resolve, { once: true });\n              existing.addEventListener('error', reject, { once: true });\n            })\n          : new Promise((resolve, reject) => {\n              const script = document.createElement('script');\n              script.type = 'module';\n              script.src = modelViewerSrc;\n              script.dataset.toolModelViewer = 'true';\n              script.addEventListener('load', resolve, { once: true });\n              script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n              document.head.appendChild(script);\n            });\n        return withTimeout(scriptReady, 15000, '3D viewer timed out')\n          .then(() => withTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n      };\n\n      const waitForModel = () => {\n        if (viewer.loaded) return Promise.resolve();\n        return withTimeout(new Promise((resolve, reject) => {\n          viewer.addEventListener('load', resolve, { once: true });\n          viewer.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n          viewer.src = viewer.dataset.modelSrc;\n        }), 45000, '3D model timed out');\n      };\n\n      const ensureViewerReady = () => {\n        if (viewer.loaded && customElements.get('model-viewer')) return Promise.resolve(viewer);\n        if (viewerReadyPromise) return viewerReadyPromise;\n\n        stage.classList.remove('is-error');\n        stage.classList.add('is-loading');\n        stage.setAttribute('aria-busy', 'true');\n        if (loadPreview) loadPreview.querySelector('span').textContent = 'Loading 3D preview…';\n        status.textContent = 'Loading the interactive garment only once…';\n\n        viewerReadyPromise = loadModelViewerModule()\n          .then(() => {\n            viewer.hidden = false;\n            return waitForModel();\n          })\n          .then(() => {\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-ready');\n            stage.setAttribute('aria-busy', 'false');\n            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';\n            window.trackEvent?.(")
+    ; __append(";\n      const modelViewerSrc = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n      let viewerReadyPromise = null;\n      if (!viewer || !stage || !preview) return;\n\n      const withTimeout = (promise, milliseconds, message) => Promise.race([\n        promise,\n        new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n      ]);\n\n      const loadModelViewerModule = () => {\n        if (customElements.get('model-viewer')) return Promise.resolve();\n        const existing = document.querySelector('script[data-tool-model-viewer]');\n        const scriptReady = existing\n          ? new Promise((resolve, reject) => {\n              existing.addEventListener('load', resolve, { once: true });\n              existing.addEventListener('error', reject, { once: true });\n            })\n          : new Promise((resolve, reject) => {\n              const script = document.createElement('script');\n              script.type = 'module';\n              script.src = modelViewerSrc;\n              script.dataset.toolModelViewer = 'true';\n              script.addEventListener('load', resolve, { once: true });\n              script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n              document.head.appendChild(script);\n            });\n        return withTimeout(scriptReady, 15000, '3D viewer timed out')\n          .then(() => withTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n      };\n\n      const waitForModel = () => {\n        if (viewer.loaded) return Promise.resolve();\n        return withTimeout(new Promise((resolve, reject) => {\n          viewer.addEventListener('load', resolve, { once: true });\n          viewer.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n          viewer.src = viewer.dataset.modelSrc;\n        }), 45000, '3D model timed out');\n      };\n\n      const ensureViewerReady = () => {\n        if (viewer.loaded && customElements.get('model-viewer')) return Promise.resolve(viewer);\n        if (viewerReadyPromise) return viewerReadyPromise;\n\n        stage.classList.remove('is-error');\n        stage.classList.add('is-loading');\n        stage.setAttribute('aria-busy', 'true');\n        if (loadPreview) loadPreview.hidden = true;\n        status.textContent = 'Preparing preview…';\n\n        viewerReadyPromise = loadModelViewerModule()\n          .then(() => {\n            viewer.hidden = false;\n            return waitForModel();\n          })\n          .then(() => {\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-ready');\n            stage.setAttribute('aria-busy', 'false');\n            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';\n            window.trackEvent?.(")
     ; __append( JSON.stringify(toolPage.slug + '_3d_preview_load') )
     ; __append(", {\n              interaction_type: 'load_3d_preview',\n              tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
-    ; __append("\n            });\n            return viewer;\n          })\n          .catch((error) => {\n            viewerReadyPromise = null;\n            viewer.hidden = true;\n            viewer.removeAttribute('src');\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-error');\n            stage.setAttribute('aria-busy', 'false');\n            if (loadPreview) loadPreview.querySelector('span').textContent = 'Retry interactive 3D';\n            status.textContent = 'The fast preview is still available. Retry 3D or open the full editor.';\n            throw error;\n          });\n\n        return viewerReadyPromise;\n      };\n\n      const hexFactor = (hex) => {\n        const value = parseInt(String(hex).replace('#', ''), 16);\n        return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n      };\n\n      const applyColor = (hex) => {\n        const materials = viewer.model?.materials || [];\n        materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));\n        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';\n      };\n\n      loadPreview?.addEventListener('click', () => {\n        ensureViewerReady().catch(() => {});\n      });\n\n      document.querySelectorAll('.tool-color-swatch').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            applyColor(button.dataset.color);\n          } catch (_) {}\n        });\n      });\n\n      document.querySelectorAll('.tool-angle-controls button').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            viewer.removeAttribute('auto-rotate');\n            viewer.cameraOrbit = button.dataset.orbit;\n            viewer.jumpCameraToGoal?.();\n            status.textContent = `${button.textContent} view selected.`;\n          } catch (_) {}\n        });\n      });\n\n      upload?.addEventListener('change', () => {\n        const file = upload.files?.[0];\n        if (!file) return;\n        if (file.size > 10 * 1024 * 1024) {\n          status.textContent = 'Choose an artwork file no larger than 10 MB.';\n          upload.value = '';\n          return;\n        }\n        const reader = new FileReader();\n        reader.onload = () => {\n          try {\n            sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({\n              dataUrl: reader.result,\n              name: file.name,\n              createdAt: Date.now()\n            }));\n          } catch (error) {\n            status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';\n            return;\n          }\n          window.trackEvent?.(")
+    ; __append("\n            });\n            return viewer;\n          })\n          .catch((error) => {\n            viewerReadyPromise = null;\n            viewer.hidden = true;\n            viewer.removeAttribute('src');\n            stage.classList.remove('is-loading');\n            stage.classList.add('is-error');\n            stage.setAttribute('aria-busy', 'false');\n            if (loadPreview) loadPreview.hidden = false;\n            status.textContent = 'Preview unavailable. Try again or open the editor.';\n            throw error;\n          });\n\n        return viewerReadyPromise;\n      };\n\n      const hexFactor = (hex) => {\n        const value = parseInt(String(hex).replace('#', ''), 16);\n        return [((value >> 16) & 255) / 255, ((value >> 8) & 255) / 255, (value & 255) / 255, 1];\n      };\n\n      const applyColor = (hex) => {\n        const materials = viewer.model?.materials || [];\n        materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));\n        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';\n      };\n\n      ensureViewerReady().catch(() => {});\n\n      loadPreview?.addEventListener('click', () => {\n        ensureViewerReady().catch(() => {});\n      });\n\n      document.querySelectorAll('.tool-color-swatch').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-color-swatch').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            applyColor(button.dataset.color);\n          } catch (_) {}\n        });\n      });\n\n      document.querySelectorAll('.tool-angle-controls button').forEach((button) => {\n        button.addEventListener('click', async () => {\n          try {\n            await ensureViewerReady();\n            document.querySelectorAll('.tool-angle-controls button').forEach((item) => item.classList.remove('active'));\n            button.classList.add('active');\n            viewer.removeAttribute('auto-rotate');\n            viewer.cameraOrbit = button.dataset.orbit;\n            viewer.jumpCameraToGoal?.();\n            status.textContent = `${button.textContent} view selected.`;\n          } catch (_) {}\n        });\n      });\n\n      upload?.addEventListener('change', () => {\n        const file = upload.files?.[0];\n        if (!file) return;\n        if (file.size > 10 * 1024 * 1024) {\n          status.textContent = 'Choose an artwork file no larger than 10 MB.';\n          upload.value = '';\n          return;\n        }\n        const reader = new FileReader();\n        reader.onload = () => {\n          try {\n            sessionStorage.setItem('clothingdesign_pending_artwork', JSON.stringify({\n              dataUrl: reader.result,\n              name: file.name,\n              createdAt: Date.now()\n            }));\n          } catch (error) {\n            status.textContent = 'The artwork is too large to transfer. Open the editor and upload it there.';\n            return;\n          }\n          window.trackEvent?.(")
     ; __append( JSON.stringify(toolPage.slug + '_artwork_upload_start') )
     ; __append(", {\n            design_entry: 'tool_artwork_upload',\n            tool_name: ")
     ; __append( JSON.stringify(toolPage.slug) )
@@ -9752,6 +10037,13 @@ title = __locals.title,
     ; __append("\n\n")
     ; 
 const toolDirectory = [
+  {
+    href: '/tools/3d-pants-generator',
+    title: '3D Pants Generator',
+    description: 'Customize pants colors, artwork, and 3D product views',
+    image: '/images/categories/pants.webp',
+    featured: true
+  },
   {
     href: '/tools/t-shirt-mockup-generator',
     title: 'T-Shirt Mockup Generator',

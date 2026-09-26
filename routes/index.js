@@ -394,6 +394,41 @@ async function getActiveHoodieModelStarters(req) {
   });
 }
 
+async function getActivePantsModelStarters(req) {
+  await ensureModelCategoryTable();
+  const models = await db.all(`
+    ${getModelCategorySelect()}
+    WHERE m.status = ?
+      AND COALESCE(m.file_url, '') != ''
+      AND COALESCE(m.image_url, '') != ''
+      AND (legacy_category.slug = ? OR EXISTS (
+        SELECT 1 FROM model_3d_categories mc_pants
+        JOIN categories category_pants ON category_pants.id = mc_pants.category_id
+        WHERE mc_pants.model_id = m.id
+          AND category_pants.resource_type = '3d-models'
+          AND category_pants.slug = ?
+      ))
+    ${getModelCategoryGroupBy()}
+    ORDER BY m.updated_at DESC, m.id ASC
+  `, ['active', 'pants', 'pants']);
+  const available = normalize3dModels(models);
+  const selected = [];
+  for (const style of [/relaxed/i, /tailored/i, /cargo/i, /jogger|sweatpant/i]) {
+    const match = available.find(model => !selected.includes(model) && style.test(model.name));
+    if (match) selected.push(match);
+  }
+  for (const model of available) {
+    if (selected.length < 4 && !selected.includes(model)) selected.push(model);
+  }
+  return selected.map(model => ({
+    title: String(model.name).replace(/\s+3D(?:\s+Garment)?\s+Model$/i, ''),
+    body: 'Customize colors and artwork, then review your pants from every angle.',
+    href: `/3d-models/${model.category_slug || 'pants'}/${model.slug}`,
+    image: model.image_url,
+    modelSrc: getPreviewModelFileUrl(model, req)
+  }));
+}
+
 const DRESS_STARTER_METADATA = {
   'classic-one-piece-dress-3d-model': {
     shortTitle: 'Classic',
@@ -976,6 +1011,46 @@ function buildCategoryStructuredData(req, category, items = [], resourceType, re
 const MOCKUP_GLB_BASE_URL = 'https://cdn.cloz-design.com/uploads/glb';
 
 const TOOL_PAGE_CONTENT = {
+  '3d-pants-generator': {
+    title: '3D Pants Generator',
+    eyebrow: 'Your next pair starts here',
+    image: siteImage('categories/pants.webp'),
+    subtitle: 'Create pants mockups in 3D. Choose a fit, try colors, upload artwork, and inspect front, side, and back views in your browser.',
+    intent: 'Start with an existing pants model to explore garment colors and artwork placement. Check graphics against the waistband, pockets, and leg proportions before sharing a collection concept or preparing product imagery.',
+    primaryKeyword: '3D pants generator',
+    keywords: ['3D pants mockup', 'pants design online', 'trousers mockup', 'cargo pants mockup', 'joggers mockup'],
+    outputHighlights: ['Interactive 3D preview', 'Color and artwork controls', 'No Photoshop required'],
+    competitorInsights: [
+      { title: 'Find the right fit', body: 'Compare available relaxed, tailored, cargo, and jogger silhouettes before starting your design.' },
+      { title: 'Check every angle', body: 'Rotate the pants to review artwork scale and placement around pockets, seams, and the legs.' },
+      { title: 'Build a color direction', body: 'Try garment colors on the same model for a consistent collection or product presentation.' }
+    ],
+    steps: [
+      { title: 'Choose your pants', body: 'Pick an available pants model with the silhouette closest to your product.' },
+      { title: 'Add color and artwork', body: 'Open the editor, set garment colors, and upload your logo or pattern.' },
+      { title: 'Review the details', body: 'Inspect front, side, and back views to check scale and placement.' },
+      { title: 'Export your mockup', body: 'Use the export options available to your account to save your product preview.' }
+    ],
+    useCases: ['Streetwear collection previews', 'Product listing drafts', 'Design approvals'],
+    useCaseDetails: ['Explore leg graphics and colorways for a coordinated clothing drop.', 'Prepare consistent pants visuals before a product photoshoot.', 'Share garment color and artwork placement ideas with your team.'],
+    faq: [
+      { question: 'What does the 3D Pants Generator create?', answer: 'It helps you customize mockups using existing 3D pants models. It does not generate new garment geometry or sewing patterns from text.' },
+      { question: 'Can I upload a logo or pattern?', answer: 'Yes. Open a pants model in the editor to upload artwork and adjust its placement on the garment.' },
+      { question: 'Can I see the back of the pants?', answer: 'Yes. The preview opens automatically. Use the front, side, and back controls, or drag to rotate the model.' },
+      { question: 'Can I export a transparent PNG?', answer: 'Transparent and higher-resolution exports depend on your account plan. The editor shows the available export options before you download.' }
+    ],
+    starterEyebrow: 'Choose your silhouette',
+    starterTitle: 'Start with a pair that fits your idea',
+    starterSubtitle: 'Choose an available pants model and open its editor to customize colors and artwork.',
+    planningTitle: 'See your design on a real pants silhouette',
+    benefitsTitle: 'From waistband to hem, check the whole design',
+    workflowTitle: 'From blank pants to a product mockup',
+    relatedSlugs: ['hoodie-mockup-generator', 't-shirt-mockup-generator', '3d-clothing-mockup-generator'],
+    secondaryCtaLabel: 'Browse All Pants Models',
+    secondaryCtaHref: '/mockups/pants',
+    editorHref: '/mockups/pants',
+    cta: { label: 'Choose Pants to Customize', href: '/mockups/pants' }
+  },
   't-shirt-mockup-generator': {
     title: 'Free T-Shirt Mockup Generator',
     eyebrow: 'Free online T-shirt mockups',
@@ -2661,7 +2736,8 @@ router.get('/tools', (req, res) => {
           { '@type': 'ListItem', position: 9, name: 'Polo Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/polo-shirt-mockup-generator') },
           { '@type': 'ListItem', position: 10, name: 'Long Sleeve Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/long-sleeve-shirt-mockup-generator') },
           { '@type': 'ListItem', position: 11, name: 'Streetwear Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/streetwear-hoodie-mockup-generator') },
-          { '@type': 'ListItem', position: 12, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') }
+          { '@type': 'ListItem', position: 12, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') },
+          { '@type': 'ListItem', position: 13, name: '3D Pants Generator', url: toAbsoluteUrl(req, '/tools/3d-pants-generator') }
         ]
       }
     }),
@@ -3261,6 +3337,22 @@ router.get('/tools/:slug', async (req, res) => {
         console.error('Error loading active Hoodie generator models:', error);
       }
     }
+    if (req.params.slug === '3d-pants-generator') {
+      try {
+        const modelStarters = await getActivePantsModelStarters(req);
+        if (modelStarters.length) {
+          const first = modelStarters[0];
+          renderedToolPage = {
+            ...toolPage, modelStarters, image: first.image,
+            heroModel: { src: first.modelSrc, alt: `${first.title} 3D preview` },
+            editorHref: `${first.href}#design`,
+            cta: { label: 'Open Pants Editor', href: `${first.href}#design` }
+          };
+        }
+      } catch (error) {
+        console.error('Error loading active Pants generator models:', error);
+      }
+    }
     const isDressDesigner = req.params.slug === 'dress-designer';
     if (isDressDesigner) {
       try {
@@ -3289,9 +3381,11 @@ router.get('/tools/:slug', async (req, res) => {
     }
     const isIndexableTool = Boolean(
       TOOL_VARIANT_CONTENT[req.params.slug]
-      || ['t-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
+      || ['3d-pants-generator', 't-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
     );
-    const viewName = isTshirtGenerator
+    const viewName = req.params.slug === '3d-pants-generator'
+      ? 'pants-generator-landing'
+      : isTshirtGenerator
       ? 'tshirt-generator-landing'
       : isHoodieGenerator
         ? 'hoodie-generator-landing'
@@ -3309,8 +3403,8 @@ router.get('/tools/:slug', async (req, res) => {
       structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
-      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20260919-seo-3d-v2'] : undefined,
-      bodyClass: isDressDesigner ? 'dress-designer-page' : '',
+      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20260919-seo-3d-v2'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=2'] : undefined,
+      bodyClass: isDressDesigner ? 'dress-designer-page' : req.params.slug === '3d-pants-generator' ? 'pants-generator-page' : '',
       toolPage: renderedToolPage
     });
   }
