@@ -18,7 +18,6 @@
     return `${mockupBasePath}${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
   };
   const allModelCountLabel = currentCatalogTotal ? `${currentCatalogTotal} free 3D models` : 'Free 3D model library';
-  const masonrySizes = ['compact', 'tall', 'medium', 'compact', 'tall', 'medium', 'compact', 'medium'];
   const masonryTones = ['ice', 'white', 'mist', 'cloud', 'frost', 'silver'];
   const allCatalogSteps = [
     { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
@@ -125,13 +124,20 @@
       <% if (models && models.length > 0) { %>
         <% models.forEach(function(model, index) { %>
           <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
-          <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card mockups-masonry-card mockups-card-<%= masonrySizes[index % masonrySizes.length] %> mockups-card-<%= masonryTones[index % masonryTones.length] %>" data-category="<%= model.category_slug || model.category %>" aria-label="Open <%= modelDisplayName %> 3D model">
+          <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card mockups-masonry-card mockups-card-<%= masonryTones[index % masonryTones.length] %>" data-category="<%= model.category_slug || model.category %>" aria-label="Open <%= modelDisplayName %> 3D model">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
                 <img src="<%= model.cover_image_url || model.image_url %>" alt="" class="model-img" loading="lazy" decoding="async">
               <% } else { %>
                 <div class="model-placeholder" aria-hidden="true"></div>
               <% } %>
+              <span class="mockups-model-type-badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path d="M12 2.75 20 7.25v9.5l-8 4.5-8-4.5v-9.5l8-4.5Z"/>
+                  <path d="m4 7.25 8 4.5 8-4.5M12 11.75v9.5"/>
+                </svg>
+                <span>3D</span>
+              </span>
             </div>
             <span class="sr-only"><%= modelDisplayName %></span>
           </a>

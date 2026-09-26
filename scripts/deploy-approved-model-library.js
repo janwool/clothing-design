@@ -34,12 +34,16 @@ const categorySlugByName = {
   Jacket: 'jacket',
   Hoodie: 'hoodie-mockup',
   Dress: 'dress',
+  Jumpsuit: 'jumpsuit',
   Underwear: 'underwear',
+  Swimwear: 'swimwear',
   Skirt: 'skirt',
   Blazer: 'blazer',
   Coat: 'coat',
   Hat: 'hat',
   Top: 'top',
+  Sets: 'sets',
+  Socks: 'socks',
 };
 
 function required(value, name) {

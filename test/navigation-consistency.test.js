@@ -9,6 +9,7 @@ const header = fs.readFileSync(path.join(root, 'views', 'partials', 'header.ejs'
 const styles = fs.readFileSync(path.join(root, 'public', 'css', 'style.css'), 'utf8');
 const refreshStyles = fs.readFileSync(path.join(root, 'public', 'css', 'product-refresh.css'), 'utf8');
 const detailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'model-detail-v2.css'), 'utf8');
+const workerTemplates = require('../src/worker-templates.cjs');
 
 test('uses one navigation treatment across standard pages', () => {
   assert.match(header, /product-refresh\.css\?v=[a-z0-9-]+/);
@@ -32,6 +33,27 @@ test('shows signed-in users a direct Workbench navigation button', () => {
 
   assert.match(signedInBlock, /<a href="\/account" class="btn btn-primary navbar-workbench-link">Workbench<\/a>/);
   assert.doesNotMatch(signedInBlock, /user-dropdown|user-toggle|user-menu/);
+});
+
+test('omits Start designing from desktop and mobile navigation for signed-out users', () => {
+  const guestHeader = workerTemplates.render('partials/header', {
+    title: 'Fashion Mockup',
+    user: null,
+    authLoginUrl: '/auth/login',
+    t: key => key
+  });
+
+  assert.equal((guestHeader.match(/href="\/auth\/login"/g) || []).length, 2);
+  assert.doesNotMatch(guestHeader, />Start designing<\/a>/i);
+  assert.doesNotMatch(guestHeader, /navbar-workbench-link/);
+
+  const memberHeader = workerTemplates.render('partials/header', {
+    title: 'Fashion Mockup',
+    user: { id: 1 },
+    authLoginUrl: '/auth/login',
+    t: key => key
+  });
+  assert.match(memberHeader, /navbar-workbench-link">Workbench<\/a>/);
 });
 
 test('loads the user image library runtime with the current cache version', () => {

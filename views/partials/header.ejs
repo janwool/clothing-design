@@ -36,7 +36,7 @@
   <script src="/js/upgrade-modal.js?v=20260926-3d-sharing-v1" defer></script>
   <script src="/js/user-projects.js?v=20260923-cover-project-v7" defer></script>
   <link rel="stylesheet" href="/css/export-access.css?v=20260926-paid-v1">
-  <script src="/js/export-entitlements.js?v=20260926-no-max-v1" defer></script>
+  <script src="/js/export-entitlements.js?v=20260927-watermark-contrast-v2" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -84,6 +84,9 @@
   <% headPageStyles.forEach(function(stylesheet) { %>
     <link rel="stylesheet" href="<%= stylesheet %>">
   <% }); %>
+  <% if (typeof toolPage !== 'undefined' && ['oversized-t-shirt-mockup-generator', 'front-and-back-t-shirt-mockup', 'polo-shirt-mockup-generator', 'long-sleeve-shirt-mockup-generator', 'streetwear-hoodie-mockup-generator'].includes(toolPage.slug)) { %>
+    <link rel="stylesheet" href="/css/tool-editorial-detail.css?v=12">
+  <% } %>
   <% if (typeof page !== 'undefined' && page === 'home') { %>
     <link rel="stylesheet" href="/css/home-v2.css?v=20260916-imagegen-build-v5">
   <% } %>
@@ -194,9 +197,7 @@
         <% if (user) { %>
           <a href="/account" class="btn btn-primary navbar-workbench-link">Workbench</a>
         <% } else { %>
-          <!-- Auth Buttons -->
           <a href="<%= authLoginUrl %>" class="btn btn-ghost"><%= t('nav.signIn') %></a>
-          <a href="/tools/t-shirt-mockup-generator" class="btn btn-primary">Start designing</a>
         <% } %>
 
         <!-- Mobile Menu Toggle -->
@@ -222,7 +223,6 @@
         <a href="/auth/logout" class="mobile-link"><%= t('nav.signOut') %></a>
       <% } else { %>
         <a href="<%= authLoginUrl %>" class="mobile-link"><%= t('nav.signIn') %></a>
-        <a href="/tools/t-shirt-mockup-generator" class="mobile-link btn btn-primary">Start designing</a>
       <% } %>
     </div>
   </nav>

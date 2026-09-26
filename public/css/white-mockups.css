@@ -6,6 +6,8 @@
   --catalog-blue: #0757e8;
   color: var(--catalog-ink);
   background: var(--catalog-paper);
+  /* The global overflow-x: hidden makes body a scroll container and disables sticky categories. */
+  overflow-x: clip;
 }
 
 .white-mockup-library-page .white-catalog-shell {
@@ -14,7 +16,35 @@
 }
 
 .white-catalog-intro {
-  padding: calc(var(--navbar-height) + 60px) 0 48px;
+  padding: calc(var(--navbar-height) + 12px) 0 12px;
+}
+
+.white-catalog-intro .white-catalog-shell {
+  display: grid;
+  width: calc(100% - 80px);
+  max-width: none;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: clamp(28px, 3vw, 60px);
+  align-items: center;
+}
+
+.white-catalog-copy {
+  min-width: 0;
+}
+
+.white-catalog-hero-media {
+  display: block;
+  min-width: 0;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  background: #b8adaa;
+}
+
+.white-catalog-hero-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .white-catalog-eyebrow {
@@ -30,10 +60,11 @@
 
 .white-catalog-intro h1 {
   margin: 0;
-  font-size: clamp(40px, 4.3vw, 62px);
+  font-size: clamp(42px, 3.6vw, 72px);
   font-weight: 590;
   line-height: 1.09;
   letter-spacing: -0.052em;
+  text-wrap: balance;
 }
 
 .white-catalog-mobile-title {
@@ -377,6 +408,15 @@
 
   .white-catalog-intro {
     padding: calc(var(--navbar-height) + 30px) 0 24px;
+  }
+
+  .white-catalog-intro .white-catalog-shell {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .white-catalog-hero-media {
+    aspect-ratio: 8 / 5;
   }
 
   .white-catalog-eyebrow,

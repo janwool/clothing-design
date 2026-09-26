@@ -83,7 +83,7 @@ test('offers camera-relative lighting controls on the model detail page', () => 
   assert.match(template, /data-light-angle="-45"/);
   assert.match(template, /data-light-angle="0"/);
   assert.match(template, /data-light-angle="45"/);
-  assert.match(template, /id="quickLightExposure" type="range" min="55" max="300" step="1" value="200"/);
+  assert.match(template, /id="quickLightExposure" type="range" min="55" max="300" step="1" value="150"/);
   assert.match(template, /id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90"/);
   assert.match(template, /window\.ModelDetailLightingSettings = detailLightState/);
   assert.match(template, /function applyDetailLightingSettings\(\)/);

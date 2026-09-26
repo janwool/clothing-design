@@ -3,8 +3,7 @@
 
   const editor = document.getElementById('whiteMockupEditor');
   if (!editor) return;
-  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v7.png';
-  const WATERMARK_COLOR = '#f2f2f2';
+  const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v1.png';
 
   const stage = document.getElementById('whiteMockupStage');
   const canvas = document.getElementById('whiteMockupCanvas');
@@ -253,23 +252,36 @@
     if (!state.watermarkEnabled) return;
 
     const tile = await loadImage(WATERMARK_TILE_URL);
-    const tileSize = Math.max(384, Math.min(768, Math.round(Math.min(canvas.width, canvas.height) * 0.5)));
-    const tintedTile = document.createElement('canvas');
-    tintedTile.width = tile.naturalWidth || tile.width;
-    tintedTile.height = tile.naturalHeight || tile.height;
-    const tintedContext = tintedTile.getContext('2d');
-    tintedContext.drawImage(tile, 0, 0);
-    tintedContext.globalCompositeOperation = 'source-in';
-    tintedContext.fillStyle = WATERMARK_COLOR;
-    tintedContext.fillRect(0, 0, tintedTile.width, tintedTile.height);
+    const markWidth = Math.max(96, Math.min(220, Math.round(Math.min(canvas.width, canvas.height) * 0.12)));
+    const markHeight = Math.round(markWidth * 0.58);
+    const horizontalStep = Math.round(markWidth * 0.9);
+    const verticalStep = Math.round(markHeight * 0.92);
+    const markCanvas = document.createElement('canvas');
+    markCanvas.width = 650;
+    markCanvas.height = 480;
+    const markContext = markCanvas.getContext('2d');
+    markContext.drawImage(tile, 300, 390, 650, 480, 0, 0, markCanvas.width, markCanvas.height);
+    // The legacy tile is already faint (its strongest alpha is about 85/255).
+    // Restore a solid mark before applying the preview's intended opacity.
+    const markPixels = markContext.getImageData(0, 0, markCanvas.width, markCanvas.height);
+    for (let index = 3; index < markPixels.data.length; index += 4) {
+      markPixels.data[index] = Math.min(255, markPixels.data[index] * 3);
+    }
+    markContext.putImageData(markPixels, 0, 0);
+    markContext.globalCompositeOperation = 'source-in';
+    markContext.fillStyle = '#c5c7c4';
+    markContext.fillRect(0, 0, markCanvas.width, markCanvas.height);
     watermarkSourceContext.save();
-    watermarkSourceContext.globalAlpha = 1;
+    watermarkSourceContext.globalAlpha = 0.62;
     watermarkSourceContext.imageSmoothingEnabled = true;
     watermarkSourceContext.imageSmoothingQuality = 'high';
-    for (let y = 0; y < canvas.height; y += tileSize) {
-      for (let x = 0; x < canvas.width; x += tileSize) {
-        watermarkSourceContext.drawImage(tintedTile, x, y, tileSize, tileSize);
+    let row = 0;
+    for (let y = -verticalStep; y < canvas.height + verticalStep; y += verticalStep) {
+      const rowOffset = row % 2 ? -horizontalStep / 2 : 0;
+      for (let x = -horizontalStep; x < canvas.width + horizontalStep; x += horizontalStep) {
+        watermarkSourceContext.drawImage(markCanvas, 0, 0, markCanvas.width, markCanvas.height, x + rowOffset, y, markWidth, markHeight);
       }
+      row += 1;
     }
     watermarkSourceContext.restore();
 

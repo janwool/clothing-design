@@ -47,7 +47,7 @@ test('keeps search and sorting available across the redesigned catalog', () => {
   assert.match(template, /type="search"/);
   assert.match(template, /name="q"/);
   assert.match(template, /class="models-grid mockups-masonry-grid"/);
-  assert.match(mockupStyles, /column-count: 5/);
+  assert.match(mockupStyles, /column-count: 4/);
   assert.match(mockupStyles, /break-inside: avoid/);
 });
 
@@ -61,7 +61,7 @@ test('shows every garment category without a hidden More menu or warm image filt
   assert.doesNotMatch(mockupStyles, /sepia\(/);
   assert.match(mockupStyles, /mix-blend-mode: normal/);
   assert.match(mockupStyles, /background-image: none/);
-  assert.match(mockupStyles, /border-radius: 2px/);
+  assert.match(mockupStyles, /\.mockups-masonry-card[\s\S]*?border-radius: 12px/);
   assert.doesNotMatch(mockupStyles, /transform: scale\(1\.055\)/);
 });
 
@@ -76,7 +76,7 @@ test('uses the generated fashion studio image and a product-specific hero messag
 test('renders every 3D category with the same redesigned mockup library', () => {
   assert.match(route, /router\.get\('\/mockups\/:slug'[\s\S]*?res\.render\('design-3d'/);
   assert.match(route, /activeCategory: \{ \.\.\.category, meta_title: seoTitle, description \}/);
-  assert.match(route, /pageStyles: \['\/css\/mockups-library\.css\?v=20260917-flat-cards-v10'\]/);
+  assert.match(route, /pageStyles: \['\/css\/mockups-library\.css\?v=[^']+'\]/);
   assert.match(template, /const activeMockupCategory/);
   assert.match(template, /activeMockupCategory && cat\.slug === activeMockupCategory\.slug \? 'is-active'/);
   assert.match(template, /Explore <%= activeMockupCategory\.name %> models\./);

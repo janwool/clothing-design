@@ -77,7 +77,7 @@
               field-of-view="28deg"
               shadow-intensity="0.32"
               shadow-softness="0.9"
-              exposure="2"
+              exposure="1.5"
               environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-studio-light-reference-azimuth="-16"
@@ -109,8 +109,8 @@
             <button type="button" class="active" data-light-angle="45" aria-pressed="true"><i aria-hidden="true"></i><span>+45°</span></button>
           </div>
           <label class="quick-light-range">
-            <span>Brightness <output id="quickLightExposureOutput">200%</output></span>
-            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="200">
+            <span>Brightness <output id="quickLightExposureOutput">150%</output></span>
+            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="150">
           </label>
           <label class="quick-light-range">
             <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
@@ -924,7 +924,7 @@
                   field-of-view="28deg"
                   shadow-intensity="0.32"
                   shadow-softness="0.9"
-                  exposure="2"
+                  exposure="1.5"
                   environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-studio-light-reference-azimuth="-16"
@@ -1056,7 +1056,7 @@ const defaultDetailRenderStandard = {
     shadowSoftness: 0.9,
     exportShadowIntensity: 0.46,
     exportShadowSoftness: 0.88,
-    exposure: 2,
+    exposure: 1.5,
     toneMapping: 'commerce',
     material: {
       neutralizeBaseColor: false,
@@ -1069,7 +1069,7 @@ const defaultDetailRenderStandard = {
 };
 const detailLightState = {
   azimuthOffsetDeg: 45,
-  exposure: 2,
+  exposure: 1.5,
   shadowSoftness: 0.9
 };
 window.ModelDetailLightingSettings = detailLightState;
@@ -1093,8 +1093,8 @@ const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json
         web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }
       };
     }
-    // Detail pages always start at 200%, including models with lighting overrides.
-    detailSceneStandard.web.exposure = 2;
+    // Detail pages always start at 150%, including models with lighting overrides.
+    detailSceneStandard.web.exposure = 1.5;
     Object.assign(detailLightState, {
       azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,
       exposure: detailSceneStandard.web.exposure,
@@ -1133,7 +1133,7 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
   }
   element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
   element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));
-  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 2) * (Number(element.dataset.designExposureRatio) || 1)));
+  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 1.5) * (Number(element.dataset.designExposureRatio) || 1)));
   element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
   element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
   element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
@@ -1187,7 +1187,7 @@ detailRenderStandardPromise.then((standard) => {
 
 function renderDetailLightingControls() {
   const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
-  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 2)) * 100);
+  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1.5)) * 100);
   const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
   if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
   if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);

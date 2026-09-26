@@ -375,7 +375,7 @@
 
 .mockup-library-page .mockups-masonry-grid {
   display: block;
-  column-count: 5;
+  column-count: 4;
   column-width: auto;
   column-gap: 12px;
 }
@@ -388,8 +388,8 @@
   overflow: hidden;
   break-inside: avoid;
   background: transparent;
-  border: 0;
-  border-radius: 2px;
+  border: 1px solid rgba(17, 18, 22, 0.14);
+  border-radius: 12px;
   box-shadow: none;
   transform: none;
   vertical-align: top;
@@ -399,11 +399,12 @@
   position: relative;
   width: 100%;
   height: auto;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background-color: #f7f5f0;
   background-image: none;
   border: 0;
-  border-radius: 2px;
+  border-radius: 12px;
   isolation: isolate;
 }
 
@@ -411,9 +412,33 @@
   display: none;
 }
 
-.mockup-library-page .mockups-card-compact .model-preview-3d { aspect-ratio: 1.35 / 1; }
-.mockup-library-page .mockups-card-medium .model-preview-3d { aspect-ratio: 1 / 1.04; }
-.mockup-library-page .mockups-card-tall .model-preview-3d { aspect-ratio: 0.82 / 1; }
+.mockup-library-page .mockups-model-type-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #30343a;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  pointer-events: none;
+}
+
+.mockup-library-page .mockups-model-type-badge svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.4;
+}
+
 .mockup-library-page .mockups-card-ice .model-preview-3d,
 .mockup-library-page .mockups-card-white .model-preview-3d,
 .mockup-library-page .mockups-card-mist .model-preview-3d,
@@ -493,7 +518,7 @@
   .mockups-hero-copy { padding-left: 32px; }
   .mockups-hero h1 { font-size: 46px; }
   .mockups-hero-tools { align-items: flex-start; flex-direction: column; gap: 10px; }
-  .mockup-library-page .mockups-masonry-grid { column-count: 4; }
+  .mockup-library-page .mockups-masonry-grid { column-count: 3; }
 }
 
 @media (max-width: 940px) {
@@ -541,8 +566,10 @@
   .mockups-sort { flex-basis: 135px; }
   .mockup-library-page .mockups-masonry-grid { column-count: 2; column-width: auto; column-gap: 10px; }
   .mockup-library-page .mockups-masonry-card,
-  .mockup-library-page .mockups-masonry-card:hover { margin-bottom: 10px; border-radius: 2px; }
-  .mockup-library-page .mockups-masonry-card .model-preview-3d { border-radius: 2px; }
+  .mockup-library-page .mockups-masonry-card:hover { margin-bottom: 10px; border-radius: 10px; }
+  .mockup-library-page .mockups-masonry-card .model-preview-3d { border-radius: 10px; }
+  .mockup-library-page .mockups-model-type-badge { top: 8px; right: 8px; font-size: 9px; }
+  .mockup-library-page .mockups-model-type-badge svg { width: 15px; height: 15px; }
   .mockup-library-page .mockups-masonry-card .model-img { padding: 0; }
 }
 

@@ -8,6 +8,8 @@
   const colorButtons = [...document.querySelectorAll('[data-pg-color]')];
   const angleButtons = [...document.querySelectorAll('[data-pg-angle]')];
   const models = [...document.querySelectorAll('[data-pg-model]')];
+  const originalBaseColors = new WeakMap();
+  const baseColor = colorButtons[0].dataset.pgColor;
   let color = colorButtons[0].dataset.pgColor;
   let angle = 0;
   let timer;
@@ -30,7 +32,12 @@
     if (!viewer.loaded) return;
     const n = parseInt(color.slice(1), 16);
     const rgba = [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255, 1];
-    for (const material of viewer.model?.materials || []) material.pbrMetallicRoughness?.setBaseColorFactor(rgba);
+    for (const material of viewer.model?.materials || []) {
+      const pbr = material.pbrMetallicRoughness;
+      if (!pbr?.setBaseColorFactor) continue;
+      if (!originalBaseColors.has(material)) originalBaseColors.set(material, [...(pbr.baseColorFactor || [1, 1, 1, 1])]);
+      pbr.setBaseColorFactor(color === baseColor ? originalBaseColors.get(material) : rgba);
+    }
   };
   const ready = () => {
     clearTimeout(timer);

@@ -89,10 +89,10 @@ test('cache-busts commercial white mockup assets consistently', () => {
     .map(match => match[1]);
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
-  assert.match(libraryVersions[0], /^20260926-catalog-redesign-v1$/);
+  assert.match(libraryVersions[0], /^20260926-hero-gif-v5$/);
   assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260922-shared-login-v11/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260926-paid-v1/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260927-watermark-contrast-v2/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);

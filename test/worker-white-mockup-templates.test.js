@@ -24,6 +24,8 @@ test('renders the white mockup library with the Worker template runtime', () => 
   });
 
   assert.match(html, /Choose a look\. Add your design\./);
+  assert.match(html, /fashion-mockups-artwork-motion-v2\.gif/);
+  assert.match(html, /prefers-reduced-motion: reduce/);
   assert.match(html, /Fashion mockup categories/);
   assert.match(html, /No fashion mockups found/);
   assert.match(html, /<body class="category-catalog-page white-mockup-library-page">/);

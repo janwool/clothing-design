@@ -1,0 +1,277 @@
+<%
+  const editorialPages = {
+    'oversized-t-shirt-mockup-generator': {
+      title: 'Oversized T-Shirt Mockups',
+      eyebrow: 'Drop-shoulder T-shirt',
+      summary: 'Check front and back artwork on a relaxed fit before you commit to a print.',
+      placementTitle: 'Made for real designs.',
+      placementBody: 'A wider body and dropped shoulder change how a design reads. Review the chest area, then turn the garment to check the back at the same scale.',
+      placementImage: '/images/tool-editorial/oversized-tee-views-v1.webp',
+      mobilePlacementImage: '/images/tool-editorial/oversized-tee-views-mobile-v1.webp',
+      exampleImage: '/images/tool-editorial/oversized-tee-example-v1.webp',
+      placementAlt: 'Oversized white T-shirt shown from the front and back',
+      placements: [
+        ['01', 'Front', 'Check the artwork against the wider chest and sleeve line.'],
+        ['02', 'Back', 'Turn the model to judge a larger print on the relaxed body.']
+      ],
+      detailTitle: 'A relaxed fit with room to create.',
+      detailBody: 'The lower shoulder seam and longer sleeve give this tee its streetwear proportion. Check placement on this silhouette rather than on a standard-fit blank.',
+      detailImage: '/images/tool-editorial/oversized-tee-details-v1.webp',
+      detailAlt: 'Oversized T-shirt drop shoulder, ribbed collar and sleeve stitching',
+      detailCaption: 'Dropped shoulder · Ribbed collar · Roomy sleeve',
+      related: [
+        ['front-and-back-t-shirt-mockup', 'Front & Back Views'],
+        ['long-sleeve-shirt-mockup-generator', 'Long-Sleeve Shirts'],
+        ['streetwear-hoodie-mockup-generator', 'Streetwear Hoodies']
+      ]
+    },
+    'front-and-back-t-shirt-mockup': {
+      title: 'Front & Back T-Shirt Mockups',
+      eyebrow: 'Two-sided artwork',
+      summary: 'Review the front and back of the same T-shirt without changing the garment or lighting.',
+      placementTitle: 'Visualize both sides together.',
+      placementBody: 'Compare a small chest mark with a larger back graphic on one consistent T-shirt. Switch views in the preview to check their visual balance.',
+      placementImage: '/images/tool-editorial/front-back-tee-views-v1.webp',
+      mobilePlacementImage: '/images/tool-editorial/front-back-tee-views-mobile-v1.webp',
+      exampleImage: '/images/tool-editorial/front-back-tee-example-v1.webp',
+      placementAlt: 'Front and back views of the same white crew-neck T-shirt',
+      placements: [
+        ['01', 'Front', 'Keep the chest graphic in proportion to the body.'],
+        ['02', 'Back', 'Review the back artwork on the same garment shape.']
+      ],
+      detailTitle: 'One garment. Two clear views.',
+      detailBody: 'The front, side and back controls keep the model consistent while you inspect placement. Use the full editor to position artwork on each surface.',
+      detailImage: '/images/tool-editorial/front-back-tee-details-v1.webp',
+      detailAlt: 'Close views of the front and back neckline of a white crew-neck T-shirt',
+      detailCaption: 'The same fabric and cut, viewed from both sides.',
+      related: [
+        ['oversized-t-shirt-mockup-generator', 'Oversized T-Shirts'],
+        ['polo-shirt-mockup-generator', 'Polo Shirts'],
+        ['long-sleeve-shirt-mockup-generator', 'Long-Sleeve Shirts']
+      ]
+    },
+    'polo-shirt-mockup-generator': {
+      title: 'Polo Shirt Mockups',
+      eyebrow: 'Collared shirt',
+      summary: 'Preview a chest logo and garment color on a polo with a real collar and placket.',
+      placementTitle: 'Made for real designs.',
+      placementBody: 'A polo has a different visual center from a crew-neck tee. Use the preview to judge the chest mark beside the placket and below the collar.',
+      placementImage: '/images/tool-editorial/polo-shirt-views-v1.webp',
+      mobilePlacementImage: '/images/tool-editorial/polo-shirt-views-mobile-v1.webp',
+      exampleImage: '/images/tool-editorial/polo-shirt-example-v1.webp',
+      placementAlt: 'White piqué polo shirt shown from the front and back',
+      placements: [
+        ['01', 'Front', 'Check logo size beside the button placket.'],
+        ['02', 'Back', 'Review the complete shirt from behind.']
+      ],
+      detailTitle: 'Collar and placket matter.',
+      detailBody: 'Those details frame the chest area. Rotate the model to check the collared silhouette and the logo from more than one angle.',
+      detailImage: '/images/tool-editorial/polo-shirt-details-v1.webp',
+      detailAlt: 'Polo shirt collar, button placket, piqué fabric and sleeve cuff',
+      detailCaption: 'Structured collar · Piqué texture · Ribbed cuff',
+      related: [
+        ['oversized-t-shirt-mockup-generator', 'Oversized T-Shirts'],
+        ['front-and-back-t-shirt-mockup', 'Front & Back Views'],
+        ['long-sleeve-shirt-mockup-generator', 'Long-Sleeve Shirts']
+      ]
+    },
+    'long-sleeve-shirt-mockup-generator': {
+      title: 'Long-Sleeve Shirt Mockups',
+      eyebrow: 'Long-sleeve crewneck',
+      summary: 'Review chest artwork, sleeve space and garment color on a long-sleeve shirt.',
+      placementTitle: 'Designed for full expression.',
+      placementBody: 'The side view reveals space that a front image misses. Rotate the garment to inspect sleeve artwork and its distance from the cuff.',
+      placementImage: '/images/tool-editorial/long-sleeve-views-v1.webp',
+      mobilePlacementImage: '/images/tool-editorial/long-sleeve-views-mobile-v1.webp',
+      exampleImage: '/images/tool-editorial/long-sleeve-example-v1.webp',
+      placementAlt: 'White long-sleeve shirt shown from the front, side and back',
+      placements: [
+        ['01', 'Chest', 'Check the graphic against the crew neck and body width.'],
+        ['02', 'Side', 'Turn to the side to review the length of a sleeve design.'],
+        ['03', 'Back', 'Review artwork scale across the back of the shirt.']
+      ],
+      detailTitle: 'Check the cuff and the line of the sleeve.',
+      detailBody: 'Long sleeves add another visible surface. Review the shirt from the side before finalizing artwork that runs toward the wrist.',
+      detailImage: '/images/tool-editorial/long-sleeve-details-v1.webp',
+      detailAlt: 'Long-sleeve shirt ribbed cuff, crew neck and fabric stitching',
+      detailCaption: 'Ribbed cuff · Classic crew neck · Soft cotton',
+      related: [
+        ['front-and-back-t-shirt-mockup', 'Front & Back Views'],
+        ['polo-shirt-mockup-generator', 'Polo Shirts'],
+        ['streetwear-hoodie-mockup-generator', 'Streetwear Hoodies']
+      ]
+    },
+    'streetwear-hoodie-mockup-generator': {
+      title: 'Streetwear Hoodie Mockups',
+      eyebrow: 'Pullover hoodie',
+      summary: 'Test graphics on a pullover hoodie with its hood, pocket and cuffs in view.',
+      placementTitle: 'Designed for your ideas.',
+      placementBody: 'The hood and kangaroo pocket change the available print area. Review chest artwork from the front, then turn the hoodie to check the back.',
+      placementImage: '/images/tool-editorial/hoodie-views-v1.webp',
+      mobilePlacementImage: '/images/tool-editorial/hoodie-views-mobile-v1.webp',
+      exampleImage: '/images/tool-editorial/hoodie-example-v1.webp',
+      placementAlt: 'White pullover hoodie shown from the front, back and side',
+      placements: [
+        ['01', 'Front', 'Check the space between the neckline and pocket.'],
+        ['02', 'Back', 'Review the print beneath the hood.'],
+        ['03', 'Side', 'Check the sleeve and pocket from another angle.']
+      ],
+      detailTitle: 'The silhouette carries the artwork.',
+      detailBody: 'A pullover has more volume than a tee. Inspect the hood, shoulder and pocket together so a graphic feels balanced on the garment.',
+      detailImage: '/images/tool-editorial/hoodie-details-v1.webp',
+      detailAlt: 'Pullover hoodie hood, cuff and kangaroo pocket details',
+      detailCaption: 'Double-layer hood · Ribbed cuff · Kangaroo pocket',
+      related: [
+        ['oversized-t-shirt-mockup-generator', 'Oversized T-Shirts'],
+        ['long-sleeve-shirt-mockup-generator', 'Long-Sleeve Shirts'],
+        ['front-and-back-t-shirt-mockup', 'Front & Back Views']
+      ]
+    }
+  };
+  const editorial = editorialPages[toolPage.slug];
+%>
+
+<div class="editorial-tool" data-tool="<%= toolPage.slug %>">
+  <section class="editorial-tool-hero" aria-labelledby="editorialToolTitle">
+    <div class="container">
+      <div class="editorial-tool-hero-grid">
+        <div class="editorial-tool-intro">
+          <span class="editorial-tool-kicker">Free mockup generator</span>
+          <h1 id="editorialToolTitle"><%= editorial.title %></h1>
+          <p><%= editorial.summary %></p>
+          <a class="editorial-tool-cta" href="<%= toolPage.editorHref %>"><%= toolPage.cta.label %><span aria-hidden="true">↗</span></a>
+          <div class="editorial-tool-hero-features" aria-label="Preview features">
+            <span>3D garment preview</span>
+            <span>Front, side &amp; back views</span>
+            <span>PNG preview download</span>
+          </div>
+        </div>
+        <div class="tool-live-preview editorial-tool-preview" data-editor-href="<%= toolPage.editorHref %>">
+          <div class="tool-model-stage editorial-tool-stage" id="toolModelStage" aria-busy="false">
+            <img class="tool-hero-model-poster" src="<%= toolPage.image %>" alt="<%= toolPage.heroModel.alt %> preview" width="1200" height="1200" fetchpriority="high" decoding="async">
+            <model-viewer
+              id="toolHeroModelViewer"
+              class="model-viewer-natural tool-hero-model-viewer"
+              data-model-src="<%= toolPage.heroModel.src %>"
+              alt="<%= toolPage.heroModel.alt %>"
+              camera-controls
+              camera-orbit="0deg 75deg 95%"
+              shadow-intensity="0.32"
+              shadow-softness="0.9"
+              exposure="1.5"
+              environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+              data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
+              data-studio-light-reference-azimuth="-16"
+              data-studio-light-azimuth-offset="45"
+              tone-mapping="commerce"
+              aria-label="<%= toolPage.heroModel.alt %>"
+              hidden
+            ></model-viewer>
+            <button type="button" class="btn btn-secondary tool-model-load" id="toolLoadPreview" hidden><span>Retry preview</span></button>
+          </div>
+          <div class="tool-quick-editor editorial-tool-controls" aria-label="Quick mockup controls">
+            <div class="editorial-tool-controls-heading">
+              <strong><%= editorial.eyebrow %></strong>
+              <span>Preview controls</span>
+            </div>
+            <div class="tool-control-group tool-angle-controls" role="group" aria-label="Garment view">
+              <button type="button" class="active" data-orbit="0deg 75deg 95%">Front</button>
+              <button type="button" data-orbit="90deg 75deg 95%">Side</button>
+              <button type="button" data-orbit="180deg 75deg 95%">Back</button>
+            </div>
+            <div class="tool-control-group tool-color-controls" role="group" aria-label="Garment color">
+              <span>Color</span>
+              <% ['#f7f7f5', '#171717', '#506b5d', '#a54b43'].forEach(function(color, index) { %>
+                <button type="button" class="tool-color-swatch<%= index === 0 ? ' active' : '' %>" data-color="<%= color %>" style="--swatch-color: <%= color %>" aria-label="Set garment color <%= color %>"></button>
+              <% }); %>
+            </div>
+            <div class="tool-preview-actions">
+              <label class="btn btn-secondary tool-upload-button" for="toolArtworkUpload"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m0 0L7 8m5-5 5 5M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></svg><span>Upload artwork<small>PNG, JPG, WebP or SVG</small></span>
+                <input id="toolArtworkUpload" class="editorial-tool-file-input" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+              </label>
+              <button type="button" class="btn btn-primary" id="toolDownloadPreview">Download PNG</button>
+            </div>
+            <p class="tool-preview-status" id="toolPreviewStatus" aria-live="polite">Preparing preview…</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-tool-section editorial-tool-placement" aria-labelledby="editorialPlacementTitle">
+    <div class="container editorial-tool-section-grid">
+      <div class="editorial-tool-section-copy">
+        <span class="editorial-tool-kicker">Artwork placement</span>
+        <h2 id="editorialPlacementTitle"><%= editorial.placementTitle %></h2>
+        <p><%= editorial.placementBody %></p>
+        <a class="editorial-tool-text-link" href="<%= toolPage.editorHref %>">Open the garment editor <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="editorial-tool-placement-visual">
+        <div class="editorial-tool-placement-image"><img src="<%= editorial.placementImage %>" alt="<%= editorial.placementAlt %>" width="1536" height="1024" loading="lazy" decoding="async"></div>
+        <div class="editorial-tool-placement-notes" style="--view-count: <%= editorial.placements.length %>">
+          <% editorial.placements.forEach(function(item) { %>
+            <div><span><%= item[0] %></span><strong><%= item[1] %></strong><p><%= item[2] %></p></div>
+          <% }); %>
+        </div>
+        <div class="editorial-tool-placement-mobile-views">
+          <% editorial.placements.forEach(function(item, index) { %>
+            <figure><div class="editorial-tool-mobile-view-photo" role="img" aria-label="<%= editorial.placementAlt %>, <%= item[1].toLowerCase() %> view" style="background-image: url('<%= editorial.mobilePlacementImage %>'); --view-position: <%= index / (editorial.placements.length - 1) * 100 %>%; --view-ratio: <%= editorial.placements.length === 3 ? 2 : 1.33 %>;"></div><figcaption><strong><%= item[1] %></strong><span><%= item[2] %></span></figcaption></figure>
+          <% }); %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-tool-section editorial-tool-workflow" aria-labelledby="editorialWorkflowTitle">
+    <div class="container editorial-tool-workflow-layout">
+      <div class="editorial-tool-workflow-heading">
+        <span class="editorial-tool-kicker">Editing workflow</span>
+        <h2 id="editorialWorkflowTitle">From idea to mockup in three steps.</h2>
+        <p>Choose a view and color here. Add artwork in the garment editor, then save a consistent product image.</p>
+        <a class="editorial-tool-text-link" href="<%= toolPage.editorHref %>"><%= toolPage.cta.label %> <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="editorial-tool-workflow-grid">
+        <article><span class="editorial-tool-step-number">1</span><h3>Choose a view &amp; color</h3><div class="editorial-tool-step-media editorial-tool-step-product"><img src="<%= toolPage.image %>" alt="" loading="lazy" decoding="async"></div><p>Rotate the garment and compare its color.</p></article>
+        <article><span class="editorial-tool-step-number">2</span><h3>Add your artwork</h3><div class="editorial-tool-step-media editorial-tool-step-upload" aria-hidden="true"><div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><strong>Upload artwork</strong><small>PNG, JPG, WebP or SVG</small></div></div><p>Open the editor to position your design.</p></article>
+        <article><span class="editorial-tool-step-number">3</span><h3>Save your mockup</h3><div class="editorial-tool-step-media editorial-tool-step-export" aria-hidden="true"><span>Download PNG <span>↓</span></span><img src="<%= editorial.exampleImage %>" alt="" loading="lazy" decoding="async"></div><p>Download a preview or finish in the editor.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-tool-section editorial-tool-detail" aria-labelledby="editorialDetailTitle">
+    <div class="container editorial-tool-section-grid">
+      <div class="editorial-tool-section-copy">
+        <span class="editorial-tool-kicker">Garment details</span>
+        <h2 id="editorialDetailTitle"><%= editorial.detailTitle %></h2>
+        <p><%= editorial.detailBody %></p>
+        <a class="editorial-tool-text-link" href="<%= toolPage.editorHref %>"><%= toolPage.cta.label %> <span aria-hidden="true">↗</span></a>
+      </div>
+      <figure class="editorial-tool-detail-image">
+        <img src="<%= editorial.detailImage %>" alt="<%= editorial.detailAlt %>" width="1536" height="1024" loading="lazy" decoding="async">
+        <figcaption><%= editorial.detailCaption %></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="editorial-tool-questions" aria-labelledby="editorialFaqTitle">
+    <div class="container editorial-tool-section-grid">
+      <div class="editorial-tool-section-copy"><span class="editorial-tool-kicker">Good to know</span><h2 id="editorialFaqTitle">Questions about this tool.</h2></div>
+      <div class="editorial-tool-faq-list">
+        <% toolPage.faq.forEach(function(item) { %>
+          <details><summary><%= item.question %></summary><p><%= item.answer %></p></details>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+
+  <section class="editorial-tool-related" aria-labelledby="editorialRelatedTitle">
+    <div class="container editorial-tool-related-layout">
+      <div class="editorial-tool-related-heading"><span class="editorial-tool-kicker">Related tools</span><h2 id="editorialRelatedTitle">More ways to design.</h2><p>Open another garment to compare how your artwork looks.</p><a class="editorial-tool-outline-link" href="/tools">View all tools <span aria-hidden="true">↗</span></a></div>
+      <div class="editorial-tool-related-list">
+        <% editorial.related.forEach(function(item) { %>
+          <a href="/tools/<%= item[0] %>"><img src="<%= editorialPages[item[0]].placementImage %>" alt="" loading="lazy" decoding="async"><strong><%= item[1] %></strong><span><%= editorialPages[item[0]].summary %></span><em>Open tool <span aria-hidden="true">↗</span></em></a>
+        <% }); %>
+      </div>
+    </div>
+  </section>
+</div>

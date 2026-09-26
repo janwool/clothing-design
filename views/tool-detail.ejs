@@ -1,5 +1,16 @@
 <%- include('partials/header') %>
 
+<% const isEditorialTool = [
+  'oversized-t-shirt-mockup-generator',
+  'front-and-back-t-shirt-mockup',
+  'polo-shirt-mockup-generator',
+  'long-sleeve-shirt-mockup-generator',
+  'streetwear-hoodie-mockup-generator'
+].includes(toolPage.slug); %>
+<% if (isEditorialTool) { %>
+  <%- include('partials/tool-editorial-detail', { toolPage }) %>
+<% } else { %>
+
 <section class="tool-detail-hero">
   <div class="container tool-detail-hero-grid">
     <div class="tool-detail-copy">
@@ -342,6 +353,8 @@
   </div>
 </section>
 
+<% } %>
+
 <% if (toolPage.heroModel && toolPage.heroModel.src) { %>
   <script>
     (() => {
@@ -353,7 +366,10 @@
       const download = document.getElementById('toolDownloadPreview');
       const status = document.getElementById('toolPreviewStatus');
       const isBulkTool = <%- JSON.stringify(toolPage.slug === 'bulk-t-shirt-mockup-generator') %>;
+      const usesEditorialLayout = <%- JSON.stringify(isEditorialTool) %>;
       const modelViewerSrc = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';
+      window.ModelViewerElement = window.ModelViewerElement || {};
+      window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
       let viewerReadyPromise = null;
       if (!viewer || !stage || !preview) return;
 
@@ -411,7 +427,7 @@
             stage.classList.remove('is-loading');
             stage.classList.add('is-ready');
             stage.setAttribute('aria-busy', 'false');
-            status.textContent = 'Interactive 3D ready. Rotate, recolor, or export the model.';
+            status.textContent = usesEditorialLayout ? 'Preview ready. Choose a view or color.' : 'Interactive 3D ready. Rotate, recolor, or export the model.';
             window.trackEvent?.(<%- JSON.stringify(toolPage.slug + '_3d_preview_load') %>, {
               interaction_type: 'load_3d_preview',
               tool_name: <%- JSON.stringify(toolPage.slug) %>
@@ -441,7 +457,7 @@
       const applyColor = (hex) => {
         const materials = viewer.model?.materials || [];
         materials.forEach((material) => material.pbrMetallicRoughness?.setBaseColorFactor?.(hexFactor(hex)));
-        status.textContent = 'Garment color updated. Upload artwork to continue in the full editor.';
+        status.textContent = usesEditorialLayout ? 'Color updated. Upload artwork to continue.' : 'Garment color updated. Upload artwork to continue in the full editor.';
       };
 
       ensureViewerReady().catch(() => {});
