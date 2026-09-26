@@ -22,21 +22,11 @@
           </div>
         </div>
         <div class="article-hero-media">
-          <img src="<%= article.image %>" alt="<%= article.imageAlt %>">
-          <span class="article-image-caption">ClozDesign workflow reference</span>
+          <img src="<%= article.image %>" alt="<%= article.imageAlt %>" width="960" height="620" fetchpriority="high">
         </div>
       </div>
     </div>
   </header>
-
-  <div class="container">
-    <%- include('partials/share-panel', {
-      shareSurface: 'article',
-      shareTitle: article.title,
-      shareKicker: 'Share this field note',
-      sharePrompt: 'Know a designer, POD seller, or apparel team working through this problem? Send them the useful part.'
-    }) %>
-  </div>
 
   <div class="container article-layout">
     <aside class="article-toc">
@@ -175,6 +165,14 @@
         </ul>
       </section>
     </div>
+  </div>
+  <div class="container article-share">
+    <%- include('partials/share-panel', {
+      shareSurface: 'article',
+      shareTitle: article.title,
+      shareKicker: 'Share this field note',
+      sharePrompt: 'Know a designer, POD seller, or apparel team working through this problem? Send them the useful part.'
+    }) %>
   </div>
 </article>
 

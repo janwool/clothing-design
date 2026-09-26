@@ -2846,7 +2846,7 @@ router.get('/blog', (req, res) => {
     metaImage: firstImage(req, [blogArticles[0]?.image]),
     structuredData: buildBlogIndexStructuredData(req),
     page: 'blog',
-    pageStyles: ['/css/blog.css?v=20260805'],
+    pageStyles: ['/css/blog.css?v=20260926-editorial-v3'],
     articles: blogArticles
   });
 });
@@ -2877,7 +2877,7 @@ router.get('/blog/:slug', (req, res) => {
     metaImage: firstImage(req, [article.image]),
     structuredData: buildBlogArticleStructuredData(req, article),
     page: 'blog',
-    pageStyles: ['/css/blog.css?v=20260805'],
+    pageStyles: ['/css/blog.css?v=20260926-editorial-v3'],
     article,
     resources: articleResourceLinks(article),
     related: relatedArticles(article)

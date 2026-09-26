@@ -1,0 +1,204 @@
+{
+  "generator": "built-in image_gen",
+  "pages": [
+    {
+      "path": "/blog",
+      "title": "Apparel mockup and 3D clothing design guides.",
+      "mockup": "index-v2.png",
+      "image": "/images/design-guide/index.webp"
+    },
+    {
+      "path": "/blog/how-to-make-realistic-t-shirt-mockups",
+      "title": "How to Make a Realistic T-Shirt Mockup (Without Photoshop)",
+      "mockup": "how-to-make-realistic-t-shirt-mockups-v2.png",
+      "image": "/images/design-guide/how-to-make-realistic-t-shirt-mockups.webp"
+    },
+    {
+      "path": "/blog/t-shirt-print-placement-size-guide",
+      "title": "T-Shirt Print Placement and Size Guide",
+      "mockup": "t-shirt-print-placement-size-guide-v2.png",
+      "image": "/images/design-guide/t-shirt-print-placement-size-guide.webp"
+    },
+    {
+      "path": "/blog/bulk-t-shirt-mockups-for-print-on-demand",
+      "title": "How to Create Bulk T-Shirt Mockups for Print-on-Demand",
+      "mockup": "bulk-t-shirt-mockups-for-print-on-demand-v2.png",
+      "image": "/images/design-guide/bulk-t-shirt-mockups-for-print-on-demand.webp"
+    },
+    {
+      "path": "/blog/transparent-background-apparel-mockups",
+      "title": "How to Make Apparel Mockups With a Transparent Background",
+      "mockup": "transparent-background-apparel-mockups-v2.png",
+      "image": "/images/design-guide/transparent-background-apparel-mockups.webp"
+    },
+    {
+      "path": "/blog/front-and-back-t-shirt-mockup-guide",
+      "title": "Front and Back T-Shirt Mockups: What Every Listing Should Show",
+      "mockup": "front-and-back-t-shirt-mockup-guide-v2.png",
+      "image": "/images/design-guide/front-and-back-t-shirt-mockup-guide.webp"
+    },
+    {
+      "path": "/blog/how-to-choose-a-3d-clothing-model",
+      "title": "How to Choose the Right 3D Clothing Model for Your Design",
+      "mockup": "how-to-choose-a-3d-clothing-model-v1.png",
+      "image": "/images/design-guide/how-to-choose-a-3d-clothing-model.webp",
+      "sourceAsset": "how-to-choose-a-3d-clothing-model-asset-v1.png"
+    },
+    {
+      "path": "/blog/3d-apparel-mockup-workflow",
+      "title": "3D Apparel Mockup Workflow: From Garment Model to Product Visual",
+      "mockup": "3d-apparel-mockup-workflow-v1.png",
+      "image": "/images/design-guide/3d-apparel-mockup-workflow.webp"
+    },
+    {
+      "path": "/blog/streetwear-first-drop-mockup-checklist",
+      "title": "Streetwear First Drop Mockup Checklist",
+      "mockup": "streetwear-first-drop-mockup-checklist-v1.png",
+      "image": "/images/design-guide/streetwear-first-drop-mockup-checklist.webp"
+    },
+    {
+      "path": "/blog/free-3d-clothing-design-online",
+      "title": "Free 3D Clothing Design Online: A Practical Starter Workflow",
+      "mockup": "free-3d-clothing-design-online-v1.png",
+      "image": "/images/design-guide/free-3d-clothing-design-online.webp"
+    },
+    {
+      "path": "/blog/how-to-design-a-dress-online-free",
+      "title": "How to Design a Dress Online for Free in 3D",
+      "mockup": "how-to-design-a-dress-online-free-v1.png",
+      "image": "/images/design-guide/how-to-design-a-dress-online-free.webp"
+    },
+    {
+      "path": "/blog/3d-pants-design-and-mockup-guide",
+      "title": "3D Pants Design and Mockup Guide",
+      "mockup": "3d-pants-design-and-mockup-guide-v1.png",
+      "image": "/images/design-guide/3d-pants-design-and-mockup-guide.webp"
+    },
+    {
+      "path": "/blog/3d-jacket-and-trench-coat-model-guide",
+      "title": "How to Use a 3D Jacket or Trench Coat Model for Apparel Design",
+      "mockup": "3d-jacket-and-trench-coat-model-guide-v1.png",
+      "image": "/images/design-guide/3d-jacket-and-trench-coat-model-guide.webp"
+    },
+    {
+      "path": "/blog/underwear-mockup-design-guide",
+      "title": "Underwear Mockup Design Guide: Briefs, Panties, and Sets",
+      "mockup": "underwear-mockup-design-guide-v1.png",
+      "image": "/images/design-guide/underwear-mockup-design-guide.webp"
+    },
+    {
+      "path": "/blog/make-apparel-mockups-match-the-real-product",
+      "title": "How to Make Apparel Mockups Match the Real Product",
+      "mockup": "make-apparel-mockups-match-the-real-product-v1.png",
+      "image": "/images/design-guide/make-apparel-mockups-match-the-real-product.webp"
+    },
+    {
+      "path": "/blog/3d-vs-ai-vs-template-vs-product-photography",
+      "title": "3D Mockup vs AI Mockup vs Template vs Product Photography",
+      "mockup": "3d-vs-ai-vs-template-vs-product-photography-v1.png",
+      "image": "/images/design-guide/3d-vs-ai-vs-template-vs-product-photography.webp"
+    },
+    {
+      "path": "/blog/white-background-vs-lifestyle-apparel-images",
+      "title": "White Background vs Lifestyle Images for Apparel Products",
+      "mockup": "white-background-vs-lifestyle-apparel-images-v1.png",
+      "image": "/images/design-guide/white-background-vs-lifestyle-apparel-images.webp"
+    },
+    {
+      "path": "/blog/plan-a-clothing-collection-online-free",
+      "title": "How to Plan a Clothing Collection Online for Free",
+      "mockup": "plan-a-clothing-collection-online-free-v1.png",
+      "image": "/images/design-guide/plan-a-clothing-collection-online-free.webp"
+    },
+    {
+      "path": "/blog/how-to-create-a-360-clothing-mockup",
+      "title": "How to Create a 360° Clothing Mockup",
+      "mockup": "how-to-create-a-360-clothing-mockup-v1.png",
+      "image": "/images/design-guide/how-to-create-a-360-clothing-mockup.webp"
+    },
+    {
+      "path": "/blog/hoodie-print-placement-guide",
+      "title": "Hoodie Print Placement Guide: Front, Back, and Sleeves",
+      "mockup": "hoodie-print-placement-guide-v1.png",
+      "image": "/images/design-guide/hoodie-print-placement-guide.webp"
+    },
+    {
+      "path": "/blog/glb-clothing-models-for-apparel-mockups",
+      "title": "GLB Clothing Models for Browser-Based Apparel Mockups",
+      "mockup": "glb-clothing-models-for-apparel-mockups-v1.png",
+      "image": "/images/design-guide/glb-clothing-models-for-apparel-mockups.webp"
+    },
+    {
+      "path": "/blog/how-to-add-a-logo-to-3d-clothing",
+      "title": "How to Add a Logo to 3D Clothing Online",
+      "mockup": "how-to-add-a-logo-to-3d-clothing-v1.png",
+      "image": "/images/design-guide/how-to-add-a-logo-to-3d-clothing.webp"
+    },
+    {
+      "path": "/blog/polo-shirt-logo-placement-guide",
+      "title": "Polo Shirt Logo Placement Guide",
+      "mockup": "polo-shirt-logo-placement-guide-v1.png",
+      "image": "/images/design-guide/polo-shirt-logo-placement-guide.webp"
+    },
+    {
+      "path": "/blog/long-sleeve-shirt-print-placement-guide",
+      "title": "Long Sleeve Shirt Print Placement Guide",
+      "mockup": "long-sleeve-shirt-print-placement-guide-v1.png",
+      "image": "/images/design-guide/long-sleeve-shirt-print-placement-guide.webp"
+    },
+    {
+      "path": "/blog/apparel-ecommerce-catalog-image-guide",
+      "title": "Apparel Ecommerce Catalog Image Guide",
+      "mockup": "apparel-ecommerce-catalog-image-guide-v1.png",
+      "image": "/images/design-guide/apparel-ecommerce-catalog-image-guide.webp"
+    },
+    {
+      "path": "/blog/how-to-use-a-uv-map-for-clothing-mockups",
+      "title": "How to Use a UV Map for 3D Clothing Mockups",
+      "mockup": "how-to-use-a-uv-map-for-clothing-mockups-v1.png",
+      "image": "/images/design-guide/how-to-use-a-uv-map-for-clothing-mockups.webp"
+    },
+    {
+      "path": "/blog/apparel-colorway-mockup-guide",
+      "title": "Apparel Colorway Mockup Guide",
+      "mockup": "apparel-colorway-mockup-guide-v1.png",
+      "image": "/images/design-guide/apparel-colorway-mockup-guide.webp"
+    },
+    {
+      "path": "/blog/skirt-mockup-design-guide",
+      "title": "3D Skirt Mockup Design Guide",
+      "mockup": "skirt-mockup-design-guide-v1.png",
+      "image": "/images/design-guide/skirt-mockup-design-guide.webp"
+    },
+    {
+      "path": "/blog/jacket-print-and-logo-placement-guide",
+      "title": "Jacket Print and Logo Placement Guide",
+      "mockup": "jacket-print-and-logo-placement-guide-v1.png",
+      "image": "/images/design-guide/jacket-print-and-logo-placement-guide.webp"
+    },
+    {
+      "path": "/blog/tactical-utility-vest-mockup-guide",
+      "title": "Tactical and Utility Vest Mockup Design Guide",
+      "mockup": "tactical-utility-vest-mockup-guide-v1.png",
+      "image": "/images/design-guide/tactical-utility-vest-mockup-guide.webp"
+    },
+    {
+      "path": "/blog/leggings-mockup-print-placement-guide",
+      "title": "Leggings Mockup and Print Placement Guide",
+      "mockup": "leggings-mockup-print-placement-guide-v1.png",
+      "image": "/images/design-guide/leggings-mockup-print-placement-guide.webp"
+    },
+    {
+      "path": "/blog/sweater-mockup-design-guide",
+      "title": "Sweater Mockup Design Guide for Knitwear",
+      "mockup": "sweater-mockup-design-guide-v1.png",
+      "image": "/images/design-guide/sweater-mockup-design-guide.webp"
+    },
+    {
+      "path": "/blog/tracksuit-mockup-design-guide",
+      "title": "Tracksuit Mockup Design Guide",
+      "mockup": "tracksuit-mockup-design-guide-v1.png",
+      "image": "/images/design-guide/tracksuit-mockup-design-guide.webp"
+    }
+  ]
+}
