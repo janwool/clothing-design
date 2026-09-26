@@ -120,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260925-share-project-v3'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260926-paid-v1'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -244,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260925-share-project-v3/);
+  assert.match(template, /model-designer\.js\?v=20260926-paid-v1/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -464,7 +464,7 @@ test('keeps on-model mockup code, styles, and image maps behind its launch actio
   assert.match(template, /link\.href = '\/css\/on-model-mockup\.css\?v=20260821'/);
   assert.match(template, /data-mask-image="<%= modelMockupProfile\.live_mask_url %>"/);
   assert.match(template, /data-mask-fallback="<%= modelMockupProfile\.mask_image_url %>/);
-  assert.match(template, /script\.src = '\/js\/on-model-mockup\.js\?v=20260915-direct-events-v3'/);
+  assert.match(template, /script\.src = '\/js\/on-model-mockup\.js\?v=20260926-paid-v1'/);
   assert.match(template, /button\.addEventListener\('click', openStudio\)/);
 });
 

@@ -2217,6 +2217,7 @@ window.initializeModelDesigner = () => {
     setRenderStatus('Rendering high-resolution 3D image...');
 
     try {
+      if (!await window.ExportEntitlements?.requireExportAccess()) return;
       await loadModelViewerModule();
       stopModelRotation();
       const activeViewer = designModal.classList.contains('active') ? designerViewer : detailViewer;

@@ -421,6 +421,7 @@ else loadDesignerProject();
 // Download render
 if (downloadBtn) {
   downloadBtn.addEventListener('click', async () => {
+    if (!await window.ExportEntitlements?.requireExportAccess()) return;
     if (viewer && viewer.toDataURL) {
       downloadBtn.disabled = true;
       try {

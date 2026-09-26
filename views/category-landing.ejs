@@ -122,7 +122,7 @@
             <a href="/3d-models/<%= category.slug %>/<%= model.slug %>" class="model-card" data-category="<%= category.slug %>">
               <div class="model-preview-3d">
                 <% if (model.image_url) { %>
-                  <img src="<%= model.image_url %>" alt="<%= model.name %> free <%= categoryLower %> 3D model and apparel mockup" class="model-img" loading="lazy">
+                  <img src="<%= model.cover_image_url || model.image_url %>" alt="<%= model.name %> free <%= categoryLower %> 3D model and apparel mockup" class="model-img" loading="lazy">
                 <% } else { %>
                   <div class="model-placeholder">
                     <span><%= model.name.charAt(0) %></span>

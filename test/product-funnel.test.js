@@ -22,22 +22,19 @@ test('routes public calls to action into a working mockup path', () => {
   assert.match(authRoute, /res\.redirect\('\/tools\/t-shirt-mockup-generator'\)/);
 });
 
-test('publishes the current Free, Pro, Max, and Business pricing', () => {
+test('publishes the current Free, Pro, and Business pricing', () => {
+  assert.doesNotMatch(pricing, /data-plan="max"|<h2>Max<\/h2>/);
   assert.match(pricing, /3 projects total/);
-  assert.match(pricing, /28 projects \/ month/);
-  assert.match(pricing, /99 projects \/ month/);
-  assert.match(pricing, /250 Try-on Credits/);
-  assert.match(pricing, /1,000 Try-on Credits/);
+  assert.match(pricing, /Unlimited projects/);
+  assert.match(pricing, /Unlimited image storage/);
+  assert.match(pricing, /250 monthly credits/);
   assert.match(pricing, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
   assert.match(pricing, /<% if \(aiTryOnAvailable\) \{ %><li><span aria-hidden="true">✓<\/span> All AI models<\/li>/);
   assert.match(pricing, /data-yearly="\$6\.67"/);
-  assert.match(pricing, /data-yearly="\$19\.67"/);
   assert.match(pricing, /data-plan-alt data-monthly="Billed monthly" data-yearly="\$80 billed annually"/);
   assert.match(pricing, /mailto:support@cloz-design\.com\?subject=ClozDesign%20Business/);
   assert.match(route, /name: 'Pro monthly', price: '9\.90'/);
   assert.match(route, /name: 'Pro yearly', price: '80', priceCurrency: 'USD'/);
-  assert.match(route, /name: 'Max monthly', price: '29', priceCurrency: 'USD'/);
-  assert.match(route, /name: 'Max yearly', price: '236'/);
 });
 
 test('provides live trust routes linked from the footer', () => {

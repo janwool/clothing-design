@@ -23,8 +23,8 @@ test('renders the white mockup library with the Worker template runtime', () => 
     pagination: { page: 1, pageCount: 1, total: 0, start: 0, end: 0, pages: [1] }
   });
 
-  assert.match(html, /Design it\./);
-  assert.match(html, /Catalog index/);
+  assert.match(html, /Choose a look\. Add your design\./);
+  assert.match(html, /Fashion mockup categories/);
   assert.match(html, /No fashion mockups found/);
   assert.match(html, /<body class="category-catalog-page white-mockup-library-page">/);
 });

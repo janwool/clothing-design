@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   let dialog, trigger, access, resource, billing = 'monthly', busy = false, checkoutPending = false, planReady = false, revision = 0;
-  const plans = { pro: { name: 'Pro', monthly: '9.90', yearly: '80', credits: '250', projects: '28', storage: '1 GB' }, max: { name: 'Max', monthly: '29', yearly: '236', credits: '1,000', projects: '99', storage: '100 GB' } };
+  const plans = { pro: { name: 'Pro', monthly: '9.90', yearly: '80', credits: '250', projects: 'Unlimited', storage: 'Unlimited' } };
   let openedAt = 0, closeReason = 'dismiss';
   function trackUpgrade(eventName, parameters = {}) {
     try {
@@ -54,23 +54,23 @@
     const current = access?.plan?.id || 'free';
     const paid = current !== 'free';
     dialog.querySelector('.upgrade-footer > span').textContent = paid ? 'Prices in USD · Contact us to change your subscription' : 'Prices in USD · Checkout opens in a new tab';
-    const titles = { tryOnCredits: current === 'free' ? 'Unlock AI Try-on' : 'More Try-on credits', projects: 'More room to create', storage: 'More space for your designs', watermark: 'Export without watermarks' };
+    const titles = { tryOnCredits: current === 'free' ? 'Unlock AI Try-on' : 'More Try-on credits', projects: 'More room to create', storage: 'More space for your designs', exports: 'Unlock unlimited exports', watermark: 'Export without watermarks' };
     dialog.querySelector('#upgradeTitle').textContent = titles[resource] || 'Upgrade plan';
     const quota = access?.[resource];
-    let reason = { tryOnCredits: current === 'free' ? 'Choose a plan to generate AI Try-ons.' : `Each Try-on needs ${access?.tryOnCredits?.costPerGeneration || 10} credits. You don’t have enough credits left.`, projects: 'You’ve reached your project limit.', storage: 'Your storage is full.', watermark: 'Watermark-free exports are included in Pro and Max.' }[resource] || 'Choose the plan that fits your workflow.';
+    let reason = { tryOnCredits: current === 'free' ? 'Choose a plan to generate AI Try-ons.' : `Each Try-on needs ${access?.tryOnCredits?.costPerGeneration || 10} credits. You don’t have enough credits left.`, projects: 'You’ve reached your project limit.', storage: 'Your storage is full.', exports: 'Upgrade to Pro or above to export images, videos, 3D models and share links.', watermark: 'Watermark-free exports are included in Pro and Business.' }[resource] || 'Choose the plan that fits your workflow.';
     if (quota?.resetsAt && Number.isFinite(Date.parse(quota.resetsAt))) reason += ` Resets ${new Date(quota.resetsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.`;
     dialog.querySelector('#upgradeReason').textContent = reason;
     dialog.querySelector('.upgrade-current').textContent = `Current plan · ${access?.plan?.name || 'Free'}`;
     dialog.querySelectorAll('[data-upgrade-billing]').forEach(button => { button.setAttribute('aria-pressed', String(button.dataset.upgradeBilling === billing)); button.disabled = busy; });
-    const available = current === 'free' ? ['pro', 'max'] : current === 'pro' ? ['max'] : [];
+    const available = current === 'free' ? ['pro'] : [];
     dialog.querySelector('.upgrade-billing').hidden = !available.length;
-    const freeCard = `<section class="upgrade-plan upgrade-plan-free" aria-labelledby="upgradeFreeTitle"><div class="upgrade-plan-heading"><h3 id="upgradeFreeTitle">Free</h3></div><div class="upgrade-free-price-block"><p class="upgrade-price">$0</p><span class="upgrade-free-price-spacer" aria-hidden="true">&nbsp;</span></div><ul><li>3 projects total</li><li>20 MB image storage</li><li>Watermarked exports</li></ul>${access?.plan ? `<span class="upgrade-cta upgrade-free-status">${current === 'free' ? 'Current plan' : 'Free plan'}</span>` : `<a class="upgrade-cta" href="/auth/register">Start free</a>`}</section>`;
+    const freeCard = `<section class="upgrade-plan upgrade-plan-free" aria-labelledby="upgradeFreeTitle"><div class="upgrade-plan-heading"><h3 id="upgradeFreeTitle">Free</h3></div><div class="upgrade-free-price-block"><p class="upgrade-price">$0</p><span class="upgrade-free-price-spacer" aria-hidden="true">&nbsp;</span></div><ul><li>3 projects total</li><li>20 MB image storage</li><li>Free editing &amp; previews</li><li>Exports require Pro</li></ul>${access?.plan ? `<span class="upgrade-cta upgrade-free-status">${current === 'free' ? 'Current plan' : 'Free plan'}</span>` : `<a class="upgrade-cta" href="/auth/register">Start free</a>`}</section>`;
     dialog.querySelector('.upgrade-plans').innerHTML = freeCard + (available.map((id, index) => {
       const plan = plans[id];
       const annual = billing === 'yearly';
       const monthlyPrice = annual ? (Number(plan.yearly) / 12).toFixed(2) : plan.monthly;
       const discount = ((1 - Number(plan.yearly) / (Number(plan.monthly) * 12)) * 100).toFixed(1);
-      return `<section class="upgrade-plan ${index === 0 ? 'is-recommended' : ''}"><div class="upgrade-plan-heading"><h3>${plan.name}</h3>${index === 0 ? '<span>Recommended</span>' : ''}</div><p class="upgrade-price">$${monthlyPrice}<small> / month</small></p>${annual ? `<div class="upgrade-annual-saving"><s>$${plan.monthly} / month</s><span>Save ${discount}%</span></div>` : ''}<p class="upgrade-renewal">${annual ? `$${plan.yearly} billed annually` : 'Billed monthly'}</p><ul><li><strong>${plan.credits}</strong> Try-on credits / month</li><li><strong>${plan.projects}</strong> projects / month</li><li><strong>${plan.storage}</strong> storage</li><li>Watermark-free exports</li><li>All mockup models</li></ul>${paid ? `<a class="upgrade-cta" href="${contact}">Contact us to upgrade ↗</a>` : `<button type="button" class="upgrade-cta" data-upgrade-plan="${id}" ${busy || !planReady ? 'disabled' : ''}>${busy ? 'Loading…' : `Get ${plan.name} ↗`}</button>`}</section>`;
+      return `<section class="upgrade-plan ${index === 0 ? 'is-recommended' : ''}"><div class="upgrade-plan-heading"><h3>${plan.name}</h3>${index === 0 ? '<span>Recommended</span>' : ''}</div><p class="upgrade-price">$${monthlyPrice}<small> / month</small></p>${annual ? `<div class="upgrade-annual-saving"><s>$${plan.monthly} / month</s><span>Save ${discount}%</span></div>` : ''}<p class="upgrade-renewal">${annual ? `$${plan.yearly} billed annually` : 'Billed monthly'}</p><ul><li><strong>${plan.credits}</strong> monthly credits</li><li><strong>${plan.projects}</strong> projects</li><li><strong>${plan.storage}</strong> image storage</li><li>Unlimited image, video &amp; GLB exports</li><li>No watermarks</li><li>Interactive 3D sharing</li><li>All mockup models</li></ul>${paid ? `<a class="upgrade-cta" href="${contact}">Contact us to upgrade ↗</a>` : `<button type="button" class="upgrade-cta" data-upgrade-plan="${id}" ${busy || !planReady ? 'disabled' : ''}>${busy ? 'Loading…' : `Get ${plan.name} ↗`}</button>`}</section>`;
     }).join('') || `<section class="upgrade-business"><h3>Need more capacity?</h3><p>Contact us for a plan tailored to your team.</p><a class="upgrade-cta" href="${contact}">Contact us ↗</a></section>`);
     dialog.querySelector('.upgrade-plans').classList.toggle('has-three-plans', available.length === 2);
   }

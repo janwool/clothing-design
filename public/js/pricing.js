@@ -7,11 +7,18 @@
   const pricingCtas = [...document.querySelectorAll('[data-pricing-cta]')];
   const caption = document.querySelector('[data-billing-caption]');
   const plansRoot = document.querySelector('[data-pricing-plans]');
+  const currencySelect = document.querySelector('[data-pricing-currency]');
+  let quote = { currency: 'USD', monthly: 9.9, yearly: 80 };
+  let quoteRequest = 0;
+  let pricingReady = Promise.resolve();
+  let pricingUnavailable = false;
+  const money = amount => new Intl.NumberFormat(navigator.language || 'en', {
+    style: 'currency', currency: quote.currency
+  }).format(amount);
   const authenticated = plansRoot?.dataset.authenticated === 'true';
   const planDetails = {
     free: { name: 'Free', monthly: 0, yearly: 0 },
     pro: { name: 'Pro', monthly: 9.9, yearly: 80 },
-    max: { name: 'Max', monthly: 29, yearly: 236 },
     business: { name: 'Business' }
   };
 
@@ -31,7 +38,7 @@
 
   const planEvent = (plan, billing = selectedBilling()) => {
     const details = planDetails[plan] || { name: plan };
-    const price = details[billing];
+    const price = plan === 'pro' ? quote[billing] : details[billing];
     const item = {
       item_id: plan,
       item_name: details.name,
@@ -42,7 +49,7 @@
     };
     Object.keys(item).forEach(key => item[key] === undefined && delete item[key]);
     return {
-      currency: price === undefined ? undefined : 'USD',
+      currency: price === undefined ? undefined : quote.currency,
       value: price,
       billing_interval: plan === 'business' ? 'custom' : billing,
       item_list_id: 'pricing_plans',
@@ -60,7 +67,7 @@
     });
 
     prices.forEach(price => {
-      price.textContent = price.dataset[billing];
+      price.textContent = money(billing === 'yearly' ? quote.yearly / 12 : quote.monthly);
     });
 
     periods.forEach(period => {
@@ -68,15 +75,19 @@
     });
 
     alternatePrices.forEach(price => {
-      price.textContent = price.dataset[billing];
+      price.textContent = billing === 'yearly' ? `${money(quote.yearly)} billed annually` : 'Billed monthly';
     });
 
     document.querySelectorAll('[data-plan-saving]').forEach(saving => {
-      saving.hidden = billing !== 'yearly';
+      const percent = (1 - quote.yearly / (quote.monthly * 12)) * 100;
+      saving.hidden = billing !== 'yearly' || percent <= 0;
+      saving.querySelector('s').textContent = `${money(quote.monthly)} / month`;
+      saving.querySelector('span').textContent = `Save ${percent.toFixed(1)}%`;
     });
 
     planLinks.forEach(link => {
       const params = new URLSearchParams({ plan: link.dataset.plan, billing });
+      params.set('currency', currencySelect?.value || 'auto');
       const returnPath = `/pricing?${params.toString()}&checkout=resume`;
       link.dataset.billing = billing;
       link.href = authenticated
@@ -85,10 +96,11 @@
     });
 
     if (caption) {
-      caption.textContent = billing === 'yearly'
-        ? 'Monthly equivalent, billed annually. All prices in USD.'
-        : 'Flexible monthly billing. Change plans anytime.';
+      caption.textContent = `${billing === 'yearly' ? 'Monthly equivalent. ' : ''}Prices in ${quote.currency}. Taxes calculated at checkout.${pricingUnavailable ? ' Local pricing unavailable.' : ''}`;
     }
+
+    const freePrice = document.querySelector('[data-free-price]');
+    if (freePrice) freePrice.textContent = money(0);
 
     if (trackChange) {
       trackPricing(`pricing_billing_${billing}_click`, {
@@ -98,11 +110,66 @@
     }
   };
 
+  // Keep this in memory only: reloading after a VPN change must detect the new IP.
+  const visitorCountry = (async () => {
+    try {
+      const response = await fetch('/api/billing/location', {
+        credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(4000)
+      });
+      const location = await response.json();
+      if (response.ok && /^[A-Z]{2}$/.test(location.country || '')) return location.country;
+    } catch (_) { /* Local previews may not have edge geolocation. */ }
+    try {
+      // Request from the browser so browser VPN/proxy settings are respected.
+      // Only the country code is used; no IP address is stored or sent to our API.
+      const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace', {
+        credentials: 'omit', cache: 'no-store', signal: AbortSignal.timeout(4000)
+      });
+      if (!response.ok) return null;
+      return (await response.text()).match(/^loc=([A-Z]{2})$/m)?.[1] || null;
+    } catch (_) { return null; }
+  })();
+
+  async function loadPricing() {
+    const request = ++quoteRequest;
+    const params = new URLSearchParams();
+    const country = await visitorCountry;
+    if (request !== quoteRequest) return;
+    if (country) params.set('country', country);
+    if (currencySelect?.value === 'USD') params.set('currency', 'USD');
+    plansRoot?.setAttribute('aria-busy', 'true');
+    try {
+      const response = await fetch(`/api/billing/pricing?${params}`, { credentials: 'same-origin' });
+      const result = await response.json();
+      if (!response.ok || !result.success) throw new Error('Pricing unavailable');
+      if (request !== quoteRequest) return;
+      quote = result;
+      pricingUnavailable = false;
+    } catch (_) {
+      if (request !== quoteRequest) return;
+      quote = { currency: 'USD', monthly: 9.9, yearly: 80 };
+      pricingUnavailable = true;
+    }
+    if (currencySelect?.value === 'auto') {
+      currencySelect.options[0].textContent = `Local currency (${quote.currency})`;
+    }
+    setBilling(selectedBilling());
+    plansRoot?.removeAttribute('aria-busy');
+  }
+
+  currencySelect?.addEventListener('change', () => {
+    setBilling(selectedBilling());
+    pricingReady = loadPricing();
+  });
+
   options.forEach(option => {
     option.addEventListener('click', () => setBilling(option.dataset.billingOption, true));
   });
 
   async function startCheckout(link, source = 'pricing_cta') {
+    link.setAttribute('aria-disabled', 'true');
+    let pending;
+    do { pending = pricingReady; await pending; } while (pending !== pricingReady);
     const selected = selectedBilling();
     const checkoutEvent = planEvent(link.dataset.plan, selected);
     trackPricing(`pricing_${link.dataset.plan}_checkout_begin`, { ...checkoutEvent, checkout_source: source });
@@ -115,7 +182,7 @@
         method: 'POST',
         credentials: 'same-origin',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({ plan: link.dataset.plan, billingInterval: selected })
+        body: JSON.stringify({ plan: link.dataset.plan, billingInterval: selected, currency: quote.currency, country: quote.country })
       });
       const payload = await response.json().catch(() => ({}));
       if (response.status === 401 && payload.loginUrl) {
@@ -181,7 +248,9 @@
   const query = new URLSearchParams(window.location.search);
   const requestedBilling = query.get('billing');
   const initialBilling = ['monthly', 'yearly'].includes(requestedBilling) ? requestedBilling : 'monthly';
+  if (currencySelect && query.get('currency') === 'USD') currencySelect.value = 'USD';
   setBilling(initialBilling);
+  pricingReady = loadPricing();
   trackPricing('pricing_plans_view', {
     billing_interval: initialBilling,
     pricing_entry_source: query.get('source') || undefined,

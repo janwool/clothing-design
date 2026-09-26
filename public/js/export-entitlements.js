@@ -22,6 +22,53 @@
     return entitlementPromise;
   }
 
+  let accessDialog;
+  function showAccessDialog(message, upgrade = false) {
+    if (upgrade && window.UpgradeModal) {
+      window.UpgradeModal.open({ resource: 'exports' });
+      return;
+    }
+    if (!accessDialog) {
+      accessDialog = document.createElement('dialog');
+      accessDialog.className = 'export-access-dialog';
+      accessDialog.setAttribute('aria-labelledby', 'exportAccessTitle');
+      accessDialog.setAttribute('aria-describedby', 'exportAccessMessage');
+      accessDialog.innerHTML = `<form method="dialog"><button class="export-access-close" aria-label="Close">×</button>
+        <span class="export-access-eyebrow">CLOZDESIGN · EXPORT</span>
+        <h2 id="exportAccessTitle"></h2><p id="exportAccessMessage"></p>
+        <div class="export-access-actions"><button>Keep editing</button><a href="/pricing" target="_blank" rel="noopener">View plans ↗</a></div></form>`;
+      document.body.appendChild(accessDialog);
+      accessDialog.addEventListener('click', event => { if (event.target === accessDialog) accessDialog.close(); });
+    }
+    accessDialog.querySelector('h2').textContent = upgrade ? 'Make it yours. Export with Pro.' : 'Unable to verify export access';
+    accessDialog.querySelector('p').textContent = message;
+    accessDialog.querySelector('a').hidden = !upgrade;
+    if (!accessDialog.open) accessDialog.showModal();
+  }
+
+  // Always revalidate: an editor may remain open across an upgrade or expiry.
+  async function requireExportAccess() {
+    try {
+      const response = await fetch('/api/account/exports/authorize', {
+        method: 'POST', credentials: 'same-origin', cache: 'no-store',
+        headers: { Accept: 'application/json' }
+      });
+      const payload = await response.json();
+      if (response.ok && payload.success === true) {
+        entitlementPromise = undefined;
+        return true;
+      }
+      if (response.status === 401 || (response.status === 403 && payload.code === 'EXPORT_UPGRADE_REQUIRED')) {
+        showAccessDialog('Image, video, 3D model exports and share links are included with Pro and Business. Your design stays here while you choose a plan.', true);
+      } else {
+        showAccessDialog('We could not check your subscription. Please try exporting again in a moment.');
+      }
+    } catch (error) {
+      showAccessDialog('We could not check your subscription. Check your connection and try again.');
+    }
+    return false;
+  }
+
   function loadImage(source) {
     return new Promise((resolve, reject) => {
       const image = new Image();
@@ -212,6 +259,7 @@
   }
 
   window.ExportEntitlements = Object.freeze({
+    requireExportAccess,
     applyModelViewerWatermark,
     drawTiledWatermark,
     getEntitlements,

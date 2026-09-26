@@ -305,9 +305,11 @@
     modelCards.forEach(item => {
       const isSelected = item === card;
       item.classList.toggle('is-selected', isSelected);
-      item.setAttribute('aria-selected', String(isSelected));
+      item.setAttribute('aria-pressed', String(isSelected));
     });
+    setPreviewZoom(100);
     selectedModel = card;
+    document.getElementById('tryOnSelectedAvatar').src = card.dataset.modelImage;
     personImageUrl = card.dataset.modelImage;
     generatedImageUrl = '';
     trackTryOn('ai_tryon_person_model_select', {
@@ -378,6 +380,7 @@
   async function captureGarmentImage() {
     await designLoadPromise;
     if (savedProjectPreviewUrl) return imageUrlToDataUri(savedProjectPreviewUrl);
+    await angleCapturePromise;
     const fallbackImage = root.dataset.garmentFallback;
     if (!viewer?.toDataURL) {
       if (fallbackImage) return imageUrlToDataUri(fallbackImage);
@@ -498,8 +501,19 @@
   }
 
   modelCards.forEach(card => card.addEventListener('click', () => selectModel(card)));
+  let modelCollection = '';
+  function filterModels() {
+    const style = document.getElementById('tryOnStyleFilter').value;
+    modelCards.forEach(card => { card.hidden = Boolean((style && card.dataset.modelStyle !== style) || (modelCollection && card.dataset.modelCollection !== modelCollection)); });
+    document.getElementById('tryOnModelEmpty').hidden = modelCards.some(card => !card.hidden);
+  }
+  root.querySelectorAll('[data-model-filter]').forEach(button => button.addEventListener('click', () => {
+    modelCollection = button.dataset.modelFilter;
+    root.querySelectorAll('[data-model-filter]').forEach(tab => tab.setAttribute('aria-pressed', String(tab === button)));
+    filterModels();
+  }));
   document.getElementById('tryOnStyleFilter')?.addEventListener('change', event => {
-    modelCards.forEach(card => { card.hidden = Boolean(event.target.value && card.dataset.modelStyle !== event.target.value); });
+    filterModels();
     trackTryOn('ai_tryon_model_filter_change', { model_style: event.target.value || 'all' });
   });
   let uploadedPhotoUrl = '';
@@ -541,7 +555,7 @@
     window.parent.postMessage({ type: 'tryon:close' }, location.origin);
   }
   root.querySelector('.ai-tryon__close')?.addEventListener('click', closeEditor);
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') closeEditor(event); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !previewDialog.open) closeEditor(event); });
   previewButtons.forEach(button => button.addEventListener('click', () => {
     setPreviewState(button.dataset.previewState);
     trackTryOn('ai_tryon_preview_toggle', { preview_state: button.dataset.previewState });
@@ -565,14 +579,19 @@
     }
   });
 
-  const fitViewButton = document.getElementById('fitViewButton');
-  fitViewButton?.addEventListener('click', () => {
-    const isContained = resultImage.dataset.fit === 'contain';
-    resultImage.dataset.fit = isContained ? 'cover' : 'contain';
-    resultImage.style.objectFit = isContained ? 'cover' : 'contain';
-    resultImage.style.background = isContained ? '' : '#d9d8d4';
-    fitViewButton.querySelector('span').textContent = isContained ? 'Fit view' : 'Fill view';
-  });
+  let previewZoom = 100;
+  const zoomOut = document.getElementById('tryOnZoomOut');
+  const zoomIn = document.getElementById('tryOnZoomIn');
+  function setPreviewZoom(value) {
+    previewZoom = Math.max(50, Math.min(150, value));
+    resultImage.style.transform = `scale(${previewZoom / 100})`;
+    document.getElementById('tryOnZoomValue').textContent = `${previewZoom}%`;
+    zoomOut.disabled = previewZoom === 50;
+    zoomIn.disabled = previewZoom === 150;
+  }
+  zoomOut.addEventListener('click', () => setPreviewZoom(previewZoom - 10));
+  zoomIn.addEventListener('click', () => setPreviewZoom(previewZoom + 10));
+  document.getElementById('tryOnZoomReset').addEventListener('click', () => setPreviewZoom(100));
 
   downloadButton?.addEventListener('click', () => {
     if (!generatedImageUrl) return;
@@ -597,5 +616,71 @@
     has_project: new URLSearchParams(window.location.search).has('project'),
     initial_person_model_id: selectedModel?.dataset?.modelId
   });
+  const angleCards = [...root.querySelectorAll('[data-garment-angle]')];
+  const previewButton = document.getElementById('openTryOnPreview');
+  const previewDialog = document.createElement('dialog');
+  previewDialog.className = 'tryon-preview-dialog';
+  previewDialog.setAttribute('aria-label', 'Your design — 3D preview');
+  root.appendChild(previewDialog);
+  const viewerHome = viewerPanel.parentElement;
+  let previewOpener;
+  function openGarmentPreview(opener, angle = 0) {
+    previewOpener = opener;
+    previewDialog.appendChild(viewerPanel);
+    viewerPanel.inert = false;
+    viewerPanel.removeAttribute('aria-hidden');
+    if (viewer) viewer.cameraOrbit = `${angle}deg 74deg 108%`;
+    previewDialog.showModal();
+    document.getElementById('closeTryOnPreview').focus();
+  }
+  previewButton.addEventListener('click', () => openGarmentPreview(previewButton));
+  angleCards.forEach(card => card.addEventListener('click', () => openGarmentPreview(card, Number(card.dataset.garmentAngle))));
+  document.getElementById('closeTryOnPreview').addEventListener('click', () => previewDialog.close());
+  previewDialog.addEventListener('keydown', event => { if (event.key === 'Escape') event.stopPropagation(); });
+  previewDialog.addEventListener('close', () => {
+    viewerHome.appendChild(viewerPanel);
+    viewerPanel.inert = true;
+    viewerPanel.setAttribute('aria-hidden', 'true');
+    if (viewer) viewer.cameraOrbit = '0deg 74deg 108%';
+    previewOpener?.focus();
+  });
+  async function renderFrame() {
+    await viewer.updateComplete;
+    viewer.jumpCameraToGoal();
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+  async function captureGarmentAngles() {
+    await designLoadPromise;
+    try {
+      if (savedProjectPreviewUrl || !viewer) throw new Error('Only a saved preview is available.');
+      await waitForViewerModel();
+      viewer.autoRotate = false;
+      for (const card of angleCards) {
+        viewer.cameraOrbit = `${card.dataset.garmentAngle}deg 74deg 108%`;
+        await renderFrame();
+        const image = card.querySelector('img');
+        image.src = viewer.toDataURL('image/png');
+        image.hidden = false;
+        card.querySelector('.tryon-angle__status').hidden = true;
+        card.disabled = false;
+      }
+      previewButton.disabled = false;
+    } catch (error) {
+      angleCards.forEach(card => { card.querySelector('.tryon-angle__status').textContent = 'View unavailable'; });
+      const fallback = savedProjectPreviewUrl || root.dataset.garmentFallback;
+      if (fallback) {
+        const image = angleCards[0].querySelector('img');
+        image.src = fallback;
+        image.hidden = false;
+        image.alt = 'Saved garment preview';
+        angleCards[0].lastElementChild.textContent = 'Saved preview';
+        angleCards[0].querySelector('.tryon-angle__status').hidden = true;
+      }
+    } finally {
+      if (viewer) { viewer.cameraOrbit = '0deg 74deg 108%'; await renderFrame().catch(() => {}); }
+      root.querySelector('.tryon-angles').setAttribute('aria-busy', 'false');
+    }
+  }
   designLoadPromise = loadCurrentDesign();
+  const angleCapturePromise = captureGarmentAngles();
 })();

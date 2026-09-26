@@ -1299,7 +1299,7 @@ const TOOL_PAGE_CONTENT = {
     ],
     faq: [
       { question: 'What is a 3D clothing mockup generator?', answer: 'It is a browser-based workflow for creating apparel visuals from 3D garment model previews instead of editing flat PSD templates.' },
-      { question: 'Can I design clothing online for free?', answer: 'Yes. Choose a free 3D garment model, test colors and viewing angles, upload artwork, and export a transparent apparel preview in the browser.' },
+      { question: 'Can I design clothing online for free?', answer: 'Yes. Choose a free 3D garment model, test colors and viewing angles, upload artwork, and preview your apparel in the browser for free. Exporting requires Pro or above.' },
       { question: 'Which clothing categories can I mock up?', answer: 'Use ClozDesign for T-shirts, hoodies, shirts, jackets, dresses, bottoms, bags, hats, and other apparel or accessory categories.' },
       { question: 'Is this only for fashion designers?', answer: 'No. It is useful for POD sellers, ecommerce teams, agencies, merch creators, streetwear brands, students, and product teams.' },
       { question: 'Can I use mockups on product pages?', answer: 'Yes. The visual workflow is built for product page drafts, launch decks, portfolios, and internal approvals.' }
@@ -1463,7 +1463,7 @@ const TOOL_PAGE_CONTENT = {
     competitorInsights: [
       'Create front-facing shirt visuals for product validation, launch pages, and quick customer feedback.',
       'Preview print placement and color contrast on a garment shape instead of judging artwork on a blank canvas.',
-      'Use free mockup exports when you need clean apparel images before photography or production.'
+      'Use paid mockup exports when you need clean apparel images before photography or production.'
     ],
     freePositioning: 'ClozDesign keeps the T-shirt mockup step free, so you can test designs, compare colorways, and prepare review images without paying for a mockup subscription.',
     steps: [
@@ -1479,7 +1479,7 @@ const TOOL_PAGE_CONTENT = {
       'Share a clean T-shirt concept with a team, client, club, or event organizer.'
     ],
     faq: [
-      { question: 'Can I design a T-shirt online for free?', answer: 'Yes. You can start from a T-shirt model, preview artwork placement, and export a mockup image without buying a paid design tool.' },
+      { question: 'Can I design a T-shirt online for free?', answer: 'Yes. You can start from a T-shirt model, preview artwork placement, and edit your design for free. Exporting requires Pro or above.' },
       { question: 'Can I use the mockup for a product listing?', answer: 'Yes. The exported visual is useful for draft ecommerce pages, print-on-demand planning, campaign previews, and internal approvals.' },
       { question: 'Do I need Photoshop or 3D software?', answer: 'No. The workflow is browser-based, so you can create a visual preview without editing a PSD file or setting up a desktop 3D scene.' }
     ],
@@ -1549,7 +1549,7 @@ const TOOL_PAGE_CONTENT = {
       'Use dress models and mockup visuals to explain silhouette, proportion, and surface direction.'
     ],
     faq: [
-      { question: 'Can I design a dress online for free?', answer: 'Yes. Choose the 3D dress model, test colors and viewing angles, upload artwork, and export a transparent dress mockup in the browser.' },
+      { question: 'Can I design a dress online for free?', answer: 'Yes. Choose the 3D dress model, test colors and viewing angles, upload artwork, and preview your dress in the browser for free. Exporting requires Pro or above.' },
       { question: 'Can I design a dress online without CAD?', answer: 'Yes. The page provides a browser-based visual workflow for dress concepts without requiring desktop CAD or image-editing software.' },
       { question: 'Is this for fashion designers or shoppers?', answer: 'It is built for apparel creators, boutique teams, students, and designers who need mockups and planning references.' },
       { question: 'Can I compare different dress categories?', answer: 'Yes. Use category-specific dress models to compare silhouette, length, proportion, color, and surface design direction.' }
@@ -1683,7 +1683,7 @@ const TOOL_VARIANT_CONTENT = {
     heroModel: { src: 'https://cdn.cloz-design.com/d3/6588/short-sleeve-polo-shirt-3d-model.glb?v=uv-original-20260606', alt: 'Short sleeve polo shirt 3D mockup' },
     editorHref: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design',
     cta: { label: 'Customize Polo Shirt', href: '/3d-models/t-shirt-mockup/short-sleeve-polo-shirt-3d-model#design' },
-    outputHighlights: ['Collar and placket detail', 'Left-chest logo preview', 'Free transparent export'],
+    outputHighlights: ['Collar and placket detail', 'Left-chest logo preview', 'Pro transparent export'],
     examplesTitle: 'Polo shirt mockups for uniforms and branded apparel',
     planningTitle: 'Preview logos around the collar and placket structure',
     benefitsTitle: 'Use a true polo silhouette for branded shirt decisions',
@@ -1723,7 +1723,7 @@ const TOOL_VARIANT_CONTENT = {
     heroModel: { src: 'https://cdn.cloz-design.com/d3/3d-models/hoodie-mockup/hoodie-mockup-3d-model-04-e77e8039.glb', alt: 'Pullover streetwear hoodie 3D mockup' },
     editorHref: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design',
     cta: { label: 'Customize Streetwear Hoodie', href: '/3d-models/hoodie-mockup/classic-pullover-hoodie-3d-model#design' },
-    outputHighlights: ['Pullover hoodie model', 'Chest, back and sleeve planning', 'Free PNG export'],
+    outputHighlights: ['Pullover hoodie model', 'Chest, back and sleeve planning', 'Pro PNG export'],
     examplesTitle: 'Streetwear hoodie mockups for graphic drops',
     planningTitle: 'Balance artwork against hood and pocket volume',
     benefitsTitle: 'Preview the complete pullover silhouette before sampling',
@@ -1775,7 +1775,7 @@ function getToolPage(slug) {
     ],
     faqTitle: `${variant.title.replace(/^Free\s+/i, '')} questions`,
     faq: [
-      { question: `Is this ${variant.primaryKeyword.replace(/^free\s+/i, '')} free?`, answer: 'Yes. You can inspect the model, compare colors, upload artwork, use the browser editor, and export a transparent product preview for free.' },
+      { question: `Is this ${variant.primaryKeyword.replace(/^free\s+/i, '')} free?`, answer: 'Yes. You can inspect the model, compare colors, upload artwork, use the browser editor, and preview your design for free. Exporting requires Pro or above.' },
       { question: 'Can I upload my own logo or graphic?', answer: 'Yes. Upload PNG, JPG, WebP, or SVG artwork from the quick editor and it will open on the matching garment in the full UV editor.' },
       { question: 'Can I view the front, back, and side?', answer: 'Yes. Use the angle controls or drag the live 3D model to review artwork and garment proportions from any direction.' },
       { question: 'Do I need Photoshop?', answer: 'No. The model viewer, artwork placement workflow, color controls, and transparent PNG export run in the browser.' }
@@ -2396,7 +2396,7 @@ router.get('/white-mockups', async (req, res) => {
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260919-editorial-catalog-v8'],
+      pageStyles: ['/css/white-mockups.css?v=20260926-catalog-redesign-v1'],
       assets: library.assets,
       assetSummary: summary,
       activeType,
@@ -2416,7 +2416,7 @@ router.get('/white-mockups', async (req, res) => {
       title: 'On-Model Fashion Mockups | ClozDesign',
       metaDescription: 'Browse customizable on-model fashion mockups by clothing type.',
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260919-editorial-catalog-v8'],
+      pageStyles: ['/css/white-mockups.css?v=20260926-catalog-redesign-v1'],
       assets: [],
       assetSummary: { total: 0, mappedModels: 0, counts: {} },
       activeType: '',
@@ -2503,7 +2503,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       ],
       page: 'white-mockups',
       pageStyles: [
-        '/css/white-mockups.css?v=20260919-editorial-catalog-v8',
+        '/css/white-mockups.css?v=20260926-catalog-redesign-v1',
         '/css/white-mockup-detail.css?v=20260922-shared-login-v11'
       ],
       asset,
@@ -2888,8 +2888,8 @@ router.get('/blog/:slug', (req, res) => {
 router.get('/pricing', (req, res) => {
   const aiTryOnEnabled = isAiTryOnEnabled();
   const description = aiTryOnEnabled
-    ? 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, AI try-on credits, watermark-free exports, and image storage.'
-    : 'Compare ClozDesign Free, Pro, Max, and Business plans for apparel design projects, watermark-free exports, and image storage.';
+    ? 'Compare ClozDesign Free, Pro, and Business plans for apparel design projects, AI try-on credits, watermark-free exports, and image storage.'
+    : 'Compare ClozDesign Free, Pro, and Business plans for apparel design projects, watermark-free exports, and image storage.';
   res.render('pricing', { 
     title: 'Pricing & Plans - ClozDesign',
     metaDescription: description,
@@ -2910,12 +2910,10 @@ router.get('/pricing', (req, res) => {
           { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro monthly', price: '9.90', priceCurrency: 'USD' },
           { '@type': 'Offer', name: 'Pro yearly', price: '80', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Max monthly', price: '29', priceCurrency: 'USD' },
-          { '@type': 'Offer', name: 'Max yearly', price: '236', priceCurrency: 'USD' }
         ]
       }
     }),
-    pageStyles: ['/css/pricing.css?v=20260914-v4'],
+    pageStyles: ['/css/pricing.css?v=20260926-no-max-v1'],
     bodyClass: 'pricing-page',
     page: 'pricing',
     aiTryOnEnabled
@@ -3524,7 +3522,6 @@ router.get('/3d-models/:category/:slug/try-on', async (req, res) => {
       metaDescription: description,
       metaRobots: 'noindex,follow',
       metaImage: firstImage(req, [normalizedModel.image_url]),
-      pageStyles: ['/css/ai-try-on.css?v=20260920-fullscreen-v11'],
       bodyClass: 'ai-tryon-body',
       personModels: require('../lib/try-on-models.json'),
       page: 'designer',

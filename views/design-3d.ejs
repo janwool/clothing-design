@@ -128,7 +128,7 @@
           <a href="/3d-models/<%= model.category_slug || model.category %>/<%= model.slug %>" class="model-card mockups-masonry-card mockups-card-<%= masonrySizes[index % masonrySizes.length] %> mockups-card-<%= masonryTones[index % masonryTones.length] %>" data-category="<%= model.category_slug || model.category %>" aria-label="Open <%= modelDisplayName %> 3D model">
             <div class="model-preview-3d">
               <% if (model.image_url) { %>
-                <img src="<%= model.image_url %>" alt="" class="model-img" loading="lazy" decoding="async">
+                <img src="<%= model.cover_image_url || model.image_url %>" alt="" class="model-img" loading="lazy" decoding="async">
               <% } else { %>
                 <div class="model-placeholder" aria-hidden="true"></div>
               <% } %>

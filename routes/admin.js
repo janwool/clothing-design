@@ -1145,7 +1145,7 @@ router.get('/users', requireAuth, async (req, res) => {
 router.patch('/users/:id/plan', requireAuth, async (req, res) => {
   const requestedPlan = String(req.body?.plan || '').trim().toLowerCase();
   const billingInterval = String(req.body?.billingInterval || '').trim().toLowerCase();
-  if (!['free', 'pro', 'max', 'business'].includes(requestedPlan)) {
+  if (!['free', 'pro', 'business'].includes(requestedPlan)) {
     return res.status(400).json({ success: false, error: 'Choose a valid plan.' });
   }
   if (requestedPlan !== 'free' && requestedPlan !== 'business' && !['monthly', 'yearly'].includes(billingInterval)) {

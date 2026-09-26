@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'pricing-page',
-  pageStyles: ['/css/pricing.css?v=20260922-annual-v3']
+  pageStyles: ['/css/pricing.css?v=20260926-ip-currency-v3']
 }) %>
 <% const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled); %>
 
@@ -18,6 +18,10 @@
       <button class="is-active" type="button" data-billing-option="monthly" data-analytics-managed="true" aria-pressed="true">Monthly</button>
       <button type="button" data-billing-option="yearly" data-analytics-managed="true" aria-pressed="false">Yearly</button>
     </div>
+    <select class="pricing-currency" aria-label="Display currency" data-pricing-currency>
+      <option value="auto">Local currency</option>
+      <option value="USD">USD</option>
+    </select>
     <p class="billing-caption" aria-live="polite" data-billing-caption>Flexible monthly billing. Change plans anytime.</p>
   </div>
 
@@ -25,18 +29,20 @@
     <article class="pricing-card pricing-card-free">
       <div class="pricing-card-heading"><h2>Free</h2></div>
       <div class="pricing-price-block">
-        <div class="pricing-price-line"><strong>$0</strong></div>
+        <div class="pricing-price-line"><strong data-free-price>$0</strong></div>
         <span class="pricing-alt-price" aria-hidden="true">&nbsp;</span>
       </div>
       <ul class="pricing-features">
         <li><span aria-hidden="true">✓</span> 3 projects total</li>
         <li><span aria-hidden="true">✓</span> 20 MB image storage</li>
-        <li><span aria-hidden="true">✓</span> Watermarked exports</li>
+        <li><span aria-hidden="true">✓</span> Free editing &amp; previews</li>
+        <li><span aria-hidden="true">—</span> Exports require Pro</li>
       </ul>
       <a class="pricing-cta pricing-cta-secondary" href="/auth/register" data-pricing-cta data-plan="free" data-analytics-managed="true">Start free</a>
     </article>
 
-    <article class="pricing-card">
+    <article class="pricing-card pricing-card-featured">
+      <div class="pricing-popular">Most popular</div>
       <div class="pricing-card-heading"><h2>Pro</h2></div>
       <div class="pricing-price-block">
         <div class="pricing-price-line">
@@ -47,34 +53,15 @@
         <span class="pricing-alt-price" data-plan-alt data-monthly="Billed monthly" data-yearly="$80 billed annually">Billed monthly</span>
       </div>
       <ul class="pricing-features">
-        <li><span aria-hidden="true">✓</span> 28 projects / month</li>
-        <li><span aria-hidden="true">✓</span> Remove watermarks</li>
+        <li><span aria-hidden="true">✓</span> Unlimited projects</li>
+        <li><span aria-hidden="true">✓</span> Unlimited image, video &amp; GLB exports</li>
+        <li><span aria-hidden="true">✓</span> No watermarks</li>
+        <li><span aria-hidden="true">✓</span> Interactive 3D sharing</li>
         <% if (aiTryOnAvailable) { %><li><span aria-hidden="true">✓</span> All AI models</li>
-        <li><span aria-hidden="true">✓</span> 250 Try-on Credits</li><% } %>
-        <li><span aria-hidden="true">✓</span> 1 GB image storage</li>
+        <li><span aria-hidden="true">✓</span> 250 monthly credits</li><% } %>
+        <li><span aria-hidden="true">✓</span> Unlimited image storage</li>
       </ul>
-      <a class="pricing-cta pricing-cta-secondary" href="/auth/register?plan=pro&amp;billing=monthly" data-pricing-cta data-plan-link data-plan="pro" data-analytics-managed="true">Choose Pro</a>
-    </article>
-
-    <article class="pricing-card pricing-card-featured">
-      <div class="pricing-popular">Most popular</div>
-      <div class="pricing-card-heading"><h2>Max</h2></div>
-      <div class="pricing-price-block">
-        <div class="pricing-price-line">
-          <strong data-plan-price data-monthly="$29" data-yearly="$19.67">$29</strong>
-          <span data-plan-period data-monthly="/ month" data-yearly="/ month">/ month</span>
-        </div>
-        <div class="pricing-annual-saving" data-plan-saving hidden><s>$29 / month</s><span>Save 32.2%</span></div>
-        <span class="pricing-alt-price" data-plan-alt data-monthly="Billed monthly" data-yearly="$236 billed annually">Billed monthly</span>
-      </div>
-      <ul class="pricing-features">
-        <li><span aria-hidden="true">✓</span> 99 projects / month</li>
-        <li><span aria-hidden="true">✓</span> Remove watermarks</li>
-        <% if (aiTryOnAvailable) { %><li><span aria-hidden="true">✓</span> All AI models</li>
-        <li><span aria-hidden="true">✓</span> 1,000 Try-on Credits</li><% } %>
-        <li><span aria-hidden="true">✓</span> 100 GB image storage</li>
-      </ul>
-      <a class="pricing-cta pricing-cta-inverse" href="/auth/register?plan=max&amp;billing=monthly" data-pricing-cta data-plan-link data-plan="max" data-analytics-managed="true">Choose Max</a>
+      <a class="pricing-cta pricing-cta-inverse" href="/auth/register?plan=pro&amp;billing=monthly" data-pricing-cta data-plan-link data-plan="pro" data-analytics-managed="true">Choose Pro</a>
     </article>
 
     <article class="pricing-card pricing-card-business">
@@ -86,6 +73,9 @@
       <ul class="pricing-features">
         <li><span aria-hidden="true">✓</span> Custom projects &amp; limits</li>
         <li><span aria-hidden="true">✓</span> Custom storage</li>
+        <li><span aria-hidden="true">✓</span> Unlimited image, video &amp; GLB exports</li>
+        <li><span aria-hidden="true">✓</span> No watermarks</li>
+        <li><span aria-hidden="true">✓</span> Interactive 3D sharing</li>
         <li><span aria-hidden="true">✓</span> Priority support</li>
       </ul>
       <a class="pricing-cta pricing-cta-secondary" href="mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry" data-pricing-cta data-plan="business" data-analytics-managed="true">Contact sales</a>
@@ -99,9 +89,9 @@
       <path d="M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7"></path>
     </svg>
     <span aria-hidden="true"></span>
-    <p>Projects refresh monthly. Storage stays with you.</p>
+    <p>Create unlimited projects with Pro. Keep your work in one place.</p>
   </div>
 </section>
 
-<script src="/js/pricing.js?v=20260922-annual-v3" defer></script>
+<script src="/js/pricing.js?v=20260926-ip-currency-v3" defer></script>
 <%- include('partials/footer') %>

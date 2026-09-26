@@ -22,8 +22,9 @@ test('renders the white mockup category page from database asset records', () =>
   assert.match(data, /FROM on_model_mockup_assets a/);
   assert.match(data, /a\.garment_type = \?/);
   assert.match(view, /asset\.base_image_url/);
-  assert.match(view, /Explore the collection/);
-  assert.match(view, /Catalog index/);
+  assert.match(view, /Choose a look\. Add your design\./);
+  assert.match(view, /Fashion mockup categories/);
+  assert.match(view, /white-catalog-grid/);
   assert.match(view, /href="\/white-mockups\/<%= asset\.asset_name %>"/);
 });
 
@@ -88,10 +89,10 @@ test('cache-busts commercial white mockup assets consistently', () => {
     .map(match => match[1]);
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
-  assert.match(libraryVersions[0], /^20260919-editorial-catalog-v8$/);
+  assert.match(libraryVersions[0], /^20260926-catalog-redesign-v1$/);
   assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260922-shared-login-v11/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260923-cover-project-v33/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260926-paid-v1/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);

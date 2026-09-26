@@ -1,0 +1,4 @@
+file '/Users/chengwuxue/projects/clothing-design/marketing/x/2026-09-26/export-tutorial/hook.mp4'
+file '/Users/chengwuxue/projects/clothing-design/marketing/x/2026-09-26/export-tutorial/images.mp4'
+file '/Users/chengwuxue/projects/clothing-design/marketing/x/2026-09-26/export-tutorial/video.mp4'
+file '/Users/chengwuxue/projects/clothing-design/marketing/x/2026-09-26/export-tutorial/end.mp4'

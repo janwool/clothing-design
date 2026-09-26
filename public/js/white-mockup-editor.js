@@ -849,7 +849,7 @@
   }
 
   async function downloadMockup() {
-    if (!requireEditorSignIn('download')) return;
+    if (!await window.ExportEntitlements?.requireExportAccess()) return;
     if (!state.ready || !state.artworkImage) return;
     trackWhiteMockup('white_mockup_png_download_begin');
     render({ overlay: false, forceQuality: true });

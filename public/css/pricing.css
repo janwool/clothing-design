@@ -100,7 +100,7 @@
 
 .pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   max-width: 1384px;
   padding-top: 18px;
@@ -283,7 +283,7 @@
 
 @media (max-width: 1120px) {
   .pricing-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
   }
 
@@ -331,3 +331,17 @@
 .pricing-annual-saving s { color: var(--pricing-copy); }
 .pricing-annual-saving span { padding: 4px 7px; border-radius: 3px; background: #ececea; color: var(--pricing-ink); font-weight: 650; }
 .pricing-card-featured .pricing-annual-saving s { color: #d0d0d3; }
+
+.pricing-currency {
+  display: block;
+  margin: 12px auto 0;
+  padding: 6px 28px 6px 10px;
+  max-width: 100%;
+  border: 1px solid var(--pricing-line);
+  border-radius: 4px;
+  color: var(--pricing-copy);
+  background-color: transparent;
+  font: inherit;
+  font-size: 12px;
+}
+.pricing-currency:focus-visible { outline: 2px solid #0066cc; outline-offset: 3px; }

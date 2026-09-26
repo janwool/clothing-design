@@ -36,6 +36,29 @@ function requireUser(req, res, next) {
   return res.redirect(`/auth/login?next=${encodeURIComponent(req.originalUrl || '/account/projects')}`);
 }
 
+async function requireExportAccess(req, res, next) {
+  res.set('Cache-Control', 'private, no-store');
+  try {
+    const entitlements = await getUserEntitlements(req.session.user.id);
+    if (!entitlements.features.exports) {
+      return res.status(403).json({
+        success: false,
+        code: 'EXPORT_UPGRADE_REQUIRED',
+        error: 'Upgrade to Pro or above to export your designs.',
+        upgradeUrl: '/pricing'
+      });
+    }
+    return next();
+  } catch (error) {
+    console.error('Export authorization failed:', error);
+    return res.status(503).json({ success: false, error: 'Export access could not be verified. Please try again.' });
+  }
+}
+
+router.post('/api/account/exports/authorize', requireUser, requireExportAccess, (req, res) => {
+  return res.json({ success: true });
+});
+
 function cleanFileName(value) {
   return String(value || 'image').replace(/[\u0000-\u001f\u007f]/g, '').trim().slice(0, 180) || 'image';
 }
@@ -183,7 +206,7 @@ router.get('/api/projects/:id', requireUser, async (req, res) => {
   }
 });
 
-router.post('/api/projects/:id/share', requireUser, async (req, res) => {
+router.post('/api/projects/:id/share', requireUser, requireExportAccess, async (req, res) => {
   try {
     await ensureUserContentTables();
     const project = await db.get('SELECT id, name, source_url, preview_image_url FROM design_projects WHERE id = ? AND user_id = ? AND deleted_at IS NULL AND project_type = ?', [req.params.id, req.session.user.id, '3d']);
@@ -203,7 +226,7 @@ router.post('/api/projects/:id/share', requireUser, async (req, res) => {
   }
 });
 
-router.put('/api/projects/:id/share/model', requireUser, express.raw({ type: 'model/gltf-binary', limit: '25mb' }), async (req, res) => {
+router.put('/api/projects/:id/share/model', requireUser, requireExportAccess, express.raw({ type: 'model/gltf-binary', limit: '25mb' }), async (req, res) => {
   const bytes = req.body;
   if (!Buffer.isBuffer(bytes) || bytes.length < 12 || bytes.toString('ascii', 0, 4) !== 'glTF') {
     return res.status(400).json({ success: false, error: 'A valid GLB file is required.' });

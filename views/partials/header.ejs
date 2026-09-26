@@ -33,9 +33,10 @@
   <link rel="stylesheet" href="/css/model-login.css?v=20260922-v1">
   <link rel="stylesheet" href="/css/upgrade-modal.css?v=20260923-free-card-v7">
   <script src="/js/login-dialog.js?v=20260921-v1" data-google-auth="<%= typeof googleAuthEnabled !== 'undefined' && googleAuthEnabled ? 'true' : 'false' %>" defer></script>
-  <script src="/js/upgrade-modal.js?v=20260923-free-card-v14" defer></script>
+  <script src="/js/upgrade-modal.js?v=20260926-3d-sharing-v1" defer></script>
   <script src="/js/user-projects.js?v=20260923-cover-project-v7" defer></script>
-  <script src="/js/export-entitlements.js?v=20260926-watermark-v14" defer></script>
+  <link rel="stylesheet" href="/css/export-access.css?v=20260926-paid-v1">
+  <script src="/js/export-entitlements.js?v=20260926-no-max-v1" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -75,7 +76,7 @@
   <link rel="shortcut icon" href="/favicon.ico?v=20260925-round">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=20260925-round" sizes="180x180">
   <link rel="alternate" type="application/rss+xml" title="ClozDesign apparel mockup guides" href="/feed.xml">
-  <link rel="stylesheet" href="/css/style.css?v=20260924-compact-launch-badges">
+  <link rel="stylesheet" href="/css/style.css?v=20260926-tools-labels-700-14-v9">
   <link rel="stylesheet" href="/css/growth.css?v=20260913-loading-spinner-v2">
   <link rel="stylesheet" href="/css/product-refresh.css?v=20260925-round-image">
   <link rel="stylesheet" href="/css/feedback-widget.css?v=20260917-global-v1">
@@ -126,79 +127,60 @@
           </button>
           <div class="dropdown-menu tools-mega-menu">
             <div class="tools-mega-inner">
-              <div class="tools-mega-intro">
-                <span class="tools-mega-eyebrow">Free clothing design tools</span>
-                <strong>Pick a mockup workflow</strong>
-                <p>Browser-based tools for apparel mockups, print placement, colorways, and product listing visuals.</p>
-              </div>
               <div class="tools-mega-grid">
                 <div class="dropdown-section">
                   <span class="dropdown-label">Mockup generators</span>
                   <a href="/tools/t-shirt-mockup-generator" class="dropdown-item">
-                    <span>T-Shirt Mockup Generator</span>
-                    <small>Free front, back, and colorway mockups.</small>
+                    <span>T-Shirt Mockups</span>
                   </a>
                   <a href="/tools/hoodie-mockup-generator" class="dropdown-item">
-                    <span>Hoodie Mockup Generator</span>
-                    <small>Build hoodie previews for print tests.</small>
+                    <span>Hoodie Mockups</span>
                   </a>
                   <a href="/tools/3d-pants-generator" class="dropdown-item"><span>3D Pants Generator</span></a>
                   <a href="/tools/dress-designer" class="dropdown-item">
-                    <span>Online Dress Designer</span>
-                    <small>Design a dress on a live 3D garment model.</small>
+                    <span>Dress Designer</span>
                   </a>
                   <a href="/tools/3d-clothing-mockup-generator" class="dropdown-item">
-                    <span>3D Clothing Design & Mockup Generator</span>
-                    <small>Use 3D models for apparel mockups.</small>
+                    <span>3D Clothing Designer</span>
                   </a>
                 </div>
                 <div class="dropdown-section">
                   <span class="dropdown-label">Production previews</span>
                   <a href="/tools/bulk-t-shirt-mockup-generator" class="dropdown-item">
-                    <span>Bulk T-Shirt Mockup Generator</span>
-                    <small>Create many colorways faster.</small>
+                    <span>Bulk T-Shirt Mockups</span>
                   </a>
                   <a href="/tools/print-on-demand-mockup-generator" class="dropdown-item">
-                    <span>POD Mockup Generator</span>
-                    <small>Prepare marketplace listing images.</small>
+                    <span>Print-on-Demand Mockups</span>
                   </a>
                   <a href="/tools/transparent-apparel-mockup-generator" class="dropdown-item">
-                    <span>Transparent Apparel Mockups</span>
-                    <small>Export clean transparent product visuals.</small>
+                    <span>Transparent Mockups</span>
                   </a>
                 </div>
                 <div class="dropdown-section">
                   <span class="dropdown-label"><%= t('tools.designTools') %></span>
                   <a href="/tools/oversized-t-shirt-mockup-generator" class="dropdown-item">
-                    <span>Oversized T-Shirt Mockups</span>
-                    <small>Design on a relaxed drop-shoulder fit.</small>
+                    <span>Oversized T-Shirts</span>
                   </a>
                   <a href="/tools/polo-shirt-mockup-generator" class="dropdown-item">
-                    <span>Polo Shirt Mockups</span>
-                    <small>Preview uniforms and chest logos.</small>
+                    <span>Polo Shirts</span>
                   </a>
                   <a href="/tools/front-and-back-t-shirt-mockup" class="dropdown-item">
-                    <span>Front &amp; Back T-Shirt Mockups</span>
-                    <small>Review both sides of a garment together.</small>
+                    <span>Front &amp; Back Views</span>
                   </a>
                   <a href="/tools/long-sleeve-shirt-mockup-generator" class="dropdown-item">
-                    <span>Long-Sleeve Shirt Mockups</span>
-                    <small>Place artwork across sleeves and body.</small>
+                    <span>Long-Sleeve Shirts</span>
                   </a>
                   <a href="/tools/streetwear-hoodie-mockup-generator" class="dropdown-item">
-                    <span>Streetwear Hoodie Mockups</span>
-                    <small>Build relaxed streetwear presentations.</small>
+                    <span>Streetwear Hoodies</span>
                   </a>
                 </div>
                 <div class="dropdown-section">
                   <span class="dropdown-label">Free resources</span>
                   <a href="/mockups" class="dropdown-item">
                     <span>Free 3D Models</span>
-                    <small>Browse editable garment models.</small>
                   </a>
                   <a href="/blog" class="dropdown-item">
-                    <span>Clothing Design Guides</span>
-                    <small>Learn mockup and apparel workflows.</small>
+                    <span>Design Guides</span>
                   </a>
                 </div>
               </div>

@@ -1,0 +1,11 @@
+.export-access-dialog { width: min(460px, calc(100vw - 40px)); box-sizing: border-box; padding: 36px; border: 1px solid #deded8; border-radius: 18px; background: #fafaf7; color: #20251f; box-shadow: 0 24px 80px #0003; font-family: inherit; }
+.export-access-dialog::backdrop { background: #17201780; }
+.export-access-dialog form { margin: 0; }
+.export-access-eyebrow { font-size: 10px; letter-spacing: .16em; color: #65715f; }
+.export-access-dialog h2 { margin: 20px 0 14px; font-size: 30px; line-height: 1.15; letter-spacing: -.04em; }
+.export-access-dialog p { font-size: 14px; line-height: 1.65; color: #60665c; }
+.export-access-close { position: absolute; top: 12px; right: 16px; border: 0; background: none; color: inherit; font-size: 26px; cursor: pointer; }
+.export-access-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.export-access-actions button, .export-access-actions a { padding: 12px 18px; border: 1px solid #cfd4c9; border-radius: 8px; font: inherit; font-size: 13px; cursor: pointer; text-decoration: none; background: transparent; color: inherit; }
+.export-access-actions a { background: #283d29; border-color: #283d29; color: white; }
+.export-access-dialog :focus-visible { outline: 2px solid #587746; outline-offset: 3px; }

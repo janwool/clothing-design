@@ -405,7 +405,8 @@
     state.returnFocus?.focus?.({ preventScroll: true });
   }
 
-  function downloadMockup() {
+  async function downloadMockup() {
+    if (!await window.ExportEntitlements?.requireExportAccess()) return;
     if (!state.ready || !state.artworkImage) return;
     const previousView = state.mapView;
     state.mapView = 'result';

@@ -2,11 +2,14 @@ const express = require('express');
 const db = require('../lib/db');
 const {
   createDodoCheckout,
+  getDodoPricing,
   extractDodoEventData,
   getAccessForProduct,
   unwrapDodoWebhook
 } = require('../lib/dodo-billing');
 const { ensureEntitlementTables } = require('../lib/user-entitlements');
+
+const { normalizeCountry } = require('../lib/pricing-currency');
 
 const router = express.Router();
 const ACTIVE_EVENTS = new Set([
@@ -45,6 +48,7 @@ function getPublicOrigin(req) {
 }
 
 function checkoutFailure(error) {
+  if (error?.status === 400) return { status: 400, message: error.message };
   const upstreamMessage = String(error?.message || '');
   const upstreamCode = String(error?.code || error?.error?.code || '');
   if (error?.status === 403 && (
@@ -88,6 +92,23 @@ async function findWebhookUser(data) {
   return user;
 }
 
+router.get('/location', (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
+  return res.json({ country: normalizeCountry(req.get('cf-ipcountry')) });
+});
+
+router.get('/pricing', async (req, res) => {
+  // Prefer edge geolocation; the browser supplies IP geolocation when no edge is present.
+  const country = normalizeCountry(req.get('cf-ipcountry')) || normalizeCountry(req.query.country) || 'US';
+  res.set('Cache-Control', 'private, no-store');
+  try {
+    const quote = await getDodoPricing({ country, currency: req.query.currency });
+    return res.json({ success: true, ...quote });
+  } catch (error) {
+    return res.status(503).json({ success: false, error: 'Local pricing is temporarily unavailable.' });
+  }
+});
+
 router.post('/checkout', requireUser, async (req, res) => {
   try {
     const origin = getPublicOrigin(req);
@@ -95,6 +116,8 @@ router.post('/checkout', requireUser, async (req, res) => {
       plan: req.body?.plan,
       billingInterval: req.body?.billingInterval,
       user: req.session.user,
+      currency: req.body?.currency,
+      country: req.body?.country,
       successUrl: `${origin}/account?checkout=success`,
       cancelUrl: `${origin}/pricing?checkout=cancelled`
     });

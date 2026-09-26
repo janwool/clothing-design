@@ -53,7 +53,7 @@ for (const scenario of [
 ]) test(`tracks checkout outcome ${scenario.reason || scenario.status}`, async () => {
   const h = setup(scenario);
   await h.window.UpgradeModal.open({ entitlements: free });
-  await h.click('[data-upgrade-plan]', { upgradePlan: 'max' });
+  await h.click('[data-upgrade-plan]', { upgradePlan: 'pro' });
   assert.equal(h.events.at(-1).name, scenario.event);
   if (scenario.reason) assert.equal(h.events.at(-1).data.failure_reason, scenario.reason);
   assert.equal(h.events.some(e => e.name === 'upgrade_checkout_redirect'), false);

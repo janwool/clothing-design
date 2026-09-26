@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { Webhook } = require('standardwebhooks');
 const {
+  createDodoCheckout,
   extractDodoEventData,
   getAccessForProduct,
   getProduct,
@@ -32,7 +33,7 @@ function withEnv(values, callback) {
   }
 }
 
-test('maps all four Dodo Payments products to server-owned plan choices', () => {
+test('offers Pro checkout while recognizing legacy Max webhook products', () => {
   withEnv(productEnv, () => {
     assert.deepEqual(getProduct('pro', 'yearly'), {
       plan: 'pro', billingInterval: 'yearly', productId: 'pdt_pro_yearly'
@@ -40,6 +41,8 @@ test('maps all four Dodo Payments products to server-owned plan choices', () => 
     assert.deepEqual(getAccessForProduct('pdt_max_monthly'), {
       plan: 'max', billingInterval: 'monthly', productId: 'pdt_max_monthly'
     });
+    assert.equal(getProduct('max', 'monthly'), null);
+    assert.equal(getProduct('max', 'yearly'), null);
     assert.equal(getProduct('business', 'monthly'), null);
     assert.equal(getAccessForProduct('pdt_unknown'), null);
   });
@@ -128,4 +131,10 @@ test('tracks each Pricing action with a dedicated functional event name', () => 
   assert.match(pricing, /pricing_\$\{plan\}_signup_start/);
   assert.match(pricingView, /data-billing-option="monthly" data-analytics-managed="true"/);
   assert.match(pricingView, /data-plan="pro" data-analytics-managed="true"/);
+});
+
+test('rejects new Max checkouts before contacting the payment provider', async () => {
+  for (const billingInterval of ['monthly', 'yearly']) {
+    await assert.rejects(createDodoCheckout({ plan: 'max', billingInterval }), { status: 400 });
+  }
 });

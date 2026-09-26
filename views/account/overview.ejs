@@ -6,7 +6,7 @@
   const recentProject = projects[0] || null;
   const planAccess = typeof entitlements !== 'undefined' ? entitlements : {
     plan: { id: 'free', name: 'Free' },
-    features: { removeWatermarks: false, allModels: false },
+    features: { exports: false, removeWatermarks: false, allModels: false },
     projects: { period: 'lifetime', limit: 3, used: workspaceStats.totalProjects, remaining: Math.max(0, 3 - workspaceStats.totalProjects) },
     tryOnCredits: { limit: 0, used: 0, remaining: 0 },
     storage: { limitBytes: 20 * 1024 * 1024, usedBytes: workspaceStats.storageBytes, remainingBytes: Math.max(0, 20 * 1024 * 1024 - workspaceStats.storageBytes) }
@@ -30,7 +30,7 @@
     ? 'Custom'
     : `${planAccess.tryOnCredits.remaining} left`;
   const storageQuotaLabel = planAccess.storage.limitBytes === null
-    ? 'Custom'
+    ? 'Unlimited'
     : `${formatBytes(planAccess.storage.usedBytes)} / ${formatBytes(planAccess.storage.limitBytes)}`;
   const formatDate = function(value) {
     if (!value) return 'Just now';
@@ -63,7 +63,7 @@
       <div class="workspace-plan-heading">
         <div><span>Current plan</span><h2 id="workspacePlanTitle"><%= planAccess.plan.name %></h2></div>
         <div class="workspace-plan-actions">
-          <span class="workspace-plan-feature"><%= planAccess.features.removeWatermarks ? 'Watermark-free exports' : 'Watermarked exports' %></span>
+          <span class="workspace-plan-feature"><%= planAccess.features.exports ? 'Unlimited image, video & GLB exports' : 'Exports available with Pro' %></span>
           <a href="/pricing" data-upgrade-resource="plan"><%= planAccess.plan.id === 'free' ? 'Upgrade plan' : 'View plans' %> <b>→</b></a>
         </div>
       </div>

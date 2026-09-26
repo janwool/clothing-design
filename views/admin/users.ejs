@@ -40,7 +40,8 @@
                 <td>
                   <div class="user-plan-control" data-user-plan-control>
                     <select aria-label="Plan for <%= item.email %>" data-user-plan>
-                      <% ['free', 'pro', 'max', 'business'].forEach(function(plan) { %>
+                      <% if (item.plan === 'max') { %><option value="max" selected disabled>Max (legacy)</option><% } %>
+                      <% ['free', 'pro', 'business'].forEach(function(plan) { %>
                         <option value="<%= plan %>" <%= item.plan === plan ? 'selected' : '' %>><%= plan.charAt(0).toUpperCase() + plan.slice(1) %></option>
                       <% }); %>
                     </select>

@@ -12,13 +12,15 @@ const {
 const root = path.join(__dirname, '..');
 const read = relativePath => fs.readFileSync(path.join(root, relativePath), 'utf8');
 
-test('defines the published Free, Pro, Max, and Business allowances', () => {
+test('defines current plan allowances and preserves legacy Max subscriptions', () => {
+  assert.equal(PLAN_ENTITLEMENTS.free.exports, false);
+  for (const plan of ['pro', 'max', 'business']) assert.equal(PLAN_ENTITLEMENTS[plan].exports, true);
   assert.equal(PLAN_ENTITLEMENTS.free.projectLimit, 3);
   assert.equal(PLAN_ENTITLEMENTS.free.projectPeriod, 'lifetime');
   assert.equal(PLAN_ENTITLEMENTS.free.removeWatermarks, false);
-  assert.equal(PLAN_ENTITLEMENTS.pro.projectLimit, 28);
+  assert.equal(PLAN_ENTITLEMENTS.pro.projectLimit, null);
   assert.equal(PLAN_ENTITLEMENTS.pro.tryOnCredits, 250);
-  assert.equal(PLAN_ENTITLEMENTS.pro.storageBytes, 1024 ** 3);
+  assert.equal(PLAN_ENTITLEMENTS.pro.storageBytes, null);
   assert.equal(PLAN_ENTITLEMENTS.pro.removeWatermarks, true);
   assert.equal(PLAN_ENTITLEMENTS.pro.allModels, true);
   assert.equal(PLAN_ENTITLEMENTS.max.projectLimit, 99);

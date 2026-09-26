@@ -180,7 +180,24 @@ test('tracks the complete AI try-on entry, access, generation, and result funnel
     'ai_tryon_access_check_error'
   ].forEach(eventName => assert.match(access, new RegExp(eventName)));
 
-  assert.match(view, /ai-try-on\.js\?v=20260925-zero-azimuth-v1/);
+  assert.match(view, /ai-try-on\.js\?v=20260926-compact-no-names-v10/);
   assert.match(modelDetail, /detail-try-on\.js\?v=20260923-analytics-v5/);
   assert.match(header, /upgrade-modal\.js\?v=[a-z0-9-]+/);
+});
+
+
+test('ships the try-on template with its matching stylesheet even when route locals are stale', () => {
+  const ejs = require('ejs');
+  const template = read('views/ai-try-on.ejs');
+  const calls = [];
+  ejs.render(template, {
+    pageStyles: ['/css/ai-try-on.css?v=old-layout'],
+    personModels: require('../lib/try-on-models.json'),
+    model: { name: 'Test garment', slug: 'test', image_url: '/test.webp' },
+    categorySlug: 't-shirt',
+    tryOnCreditCost: 10,
+    include(name, locals) { calls.push({ name, locals }); return ''; }
+  });
+  const header = calls.find(call => call.name === 'partials/header');
+  assert.deepEqual(header.locals.pageStyles, ['/css/ai-try-on.css?v=20260926-compact-no-names-v10']);
 });

@@ -437,6 +437,7 @@
     if (shareInput) shareInput.placeholder='Preparing share link…';
     setStatus('Preparing your design…');
     try {
+      if (!await window.ExportEntitlements?.requireExportAccess()) return;
       await previewRun;
       if (!window.ModelDesignerExport) await window.loadModelDesignerRuntime?.();
       if (!window.ModelDesignerExport?.ensureSavedProjectForShare) throw new Error('3D sharing is unavailable. Please reload and try again.');
@@ -474,6 +475,7 @@
     if (action === 'done') { close(); return; }
     state.busy=true; dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=true);
     try {
+      if (!await window.ExportEntitlements?.requireExportAccess()) return;
       await previewRun;
       if (action === 'image') {
         setStatus('Rendering image…');

@@ -1,4 +1,4 @@
-<%- include('partials/header') %>
+<%- include('partials/header', { pageStyles: ['/css/ai-try-on.css?v=20260926-compact-no-names-v10'] }) %>
 
 <%
 const tryOnModels = personModels;
@@ -58,37 +58,39 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
       <div class="tryon-result__loading" id="tryOnLoading" hidden>
         <span class="tryon-result__spinner" aria-hidden="true"></span>
         <strong>Creating your try-on</strong>
-        <small>Matching shape, fabric and drape…</small>
       </div>
 
-      <div class="tryon-result__toolbar" role="toolbar" aria-label="Try-on preview tools">
-        <button type="button" id="fitViewButton">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3Zm0 0v18M4 7.5l8 4.5 8-4.5"/></svg>
-          <span>Fill view</span>
-          <svg class="toolbar-chevron" aria-hidden="true" viewBox="0 0 24 24"><path d="m8 10 4 4 4-4"/></svg>
-        </button>
-        <button type="button" data-generate>
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15"/></svg>
-          <span>Generate try-on · <%= tryOnCreditCost %> credits</span>
-        </button>
-        <button type="button" id="downloadTryOn" disabled aria-disabled="true">
-          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>
-          <span>Download</span>
-        </button>
+      <div class="tryon-result__zoom" role="group" aria-label="Preview zoom">
+        <button type="button" id="tryOnZoomOut" aria-label="Zoom out">−</button>
+        <button type="button" id="tryOnZoomReset" aria-label="Reset zoom to fit image"><output id="tryOnZoomValue" aria-live="polite">100%</output></button>
+        <button type="button" id="tryOnZoomIn" aria-label="Zoom in">+</button>
       </div>
+      <button type="button" id="downloadTryOn" disabled aria-disabled="true" class="tryon-result__download" data-after-result hidden>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 20h14"/></svg>
+        <span>Download</span>
+      </button>
     </section>
 
     <aside class="tryon-flow" aria-label="AI try-on steps">
       <section class="tryon-step tryon-step--design">
         <div class="tryon-step__title">
-
           <div>
             <h2>Your design</h2>
             <p><%= model.name %></p>
           </div>
         </div>
 
-        <div class="tryon-viewer" id="tryOnViewerPanel">
+        <button type="button" class="tryon-design-preview" id="openTryOnPreview" disabled><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>Preview</button>
+        <div class="tryon-angles" aria-label="Garment views" aria-busy="true">
+          <% ['Front', 'Side', 'Back'].forEach((angle, index) => { %>
+            <button type="button" class="tryon-angle" data-garment-angle="<%= index * 90 %>" disabled>
+              <span class="tryon-angle__image"><img alt="<%= angle %> view of <%= model.name %>" hidden><span class="tryon-angle__status">Loading…</span></span>
+              <span><%= angle %></span>
+            </button>
+          <% }); %>
+        </div>
+        <div class="tryon-viewer" id="tryOnViewerPanel" inert aria-hidden="true">
+          <button type="button" id="closeTryOnPreview" aria-label="Close garment preview">×</button>
           <% if (currentModelFile) { %>
             <model-viewer
               id="tryOnGarmentViewer"
@@ -132,36 +134,44 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
         <div class="tryon-step__heading-row">
           <div class="tryon-step__title">
 
-            <h2>Model</h2>
+            <div><h2>Choose a model</h2></div>
+          </div>
+          <button type="button" class="tryon-upload" id="tryOnUploadButton"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v5h16v-5"/></svg>Upload photo</button>
+        </div>
+
+        <div class="tryon-filters">
+          <div class="tryon-filter-tabs" role="group" aria-label="Model collection">
+            <button type="button" data-model-filter="" aria-pressed="true">All</button>
+            <button type="button" data-model-filter="Women" aria-pressed="false">Women</button>
+            <button type="button" data-model-filter="Men" aria-pressed="false">Men</button>
           </div>
           <select id="tryOnStyleFilter" aria-label="Model style"><option value="">All styles</option><% [...new Set(tryOnModels.map(person => person.style))].forEach(style => { %><option value="<%= style %>"><%= style %></option><% }); %></select>
         </div>
-
-        <div class="model-picker" role="listbox" aria-label="Choose a model">
+        <p class="tryon-model-empty" id="tryOnModelEmpty" role="status" hidden>No models match these filters. Try another style or choose All.</p>
+        <div class="model-picker" role="group" aria-label="Choose a model">
           <% tryOnModels.forEach(function(person, index) { %>
             <button
               class="model-card <%= index === 0 ? 'is-selected' : '' %>"
               type="button"
-              role="option"
-              aria-selected="<%= index === 0 ? 'true' : 'false' %>"
+              aria-pressed="<%= index === 0 ? 'true' : 'false' %>"
               data-model-card
               data-model-id="<%= person.id %>"
               data-model-style="<%= person.style %>"
+              data-model-collection="<%= person.collection %>"
               data-model-name="<%= person.name %>"
               data-model-image="<%= person.image %>"
             >
-              <img src="<%= person.thumbnail %>" alt="<%= person.name %>, full-body model" loading="<%= index > 2 ? 'lazy' : 'eager' %>">
+              <span class="model-card__portrait"><img src="<%= person.thumbnail %>" alt="<%= person.name %>, full-body model" loading="<%= index > 5 ? 'lazy' : 'eager' %>"></span>
               <span class="model-card__check" aria-hidden="true">
                 <svg viewBox="0 0 24 24"><path d="m6 12 4 4 8-9"/></svg>
               </span>
-              <span class="model-card__name"><%= person.name %></span>
             </button>
           <% }); %>
         </div>
       </section>
 
       <div class="tryon-flow__generate">
-        <button type="button" class="tryon-upload" id="tryOnUploadButton">↑ Upload photo</button>
+        <div class="tryon-selection" aria-live="polite"><span class="tryon-selection__avatar"><img id="tryOnSelectedAvatar" src="<%= tryOnModels[0].thumbnail %>" alt=""></span></div>
         <input type="file" id="tryOnPhoto" accept="image/png,image/jpeg,image/webp" hidden>
         <button class="ai-button ai-button--primary ai-button--wide" type="button" data-generate>
           <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2l1.6 4.4L18 8l-4.4 1.6L12 14l-1.6-4.4L6 8l4.4-1.6L12 2Zm7 12 .9 2.1L22 17l-2.1.9L19 20l-.9-2.1L16 17l2.1-.9L19 14Z"/></svg>
@@ -183,6 +193,6 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
   window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
 </script>
 <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
-<script src="/js/ai-try-on.js?v=20260925-zero-azimuth-v1" defer></script>
+<script src="/js/ai-try-on.js?v=20260926-compact-no-names-v10" defer></script>
 
 <%- include('partials/footer') %>
