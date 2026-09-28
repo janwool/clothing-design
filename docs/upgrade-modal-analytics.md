@@ -19,7 +19,7 @@ The upgrade dialog reports through `window.trackEvent` (GA4 / dataLayer). The di
 
 Common parameters: `item_category=subscription`, `checkout_source=upgrade_modal`, `trigger_resource`, `current_plan`, `billing_interval`. The plan can be `unknown` on initial display before the account request finishes.
 
-Checkout events also include `plan_id`, `currency=USD`, `value` (full billing-period price), and `checkout_provider=dodo_payments`. The selected plan, interval, and trigger are captured when checkout starts so later dialog changes do not change the checkout attribution. Error events use controlled reason codes rather than raw server messages.
+Checkout events also include `plan_id`, the quoted `currency`, `value` (full billing-period price), and `checkout_provider=dodo_payments`. The selected plan, interval, quote, and trigger are captured when checkout starts so later dialog changes do not change the checkout attribution. Error events use controlled reason codes rather than raw server messages.
 
 Funnel: `upgrade_modal_view` → `upgrade_plan_select` → `upgrade_checkout_begin` → `upgrade_checkout_redirect`. Compare by trigger resource and billing interval.
 

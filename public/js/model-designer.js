@@ -51,10 +51,9 @@ window.initializeModelDesigner = () => {
   const imageAssetTray = document.getElementById('imageAssetTray');
   const imageAssetViewport = document.getElementById('imageAssetViewport');
   const imageAssetTrack = document.getElementById('imageAssetTrack');
+  const imageAssetEmpty = document.getElementById('imageAssetEmpty');
   const imageAssetUpload = document.getElementById('imageAssetUpload');
   const imageAssetUploadInput = document.getElementById('imageAssetUploadInput');
-  const imageAssetClose = document.getElementById('imageAssetClose');
-  const imageAssetFilter = document.getElementById('imageAssetFilter');
   const assetScrollPrev = document.getElementById('assetScrollPrev');
   const assetScrollNext = document.getElementById('assetScrollNext');
   const imageAssetProgress = document.getElementById('imageAssetProgress');
@@ -62,8 +61,8 @@ window.initializeModelDesigner = () => {
   const imageUploadToastText = document.getElementById('imageUploadToastText');
   const designAppearancePanel = document.getElementById('designAppearancePanel');
   const appearancePanelCollapse = document.getElementById('appearancePanelCollapse');
-  const toolAppearance = document.getElementById('toolAppearance');
   const appearanceColorStart = document.getElementById('appearanceColorStart');
+  const appearanceCustomColor = document.getElementById('appearanceCustomColor');
   const appearanceColorEnd = document.getElementById('appearanceColorEnd');
   const appearanceGradientAngle = document.getElementById('appearanceGradientAngle');
   const appearanceGradientAngleOutput = document.getElementById('appearanceGradientAngleOutput');
@@ -107,7 +106,7 @@ window.initializeModelDesigner = () => {
   const defaultRenderStandard = {
     camera: {
       webOrbit: '0deg 72deg 142%',
-      webEditorOrbit: '0deg 72deg 158%',
+      webEditorOrbit: '0deg 72deg 180%',
       webFieldOfView: '28deg',
       webTarget: 'auto auto auto'
     },
@@ -148,7 +147,7 @@ window.initializeModelDesigner = () => {
       }
     }
   };
-  const renderStandardPromise = window.ModelDetailRenderStandardPromise || fetch('/config/design3d-render-standard.json?v=20260925-zero-azimuth-v1')
+  const renderStandardPromise = window.ModelDetailRenderStandardPromise || fetch('/config/design3d-render-standard.json?v=20260928-editor-preview-v3')
     .then((response) => response.ok ? response.json() : defaultRenderStandard)
     .catch(() => defaultRenderStandard);
   const state = {
@@ -187,7 +186,7 @@ window.initializeModelDesigner = () => {
     inquirySnapshots: null,
     coverCaptureHidden: [],
     fillScope: 'whole',
-    fillMode: 'gradient',
+    fillMode: 'solid',
     designView: '2d',
     projectId: '',
     projectName: '',
@@ -315,6 +314,9 @@ window.initializeModelDesigner = () => {
     renderSelection();
     designModal.classList.add('active');
     designModal.setAttribute('aria-hidden', 'false');
+    setDesignView('2d');
+    setTool('image');
+    setAssetTrayOpen(true);
     document.body.style.overflow = 'hidden';
     renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
     if (designPreviewLoading && !designerViewer?.loaded) designPreviewLoading.hidden = false;
@@ -474,7 +476,7 @@ window.initializeModelDesigner = () => {
     viewerElement.setAttribute('camera-target', cameraStandard.webTarget || 'auto auto auto');
     viewerElement.setAttribute('field-of-view', cameraStandard.webFieldOfView || '28deg');
     const cameraOrbit = viewerElement.id === 'designerViewer'
-      ? cameraStandard.webEditorOrbit || '0deg 72deg 158%'
+      ? cameraStandard.webEditorOrbit || '0deg 72deg 180%'
       : cameraStandard.webOrbit || '0deg 72deg 142%';
     viewerElement.setAttribute('camera-orbit', cameraOrbit);
     viewerElement.autoRotate = false;
@@ -919,14 +921,10 @@ window.initializeModelDesigner = () => {
   function setAssetTrayOpen(open) {
     if (!imageAssetTray || !textureDesigner) return;
     imageAssetTray.hidden = !open;
-    if (designAppearancePanel) designAppearancePanel.hidden = open;
-    if (!open) designAppearancePanel?.classList.remove('is-mobile-open');
+    if (open) designAppearancePanel?.classList.remove('is-mobile-open');
     textureDesigner.classList.toggle('asset-tray-open', open);
     toolButtons.image?.setAttribute('aria-pressed', String(open));
-    if (open) {
-      toolAppearance?.classList.remove('active');
-      toolAppearance?.setAttribute('aria-pressed', 'false');
-    }
+    toolButtons.image?.classList.toggle('active', open);
     if (open) {
       requestAnimationFrame(() => {
         updateAssetTrayScrollState();
@@ -940,6 +938,11 @@ window.initializeModelDesigner = () => {
     if (!textureDesigner || !['2d', '3d', 'split'].includes(view)) return;
     state.designView = view;
     textureDesigner.dataset.designView = view;
+    if (view === '3d') {
+      designerViewer?.removeAttribute('min-camera-orbit');
+    } else {
+      designerViewer?.setAttribute('min-camera-orbit', 'auto auto 180%');
+    }
     designViewSwitcher?.querySelectorAll('[data-design-view]').forEach((button) => {
       const isActive = button.dataset.designView === view;
       button.classList.toggle('active', isActive);
@@ -969,8 +972,6 @@ window.initializeModelDesigner = () => {
     if (window.matchMedia('(max-width: 900px)').matches) {
       designAppearancePanel.classList.add('is-mobile-open');
     }
-    toolAppearance?.classList.add('active');
-    toolAppearance?.setAttribute('aria-pressed', 'true');
     designAppearancePanel.querySelector('.design-appearance-card')
       ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
@@ -979,8 +980,6 @@ window.initializeModelDesigner = () => {
     state.tool = tool;
     state.textClickCandidate = null;
     Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
-    toolAppearance?.classList.remove('active');
-    toolAppearance?.setAttribute('aria-pressed', 'false');
     if (toolButtons[tool]) toolButtons[tool].classList.add('active');
     if (tool !== 'image') setAssetTrayOpen(false);
     textureSvg.classList.toggle('is-drawing', tool === 'draw');
@@ -989,11 +988,6 @@ window.initializeModelDesigner = () => {
 
   Object.entries(toolButtons).forEach(([tool, btn]) => {
     btn?.addEventListener('click', () => setTool(tool));
-  });
-
-  toolAppearance?.addEventListener('click', () => {
-    setTool('select');
-    openAppearancePanel();
   });
 
   designViewSwitcher?.addEventListener('click', (event) => {
@@ -1152,7 +1146,7 @@ window.initializeModelDesigner = () => {
     const dominantPaint = [...paintWeights.entries()].sort((left, right) => right[1] - left[1])[0]?.[0];
     // Canvas fillStyle cannot consume the editor's CSS linear-gradient string.
     // Its leading color is a stable backing for small hidden/reverse regions.
-    return dominantPaint ? parseColorState(dominantPaint).start : '#ffffff';
+    return dominantPaint && dominantPaint !== 'none' ? parseColorState(dominantPaint).start : '#ffffff';
   }
 
   function rasterizeModelTexture(options = {}) {
@@ -2781,7 +2775,8 @@ window.initializeModelDesigner = () => {
   }
 
   function getAppearancePaint() {
-    const start = appearanceColorStart?.value || '#5f89f4';
+    if (state.fillMode === 'transparent') return 'none';
+    const start = appearanceColorStart?.value || '#ffffff';
     if (state.fillMode === 'solid') return start;
     const end = appearanceColorEnd?.value || '#c39bea';
     const angle = parseFloat(appearanceGradientAngle?.value || 135);
@@ -2801,6 +2796,7 @@ window.initializeModelDesigner = () => {
   }
 
   function normalizeSavedPaint(value) {
+    if (value === 'none') return 'none';
     const parsed = parseColorState(String(value || '').slice(0, 1200));
     return parsed.mode === 'gradient'
       ? gradientFromStops(parsed.stops, parsed.alpha, parsed.angle)
@@ -2879,59 +2875,52 @@ window.initializeModelDesigner = () => {
   function renderAppearanceControls() {
     const paint = getAppearancePaint();
     if (appearanceGradientPreview) appearanceGradientPreview.style.background = paint;
+    const selectedColor = appearanceColorStart?.value?.toLowerCase() || '#ffffff';
+    const isSolid = state.fillMode === 'solid';
+    const recommendedColors = [...(designAppearancePanel?.querySelectorAll('[data-fill-color]:not([data-fill-color="none"])') || [])];
+    const matchesRecommended = recommendedColors.some((button) => button.dataset.fillColor === selectedColor);
+    designAppearancePanel?.querySelectorAll('[data-fill-color]').forEach((button) => {
+      const active = button.dataset.fillColor === 'none'
+        ? state.fillMode === 'transparent'
+        : isSolid && button.dataset.fillColor === selectedColor;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    appearanceCustomColor?.classList.toggle('active', isSolid && !matchesRecommended);
     if (appearanceGradientAngleOutput) {
       appearanceGradientAngleOutput.value = `${Math.round(parseFloat(appearanceGradientAngle?.value || 135))}°`;
       appearanceGradientAngleOutput.textContent = appearanceGradientAngleOutput.value;
     }
-    designAppearancePanel?.querySelectorAll('[data-fill-scope]').forEach((button) => {
-      const active = button.dataset.fillScope === state.fillScope;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
-    designAppearancePanel?.querySelectorAll('[data-fill-mode]').forEach((button) => {
-      const active = button.dataset.fillMode === state.fillMode;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-pressed', String(active));
-    });
-    designAppearancePanel?.classList.toggle('is-solid-fill', state.fillMode === 'solid');
   }
 
   function applyAppearanceFill() {
     const allPaths = [...textureSvg.querySelectorAll('.texture-template-path')];
-    const targets = state.fillScope === 'panel'
-      ? (state.selectedTemplatePath ? [state.selectedTemplatePath] : [])
-      : allPaths;
+    state.fillScope = 'whole';
     renderAppearanceControls();
-    if (!targets.length) {
-      setDesignSaveStatus(state.fillScope === 'panel' ? 'Select a garment panel first' : 'Loading garment panels…', true);
+    if (!allPaths.length) {
+      setDesignSaveStatus('Loading garment panels…', true);
       return;
     }
     const paint = getAppearancePaint();
-    targets.forEach((path) => setElementColor(path, paint));
+    allPaths.forEach((path) => setElementColor(path, paint));
     setDesignSaveStatus('Unapplied changes', true);
     renderSelection();
     scheduleTexturePreviewUpdate();
   }
 
   designAppearancePanel?.addEventListener('click', (event) => {
-    const scopeButton = event.target.closest('[data-fill-scope]');
-    const modeButton = event.target.closest('[data-fill-mode]');
-    if (scopeButton) {
-      state.fillScope = scopeButton.dataset.fillScope;
-      renderAppearanceControls();
-      if (state.fillScope === 'panel' && !state.selectedTemplatePath) {
-        setDesignSaveStatus('Select a garment panel first', true);
-      } else {
-        applyAppearanceFill();
-      }
-    } else if (modeButton) {
-      state.fillMode = modeButton.dataset.fillMode;
+    const colorButton = event.target.closest('[data-fill-color]');
+    if (colorButton) {
+      const color = colorButton.dataset.fillColor;
+      state.fillMode = color === 'none' ? 'transparent' : 'solid';
+      if (color !== 'none' && appearanceColorStart) appearanceColorStart.value = color;
       applyAppearanceFill();
     }
   });
 
-  [appearanceColorStart, appearanceColorEnd, appearanceGradientAngle].forEach((input) => {
-    input?.addEventListener('input', applyAppearanceFill);
+  appearanceColorStart?.addEventListener('input', () => {
+    state.fillMode = 'solid';
+    applyAppearanceFill();
   });
   renderAppearanceControls();
 
@@ -3810,16 +3799,23 @@ window.initializeModelDesigner = () => {
       imageAssetTrack?.querySelectorAll('.image-asset-card').forEach((card) => card.classList.remove('active'));
       button?.classList.add('active');
       importArtworkDataUrl(dataUrl);
-      window.trackEvent?.(button?.classList.contains('is-uploaded')
-        ? 'designer_artwork_upload_select'
-        : 'designer_artwork_preset_select', {
-        interaction_type: button?.classList.contains('is-uploaded') ? 'editor_asset_upload' : 'editor_asset_preset',
-        item_id: modelDesignerConfig.modelSlug || ''
-      });
+      if (button?.classList.contains('is-uploaded')) {
+        window.trackEvent?.('designer_artwork_upload_select', {
+          interaction_type: 'editor_asset_upload',
+          item_id: modelDesignerConfig.modelSlug || ''
+        });
+      }
     } catch (error) {
       console.warn('Failed to add artwork:', error);
       setDesignSaveStatus('Image could not be loaded', true);
     }
+  }
+
+  function updateImageAssetEmptyState(message = 'No images uploaded yet') {
+    if (!imageAssetEmpty) return;
+    const hasUploads = !!imageAssetTrack?.querySelector('.image-asset-card.is-uploaded');
+    imageAssetEmpty.hidden = hasUploads;
+    if (!hasUploads) imageAssetEmpty.textContent = message;
   }
 
   function createUploadedAssetCard(dataUrl, name = 'Uploaded image', storedUrl = '', imageId = '') {
@@ -3844,6 +3840,7 @@ window.initializeModelDesigner = () => {
     button.appendChild(image);
     imageAssetTrack.insertBefore(button, imageAssetTrack.firstElementChild || null);
     renderedUploadedAssetKeys.add(assetKey);
+    updateImageAssetEmptyState();
     requestAnimationFrame(updateAssetTrayScrollState);
     return button;
   }
@@ -3863,6 +3860,8 @@ window.initializeModelDesigner = () => {
   async function loadUploadedArtworkLibrary() {
     if (!modelDesignerConfig.userAuthenticated || !window.UserProjects?.listImages || !imageAssetTrack) return;
     imageAssetTrack.setAttribute('aria-busy', 'true');
+    updateImageAssetEmptyState('Loading images…');
+    let failed = false;
     try {
       const images = await window.UserProjects.listImages('artwork');
       images
@@ -3871,8 +3870,10 @@ window.initializeModelDesigner = () => {
         .forEach((image) => createUploadedAssetCard(image.url, image.name || 'Uploaded image', image.url, image.id));
     } catch (error) {
       console.warn('Saved artwork could not be loaded:', error);
+      failed = true;
     } finally {
       imageAssetTrack.removeAttribute('aria-busy');
+      updateImageAssetEmptyState(failed ? 'Images could not be loaded' : 'No images uploaded yet');
       requestAnimationFrame(updateAssetTrayScrollState);
     }
   }
@@ -3973,17 +3974,6 @@ window.initializeModelDesigner = () => {
     handleArtworkFiles(event.target.files);
     event.target.value = '';
   });
-  imageAssetClose?.addEventListener('click', () => {
-    setAssetTrayOpen(false);
-    setTool('select');
-    openAppearancePanel();
-  });
-  imageAssetFilter?.addEventListener('click', () => {
-    const nextPressed = imageAssetFilter.getAttribute('aria-pressed') !== 'true';
-    imageAssetFilter.setAttribute('aria-pressed', String(nextPressed));
-    imageAssetTrack?.classList.toggle('show-uploaded-only', nextPressed);
-    requestAnimationFrame(updateAssetTrayScrollState);
-  });
   assetScrollPrev?.addEventListener('click', () => {
     imageAssetViewport?.scrollBy({ left: -Math.max(240, imageAssetViewport.clientWidth * 0.62), behavior: 'smooth' });
   });
@@ -4006,9 +3996,6 @@ window.initializeModelDesigner = () => {
     event.dataTransfer.setData('application/x-garment-artwork', 'true');
   });
 
-  imageAssetTrack?.querySelectorAll('.image-asset-card:not(.image-asset-upload)').forEach((button) => {
-    button.draggable = true;
-  });
   loadUploadedArtworkLibrary();
 
   textureCanvasArea?.addEventListener('dragover', (event) => {
@@ -4734,7 +4721,7 @@ window.initializeModelDesigner = () => {
       state.projectId = project.id;
       state.projectName = project.name;
       state.fillScope = saved.fillScope || 'whole';
-      state.fillMode = saved.fillMode || 'gradient';
+      state.fillMode = saved.fillMode || 'solid';
       state.finalTextureUrl = saved.textureUrl || null;
       window.syncModelTryOnLinks?.(project.id);
       if (saved.appearance) restoreAppearanceState(saved.appearance);

@@ -790,14 +790,7 @@
         <!-- Editor Tool Rail -->
         <div class="designer-toolbar" aria-label="Design tools">
           <div class="toolbar-group">
-            <button class="toolbar-btn active" id="toolAppearance" title="Appearance" type="button" aria-controls="designAppearancePanel" aria-pressed="true">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M8 4.5 10 3h4l2 1.5 4 1.8-2.2 4.2-2.3-1.1V21h-7V9.4l-2.3 1.1L4 6.3 8 4.5Z"/>
-                <path d="M16.5 14.5h4M18.5 12.5v4"/>
-              </svg>
-              <span>Appearance</span>
-            </button>
-            <button class="toolbar-btn" id="toolImage" title="Add Image" type="button" aria-controls="imageAssetTray" aria-pressed="false">
+            <button class="toolbar-btn active" id="toolImage" title="Add Image" type="button" aria-controls="imageAssetTray" aria-pressed="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                 <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -831,25 +824,9 @@
             </svg>
             <span>Upload image</span>
           </button>
-          <strong class="image-asset-library-title">Library</strong>
           <div class="image-asset-viewport" id="imageAssetViewport" tabindex="0">
-            <div class="image-asset-track" id="imageAssetTrack">
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/botanical-line.svg" aria-label="Add botanical line art"><img src="/editor-assets/botanical-line.svg" alt="Botanical line art"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/butterfly.svg" aria-label="Add butterfly"><img src="/editor-assets/butterfly.svg" alt="Purple butterfly"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/mountain-wash.svg" aria-label="Add watercolor mountains"><img src="/editor-assets/mountain-wash.svg" alt="Blue watercolor mountains"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/lavender-cloud.svg" aria-label="Add watercolor cloud"><img src="/editor-assets/lavender-cloud.svg" alt="Lavender watercolor cloud"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/ocean-wave.svg" aria-label="Add ocean wave"><img src="/editor-assets/ocean-wave.svg" alt="Blue ocean wave"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/soft-gradient.svg" aria-label="Add gradient texture"><img src="/editor-assets/soft-gradient.svg" alt="Blue and purple gradient"></button>
-              <button class="image-asset-card" type="button" data-asset-url="/editor-assets/delicate-branch.svg" aria-label="Add delicate branch"><img src="/editor-assets/delicate-branch.svg" alt="Blue delicate branch"></button>
-            </div>
-          </div>
-          <div class="image-asset-actions">
-            <button id="imageAssetFilter" type="button" aria-label="Filter images" aria-pressed="false">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 5h16l-6 7v5l-4 2v-7Z"/></svg>
-            </button>
-            <button id="imageAssetClose" type="button" aria-label="Close image list">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m18 6-12 12M6 6l12 12"/></svg>
-            </button>
+            <div class="image-asset-track" id="imageAssetTrack"></div>
+            <p class="image-asset-empty" id="imageAssetEmpty" role="status">No images uploaded yet</p>
           </div>
           <div class="image-asset-progress" aria-hidden="true"><span id="imageAssetProgress"></span></div>
           <input id="imageAssetUploadInput" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" multiple hidden>
@@ -919,7 +896,7 @@
                   loading="lazy"
                   camera-controls
                   disable-tap
-                  camera-orbit="0deg 72deg 158%"
+                  camera-orbit="0deg 72deg 180%"
                   camera-target="auto auto auto"
                   field-of-view="28deg"
                   shadow-intensity="0.32"
@@ -944,46 +921,32 @@
                 </div>
               <% } %>
             </div>
-            <p class="preview-rotate-hint">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M20 7v5h-5"/>
-                <path d="M4 17v-5h5"/>
-                <path d="M6.1 9A7 7 0 0118 6l2 1M17.9 15A7 7 0 016 18l-2-1"/>
-              </svg>
-              Drag to rotate
-            </p>
           </section>
         </div>
 
         <!-- Garment appearance and material inspector -->
         <aside class="design-appearance-panel" id="designAppearancePanel" aria-label="Garment appearance">
           <section class="design-appearance-card">
-            <div class="appearance-panel-header">
-              <h3>Appearance</h3>
-              <button id="appearancePanelCollapse" type="button" aria-label="Collapse appearance panel">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
-              </button>
-            </div>
-            <div class="appearance-scope-switch" role="group" aria-label="Color scope">
-              <button type="button" class="active" data-fill-scope="whole" aria-pressed="true">Whole garment</button>
-              <button type="button" data-fill-scope="panel" aria-pressed="false">Panel</button>
-            </div>
             <div class="appearance-section">
-              <strong>Fill</strong>
-              <div class="appearance-fill-switch" role="group" aria-label="Fill type">
-                <button type="button" data-fill-mode="solid" aria-pressed="false">Solid</button>
-                <button type="button" class="active" data-fill-mode="gradient" aria-pressed="true">Gradient</button>
+              <div class="appearance-fill-header">
+                <strong>Fill</strong>
+                <button id="appearancePanelCollapse" type="button" aria-label="Close appearance controls">
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
               </div>
-              <div class="appearance-gradient-preview" id="appearanceGradientPreview"></div>
-              <div class="appearance-color-stops">
-                <label><span>Start</span><input id="appearanceColorStart" type="color" value="#5f89f4"></label>
-                <label><span>End</span><input id="appearanceColorEnd" type="color" value="#c39bea"></label>
+              <div class="appearance-color-row" role="group" aria-label="Fill colors">
+                <label class="appearance-custom-color" id="appearanceCustomColor">
+                  <span class="appearance-custom-swatch"><input id="appearanceColorStart" type="color" value="#ffffff" aria-label="Choose custom fill color"></span>
+                </label>
+                <button class="appearance-transparent-color" type="button" data-fill-color="none" aria-label="Transparent" aria-pressed="false"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#ffffff" aria-label="White" aria-pressed="true" style="--fill-swatch:#ffffff"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#f2eee5" aria-label="Ivory" aria-pressed="false" style="--fill-swatch:#f2eee5"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#3f4145" aria-label="Charcoal" aria-pressed="false" style="--fill-swatch:#3f4145"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#243653" aria-label="Navy" aria-pressed="false" style="--fill-swatch:#243653"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#d9bfa0" aria-label="Beige" aria-pressed="false" style="--fill-swatch:#d9bfa0"><span aria-hidden="true"></span></button>
               </div>
-              <label class="appearance-angle-control">
-                <span>Angle</span>
-                <input id="appearanceGradientAngle" type="range" min="0" max="360" value="135">
-                <output id="appearanceGradientAngleOutput">135°</output>
-              </label>
+              <input id="appearanceColorEnd" type="color" value="#ffffff" hidden>
+              <input id="appearanceGradientAngle" type="range" min="0" max="360" value="135" hidden>
             </div>
           </section>
           <section class="material-panel" aria-label="Material presets">
@@ -1029,7 +992,7 @@ const defaultDetailRenderStandard = {
   version: 'commercial-studio-stage-v3',
   camera: {
     webOrbit: '0deg 72deg 142%',
-    webEditorOrbit: '0deg 72deg 158%',
+    webEditorOrbit: '0deg 72deg 180%',
     webFieldOfView: '28deg',
     webTarget: 'auto auto auto'
   },
@@ -1074,7 +1037,7 @@ const detailLightState = {
 };
 window.ModelDetailLightingSettings = detailLightState;
 let detailSceneStandard = defaultDetailRenderStandard;
-const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260925-zero-azimuth-v1')
+const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260928-editor-preview-v3')
   .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)
   .then((standard) => {
     detailSceneStandard = {
@@ -1680,7 +1643,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260926-paid-v1',
+      src: '/js/model-designer.js?v=20260928-editor-preview-v3',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

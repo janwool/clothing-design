@@ -63,9 +63,9 @@ test('enables the Meshopt decoder before loading compressed GLB models', () => {
 test('applies the saved commercial cover scene to detail and editor viewers', () => {
   assert.match(template, /data-catalog-render-standard="main"/);
   assert.doesNotMatch(template, /data-catalog-render-standard="side"/);
-  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260925-zero-azimuth-v1'\)/);
+  assert.match(template, /fetch\('\/config\/design3d-render-standard\.json\?v=20260928-editor-preview-v3'\)/);
   assert.match(template, /camera-orbit="0deg 72deg 142%"/);
-  assert.match(template, /camera-orbit="0deg 72deg 158%"/);
+  assert.match(template, /camera-orbit="0deg 72deg 180%"/);
   assert.match(template, /camera-target="auto auto auto"/);
   assert.match(template, /field-of-view="28deg"/);
   assert.match(template, /function applyCatalogRenderAttributes\(element, standard/);
@@ -120,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260926-paid-v1'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260928-editor-preview-v3'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -244,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260926-paid-v1/);
+  assert.match(template, /model-designer\.js\?v=20260928-editor-preview-v3/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -352,7 +352,7 @@ test('backs opaque GLB textures with the whole garment color without spilling pa
   assert.match(designerRuntime, /function getModelTextureBackingPaint\(\)/);
   assert.match(designerRuntime, /paths\.some\(\(path\) => !path\.dataset\.color\)\) return '#ffffff'/);
   assert.match(designerRuntime, /bounds\.width \* bounds\.height/);
-  assert.match(designerRuntime, /return dominantPaint \? parseColorState\(dominantPaint\)\.start : '#ffffff'/);
+  assert.match(designerRuntime, /return dominantPaint && dominantPaint !== 'none' \? parseColorState\(dominantPaint\)\.start : '#ffffff'/);
   assert.match(designerRuntime, /function rasterizeModelTexture\(options = \{\}\)/);
   assert.match(designerRuntime, /backgroundColor: options\.backgroundColor \|\| getModelTextureBackingPaint\(\)/);
   assert.match(designerRuntime, /const textureUrl = await rasterizeModelTexture\(\)/);
@@ -409,7 +409,7 @@ test('keeps element and surface toolbars centered in the visible canvas', () => 
   assert.match(styles, /\.element-toolbar \{[\s\S]*?max-width: calc\(100% - 36px\);[\s\S]*?backdrop-filter: blur\(18px\)/);
 });
 
-test('keeps UV guide outlines out of garment fills and makes the 3D stage full height', () => {
+test('keeps UV guide outlines out of garment fills and the 3D preview fully framed', () => {
   assert.match(designerRuntime, /fillPath\.setAttribute\('class', 'texture-template-fill'\)/);
   assert.match(designerRuntime, /fillPath\.style\.setProperty\('stroke', 'transparent', 'important'\)/);
   assert.match(designerRuntime, /fillPath\.style\.setProperty\('stroke-width', '0', 'important'\)/);
@@ -417,14 +417,25 @@ test('keeps UV guide outlines out of garment fills and makes the 3D stage full h
   assert.match(designerRuntime, /fillPath\.setAttribute\('stroke', paint\)/);
   assert.match(designerRuntime, /fillPath\.setAttribute\('stroke-width', '8'\)/);
   assert.match(designerRuntime, /fillPath\.setAttribute\('vector-effect', 'non-scaling-stroke'\)/);
-  assert.match(styles, /@media \(min-width: 901px\) \{[\s\S]*?\.design-modal \.preview-3d-panel \{[\s\S]*?height: 100%;[\s\S]*?margin-block: 0;[\s\S]*?padding-block: 0;/);
+  assert.match(styles, /grid-template-areas: "toolbar sidebar canvas preview";[\s\S]*?grid-template-columns: 104px clamp\(250px, 19vw, 306px\) minmax\(0, 1fr\) clamp\(260px, 24vw, 340px\);/);
+  assert.match(styles, /\.design-modal \.preview-3d-panel \{[\s\S]*?grid-area: preview;[\s\S]*?height: clamp\(240px, 36vh, 360px\);[\s\S]*?align-self: start;/);
+  assert.match(styles, /grid-template-rows: clamp\(240px, 36vh, 360px\) minmax\(0, 1fr\);/);
+  assert.match(styles, /grid-area: preview;\s*height: calc\(100% - 24px\);\s*box-sizing: border-box;\s*margin: 18px 16px 6px 0;/);
+  assert.match(designerRuntime, /webEditorOrbit: '0deg 72deg 180%'/);
+  assert.match(designerRuntime, /designerViewer\?\.setAttribute\('min-camera-orbit', 'auto auto 180%'\)/);
+  assert.match(designerRuntime, /designerViewer\?\.removeAttribute\('min-camera-orbit'\)/);
+  assert.match(styles, /\.design-modal \.texture-designer\[data-design-view="3d"\] \.preview-3d-panel \{[\s\S]*?height: calc\(100% - 36px\);/);
+  assert.match(styles, /@media \(max-width: 900px\) \{[\s\S]*?\.design-modal \.texture-designer:not\(\[data-design-view="3d"\]\) \.preview-3d-panel \{[\s\S]*?position: absolute;[\s\S]*?right: 12px;[\s\S]*?display: block;/);
 });
 
-test('provides a compact horizontal artwork library with working import controls', () => {
+test('shows uploaded artwork without built-in image presets', () => {
   assert.match(template, /id="imageAssetTray"/);
   assert.match(template, /id="imageAssetViewport"/);
   assert.match(template, /id="imageAssetUploadInput"[^>]*multiple/);
-  assert.match(template, /data-asset-url="\/editor-assets\/botanical-line\.svg"/);
+  assert.match(template, /id="imageAssetEmpty"[^>]*>No images uploaded yet<\/p>/);
+  assert.doesNotMatch(template, /data-asset-url="\/editor-assets\//);
+  assert.doesNotMatch(template, /id="imageAssetFilter"/);
+  assert.doesNotMatch(template, /id="imageAssetClose"|aria-label="Close image list"/);
   assert.match(userProjectsRuntime, /async function listImages\(purpose\)/);
   assert.match(userProjectsRuntime, /\/api\/user-images\$\{query\}/);
   assert.match(userContentRoute, /purpose \? ' AND purpose = \?' : ''/);
@@ -442,6 +453,8 @@ test('provides a compact horizontal artwork library with working import controls
   assert.match(template, /accept="\.png,\.jpg,\.jpeg,\.webp,image\/png,image\/jpeg,image\/webp"/);
   assert.match(designerRuntime, /createUploadedAssetCard\(image\.url, image\.name \|\| 'Uploaded image', image\.url, image\.id\)/);
   assert.match(designerRuntime, /renderedUploadedAssetKeys\.has\(assetKey\)/);
+  assert.match(designerRuntime, /updateImageAssetEmptyState\(\)/);
+  assert.doesNotMatch(designerRuntime, /designer_artwork_preset_select/);
   assert.doesNotMatch(template, /<h3[^>]*>My images<\/h3>/);
   assert.match(designerRuntime, /function setAssetTrayOpen\(open\)/);
   assert.match(designerRuntime, /imageAssetViewport\?\.scrollBy/);
@@ -455,6 +468,43 @@ test('matches the approved studio composition for tools, preview, and appearance
   assert.match(styles, /\.design-modal \.preview-model-stage \{[\s\S]*?background: transparent;/);
   assert.match(styles, /\.design-modal \.preview-model-stage::before,[\s\S]*?display: none;/);
   assert.match(styles, /\.design-appearance-panel,[\s\S]*?border-radius: 14px;[\s\S]*?background: rgba\(255, 255, 255, 0\.98\)/);
+});
+
+test('places Fill directly below the 3D preview without the removed appearance selector', () => {
+  assert.doesNotMatch(template, /class="appearance-panel-header"|class="appearance-scope-switch"|data-fill-scope=/);
+  assert.match(template, /class="design-appearance-card">\s*<div class="appearance-section">\s*<div class="appearance-fill-header">\s*<strong>Fill<\/strong>/);
+  assert.match(template, /data-fill-color="#ffffff"/);
+  assert.match(template, /data-fill-color="none"/);
+  assert.match(template, /id="appearanceColorStart" type="color"/);
+  assert.match(template, /class="appearance-color-row"[\s\S]*?id="appearanceCustomColor"[\s\S]*?data-fill-color="none"[\s\S]*?data-fill-color="#ffffff"/);
+  const fillColorRow = template.match(/<div class="appearance-color-row"[\s\S]*?<\/div>/)?.[0] || '';
+  assert.doesNotMatch(fillColorRow, /<small>|>Custom<|>Transparent<|>White<|>Ivory<|>Charcoal<|>Navy<|>Beige</);
+  assert.match(fillColorRow, /aria-label="Transparent"/);
+  assert.match(styles, /"toolbar canvas preview"\s*"toolbar canvas appearance"/);
+  assert.match(styles, /\.design-modal \.design-appearance-card \.appearance-section \{\s*margin: 0;\s*padding: 0;\s*border: 0;/);
+  assert.match(styles, /\.appearance-color-row \{\s*display: grid;\s*grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.appearance-color-row \.appearance-custom-swatch \{[\s\S]*?border-radius: 50%/);
+  assert.match(designerRuntime, /state\.fillScope = 'whole';\s*renderAppearanceControls\(\)/);
+});
+
+test('shows the twelve material choices in two rows of six', () => {
+  assert.match(styles, /\.design-modal \.design-appearance-panel \.material-swatch-grid \{\s*grid-auto-flow: row;\s*grid-template-columns: repeat\(6, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.design-modal \.design-appearance-panel \.material-swatch-preview \{\s*width: 100%;\s*height: auto;\s*aspect-ratio: 1;/);
+  assert.match(template, /id="materialSwatchGrid"/);
+  assert.match(designerRuntime, /materialSwatchGrid\.appendChild\(button\)/);
+});
+
+test('opens the Images panel on the left while keeping appearance controls on the right', () => {
+  assert.doesNotMatch(template, /id="toolAppearance"/);
+  assert.match(template, /class="toolbar-btn active" id="toolImage"[^>]*aria-pressed="true"/);
+  assert.match(designerRuntime, /designModal\.classList\.add\('active'\);[\s\S]*?setDesignView\('2d'\);\s*setTool\('image'\);\s*setAssetTrayOpen\(true\)/);
+  const assetTrayToggle = designerRuntime.slice(
+    designerRuntime.indexOf('function setAssetTrayOpen(open)'),
+    designerRuntime.indexOf('\n  function setDesignView(view)')
+  );
+  assert.doesNotMatch(assetTrayToggle, /designAppearancePanel\.hidden = open/);
+  assert.match(styles, /"toolbar sidebar canvas preview"\s*"toolbar sidebar canvas appearance"/);
+  assert.match(styles, /\.design-modal \.image-asset-tray \{\s*grid-area: sidebar;/);
 });
 
 test('keeps on-model mockup code, styles, and image maps behind its launch action', () => {

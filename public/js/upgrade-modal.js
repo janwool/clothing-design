@@ -1,8 +1,51 @@
 (() => {
   'use strict';
   let dialog, trigger, access, resource, billing = 'monthly', busy = false, checkoutPending = false, planReady = false, revision = 0;
-  const plans = { pro: { name: 'Pro', monthly: '9.90', yearly: '80', credits: '250', projects: 'Unlimited', storage: 'Unlimited' } };
+  let quote = null, quoteLoading = false, pricingUnavailable = false;
+  const plans = { pro: { name: 'Pro', credits: '250', projects: 'Unlimited', storage: 'Unlimited' } };
   let openedAt = 0, closeReason = 'dismiss';
+  const money = amount => new Intl.NumberFormat(navigator.language || 'en', {
+    style: 'currency', currency: quote?.currency || 'USD'
+  }).format(amount);
+  async function visitorCountry() {
+    try {
+      const response = await fetch('/api/billing/location', {
+        credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(4000)
+      });
+      const location = await response.json();
+      if (response.ok && /^[A-Z]{2}$/.test(location.country || '')) return location.country;
+    } catch (_) { /* Local previews may not have edge geolocation. */ }
+    try {
+      const response = await fetch('https://www.cloudflare.com/cdn-cgi/trace', {
+        credentials: 'omit', cache: 'no-store', signal: AbortSignal.timeout(4000)
+      });
+      if (!response.ok) return null;
+      return (await response.text()).match(/^loc=([A-Z]{2})$/m)?.[1] || null;
+    } catch (_) { return null; }
+  }
+  async function loadPricing(token) {
+    const country = await visitorCountry();
+    if (token !== revision) return;
+    const params = new URLSearchParams();
+    if (country) params.set('country', country);
+    try {
+      const response = await fetch(`/api/billing/pricing?${params}`, {
+        credentials: 'same-origin', signal: AbortSignal.timeout(12000)
+      });
+      const result = await response.json();
+      if (!response.ok || !result.success || !/^[A-Z]{3}$/.test(result.currency || '')
+        || !Number.isFinite(result.monthly) || !Number.isFinite(result.yearly)) throw new Error('Pricing unavailable');
+      if (token !== revision) return;
+      quote = result;
+      pricingUnavailable = false;
+    } catch (_) {
+      if (token !== revision) return;
+      quote = { currency: 'USD', country, monthly: 9.9, yearly: 80 };
+      pricingUnavailable = true;
+    }
+    quoteLoading = false;
+    if (dialog.open) render();
+  }
   function trackUpgrade(eventName, parameters = {}) {
     try {
       window.trackEvent?.(eventName, {
@@ -27,7 +70,7 @@
     dialog.innerHTML = `<div class="upgrade-shell">
       <header class="upgrade-header"><span class="upgrade-eyebrow">ClozDesign<span>Upgrade plan</span></span><button type="button" class="upgrade-close" aria-label="Close upgrade dialog" autofocus>×</button></header>
       <div class="upgrade-content"><h2 id="upgradeTitle">Upgrade plan</h2><p id="upgradeReason"></p>
-      <div class="upgrade-controls"><span class="upgrade-current"></span><div class="upgrade-billing" role="group" aria-label="Billing period"><button type="button" data-upgrade-billing="monthly" aria-pressed="true">Monthly</button><button type="button" data-upgrade-billing="yearly" aria-pressed="false">Yearly <small>Save up to 33%</small></button></div></div>
+      <div class="upgrade-controls"><span class="upgrade-current"></span><div class="upgrade-billing" role="group" aria-label="Billing period"><button type="button" data-upgrade-billing="monthly" aria-pressed="true">Monthly</button><button type="button" data-upgrade-billing="yearly" aria-pressed="false">Yearly <small data-upgrade-yearly-saving hidden></small></button></div></div>
       <div class="upgrade-plans"></div><p class="upgrade-error" role="alert"></p>
       <footer class="upgrade-footer"><span>Prices in USD · Checkout opens in a new tab</span><a href="/pricing" target="_blank" rel="noopener">Compare all plans ↗</a></footer></div>
     </div>`;
@@ -43,7 +86,7 @@
       const option = event.target.closest('[data-upgrade-billing]');
       if (option && !busy && billing !== option.dataset.upgradeBilling) { const previousBilling = billing; billing = option.dataset.upgradeBilling; trackUpgrade('upgrade_billing_change', { previous_billing_interval: previousBilling }); render(); }
       const button = event.target.closest('[data-upgrade-plan]');
-      if (button && !busy && planReady) checkout(button.dataset.upgradePlan);
+      if (button && !busy && planReady && !quoteLoading && quote) checkout(button.dataset.upgradePlan);
       const link = event.target.closest('a[href]');
       if (link?.getAttribute('href') === '/pricing') trackUpgrade('upgrade_compare_plans_click');
       if (link?.getAttribute('href') === '/auth/register') trackUpgrade('upgrade_free_start_click', { plan_id: 'free' });
@@ -53,7 +96,8 @@
   function render() {
     const current = access?.plan?.id || 'free';
     const paid = current !== 'free';
-    dialog.querySelector('.upgrade-footer > span').textContent = paid ? 'Prices in USD · Contact us to change your subscription' : 'Prices in USD · Checkout opens in a new tab';
+    const priceCaption = quoteLoading ? 'Checking local prices' : `Prices in ${quote.currency}${pricingUnavailable ? ' · Local pricing unavailable' : ''}`;
+    dialog.querySelector('.upgrade-footer > span').textContent = `${priceCaption} · ${paid ? 'Contact us to change your subscription' : 'Taxes calculated at checkout · Checkout opens in a new tab'}`;
     const titles = { tryOnCredits: current === 'free' ? 'Unlock AI Try-on' : 'More Try-on credits', projects: 'More room to create', storage: 'More space for your designs', exports: 'Unlock unlimited exports', watermark: 'Export without watermarks' };
     dialog.querySelector('#upgradeTitle').textContent = titles[resource] || 'Upgrade plan';
     const quota = access?.[resource];
@@ -62,17 +106,21 @@
     dialog.querySelector('#upgradeReason').textContent = reason;
     dialog.querySelector('.upgrade-current').textContent = `Current plan · ${access?.plan?.name || 'Free'}`;
     dialog.querySelectorAll('[data-upgrade-billing]').forEach(button => { button.setAttribute('aria-pressed', String(button.dataset.upgradeBilling === billing)); button.disabled = busy; });
+    const discount = quote ? (1 - quote.yearly / (quote.monthly * 12)) * 100 : 0;
+    const yearlySaving = dialog.querySelector('[data-upgrade-yearly-saving]');
+    yearlySaving.hidden = discount <= 0;
+    yearlySaving.textContent = discount > 0 ? `Save ${discount.toFixed(1)}%` : '';
     const available = current === 'free' ? ['pro'] : [];
     dialog.querySelector('.upgrade-billing').hidden = !available.length;
-    const freeCard = `<section class="upgrade-plan upgrade-plan-free" aria-labelledby="upgradeFreeTitle"><div class="upgrade-plan-heading"><h3 id="upgradeFreeTitle">Free</h3></div><div class="upgrade-free-price-block"><p class="upgrade-price">$0</p><span class="upgrade-free-price-spacer" aria-hidden="true">&nbsp;</span></div><ul><li>3 projects total</li><li>20 MB image storage</li><li>Free editing &amp; previews</li><li>Exports require Pro</li></ul>${access?.plan ? `<span class="upgrade-cta upgrade-free-status">${current === 'free' ? 'Current plan' : 'Free plan'}</span>` : `<a class="upgrade-cta" href="/auth/register">Start free</a>`}</section>`;
+    const freeCard = `<section class="upgrade-plan upgrade-plan-free" aria-labelledby="upgradeFreeTitle"><div class="upgrade-plan-heading"><h3 id="upgradeFreeTitle">Free</h3></div><div class="upgrade-free-price-block"><p class="upgrade-price">${quote ? money(0) : 'Free'}</p><span class="upgrade-free-price-spacer" aria-hidden="true">&nbsp;</span></div><ul><li>3 projects total</li><li>20 MB image storage</li><li>Free editing &amp; previews</li><li>Exports require Pro</li></ul>${access?.plan ? `<span class="upgrade-cta upgrade-free-status">${current === 'free' ? 'Current plan' : 'Free plan'}</span>` : `<a class="upgrade-cta" href="/auth/register">Start free</a>`}</section>`;
     dialog.querySelector('.upgrade-plans').innerHTML = freeCard + (available.map((id, index) => {
       const plan = plans[id];
       const annual = billing === 'yearly';
-      const monthlyPrice = annual ? (Number(plan.yearly) / 12).toFixed(2) : plan.monthly;
-      const discount = ((1 - Number(plan.yearly) / (Number(plan.monthly) * 12)) * 100).toFixed(1);
-      return `<section class="upgrade-plan ${index === 0 ? 'is-recommended' : ''}"><div class="upgrade-plan-heading"><h3>${plan.name}</h3>${index === 0 ? '<span>Recommended</span>' : ''}</div><p class="upgrade-price">$${monthlyPrice}<small> / month</small></p>${annual ? `<div class="upgrade-annual-saving"><s>$${plan.monthly} / month</s><span>Save ${discount}%</span></div>` : ''}<p class="upgrade-renewal">${annual ? `$${plan.yearly} billed annually` : 'Billed monthly'}</p><ul><li><strong>${plan.credits}</strong> monthly credits</li><li><strong>${plan.projects}</strong> projects</li><li><strong>${plan.storage}</strong> image storage</li><li>Unlimited image, video &amp; GLB exports</li><li>No watermarks</li><li>Interactive 3D sharing</li><li>All mockup models</li></ul>${paid ? `<a class="upgrade-cta" href="${contact}">Contact us to upgrade ↗</a>` : `<button type="button" class="upgrade-cta" data-upgrade-plan="${id}" ${busy || !planReady ? 'disabled' : ''}>${busy ? 'Loading…' : `Get ${plan.name} ↗`}</button>`}</section>`;
+      const monthlyPrice = quote ? money(annual ? quote.yearly / 12 : quote.monthly) : 'Checking local price…';
+      return `<section class="upgrade-plan ${index === 0 ? 'is-recommended' : ''}"><div class="upgrade-plan-heading"><h3>${plan.name}</h3>${index === 0 ? '<span>Recommended</span>' : ''}</div><p class="upgrade-price ${quoteLoading ? 'is-loading' : ''}">${monthlyPrice}${quote ? '<small> / month</small>' : ''}</p>${annual && quote && discount > 0 ? `<div class="upgrade-annual-saving"><s>${money(quote.monthly)} / month</s><span>Save ${discount.toFixed(1)}%</span></div>` : ''}<p class="upgrade-renewal">${quote ? (annual ? `${money(quote.yearly)} billed annually` : 'Billed monthly') : 'Fetching prices for your region'}</p><ul><li><strong>${plan.credits}</strong> monthly credits</li><li><strong>${plan.projects}</strong> projects</li><li><strong>${plan.storage}</strong> image storage</li><li>Unlimited image, video &amp; GLB exports</li><li>No watermarks</li><li>Interactive 3D sharing</li><li>All mockup models</li></ul>${paid ? `<a class="upgrade-cta" href="${contact}">Contact us to upgrade ↗</a>` : `<button type="button" class="upgrade-cta" data-upgrade-plan="${id}" ${busy || !planReady || quoteLoading || !quote ? 'disabled' : ''}>${busy || quoteLoading ? 'Loading…' : `Get ${plan.name} ↗`}</button>`}</section>`;
     }).join('') || `<section class="upgrade-business"><h3>Need more capacity?</h3><p>Contact us for a plan tailored to your team.</p><a class="upgrade-cta" href="${contact}">Contact us ↗</a></section>`);
     dialog.querySelector('.upgrade-plans').classList.toggle('has-three-plans', available.length === 2);
+    dialog.querySelector('.upgrade-plans').setAttribute('aria-busy', String(quoteLoading));
   }
   async function open(options = {}) {
     mount();
@@ -83,6 +131,9 @@
     planReady = Boolean(access);
     resource = options.resource;
     billing = 'monthly';
+    quote = null;
+    quoteLoading = true;
+    pricingUnavailable = false;
     const token = ++revision;
     dialog.querySelector('.upgrade-error').textContent = '';
     render();
@@ -90,6 +141,7 @@
     openedAt = Date.now(); closeReason = 'dismiss';
     trackUpgrade('upgrade_modal_view');
     document.documentElement.classList.add('upgrade-open');
+    const pricingLoad = loadPricing(token);
     if (!access) {
       busy = true; render();
       try {
@@ -107,14 +159,16 @@
         if (token === revision) { busy = checkoutPending; render(); }
       }
     }
+    await pricingLoad;
   }
   async function checkout(plan) {
     const token = revision;
     const selectedBilling = billing;
+    const selectedQuote = quote;
     const context = {
       plan_id: plan, current_plan: access?.plan?.id || 'unknown',
       trigger_resource: resource || 'general', billing_interval: selectedBilling,
-      currency: 'USD', value: Number(plans[plan][selectedBilling]), checkout_provider: 'dodo_payments'
+      currency: selectedQuote.currency, value: selectedQuote[selectedBilling], checkout_provider: 'dodo_payments'
     };
     trackUpgrade('upgrade_plan_select', context);
     trackUpgrade('upgrade_checkout_begin', context);
@@ -126,11 +180,11 @@
     checkoutPending = true;
     busy = true; errorBox.textContent = ''; render();
     try {
-      const response = await fetch('/api/billing/checkout', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan, billingInterval: selectedBilling }), signal: AbortSignal.timeout(30000) });
+      const response = await fetch('/api/billing/checkout', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan, billingInterval: selectedBilling, currency: selectedQuote.currency, country: selectedQuote.country }), signal: AbortSignal.timeout(30000) });
       const result = await response.json();
       if (response.status === 401) {
         trackUpgrade('upgrade_checkout_login_required', context);
-        paymentTab.location.href = `/auth/login?next=${encodeURIComponent(`/pricing?plan=${plan}&billing=${selectedBilling}&checkout=resume`)}`;
+        paymentTab.location.href = `/auth/login?next=${encodeURIComponent(`/pricing?plan=${plan}&billing=${selectedBilling}&currency=${selectedQuote.currency === 'USD' ? 'USD' : 'auto'}&checkout=resume`)}`;
         return;
       }
       if (!response.ok || !result.checkoutUrl) throw new Error(result.error || 'Checkout is unavailable. Please try again.');

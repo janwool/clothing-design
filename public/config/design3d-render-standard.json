@@ -16,7 +16,7 @@
     "distanceScale": 2.3,
     "orthographicScale": 1.16,
     "webOrbit": "0deg 72deg 142%",
-    "webEditorOrbit": "0deg 72deg 158%",
+    "webEditorOrbit": "0deg 72deg 180%",
     "webFieldOfView": "28deg",
     "webTarget": "auto auto auto"
   },
