@@ -8,6 +8,7 @@ const {
   extractDodoEventData,
   getAccessForProduct,
   getProduct,
+  scheduleDodoSubscriptionCancellation,
   unwrapDodoWebhook
 } = require('../lib/dodo-billing');
 
@@ -72,6 +73,18 @@ test('extracts identity and subscription dates from a Dodo Payments event', () =
   assert.equal(data.userId, '42');
   assert.equal(data.cancelAtNextBillingDate, true);
   assert.equal(data.periodEnd, '2026-10-01T00:00:00.000Z');
+});
+
+test('schedules cancellation at the next billing date through Dodo', async () => {
+  const calls = [];
+  const client = { subscriptions: { update: async (...args) => { calls.push(args); return { cancel_at_next_billing_date: true }; } } };
+  await scheduleDodoSubscriptionCancellation('sub_one', client);
+  assert.deepEqual(calls, [[
+    'sub_one',
+    { cancel_at_next_billing_date: true, cancel_reason: 'cancelled_by_customer' },
+    { timeout: 10000, maxRetries: 0 }
+  ]]);
+  await assert.rejects(scheduleDodoSubscriptionCancellation('', client), /Subscription ID is required/);
 });
 
 test('verifies Dodo Payments Standard Webhooks signatures', () => {

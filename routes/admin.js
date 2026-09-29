@@ -403,6 +403,18 @@ router.get('/', requireAuth, async (req, res) => {
     const gallery = await db.get('SELECT COUNT(*) as count FROM gallery_items');
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
     const users = await db.get('SELECT COUNT(*) as count FROM users');
+    let subscribers = null;
+    try {
+      await ensureEntitlementTables();
+      subscribers = await db.get(`SELECT COUNT(*) AS count
+        FROM user_subscriptions s
+        JOIN users u ON u.id = s.user_id
+        WHERE LOWER(s.plan) IN ('pro', 'max', 'business')
+          AND LOWER(s.status) IN ('active', 'trialing', 'past_due', 'scheduled_cancel')
+          AND (s.current_period_end IS NULL OR julianday(s.current_period_end) > julianday('now'))`);
+    } catch (error) {
+      console.error('Admin subscriber count failed:', error);
+    }
     const inquiries = await db.get('SELECT COUNT(*) as count FROM customization_inquiries');
     await ensureFeedbackTable();
     const feedback = await db.get('SELECT COUNT(*) as count FROM feedback_submissions');
@@ -419,6 +431,7 @@ router.get('/', requireAuth, async (req, res) => {
         gallery: gallery ? gallery.count : 0,
         tools: tools ? tools.count : 0,
         users: users ? users.count : 0,
+        subscribers: subscribers ? subscribers.count : null,
         inquiries: inquiries ? inquiries.count : 0,
         feedback: feedback ? feedback.count : 0,
         projects: projects ? projects.count : 0,
@@ -429,7 +442,7 @@ router.get('/', requireAuth, async (req, res) => {
     res.render('admin/dashboard', {
       title: 'Admin Dashboard',
       page: 'admin',
-      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, inquiries: 0, feedback: 0, projects: 0, images: 0 }
+      counts: { models3d: 0, models2d: 0, gallery: 0, tools: 0, users: 0, subscribers: null, inquiries: 0, feedback: 0, projects: 0, images: 0 }
     });
   }
 });

@@ -448,11 +448,6 @@ router.patch('/api/account', requireUser, async (req, res) => {
 });
 
 const workspacePages = {
-  overview: {
-    template: 'account/overview',
-    title: 'Workspace - ClozDesign',
-    description: 'Review your ClozDesign projects, storage, and recent activity.'
-  },
   projects3d: {
     template: 'account/projects-3d',
     title: '3D Projects - ClozDesign Workspace',
@@ -470,7 +465,7 @@ const workspacePages = {
   }
 };
 
-async function renderWorkspace(req, res, pageKey = 'overview') {
+async function renderWorkspace(req, res, pageKey = 'projects3d') {
   try {
     await ensureUserContentTables();
     const [projectRows, imageRows, account, entitlements] = await Promise.all([
@@ -496,17 +491,21 @@ async function renderWorkspace(req, res, pageKey = 'overview') {
       whiteMockups: projects.filter(project => project.projectType === 'white_mockup').length,
       storageBytes: images.reduce((total, image) => total + image.size, 0)
     };
-    const pageConfig = workspacePages[pageKey] || workspacePages.overview;
+    const pageConfig = workspacePages[pageKey] || workspacePages.projects3d;
+    const billingSubscription = pageKey === 'settings'
+      ? await db.get('SELECT provider, provider_subscription_id, status, current_period_end FROM user_subscriptions WHERE user_id = ?', [req.session.user.id])
+      : null;
     return res.render(pageConfig.template, {
       title: pageConfig.title,
       metaDescription: pageConfig.description,
       metaRobots: 'noindex,nofollow',
       page: 'account',
-      pageStyles: ['/css/account-workspace.css?v=20260915-ai-disabled-v13'],
+      pageStyles: ['/css/account-workspace.css?v=20260930-list-scroll-v5'],
       projects,
       account: account || req.session.user,
       workspaceStats,
       entitlements,
+      billingSubscription,
       aiTryOnEnabled: isAiTryOnEnabled(),
       checkoutState: req.query?.checkout === 'success' ? 'success' : ''
     });
@@ -520,7 +519,7 @@ function renderWorkspacePage(pageKey) {
   return (req, res) => renderWorkspace(req, res, pageKey);
 }
 
-router.get('/account', requireUser, renderWorkspacePage('overview'));
+router.get('/account', requireUser, (req, res) => res.redirect('/account/projects/3d'));
 router.get('/account/projects/3d', requireUser, renderWorkspacePage('projects3d'));
 router.get('/account/projects/white-mockups', requireUser, renderWorkspacePage('whiteMockups'));
 router.get('/account/projects', requireUser, (req, res) => res.redirect('/account/projects/3d'));

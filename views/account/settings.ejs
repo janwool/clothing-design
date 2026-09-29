@@ -1,11 +1,22 @@
 <%
   const settingsDisplayName = String(account.name || user.name || 'Designer').trim();
-  const initial = settingsDisplayName.charAt(0).toUpperCase();
   const formatDate = function(value) {
     if (!value) return 'Just now';
     const parsed = new Date(String(value).includes('T') ? value : `${value}Z`);
     return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
   };
+  const formatBytes = bytes => {
+    const value = Number(bytes) || 0;
+    return value < 1024 * 1024 ? Math.round(value / 1024) + ' KB' : (value / 1024 / 1024).toFixed(value >= 10 * 1024 * 1024 ? 0 : 1) + ' MB';
+  };
+  const percentage = (used, limit) => limit ? Math.min(100, Math.round((Number(used) || 0) / Number(limit) * 100)) : 0;
+  const isMember = entitlements.plan.id !== 'free';
+  const cancellationScheduled = isMember && entitlements.plan.status === 'scheduled_cancel';
+  const canCancelSubscription = isMember && !cancellationScheduled
+    && billingSubscription && billingSubscription.provider === 'dodo_payments'
+    && Boolean(billingSubscription.provider_subscription_id)
+    && ['active', 'trialing', 'past_due'].includes(String(billingSubscription.status || '').toLowerCase());
+  const periodEnd = entitlements.plan.currentPeriodEnd ? formatDate(entitlements.plan.currentPeriodEnd) : '';
 %>
 <%- include('partials/workspace-shell', {
   currentView: 'settings',
@@ -14,11 +25,23 @@
 }) %>
 
     <section class="workspace-section workspace-page-section workspace-account" aria-labelledby="accountTitle">
-      <div class="workspace-section-heading"><div><span>Account</span><h1 id="accountTitle">Profile settings</h1></div><p>Member since <%= formatDate(account.created_at) %></p></div>
-      <div class="workspace-account-grid">
-        <form id="workspaceProfileForm" class="workspace-profile-card"><div class="workspace-profile-mark"><%= initial %></div><div class="workspace-profile-fields"><label><span>Display name</span><input id="workspaceProfileName" name="name" value="<%= settingsDisplayName %>" minlength="2" maxlength="100" required></label><label><span>Email address</span><input value="<%= account.email %>" disabled></label></div><button type="submit">Save changes</button></form>
-        <aside class="workspace-account-note"><span>Storage model</span><h3>Design data stays light.</h3><p>Projects contain design settings and image addresses. Original images and generated previews live separately in Cloudflare R2.</p><a href="/privacy">Review privacy overview →</a></aside>
+      <% if (checkoutState === 'success') { %><div class="workspace-checkout-notice" role="status"><div><strong>Subscription received.</strong><span>Your plan activates once payment is confirmed.</span></div><a href="/account/settings">Refresh plan →</a></div><% } %>
+      <div class="workspace-page-title"><div><h1 id="accountTitle">Account</h1></div></div>
+      <div class="workspace-account-content">
+        <div class="workspace-account-block"><div class="workspace-account-block-heading"><h2>Profile</h2></div>
+          <form id="workspaceProfileForm" class="workspace-profile-card"><div class="workspace-profile-fields"><label><span>Display name</span><input id="workspaceProfileName" name="name" value="<%= settingsDisplayName %>" minlength="2" maxlength="100" required autocomplete="name"></label><label><span>Email address</span><input value="<%= account.email %>" type="email" readonly aria-readonly="true"></label><div class="workspace-account-readonly"><span>Member since</span><strong><%= formatDate(account.created_at) %></strong></div></div><button type="submit">Save changes</button></form>
+        </div>
+        <div class="workspace-account-block"><div class="workspace-account-block-heading"><h2>Membership</h2></div>
+          <div class="workspace-account-plan">
+            <div class="workspace-account-plan-heading"><div><span>Current plan</span><strong><%= entitlements.plan.name %></strong></div><% if (cancellationScheduled) { %><span class="workspace-plan-status">Cancellation scheduled</span><% } %></div>
+            <% if (cancellationScheduled) { %><p class="workspace-plan-message">Your membership remains active<%= periodEnd ? ' until ' + periodEnd : ' until the current billing period ends' %>. It will not renew.</p><% } else if (isMember && periodEnd) { %><p class="workspace-plan-message">Current billing period ends <%= periodEnd %>.</p><% } %>
+            <div class="workspace-account-usage-grid"><div class="workspace-usage-item"><div><span>Projects</span><strong><%= entitlements.projects.limit === null ? entitlements.projects.used + ' saved' : entitlements.projects.used + ' of ' + entitlements.projects.limit %></strong></div><progress value="<%= percentage(entitlements.projects.used, entitlements.projects.limit) %>" max="100" aria-label="Project usage"></progress><small><%= entitlements.projects.period === 'month' ? 'Created this month' : 'Created in total' %></small></div><div class="workspace-usage-item"><div><span>Image storage</span><strong><%= entitlements.storage.limitBytes === null ? formatBytes(entitlements.storage.usedBytes) : formatBytes(entitlements.storage.usedBytes) + ' of ' + formatBytes(entitlements.storage.limitBytes) %></strong></div><progress value="<%= percentage(entitlements.storage.usedBytes, entitlements.storage.limitBytes) %>" max="100" aria-label="Image storage usage"></progress></div></div>
+            <% if (!cancellationScheduled) { %><div class="workspace-membership-action"><% if (!isMember) { %><a class="workspace-upgrade-button" href="/pricing" data-upgrade-resource="plan">Upgrade to Pro</a><% } else if (canCancelSubscription) { %><button type="button" id="workspaceCancelSubscription" aria-haspopup="dialog">Cancel subscription</button><% } else { %><a href="mailto:support@cloz-design.com?subject=Subscription%20help">Contact support to manage your plan</a><% } %></div><% } %>
+          </div>
+        </div>
+        <div class="workspace-account-row"><div><h2>Sign out</h2><p>Sign out of your account on this device</p></div><a class="workspace-signout-button" href="/auth/logout" data-analytics-event="workspace_logout_click">Sign out</a></div>
       </div>
     </section>
+    <% if (canCancelSubscription) { %><dialog class="workspace-dialog workspace-cancel-dialog" id="workspaceCancelDialog" aria-labelledby="workspaceCancelTitle"><div><button type="button" class="workspace-dialog-close" data-close-cancel-dialog aria-label="Close">×</button><span>MEMBERSHIP</span><h2 id="workspaceCancelTitle">Cancel subscription?</h2><p>Your membership will remain active<%= periodEnd ? ' until ' + periodEnd : ' until the current billing period ends' %>. You will not be charged for the next period.</p><div class="workspace-cancel-actions"><button type="button" data-close-cancel-dialog>Keep subscription</button><button type="button" id="workspaceConfirmCancel">Confirm cancellation</button></div></div></dialog><% } %>
 
-<%- include('partials/workspace-end') %>
+<%- include('partials/workspace-end', { showWorkspaceFooter: true }) %>

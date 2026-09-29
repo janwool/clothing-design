@@ -84,6 +84,9 @@ const templateLocals = [
   'images',
   'account',
   'workspaceStats',
+  'entitlements',
+  'billingSubscription',
+  'checkoutState',
   'currentView',
   'headerEyebrow',
   'headerDetail',
@@ -92,7 +95,8 @@ const templateLocals = [
   'intro',
   'updatedAt',
   'sections',
-  'footerVariant'
+  'footerVariant',
+  'showWorkspaceFooter'
 ];
 
 function walk(dir, predicate) {
@@ -197,6 +201,6 @@ module.exports = {
 `;
 
 fs.mkdirSync(outputDir, { recursive: true });
-fs.writeFileSync(outputFile, moduleSource);
+fs.writeFileSync(outputFile, moduleSource.replace(/[ \t]+$/gm, ''));
 
 console.log(`Generated ${path.relative(rootDir, outputFile)}`);

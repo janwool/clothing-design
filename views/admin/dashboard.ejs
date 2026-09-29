@@ -2,79 +2,92 @@
 
 <div class="admin-wrapper">
   <%- include('partials/sidebar') %>
-  
-  <main class="admin-main">
-    <div class="admin-header">
-      <h1 class="admin-title">Dashboard</h1>
-      <button class="sidebar-toggle">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
+
+  <main class="admin-main dashboard-page">
+    <header class="dashboard-header">
+      <div>
+        <h1 class="admin-title">Dashboard</h1>
+      </div>
+      <button class="sidebar-toggle" type="button" aria-label="Open admin menu" aria-controls="adminSidebar" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
       </button>
-    </div>
-    
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">3D Models</div>
-        <div class="stat-value"><%= counts.models3d %></div>
+    </header>
+
+    <section class="dashboard-section" aria-labelledby="accountSummaryTitle">
+      <h2 id="accountSummaryTitle" class="dashboard-section-title">Account Summary</h2>
+      <div class="dashboard-account-grid">
+        <a href="/admin/users" class="dashboard-metric dashboard-metric-primary">
+          <span class="dashboard-metric-label">Users</span>
+          <strong class="dashboard-metric-value"><%= counts.users %></strong>
+          <span class="dashboard-metric-detail">Registered accounts</span>
+          <span class="dashboard-metric-link">View users <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="<%= counts.subscribers == null ? '/admin' : '/admin/users' %>" class="dashboard-metric dashboard-metric-primary dashboard-subscriber-metric" aria-label="Active subscribers: <%= counts.subscribers == null ? 'unavailable. Refresh dashboard' : counts.subscribers + '. View users' %>">
+          <span class="dashboard-metric-label">Active Subscribers</span>
+          <strong class="dashboard-metric-value"><%= counts.subscribers == null ? '—' : counts.subscribers %></strong>
+          <span class="dashboard-metric-detail"><%= counts.subscribers == null ? 'Count unavailable' : 'Paid plans · active access' %></span>
+          <span class="dashboard-metric-link"><%= counts.subscribers == null ? 'Refresh dashboard' : 'View users' %> <span aria-hidden="true">→</span></span>
+        </a>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">2D Templates</div>
-        <div class="stat-value"><%= counts.models2d %></div>
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="contentAssetsTitle">
+      <h2 id="contentAssetsTitle" class="dashboard-section-title">Content &amp; Assets</h2>
+      <div class="dashboard-metric-grid">
+        <a href="/admin/models-3d" class="dashboard-metric">
+          <span class="dashboard-metric-label">3D Models</span><strong class="dashboard-metric-value"><%= counts.models3d %></strong>
+          <span class="dashboard-metric-detail">Total models</span><span class="dashboard-metric-link">Manage 3D models <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/models-2d" class="dashboard-metric">
+          <span class="dashboard-metric-label">2D Templates</span><strong class="dashboard-metric-value"><%= counts.models2d %></strong>
+          <span class="dashboard-metric-detail">Total templates</span><span class="dashboard-metric-link">Manage 2D templates <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/gallery" class="dashboard-metric">
+          <span class="dashboard-metric-label">Gallery Items</span><strong class="dashboard-metric-value"><%= counts.gallery %></strong>
+          <span class="dashboard-metric-detail">Total items</span><span class="dashboard-metric-link">View gallery <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/tools" class="dashboard-metric">
+          <span class="dashboard-metric-label">Tools</span><strong class="dashboard-metric-value"><%= counts.tools %></strong>
+          <span class="dashboard-metric-detail">Total tools</span><span class="dashboard-metric-link">View tools <span aria-hidden="true">→</span></span>
+        </a>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Gallery Items</div>
-        <div class="stat-value"><%= counts.gallery %></div>
+    </section>
+
+    <section class="dashboard-section" aria-labelledby="userActivityTitle">
+      <h2 id="userActivityTitle" class="dashboard-section-title">User Activity</h2>
+      <div class="dashboard-metric-grid">
+        <a href="/admin/projects" class="dashboard-metric">
+          <span class="dashboard-metric-label">User Projects</span><strong class="dashboard-metric-value"><%= counts.projects %></strong>
+          <span class="dashboard-metric-detail">Total projects</span><span class="dashboard-metric-link">View user projects <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/images" class="dashboard-metric">
+          <span class="dashboard-metric-label">User Uploads</span><strong class="dashboard-metric-value"><%= counts.images %></strong>
+          <span class="dashboard-metric-detail">Total uploads</span><span class="dashboard-metric-link">View user uploads <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/inquiries" class="dashboard-metric">
+          <span class="dashboard-metric-label">Custom Inquiries</span><strong class="dashboard-metric-value"><%= counts.inquiries %></strong>
+          <span class="dashboard-metric-detail">Total inquiries</span><span class="dashboard-metric-link">View custom inquiries <span aria-hidden="true">→</span></span>
+        </a>
+        <a href="/admin/feedback" class="dashboard-metric">
+          <span class="dashboard-metric-label">User Feedback</span><strong class="dashboard-metric-value"><%= counts.feedback %></strong>
+          <span class="dashboard-metric-detail">Total feedback items</span><span class="dashboard-metric-link">View feedback <span aria-hidden="true">→</span></span>
+        </a>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Tools</div>
-        <div class="stat-value"><%= counts.tools %></div>
+    </section>
+
+    <section class="dashboard-section dashboard-actions-section" aria-labelledby="quickActionsTitle">
+      <h2 id="quickActionsTitle" class="dashboard-section-title">Quick Actions</h2>
+      <div class="dashboard-actions-grid">
+        <a href="/admin/models-3d" class="dashboard-action">Manage 3D Models <span aria-hidden="true">→</span></a>
+        <a href="/admin/models-2d" class="dashboard-action">Manage 2D Templates <span aria-hidden="true">→</span></a>
+        <a href="/admin/projects" class="dashboard-action">View User Projects <span aria-hidden="true">→</span></a>
+        <a href="/admin/images" class="dashboard-action">View User Uploads <span aria-hidden="true">→</span></a>
+        <a href="/admin/inquiries" class="dashboard-action">View Custom Inquiries <span aria-hidden="true">→</span></a>
+        <a href="/admin/feedback" class="dashboard-action">View Feedback <span aria-hidden="true">→</span></a>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Users</div>
-        <div class="stat-value"><%= counts.users %></div>
-      </div>
-      <a href="/admin/projects" class="stat-card stat-card-link">
-        <div class="stat-label">User Projects</div>
-        <div class="stat-value"><%= counts.projects %></div>
-        <span class="stat-link-label">Open library →</span>
-      </a>
-      <a href="/admin/images" class="stat-card stat-card-link">
-        <div class="stat-label">User Uploads</div>
-        <div class="stat-value"><%= counts.images %></div>
-        <span class="stat-link-label">Open uploads →</span>
-      </a>
-      <a href="/admin/inquiries" class="stat-card stat-card-link">
-        <div class="stat-label">Custom Inquiries</div>
-        <div class="stat-value"><%= counts.inquiries %></div>
-        <span class="stat-link-label">Open list →</span>
-      </a>
-      <a href="/admin/feedback" class="stat-card stat-card-link">
-        <div class="stat-label">User Feedback</div>
-        <div class="stat-value"><%= counts.feedback %></div>
-        <span class="stat-link-label">Open feedback →</span>
-      </a>
-    </div>
-    
-    <!-- Quick Links -->
-    <div class="data-card">
-      <div class="data-header">
-        <h2 class="data-title">Quick Actions</h2>
-      </div>
-      <div style="padding: var(--spacing-xl);">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-lg);">
-          <a href="/admin/models-3d" class="btn btn-primary" style="justify-content: center;">Manage 3D Models</a>
-          <a href="/admin/models-2d" class="btn btn-primary" style="justify-content: center;">Manage 2D Templates</a>
-          <a href="/admin/projects" class="btn btn-primary" style="justify-content: center;">View User Projects</a>
-          <a href="/admin/images" class="btn btn-primary" style="justify-content: center;">View User Uploads</a>
-          <a href="/admin/inquiries" class="btn btn-primary" style="justify-content: center;">View Custom Inquiries</a>
-          <a href="/admin/feedback" class="btn btn-primary" style="justify-content: center;">View Feedback</a>
-        </div>
-      </div>
-    </div>
+    </section>
   </main>
 </div>
 

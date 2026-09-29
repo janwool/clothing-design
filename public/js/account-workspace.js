@@ -6,7 +6,13 @@
   const renameInput = document.getElementById('workspaceRenameInput');
   const renameConfirm = document.getElementById('workspaceRenameConfirm');
   const profileForm = document.getElementById('workspaceProfileForm');
+  const cancelDialog = document.getElementById('workspaceCancelDialog');
+  const cancelButton = document.getElementById('workspaceCancelSubscription');
+  const confirmCancel = document.getElementById('workspaceConfirmCancel');
   const toast = document.getElementById('workspaceToast');
+  const projectSearch = document.querySelector('[data-project-search]');
+  const projectSort = document.querySelector('[data-project-sort]');
+  const searchEmpty = document.getElementById('workspaceSearchEmpty');
   let activeCard = null;
   let toastTimer = 0;
 
@@ -42,6 +48,30 @@
       card.querySelector('[data-project-menu-button]')?.setAttribute('aria-expanded', 'false');
     });
   }
+
+  function updateProjectList() {
+    if (!projectGrid) return;
+    const query = String(projectSearch?.value || '').trim().toLocaleLowerCase();
+    const cards = Array.from(projectGrid.querySelectorAll('.workspace-project-card'));
+    const mode = projectSort?.value || 'recent';
+    cards.sort((a, b) => {
+      if (mode === 'name') return a.dataset.projectName.localeCompare(b.dataset.projectName);
+      const dateOrder = String(b.dataset.projectUpdated || '').localeCompare(String(a.dataset.projectUpdated || ''));
+      return mode === 'oldest' ? -dateOrder : dateOrder;
+    }).forEach(card => {
+      projectGrid.appendChild(card);
+      card.hidden = Boolean(query && !card.dataset.projectName.includes(query));
+    });
+    if (searchEmpty) searchEmpty.hidden = !query || cards.some(card => !card.hidden);
+  }
+
+  projectSearch?.addEventListener('input', updateProjectList);
+  projectSort?.addEventListener('change', updateProjectList);
+  document.querySelector('[data-project-clear-search]')?.addEventListener('click', () => {
+    projectSearch.value = '';
+    updateProjectList();
+    projectSearch.focus();
+  });
 
   projectGrid?.addEventListener('click', async event => {
     const card = event.target.closest('.workspace-project-card');
@@ -85,6 +115,7 @@
         card.style.transform = 'scale(.96)';
         window.setTimeout(() => card.remove(), 220);
         showToast('Project deleted.');
+        window.setTimeout(updateProjectList, 250);
       } catch (error) {
         showToast(error.message, true);
       }
@@ -108,6 +139,7 @@
       activeCard.querySelectorAll('[data-project-title] a').forEach(link => { link.textContent = result.project.name; });
       activeCard.querySelectorAll('img').forEach(image => { image.alt = `${result.project.name} preview`; });
       renameDialog.close();
+      updateProjectList();
       showToast('Project renamed.');
     } catch (error) {
       showToast(error.message, true);
@@ -128,6 +160,22 @@
       showToast(error.message, true);
     } finally {
       submit.disabled = false;
+    }
+  });
+
+  cancelButton?.addEventListener('click', () => cancelDialog?.showModal());
+  cancelDialog?.querySelectorAll('[data-close-cancel-dialog]').forEach(button => {
+    button.addEventListener('click', () => cancelDialog.close());
+  });
+  confirmCancel?.addEventListener('click', async () => {
+    confirmCancel.disabled = true;
+    try {
+      await api('/api/billing/subscription/cancel', { method: 'POST', body: '{}' });
+      cancelDialog.close();
+      window.location.reload();
+    } catch (error) {
+      showToast(error.message, true);
+      confirmCancel.disabled = false;
     }
   });
 

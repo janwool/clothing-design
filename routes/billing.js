@@ -5,6 +5,7 @@ const {
   getDodoPricing,
   extractDodoEventData,
   getAccessForProduct,
+  scheduleDodoSubscriptionCancellation,
   unwrapDodoWebhook
 } = require('../lib/dodo-billing');
 const { ensureEntitlementTables } = require('../lib/user-entitlements');
@@ -118,7 +119,7 @@ router.post('/checkout', requireUser, async (req, res) => {
       user: req.session.user,
       currency: req.body?.currency,
       country: req.body?.country,
-      successUrl: `${origin}/account?checkout=success`,
+      successUrl: `${origin}/account/settings?checkout=success`,
       cancelUrl: `${origin}/pricing?checkout=cancelled`
     });
     res.set('Cache-Control', 'private, no-store');
@@ -129,6 +130,45 @@ router.post('/checkout', requireUser, async (req, res) => {
     return res.status(failure.status).json({
       success: false,
       error: failure.message
+    });
+  }
+});
+
+router.post('/subscription/cancel', requireUser, async (req, res) => {
+  res.set('Cache-Control', 'private, no-store');
+  if (!req.is('application/json')) {
+    return res.status(415).json({ success: false, error: 'JSON request required.' });
+  }
+  try {
+    await ensureEntitlementTables();
+    const subscription = await db.get(
+      'SELECT provider, provider_subscription_id, status, current_period_end FROM user_subscriptions WHERE user_id = ?',
+      [req.session.user.id]
+    );
+    if (!subscription || subscription.provider !== 'dodo_payments' || !subscription.provider_subscription_id) {
+      return res.status(409).json({ success: false, error: 'This plan cannot be cancelled here. Please contact support.' });
+    }
+    if (subscription.status === 'scheduled_cancel') {
+      return res.json({ success: true, scheduled: true, currentPeriodEnd: subscription.current_period_end });
+    }
+    if (!['active', 'trialing', 'past_due'].includes(String(subscription.status || '').toLowerCase())) {
+      return res.status(409).json({ success: false, error: 'This subscription is not active.' });
+    }
+    const updated = await scheduleDodoSubscriptionCancellation(subscription.provider_subscription_id);
+    if (updated.cancel_at_next_billing_date !== true) {
+      throw new Error('Payment provider did not confirm scheduled cancellation.');
+    }
+    await db.run(
+      `UPDATE user_subscriptions SET status = 'scheduled_cancel', updated_at = CURRENT_TIMESTAMP
+       WHERE user_id = ? AND provider_subscription_id = ? AND status IN ('active', 'trialing', 'past_due')`,
+      [req.session.user.id, subscription.provider_subscription_id]
+    );
+    return res.json({ success: true, scheduled: true, currentPeriodEnd: subscription.current_period_end });
+  } catch (error) {
+    console.error('Subscription cancellation failed:', error);
+    return res.status(error?.status === 503 ? 503 : 502).json({
+      success: false,
+      error: 'Cancellation could not be scheduled. Please try again.'
     });
   }
 });

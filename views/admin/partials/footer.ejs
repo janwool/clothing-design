@@ -8,7 +8,9 @@ const adminSidebar = document.querySelector('.admin-sidebar');
 
 if (sidebarToggle) {
   sidebarToggle.addEventListener('click', () => {
-    adminSidebar.classList.toggle('active');
+    const isOpen = adminSidebar.classList.toggle('active');
+    sidebarToggle.setAttribute('aria-expanded', String(isOpen));
+    sidebarToggle.setAttribute('aria-label', isOpen ? 'Close admin menu' : 'Open admin menu');
   });
 }
 

@@ -1,6 +1,8 @@
   <% const isHoodieFooter = typeof footerVariant !== 'undefined' && footerVariant === 'hoodie'; %>
+  <% const isWorkbenchFooter = typeof footerVariant !== 'undefined' && footerVariant === 'workbench'; %>
   </main>
 
+  <% if (!isWorkbenchFooter) { %>
   <footer class="footer<%= isHoodieFooter ? ' footer-hoodie' : '' %>">
     <div class="footer-container">
       <div class="footer-grid">
@@ -69,6 +71,7 @@
       </div>
     </div>
   </footer>
+  <% } %>
 
   <aside class="feedback-widget" data-feedback-widget>
     <div class="feedback-panel" id="feedbackPanel" data-feedback-panel role="dialog" aria-modal="true" aria-label="Feedback" hidden>

@@ -14,6 +14,7 @@ yarn-error.log*
 artifacts/
 design-mockups/*
 !design-mockups/design-guide/
+!design-mockups/workbench/
 已验收通过/
 public/generated-glb/
 public/images/mockups/on-model/generated/
