@@ -11,13 +11,13 @@
   ];
   const videos = [
     ['orbit', '360° rotation'], ['front-back', 'Front + back'], ['three', 'Three views'], ['detail', 'Detail tour'],
-    ['reveal', 'Design reveal'], ['before-after', 'Before / after'], ['social', 'Social cover'], ['story', 'Product story']
+    ['reveal', 'Design reveal'], ['social', 'Social cover'], ['story', 'Product story']
   ];
   const colors = [['transparent', 'Transparent', 'transparent'], ['white', 'White', '#ffffff'], ['ivory', 'Warm ivory', '#f9f5eb'], ['sand', 'Sand', '#d8d1c5'], ['slate', 'Slate', '#858b95'], ['charcoal', 'Charcoal', '#444444'], ['custom', 'Custom color', '#b9a38e']];
   const camera = { front: '0deg 72deg 142%', back: '180deg 72deg 142%', side: '90deg 72deg 142%', other: '-90deg 72deg 142%', detail: '0deg 67deg 88%', sleeve: '90deg 66deg 94%' };
   const state = { tab: 'images', layout: 'front-back', background: 'sand', customColor: '#B9A38E', customCss: '', pickerSpec: null, opacity: 100, format: 'png', size: 1536, video: 'orbit', duration: 10, ratio: '16:9', quality: 1080, shareUrl: '', busy: false, running: false };
   let dialog, viewer, status, animationFrame = 0, returnFocus, exportDropdown, videoBounds;
-  let renderedImage = null;
+  let renderTaskId = null, renderStarting = false, closeAfterCapture = false, renderTaskTransferred = false;
   let videoRenderGeneration = 0;
   let stopVideoThumbnails = () => {};
   const thumbnailsPaused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -62,7 +62,7 @@
     dialog = document.createElement('dialog'); dialog.id = 'modelExportDialog'; dialog.className = 'model-export-dialog'; dialog.setAttribute('aria-label', 'Export design');
     dialog.innerHTML = `<div class="export-shell">
       <div class="export-header"><div class="export-tabs" role="tablist" aria-label="Export options">${[['images','Images'],['video','Video'],['model','3D File'],['share','Share']].map(([key,label]) => `<button type="button" role="tab" data-tab="${key}" aria-selected="false">${label}</button>`).join('')}</div><button class="export-close" type="button" aria-label="Close export dialog">×</button></div>
-      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls disable-tap interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.7" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><img class="export-result-image" alt="AI rendered garment image" hidden><div class="export-compare" hidden role="group" aria-label="Compare images"><button type="button" data-compare="before">Before</button><button type="button" data-compare="after" aria-pressed="true">After</button></div><span class="export-live-label" hidden><i></i>Live 3D preview · 360° rotation running</span><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div><div class="export-preview-caption" hidden></div></div><div class="export-options"></div></div>
+      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls disable-tap interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.7" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><span class="export-live-label" hidden><i></i>Live 3D preview · 360° rotation running</span><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div><div class="export-preview-caption" hidden></div></div><div class="export-options"></div></div>
       <div class="export-footer"><span class="export-status" role="status" aria-live="polite"></span><div class="export-actions"></div></div>
     </div>`;
     document.body.append(dialog);
@@ -73,7 +73,6 @@
     dialog.addEventListener('click', e => { if (!e.target.closest('.cloz-dropdown')) exportDropdown.close(); });
     dialog.querySelector('.export-tabs').addEventListener('click', e => { const tab = e.target.closest('[data-tab]'); if (tab) switchTab(tab.dataset.tab); });
     dialog.querySelector('.export-expand').addEventListener('click', () => dialog.querySelector('.export-visual').requestFullscreen?.());
-    dialog.querySelector('.export-compare').addEventListener('click', e => { const button = e.target.closest('[data-compare]'); if (button) showComparedImage(button.dataset.compare); });
     dialog.querySelector('.export-options').addEventListener('click', handleOptionsClick);
     exportDropdown = window.ClozDropdown.bind(dialog.querySelector('.export-options'), handleDropdownChange, { isDisabled: () => state.busy });
     dialog.querySelector('.export-footer').addEventListener('click', handleAction);
@@ -94,10 +93,10 @@
     if (state.tab === 'images') {
       options.innerHTML = `<div class="export-group"><h3>View layout</h3><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-label="${esc(label)}" aria-pressed="${state.layout === key}">${cardImage(key)}</button>`).join('')}</div></div>
         <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
-        <p class="export-ai-note">AI refines lighting and fabric. Compare the result with your original before downloading.</p>`;
-      footer.innerHTML = renderedImage ? '<button type="button" data-action="image">Render again</button><button type="button" class="primary" data-action="download-image">Download image</button>' : '<button type="button" class="primary" data-action="image">Render image</button>';
-      if (!renderedImage) hideComparedImage();
-      else if (dialog.open && dialog.querySelector('.export-result-image').hidden) showComparedImage('after');
+        <p class="export-ai-note">AI refines lighting and fabric while keeping your design and background. Your image will download when ready.</p>`;
+      footer.innerHTML = renderTaskId && window.DownloadList?.status(renderTaskId) === 'rendering'
+        ? '<button type="button" class="primary" data-action="view-downloads">View rendering in Downloads</button>'
+        : '<button type="button" class="primary" data-action="image">Render image</button>';
       if (refreshPreview) updateImagePreview();
     } else if (state.tab === 'video') {
       if (refreshPreview) { state.running=false; cancelAnimationFrame(animationFrame); }
@@ -108,12 +107,7 @@
       startVideoThumbnails(options);
       footer.innerHTML = '<button type="button" class="primary" data-action="video">Export video →</button>';
       const current = () => videoGeneration === videoRenderGeneration && dialog.open && state.tab === 'video';
-      if (refreshPreview) previewRun.then(() => showVideoScene(current)).then(async () => {
-        if (!current()) return;
-        if (state.video === 'before-after') {
-          await window.ModelDesignerExport.prepareBeforeAfterReveal(viewer);
-          if (!current()) return;
-        }
+      if (refreshPreview) previewRun.then(() => showVideoScene(current)).then(() => {
         if (current()) startAnimation();
       }).catch(error => { if (videoGeneration === videoRenderGeneration) setStatus(error.message, true); });
     } else if (state.tab === 'model') {
@@ -369,16 +363,8 @@
     function tick(now) { if (!dialog.open || state.tab !== 'video' || !state.running) return; const p = ((now-started)/1000 % state.duration)/state.duration; applyVideoPose(p); animationFrame=requestAnimationFrame(tick); }
     animationFrame=requestAnimationFrame(tick);
   }
-  let showingBefore = null;
   function applyVideoPose(p) {
     const pose = window.ModelExportVideo.sample(state.video, p);
-    if (state.video === 'before-after') {
-      window.ModelDesignerExport?.setBeforeAfterReveal(viewer, pose.reveal);
-      dialog.querySelector('.export-live-label').innerHTML = `<i></i>Live 3D preview · ${pose.reveal < 1 ? 'Before → After' : 'After'}`;
-    } else if (showingBefore !== false) {
-      showingBefore = false;
-      window.ModelDesignerExport?.setBeforeAfter(viewer, false);
-    }
     const { center, dimensions } = videoBounds || { center: viewer.getBoundingBoxCenter(), dimensions: viewer.getDimensions() };
     viewer.cameraTarget = `${center.x + pose.target[0] * dimensions.x}m ${center.y + pose.target[1] * dimensions.y}m ${center.z + pose.target[2] * dimensions.z}m`;
     viewer.cameraOrbit = `${pose.azimuth}deg ${pose.polar}deg ${pose.distance}%`;
@@ -389,11 +375,8 @@
     if (state.busy) return;
     if (tab !== 'images') previewGeneration++;
     state.tab = tab;
-    if (tab !== 'images') hideComparedImage();
     state.running = false;
     cancelAnimationFrame(animationFrame);
-    showingBefore = null;
-    window.ModelDesignerExport?.setBeforeAfter(viewer, false);
     if (tab !== 'video') viewer.cameraTarget = 'auto auto auto';
     render();
     if (tab !== 'images' && tab !== 'video') {
@@ -413,9 +396,9 @@
     }
     if (state.busy) return;
     const button=e.target.closest('button'); if (!button) return;
-    if (button.dataset.layout) { resetRenderedImage(); state.layout=button.dataset.layout; render(); }
-    else if (button.dataset.background) { resetRenderedImage(); state.background=button.dataset.background; render({refreshPreview:false}); if (state.background === 'custom') showPicker(dialog.querySelector('[data-background="custom"]')); else hidePicker(); }
-    else if (button.dataset.video) { state.video=button.dataset.video; showingBefore=null; window.ModelDesignerExport?.setBeforeAfter(viewer,false); render(); }
+    if (button.dataset.layout) { state.layout=button.dataset.layout; render(); }
+    else if (button.dataset.background) { state.background=button.dataset.background; render({refreshPreview:false}); if (state.background === 'custom') showPicker(dialog.querySelector('[data-background="custom"]')); else hidePicker(); }
+    else if (button.dataset.video) { state.video=button.dataset.video; render(); }
     else if (button.dataset.duration) { state.duration=Number(button.dataset.duration); render(); }
     else if (button.dataset.ratio) { state.ratio=button.dataset.ratio; render(); }
     else if (button.matches('[data-share-create]')) createShare();
@@ -476,6 +459,8 @@
     const button=e.target.closest('[data-action]'); if (!button || state.busy) return;
     const action=button.dataset.action;
     if (action === 'done') { close(); return; }
+    if (action === 'view-downloads') { close(); window.DownloadList?.open(); return; }
+    renderStarting = action === 'image';
     state.busy=true; dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=true);
     try {
       if (!await window.ExportEntitlements?.requireExportAccess()) return;
@@ -483,47 +468,48 @@
       if (action === 'image') {
         setStatus('Preparing screenshot…');
         const source = await compose(state.layout, state.size);
-        setStatus('Rendering image with AI…');
-        const image = await renderImageWithAi(source);
-        resetRenderedImage();
-        renderedImage = { image: image.url, downloadUrl: image.downloadUrl, name: image.name, source: URL.createObjectURL(source), layout: state.layout };
-        if (dialog.open) {
-          showComparedImage('after');
-          render({ refreshPreview: false });
-          setStatus('Image saved to Downloads. Compare it with the original, then download.');
-        }
-        window.DownloadList?.add(image, dialog.open ? dialog.querySelector('.export-result-image') : null);
-      } else if (action === 'download-image') {
-        if (!renderedImage) throw new Error('Render an image first.');
-        download(renderedImage.downloadUrl, renderedImage.name);
-        setStatus('Image download started.');
+        if (!window.DownloadList?.start) throw new Error('Downloads are unavailable. Please reload and try again.');
+        const imageDataUrl = await blobDataUrl(source);
+        const thumbnail = URL.createObjectURL(source);
+        const modelSlug = config.modelSlug || 'design';
+        const layout = state.layout;
+        const id = `render-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        renderTaskTransferred = false;
+        renderTaskId = window.DownloadList.start({
+          id, thumbnail,
+          run: () => renderImageWithAi(imageDataUrl, modelSlug, layout),
+          onSettled: result => {
+            if (result === 'complete') window.trackEvent?.('model_export_download', { export_type: 'image', item_id: modelSlug });
+            if (dialog?.open && state.tab === 'images') {
+              render({ refreshPreview: false });
+              setStatus(result === 'complete' ? 'Image downloaded and saved to Downloads.' : 'Rendering failed. Open Downloads to retry.', result !== 'complete');
+            }
+          }
+        });
+        setStatus('Rendering in Downloads. You can close this window and keep designing.');
+        render({ refreshPreview: false });
+        window.trackEvent?.('model_export_render_start', { item_id: modelSlug });
       } else if (action === 'glb') { setStatus('Preparing 3D model…'); await readyViewer(); const blob=await window.ModelDesignerExport.exportGlb(viewer); download(blob,`${config.modelSlug || 'design'}.glb`); setStatus('GLB downloaded.'); }
       else if (action === 'video') await recordVideo();
-      window.trackEvent?.('model_export_download', { export_type: action, item_id: config.modelSlug || '' });
+      if (action !== 'image') window.trackEvent?.('model_export_download', { export_type: action, item_id: config.modelSlug || '' });
     } catch (error) { console.error(error); setStatus(error.message || 'Export failed. Please try again.', true); }
-    finally { state.busy=false; dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=false); }
+    finally {
+      state.busy=false;
+      renderStarting=false;
+      dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=false);
+      if (closeAfterCapture) { closeAfterCapture=false; close(); }
+    }
   }
   function blobDataUrl(blob) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('Screenshot could not be read.')); reader.readAsDataURL(blob); }); }
-  async function renderImageWithAi(source) {
-    const response = await fetch('/api/ai-render-export', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ image: await blobDataUrl(source), transparent: state.background === 'transparent', modelSlug: config.modelSlug, layout: state.layout }) });
+  async function renderImageWithAi(imageDataUrl, modelSlug, layout) {
+    const response = await fetch('/api/ai-render-export', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ image: imageDataUrl, modelSlug, layout }) });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || !payload.success || !payload.image?.url) throw new Error(payload.error || 'AI rendering failed. Please try again.');
     return payload.image;
   }
-  function hideComparedImage() { if (!dialog) return; const image = dialog.querySelector('.export-result-image'); image.hidden = true; image.removeAttribute('src'); dialog.querySelector('.export-compare').hidden = true; }
-  function resetRenderedImage() { if (renderedImage?.source) URL.revokeObjectURL(renderedImage.source); renderedImage = null; hideComparedImage(); }
-  function showComparedImage(which) {
-    if (!renderedImage || !dialog) return;
-    const image = dialog.querySelector('.export-result-image');
-    image.src = which === 'before' ? renderedImage.source : renderedImage.image;
-    image.hidden = false;
-    const compare = dialog.querySelector('.export-compare'); compare.hidden = false;
-    compare.querySelectorAll('[data-compare]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.compare === which)));
-  }
   async function recordVideo() {
     if (!window.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) throw new Error('Video recording is unavailable in this browser.');
     state.running=false; cancelAnimationFrame(animationFrame); await showVideoScene();
-    if (state.video === 'before-after') await window.ModelDesignerExport.prepareBeforeAfterReveal(viewer);
     videoBounds = { dimensions: viewer.getDimensions(), center: viewer.getBoundingBoxCenter() };
     const ratio = state.ratio === '9:16' ? [9,16] : state.ratio === '1:1' ? [1,1] : [16,9];
     const canvas=document.createElement('canvas'); const edge=state.quality === 1080 ? 1080 : 720; canvas.width=Math.round(edge*ratio[0]/Math.min(...ratio)); canvas.height=Math.round(edge*ratio[1]/Math.min(...ratio));
@@ -534,7 +520,7 @@
       const w=frame.width*scale,h=frame.height*scale;
       ctx.drawImage(frame,(canvas.width-w)/2,(canvas.height-h)/2,w,h);
     };
-    showingBefore=null; applyVideoPose(0);
+    applyVideoPose(0);
     await viewer.updateComplete;
     paintFrame(await loadImage(await window.ModelDesignerExport.capture(viewer)));
     const stream=canvas.captureStream(24);
@@ -547,14 +533,13 @@
     recorder.start(); const began=performance.now(); const duration=state.duration*1000;
     try { while (performance.now()-began < duration) { const p=(performance.now()-began)/duration; applyVideoPose(p); await viewer.updateComplete; await waitFrame(); paintFrame(await loadImage(await window.ModelDesignerExport.capture(viewer))); setStatus(`Recording 3D animation… ${Math.min(100,Math.round(p*100))}%`); await sleep(20); } }
     finally { recorder.stop(); await done; stream.getTracks().forEach(t=>t.stop()); }
-    const extension=mime.startsWith('video/mp4')?'mp4':'webm'; download(new Blob(chunks,{type:mime}),`${config.modelSlug||'design'}-${state.video}.${extension}`); setStatus(`Video downloaded as ${extension.toUpperCase()}.`); showingBefore=null; window.ModelDesignerExport.setBeforeAfter(viewer,false); startAnimation();
+    const extension=mime.startsWith('video/mp4')?'mp4':'webm'; download(new Blob(chunks,{type:mime}),`${config.modelSlug||'design'}-${state.video}.${extension}`); setStatus(`Video downloaded as ${extension.toUpperCase()}.`); startAnimation();
   }
   function showPicker(anchor) {
     window.ModelDesignerExport?.openColorPicker(anchor, {
       container: dialog.querySelector('.export-shell'),
       value: state.customCss || state.customColor,
       onChange(value, spec) {
-        if (renderedImage) { resetRenderedImage(); dialog.querySelector('.export-actions').innerHTML = '<button type="button" class="primary" data-action="image">Render image</button>'; }
         state.customCss = value;
         state.pickerSpec = spec;
         state.customColor = spec.color;
@@ -564,7 +549,15 @@
     });
   }
   function hidePicker() { window.ModelDesignerExport?.closeColorPicker?.(); }
-  function open(){ if (!dialog) create(); resetRenderedImage(); returnFocus=document.activeElement; dialog.showModal(); document.body.classList.add('model-export-open'); state.tab='images'; state.shareUrl=''; setStatus(''); render(); window.trackEvent?.('model_export_modal_open',{item_id:config.modelSlug||''}); }
-  function close(){if(!dialog?.open)return;stopVideoThumbnails();previewGeneration++;videoRenderGeneration++;previewRun=Promise.resolve();state.running=false;cancelAnimationFrame(animationFrame);exportDropdown?.close();hidePicker();resetRenderedImage();dialog.close();clearLiveLayout();document.body.classList.remove('model-export-open');returnFocus?.focus?.({preventScroll:true});}
+  function open(){ if (!dialog) create(); returnFocus=document.activeElement; dialog.showModal(); document.body.classList.add('model-export-open'); state.tab='images'; state.shareUrl=''; setStatus(''); render(); window.trackEvent?.('model_export_modal_open',{item_id:config.modelSlug||''}); }
+  function close(){
+    if(!dialog?.open)return;
+    if (renderStarting) { closeAfterCapture=true; setStatus('Preparing image for Downloads…'); return; }
+    if (renderTaskId && !renderTaskTransferred && ['rendering', 'failed'].includes(window.DownloadList?.status(renderTaskId))) {
+      window.DownloadList.reveal(renderTaskId, dialog.querySelector('.export-visual'));
+      renderTaskTransferred=true;
+    }
+    stopVideoThumbnails();previewGeneration++;videoRenderGeneration++;previewRun=Promise.resolve();state.running=false;cancelAnimationFrame(animationFrame);exportDropdown?.close();hidePicker();dialog.close();clearLiveLayout();document.body.classList.remove('model-export-open');returnFocus?.focus?.({preventScroll:true});
+  }
   window.ModelExportModal={open,close};
 })();

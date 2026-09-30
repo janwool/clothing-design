@@ -7291,7 +7291,7 @@ title = __locals.title,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
     ; __append( include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20260930-ai-render-v1']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-background-v2']
 }) )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {};
@@ -7739,7 +7739,7 @@ title = __locals.title,
     ;  if (aiTryOnAvailable) {
     ; __append("\n<dialog id=\"detailTryOnDialog\" class=\"detail-tryon-dialog\" aria-label=\"AI Try-on editor\">\n  <p class=\"detail-tryon-message\" role=\"status\">Loading editor…</p>\n  <iframe id=\"detailTryOnFrame\" title=\"AI Try-on editor\" allow=\"fullscreen\" ></iframe>\n  <button type=\"button\" class=\"detail-tryon-loading-close\" aria-label=\"Close AI Try-on\">×</button>\n</dialog>\n<script src=\"/js/detail-try-on.js?v=20260923-analytics-v5\" defer></script>\n")
     ;  }
-    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20260925-social-three-turns-v14\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20260930-ai-render-v1\" defer></script>\n\n")
+    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20261001-remove-comparison-v1\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20261001-background-v2\" defer></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -8747,7 +8747,7 @@ title = __locals.title,
     ; __append(escapeFn( i18next && i18next.language ? i18next.language : 'en' ))
     ; __append("\">\n<head>\n  <link rel=\"preconnect\" href=\"https://www.googletagmanager.com\">\n  <link rel=\"preconnect\" href=\"https://cdn.cloz-design.com\" crossorigin>\n  <!-- Google tag: queue events immediately, fetch the library after critical content. -->\n  <script>\n    window.dataLayer = window.dataLayer || [];\n    function gtag(){dataLayer.push(arguments);}\n    gtag('js', new Date());\n\n    gtag('config', 'G-PZGFTE8C6B', { 'send_page_view': false });\n\n    (function loadGoogleTagAfterPage() {\n      var loaded = false;\n      function load() {\n        if (loaded) return;\n        loaded = true;\n        var script = document.createElement('script');\n        script.async = true;\n        script.src = 'https://www.googletagmanager.com/gtag/js?id=G-PZGFTE8C6B';\n        document.head.appendChild(script);\n      }\n      function schedule() {\n        if ('requestIdleCallback' in window) window.requestIdleCallback(load, { timeout: 1500 });\n        else window.setTimeout(load, 0);\n      }\n      if (document.readyState === 'complete') schedule();\n      else window.addEventListener('load', schedule, { once: true });\n    })();\n  </script>\n  <script src=\"/js/analytics.js?v=20260930-standard-page-view-v1\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/model-login.css?v=20260922-v1\">\n  <link rel=\"stylesheet\" href=\"/css/upgrade-modal.css?v=20260928-local-currency-v1\">\n  <script src=\"/js/login-dialog.js?v=20260921-v1\" data-google-auth=\"")
     ; __append(escapeFn( typeof googleAuthEnabled !== 'undefined' && googleAuthEnabled ? 'true' : 'false' ))
-    ; __append("\" defer></script>\n  <script src=\"/js/upgrade-modal.js?v=20260928-local-currency-v1\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260923-cover-project-v7\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/export-access.css?v=20260926-paid-v1\">\n  <script src=\"/js/export-entitlements.js?v=20260927-watermark-contrast-v2\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/download-list.css?v=20261001-align-v2\">\n  <script src=\"/js/download-list.js?v=20260930-v1\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
+    ; __append("\" defer></script>\n  <script src=\"/js/upgrade-modal.js?v=20260928-local-currency-v1\" defer></script>\n  <script src=\"/js/user-projects.js?v=20260923-cover-project-v7\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/export-access.css?v=20260926-paid-v1\">\n  <script src=\"/js/export-entitlements.js?v=20260927-watermark-contrast-v2\" defer></script>\n  <link rel=\"stylesheet\" href=\"/css/download-list.css?v=20261001-progress-v3\">\n  <script src=\"/js/download-list.js?v=20261001-progress-v2\" defer></script>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
     ; __append("</title>\n  ")
     ;  if (typeof metaDescription !== 'undefined' && metaDescription) {

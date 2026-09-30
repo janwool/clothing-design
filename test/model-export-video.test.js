@@ -9,7 +9,7 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../public/js/model-expo
 const { sample } = context.window.ModelExportVideo;
 
 test('video templates produce distinct 3D camera paths with smooth transitions', () => {
-  const midpoint = ['orbit', 'front-back', 'three', 'detail', 'reveal', 'before-after', 'social', 'story'].map(template => {
+  const midpoint = ['orbit', 'front-back', 'three', 'detail', 'reveal', 'social', 'story'].map(template => {
     const pose = sample(template, .4);
     assert.ok(Number.isFinite(pose.azimuth) && Number.isFinite(pose.polar) && Number.isFinite(pose.distance));
     assert.equal(pose.target.length, 3);
@@ -23,18 +23,16 @@ test('video templates produce distinct 3D camera paths with smooth transitions',
   }
 });
 
-test('camera direction and texture reveal follow the selected video template', () => {
+test('camera direction follows the selected video template', () => {
   assert.ok(sample('orbit', .25, 'clockwise').azimuth > sample('orbit', 0).azimuth);
   assert.ok(sample('orbit', .25, 'counterclockwise').azimuth < sample('orbit', 0).azimuth);
-  assert.equal(sample('before-after', .25).before, true);
-  assert.equal(sample('before-after', .75).before, false);
   assert.equal(sample('reveal', .25).before, false);
   assert.equal(sample('reveal', .75).before, false);
   assert.ok(sample('detail', .3).target[1] > sample('orbit', .3).target[1]);
 });
 
 test('video templates use a straight-on front camera at the start', () => {
-  for (const template of ['orbit', 'three', 'detail', 'reveal', 'before-after', 'social', 'story']) {
+  for (const template of ['orbit', 'three', 'detail', 'reveal', 'social', 'story']) {
     const angle = sample(template, 0).azimuth;
     assert.equal(((angle % 360) + 360) % 360, 0, `${template} should begin from the front`);
   }
@@ -52,16 +50,6 @@ test('design reveal keeps the model designed while the camera tours front and ba
   assert.deepEqual([frontWide.azimuth, backWide.azimuth, frontFinish.azimuth], [0, 180, 360]);
   assert.ok(backLeft.target[0] > 0 && backRight.target[0] < 0, 'screen left and right reverse on the back');
   assert.ok([topLeft, bottomLeft, bottomRight, topRight, backLeft, backRight].every(pose => !pose.before));
-});
-
-test('before and after reveals the design bottom-up before turning to the back and returning', () => {
-  const [start, halfway, covered, back, held, finish] = [0, .225, .45, .6, .78, 1].map(progress => sample('before-after', progress));
-  assert.deepEqual([start.azimuth, halfway.azimuth, covered.azimuth, back.azimuth, held.azimuth, finish.azimuth], [0, 0, 0, 180, 180, 360]);
-  assert.equal(start.reveal, 0);
-  assert.ok(Math.abs(halfway.reveal - .5) < .001);
-  assert.equal(covered.reveal, 1);
-  assert.equal(start.before, true);
-  assert.equal(covered.before, false);
 });
 
 test('front and back sweeps each side by 30 degrees before changing sides', () => {
