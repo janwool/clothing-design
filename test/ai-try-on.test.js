@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { normalizeModelResult, TRY_ON_MODEL } = require('../lib/cloudflare-try-on');
+const { normalizeModelResult, runCloudflareTryOn, TRY_ON_MODEL } = require('../lib/cloudflare-try-on');
 const { isAiTryOnEnabled } = require('../lib/feature-flags');
 
 const root = path.join(__dirname, '..');
@@ -26,8 +26,8 @@ test('enables AI try-on by default and respects an explicit kill switch', () => 
   assert.match(pageRoute, /router\.get\('\/3d-models\/:category\/:slug\/try-on'[\s\S]*?if \(!isAiTryOnEnabled\(\)\)[\s\S]*?status\(404\)/);
 });
 
-test('uses Cloudflare dedicated virtual try-on without exposing credentials to the browser', () => {
-  assert.equal(TRY_ON_MODEL, 'pruna/p-image-try-on');
+test('uses the Cloudflare image model for virtual try-on without exposing credentials to the browser', () => {
+  assert.equal(TRY_ON_MODEL, 'openai/gpt-image-2.5-sunburst');
 
   const appCore = read('app-core.js');
   const route = read('routes/ai-try-on.js');
@@ -52,17 +52,32 @@ test('uses Cloudflare dedicated virtual try-on without exposing credentials to t
   assert.match(browser, /projectId: new URLSearchParams\(window\.location\.search\)\.get\('project'\)/);
   assert.match(browser, /personModelId: selectedModel\.dataset\.modelId/);
   assert.match(browser, /personModelName: selectedModel\.dataset\.modelName/);
-  assert.match(integration, /output_quality: 92/);
-  assert.doesNotMatch(integration, /\n\s+quality:/);
-  assert.match(integration, /uploadImageDataUrl\(personImage/);
-  assert.match(integration, /uploadImageDataUrl\(garmentImage/);
-  assert.match(integration, /person_image: storedPerson\.url/);
-  assert.match(integration, /garment_images: \[storedGarment\.url\]/);
-  assert.match(integration, /Promise\.all\(uploadedInputs\.map\(key => deleteObject\(key\)\.catch/);
+  assert.match(integration, /images: \[personImage, garmentImage\]/);
+  assert.match(integration, /quality: 'high'/);
+  assert.match(integration, /background: 'opaque'/);
   assert.match(integration, /body: JSON\.stringify\(\{ model: TRY_ON_MODEL, input \}\)/);
-  assert.match(integration, /ai\.run\(TRY_ON_MODEL, input\)/);
+  assert.match(integration, /ai\.run\(TRY_ON_MODEL, input, \{ gateway: \{ id: getGatewayId\(\) \} \}\)/);
   assert.doesNotMatch(browser, /CF_(?:AI_)?API_TOKEN|Authorization:\s*`Bearer/);
   assert.match(wrangler, /\[ai\]\s+binding = "AI"/);
+});
+
+test('sends both try-on references in person then garment order', async () => {
+  const previousEnv = globalThis.__WORKER_ENV__;
+  let call;
+  globalThis.__WORKER_ENV__ = { AI: { run: async (model, input, options) => {
+    call = { model, input, options };
+    return { state: 'Completed', result: { image: 'data:image/webp;base64,AAAA' } };
+  } } };
+  try {
+    const result = await runCloudflareTryOn({ personImage: 'data:image/png;base64,AAAA', garmentImage: 'data:image/png;base64,BBBB' });
+    assert.equal(result.model, TRY_ON_MODEL);
+    assert.deepEqual(call.input.images, ['data:image/png;base64,AAAA', 'data:image/png;base64,BBBB']);
+    assert.deepEqual(call.options, { gateway: { id: 'default' } });
+    assert.match(call.input.prompt, /identity, face/);
+    assert.match(call.input.prompt, /logo, text, artwork/);
+  } finally {
+    globalThis.__WORKER_ENV__ = previousEnv;
+  }
 });
 
 test('normalizes Cloudflare binding and REST response envelopes', () => {

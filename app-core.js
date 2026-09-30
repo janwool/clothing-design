@@ -434,6 +434,7 @@ app.use('/api/feedback', require('./routes/feedback'));
 app.use('/api/on-model-svg-masks', require('./routes/on-model-svg-masks'));
 app.use('/api/billing', require('./routes/billing'));
 app.use('/api/ai-try-on', require('./routes/ai-try-on'));
+app.use('/api/ai-render-export', require('./routes/ai-render-export'));
 app.use('/', require('./routes/user-content'));
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));

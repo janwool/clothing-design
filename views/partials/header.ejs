@@ -37,6 +37,8 @@
   <script src="/js/user-projects.js?v=20260923-cover-project-v7" defer></script>
   <link rel="stylesheet" href="/css/export-access.css?v=20260926-paid-v1">
   <script src="/js/export-entitlements.js?v=20260927-watermark-contrast-v2" defer></script>
+  <link rel="stylesheet" href="/css/download-list.css?v=20260930-v1">
+  <script src="/js/download-list.js?v=20260930-v1" defer></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= title %></title>
@@ -195,6 +197,7 @@
       <!-- Right Side -->
       <div class="navbar-actions">
         <% if (user) { %>
+          <button class="nav-downloads-trigger" type="button" aria-expanded="false" aria-controls="navDownloadsPanel" aria-label="Downloads"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 17v3h16v-3"/></svg><span>Downloads</span><i class="nav-downloads-dot" hidden></i></button>
           <a href="/account" class="btn btn-primary navbar-workbench-link">Workbench</a>
         <% } else { %>
           <a href="<%= authLoginUrl %>" class="btn btn-ghost"><%= t('nav.signIn') %></a>
@@ -208,6 +211,13 @@
         </button>
       </div>
     </div>
+
+    <% if (user) { %>
+      <section class="nav-downloads-panel" id="navDownloadsPanel" aria-label="Saved downloads" hidden>
+        <div class="nav-downloads-head"><h2>Downloads</h2><button type="button" class="nav-downloads-close" aria-label="Close downloads">×</button></div>
+        <div class="nav-downloads-content" role="status" aria-live="polite"></div>
+      </section>
+    <% } %>
 
     <!-- Mobile Menu -->
     <div class="mobile-menu" id="mobileNavigation">

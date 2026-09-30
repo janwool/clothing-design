@@ -72,16 +72,21 @@ For local development, add the same names to `.env` and register
 
 ## AI Try-on
 
-The AI Try-on workspace uses the Cloudflare AI model `pruna/p-image-try-on` with
-the Worker AI binding named `AI`. The binding is declared in `wrangler.toml`, so
-production requests do not expose or require an API token in browser code.
+AI Try-on and 3D export rendering use the Cloudflare AI model
+`openai/gpt-image-2.5-sunburst` with the Worker AI binding named `AI`. The binding
+is declared in `wrangler.toml`, so production requests do not expose or require
+an API token in browser code. Both features send image data URLs to the model;
+generated images are saved to R2.
+Calls use the `default` AI Gateway. Set `CF_AI_GATEWAY_ID` in both the Worker and
+local environment if this account uses another gateway for AI requests.
 
 Local Express development calls the Cloudflare REST API and requires
 `CF_ACCOUNT_ID` plus `CF_AI_API_TOKEN` in the ignored `.env.local` file. Keeping
 the AI token separate avoids replacing the `CF_API_TOKEN` used by local D1. The token
-must have Workers AI read/run access. The Pruna model is a paid third-party model;
-the Cloudflare AI Gateway account must have balance or BYOK configured before it
-can produce an image.
+must have Workers AI read/run access. This third-party OpenAI model is billed
+through AI Gateway Unified Billing, which requires prepaid AI Gateway credits
+for the same Cloudflare account (or an applicable stored provider key). A 402
+response means model execution cannot begin until that payment path is available.
 
 The database layer uses the D1 binding named `DB`. Do not rely on the D1 REST API variables for production Workers.
 

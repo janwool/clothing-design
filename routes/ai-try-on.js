@@ -90,7 +90,7 @@ async function saveTryOnResult(userId, image, metadata = {}) {
         cleanProjectId(metadata.projectId),
         cleanIdentifier(metadata.personModelId, 80),
         personName,
-        metadata.aiModel || 'pruna/p-image-try-on'
+        metadata.aiModel || 'openai/gpt-image-2.5-sunburst'
       ]
     );
     return {
@@ -206,6 +206,9 @@ router.post('/', async (req, res) => {
       });
     }
     console.error('Cloudflare AI try-on failed:', error.message);
+    if (error.status === 402 || /payment error|insufficient balance|wholesale billing service unavailable/i.test(error.message)) {
+      return res.status(503).json({ success: false, error: 'AI try-on is temporarily unavailable. Please try again later.' });
+    }
     return res.status(error.status || 502).json({
       success: false,
       error: error.message || 'AI try-on failed. Please try again.'
