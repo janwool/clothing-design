@@ -461,6 +461,7 @@
     if (action === 'done') { close(); return; }
     if (action === 'view-downloads') { close(); window.DownloadList?.open(); return; }
     renderStarting = action === 'image';
+    let startedRender = false;
     state.busy=true; dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=true);
     try {
       if (!await window.ExportEntitlements?.requireExportAccess()) return;
@@ -486,8 +487,7 @@
             }
           }
         });
-        setStatus('Rendering in Downloads. You can close this window and keep designing.');
-        render({ refreshPreview: false });
+        startedRender = true;
         window.trackEvent?.('model_export_render_start', { item_id: modelSlug });
       } else if (action === 'glb') { setStatus('Preparing 3D model…'); await readyViewer(); const blob=await window.ModelDesignerExport.exportGlb(viewer); download(blob,`${config.modelSlug || 'design'}.glb`); setStatus('GLB downloaded.'); }
       else if (action === 'video') await recordVideo();
@@ -497,7 +497,8 @@
       state.busy=false;
       renderStarting=false;
       dialog.querySelectorAll('.export-actions button').forEach(b=>b.disabled=false);
-      if (closeAfterCapture) { closeAfterCapture=false; close(); }
+      closeAfterCapture=false;
+      if (startedRender) close();
     }
   }
   function blobDataUrl(blob) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('Screenshot could not be read.')); reader.readAsDataURL(blob); }); }
