@@ -69,7 +69,7 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     assert.equal(call.model, 'openai/gpt-image-2.5-sunburst');
     assert.equal(call.input.images[0], png);
     assert.equal(call.input.quality, 'low');
-    assert.equal(call.input.size, '1536x1024');
+    assert.equal(call.input.size, '1024x1024');
     assert.equal(call.input.background, 'opaque');
     assert.match(call.input.prompt, /premium ecommerce studio product photograph/);
     assert.match(call.input.prompt, /Preserve every printed logo, letter, graphic/);
@@ -82,7 +82,7 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     const transparentResponse = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, backgroundMode: 'transparent', outputSize: '1024x1536' }) });
     assert.equal(transparentResponse.status, 200);
     assert.equal(call.input.background, 'transparent');
-    assert.equal(call.input.size, '1024x1536');
+    assert.equal(call.input.size, '1024x1024');
     globalThis.__WORKER_ENV__.AI.run = async () => { throw new Error('Model execution failed (Payment error)'); };
     const unavailable = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png }) });
     assert.equal(unavailable.status, 503);

@@ -61,13 +61,12 @@ router.post('/', async (req, res) => {
   if (!['image/png', 'image/jpeg'].includes(source.contentType)) return res.status(400).json({ success: false, error: 'A PNG or JPEG model screenshot is required.' });
   if (source.size > MAX_SOURCE_BYTES) return res.status(413).json({ success: false, error: 'The screenshot is too large. Choose a smaller image size.' });
   try {
-    const outputSize = ['1024x1024', '1024x1536', '1536x1024'].includes(req.body?.outputSize) ? req.body.outputSize : 'auto';
     const backgroundMode = source.contentType === 'image/png' && ['transparent', 'auto'].includes(req.body?.backgroundMode) ? req.body.backgroundMode : 'opaque';
     const input = {
       prompt: PROMPT,
       images: [req.body.image],
       quality: 'low',
-      size: outputSize,
+      size: '1024x1024',
       background: backgroundMode,
       output_format: 'png'
     };

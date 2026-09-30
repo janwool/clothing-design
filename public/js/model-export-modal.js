@@ -333,7 +333,7 @@
     // Avoid oversized data URLs, which can fail as download links in embedded browsers.
     return new Promise((resolve, reject) => {
       canvas.toBlob(blob => {
-        if (blob?.size) resolve({ blob, width, height });
+        if (blob?.size) resolve(blob);
         else reject(new Error('The image could not be encoded. Please try a smaller size.'));
       }, mimeType, .94);
     });
@@ -470,18 +470,16 @@
         setStatus('Preparing screenshot…');
         const source = await compose(state.layout, state.size);
         if (!window.DownloadList?.start) throw new Error('Downloads are unavailable. Please reload and try again.');
-        const imageDataUrl = await blobDataUrl(source.blob);
-        const thumbnail = URL.createObjectURL(source.blob);
+        const imageDataUrl = await blobDataUrl(source);
+        const thumbnail = URL.createObjectURL(source);
         const modelSlug = config.modelSlug || 'design';
         const layout = state.layout;
         const backgroundMode = state.background === 'transparent' ? 'transparent' : state.background === 'custom' && state.opacity < 100 ? 'auto' : 'opaque';
-        const aspectRatio = source.width / source.height;
-        const outputSize = aspectRatio > 1.225 ? '1536x1024' : aspectRatio < 0.816 ? '1024x1536' : '1024x1024';
         const id = `render-${Date.now()}-${Math.random().toString(36).slice(2)}`;
         renderTaskTransferred = false;
         renderTaskId = window.DownloadList.start({
           id, thumbnail,
-          run: () => renderImageWithAi(imageDataUrl, modelSlug, layout, backgroundMode, outputSize),
+          run: () => renderImageWithAi(imageDataUrl, modelSlug, layout, backgroundMode),
           onSettled: result => {
             if (result === 'complete') window.trackEvent?.('model_export_download', { export_type: 'image', item_id: modelSlug });
             if (dialog?.open && state.tab === 'images') {
@@ -505,8 +503,8 @@
     }
   }
   function blobDataUrl(blob) { return new Promise((resolve, reject) => { const reader = new FileReader(); reader.onload = () => resolve(reader.result); reader.onerror = () => reject(new Error('Screenshot could not be read.')); reader.readAsDataURL(blob); }); }
-  async function renderImageWithAi(imageDataUrl, modelSlug, layout, backgroundMode, outputSize) {
-    const response = await fetch('/api/ai-render-export', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ image: imageDataUrl, modelSlug, layout, backgroundMode, outputSize }) });
+  async function renderImageWithAi(imageDataUrl, modelSlug, layout, backgroundMode) {
+    const response = await fetch('/api/ai-render-export', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ image: imageDataUrl, modelSlug, layout, backgroundMode }) });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok || !payload.success || !payload.image?.url) throw new Error(payload.error || 'AI rendering failed. Please try again.');
     return payload.image;
