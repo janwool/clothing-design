@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
     const input = {
       prompt: PROMPT,
       images: [req.body.image],
-      quality: 'max',
+      quality: 'low',
       size: outputSize,
       background: backgroundMode,
       output_format: 'png'

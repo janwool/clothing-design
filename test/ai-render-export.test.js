@@ -68,7 +68,7 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     assert.equal(response.status, 200);
     assert.equal(call.model, 'openai/gpt-image-2.5-sunburst');
     assert.equal(call.input.images[0], png);
-    assert.equal(call.input.quality, 'max');
+    assert.equal(call.input.quality, 'low');
     assert.equal(call.input.size, '1536x1024');
     assert.equal(call.input.background, 'opaque');
     assert.match(call.input.prompt, /premium ecommerce studio product photograph/);
