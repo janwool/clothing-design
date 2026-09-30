@@ -10,7 +10,7 @@ const { canStoreImage, getUserEntitlements, limitError } = require('../lib/user-
 const router = express.Router();
 const MODEL = 'openai/gpt-image-2.5-sunburst';
 const MAX_SOURCE_BYTES = 8 * 1024 * 1024;
-const PROMPT = `Edit the supplied 3D apparel screenshot into a polished commercial product image. Preserve the exact garment design: silhouette, color, artwork, logo, text, scale, position, camera angle, count of garments, and composition. Preserve the supplied background color or transparency and its layout. Improve only believable fabric texture, seams, light, soft shadows, and overall photographic finish. Do not add props, people, labels, new graphics, or a new setting. Do not redraw or reinterpret printed artwork. If a detail is unclear, keep it as shown.`;
+const PROMPT = `Create a premium ecommerce studio product photograph by refining the supplied 3D apparel image. Treat the input as the definitive product, composition, and background reference. Keep exactly the same garments, number of views, arrangement, viewpoint, crop, silhouette, proportions, fit, hem, neckline, sleeves, colors, material pattern, stitching, and all user-added artwork. Preserve every printed logo, letter, graphic, and its placement without redrawing or inventing details. Keep the background exactly as supplied, including its color, gradient, or transparency; do not replace it with a scene. Make the garments look physically real and ready for a high-end retail product page: natural fabric grain and drape, precise seams and edges, realistic folds, clean tonal separation, controlled soft studio key and fill light, subtle contact shadows where the background is opaque, accurate whites, and crisp but natural detail. Use neutral product-photography color grading. Avoid a plastic, waxy, airbrushed, illustrated, or oversharpened appearance. Do not add people, mannequins, hangers, props, labels, watermarks, new graphics, or any background objects. If a detail is unclear, retain the input appearance rather than changing the design.`;
 
 router.get('/', async (req, res) => {
   res.set('Cache-Control', 'private, no-store');
@@ -61,12 +61,14 @@ router.post('/', async (req, res) => {
   if (!['image/png', 'image/jpeg'].includes(source.contentType)) return res.status(400).json({ success: false, error: 'A PNG or JPEG model screenshot is required.' });
   if (source.size > MAX_SOURCE_BYTES) return res.status(413).json({ success: false, error: 'The screenshot is too large. Choose a smaller image size.' });
   try {
+    const outputSize = ['1024x1024', '1024x1536', '1536x1024'].includes(req.body?.outputSize) ? req.body.outputSize : 'auto';
+    const backgroundMode = source.contentType === 'image/png' && ['transparent', 'auto'].includes(req.body?.backgroundMode) ? req.body.backgroundMode : 'opaque';
     const input = {
       prompt: PROMPT,
       images: [req.body.image],
-      quality: 'high',
-      size: 'auto',
-      background: source.contentType === 'image/png' ? 'auto' : 'opaque',
+      quality: 'max',
+      size: outputSize,
+      background: backgroundMode,
       output_format: 'png'
     };
     let payload;

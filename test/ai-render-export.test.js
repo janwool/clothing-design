@@ -63,18 +63,26 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
   const server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
   try {
-    const response = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, modelSlug: 'shirt', layout: 'front-back' }) });
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, modelSlug: 'shirt', layout: 'front-back', outputSize: '1536x1024' }) });
     const payload = await response.json();
     assert.equal(response.status, 200);
     assert.equal(call.model, 'openai/gpt-image-2.5-sunburst');
     assert.equal(call.input.images[0], png);
-    assert.equal(call.input.quality, 'high');
+    assert.equal(call.input.quality, 'max');
+    assert.equal(call.input.size, '1536x1024');
+    assert.equal(call.input.background, 'opaque');
+    assert.match(call.input.prompt, /premium ecommerce studio product photograph/);
+    assert.match(call.input.prompt, /Preserve every printed logo, letter, graphic/);
     assert.equal(call.input.output_format, 'png');
     assert.deepEqual(call.options, { gateway: { id: 'default' } });
     assert.match(payload.image.name, /^shirt-front-back-ai\.png$/);
     assert.equal(uploaded.length, 1);
     assert.equal(deleted.length, 0);
     assert.match(inserted[0].sql, /ai-render-export/);
+    const transparentResponse = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, backgroundMode: 'transparent', outputSize: '1024x1536' }) });
+    assert.equal(transparentResponse.status, 200);
+    assert.equal(call.input.background, 'transparent');
+    assert.equal(call.input.size, '1024x1536');
     globalThis.__WORKER_ENV__.AI.run = async () => { throw new Error('Model execution failed (Payment error)'); };
     const unavailable = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png }) });
     assert.equal(unavailable.status, 503);
