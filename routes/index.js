@@ -2389,12 +2389,12 @@ router.get('/white-mockups', async (req, res) => {
     if (library.page > 1) params.set('page', String(library.page));
     const collectionPath = params.size ? `/white-mockups?${params.toString()}` : '/white-mockups';
     const activeCategory = WHITE_MOCKUP_CATEGORIES.find(category => category.slug === activeType) || null;
-    const description = 'Browse customizable on-model fashion mockups by clothing type. Review pose, fit and silhouette, upload artwork, change the background, and export a clean PNG.';
+    const description = 'Customize fashion mockups online on real models. Choose a garment, place your artwork, adjust colors and backgrounds, and export a PNG.';
     res.locals.canonicalUrl = toAbsoluteUrl(req, collectionPath);
     res.render('white-mockups', {
       title: activeCategory
         ? `${activeCategory.label} Fashion Mockups | ClozDesign`
-        : 'On-Model Fashion Mockups | ClozDesign',
+        : 'Fashion Mockups Online | On-Model Editor | ClozDesign',
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',

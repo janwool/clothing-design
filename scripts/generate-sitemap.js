@@ -76,9 +76,9 @@ function escapeXml(value) {
 }
 
 function toIsoDate(value) {
-  if (!value) return new Date().toISOString().slice(0, 10);
+  if (!value) return null;
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return new Date().toISOString().slice(0, 10);
+  if (Number.isNaN(date.getTime())) return null;
   return date.toISOString().slice(0, 10);
 }
 
@@ -216,7 +216,7 @@ function renderSitemap(urls) {
     .map(item => [
       '  <url>',
       `    <loc>${escapeXml(item.loc)}</loc>`,
-      `    <lastmod>${escapeXml(item.lastmod)}</lastmod>`,
+      item.lastmod ? `    <lastmod>${escapeXml(item.lastmod)}</lastmod>` : null,
       `    <changefreq>${escapeXml(item.changefreq)}</changefreq>`,
       `    <priority>${escapeXml(item.priority)}</priority>`,
       item.image ? '    <image:image>' : null,
@@ -238,10 +238,8 @@ function renderSitemap(urls) {
 async function main() {
   const urls = [];
   const seen = new Set();
-  const now = new Date().toISOString();
-
-  CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, now, staticPageImages[pathname]));
-  staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, now, staticToolImages[pathname]));
+  CORE_STATIC_PATHS.forEach(pathname => addUrl(urls, seen, pathname, null, staticPageImages[pathname]));
+  staticToolPaths.forEach(pathname => addUrl(urls, seen, pathname, null, staticToolImages[pathname]));
   blogArticles.forEach(article => {
     addUrl(urls, seen, `/blog/${article.slug}`, article.updatedAt || article.publishedAt, article.image);
   });

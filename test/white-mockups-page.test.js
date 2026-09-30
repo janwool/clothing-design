@@ -22,7 +22,7 @@ test('renders the white mockup category page from database asset records', () =>
   assert.match(data, /FROM on_model_mockup_assets a/);
   assert.match(data, /a\.garment_type = \?/);
   assert.match(view, /asset\.base_image_url/);
-  assert.match(view, /Choose a look\. Add your design\./);
+  assert.match(view, /Fashion mockups\. Add your design\./);
   assert.match(view, /Fashion mockup categories/);
   assert.match(view, /white-catalog-grid/);
   assert.match(view, /href="\/white-mockups\/<%= asset\.asset_name %>"/);

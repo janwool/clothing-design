@@ -81,3 +81,39 @@ test('keeps long direct event names unique within the GA4 40-character limit', (
   assert.ok(second.length <= 40);
   assert.notEqual(first, second);
 });
+
+test('sends one standard GA4 page view with the landing URL and referrer', () => {
+  const calls = [];
+  let ready;
+  const window = {
+    dataLayer: [],
+    location: {
+      href: 'https://www.cloz-design.com/tools/dress-designer?utm_source=search',
+      origin: 'https://www.cloz-design.com',
+      pathname: '/tools/dress-designer'
+    },
+    gtag() { calls.push([...arguments]); }
+  };
+  const document = {
+    title: 'Online Dress Designer',
+    referrer: 'https://www.google.com/',
+    addEventListener(name, callback) {
+      if (name === 'DOMContentLoaded') ready = callback;
+    },
+    querySelector() { return null; },
+    querySelectorAll() { return []; }
+  };
+  vm.runInNewContext(analyticsScript, {
+    URL,
+    console,
+    document,
+    sessionStorage: { getItem() { return null; }, removeItem() {}, setItem() {} },
+    window
+  });
+  ready();
+  ready();
+  const pageViews = calls.filter(call => call[0] === 'event' && call[1] === 'page_view');
+  assert.equal(pageViews.length, 1);
+  assert.equal(pageViews[0][2].page_location, window.location.href);
+  assert.equal(pageViews[0][2].page_referrer, document.referrer);
+});

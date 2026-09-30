@@ -678,7 +678,7 @@
       select: 'Drag nodes · double-click or Shift-click a contour to add a node',
       pen: 'Click around the garment · Enter closes the contour',
       freehand: 'Press and trace the garment outline · release to close',
-      pan: 'Drag to move the canvas · wheel to zoom'
+      pan: 'Drag or scroll to move the canvas · Ctrl/⌘ + scroll to zoom'
     };
     workspaceHint.textContent = hints[tool];
     renderScene();
@@ -1008,7 +1008,17 @@
 
   function wheel(event) {
     event.preventDefault();
-    zoomAt(Math.exp(event.deltaY * 0.0012), event);
+    const unit = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16
+      : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? viewport.clientHeight : 1;
+    if (event.ctrlKey || event.metaKey) {
+      zoomAt(Math.exp(event.deltaY * unit * 0.0012), event);
+      return;
+    }
+    const deltaX = event.shiftKey && !event.deltaX ? event.deltaY : event.deltaX;
+    const deltaY = event.shiftKey && !event.deltaX ? 0 : event.deltaY;
+    state.viewBox.x += deltaX * unit * state.viewBox.width / Math.max(1, svg.clientWidth);
+    state.viewBox.y += deltaY * unit * state.viewBox.height / Math.max(1, svg.clientHeight);
+    updateViewBox();
   }
 
   function keyDown(event) {
@@ -1340,7 +1350,7 @@
   svg.addEventListener('pointerup', pointerUp);
   svg.addEventListener('pointercancel', pointerUp);
   svg.addEventListener('dblclick', doubleClick);
-  svg.addEventListener('wheel', wheel, { passive: false });
+  viewport.addEventListener('wheel', wheel, { passive: false });
   svg.addEventListener('contextmenu', event => event.preventDefault());
 
   viewport.addEventListener('pointerleave', () => {

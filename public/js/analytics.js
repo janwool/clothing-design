@@ -252,6 +252,15 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     var type = pageType();
+    // The Google tag config disables its automatic page view. Send the GA4
+    // standard event once per document so landing-page reports have a URL.
+    if (!window.__clozStandardPageViewSent) {
+      window.__clozStandardPageViewSent = true;
+      track('page_view', {
+        page_location: window.location.href,
+        page_referrer: document.referrer || undefined
+      });
+    }
     track(namedEvent(type, 'page', 'view'), {
       page_type: type,
       page_location: window.location.href,
