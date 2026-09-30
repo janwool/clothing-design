@@ -1,4 +1,4 @@
-.nav-downloads-trigger { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 39px; padding: 0 12px; border: 1px solid #d9dee5; border-radius: 5px; background: #fff; color: #15202f; font: 600 13px Inter, Arial, sans-serif; cursor: pointer; white-space: nowrap; }
+.nav-downloads-trigger { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 48px; padding: 12px 22px; border: 1px solid #d9dee5; border-radius: 4px; background: #fff; color: #15202f; font: 650 16px/1.6 var(--font-family); letter-spacing: -0.01em; cursor: pointer; white-space: nowrap; }
 .nav-downloads-trigger svg { width: 17px; height: 17px; }
 .nav-downloads-trigger:hover, .nav-downloads-trigger[aria-expanded="true"] { border-color: #0b66ed; color: #0b66ed; }
 .nav-downloads-trigger:focus-visible, .nav-downloads-panel button:focus-visible, .nav-downloads-panel a:focus-visible { outline: 2px solid #0b66ed; outline-offset: 2px; }
@@ -27,5 +27,5 @@
 .nav-downloads-retry { margin-top: 16px; padding: 9px 22px; border: 0; border-radius: 5px; background: #0b66ed; color: #fff; cursor: pointer; }
 .nav-downloads-flying-image { position: fixed; z-index: 10000; width: 70px; height: 70px; object-fit: contain; border: 1px solid #dce1e8; border-radius: 5px; background: #f4f2ed; pointer-events: none; box-shadow: 0 8px 25px #14203338; }
 @keyframes nav-downloads-pulse { 0% { box-shadow: 0 0 0 0 #0b66ed80; } 100% { box-shadow: 0 0 0 10px #0b66ed00; } }
-@media (max-width: 768px) { .nav-downloads-trigger { width: 38px; min-width: 38px; padding: 0; } .nav-downloads-trigger span { display: none; } .nav-downloads-panel { position: fixed; top: auto; right: 0; bottom: 0; left: 0; width: 100%; max-height: min(80dvh, 660px); border-radius: 12px 12px 0 0; } .nav-downloads-content { max-height: calc(min(80dvh, 660px) - 58px); } }
+@media (max-width: 768px) { .nav-downloads-trigger { width: 40px; min-width: 40px; min-height: 40px; padding: 0; } .nav-downloads-trigger span { display: none; } .nav-downloads-panel { position: fixed; top: auto; right: 0; bottom: 0; left: 0; width: 100%; max-height: min(80dvh, 660px); border-radius: 12px 12px 0 0; } .nav-downloads-content { max-height: calc(min(80dvh, 660px) - 58px); } }
 @media (prefers-reduced-motion: reduce) { .nav-downloads-arrived { animation: none; } }
