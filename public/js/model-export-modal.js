@@ -93,7 +93,7 @@
     if (state.tab === 'images') {
       options.innerHTML = `<div class="export-group"><h3>View layout</h3><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-label="${esc(label)}" aria-pressed="${state.layout === key}">${cardImage(key)}</button>`).join('')}</div></div>
         <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
-        <p class="export-product-note">We’ll prepare a polished product image with your design and selected background. Your image will download when ready.</p>`;
+        <p class="export-product-note">Export a more lifelike product image with studio-quality lighting and fabric detail, ready for ecommerce product pages. Your design and background stay as chosen. The image downloads automatically when ready.</p>`;
       footer.innerHTML = renderTaskId && window.DownloadList?.status(renderTaskId) === 'rendering'
         ? '<button type="button" class="primary" data-action="view-downloads">View rendering in Downloads</button>'
         : '<button type="button" class="primary" data-action="image">Render image</button>';
