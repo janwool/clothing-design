@@ -93,7 +93,7 @@
     if (state.tab === 'images') {
       options.innerHTML = `<div class="export-group"><h3>View layout</h3><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-label="${esc(label)}" aria-pressed="${state.layout === key}">${cardImage(key)}</button>`).join('')}</div></div>
         <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
-        <p class="export-ai-note">AI refines lighting and fabric while keeping your design and background. Your image will download when ready.</p>`;
+        <p class="export-product-note">We’ll prepare a polished product image with your design and selected background. Your image will download when ready.</p>`;
       footer.innerHTML = renderTaskId && window.DownloadList?.status(renderTaskId) === 'rendering'
         ? '<button type="button" class="primary" data-action="view-downloads">View rendering in Downloads</button>'
         : '<button type="button" class="primary" data-action="image">Render image</button>';
@@ -506,7 +506,7 @@
   async function renderImageWithAi(imageDataUrl, modelSlug, layout, backgroundMode) {
     const response = await fetch('/api/ai-render-export', { method: 'POST', credentials: 'same-origin', cache: 'no-store', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify({ image: imageDataUrl, modelSlug, layout, backgroundMode }) });
     const payload = await response.json().catch(() => ({}));
-    if (!response.ok || !payload.success || !payload.image?.url) throw new Error(payload.error || 'AI rendering failed. Please try again.');
+    if (!response.ok || !payload.success || !payload.image?.url) throw new Error(payload.error || 'Image rendering failed. Please try again.');
     return payload.image;
   }
   async function recordVideo() {

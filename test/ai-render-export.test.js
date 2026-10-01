@@ -11,6 +11,7 @@ const originalStore = entitlements.canStoreImage;
 const originalUpload = storage.uploadImageDataUrl;
 const originalDelete = storage.deleteObject;
 const originalTables = tables.ensureUserContentTables;
+const originalAll = db.all;
 const originalRun = db.run;
 entitlements.getUserEntitlements = async id => ({ features: { exports: id === 'paid' } });
 entitlements.canStoreImage = async () => ({ allowed: true });
@@ -23,6 +24,7 @@ storage.uploadImageDataUrl = async (data, options) => {
 };
 storage.deleteObject = async key => { deleted.push(key); };
 const inserted = [];
+db.all = async () => [{ id: '00000000-0000-0000-0000-000000000001', url: 'https://cdn.example/old.png', original_name: 'shirt-front-back-ai.png', mime_type: 'image/png', size_bytes: 9, created_at: '2026-10-01' }];
 db.run = async (sql, values) => { inserted.push({ sql, values }); };
 const router = require('../routes/ai-render-export');
 const png = `data:image/png;base64,${Buffer.from([137, 80, 78, 71, 13, 10, 26, 10, 0]).toString('base64')}`;
@@ -75,7 +77,9 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     assert.match(call.input.prompt, /Preserve every printed logo, letter, graphic/);
     assert.equal(call.input.output_format, 'png');
     assert.deepEqual(call.options, { gateway: { id: 'default' } });
-    assert.match(payload.image.name, /^shirt-front-back-ai\.png$/);
+    assert.match(payload.image.name, /^shirt-front-back-render\.png$/);
+    const list = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`);
+    assert.equal((await list.json()).images[0].name, 'shirt-front-back-render.png');
     assert.equal(uploaded.length, 1);
     assert.equal(deleted.length, 0);
     assert.match(inserted[0].sql, /ai-render-export/);
@@ -95,6 +99,7 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     storage.uploadImageDataUrl = originalUpload;
     storage.deleteObject = originalDelete;
     tables.ensureUserContentTables = originalTables;
+    db.all = originalAll;
     db.run = originalRun;
   }
 });

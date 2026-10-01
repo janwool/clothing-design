@@ -7291,7 +7291,7 @@ title = __locals.title,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
     ; __append( include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-background-v2']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3']
 }) )
     ; __append("\n")
     ;  const detailContent = modelDetailContent || {};
@@ -7739,7 +7739,7 @@ title = __locals.title,
     ;  if (aiTryOnAvailable) {
     ; __append("\n<dialog id=\"detailTryOnDialog\" class=\"detail-tryon-dialog\" aria-label=\"AI Try-on editor\">\n  <p class=\"detail-tryon-message\" role=\"status\">Loading editor…</p>\n  <iframe id=\"detailTryOnFrame\" title=\"AI Try-on editor\" allow=\"fullscreen\" ></iframe>\n  <button type=\"button\" class=\"detail-tryon-loading-close\" aria-label=\"Close AI Try-on\">×</button>\n</dialog>\n<script src=\"/js/detail-try-on.js?v=20260923-analytics-v5\" defer></script>\n")
     ;  }
-    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20261001-remove-comparison-v1\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20261001-1k-render-v5\" defer></script>\n\n")
+    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20261001-remove-comparison-v1\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20261001-product-render-copy-v6\" defer></script>\n\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
