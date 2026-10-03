@@ -2445,7 +2445,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
     const faqItems = [
       {
         question: `How do I customize this ${typeName} fashion mockup?`,
-        answer: 'Upload a PNG, JPG, or WebP design, then drag it directly on the garment. Use the corner handles to resize it and the top handle to rotate it.'
+        answer: 'Upload up to eight PNG, JPG, or WebP images. Select each image in the artwork list or on the garment, then drag it to move, use the corners to resize, and use the top handle to rotate.'
       },
       {
         question: 'Can I change the garment and mockup background colors?',
@@ -2506,7 +2506,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       page: 'white-mockups',
       pageStyles: [
         '/css/white-mockups.css?v=20260926-hero-gif-v5',
-        '/css/white-mockup-detail.css?v=20260922-shared-login-v11'
+        '/css/white-mockup-detail.css?v=20261004-artworks-left-v3'
       ],
       asset,
       displayTitle,

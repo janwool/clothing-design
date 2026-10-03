@@ -1,0 +1,85 @@
+<%- include('partials/header') %>
+<link rel="stylesheet" href="/css/admin-email.css?v=20261004-bulk-v2">
+<div class="admin-wrapper">
+  <%- include('partials/sidebar') %>
+  <main class="admin-main email-main">
+    <header class="admin-header">
+      <div><span class="admin-eyebrow">Customer communication</span><h1 class="admin-title">Email</h1><p class="admin-subtitle">Send messages to all users, selected users, or email addresses.</p></div>
+      <button class="sidebar-toggle" type="button" aria-label="Open admin navigation" aria-expanded="false">☰</button>
+    </header>
+    <section class="email-compose-section" aria-label="Send email">
+      <form class="data-card email-compose" data-email-form data-csrf="<%= csrf %>">
+        <h2 class="data-title">Compose email</h2>
+        <fieldset class="email-audience"><legend>To</legend>
+          <div class="email-audience-options">
+            <label><input type="radio" name="audience" value="all" checked>All users</label>
+            <label><input type="radio" name="audience" value="selected">Select users</label>
+            <label><input type="radio" name="audience" value="manual">Email addresses</label>
+          </div>
+          <div data-audience-panel="all" class="email-all-users"><strong>All registered users</strong><span><%= emailUsers.length %> users</span></div>
+          <div data-audience-panel="selected" hidden>
+            <label class="email-user-search">Find users<input type="search" data-user-search placeholder="Search by name or email"></label>
+            <div class="email-selection-actions"><button type="button" data-select-visible>Select results</button><button type="button" data-clear-selection>Clear selection</button><span data-selected-count>0 selected</span></div>
+            <div class="email-user-list">
+              <% emailUsers.forEach(item => { %><label class="email-user-option" data-search-text="<%= (String(item.name || '') + ' ' + item.email).toLowerCase() %>"><input type="checkbox" name="userIds" value="<%= item.id %>"><span><strong><%= item.name || 'User #' + item.id %></strong><small><%= item.email %></small></span></label><% }) %>
+              <p data-user-empty <%= emailUsers.length ? 'hidden' : '' %>>No matching users.</p>
+            </div>
+          </div>
+          <div data-audience-panel="manual" hidden><label>Email addresses<textarea name="addresses" rows="3" maxlength="255000" placeholder="One email per line, or separate addresses with commas"></textarea></label></div>
+          <small>Each recipient receives a separate email. Duplicate addresses are sent once.</small>
+        </fieldset>
+        <label>Subject<input name="subject" maxlength="200" placeholder="Email subject" required></label>
+        <label class="email-message-label">Message<textarea name="text" rows="9" maxlength="20000" placeholder="Write your message…" required></textarea></label>
+        <div class="email-addresses">
+          <label>From<input value="<%= config.from || 'Not configured' %>" readonly><small>Your configured sender address.</small></label>
+          <label>Reply-to <span class="email-optional">(optional)</span><input name="replyTo" type="email" maxlength="254" value="<%= config.replyTo %>" placeholder="Reply email address"><small>Replies go to this address when provided.</small></label>
+        </div>
+        <p class="email-result" data-email-result role="status" aria-live="polite" hidden></p>
+        <div class="email-send-actions"><button class="btn btn-primary" type="submit" data-send-enabled="<%= config.ready && !error ? 'true' : 'false' %>" <%= !config.ready || error || !emailUsers.length ? 'disabled' : '' %>>Send to all users</button><small data-recipient-summary><%= emailUsers.length %> registered users</small></div>
+        <noscript><p>Enable JavaScript to send emails from this page.</p></noscript>
+      </form>
+      <aside class="data-card email-config">
+        <h2 class="data-title">Sending configuration</h2>
+        <div class="email-config-status <%= config.ready ? 'is-ready' : 'is-missing' %>"><strong><%= config.ready ? 'Sending enabled' : 'Configuration required' %></strong><p><%= config.ready ? 'Messages are sent through Resend using the address below.' : 'A sender address and email service key are required before sending.' %></p></div>
+        <dl><div><dt>Provider</dt><dd>Resend</dd></div><div><dt>Sender domain</dt><dd><%= config.domain || 'Not configured' %></dd></div><div><dt>Service key</dt><dd><%= config.keyConfigured ? 'Configured' : 'Not configured' %></dd></div></dl>
+        <p>Accepted messages have been submitted to Resend. Delivery details are available in the email service.</p>
+        <a href="https://resend.com/emails" target="_blank" rel="noopener noreferrer">Open Resend ↗</a>
+      </aside>
+    </section>
+    <section class="email-history-section" aria-labelledby="email-history-title">
+      <div class="email-history-heading"><div><h2 id="email-history-title">Sending history</h2><p>Messages continue sending after this page is closed. Accepted means submitted to Resend.</p></div><a href="/admin/email?page=<%= historyPage %>" class="btn btn-secondary btn-small">Refresh</a></div>
+      <% if (error) { %><p class="email-config-status is-missing" role="alert"><%= error %></p><% } %>
+      <div class="data-card email-campaign-card">
+        <% if (!campaigns.length && !error) { %><div class="email-empty"><h3>No messages yet</h3><p>Messages you send will appear here.</p></div><% } %>
+        <div class="email-campaign-list">
+          <% campaigns.forEach(item => { %><article class="email-campaign-row">
+            <div class="email-campaign-subject"><strong><%= item.subject %></strong><small><%= ({all: 'All users', selected: 'Selected users', manual: 'Email addresses'})[item.audience] %> · <%= item.recipient_count %> recipients</small><time><%= item.created_at %> UTC</time></div>
+            <div class="email-campaign-progress"><progress value="<%= item.accepted %>" max="<%= item.recipient_count %>" aria-label="Accepted recipients"></progress><small><%= item.accepted %> / <%= item.recipient_count %> accepted<%= item.failed ? ' · ' + item.failed + ' need attention' : '' %></small><% if (item.error) { %><p class="email-record-error"><%= item.error %></p><% } %></div>
+            <span class="email-status <%= item.status === 'Accepted' ? 'email-status-accepted' : item.failed ? 'email-status-failed' : '' %>"><%= item.status %></span>
+            <% if (item.failed || item.unconfirmed || !item.ready) { %><button type="button" class="btn btn-secondary btn-small" data-campaign-retry="<%= item.id %>" <%= !config.ready ? 'disabled' : '' %>>Retry remaining</button><% } %>
+          </article><% }) %>
+        </div>
+      </div>
+      <% if (items.length) { %><h3 class="email-legacy-heading">Individual emails</h3>
+      <div class="data-card email-history-card">
+        <div class="email-table-wrap" role="region" aria-label="Sending history" tabindex="0">
+          <table class="data-table"><thead><tr><th>Recipient</th><th>Subject</th><th>Status</th><th>Date (UTC)</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody>
+          <% items.forEach(item => { %><tr>
+            <td><%= item.recipient %></td><td><strong><%= item.subject %></strong><% if (item.provider_id) { %><small class="email-provider-id"><%= item.provider_id %></small><% } %><% if (item.error) { %><small class="email-record-error"><%= item.error %></small><% } %></td>
+            <td><span class="email-status email-status-<%= item.status %>"><%= ({accepted: 'Accepted', pending: 'Unconfirmed', unknown: 'Unconfirmed', failed: 'Failed'})[item.status] || 'Unconfirmed' %></span></td>
+            <td><time><%= item.created_at %></time></td>
+            <td><% if (item.status !== 'accepted') { %><button type="button" class="btn btn-secondary btn-small" data-email-retry="<%= item.id %>" <%= !config.ready ? 'disabled' : '' %>>Retry</button><% } %></td>
+          </tr><% }) %>
+          </tbody></table>
+        </div>
+        <% if (!items.length && !error) { %><div class="inquiry-empty-state email-empty"><h3>No emails sent yet</h3><p>Emails you send will appear here.</p></div><% } %>
+      </div>
+      <% } %>
+      <% if (pageCount > 1) { %><nav class="inquiry-pagination" aria-label="Sending history pages"><% if (historyPage > 1) { %><a href="?page=<%= historyPage - 1 %>">← Previous</a><% } %><span>Page <%= historyPage %> of <%= pageCount %></span><% if (historyPage < pageCount) { %><a href="?page=<%= historyPage + 1 %>">Next →</a><% } %></nav><% } %>
+      <p class="email-history-note">Retry remaining recipients after three minutes. Accepted recipients are skipped. Check unconfirmed attempts older than 23 hours in Resend before sending again.</p>
+    </section>
+  </main>
+</div>
+<script src="/js/admin-email.js?v=20261004-bulk-v2" defer></script>
+<script src="/js/admin-navigation.js?v=20261003-v1" defer></script>
+</body></html>

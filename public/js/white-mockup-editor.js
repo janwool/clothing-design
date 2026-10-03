@@ -4,27 +4,34 @@
   const editor = document.getElementById('whiteMockupEditor');
   if (!editor) return;
   const WATERMARK_TILE_URL = '/images/watermarks/clozdesign-watermark-tile-v1.png';
+  const MAX_ARTWORK_IMAGES = 8;
 
   const stage = document.getElementById('whiteMockupStage');
   const canvas = document.getElementById('whiteMockupCanvas');
   const context = canvas.getContext('2d', { willReadFrequently: true });
   const input = document.getElementById('whiteMockupArtworkInput');
-  const uploadZone = document.getElementById('whiteMockupUploadZone');
-  const uploadLabel = document.getElementById('whiteMockupUploadLabel');
-  const emptyUpload = document.getElementById('whiteMockupEmptyUpload');
+  const artworksPanel = document.getElementById('whiteMockupArtworks');
+  const artworkList = document.getElementById('whiteMockupArtworkList');
+  const artworkCount = document.getElementById('whiteMockupArtworkCount');
+  const artworkHint = document.getElementById('whiteMockupArtworkHint');
   const loading = document.getElementById('whiteMockupLoading');
   const gestureHint = document.getElementById('whiteMockupGestureHint');
   const resetButton = document.getElementById('whiteMockupReset');
   const downloadButton = document.getElementById('whiteMockupDownload');
+  const toolbarUpload = document.getElementById('whiteMockupToolbarUpload');
+  const toolbarReset = document.getElementById('whiteMockupToolbarReset');
+  const toolbarDownload = document.getElementById('whiteMockupToolbarDownload');
+  const toolbarScale = document.getElementById('whiteMockupToolbarScale');
+  const toolbarAdjustments = [...editor.querySelectorAll('[data-artwork-adjust]')];
   const status = document.getElementById('whiteMockupStatus');
   const backgroundLabel = document.getElementById('whiteMockupBackgroundLabel');
   const backgroundButtons = [...editor.querySelectorAll('[data-background]')];
   const customBackground = document.getElementById('whiteMockupBackgroundColor');
-  const customBackgroundSwatch = customBackground.closest('.white-detail-custom-swatch');
+  const customBackgroundSwatch = document.getElementById('whiteMockupBackgroundColorPicker');
   const garmentColorLabel = document.getElementById('whiteMockupGarmentColorLabel');
   const garmentColorButtons = [...editor.querySelectorAll('[data-garment-color]')];
   const customGarmentColor = document.getElementById('whiteMockupGarmentColor');
-  const customGarmentColorSwatch = customGarmentColor.closest('.white-detail-garment-custom-swatch');
+  const customGarmentColorSwatch = document.getElementById('whiteMockupGarmentColorPicker');
 
   const assets = {
     base: editor.dataset.baseImage,
@@ -98,8 +105,6 @@
       editor.dataset.authenticated = 'true';
       signInForm.reset();
       signInDialog.close();
-      uploadLabel.textContent = 'Upload your design';
-      emptyUpload.querySelector('strong').textContent = 'Upload a design to begin';
       setStatus('Signed in. Upload your design to begin.');
       trackWhiteMockup('white_mockup_signin_success');
       await buildGarmentWatermark(true);
@@ -127,6 +132,9 @@
     maskPixels: null,
     depthPixels: null,
     artworkImage: null,
+    layers: [],
+    activeLayerId: null,
+    layerSequence: 0,
     artworkName: '',
     offsetX: 0,
     offsetY: 0,
@@ -137,7 +145,6 @@
     interaction: null,
     artworkUrl: '',
     artworkDataUrl: '',
-    artworkUploadPromise: null,
     artworkRevision: 0,
     autoSaveTimer: null,
     saveInProgress: false,
@@ -174,6 +181,107 @@
   function setStatus(message, isError) {
     status.textContent = message;
     status.classList.toggle('is-error', Boolean(isError));
+  }
+
+  function activeLayer() {
+    return state.layers.find(layer => layer.id === state.activeLayerId) || null;
+  }
+
+  function captureActiveLayer() {
+    const layer = activeLayer();
+    if (!layer) return;
+    ['offsetX', 'offsetY', 'scale', 'rotation'].forEach(key => { layer[key] = state[key]; });
+  }
+
+  function updateArtworkList() {
+    const hasArtwork = state.layers.length > 0;
+    artworksPanel.hidden = !hasArtwork;
+    artworkList.hidden = !hasArtwork;
+    artworkHint.hidden = !hasArtwork;
+    artworkCount.hidden = !hasArtwork;
+    artworkCount.textContent = hasArtwork ? `(${state.layers.length})` : '';
+    gestureHint.hidden = !hasArtwork;
+    resetButton.hidden = !hasArtwork;
+    downloadButton.disabled = !hasArtwork;
+    canvas.classList.toggle('has-artwork', hasArtwork);
+    artworkList.replaceChildren();
+    state.layers.forEach((layer, index) => {
+      const row = document.createElement('div');
+      row.className = `white-detail-artwork-row${layer.id === state.activeLayerId ? ' is-active' : ''}`;
+      row.setAttribute('role', 'listitem');
+      const select = document.createElement('button');
+      select.type = 'button';
+      select.className = 'white-detail-artwork-select';
+      select.setAttribute('aria-label', `Select image ${index + 1}: ${layer.artworkName}`);
+      select.setAttribute('aria-pressed', String(layer.id === state.activeLayerId));
+      const thumbnail = document.createElement('img');
+      thumbnail.src = layer.artworkDataUrl || layer.artworkUrl || layer.artworkImage.src;
+      thumbnail.alt = '';
+      const name = document.createElement('span');
+      name.textContent = layer.artworkName;
+      select.append(thumbnail, name);
+      select.addEventListener('click', () => activateLayer(layer.id, true));
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'white-detail-artwork-remove';
+      remove.setAttribute('aria-label', `Remove ${layer.artworkName}`);
+      remove.textContent = '×';
+      remove.addEventListener('click', () => removeArtworkLayer(layer.id));
+      row.append(select, remove);
+      artworkList.append(row);
+    });
+    updateToolbar();
+  }
+
+  function activateLayer(id, focusListButton = false) {
+    captureActiveLayer();
+    const layer = state.layers.find(item => item.id === id) || null;
+    state.activeLayerId = layer?.id || null;
+    state.artworkImage = layer?.artworkImage || null;
+    state.artworkName = layer?.artworkName || '';
+    state.artworkUrl = layer?.artworkUrl || '';
+    state.artworkDataUrl = layer?.artworkDataUrl || '';
+    state.offsetX = layer?.offsetX || 0;
+    state.offsetY = layer?.offsetY || 0;
+    state.scale = layer?.scale ?? template.defaultScale;
+    state.rotation = layer?.rotation || 0;
+    state.interaction = null;
+    updateArtworkList();
+    if (focusListButton) {
+      const activeIndex = state.layers.findIndex(item => item.id === state.activeLayerId);
+      artworkList.querySelectorAll('.white-detail-artwork-select')[activeIndex]?.focus();
+    }
+    scheduleRender({ forceQuality: true });
+  }
+
+  function removeArtworkLayer(id) {
+    if (!requireEditorSignIn('remove_artwork')) return;
+    captureActiveLayer();
+    const index = state.layers.findIndex(layer => layer.id === id);
+    if (index < 0) return;
+    const [removed] = state.layers.splice(index, 1);
+    if (state.activeLayerId === id) {
+      state.activeLayerId = null;
+      activateLayer(state.layers[Math.max(0, index - 1)]?.id || state.layers[0]?.id);
+    } else updateArtworkList();
+    if (state.layers.length) {
+      const activeIndex = state.layers.findIndex(item => item.id === state.activeLayerId);
+      artworkList.querySelectorAll('.white-detail-artwork-select')[activeIndex]?.focus();
+    } else toolbarUpload.focus();
+    state.artworkRevision += 1;
+    state.projectPreviewUrl = '';
+    setStatus(`${removed.artworkName} removed.`);
+    queueProjectSave();
+    scheduleRender({ forceQuality: true });
+    trackWhiteMockup('white_mockup_artwork_remove', { remaining_images: state.layers.length });
+  }
+
+  function updateToolbar() {
+    const canEdit = state.ready && Boolean(state.artworkImage);
+    toolbarScale.value = canEdit ? `${Math.round(state.scale)}%` : '—';
+    toolbarReset.disabled = !canEdit;
+    toolbarDownload.disabled = !canEdit || downloadButton.disabled;
+    toolbarAdjustments.forEach(button => { button.disabled = !canEdit; });
   }
 
   function loadImage(url) {
@@ -366,18 +474,18 @@
     }
   }
 
-  function artworkGeometry() {
-    if (!state.artworkImage) return null;
-    const scale = state.scale / 100;
+  function artworkGeometry(layer = state) {
+    if (!layer.artworkImage) return null;
+    const scale = layer.scale / 100;
     const width = template.baseWidth * scale;
-    const aspectRatio = state.artworkImage.naturalHeight / Math.max(1, state.artworkImage.naturalWidth);
+    const aspectRatio = layer.artworkImage.naturalHeight / Math.max(1, layer.artworkImage.naturalWidth);
     const height = Math.min(template.maxHeight * scale, width * aspectRatio);
     return {
-      centerX: template.centerX + state.offsetX,
-      centerY: template.centerY + state.offsetY,
+      centerX: template.centerX + layer.offsetX,
+      centerY: template.centerY + layer.offsetY,
       width,
       height,
-      rotation: state.rotation * Math.PI / 180
+      rotation: layer.rotation * Math.PI / 180
     };
   }
 
@@ -394,9 +502,9 @@
     );
   }
 
-  function drawArtworkSource() {
+  function drawArtworkSource(layer = state) {
     artworkContext.clearRect(0, 0, artworkCanvas.width, artworkCanvas.height);
-    const geometry = artworkGeometry();
+    const geometry = artworkGeometry(layer);
     if (!geometry) return null;
     artworkContext.save();
     artworkContext.translate(geometry.centerX, geometry.centerY);
@@ -404,7 +512,7 @@
     artworkContext.imageSmoothingEnabled = true;
     artworkContext.imageSmoothingQuality = 'high';
     artworkContext.drawImage(
-      state.artworkImage,
+      layer.artworkImage,
       -geometry.width / 2,
       -geometry.height / 2,
       geometry.width,
@@ -424,15 +532,20 @@
     compositeContext.restore();
   }
 
-  function warpArtwork(sourceImageData) {
+  function warpArtwork(sourceImageData, layer = state) {
     const source = sourceImageData.data;
     const output = new ImageData(canvas.width, canvas.height);
     const target = output.data;
-    const xStart = Math.max(0, template.renderLeft);
-    const xEnd = Math.min(canvas.width, template.renderRight);
-    const yStart = Math.max(0, template.renderTop);
-    const yEnd = Math.min(canvas.height, template.renderBottom);
     const warpStrength = state.warp / 100;
+    const geometry = artworkGeometry(layer);
+    const rotatedHalfWidth = (Math.abs(Math.cos(geometry.rotation)) * geometry.width + Math.abs(Math.sin(geometry.rotation)) * geometry.height) / 2;
+    const rotatedHalfHeight = (Math.abs(Math.sin(geometry.rotation)) * geometry.width + Math.abs(Math.cos(geometry.rotation)) * geometry.height) / 2;
+    const warpMarginX = Math.ceil(255 * warpStrength * 0.82) + 2;
+    const warpMarginY = Math.ceil(255 * warpStrength * 0.58) + 2;
+    const xStart = Math.max(0, template.renderLeft, Math.floor(geometry.centerX - rotatedHalfWidth - warpMarginX));
+    const xEnd = Math.min(canvas.width, template.renderRight, Math.ceil(geometry.centerX + rotatedHalfWidth + warpMarginX));
+    const yStart = Math.max(0, template.renderTop, Math.floor(geometry.centerY - rotatedHalfHeight - warpMarginY));
+    const yEnd = Math.min(canvas.height, template.renderBottom, Math.ceil(geometry.centerY + rotatedHalfHeight + warpMarginY));
 
     for (let y = yStart; y < yEnd; y += 1) {
       for (let x = xStart; x < xEnd; x += 1) {
@@ -467,7 +580,9 @@
       context.drawImage(state.baseImage, 0, 0, canvas.width, canvas.height);
       return;
     }
-    context.fillStyle = state.background;
+    context.fillStyle = window.ClozColorPicker.canvasFillStyle(context, state.background, {
+      x: 0, y: 0, width: canvas.width, height: canvas.height
+    });
     context.fillRect(0, 0, canvas.width, canvas.height);
     context.drawImage(
       state.foregroundReady ? foregroundCanvas : baseCanvas,
@@ -481,7 +596,12 @@
   function drawGarmentColor() {
     if (state.garmentColor.toLowerCase() === '#ffffff') return;
     garmentTintContext.clearRect(0, 0, garmentTintCanvas.width, garmentTintCanvas.height);
-    garmentTintContext.fillStyle = state.garmentColor;
+    garmentTintContext.fillStyle = window.ClozColorPicker.canvasFillStyle(garmentTintContext, state.garmentColor, {
+      x: template.renderLeft,
+      y: template.renderTop,
+      width: template.renderRight - template.renderLeft,
+      height: template.renderBottom - template.renderTop
+    });
     garmentTintContext.fillRect(0, 0, garmentTintCanvas.width, garmentTintCanvas.height);
     garmentTintContext.save();
     garmentTintContext.globalCompositeOperation = 'destination-in';
@@ -555,20 +675,22 @@
 
   function render(options = {}) {
     state.renderQueued = false;
+    captureActiveLayer();
+    updateToolbar();
     if (!state.ready) return;
     context.clearRect(0, 0, canvas.width, canvas.height);
     drawBaseAndBackground();
     drawGarmentColor();
-    if (state.artworkImage) {
-      const source = drawArtworkSource();
-      if (state.interaction && !options.forceQuality) clipArtworkFast();
-      else warpArtwork(source);
+    state.layers.forEach(layer => {
+      const source = drawArtworkSource(layer);
+      if (state.interaction && layer.id === state.activeLayerId && !options.forceQuality) clipArtworkFast();
+      else warpArtwork(source, layer);
       context.save();
       context.globalCompositeOperation = 'multiply';
       context.drawImage(compositeCanvas, 0, 0);
       context.restore();
-      updateAccessibleTransform();
-    }
+    });
+    if (state.artworkImage) updateAccessibleTransform();
     drawGarmentWatermark();
     if (state.artworkImage && options.overlay !== false) drawSelection();
   }
@@ -597,6 +719,7 @@
       baseContext.drawImage(baseImage, 0, 0, baseCanvas.width, baseCanvas.height);
       buildForegroundCutout();
       state.ready = true;
+      updateToolbar();
       render({ forceQuality: true });
       stage.classList.add('is-ready');
       loading.hidden = true;
@@ -629,48 +752,67 @@
     }
   }
 
-  function setArtworkImage(image, name, source = 'external') {
-    state.artworkImage = image;
-    state.artworkName = name || 'artwork';
-    uploadLabel.textContent = name || 'Design uploaded';
-    uploadZone.classList.add('has-artwork');
-    emptyUpload.hidden = true;
-    gestureHint.hidden = false;
-    resetButton.hidden = false;
-    downloadButton.disabled = false;
-    canvas.classList.add('has-artwork');
-    resetTransform();
-    setStatus('Design added. Adjust it directly on the garment.');
+  function setArtworkImage(image, name, source = 'external', options = {}) {
+    if (state.layers.length >= MAX_ARTWORK_IMAGES) throw new Error('You can add up to 8 images to this mockup.');
+    const position = state.layers.length;
+    const layer = {
+      id: `artwork-${++state.layerSequence}`,
+      artworkImage: image,
+      artworkName: name || 'artwork',
+      artworkUrl: options.artworkUrl || '',
+      artworkDataUrl: options.artworkDataUrl || '',
+      uploadPromise: null,
+      offsetX: options.offsetX ?? Math.min(90, position * 24),
+      offsetY: options.offsetY ?? Math.min(90, position * 24),
+      scale: options.scale ?? template.defaultScale,
+      rotation: options.rotation ?? 0
+    };
+    captureActiveLayer();
+    state.layers.push(layer);
+    activateLayer(layer.id);
+    state.artworkRevision += 1;
+    state.projectPreviewUrl = '';
+    setStatus(`${layer.artworkName} added. Select an image to edit it.`);
     trackWhiteMockup(`white_mockup_artwork_${source}_load_success`, {
       design_entry: 'white_mockup_detail',
       file_name: name || undefined
     });
+    return layer;
   }
 
-  function loadArtworkDataUrl(dataUrl, name, source = 'external') {
+  function loadArtworkDataUrl(dataUrl, name, source = 'external', options = {}) {
     if (!requireEditorSignIn('upload')) return Promise.resolve(null);
     return loadImage(dataUrl).then((image) => {
-      setArtworkImage(image, name, source);
-      return image;
+      return setArtworkImage(image, name, source, options);
     });
   }
 
-  async function storeArtwork(dataUrl, name, revision) {
+  async function storeArtwork(layer) {
     if (editor.dataset.authenticated !== 'true' || !window.UserProjects) return null;
     setStatus('Uploading artwork securely…');
-    const image = await window.UserProjects.uploadImage(dataUrl, name, 'artwork');
-    if (revision !== state.artworkRevision) return image;
-    state.artworkUrl = image.url;
+    const image = await window.UserProjects.uploadImage(layer.artworkDataUrl, layer.artworkName, 'artwork');
+    if (!state.layers.includes(layer)) return image;
+    layer.artworkUrl = image.url;
+    layer.artworkDataUrl = '';
+    if (state.activeLayerId === layer.id) {
+      state.artworkUrl = image.url;
+      state.artworkDataUrl = '';
+    }
+    updateArtworkList();
     setStatus('Artwork uploaded. Adding it to your projects…');
     trackWhiteMockup('white_mockup_artwork_cloud_save_success', {
-      file_name: name || undefined
+      file_name: layer.artworkName || undefined
     });
     return image;
   }
 
-  function handleArtworkFile(file, source = 'picker') {
+  async function handleArtworkFile(file, source = 'picker') {
     if (!requireEditorSignIn('upload')) return;
     if (!file) return;
+    if (state.layers.length >= MAX_ARTWORK_IMAGES) {
+      setStatus('You can add up to 8 images to this mockup.', true);
+      return;
+    }
     if (!['image/png', 'image/jpeg', 'image/webp'].includes(file.type)) {
       setStatus('Choose a PNG, JPG, or WebP image.', true);
       trackWhiteMockup(`white_mockup_artwork_${source}_invalid_type`, { file_type: file.type || undefined });
@@ -685,40 +827,32 @@
       file_type: file.type,
       file_size: file.size
     });
-    const reader = new FileReader();
-    reader.onload = () => {
-      const revision = state.artworkRevision + 1;
-      state.artworkRevision = revision;
-      state.artworkDataUrl = reader.result;
-      state.artworkUrl = '';
-      state.projectPreviewUrl = '';
-      const artworkLoadPromise = loadArtworkDataUrl(reader.result, file.name, source).catch((error) => {
-        console.error(error);
-        setStatus('The selected image could not be opened.', true);
-        trackWhiteMockup(`white_mockup_artwork_${source}_load_error`, {
-          error_message: String(error.message || 'Selected image could not be opened.').slice(0, 120)
-        });
-        throw error;
+    try {
+      const dataUrl = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('The selected image could not be read.'));
+        reader.readAsDataURL(file);
       });
-      state.artworkUploadPromise = storeArtwork(reader.result, file.name, revision).catch((error) => {
-        console.error(error);
-        setStatus(error.message || 'Artwork could not be saved.', true);
-        trackWhiteMockup('white_mockup_artwork_cloud_upload_error', {
-          error_message: String(error.message || 'Artwork could not be saved.').slice(0, 120)
-        });
-        throw error;
+      const layer = await loadArtworkDataUrl(dataUrl, file.name, source, { artworkDataUrl: dataUrl });
+      if (!layer) return;
+      layer.uploadPromise = storeArtwork(layer);
+      await layer.uploadPromise;
+      queueProjectSave({ immediate: true });
+    } catch (error) {
+      console.error(error);
+      setStatus(error.message || 'The selected image could not be added.', true);
+      trackWhiteMockup(`white_mockup_artwork_${source}_load_error`, {
+        error_message: String(error.message || 'Selected image could not be opened.').slice(0, 120)
       });
-      Promise.all([artworkLoadPromise, state.artworkUploadPromise])
-        .then(() => {
-          if (revision === state.artworkRevision) queueProjectSave({ immediate: true });
-        })
-        .catch(() => {});
-    };
-    reader.onerror = () => {
-      setStatus('The selected image could not be read.', true);
-      trackWhiteMockup(`white_mockup_artwork_${source}_read_error`);
-    };
-    reader.readAsDataURL(file);
+    }
+  }
+
+  async function handleArtworkFiles(files, source = 'picker') {
+    const selectedFiles = Array.from(files || []);
+    const availableSlots = Math.max(0, MAX_ARTWORK_IMAGES - state.layers.length);
+    for (const file of selectedFiles.slice(0, availableSlots)) await handleArtworkFile(file, source);
+    if (selectedFiles.length > availableSlots) setStatus('You can add up to 8 images to this mockup.', true);
   }
 
   function eventPoint(event) {
@@ -766,10 +900,21 @@
 
   function beginInteraction(event) {
     if (!requireEditorSignIn('edit')) return;
-    if (!state.ready || !state.artworkImage || event.button > 0) return;
+    if (!state.ready || !state.layers.length || event.button > 0) return;
     const point = eventPoint(event);
-    const geometry = artworkGeometry();
-    const mode = findPointerMode(point, geometry);
+    let geometry = artworkGeometry();
+    let mode = geometry ? findPointerMode(point, geometry) : '';
+    if (!mode) {
+      for (const layer of [...state.layers].reverse()) {
+        const candidateGeometry = artworkGeometry(layer);
+        const candidateMode = findPointerMode(point, candidateGeometry);
+        if (!candidateMode) continue;
+        activateLayer(layer.id);
+        geometry = candidateGeometry;
+        mode = candidateMode;
+        break;
+      }
+    }
     if (!mode) return;
     event.preventDefault();
     const center = { x: geometry.centerX, y: geometry.centerY };
@@ -835,6 +980,8 @@
       button.setAttribute('aria-pressed', String(active));
     });
     customBackgroundSwatch.classList.toggle('active', selectedButton === customBackgroundSwatch);
+    customBackgroundSwatch.setAttribute('aria-pressed', String(selectedButton === customBackgroundSwatch));
+    customBackgroundSwatch.querySelector('i').style.background = selectedButton === customBackgroundSwatch ? value : '';
     scheduleRender({ forceQuality: true });
     queueProjectSave();
     if (analyticsEventName) {
@@ -852,6 +999,8 @@
       button.setAttribute('aria-pressed', String(active));
     });
     customGarmentColorSwatch.classList.toggle('active', selectedControl === customGarmentColorSwatch);
+    customGarmentColorSwatch.setAttribute('aria-pressed', String(selectedControl === customGarmentColorSwatch));
+    customGarmentColorSwatch.querySelector('i').style.background = selectedControl === customGarmentColorSwatch ? value : '';
     setStatus(`${label} garment color applied.`);
     scheduleRender({ forceQuality: true });
     queueProjectSave();
@@ -866,10 +1015,11 @@
     trackWhiteMockup('white_mockup_png_download_begin');
     render({ overlay: false, forceQuality: true });
     downloadButton.disabled = true;
+    updateToolbar();
     try {
       const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
       if (!blob) throw new Error('The PNG could not be created.');
-      const safeArtworkName = state.artworkName
+      const safeArtworkName = (state.layers.length > 1 ? 'fashion-design' : state.artworkName)
         .replace(/\.[^.]+$/, '')
         .replace(/[^a-z0-9-_]+/gi, '-')
         .replace(/^-+|-+$/g, '') || 'design';
@@ -894,13 +1044,17 @@
       });
     } finally {
       downloadButton.disabled = false;
+      updateToolbar();
       scheduleRender({ forceQuality: true });
     }
   }
 
   function queueProjectSave({ immediate = false } = {}) {
     if (window.UserProjects?.isAdminPreview) return;
-    if (editor.dataset.authenticated !== 'true' || !state.artworkImage || !window.UserProjects) return;
+    if (editor.dataset.authenticated !== 'true' || (!state.layers.length && !state.projectId) || !window.UserProjects) return;
+    captureActiveLayer();
+    state.artworkRevision += 1;
+    state.projectPreviewUrl = '';
     window.clearTimeout(state.autoSaveTimer);
     state.autoSaveTimer = window.setTimeout(saveProject, immediate ? 0 : 700);
   }
@@ -908,7 +1062,7 @@
   async function saveProject() {
     if (window.UserProjects?.isAdminPreview) return;
     state.autoSaveTimer = null;
-    if (!state.artworkImage || !window.UserProjects) return;
+    if ((!state.layers.length && !state.projectId) || !window.UserProjects) return;
     if (!state.ready) {
       state.autoSaveTimer = window.setTimeout(saveProject, 250);
       return;
@@ -924,23 +1078,34 @@
     trackWhiteMockup(`white_mockup_project_${saveMode}_begin`);
     setStatus(saveMode === 'create' ? 'Adding project to your account…' : 'Saving changes…');
     try {
-      if (state.artworkUploadPromise) await state.artworkUploadPromise;
+      await Promise.all(state.layers.map(async layer => {
+        if (layer.uploadPromise) {
+          try { await layer.uploadPromise; }
+          catch (error) { layer.uploadPromise = null; }
+        }
+        if (!layer.artworkUrl && layer.artworkDataUrl) {
+          layer.uploadPromise = storeArtwork(layer);
+          await layer.uploadPromise;
+        }
+        if (!layer.artworkUrl) throw new Error(`${layer.artworkName} could not be saved.`);
+      }));
       if (revision !== state.artworkRevision) return;
-      if (!state.artworkUrl && state.artworkDataUrl) {
-        state.artworkUploadPromise = storeArtwork(state.artworkDataUrl, state.artworkName, revision);
-        await state.artworkUploadPromise;
-      }
-      if (!state.artworkUrl) throw new Error('Artwork must finish uploading before this project can be saved.');
-      const projectName = state.projectName || `${state.artworkName.replace(/\.[^.]+$/, '')} — ${template.assetName}`;
+      captureActiveLayer();
+      const firstLayer = state.layers[0];
+      const projectName = state.projectName || `${(firstLayer?.artworkName || 'Mockup').replace(/\.[^.]+$/, '')} — ${template.assetName}`;
       const projectDesignData = () => ({
-        artworkUrl: state.artworkUrl,
-        artworkName: state.artworkName,
+        artworks: state.layers.map(layer => ({
+          artworkUrl: layer.artworkUrl,
+          artworkName: layer.artworkName,
+          offsetX: layer.offsetX,
+          offsetY: layer.offsetY,
+          scale: layer.scale,
+          rotation: layer.rotation
+        })),
+        artworkUrl: firstLayer?.artworkUrl || '',
+        artworkName: firstLayer?.artworkName || '',
         background: state.background,
         garmentColor: state.garmentColor,
-        offsetX: state.offsetX,
-        offsetY: state.offsetY,
-        scale: state.scale,
-        rotation: state.rotation,
         warp: state.warp,
         opacity: state.opacity
       });
@@ -1027,24 +1192,68 @@
       if (!project) return;
       if (project.sourceId && project.sourceId !== template.assetName) throw new Error('This project uses another fashion mockup.');
       const saved = project.designData || {};
-      if (!saved.artworkUrl) throw new Error('The saved artwork is unavailable.');
-      await loadArtworkDataUrl(window.UserProjects.isAdminPreview ? window.UserProjects.textureUrl(saved.artworkUrl) : saved.artworkUrl, saved.artworkName || project.name, 'saved_project');
-      state.artworkUrl = saved.artworkUrl;
+      const savedArtworks = Array.isArray(saved.artworks)
+        ? saved.artworks
+        : saved.artworkUrl ? [saved] : [];
+      if (!savedArtworks.length && !Array.isArray(saved.artworks)) throw new Error('The saved artwork is unavailable.');
+      if (savedArtworks.length > MAX_ARTWORK_IMAGES) throw new Error('This project has more images than the editor can open.');
+      setStatus('Opening your saved project…');
+      const restoredArtworks = [];
+      for (const artwork of savedArtworks) {
+        if (!artwork.artworkUrl) throw new Error('A saved image is unavailable.');
+        const imageUrl = window.UserProjects.textureUrl(artwork.artworkUrl);
+        let image;
+        try {
+          image = await loadImage(imageUrl);
+        } catch (proxyError) {
+          if (window.UserProjects.isAdminPreview) throw new Error('A saved image could not be opened.');
+          try {
+            image = await loadImage(artwork.artworkUrl);
+          } catch (directError) {
+            throw new Error('A saved image could not be opened.');
+          }
+        }
+        restoredArtworks.push({ image, artwork });
+      }
+      for (const { image, artwork } of restoredArtworks) {
+        setArtworkImage(image, artwork.artworkName || project.name, 'saved_project', {
+          artworkUrl: artwork.artworkUrl,
+          offsetX: Number(artwork.offsetX) || 0,
+          offsetY: Number(artwork.offsetY) || 0,
+          scale: Number(artwork.scale) || template.defaultScale,
+          rotation: Number(artwork.rotation) || 0
+        });
+      }
       state.projectId = project.id;
       state.projectName = project.name;
       state.projectPreviewUrl = project.previewImageUrl || '';
       state.background = saved.background || 'studio';
       state.garmentColor = saved.garmentColor || '#ffffff';
-      state.offsetX = Number(saved.offsetX) || 0;
-      state.offsetY = Number(saved.offsetY) || 0;
-      state.scale = Number(saved.scale) || template.defaultScale;
-      state.rotation = Number(saved.rotation) || 0;
       state.warp = Number(saved.warp) || template.defaultWarp;
       state.opacity = Number(saved.opacity) || 0.96;
-      backgroundLabel.textContent = state.background === 'studio' ? 'Original studio' : 'Saved color';
-      garmentColorLabel.textContent = 'Saved color';
-      customBackground.value = /^#[0-9a-f]{6}$/i.test(state.background) ? state.background : '#d6d3cb';
+      backgroundLabel.textContent = state.background === 'studio' ? 'Original studio'
+        : state.background.startsWith('linear-gradient(') ? 'Custom gradient' : 'Saved color';
+      garmentColorLabel.textContent = state.garmentColor.startsWith('linear-gradient(') ? 'Custom gradient' : 'Saved color';
+      customBackground.value = state.background === 'studio' ? '#d6d3cb' : state.background;
       customGarmentColor.value = state.garmentColor;
+      const selectedBackground = backgroundButtons.find(button => button.dataset.background === state.background);
+      backgroundButtons.forEach(button => {
+        const active = button === selectedBackground;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      customBackgroundSwatch.classList.toggle('active', !selectedBackground);
+      customBackgroundSwatch.setAttribute('aria-pressed', String(!selectedBackground));
+      customBackgroundSwatch.querySelector('i').style.background = selectedBackground ? '' : state.background;
+      const selectedGarmentColor = garmentColorButtons.find(button => button.dataset.garmentColor.toLowerCase() === state.garmentColor.toLowerCase());
+      garmentColorButtons.forEach(button => {
+        const active = button === selectedGarmentColor;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      customGarmentColorSwatch.classList.toggle('active', !selectedGarmentColor);
+      customGarmentColorSwatch.setAttribute('aria-pressed', String(!selectedGarmentColor));
+      customGarmentColorSwatch.querySelector('i').style.background = selectedGarmentColor ? '' : state.garmentColor;
       setStatus('Saved project loaded.');
       scheduleRender({ forceQuality: true });
       trackWhiteMockup('white_mockup_saved_project_load_success', {
@@ -1068,31 +1277,36 @@
     }
     trackWhiteMockup('white_mockup_artwork_picker_open');
   });
-  input.addEventListener('change', () => handleArtworkFile(input.files?.[0], 'picker'));
-  emptyUpload.addEventListener('click', () => {
-    if (!requireEditorSignIn('upload')) return;
-    trackWhiteMockup('white_mockup_empty_stage_upload_click');
-    input.click();
+  input.addEventListener('change', () => {
+    const files = [...(input.files || [])];
+    input.value = '';
+    handleArtworkFiles(files, 'picker');
   });
   resetButton.addEventListener('click', () => resetTransform(true));
   downloadButton.addEventListener('click', downloadMockup);
-
-  ['dragenter', 'dragover'].forEach((eventName) => {
-    uploadZone.addEventListener(eventName, (event) => {
-      event.preventDefault();
-      uploadZone.classList.add('is-dragover');
-    });
+  toolbarUpload.addEventListener('click', () => {
+    if (!requireEditorSignIn('upload')) return;
+    input.click();
   });
-  ['dragleave', 'drop'].forEach((eventName) => {
-    uploadZone.addEventListener(eventName, (event) => {
-      event.preventDefault();
-      uploadZone.classList.remove('is-dragover');
-    });
-  });
-  uploadZone.addEventListener('drop', (event) => handleArtworkFile(event.dataTransfer?.files?.[0], 'drop'));
+  toolbarReset.addEventListener('click', () => resetTransform(true));
+  toolbarDownload.addEventListener('click', downloadMockup);
+  toolbarAdjustments.forEach(button => button.addEventListener('click', () => {
+    if (!state.ready || !state.artworkImage || !requireEditorSignIn('edit')) return;
+    const action = button.dataset.artworkAdjust;
+    if (action === 'smaller') state.scale = Math.max(16, state.scale - 5);
+    if (action === 'larger') state.scale = Math.min(180, state.scale + 5);
+    if (action === 'rotate-left') state.rotation -= 15;
+    if (action === 'rotate-right') state.rotation += 15;
+    setStatus(action.startsWith('rotate') ? 'Artwork rotation updated.' : 'Artwork size updated.');
+    updateToolbar();
+    scheduleRender({ forceQuality: true });
+    queueProjectSave();
+    trackWhiteMockup('white_mockup_toolbar_adjust', { action });
+  }));
 
   backgroundButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      window.ClozColorPicker?.close();
       selectBackground(
         button.dataset.background,
         button.dataset.label,
@@ -1101,21 +1315,24 @@
       );
     });
   });
-  customBackground.addEventListener('click', (event) => {
-    if (!requireEditorSignIn('background')) event.preventDefault();
-  });
-  customBackground.addEventListener('input', () => {
-    selectBackground(customBackground.value, 'Custom color', customBackgroundSwatch);
-  });
-  customBackground.addEventListener('change', () => {
+  customBackgroundSwatch.addEventListener('click', () => {
     if (!requireEditorSignIn('background')) return;
-    trackWhiteMockup('white_mockup_bg_custom_select', {
-      background_name: 'Custom color',
-      background_value: customBackground.value
+    window.ClozColorPicker.open({
+      anchor: customBackgroundSwatch,
+      label: 'Choose a custom background color',
+      value: customBackground.value,
+      onChange(value) {
+        customBackground.value = value;
+        selectBackground(value, value.startsWith('linear-gradient(') ? 'Custom gradient' : 'Custom color', customBackgroundSwatch);
+      },
+      onCommit(value) {
+        trackWhiteMockup('white_mockup_bg_custom_select', { background_name: value.startsWith('linear-gradient(') ? 'Custom gradient' : 'Custom color', background_value: value });
+      }
     });
   });
   garmentColorButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      window.ClozColorPicker?.close();
       selectGarmentColor(
         button.dataset.garmentColor,
         button.dataset.label,
@@ -1124,17 +1341,19 @@
       );
     });
   });
-  customGarmentColor.addEventListener('click', (event) => {
-    if (!requireEditorSignIn('garment_color')) event.preventDefault();
-  });
-  customGarmentColor.addEventListener('input', () => {
-    selectGarmentColor(customGarmentColor.value, 'Custom color', customGarmentColorSwatch);
-  });
-  customGarmentColor.addEventListener('change', () => {
+  customGarmentColorSwatch.addEventListener('click', () => {
     if (!requireEditorSignIn('garment_color')) return;
-    trackWhiteMockup('white_mockup_color_custom_select', {
-      color_name: 'Custom color',
-      color_value: customGarmentColor.value
+    window.ClozColorPicker.open({
+      anchor: customGarmentColorSwatch,
+      label: 'Choose a custom garment color',
+      value: customGarmentColor.value,
+      onChange(value) {
+        customGarmentColor.value = value;
+        selectGarmentColor(value, value.startsWith('linear-gradient(') ? 'Custom gradient' : 'Custom color', customGarmentColorSwatch);
+      },
+      onCommit(value) {
+        trackWhiteMockup('white_mockup_color_custom_select', { color_name: value.startsWith('linear-gradient(') ? 'Custom gradient' : 'Custom color', color_value: value });
+      }
     });
   });
 
@@ -1177,7 +1396,9 @@
     getState() {
       return {
         ready: state.ready,
-        hasArtwork: Boolean(state.artworkImage),
+        hasArtwork: Boolean(state.layers.length),
+        artworkCount: state.layers.length,
+        activeArtworkName: state.artworkName,
         background: state.background,
         garmentColor: state.garmentColor,
         offsetX: state.offsetX,

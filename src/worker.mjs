@@ -30,7 +30,15 @@ applyEnvironment(env);
 
 const mod = await import('../app-core.js');
 const app = mod.default || mod;
+const campaignsMod = await import('../lib/admin-email-campaigns.js');
+const { processCampaignQueue } = campaignsMod.default || campaignsMod;
 
 app.listen(3000);
 
-export default httpServerHandler({ port: 3000 });
+export default {
+  ...httpServerHandler({ port: 3000 }),
+  scheduled(controller, workerEnv, ctx) {
+    applyEnvironment(workerEnv);
+    ctx.waitUntil(processCampaignQueue());
+  }
+};

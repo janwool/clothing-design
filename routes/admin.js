@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+router.use('/email', require('./admin-email'));
 const path = require('path');
 const db = require('../lib/db');
 const { parseProjectRow } = require('../lib/user-projects');

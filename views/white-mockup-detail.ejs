@@ -1,4 +1,10 @@
-<%- include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) %>
+<%- include('partials/header', {
+  bodyClass: 'category-catalog-page white-mockup-detail-page',
+  pageStyles: [
+    '/css/white-mockups.css?v=20260926-hero-gif-v5',
+    '/css/white-mockup-detail.css?v=20261004-artworks-left-v3'
+  ]
+}) %>
 <%
   const cleanRelatedTitle = function(item) {
     return String(item.title || item.asset_name || 'Fashion mockup')
@@ -45,51 +51,62 @@
       data-authenticated="<%= user ? 'true' : 'false' %>"
     >
       <div class="white-detail-stage-column">
-        <div class="white-detail-stage" id="whiteMockupStage">
-          <img
-            class="white-detail-stage-poster"
-            crossorigin="anonymous"
-            src="<%= editorBaseImageUrl %>"
-            alt="<%= displayTitle %> fashion mockup preview"
-            width="<%= asset.canvas_width %>"
-            height="<%= asset.canvas_height %>"
-            fetchpriority="high"
-            decoding="async"
-          >
-          <canvas
-            id="whiteMockupCanvas"
-            width="<%= asset.canvas_width %>"
-            height="<%= asset.canvas_height %>"
-            tabindex="0"
-            aria-label="Customize <%= displayTitle %> fashion mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate."
-          ></canvas>
-          <button type="button" class="white-detail-stage-reset" id="whiteMockupReset" data-analytics-managed="true" hidden>Reset artwork</button>
-          <button type="button" class="white-detail-empty" id="whiteMockupEmptyUpload" data-analytics-managed="true">
-            <span>Place your artwork directly on the garment</span>
-            <strong><%= user ? 'Upload a design to begin' : 'Sign in to start designing' %></strong>
+        <h1 class="white-detail-title" id="whiteMockupTitle"><%= displayTitle %></h1>
+        <div class="white-detail-toolbar" role="toolbar" aria-label="Mockup editor tools">
+          <button type="button" id="whiteMockupToolbarUpload" class="white-detail-tool white-detail-tool-upload" data-analytics-managed="true" aria-label="Upload artwork">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span>Upload artwork</span>
           </button>
-          <div class="white-detail-loading" id="whiteMockupLoading" aria-live="polite">
-            <i aria-hidden="true"></i><span>Preparing your mockup</span>
+          <span class="white-detail-toolbar-divider" aria-hidden="true"></span>
+          <div class="white-detail-tool-group" role="group" aria-label="Artwork size">
+            <button type="button" class="white-detail-tool white-detail-tool-icon" data-artwork-adjust="smaller" aria-label="Make artwork smaller" title="Make artwork smaller" disabled>−</button>
+            <output id="whiteMockupToolbarScale" aria-label="Artwork size">—</output>
+            <button type="button" class="white-detail-tool white-detail-tool-icon" data-artwork-adjust="larger" aria-label="Make artwork larger" title="Make artwork larger" disabled>+</button>
           </div>
-          <p class="white-detail-gesture-hint" id="whiteMockupGestureHint" hidden>Drag to move · corners to scale · top handle to rotate</p>
+          <span class="white-detail-toolbar-divider" aria-hidden="true"></span>
+          <div class="white-detail-tool-group" role="group" aria-label="Artwork rotation">
+            <button type="button" class="white-detail-tool white-detail-tool-icon" data-artwork-adjust="rotate-left" aria-label="Rotate artwork left" title="Rotate artwork left" disabled>↶</button>
+            <button type="button" class="white-detail-tool white-detail-tool-icon" data-artwork-adjust="rotate-right" aria-label="Rotate artwork right" title="Rotate artwork right" disabled>↷</button>
+          </div>
+          <button type="button" id="whiteMockupToolbarReset" class="white-detail-tool white-detail-tool-reset" data-analytics-managed="true" disabled>Reset</button>
+          <button type="button" id="whiteMockupToolbarDownload" class="white-detail-tool white-detail-tool-download" data-analytics-managed="true" aria-describedby="whiteMockupDownloadRequirement" disabled>Download PNG</button>
+        </div>
+        <div class="white-detail-preview-layout">
+          <div class="white-detail-artworks" id="whiteMockupArtworks" hidden>
+            <div class="white-detail-artworks-heading">
+              <span>Artworks <small id="whiteMockupArtworkCount" hidden></small></span>
+            </div>
+            <div class="white-detail-artwork-list" id="whiteMockupArtworkList" role="list" aria-label="Uploaded artwork" hidden></div>
+            <p class="white-detail-artwork-hint" id="whiteMockupArtworkHint" hidden>Select an image to edit it on the garment.</p>
+          </div>
+          <div class="white-detail-stage" id="whiteMockupStage">
+            <img
+              class="white-detail-stage-poster"
+              crossorigin="anonymous"
+              src="<%= editorBaseImageUrl %>"
+              alt="<%= displayTitle %> fashion mockup preview"
+              width="<%= asset.canvas_width %>"
+              height="<%= asset.canvas_height %>"
+              fetchpriority="high"
+              decoding="async"
+            >
+            <canvas
+              id="whiteMockupCanvas"
+              width="<%= asset.canvas_width %>"
+              height="<%= asset.canvas_height %>"
+              tabindex="0"
+              aria-label="Customize <%= displayTitle %> fashion mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate."
+            ></canvas>
+            <button type="button" class="white-detail-stage-reset" id="whiteMockupReset" data-analytics-managed="true" hidden>Reset artwork</button>
+            <div class="white-detail-loading" id="whiteMockupLoading" aria-live="polite">
+              <i aria-hidden="true"></i><span>Preparing your mockup</span>
+            </div>
+            <p class="white-detail-gesture-hint" id="whiteMockupGestureHint" hidden>Drag to move · corners to scale · top handle to rotate</p>
+          </div>
         </div>
       </div>
 
       <aside class="white-detail-purchase" aria-labelledby="whiteMockupTitle">
-        <span class="white-detail-eyebrow">On-model fashion mockup</span>
-        <h1 id="whiteMockupTitle"><%= displayTitle %> Fashion Mockup</h1>
-        <p class="white-detail-description">Preview artwork on a natural <%= typeName %> fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>
-
-        <label class="white-detail-upload" id="whiteMockupUploadZone" data-analytics-managed="true">
-          <input type="file" id="whiteMockupArtworkInput" accept="image/png,image/jpeg,image/webp">
-          <span class="white-detail-upload-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg>
-          </span>
-          <span>
-            <strong id="whiteMockupUploadLabel"><%= user ? 'Upload your design' : 'Sign in to upload your design' %></strong>
-            <small>PNG, JPG or WebP · up to 10 MB</small>
-          </span>
-        </label>
+        <input type="file" id="whiteMockupArtworkInput" accept="image/png,image/jpeg,image/webp" multiple hidden>
 
         <div class="white-detail-garment-colors">
           <div class="white-detail-control-label">
@@ -97,6 +114,8 @@
             <small id="whiteMockupGarmentColorLabel">Original white</small>
           </div>
           <div class="white-detail-garment-swatches" role="group" aria-label="Choose garment color">
+            <button type="button" class="white-detail-custom-swatch white-detail-garment-custom-swatch" id="whiteMockupGarmentColorPicker" data-analytics-managed="true" aria-label="Choose a custom garment color" aria-haspopup="dialog" aria-expanded="false" aria-pressed="false"><i aria-hidden="true"></i></button>
+            <input type="hidden" id="whiteMockupGarmentColor" value="#c9b7a2">
             <button type="button" class="active" data-garment-color="#ffffff" data-label="Original white" data-analytics-managed="true" aria-label="White garment" aria-pressed="true"><i style="--swatch:#ffffff"></i></button>
             <button type="button" data-garment-color="#e2d5c2" data-label="Natural ecru" data-analytics-managed="true" aria-label="Natural ecru garment" aria-pressed="false"><i style="--swatch:#e2d5c2"></i></button>
             <button type="button" data-garment-color="#a9b5a4" data-label="Soft sage" data-analytics-managed="true" aria-label="Soft sage garment" aria-pressed="false"><i style="--swatch:#a9b5a4"></i></button>
@@ -104,10 +123,6 @@
             <button type="button" data-garment-color="#a8493f" data-label="Brick red" data-analytics-managed="true" aria-label="Brick red garment" aria-pressed="false"><i style="--swatch:#a8493f"></i></button>
             <button type="button" data-garment-color="#27384d" data-label="Deep navy" data-analytics-managed="true" aria-label="Deep navy garment" aria-pressed="false"><i style="--swatch:#27384d"></i></button>
             <button type="button" data-garment-color="#252523" data-label="Black" data-analytics-managed="true" aria-label="Black garment" aria-pressed="false"><i style="--swatch:#252523"></i></button>
-            <label class="white-detail-custom-swatch white-detail-garment-custom-swatch" data-analytics-managed="true" aria-label="Choose a custom garment color">
-              <input type="color" id="whiteMockupGarmentColor" value="#c9b7a2">
-              <i aria-hidden="true"></i>
-            </label>
           </div>
         </div>
 
@@ -117,29 +132,31 @@
             <small id="whiteMockupBackgroundLabel">Original studio</small>
           </div>
           <div class="white-detail-swatches" role="group" aria-label="Choose mockup background">
+            <button type="button" class="white-detail-custom-swatch" id="whiteMockupBackgroundColorPicker" data-analytics-managed="true" aria-label="Choose a custom background color" aria-haspopup="dialog" aria-expanded="false" aria-pressed="false"><i aria-hidden="true"></i></button>
+            <input type="hidden" id="whiteMockupBackgroundColor" value="#d6d3cb">
             <button type="button" class="active" data-background="studio" data-label="Original studio" data-analytics-managed="true" aria-label="Original studio background" aria-pressed="true"><i class="studio"></i></button>
             <button type="button" data-background="#f7f7f4" data-label="Soft white" data-analytics-managed="true" aria-label="Soft white background" aria-pressed="false"><i style="--swatch:#f7f7f4"></i></button>
             <button type="button" data-background="#d9d3c9" data-label="Warm stone" data-analytics-managed="true" aria-label="Warm stone background" aria-pressed="false"><i style="--swatch:#d9d3c9"></i></button>
             <button type="button" data-background="#a8b4a6" data-label="Muted sage" data-analytics-managed="true" aria-label="Muted sage background" aria-pressed="false"><i style="--swatch:#a8b4a6"></i></button>
             <button type="button" data-background="#b8c7d0" data-label="Cool gray" data-analytics-managed="true" aria-label="Cool gray background" aria-pressed="false"><i style="--swatch:#b8c7d0"></i></button>
             <button type="button" data-background="#242522" data-label="Charcoal" data-analytics-managed="true" aria-label="Charcoal background" aria-pressed="false"><i style="--swatch:#242522"></i></button>
-            <label class="white-detail-custom-swatch" data-analytics-managed="true" aria-label="Choose a custom background color">
-              <input type="color" id="whiteMockupBackgroundColor" value="#d6d3cb">
-              <i aria-hidden="true"></i>
-            </label>
           </div>
         </div>
 
-        <button type="button" class="white-detail-download" id="whiteMockupDownload" data-analytics-managed="true" disabled>
+        <button type="button" class="white-detail-download" id="whiteMockupDownload" data-analytics-managed="true" aria-describedby="whiteMockupDownloadRequirement" disabled>
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"/></svg>
           Download PNG
+        </button>
+        <button type="button" class="white-detail-remove-watermark" data-upgrade-resource="watermark" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+          Remove watermark
         </button>
         <p class="white-detail-status" id="whiteMockupStatus" role="status" aria-live="polite">Ready for your design.</p>
 
         <ul class="white-detail-trust" aria-label="Mockup benefits">
           <li>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z"/></svg>
-            <span>Free to use</span>
+            <span>Free to edit</span>
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3"/></svg>
@@ -147,7 +164,7 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg>
-            <span>High-resolution export</span>
+            <span id="whiteMockupDownloadRequirement">Pro required to download</span>
           </li>
         </ul>
       </aside>
@@ -166,11 +183,11 @@
       </div>
       <div class="white-detail-about-copy">
         <p>The <%= displayTitle %> fashion mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>
-        <p>Upload your design and position it directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a <%= asset.canvas_width %> × <%= asset.canvas_height %> PNG without installing design software.</p>
+        <p>Upload images and position each one directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a <%= asset.canvas_width %> × <%= asset.canvas_height %> PNG without installing design software.</p>
       </div>
       <ol class="white-detail-steps">
-        <li><span>1</span><div><h3>Upload artwork</h3><p>Use a transparent PNG for the cleanest apparel graphic result.</p></div></li>
-        <li><span>2</span><div><h3>Place it on the garment</h3><p>Drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>
+        <li><span>1</span><div><h3>Add images</h3><p>Upload up to eight PNG, JPG, or WebP images. Transparent PNGs work best for apparel graphics.</p></div></li>
+        <li><span>2</span><div><h3>Place each image</h3><p>Select an image, then drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>
         <li><span>3</span><div><h3>Set garment and background colors</h3><p>Build a product colorway, then match the setting to a catalog, campaign board, presentation, or store draft.</p></div></li>
         <li><span>4</span><div><h3>Download the PNG</h3><p>Export the finished on-model mockup at its full source dimensions.</p></div></li>
       </ol>
@@ -229,5 +246,6 @@
 
 <%- include('partials/model-login', { loginReturnPath: '/white-mockups/' + asset.asset_name }) %>
 
-<script src="/js/white-mockup-editor.js?v=20260927-watermark-contrast-v2" defer></script>
+<script src="/js/cloz-color-picker.js?v=20261004-gradient-v2" defer></script>
+<script src="/js/white-mockup-editor.js?v=20261004-gradient-v2" defer></script>
 <%- include('partials/footer') %>

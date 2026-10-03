@@ -56,7 +56,8 @@ test('tracks the white mockup detail funnel with dedicated event names', () => {
   assert.match(detailEditor, /white_mockup_color_\$\{button\.dataset\.label\}_select/);
   assert.match(detailEditor, /white_mockup_project_\$\{saveMode\}_success/);
   assert.match(detailEditor, /white_mockup_png_download_success/);
-  assert.match(detailView, /id="whiteMockupUploadZone" data-analytics-managed="true"/);
+  assert.match(detailView, /id="whiteMockupToolbarUpload"[^>]+data-analytics-managed="true"/);
+  assert.doesNotMatch(detailView, /whiteMockupUploadZone|whiteMockupAddImages/);
   assert.doesNotMatch(detailView, /whiteMockupSave|Save project/);
   assert.match(detailView, /id="whiteMockupDownload" data-analytics-managed="true"/);
   assert.match(detailView, /data-analytics-event="white_mockup_detail_breadcrumb_home_click"/);
@@ -66,6 +67,15 @@ test('tracks the white mockup detail funnel with dedicated event names', () => {
   assert.match(detailView, /data-analytics-event="white_mockup_detail_related_view_all_click"/);
   assert.match(detailView, /data-analytics-event="white_mockup_detail_related_select"/);
   assert.match(detailView, /data-id="<%= item\.asset_name %>"/);
+});
+
+test('requires a paid subscription before either Fashion Mockups download control exports', () => {
+  assert.match(detailView, /id="whiteMockupToolbarDownload"[^>]+aria-describedby="whiteMockupDownloadRequirement"/);
+  assert.match(detailView, /id="whiteMockupDownload"[^>]+aria-describedby="whiteMockupDownloadRequirement"/);
+  assert.match(detailView, /id="whiteMockupDownloadRequirement">Pro required to download/);
+  assert.match(detailEditor, /downloadButton\.addEventListener\('click', downloadMockup\)/);
+  assert.match(detailEditor, /toolbarDownload\.addEventListener\('click', downloadMockup\)/);
+  assert.match(detailEditor, /async function downloadMockup\(\) \{\s*if \(!await window\.ExportEntitlements\?\.requireExportAccess\(\)\) return;/);
 });
 
 test('offers garment colorways without flattening the mockup shading', () => {
@@ -90,9 +100,9 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.ok(libraryVersions.length >= 3);
   assert.equal(new Set(libraryVersions).size, 1);
   assert.match(libraryVersions[0], /^20260926-hero-gif-v5$/);
-  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20260922-shared-login-v11/);
+  assert.match(route, /\/css\/white-mockup-detail\.css\?v=20261004-artworks-left-v3/);
   assert.match(detailView, /commercial-refine-v10/);
-  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20260927-watermark-contrast-v2/);
+  assert.match(detailView, /\/js\/white-mockup-editor\.js\?v=20261004-gradient-v2/);
   assert.match(detailView, /class="white-detail-stage-poster"/);
   assert.match(detailView, /fetchpriority="high"/);
   assert.match(detailView, /crossorigin="anonymous"/);
@@ -101,9 +111,21 @@ test('cache-busts commercial white mockup assets consistently', () => {
   assert.match(detailEditor, /stage\.classList\.add\('is-ready'\)/);
 });
 
-test('automatically records uploaded artwork as a white mockup project', () => {
+test('saves multiple uploaded images and their independent transforms', () => {
   assert.doesNotMatch(detailEditor, /getElementById\('whiteMockupSave'\)/);
-  assert.match(detailEditor, /Promise\.all\(\[artworkLoadPromise, state\.artworkUploadPromise\]\)/);
+  assert.match(detailView, /id="whiteMockupArtworkInput"[^>]+multiple/);
+  assert.match(detailView, /id="whiteMockupArtworkList"/);
+  assert.match(detailEditor, /state\.layers\.forEach\(layer =>/);
+  assert.match(detailEditor, /artworks: state\.layers\.map\(layer =>/);
+  assert.match(detailEditor, /Array\.isArray\(saved\.artworks\)/);
+  assert.match(detailEditor, /removeArtworkLayer\(layer\.id\)/);
   assert.match(detailEditor, /queueProjectSave\(\{ immediate: true \}\)/);
   assert.match(detailEditor, /Added automatically to your projects\./);
+});
+
+test('places the artwork list beside the preview instead of in the settings panel', () => {
+  const preview = detailView.match(/<div class="white-detail-preview-layout">([\s\S]*?)<\/div>\s*<\/div>\s*<aside class="white-detail-purchase"/);
+  assert.ok(preview);
+  assert.match(preview[1], /id="whiteMockupArtworks"[\s\S]*id="whiteMockupStage"/);
+  assert.doesNotMatch(detailView.split('<aside class="white-detail-purchase"')[1], /id="whiteMockupArtworks"/);
 });

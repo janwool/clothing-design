@@ -23,7 +23,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -231,7 +237,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -351,7 +363,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -474,7 +492,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -623,7 +647,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -805,7 +835,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1004,7 +1040,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1186,7 +1228,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1344,7 +1392,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1471,6 +1525,283 @@ title = __locals.title,
   return __output;
 
 },
+  "admin/email.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  authLoginUrl = __locals.authLoginUrl,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  feedbackFilters = __locals.feedbackFilters,
+  feedbackPagination = __locals.feedbackPagination,
+  feedbackStats = __locals.feedbackStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  imageFilters = __locals.imageFilters,
+  imagePagination = __locals.imagePagination,
+  imageStats = __locals.imageStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  entitlements = __locals.entitlements,
+  billingSubscription = __locals.billingSubscription,
+  checkoutState = __locals.checkoutState,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant,
+  showWorkspaceFooter = __locals.showWorkspaceFooter;
+    ; __append( include('partials/header') )
+    ; __append("\n<link rel=\"stylesheet\" href=\"/css/admin-email.css?v=20261004-bulk-v2\">\n<div class=\"admin-wrapper\">\n  ")
+    ; __append( include('partials/sidebar') )
+    ; __append("\n  <main class=\"admin-main email-main\">\n    <header class=\"admin-header\">\n      <div><span class=\"admin-eyebrow\">Customer communication</span><h1 class=\"admin-title\">Email</h1><p class=\"admin-subtitle\">Send messages to all users, selected users, or email addresses.</p></div>\n      <button class=\"sidebar-toggle\" type=\"button\" aria-label=\"Open admin navigation\" aria-expanded=\"false\">☰</button>\n    </header>\n    <section class=\"email-compose-section\" aria-label=\"Send email\">\n      <form class=\"data-card email-compose\" data-email-form data-csrf=\"")
+    ; __append(escapeFn( csrf ))
+    ; __append("\">\n        <h2 class=\"data-title\">Compose email</h2>\n        <fieldset class=\"email-audience\"><legend>To</legend>\n          <div class=\"email-audience-options\">\n            <label><input type=\"radio\" name=\"audience\" value=\"all\" checked>All users</label>\n            <label><input type=\"radio\" name=\"audience\" value=\"selected\">Select users</label>\n            <label><input type=\"radio\" name=\"audience\" value=\"manual\">Email addresses</label>\n          </div>\n          <div data-audience-panel=\"all\" class=\"email-all-users\"><strong>All registered users</strong><span>")
+    ; __append(escapeFn( emailUsers.length ))
+    ; __append(" users</span></div>\n          <div data-audience-panel=\"selected\" hidden>\n            <label class=\"email-user-search\">Find users<input type=\"search\" data-user-search placeholder=\"Search by name or email\"></label>\n            <div class=\"email-selection-actions\"><button type=\"button\" data-select-visible>Select results</button><button type=\"button\" data-clear-selection>Clear selection</button><span data-selected-count>0 selected</span></div>\n            <div class=\"email-user-list\">\n              ")
+    ;  emailUsers.forEach(item => {
+    ; __append("<label class=\"email-user-option\" data-search-text=\"")
+    ; __append(escapeFn( (String(item.name || '') + ' ' + item.email).toLowerCase() ))
+    ; __append("\"><input type=\"checkbox\" name=\"userIds\" value=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\"><span><strong>")
+    ; __append(escapeFn( item.name || 'User #' + item.id ))
+    ; __append("</strong><small>")
+    ; __append(escapeFn( item.email ))
+    ; __append("</small></span></label>")
+    ;  })
+    ; __append("\n              <p data-user-empty ")
+    ; __append(escapeFn( emailUsers.length ? 'hidden' : '' ))
+    ; __append(">No matching users.</p>\n            </div>\n          </div>\n          <div data-audience-panel=\"manual\" hidden><label>Email addresses<textarea name=\"addresses\" rows=\"3\" maxlength=\"255000\" placeholder=\"One email per line, or separate addresses with commas\"></textarea></label></div>\n          <small>Each recipient receives a separate email. Duplicate addresses are sent once.</small>\n        </fieldset>\n        <label>Subject<input name=\"subject\" maxlength=\"200\" placeholder=\"Email subject\" required></label>\n        <label class=\"email-message-label\">Message<textarea name=\"text\" rows=\"9\" maxlength=\"20000\" placeholder=\"Write your message…\" required></textarea></label>\n        <div class=\"email-addresses\">\n          <label>From<input value=\"")
+    ; __append(escapeFn( config.from || 'Not configured' ))
+    ; __append("\" readonly><small>Your configured sender address.</small></label>\n          <label>Reply-to <span class=\"email-optional\">(optional)</span><input name=\"replyTo\" type=\"email\" maxlength=\"254\" value=\"")
+    ; __append(escapeFn( config.replyTo ))
+    ; __append("\" placeholder=\"Reply email address\"><small>Replies go to this address when provided.</small></label>\n        </div>\n        <p class=\"email-result\" data-email-result role=\"status\" aria-live=\"polite\" hidden></p>\n        <div class=\"email-send-actions\"><button class=\"btn btn-primary\" type=\"submit\" data-send-enabled=\"")
+    ; __append(escapeFn( config.ready && !error ? 'true' : 'false' ))
+    ; __append("\" ")
+    ; __append(escapeFn( !config.ready || error || !emailUsers.length ? 'disabled' : '' ))
+    ; __append(">Send to all users</button><small data-recipient-summary>")
+    ; __append(escapeFn( emailUsers.length ))
+    ; __append(" registered users</small></div>\n        <noscript><p>Enable JavaScript to send emails from this page.</p></noscript>\n      </form>\n      <aside class=\"data-card email-config\">\n        <h2 class=\"data-title\">Sending configuration</h2>\n        <div class=\"email-config-status ")
+    ; __append(escapeFn( config.ready ? 'is-ready' : 'is-missing' ))
+    ; __append("\"><strong>")
+    ; __append(escapeFn( config.ready ? 'Sending enabled' : 'Configuration required' ))
+    ; __append("</strong><p>")
+    ; __append(escapeFn( config.ready ? 'Messages are sent through Resend using the address below.' : 'A sender address and email service key are required before sending.' ))
+    ; __append("</p></div>\n        <dl><div><dt>Provider</dt><dd>Resend</dd></div><div><dt>Sender domain</dt><dd>")
+    ; __append(escapeFn( config.domain || 'Not configured' ))
+    ; __append("</dd></div><div><dt>Service key</dt><dd>")
+    ; __append(escapeFn( config.keyConfigured ? 'Configured' : 'Not configured' ))
+    ; __append("</dd></div></dl>\n        <p>Accepted messages have been submitted to Resend. Delivery details are available in the email service.</p>\n        <a href=\"https://resend.com/emails\" target=\"_blank\" rel=\"noopener noreferrer\">Open Resend ↗</a>\n      </aside>\n    </section>\n    <section class=\"email-history-section\" aria-labelledby=\"email-history-title\">\n      <div class=\"email-history-heading\"><div><h2 id=\"email-history-title\">Sending history</h2><p>Messages continue sending after this page is closed. Accepted means submitted to Resend.</p></div><a href=\"/admin/email?page=")
+    ; __append(escapeFn( historyPage ))
+    ; __append("\" class=\"btn btn-secondary btn-small\">Refresh</a></div>\n      ")
+    ;  if (error) {
+    ; __append("<p class=\"email-config-status is-missing\" role=\"alert\">")
+    ; __append(escapeFn( error ))
+    ; __append("</p>")
+    ;  }
+    ; __append("\n      <div class=\"data-card email-campaign-card\">\n        ")
+    ;  if (!campaigns.length && !error) {
+    ; __append("<div class=\"email-empty\"><h3>No messages yet</h3><p>Messages you send will appear here.</p></div>")
+    ;  }
+    ; __append("\n        <div class=\"email-campaign-list\">\n          ")
+    ;  campaigns.forEach(item => {
+    ; __append("<article class=\"email-campaign-row\">\n            <div class=\"email-campaign-subject\"><strong>")
+    ; __append(escapeFn( item.subject ))
+    ; __append("</strong><small>")
+    ; __append(escapeFn( ({all: 'All users', selected: 'Selected users', manual: 'Email addresses'})[item.audience] ))
+    ; __append(" · ")
+    ; __append(escapeFn( item.recipient_count ))
+    ; __append(" recipients</small><time>")
+    ; __append(escapeFn( item.created_at ))
+    ; __append(" UTC</time></div>\n            <div class=\"email-campaign-progress\"><progress value=\"")
+    ; __append(escapeFn( item.accepted ))
+    ; __append("\" max=\"")
+    ; __append(escapeFn( item.recipient_count ))
+    ; __append("\" aria-label=\"Accepted recipients\"></progress><small>")
+    ; __append(escapeFn( item.accepted ))
+    ; __append(" / ")
+    ; __append(escapeFn( item.recipient_count ))
+    ; __append(" accepted")
+    ; __append(escapeFn( item.failed ? ' · ' + item.failed + ' need attention' : '' ))
+    ; __append("</small>")
+    ;  if (item.error) {
+    ; __append("<p class=\"email-record-error\">")
+    ; __append(escapeFn( item.error ))
+    ; __append("</p>")
+    ;  }
+    ; __append("</div>\n            <span class=\"email-status ")
+    ; __append(escapeFn( item.status === 'Accepted' ? 'email-status-accepted' : item.failed ? 'email-status-failed' : '' ))
+    ; __append("\">")
+    ; __append(escapeFn( item.status ))
+    ; __append("</span>\n            ")
+    ;  if (item.failed || item.unconfirmed || !item.ready) {
+    ; __append("<button type=\"button\" class=\"btn btn-secondary btn-small\" data-campaign-retry=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\" ")
+    ; __append(escapeFn( !config.ready ? 'disabled' : '' ))
+    ; __append(">Retry remaining</button>")
+    ;  }
+    ; __append("\n          </article>")
+    ;  })
+    ; __append("\n        </div>\n      </div>\n      ")
+    ;  if (items.length) {
+    ; __append("<h3 class=\"email-legacy-heading\">Individual emails</h3>\n      <div class=\"data-card email-history-card\">\n        <div class=\"email-table-wrap\" role=\"region\" aria-label=\"Sending history\" tabindex=\"0\">\n          <table class=\"data-table\"><thead><tr><th>Recipient</th><th>Subject</th><th>Status</th><th>Date (UTC)</th><th><span class=\"sr-only\">Actions</span></th></tr></thead><tbody>\n          ")
+    ;  items.forEach(item => {
+    ; __append("<tr>\n            <td>")
+    ; __append(escapeFn( item.recipient ))
+    ; __append("</td><td><strong>")
+    ; __append(escapeFn( item.subject ))
+    ; __append("</strong>")
+    ;  if (item.provider_id) {
+    ; __append("<small class=\"email-provider-id\">")
+    ; __append(escapeFn( item.provider_id ))
+    ; __append("</small>")
+    ;  }
+    ;  if (item.error) {
+    ; __append("<small class=\"email-record-error\">")
+    ; __append(escapeFn( item.error ))
+    ; __append("</small>")
+    ;  }
+    ; __append("</td>\n            <td><span class=\"email-status email-status-")
+    ; __append(escapeFn( item.status ))
+    ; __append("\">")
+    ; __append(escapeFn( ({accepted: 'Accepted', pending: 'Unconfirmed', unknown: 'Unconfirmed', failed: 'Failed'})[item.status] || 'Unconfirmed' ))
+    ; __append("</span></td>\n            <td><time>")
+    ; __append(escapeFn( item.created_at ))
+    ; __append("</time></td>\n            <td>")
+    ;  if (item.status !== 'accepted') {
+    ; __append("<button type=\"button\" class=\"btn btn-secondary btn-small\" data-email-retry=\"")
+    ; __append(escapeFn( item.id ))
+    ; __append("\" ")
+    ; __append(escapeFn( !config.ready ? 'disabled' : '' ))
+    ; __append(">Retry</button>")
+    ;  }
+    ; __append("</td>\n          </tr>")
+    ;  })
+    ; __append("\n          </tbody></table>\n        </div>\n        ")
+    ;  if (!items.length && !error) {
+    ; __append("<div class=\"inquiry-empty-state email-empty\"><h3>No emails sent yet</h3><p>Emails you send will appear here.</p></div>")
+    ;  }
+    ; __append("\n      </div>\n      ")
+    ;  }
+    ; __append("\n      ")
+    ;  if (pageCount > 1) {
+    ; __append("<nav class=\"inquiry-pagination\" aria-label=\"Sending history pages\">")
+    ;  if (historyPage > 1) {
+    ; __append("<a href=\"?page=")
+    ; __append(escapeFn( historyPage - 1 ))
+    ; __append("\">← Previous</a>")
+    ;  }
+    ; __append("<span>Page ")
+    ; __append(escapeFn( historyPage ))
+    ; __append(" of ")
+    ; __append(escapeFn( pageCount ))
+    ; __append("</span>")
+    ;  if (historyPage < pageCount) {
+    ; __append("<a href=\"?page=")
+    ; __append(escapeFn( historyPage + 1 ))
+    ; __append("\">Next →</a>")
+    ;  }
+    ; __append("</nav>")
+    ;  }
+    ; __append("\n      <p class=\"email-history-note\">Retry remaining recipients after three minutes. Accepted recipients are skipped. Check unconfirmed attempts older than 23 hours in Resend before sending again.</p>\n    </section>\n  </main>\n</div>\n<script src=\"/js/admin-email.js?v=20261004-bulk-v2\" defer></script>\n<script src=\"/js/admin-navigation.js?v=20261003-v1\" defer></script>\n</body></html>\n")
+  return __output;
+
+},
   "admin/feedback.ejs": function anonymous(locals, escapeFn, include, rethrow
 ) {
 escapeFn = escapeFn || function (markup) {
@@ -1494,7 +1825,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1786,7 +2123,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -1952,7 +2295,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -2202,7 +2551,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -2510,7 +2865,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -2678,7 +3039,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -2866,7 +3233,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -2983,7 +3356,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -3106,7 +3485,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -3216,7 +3601,9 @@ title = __locals.title,
     ; __append(escapeFn( page === 'admin-inquiries' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z\"/>\n        <path d=\"M8 9h8M8 13h5\"/>\n      </svg>\n      Custom Inquiries\n    </a>\n\n    <a href=\"/admin/feedback\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-feedback' ? 'active' : '' ))
-    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M4 4h16v12H9l-5 4V4Z\"/>\n        <path d=\"M8 8h8M8 12h5\"/>\n      </svg>\n      Feedback\n    </a>\n\n    <div class=\"sidebar-section\">System</div>\n    \n    <a href=\"/admin/users\" class=\"sidebar-link ")
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M4 4h16v12H9l-5 4V4Z\"/>\n        <path d=\"M8 8h8M8 12h5\"/>\n      </svg>\n      Feedback\n    </a>\n\n    <a href=\"/admin/email\" class=\"sidebar-link ")
+    ; __append(escapeFn( page === 'admin-email' ? 'active' : '' ))
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"5\" width=\"18\" height=\"14\" rx=\"2\"/><path d=\"m3 6 9 7 9-7\"/></svg>\n      Email\n    </a>\n\n    <div class=\"sidebar-section\">System</div>\n    \n    <a href=\"/admin/users\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-users' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n        <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n      </svg>\n      Users\n    </a>\n    \n    <a href=\"/\" class=\"sidebar-link\" target=\"_blank\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6\"/>\n        <polyline points=\"15 3 21 3 21 9\"/>\n        <line x1=\"10\" y1=\"14\" x2=\"21\" y2=\"3\"/>\n      </svg>\n      View Site\n    </a>\n  </nav>\n  \n  <div class=\"sidebar-footer\">\n    <a href=\"/auth/logout\" class=\"sidebar-link\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4\"/>\n        <polyline points=\"16 17 21 12 16 7\"/>\n        <line x1=\"21\" y1=\"12\" x2=\"9\" y2=\"12\"/>\n      </svg>\n      Sign Out\n    </a>\n  </div>\n</aside>\n")
   return __output;
@@ -3245,7 +3632,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -3511,7 +3904,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -3679,7 +4078,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -3853,7 +4258,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -4063,7 +4474,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -4211,7 +4628,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -4361,7 +4784,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -4652,7 +5081,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -4818,7 +5253,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -5016,7 +5457,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -5352,7 +5799,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -5526,7 +5979,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -5847,7 +6306,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6013,7 +6478,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6253,7 +6724,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6372,7 +6849,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6496,7 +6979,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6749,7 +7238,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -6919,7 +7414,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -7065,7 +7566,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -7199,7 +7706,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -7768,7 +8281,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -8035,7 +8554,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -8218,7 +8743,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -8361,7 +8892,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -8653,7 +9190,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -8900,7 +9443,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9027,7 +9576,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9154,7 +9709,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9521,7 +10082,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9652,7 +10219,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9797,7 +10370,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -9963,7 +10542,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -10400,7 +10985,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -10610,7 +11201,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -10825,7 +11422,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,
@@ -10915,7 +11518,13 @@ title = __locals.title,
   sections = __locals.sections,
   footerVariant = __locals.footerVariant,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
-    ; __append( include('partials/header', { bodyClass: 'category-catalog-page white-mockup-detail-page' }) )
+    ; __append( include('partials/header', {
+  bodyClass: 'category-catalog-page white-mockup-detail-page',
+  pageStyles: [
+    '/css/white-mockups.css?v=20260926-hero-gif-v5',
+    '/css/white-mockup-detail.css?v=20261004-artworks-left-v3'
+  ]
+}) )
     ; __append("\n")
     ;
   const cleanRelatedTitle = function(item) {
@@ -10970,39 +11579,33 @@ title = __locals.title,
     ; __append(escapeFn( asset.default_warp ))
     ; __append("\"\n      data-authenticated=\"")
     ; __append(escapeFn( user ? 'true' : 'false' ))
-    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n          <img\n            class=\"white-detail-stage-poster\"\n            crossorigin=\"anonymous\"\n            src=\"")
+    ; __append("\"\n    >\n      <div class=\"white-detail-stage-column\">\n        <h1 class=\"white-detail-title\" id=\"whiteMockupTitle\">")
+    ; __append(escapeFn( displayTitle ))
+    ; __append("</h1>\n        <div class=\"white-detail-toolbar\" role=\"toolbar\" aria-label=\"Mockup editor tools\">\n          <button type=\"button\" id=\"whiteMockupToolbarUpload\" class=\"white-detail-tool white-detail-tool-upload\" data-analytics-managed=\"true\" aria-label=\"Upload artwork\">\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3\"/></svg><span>Upload artwork</span>\n          </button>\n          <span class=\"white-detail-toolbar-divider\" aria-hidden=\"true\"></span>\n          <div class=\"white-detail-tool-group\" role=\"group\" aria-label=\"Artwork size\">\n            <button type=\"button\" class=\"white-detail-tool white-detail-tool-icon\" data-artwork-adjust=\"smaller\" aria-label=\"Make artwork smaller\" title=\"Make artwork smaller\" disabled>−</button>\n            <output id=\"whiteMockupToolbarScale\" aria-label=\"Artwork size\">—</output>\n            <button type=\"button\" class=\"white-detail-tool white-detail-tool-icon\" data-artwork-adjust=\"larger\" aria-label=\"Make artwork larger\" title=\"Make artwork larger\" disabled>+</button>\n          </div>\n          <span class=\"white-detail-toolbar-divider\" aria-hidden=\"true\"></span>\n          <div class=\"white-detail-tool-group\" role=\"group\" aria-label=\"Artwork rotation\">\n            <button type=\"button\" class=\"white-detail-tool white-detail-tool-icon\" data-artwork-adjust=\"rotate-left\" aria-label=\"Rotate artwork left\" title=\"Rotate artwork left\" disabled>↶</button>\n            <button type=\"button\" class=\"white-detail-tool white-detail-tool-icon\" data-artwork-adjust=\"rotate-right\" aria-label=\"Rotate artwork right\" title=\"Rotate artwork right\" disabled>↷</button>\n          </div>\n          <button type=\"button\" id=\"whiteMockupToolbarReset\" class=\"white-detail-tool white-detail-tool-reset\" data-analytics-managed=\"true\" disabled>Reset</button>\n          <button type=\"button\" id=\"whiteMockupToolbarDownload\" class=\"white-detail-tool white-detail-tool-download\" data-analytics-managed=\"true\" aria-describedby=\"whiteMockupDownloadRequirement\" disabled>Download PNG</button>\n        </div>\n        <div class=\"white-detail-preview-layout\">\n          <div class=\"white-detail-artworks\" id=\"whiteMockupArtworks\" hidden>\n            <div class=\"white-detail-artworks-heading\">\n              <span>Artworks <small id=\"whiteMockupArtworkCount\" hidden></small></span>\n            </div>\n            <div class=\"white-detail-artwork-list\" id=\"whiteMockupArtworkList\" role=\"list\" aria-label=\"Uploaded artwork\" hidden></div>\n            <p class=\"white-detail-artwork-hint\" id=\"whiteMockupArtworkHint\" hidden>Select an image to edit it on the garment.</p>\n          </div>\n          <div class=\"white-detail-stage\" id=\"whiteMockupStage\">\n            <img\n              class=\"white-detail-stage-poster\"\n              crossorigin=\"anonymous\"\n              src=\"")
     ; __append(escapeFn( editorBaseImageUrl ))
-    ; __append("\"\n            alt=\"")
+    ; __append("\"\n              alt=\"")
     ; __append(escapeFn( displayTitle ))
-    ; __append(" fashion mockup preview\"\n            width=\"")
+    ; __append(" fashion mockup preview\"\n              width=\"")
     ; __append(escapeFn( asset.canvas_width ))
-    ; __append("\"\n            height=\"")
+    ; __append("\"\n              height=\"")
     ; __append(escapeFn( asset.canvas_height ))
-    ; __append("\"\n            fetchpriority=\"high\"\n            decoding=\"async\"\n          >\n          <canvas\n            id=\"whiteMockupCanvas\"\n            width=\"")
+    ; __append("\"\n              fetchpriority=\"high\"\n              decoding=\"async\"\n            >\n            <canvas\n              id=\"whiteMockupCanvas\"\n              width=\"")
     ; __append(escapeFn( asset.canvas_width ))
-    ; __append("\"\n            height=\"")
+    ; __append("\"\n              height=\"")
     ; __append(escapeFn( asset.canvas_height ))
-    ; __append("\"\n            tabindex=\"0\"\n            aria-label=\"Customize ")
+    ; __append("\"\n              tabindex=\"0\"\n              aria-label=\"Customize ")
     ; __append(escapeFn( displayTitle ))
-    ; __append(" fashion mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate.\"\n          ></canvas>\n          <button type=\"button\" class=\"white-detail-stage-reset\" id=\"whiteMockupReset\" data-analytics-managed=\"true\" hidden>Reset artwork</button>\n          <button type=\"button\" class=\"white-detail-empty\" id=\"whiteMockupEmptyUpload\" data-analytics-managed=\"true\">\n            <span>Place your artwork directly on the garment</span>\n            <strong>")
-    ; __append(escapeFn( user ? 'Upload a design to begin' : 'Sign in to start designing' ))
-    ; __append("</strong>\n          </button>\n          <div class=\"white-detail-loading\" id=\"whiteMockupLoading\" aria-live=\"polite\">\n            <i aria-hidden=\"true\"></i><span>Preparing your mockup</span>\n          </div>\n          <p class=\"white-detail-gesture-hint\" id=\"whiteMockupGestureHint\" hidden>Drag to move · corners to scale · top handle to rotate</p>\n        </div>\n      </div>\n\n      <aside class=\"white-detail-purchase\" aria-labelledby=\"whiteMockupTitle\">\n        <span class=\"white-detail-eyebrow\">On-model fashion mockup</span>\n        <h1 id=\"whiteMockupTitle\">")
-    ; __append(escapeFn( displayTitle ))
-    ; __append(" Fashion Mockup</h1>\n        <p class=\"white-detail-description\">Preview artwork on a natural ")
-    ; __append(escapeFn( typeName ))
-    ; __append(" fit before publishing your collection. Adjust it directly on the garment and create a clean product-ready visual.</p>\n\n        <label class=\"white-detail-upload\" id=\"whiteMockupUploadZone\" data-analytics-managed=\"true\">\n          <input type=\"file\" id=\"whiteMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\">\n          <span class=\"white-detail-upload-icon\" aria-hidden=\"true\">\n            <svg viewBox=\"0 0 24 24\" fill=\"none\"><path d=\"M12 16V4m0 0L7 9m5-5 5 5M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4\"/></svg>\n          </span>\n          <span>\n            <strong id=\"whiteMockupUploadLabel\">")
-    ; __append(escapeFn( user ? 'Upload your design' : 'Sign in to upload your design' ))
-    ; __append("</strong>\n            <small>PNG, JPG or WebP · up to 10 MB</small>\n          </span>\n        </label>\n\n        <div class=\"white-detail-garment-colors\">\n          <div class=\"white-detail-control-label\">\n            <span>Garment color</span>\n            <small id=\"whiteMockupGarmentColorLabel\">Original white</small>\n          </div>\n          <div class=\"white-detail-garment-swatches\" role=\"group\" aria-label=\"Choose garment color\">\n            <button type=\"button\" class=\"active\" data-garment-color=\"#ffffff\" data-label=\"Original white\" data-analytics-managed=\"true\" aria-label=\"White garment\" aria-pressed=\"true\"><i style=\"--swatch:#ffffff\"></i></button>\n            <button type=\"button\" data-garment-color=\"#e2d5c2\" data-label=\"Natural ecru\" data-analytics-managed=\"true\" aria-label=\"Natural ecru garment\" aria-pressed=\"false\"><i style=\"--swatch:#e2d5c2\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a9b5a4\" data-label=\"Soft sage\" data-analytics-managed=\"true\" aria-label=\"Soft sage garment\" aria-pressed=\"false\"><i style=\"--swatch:#a9b5a4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#9db3c4\" data-label=\"Dusty blue\" data-analytics-managed=\"true\" aria-label=\"Dusty blue garment\" aria-pressed=\"false\"><i style=\"--swatch:#9db3c4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a8493f\" data-label=\"Brick red\" data-analytics-managed=\"true\" aria-label=\"Brick red garment\" aria-pressed=\"false\"><i style=\"--swatch:#a8493f\"></i></button>\n            <button type=\"button\" data-garment-color=\"#27384d\" data-label=\"Deep navy\" data-analytics-managed=\"true\" aria-label=\"Deep navy garment\" aria-pressed=\"false\"><i style=\"--swatch:#27384d\"></i></button>\n            <button type=\"button\" data-garment-color=\"#252523\" data-label=\"Black\" data-analytics-managed=\"true\" aria-label=\"Black garment\" aria-pressed=\"false\"><i style=\"--swatch:#252523\"></i></button>\n            <label class=\"white-detail-custom-swatch white-detail-garment-custom-swatch\" data-analytics-managed=\"true\" aria-label=\"Choose a custom garment color\">\n              <input type=\"color\" id=\"whiteMockupGarmentColor\" value=\"#c9b7a2\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <div class=\"white-detail-backgrounds\">\n          <div class=\"white-detail-control-label\">\n            <span>Change background</span>\n            <small id=\"whiteMockupBackgroundLabel\">Original studio</small>\n          </div>\n          <div class=\"white-detail-swatches\" role=\"group\" aria-label=\"Choose mockup background\">\n            <button type=\"button\" class=\"active\" data-background=\"studio\" data-label=\"Original studio\" data-analytics-managed=\"true\" aria-label=\"Original studio background\" aria-pressed=\"true\"><i class=\"studio\"></i></button>\n            <button type=\"button\" data-background=\"#f7f7f4\" data-label=\"Soft white\" data-analytics-managed=\"true\" aria-label=\"Soft white background\" aria-pressed=\"false\"><i style=\"--swatch:#f7f7f4\"></i></button>\n            <button type=\"button\" data-background=\"#d9d3c9\" data-label=\"Warm stone\" data-analytics-managed=\"true\" aria-label=\"Warm stone background\" aria-pressed=\"false\"><i style=\"--swatch:#d9d3c9\"></i></button>\n            <button type=\"button\" data-background=\"#a8b4a6\" data-label=\"Muted sage\" data-analytics-managed=\"true\" aria-label=\"Muted sage background\" aria-pressed=\"false\"><i style=\"--swatch:#a8b4a6\"></i></button>\n            <button type=\"button\" data-background=\"#b8c7d0\" data-label=\"Cool gray\" data-analytics-managed=\"true\" aria-label=\"Cool gray background\" aria-pressed=\"false\"><i style=\"--swatch:#b8c7d0\"></i></button>\n            <button type=\"button\" data-background=\"#242522\" data-label=\"Charcoal\" data-analytics-managed=\"true\" aria-label=\"Charcoal background\" aria-pressed=\"false\"><i style=\"--swatch:#242522\"></i></button>\n            <label class=\"white-detail-custom-swatch\" data-analytics-managed=\"true\" aria-label=\"Choose a custom background color\">\n              <input type=\"color\" id=\"whiteMockupBackgroundColor\" value=\"#d6d3cb\">\n              <i aria-hidden=\"true\"></i>\n            </label>\n          </div>\n        </div>\n\n        <button type=\"button\" class=\"white-detail-download\" id=\"whiteMockupDownload\" data-analytics-managed=\"true\" disabled>\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n          Download PNG\n        </button>\n        <p class=\"white-detail-status\" id=\"whiteMockupStatus\" role=\"status\" aria-live=\"polite\">Ready for your design.</p>\n\n        <ul class=\"white-detail-trust\" aria-label=\"Mockup benefits\">\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z\"/></svg>\n            <span>Free to use</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3\"/></svg>\n            <span>")
+    ; __append(" fashion mockup. Drag the selected artwork to move it, use corner handles to scale, and use the top handle to rotate.\"\n            ></canvas>\n            <button type=\"button\" class=\"white-detail-stage-reset\" id=\"whiteMockupReset\" data-analytics-managed=\"true\" hidden>Reset artwork</button>\n            <div class=\"white-detail-loading\" id=\"whiteMockupLoading\" aria-live=\"polite\">\n              <i aria-hidden=\"true\"></i><span>Preparing your mockup</span>\n            </div>\n            <p class=\"white-detail-gesture-hint\" id=\"whiteMockupGestureHint\" hidden>Drag to move · corners to scale · top handle to rotate</p>\n          </div>\n        </div>\n      </div>\n\n      <aside class=\"white-detail-purchase\" aria-labelledby=\"whiteMockupTitle\">\n        <input type=\"file\" id=\"whiteMockupArtworkInput\" accept=\"image/png,image/jpeg,image/webp\" multiple hidden>\n\n        <div class=\"white-detail-garment-colors\">\n          <div class=\"white-detail-control-label\">\n            <span>Garment color</span>\n            <small id=\"whiteMockupGarmentColorLabel\">Original white</small>\n          </div>\n          <div class=\"white-detail-garment-swatches\" role=\"group\" aria-label=\"Choose garment color\">\n            <button type=\"button\" class=\"white-detail-custom-swatch white-detail-garment-custom-swatch\" id=\"whiteMockupGarmentColorPicker\" data-analytics-managed=\"true\" aria-label=\"Choose a custom garment color\" aria-haspopup=\"dialog\" aria-expanded=\"false\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i></button>\n            <input type=\"hidden\" id=\"whiteMockupGarmentColor\" value=\"#c9b7a2\">\n            <button type=\"button\" class=\"active\" data-garment-color=\"#ffffff\" data-label=\"Original white\" data-analytics-managed=\"true\" aria-label=\"White garment\" aria-pressed=\"true\"><i style=\"--swatch:#ffffff\"></i></button>\n            <button type=\"button\" data-garment-color=\"#e2d5c2\" data-label=\"Natural ecru\" data-analytics-managed=\"true\" aria-label=\"Natural ecru garment\" aria-pressed=\"false\"><i style=\"--swatch:#e2d5c2\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a9b5a4\" data-label=\"Soft sage\" data-analytics-managed=\"true\" aria-label=\"Soft sage garment\" aria-pressed=\"false\"><i style=\"--swatch:#a9b5a4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#9db3c4\" data-label=\"Dusty blue\" data-analytics-managed=\"true\" aria-label=\"Dusty blue garment\" aria-pressed=\"false\"><i style=\"--swatch:#9db3c4\"></i></button>\n            <button type=\"button\" data-garment-color=\"#a8493f\" data-label=\"Brick red\" data-analytics-managed=\"true\" aria-label=\"Brick red garment\" aria-pressed=\"false\"><i style=\"--swatch:#a8493f\"></i></button>\n            <button type=\"button\" data-garment-color=\"#27384d\" data-label=\"Deep navy\" data-analytics-managed=\"true\" aria-label=\"Deep navy garment\" aria-pressed=\"false\"><i style=\"--swatch:#27384d\"></i></button>\n            <button type=\"button\" data-garment-color=\"#252523\" data-label=\"Black\" data-analytics-managed=\"true\" aria-label=\"Black garment\" aria-pressed=\"false\"><i style=\"--swatch:#252523\"></i></button>\n          </div>\n        </div>\n\n        <div class=\"white-detail-backgrounds\">\n          <div class=\"white-detail-control-label\">\n            <span>Change background</span>\n            <small id=\"whiteMockupBackgroundLabel\">Original studio</small>\n          </div>\n          <div class=\"white-detail-swatches\" role=\"group\" aria-label=\"Choose mockup background\">\n            <button type=\"button\" class=\"white-detail-custom-swatch\" id=\"whiteMockupBackgroundColorPicker\" data-analytics-managed=\"true\" aria-label=\"Choose a custom background color\" aria-haspopup=\"dialog\" aria-expanded=\"false\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i></button>\n            <input type=\"hidden\" id=\"whiteMockupBackgroundColor\" value=\"#d6d3cb\">\n            <button type=\"button\" class=\"active\" data-background=\"studio\" data-label=\"Original studio\" data-analytics-managed=\"true\" aria-label=\"Original studio background\" aria-pressed=\"true\"><i class=\"studio\"></i></button>\n            <button type=\"button\" data-background=\"#f7f7f4\" data-label=\"Soft white\" data-analytics-managed=\"true\" aria-label=\"Soft white background\" aria-pressed=\"false\"><i style=\"--swatch:#f7f7f4\"></i></button>\n            <button type=\"button\" data-background=\"#d9d3c9\" data-label=\"Warm stone\" data-analytics-managed=\"true\" aria-label=\"Warm stone background\" aria-pressed=\"false\"><i style=\"--swatch:#d9d3c9\"></i></button>\n            <button type=\"button\" data-background=\"#a8b4a6\" data-label=\"Muted sage\" data-analytics-managed=\"true\" aria-label=\"Muted sage background\" aria-pressed=\"false\"><i style=\"--swatch:#a8b4a6\"></i></button>\n            <button type=\"button\" data-background=\"#b8c7d0\" data-label=\"Cool gray\" data-analytics-managed=\"true\" aria-label=\"Cool gray background\" aria-pressed=\"false\"><i style=\"--swatch:#b8c7d0\"></i></button>\n            <button type=\"button\" data-background=\"#242522\" data-label=\"Charcoal\" data-analytics-managed=\"true\" aria-label=\"Charcoal background\" aria-pressed=\"false\"><i style=\"--swatch:#242522\"></i></button>\n          </div>\n        </div>\n\n        <button type=\"button\" class=\"white-detail-download\" id=\"whiteMockupDownload\" data-analytics-managed=\"true\" aria-describedby=\"whiteMockupDownloadRequirement\" disabled>\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M12 3v12m0 0 5-5m-5 5-5-5M5 21h14\"/></svg>\n          Download PNG\n        </button>\n        <button type=\"button\" class=\"white-detail-remove-watermark\" data-upgrade-resource=\"watermark\" aria-haspopup=\"dialog\">\n          <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><rect x=\"5\" y=\"10\" width=\"14\" height=\"11\" rx=\"2\"/><path d=\"M8 10V7a4 4 0 0 1 8 0v3\"/></svg>\n          Remove watermark\n        </button>\n        <p class=\"white-detail-status\" id=\"whiteMockupStatus\" role=\"status\" aria-live=\"polite\">Ready for your design.</p>\n\n        <ul class=\"white-detail-trust\" aria-label=\"Mockup benefits\">\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M19 3C11 4 5 8 5 15c0 2 1 4 3 5 1-6 4-10 9-13-4 4-6 8-7 13 7 0 11-5 9-17Z\"/></svg>\n            <span>Free to edit</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M6 10V8a6 6 0 0 1 12 0v2m-13 0h14v11H5V10Zm7 4v3\"/></svg>\n            <span>")
     ; __append(escapeFn( user ? 'Saved to your account' : 'Sign in to save projects' ))
-    ; __append("</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/></svg>\n            <span>High-resolution export</span>\n          </li>\n        </ul>\n      </aside>\n    </section>\n\n    <section class=\"white-detail-benefits\" aria-label=\"Fashion mockup features\">\n      <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>\n      <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>\n      <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>\n    </section>\n\n    <section class=\"white-detail-about\">\n      <div class=\"white-detail-section-heading\">\n        <span>About this mockup</span>\n        <h2>A commercial ")
+    ; __append("</span>\n          </li>\n          <li>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" aria-hidden=\"true\"><path d=\"M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5\"/></svg>\n            <span id=\"whiteMockupDownloadRequirement\">Pro required to download</span>\n          </li>\n        </ul>\n      </aside>\n    </section>\n\n    <section class=\"white-detail-benefits\" aria-label=\"Fashion mockup features\">\n      <article><span>01</span><h2>Natural garment fit</h2><p>Realistic drape, proportions, and posture provide a more useful preview than a flat product template.</p></article>\n      <article><span>02</span><h2>Artwork follows fabric</h2><p>Your design responds to the garment silhouette and visible folds without adding extra controls to the creative workflow.</p></article>\n      <article><span>03</span><h2>Ready for product pages</h2><p>Create clean, consistent apparel imagery for product drafts, campaign boards, client reviews, and launch planning.</p></article>\n    </section>\n\n    <section class=\"white-detail-about\">\n      <div class=\"white-detail-section-heading\">\n        <span>About this mockup</span>\n        <h2>A commercial ")
     ; __append(escapeFn( typeName ))
     ; __append(" mockup built around the garment.</h2>\n      </div>\n      <div class=\"white-detail-about-copy\">\n        <p>The ")
     ; __append(escapeFn( displayTitle ))
-    ; __append(" fashion mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>\n        <p>Upload your design and position it directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a ")
+    ; __append(" fashion mockup gives apparel designers and brand teams a neutral on-model starting point. The garment remains the visual focus, making it easier to judge artwork scale, placement, contrast, and overall product-page composition.</p>\n        <p>Upload images and position each one directly on the canvas. Build a garment colorway, choose a background that fits your collection, then export a ")
     ; __append(escapeFn( asset.canvas_width ))
     ; __append(" × ")
     ; __append(escapeFn( asset.canvas_height ))
-    ; __append(" PNG without installing design software.</p>\n      </div>\n      <ol class=\"white-detail-steps\">\n        <li><span>1</span><div><h3>Upload artwork</h3><p>Use a transparent PNG for the cleanest apparel graphic result.</p></div></li>\n        <li><span>2</span><div><h3>Place it on the garment</h3><p>Drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>\n        <li><span>3</span><div><h3>Set garment and background colors</h3><p>Build a product colorway, then match the setting to a catalog, campaign board, presentation, or store draft.</p></div></li>\n        <li><span>4</span><div><h3>Download the PNG</h3><p>Export the finished on-model mockup at its full source dimensions.</p></div></li>\n      </ol>\n    </section>\n\n    <section class=\"white-detail-faq\">\n      <div class=\"white-detail-section-heading\">\n        <span>FAQ</span>\n        <h2>Using this fashion mockup</h2>\n      </div>\n      <div class=\"white-detail-faq-list\">\n        ")
+    ; __append(" PNG without installing design software.</p>\n      </div>\n      <ol class=\"white-detail-steps\">\n        <li><span>1</span><div><h3>Add images</h3><p>Upload up to eight PNG, JPG, or WebP images. Transparent PNGs work best for apparel graphics.</p></div></li>\n        <li><span>2</span><div><h3>Place each image</h3><p>Select an image, then drag to move, use the corners to resize, and rotate from the top handle.</p></div></li>\n        <li><span>3</span><div><h3>Set garment and background colors</h3><p>Build a product colorway, then match the setting to a catalog, campaign board, presentation, or store draft.</p></div></li>\n        <li><span>4</span><div><h3>Download the PNG</h3><p>Export the finished on-model mockup at its full source dimensions.</p></div></li>\n      </ol>\n    </section>\n\n    <section class=\"white-detail-faq\">\n      <div class=\"white-detail-section-heading\">\n        <span>FAQ</span>\n        <h2>Using this fashion mockup</h2>\n      </div>\n      <div class=\"white-detail-faq-list\">\n        ")
     ;  whiteFaqItems.forEach(function(item, index) {
     ; __append("\n          <details\n            data-analytics-event=\"white_mockup_detail_faq_toggle\"\n            data-analytics-item=\"faq_")
     ; __append(escapeFn( index + 1 ))
@@ -11052,7 +11655,7 @@ title = __locals.title,
     ;  }
     ; __append("\n  </div>\n</div>\n\n")
     ; __append( include('partials/model-login', { loginReturnPath: '/white-mockups/' + asset.asset_name }) )
-    ; __append("\n\n<script src=\"/js/white-mockup-editor.js?v=20260927-watermark-contrast-v2\" defer></script>\n")
+    ; __append("\n\n<script src=\"/js/cloz-color-picker.js?v=20261004-gradient-v2\" defer></script>\n<script src=\"/js/white-mockup-editor.js?v=20261004-gradient-v2\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -11081,7 +11684,13 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-title = __locals.title,
+config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
   page = __locals.page,
   error = __locals.error,
   next = __locals.next,

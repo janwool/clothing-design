@@ -9,9 +9,9 @@
       "svgMask": "/images/mockups/on-model/generated/belted-shirt-jacket-female-action-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 1,
-      "nodes": 230
+      "nodes": 214
     },
     {
       "id": "button-shirt-male-front",
@@ -23,7 +23,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 221
+      "nodes": 183
     },
     {
       "id": "classic-skirt-female-front",
@@ -35,7 +35,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 88
+      "nodes": 87
     },
     {
       "id": "crewneck-tee-male-front",
@@ -47,7 +47,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 113
+      "nodes": 97
     },
     {
       "id": "henley-wheelchair-male-front",
@@ -59,7 +59,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 165
+      "nodes": 228
     },
     {
       "id": "layered-skirt-female-walking",
@@ -71,7 +71,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 141
+      "nodes": 106
     },
     {
       "id": "leather-jacket-androgynous-front",
@@ -82,8 +82,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 95
+      "cutRegions": 0,
+      "nodes": 93
     },
     {
       "id": "lightweight-trench-mediterranean-female",
@@ -93,9 +93,9 @@
       "svgMask": "/images/mockups/on-model/generated/lightweight-trench-mediterranean-female-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 205
+      "nodes": 232
     },
     {
       "id": "long-coat-male-walking",
@@ -106,8 +106,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 124
+      "cutRegions": 1,
+      "nodes": 248
     },
     {
       "id": "long-sleeve-crewneck-male-front",
@@ -119,7 +119,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 233
+      "nodes": 196
     },
     {
       "id": "longline-blazer-nordic-male",
@@ -130,8 +130,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 123
+      "cutRegions": 0,
+      "nodes": 191
     },
     {
       "id": "model-002-split-neck-pullover-from3d-v1",
@@ -143,7 +143,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 97
+      "nodes": 104
     },
     {
       "id": "model-003-relaxed-long-sleeve-crewneck-from3d-v1",
@@ -155,7 +155,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 116
+      "nodes": 164
     },
     {
       "id": "model-004-roll-sleeve-henley-from3d-v1",
@@ -167,7 +167,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 74
+      "nodes": 119
     },
     {
       "id": "model-005-utility-henley-top-from3d-v1",
@@ -179,7 +179,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 118
+      "nodes": 104
     },
     {
       "id": "model-006-v-neck-welt-pocket-top-from3d-v1",
@@ -191,7 +191,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 113
+      "nodes": 85
     },
     {
       "id": "model-007-open-collar-long-sleeve-polo-from3d-v1",
@@ -203,7 +203,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 128
+      "nodes": 114
     },
     {
       "id": "model-008-basic-tee-from3d-v1",
@@ -215,7 +215,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 92
+      "nodes": 75
     },
     {
       "id": "model-009-relaxed-long-sleeve-tee-from3d-v1",
@@ -227,7 +227,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 102
+      "nodes": 168
     },
     {
       "id": "model-010-longline-short-sleeve-top-from3d-v2-female",
@@ -239,7 +239,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 132
+      "nodes": 127
     },
     {
       "id": "model-010-wideband-short-sleeve-top-from3d-v1",
@@ -251,7 +251,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 132
+      "nodes": 174
     },
     {
       "id": "model-011-crewneck-sweatshirt-from3d-v1",
@@ -263,7 +263,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 88
+      "nodes": 133
     },
     {
       "id": "model-012-belted-shirt-jacket-from3d-v1",
@@ -275,7 +275,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 155
+      "nodes": 175
     },
     {
       "id": "model-013-fitted-blouse-from3d-v1",
@@ -286,8 +286,8 @@
       "width": 1024,
       "height": 1535,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 115
+      "cutRegions": 1,
+      "nodes": 184
     },
     {
       "id": "model-014-oversized-utility-shirt-from3d-v1",
@@ -299,7 +299,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 83
+      "nodes": 126
     },
     {
       "id": "model-015-utility-button-shirt-from3d-v1",
@@ -311,7 +311,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 111
+      "nodes": 183
     },
     {
       "id": "model-016-bow-pleat-blouse-from3d-v2-female",
@@ -323,7 +323,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 144
+      "nodes": 159
     },
     {
       "id": "model-016-puff-sleeve-pleat-blouse-from3d-v1",
@@ -335,7 +335,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 123
+      "nodes": 127
     },
     {
       "id": "model-017-round-neck-open-top-from3d-v1",
@@ -346,8 +346,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 124
+      "cutRegions": 0,
+      "nodes": 172
     },
     {
       "id": "model-018-relaxed-button-shirt-from3d-v1",
@@ -359,7 +359,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 164
+      "nodes": 226
     },
     {
       "id": "model-019-ruffle-tie-blouse-from3d-v2-female",
@@ -370,8 +370,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 4,
-      "nodes": 262
+      "cutRegions": 0,
+      "nodes": 325
     },
     {
       "id": "model-019-tie-neck-blouse-from3d-v1",
@@ -383,7 +383,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 181
+      "nodes": 217
     },
     {
       "id": "model-020-asymmetric-long-shirt-from3d-v1",
@@ -395,7 +395,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 162
+      "nodes": 186
     },
     {
       "id": "model-020-diagonal-button-long-shirt-from3d-v2-female",
@@ -407,7 +407,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 148
+      "nodes": 237
     },
     {
       "id": "model-021-deep-v-puff-sleeve-top-from3d-v2-female",
@@ -417,9 +417,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-021-deep-v-puff-sleeve-top-from3d-v2-female-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
-      "cutRegions": 3,
-      "nodes": 144
+      "addRegions": 6,
+      "cutRegions": 0,
+      "nodes": 202
     },
     {
       "id": "model-021-puff-sleeve-vneck-top-from3d-v1",
@@ -430,8 +430,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 124
+      "cutRegions": 0,
+      "nodes": 171
     },
     {
       "id": "model-022-asymmetric-button-top-from3d-v1",
@@ -441,9 +441,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-022-asymmetric-button-top-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 141
+      "nodes": 283
     },
     {
       "id": "model-022-asymmetric-tie-point-hem-shirt-from3d-v2-female",
@@ -453,9 +453,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-022-asymmetric-tie-point-hem-shirt-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 1,
-      "nodes": 149
+      "nodes": 431
     },
     {
       "id": "model-023-classic-v-neck-tshirt-from3d-v2-male",
@@ -465,9 +465,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-023-classic-v-neck-tshirt-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 89
+      "nodes": 127
     },
     {
       "id": "model-023-vneck-tee-from3d-v1",
@@ -479,7 +479,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 116
+      "nodes": 93
     },
     {
       "id": "model-024-club-collar-concealed-shirt-from3d-v1",
@@ -491,7 +491,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 89
+      "nodes": 87
     },
     {
       "id": "model-024-hidden-placket-shirt-from3d-v2-female",
@@ -503,7 +503,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 133
+      "nodes": 154
     },
     {
       "id": "model-025-concealed-placket-relaxed-shirt-from3d-v1",
@@ -513,9 +513,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-025-concealed-placket-relaxed-shirt-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 5,
       "cutRegions": 1,
-      "nodes": 125
+      "nodes": 235
     },
     {
       "id": "model-025-concealed-placket-relaxed-shirt-from3d-v2-male",
@@ -526,8 +526,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 20,
-      "nodes": 261
+      "cutRegions": 1,
+      "nodes": 307
     },
     {
       "id": "model-026-pointcollar-concealed-shirt-from3d-v1",
@@ -538,8 +538,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 126
+      "cutRegions": 1,
+      "nodes": 149
     },
     {
       "id": "model-027-high-waist-cuffed-trousers-from3d-v1",
@@ -550,8 +550,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 147
+      "cutRegions": 1,
+      "nodes": 156
     },
     {
       "id": "model-027-highwaist-tapered-trousers-from3d-v2-male",
@@ -561,9 +561,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-027-highwaist-tapered-trousers-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
-      "cutRegions": 0,
-      "nodes": 124
+      "addRegions": 1,
+      "cutRegions": 1,
+      "nodes": 142
     },
     {
       "id": "model-028-strapped-cargo-joggers-from3d-v1",
@@ -575,7 +575,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 240
+      "nodes": 167
     },
     {
       "id": "model-028-strapped-cargo-joggers-from3d-v2-male",
@@ -586,8 +586,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 283
+      "cutRegions": 1,
+      "nodes": 303
     },
     {
       "id": "model-029-cargo-jogger-pants-from3d-v1",
@@ -597,9 +597,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-029-cargo-jogger-pants-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 177
+      "nodes": 163
     },
     {
       "id": "model-029-layered-cargo-trousers-from3d-v2-male",
@@ -609,9 +609,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-029-layered-cargo-trousers-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 4,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 146
+      "nodes": 185
     },
     {
       "id": "model-030-sculptural-drop-crotch-pants-from3d-v1",
@@ -621,9 +621,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-030-sculptural-drop-crotch-pants-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 4,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 218
+      "nodes": 317
     },
     {
       "id": "model-030-sculptural-drop-crotch-pants-from3d-v2-male",
@@ -633,9 +633,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-030-sculptural-drop-crotch-pants-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 204
+      "nodes": 340
     },
     {
       "id": "model-031-clean-cuffed-joggers-from3d-v2-male",
@@ -646,8 +646,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 213
+      "cutRegions": 0,
+      "nodes": 299
     },
     {
       "id": "model-031-clean-tapered-joggers-from3d-v1",
@@ -657,9 +657,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-031-clean-tapered-joggers-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 5,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 191
+      "nodes": 140
     },
     {
       "id": "model-032-sculptural-draped-trousers-from3d-v1",
@@ -669,9 +669,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-032-sculptural-draped-trousers-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
-      "cutRegions": 0,
-      "nodes": 151
+      "addRegions": 1,
+      "cutRegions": 1,
+      "nodes": 222
     },
     {
       "id": "model-032-sculptural-draped-trousers-from3d-v2-male",
@@ -681,9 +681,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-032-sculptural-draped-trousers-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 192
+      "nodes": 302
     },
     {
       "id": "model-033-multipocket-cargo-pants-from3d-v1",
@@ -693,9 +693,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-033-multipocket-cargo-pants-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 5,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 209
+      "nodes": 218
     },
     {
       "id": "model-033-multipocket-technical-cargo-pants-from3d-v2-male",
@@ -705,9 +705,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-033-multipocket-technical-cargo-pants-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 6,
-      "cutRegions": 0,
-      "nodes": 223
+      "addRegions": 1,
+      "cutRegions": 2,
+      "nodes": 312
     },
     {
       "id": "model-034-strapped-multipouch-technical-trousers-from3d-v2-male",
@@ -717,9 +717,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-034-strapped-multipouch-technical-trousers-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 238
+      "addRegions": 3,
+      "cutRegions": 2,
+      "nodes": 345
     },
     {
       "id": "model-035-side-panel-balloon-trousers-from3d-v1",
@@ -729,9 +729,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-035-side-panel-balloon-trousers-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 143
+      "nodes": 129
     },
     {
       "id": "model-035-side-panel-balloon-trousers-from3d-v2-female",
@@ -743,7 +743,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 175
+      "nodes": 219
     },
     {
       "id": "model-036-highwaist-flared-trousers-from3d-v1",
@@ -754,8 +754,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 201
+      "cutRegions": 0,
+      "nodes": 110
     },
     {
       "id": "model-036-highwaist-subtle-flare-trousers-from3d-v2-female",
@@ -766,8 +766,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 227
+      "cutRegions": 1,
+      "nodes": 259
     },
     {
       "id": "model-037-high-waist-tailored-shorts-from3d-v1",
@@ -779,7 +779,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 60
+      "nodes": 58
     },
     {
       "id": "model-037-high-waist-tailored-shorts-from3d-v2-male",
@@ -791,7 +791,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 61
+      "nodes": 60
     },
     {
       "id": "model-038-ankle-gathered-highwaist-leggings-from3d-v1",
@@ -801,9 +801,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-038-ankle-gathered-highwaist-leggings-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 197
+      "nodes": 254
     },
     {
       "id": "model-039-channel-waist-cycling-shorts-from3d-v2-male",
@@ -813,9 +813,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-039-channel-waist-cycling-shorts-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 96
+      "nodes": 118
     },
     {
       "id": "model-039-ribbed-band-cycling-shorts-from3d-v1",
@@ -826,8 +826,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 77
+      "cutRegions": 0,
+      "nodes": 79
     },
     {
       "id": "model-040-drawcord-cuffed-joggers-from3d-v1",
@@ -837,9 +837,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-040-drawcord-cuffed-joggers-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 151
+      "nodes": 107
     },
     {
       "id": "model-041-stand-collar-utility-jacket-from3d-v1",
@@ -850,8 +850,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 158
+      "cutRegions": 0,
+      "nodes": 185
     },
     {
       "id": "model-041-stand-collar-utility-jacket-from3d-v2-male",
@@ -863,7 +863,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 168
+      "nodes": 192
     },
     {
       "id": "model-042-tabbed-puffer-bolero-from3d-v1",
@@ -875,7 +875,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 200
+      "nodes": 342
     },
     {
       "id": "model-042-tabbed-puffer-bolero-from3d-v2-male",
@@ -887,7 +887,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 276
+      "nodes": 380
     },
     {
       "id": "model-043-ruched-sleeve-cropped-jacket-from3d-v1",
@@ -897,9 +897,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-043-ruched-sleeve-cropped-jacket-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
+      "addRegions": 3,
       "cutRegions": 0,
-      "nodes": 150
+      "nodes": 221
     },
     {
       "id": "model-043-ruched-sleeve-cropped-jacket-from3d-v2-male",
@@ -911,7 +911,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 154
+      "nodes": 246
     },
     {
       "id": "model-044-collarless-open-jacket-from3d-v1",
@@ -923,7 +923,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 142
+      "nodes": 158
     },
     {
       "id": "model-044-round-neck-envelope-pocket-jacket-from3d-v2-female",
@@ -935,7 +935,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 182
+      "nodes": 174
     },
     {
       "id": "model-045-asymmetric-tailored-jacket-from3d-v1",
@@ -945,9 +945,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-045-asymmetric-tailored-jacket-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
+      "addRegions": 4,
       "cutRegions": 0,
-      "nodes": 144
+      "nodes": 197
     },
     {
       "id": "model-045-asymmetric-tailored-jacket-from3d-v2-male",
@@ -957,9 +957,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-045-asymmetric-tailored-jacket-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 206
+      "addRegions": 3,
+      "cutRegions": 0,
+      "nodes": 202
     },
     {
       "id": "model-046-cutout-wrap-crop-top-from3d-v1",
@@ -970,8 +970,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 163
+      "cutRegions": 2,
+      "nodes": 443
     },
     {
       "id": "model-046-cutout-wrap-crop-top-from3d-v2-female",
@@ -982,8 +982,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 3,
-      "nodes": 142
+      "cutRegions": 1,
+      "nodes": 444
     },
     {
       "id": "model-047-four-pocket-ruched-jacket-from3d-v2-male",
@@ -995,7 +995,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 170
+      "nodes": 289
     },
     {
       "id": "model-047-pocket-utility-jacket-from3d-v1",
@@ -1006,8 +1006,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 131
+      "cutRegions": 0,
+      "nodes": 259
     },
     {
       "id": "model-048-minimal-shirt-white-tie-from3d-v1",
@@ -1018,8 +1018,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 131
+      "cutRegions": 2,
+      "nodes": 188
     },
     {
       "id": "model-049-integrated-scarf-puffer-from3d-v1",
@@ -1031,7 +1031,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 249
+      "nodes": 217
     },
     {
       "id": "model-049-integrated-scarf-puffer-from3d-v2-male",
@@ -1043,7 +1043,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 213
+      "nodes": 223
     },
     {
       "id": "model-050-asymmetric-wrap-puffer-from3d-v1",
@@ -1055,7 +1055,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 285
+      "nodes": 263
     },
     {
       "id": "model-051-long-open-puffer-from3d-v1",
@@ -1065,9 +1065,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-051-long-open-puffer-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
+      "addRegions": 3,
       "cutRegions": 0,
-      "nodes": 204
+      "nodes": 318
     },
     {
       "id": "model-052-clean-puffer-jacket-from3d-v1",
@@ -1078,8 +1078,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 188
+      "cutRegions": 0,
+      "nodes": 244
     },
     {
       "id": "model-052-clean-puffer-jacket-from3d-v2-female",
@@ -1091,7 +1091,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 1,
-      "nodes": 123
+      "nodes": 220
     },
     {
       "id": "model-053-open-utility-jacket-from3d-v1",
@@ -1102,8 +1102,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 2,
-      "cutRegions": 0,
-      "nodes": 157
+      "cutRegions": 1,
+      "nodes": 221
     },
     {
       "id": "model-054-ultracrop-hoodie-from3d-v1",
@@ -1115,7 +1115,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 120
+      "nodes": 188
     },
     {
       "id": "model-054-ultracrop-hoodie-from3d-v2-female",
@@ -1126,8 +1126,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 3,
-      "nodes": 157
+      "cutRegions": 0,
+      "nodes": 179
     },
     {
       "id": "model-055-minimal-hooded-jacket-from3d-v2-female",
@@ -1139,7 +1139,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 134
+      "nodes": 314
     },
     {
       "id": "model-055-open-front-hooded-jacket-from3d-v1",
@@ -1151,7 +1151,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 183
+      "nodes": 719
     },
     {
       "id": "model-056-oversized-geometric-pocket-hoodie-from3d-v2-male",
@@ -1162,8 +1162,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 126
+      "cutRegions": 1,
+      "nodes": 196
     },
     {
       "id": "model-056-pullover-hoodie-from3d-v1",
@@ -1175,7 +1175,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 149
+      "nodes": 157
     },
     {
       "id": "model-057-full-zip-hoodie-from3d-v1",
@@ -1186,8 +1186,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 128
+      "cutRegions": 0,
+      "nodes": 153
     },
     {
       "id": "model-058-strapped-utility-hoodie-from3d-v1",
@@ -1198,8 +1198,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 119
+      "cutRegions": 1,
+      "nodes": 189
     },
     {
       "id": "model-059-four-pouch-long-tabard-hooded-coat-from3d-v2-male",
@@ -1209,9 +1209,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-059-four-pouch-long-tabard-hooded-coat-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 1,
-      "nodes": 225
+      "nodes": 716
     },
     {
       "id": "model-060-belted-palazzo-jumpsuit-from3d-v1",
@@ -1223,7 +1223,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 317
+      "nodes": 448
     },
     {
       "id": "model-061-boatneck-asymmetric-maxi-set-from3d-v1",
@@ -1235,7 +1235,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 185
+      "nodes": 146
     },
     {
       "id": "model-061-boatneck-asymmetric-maxi-set-from3d-v2-male",
@@ -1247,7 +1247,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 184
+      "nodes": 226
     },
     {
       "id": "model-062-cross-neck-maxi-dress-from3d-v1",
@@ -1259,7 +1259,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 252
+      "nodes": 255
     },
     {
       "id": "model-063-diagonal-band-draped-vest-from3d-v1",
@@ -1270,8 +1270,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 165
+      "cutRegions": 0,
+      "nodes": 178
     },
     {
       "id": "model-064-pointed-layered-vest-tunic-from3d-v1",
@@ -1283,7 +1283,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 128
+      "nodes": 153
     },
     {
       "id": "model-065-asymmetric-waist-handkerchief-dress-from3d-v2-female",
@@ -1293,9 +1293,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-065-asymmetric-waist-handkerchief-dress-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 212
+      "addRegions": 2,
+      "cutRegions": 4,
+      "nodes": 1560
     },
     {
       "id": "model-065-sleeveless-a-line-dress-from3d-v1",
@@ -1307,7 +1307,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 195
+      "nodes": 492
     },
     {
       "id": "model-066-crop-top-maxi-skirt-set-from3d-v1",
@@ -1318,8 +1318,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 2,
-      "cutRegions": 3,
-      "nodes": 271
+      "cutRegions": 0,
+      "nodes": 149
     },
     {
       "id": "model-066-crop-top-maxi-skirt-set-from3d-v2-female",
@@ -1331,7 +1331,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 263
+      "nodes": 189
     },
     {
       "id": "model-067-cape-mermaid-gown-from3d-v1",
@@ -1342,8 +1342,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 338
+      "cutRegions": 0,
+      "nodes": 270
     },
     {
       "id": "model-067-cape-mermaid-gown-from3d-v2-female",
@@ -1354,8 +1354,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 4,
-      "nodes": 291
+      "cutRegions": 2,
+      "nodes": 803
     },
     {
       "id": "model-068-boatneck-side-slit-midi-dress-from3d-v2-female",
@@ -1367,7 +1367,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 201
+      "nodes": 112
     },
     {
       "id": "model-068-waistband-slit-midi-dress-from3d-v1",
@@ -1379,7 +1379,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 200
+      "nodes": 121
     },
     {
       "id": "model-069-spiked-ruched-mini-dress-from3d-v1",
@@ -1391,7 +1391,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 241
+      "nodes": 257
     },
     {
       "id": "model-069-spiked-tab-closure-mini-dress-from3d-v2-female",
@@ -1403,7 +1403,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 240
+      "nodes": 334
     },
     {
       "id": "model-070-four-tier-crop-top-skirt-set-from3d-v2-female",
@@ -1413,9 +1413,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-070-four-tier-crop-top-skirt-set-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 215
+      "addRegions": 2,
+      "cutRegions": 0,
+      "nodes": 179
     },
     {
       "id": "model-070-tiered-maxi-set-from3d-v1",
@@ -1425,9 +1425,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-070-tiered-maxi-set-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 275
+      "nodes": 184
     },
     {
       "id": "model-071-handkerchief-hem-poncho-from3d-v1",
@@ -1437,9 +1437,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-071-handkerchief-hem-poncho-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 187
+      "nodes": 181
     },
     {
       "id": "model-071-layered-handkerchief-poncho-from3d-v2-male",
@@ -1451,7 +1451,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 141
+      "nodes": 199
     },
     {
       "id": "model-072-asymmetric-draped-cape-from3d-v2-male",
@@ -1461,9 +1461,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-072-asymmetric-draped-cape-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 5,
-      "cutRegions": 1,
-      "nodes": 158
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 187
     },
     {
       "id": "model-072-asymmetric-overlay-poncho-from3d-v1",
@@ -1473,9 +1473,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-072-asymmetric-overlay-poncho-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 177
+      "nodes": 150
     },
     {
       "id": "model-073-handkerchief-poncho-top-from3d-v2-male",
@@ -1497,9 +1497,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-074-ankle-hooded-robe-coat-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 197
+      "nodes": 169
     },
     {
       "id": "model-074-hooded-ankle-robe-coat-from3d-v1",
@@ -1511,7 +1511,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 267
+      "nodes": 347
     },
     {
       "id": "model-075-double-pocket-hooded-tunic-from3d-v1",
@@ -1523,7 +1523,7 @@
       "height": 1537,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 156
+      "nodes": 196
     },
     {
       "id": "model-076-standcollar-handkerchief-cape-from3d-v1",
@@ -1535,7 +1535,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 246
+      "nodes": 517
     },
     {
       "id": "model-077-cowl-hooded-handkerchief-cape-from3d-v1",
@@ -1545,9 +1545,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-077-cowl-hooded-handkerchief-cape-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
+      "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 280
+      "nodes": 393
     },
     {
       "id": "model-078-hooded-poncho-cape-from3d-v1",
@@ -1559,7 +1559,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 288
+      "nodes": 196
     },
     {
       "id": "model-079-crossfront-keyhole-crop-top-from3d-v1",
@@ -1570,8 +1570,8 @@
       "width": 1003,
       "height": 1568,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 84
+      "cutRegions": 2,
+      "nodes": 144
     },
     {
       "id": "model-080-chevron-panel-halter-bodysuit-from3d-v1",
@@ -1583,7 +1583,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 63
+      "nodes": 77
     },
     {
       "id": "model-085-balloon-leg-jumpsuit-from3d-v1",
@@ -1593,9 +1593,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-085-balloon-leg-jumpsuit-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
-      "cutRegions": 3,
-      "nodes": 296
+      "addRegions": 1,
+      "cutRegions": 1,
+      "nodes": 213
     },
     {
       "id": "model-085-balloon-leg-jumpsuit-from3d-v2-female",
@@ -1606,8 +1606,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 277
+      "cutRegions": 2,
+      "nodes": 525
     },
     {
       "id": "model-086-oversized-pocket-jumpsuit-from3d-v2-female",
@@ -1617,9 +1617,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-086-oversized-pocket-jumpsuit-from3d-v2-female-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 201
+      "nodes": 185
     },
     {
       "id": "model-086-oversized-utility-jumpsuit-from3d-v1",
@@ -1631,7 +1631,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 279
+      "nodes": 234
     },
     {
       "id": "model-087-belted-funnel-neck-jumpsuit-from3d-v2-female",
@@ -1641,9 +1641,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-087-belted-funnel-neck-jumpsuit-from3d-v2-female-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 201
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 205
     },
     {
       "id": "model-087-tailored-jumpsuit-from3d-v1",
@@ -1654,8 +1654,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 313
+      "cutRegions": 3,
+      "nodes": 1281
     },
     {
       "id": "model-088-deep-v-wide-leg-jumpsuit-from3d-v2-female",
@@ -1665,9 +1665,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-088-deep-v-wide-leg-jumpsuit-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 184
+      "nodes": 203
     },
     {
       "id": "model-088-wrap-vneck-wideleg-jumpsuit-from3d-v1",
@@ -1677,9 +1677,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-088-wrap-vneck-wideleg-jumpsuit-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 218
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 146
     },
     {
       "id": "model-089-square-neck-romper-from3d-v1",
@@ -1691,7 +1691,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 119
+      "nodes": 126
     },
     {
       "id": "model-089-tailored-spaghetti-strap-romper-from3d-v2-female",
@@ -1702,8 +1702,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 141
+      "cutRegions": 0,
+      "nodes": 83
     },
     {
       "id": "model-090-front-slit-mini-skirt-from3d-v2-female",
@@ -1714,8 +1714,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 80
+      "cutRegions": 0,
+      "nodes": 63
     },
     {
       "id": "model-090-front-zip-mini-skirt-from3d-v1",
@@ -1727,7 +1727,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 72
+      "nodes": 63
     },
     {
       "id": "model-091-asymmetric-skirt-from3d-v1",
@@ -1739,7 +1739,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 118
+      "nodes": 178
     },
     {
       "id": "model-091-inverted-v-front-slit-pencil-skirt-from3d-v2-female",
@@ -1751,7 +1751,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 77
+      "nodes": 114
     },
     {
       "id": "model-092-ultrawide-palazzo-trousers-from3d-v1",
@@ -1762,8 +1762,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 166
+      "cutRegions": 0,
+      "nodes": 132
     },
     {
       "id": "model-093-full-circle-maxi-skirt-from3d-v1",
@@ -1774,8 +1774,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 3,
-      "nodes": 310
+      "cutRegions": 0,
+      "nodes": 157
     },
     {
       "id": "model-094-side-pleat-skirt-from3d-v2-female",
@@ -1787,7 +1787,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 91
+      "nodes": 70
     },
     {
       "id": "model-094-side-pleat-wrap-skirt-from3d-v1",
@@ -1797,9 +1797,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-094-side-pleat-wrap-skirt-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 5,
-      "cutRegions": 1,
-      "nodes": 112
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 64
     },
     {
       "id": "model-095-yoke-gathered-mini-skirt-from3d-v1",
@@ -1811,7 +1811,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 84
+      "nodes": 64
     },
     {
       "id": "model-097-three-quarter-open-blazer-from3d-v2-male",
@@ -1823,7 +1823,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 130
+      "nodes": 134
     },
     {
       "id": "model-097-three-quarter-open-jacket-from3d-v1",
@@ -1835,7 +1835,7 @@
       "height": 1402,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 95
+      "nodes": 138
     },
     {
       "id": "model-098-open-front-blazer-from3d-v1",
@@ -1847,7 +1847,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 90
+      "nodes": 116
     },
     {
       "id": "model-098-pocketless-longline-open-blazer-from3d-v2-male",
@@ -1859,7 +1859,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 117
+      "nodes": 151
     },
     {
       "id": "model-099-deep-v-longline-blazer-from3d-v1",
@@ -1871,7 +1871,7 @@
       "height": 1477,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 130
+      "nodes": 107
     },
     {
       "id": "model-099-pocketless-deep-v-longline-blazer-from3d-v2-male",
@@ -1882,8 +1882,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 2,
-      "cutRegions": 0,
-      "nodes": 140
+      "cutRegions": 1,
+      "nodes": 108
     },
     {
       "id": "model-100-calf-length-deep-v-tailored-coat-from3d-v2-male",
@@ -1893,9 +1893,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-100-calf-length-deep-v-tailored-coat-from3d-v2-male-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
-      "cutRegions": 1,
-      "nodes": 266
+      "addRegions": 3,
+      "cutRegions": 0,
+      "nodes": 239
     },
     {
       "id": "model-100-long-open-coat-from3d-v1",
@@ -1907,7 +1907,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 235
+      "nodes": 245
     },
     {
       "id": "model-101-asymmetric-tailored-coat-from3d-v1",
@@ -1918,8 +1918,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 161
+      "cutRegions": 1,
+      "nodes": 337
     },
     {
       "id": "model-102-asymmetric-minimal-long-coat-from3d-v1",
@@ -1931,7 +1931,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 207
+      "nodes": 176
     },
     {
       "id": "model-102-minimal-keyhole-standing-collar-coat-from3d-v2-male",
@@ -1943,7 +1943,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 188
+      "nodes": 166
     },
     {
       "id": "model-103-highlow-pointed-hem-standing-collar-coat-from3d-v2-female",
@@ -1955,7 +1955,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 210
+      "nodes": 256
     },
     {
       "id": "model-105-floorlength-minimal-tailored-coat-from3d-v2-female",
@@ -1965,9 +1965,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-105-floorlength-minimal-tailored-coat-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
-      "cutRegions": 2,
-      "nodes": 237
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 598
     },
     {
       "id": "model-105-structured-long-coat-from3d-v1",
@@ -1977,9 +1977,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-105-structured-long-coat-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 1,
-      "cutRegions": 4,
-      "nodes": 138
+      "addRegions": 2,
+      "cutRegions": 0,
+      "nodes": 186
     },
     {
       "id": "model-106-diagonal-quilt-long-puffer-from3d-v1",
@@ -1989,9 +1989,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-106-diagonal-quilt-long-puffer-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 143
+      "nodes": 200
     },
     {
       "id": "model-107-soft-visor-cap-from3d-v1",
@@ -2003,7 +2003,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 110
+      "nodes": 44
     },
     {
       "id": "model-108-sculptural-folded-headpiece-from3d-v1",
@@ -2013,9 +2013,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-108-sculptural-folded-headpiece-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 4,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 116
+      "nodes": 77
     },
     {
       "id": "model-109-padded-flat-cap-from3d-v1",
@@ -2027,7 +2027,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 33
+      "nodes": 29
     },
     {
       "id": "model-110-floppy-bucket-hat-from3d-v1",
@@ -2039,7 +2039,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 53
+      "nodes": 54
     },
     {
       "id": "model-111-wide-flat-brim-hat-from3d-v1",
@@ -2050,8 +2050,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 1,
-      "cutRegions": 6,
-      "nodes": 113
+      "cutRegions": 0,
+      "nodes": 91
     },
     {
       "id": "model-112-structured-cap-from3d-v1",
@@ -2061,9 +2061,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-112-structured-cap-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 3,
-      "cutRegions": 1,
-      "nodes": 128
+      "addRegions": 1,
+      "cutRegions": 0,
+      "nodes": 34
     },
     {
       "id": "model-113-padded-brimless-cap-from3d-v1",
@@ -2073,9 +2073,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-113-padded-brimless-cap-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 82
+      "nodes": 57
     },
     {
       "id": "model-114-floppy-bucket-hat-female-from3d-v1",
@@ -2085,9 +2085,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-114-floppy-bucket-hat-female-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 83
+      "nodes": 51
     },
     {
       "id": "model-115-utility-crossbody-sling-from3d-v1",
@@ -2097,9 +2097,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-115-utility-crossbody-sling-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 11,
-      "nodes": 178
+      "addRegions": 2,
+      "cutRegions": 0,
+      "nodes": 157
     },
     {
       "id": "model-116-wrap-hood-scarf-from3d-v1",
@@ -2109,9 +2109,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-116-wrap-hood-scarf-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 159
+      "addRegions": 2,
+      "cutRegions": 0,
+      "nodes": 164
     },
     {
       "id": "model-116-wrap-hood-scarf-from3d-v2-female",
@@ -2121,9 +2121,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-116-wrap-hood-scarf-from3d-v2-female-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 208
+      "addRegions": 7,
+      "cutRegions": 0,
+      "nodes": 329
     },
     {
       "id": "model-117-underchin-knot-headscarf-from3d-v1",
@@ -2133,9 +2133,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-117-underchin-knot-headscarf-from3d-v1-mask.svg",
       "width": 1122,
       "height": 1402,
-      "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 126
+      "addRegions": 2,
+      "cutRegions": 0,
+      "nodes": 180
     },
     {
       "id": "model-118-utility-strap-vest-from3d-v1",
@@ -2147,7 +2147,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 189
+      "nodes": 142
     },
     {
       "id": "model-119-fitted-zip-crop-vest-from3d-v1",
@@ -2159,7 +2159,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 71
+      "nodes": 76
     },
     {
       "id": "model-120-square-neck-crop-vest-from3d-v1",
@@ -2171,7 +2171,7 @@
       "height": 1516,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 62
+      "nodes": 79
     },
     {
       "id": "model-121-sculpted-band-crop-vest-from3d-v1",
@@ -2183,7 +2183,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 99
+      "nodes": 69
     },
     {
       "id": "model-121-sculpted-band-crop-vest-from3d-v2-male",
@@ -2195,7 +2195,7 @@
       "height": 1402,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 80
+      "nodes": 81
     },
     {
       "id": "model-122-lightweight-hooded-puffer-vest-from3d-v1",
@@ -2205,9 +2205,9 @@
       "svgMask": "/images/mockups/on-model/generated/model-122-lightweight-hooded-puffer-vest-from3d-v1-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 4,
-      "cutRegions": 2,
-      "nodes": 155
+      "addRegions": 3,
+      "cutRegions": 0,
+      "nodes": 130
     },
     {
       "id": "model-123-cropped-pocket-blazer-shrug-from3d-v1",
@@ -2218,8 +2218,8 @@
       "width": 1122,
       "height": 1402,
       "addRegions": 2,
-      "cutRegions": 2,
-      "nodes": 176
+      "cutRegions": 0,
+      "nodes": 88
     },
     {
       "id": "model-pose-contrapposto-v3",
@@ -2230,8 +2230,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 98
+      "cutRegions": 1,
+      "nodes": 106
     },
     {
       "id": "model-pose-three-quarter-v3",
@@ -2242,8 +2242,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 120
+      "cutRegions": 1,
+      "nodes": 124
     },
     {
       "id": "model-pose-walking-v3",
@@ -2255,7 +2255,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 126
+      "nodes": 103
     },
     {
       "id": "modern-dress-american-female",
@@ -2267,7 +2267,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 117
+      "nodes": 162
     },
     {
       "id": "one-piece-dress-female-front",
@@ -2279,7 +2279,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 119
+      "nodes": 155
     },
     {
       "id": "open-front-blazer-female-front",
@@ -2291,7 +2291,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 112
+      "nodes": 124
     },
     {
       "id": "panel-tee-european-male-candid",
@@ -2303,7 +2303,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 79
+      "nodes": 97
     },
     {
       "id": "polo-shirt-male-front",
@@ -2315,7 +2315,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 124
+      "nodes": 147
     },
     {
       "id": "puff-sleeve-blouse-female-front",
@@ -2326,8 +2326,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 107
+      "cutRegions": 0,
+      "nodes": 124
     },
     {
       "id": "puffer-jacket-male-front",
@@ -2338,8 +2338,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 3,
-      "nodes": 211
+      "cutRegions": 1,
+      "nodes": 271
     },
     {
       "id": "pullover-hoodie-male-front",
@@ -2350,8 +2350,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 241
+      "cutRegions": 0,
+      "nodes": 219
     },
     {
       "id": "quarter-zip-walking-male-front",
@@ -2362,8 +2362,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 245
+      "cutRegions": 1,
+      "nodes": 139
     },
     {
       "id": "raw-casting-tee-v2",
@@ -2375,7 +2375,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 157
+      "nodes": 121
     },
     {
       "id": "raw-fitting-shirt-v2",
@@ -2387,7 +2387,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 161
+      "nodes": 175
     },
     {
       "id": "raw-lookbook-chore-jacket-v2",
@@ -2398,8 +2398,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 3,
-      "cutRegions": 3,
-      "nodes": 236
+      "cutRegions": 0,
+      "nodes": 171
     },
     {
       "id": "relaxed-pants-male-front",
@@ -2411,7 +2411,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 156
+      "nodes": 132
     },
     {
       "id": "structured-blazer-female-action",
@@ -2421,9 +2421,9 @@
       "svgMask": "/images/mockups/on-model/generated/structured-blazer-female-action-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 3,
+      "addRegions": 4,
       "cutRegions": 0,
-      "nodes": 181
+      "nodes": 168
     },
     {
       "id": "structured-pants-european-male",
@@ -2435,7 +2435,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 139
+      "nodes": 165
     },
     {
       "id": "tailored-pants-male-front",
@@ -2447,7 +2447,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 194
+      "nodes": 128
     },
     {
       "id": "tank-top-female-front",
@@ -2459,7 +2459,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 96
+      "nodes": 118
     },
     {
       "id": "tie-neck-blouse-european-female",
@@ -2470,8 +2470,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 142
+      "cutRegions": 1,
+      "nodes": 455
     },
     {
       "id": "trench-coat-female-front",
@@ -2482,8 +2482,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 122
+      "cutRegions": 2,
+      "nodes": 176
     },
     {
       "id": "turtleneck-nonbinary-front",
@@ -2494,8 +2494,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 119
+      "cutRegions": 1,
+      "nodes": 99
     },
     {
       "id": "utility-shirt-dress-female-front",
@@ -2507,7 +2507,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 1,
-      "nodes": 89
+      "nodes": 277
     },
     {
       "id": "womens-blouse-front",
@@ -2518,8 +2518,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 7,
-      "nodes": 143
+      "cutRegions": 0,
+      "nodes": 158
     },
     {
       "id": "young-western-female-bermuda-shorts-v7",
@@ -2531,7 +2531,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 96
+      "nodes": 70
     },
     {
       "id": "young-western-female-blazer-v4",
@@ -2541,9 +2541,9 @@
       "svgMask": "/images/mockups/on-model/generated/young-western-female-blazer-v4-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
+      "addRegions": 3,
       "cutRegions": 0,
-      "nodes": 82
+      "nodes": 114
     },
     {
       "id": "young-western-female-bomber-v6",
@@ -2555,7 +2555,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 133
+      "nodes": 147
     },
     {
       "id": "young-western-female-cardigan-v6",
@@ -2566,8 +2566,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 92
+      "cutRegions": 1,
+      "nodes": 152
     },
     {
       "id": "young-western-female-cargo-trousers-v8",
@@ -2577,9 +2577,9 @@
       "svgMask": "/images/mockups/on-model/generated/young-western-female-cargo-trousers-v8-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 3,
+      "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 179
+      "nodes": 157
     },
     {
       "id": "young-western-female-crew-sweatshirt-v8",
@@ -2591,7 +2591,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 115
+      "nodes": 128
     },
     {
       "id": "young-western-female-denim-jacket-v6",
@@ -2603,7 +2603,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 139
+      "nodes": 156
     },
     {
       "id": "young-western-female-denim-midi-skirt-v8",
@@ -2615,7 +2615,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 142
+      "nodes": 118
     },
     {
       "id": "young-western-female-dress-v4",
@@ -2627,7 +2627,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 187
+      "nodes": 162
     },
     {
       "id": "young-western-female-henley-v7",
@@ -2638,8 +2638,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 101
+      "cutRegions": 1,
+      "nodes": 118
     },
     {
       "id": "young-western-female-hoodie-v5",
@@ -2651,7 +2651,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 95
+      "nodes": 146
     },
     {
       "id": "young-western-female-jumpsuit-v6",
@@ -2662,8 +2662,8 @@
       "width": 1023,
       "height": 1537,
       "addRegions": 1,
-      "cutRegions": 2,
-      "nodes": 297
+      "cutRegions": 1,
+      "nodes": 270
     },
     {
       "id": "young-western-female-oversized-shirt-v7",
@@ -2675,7 +2675,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 110
+      "nodes": 94
     },
     {
       "id": "young-western-female-pleated-skirt-v6",
@@ -2687,7 +2687,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 163
+      "nodes": 129
     },
     {
       "id": "young-western-female-polo-v5",
@@ -2698,8 +2698,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 10,
-      "nodes": 142
+      "cutRegions": 0,
+      "nodes": 99
     },
     {
       "id": "young-western-female-quilted-vest-v8",
@@ -2711,7 +2711,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 111
+      "nodes": 134
     },
     {
       "id": "young-western-female-relaxed-blazer-v5",
@@ -2723,7 +2723,7 @@
       "height": 1536,
       "addRegions": 2,
       "cutRegions": 0,
-      "nodes": 106
+      "nodes": 121
     },
     {
       "id": "young-western-female-rib-tank-v6",
@@ -2735,7 +2735,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 53
+      "nodes": 76
     },
     {
       "id": "young-western-female-rugby-shirt-v8",
@@ -2746,8 +2746,8 @@
       "width": 1023,
       "height": 1537,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 132
+      "cutRegions": 0,
+      "nodes": 261
     },
     {
       "id": "young-western-female-shirt-dress-v8",
@@ -2759,7 +2759,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 199
+      "nodes": 144
     },
     {
       "id": "young-western-female-shirt-v4",
@@ -2770,8 +2770,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 1,
-      "nodes": 142
+      "cutRegions": 0,
+      "nodes": 116
     },
     {
       "id": "young-western-female-skirt-v5",
@@ -2783,7 +2783,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 123
+      "nodes": 71
     },
     {
       "id": "young-western-female-tee-v4",
@@ -2795,7 +2795,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 106
+      "nodes": 97
     },
     {
       "id": "young-western-female-trench-v5",
@@ -2807,7 +2807,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 155
+      "nodes": 160
     },
     {
       "id": "young-western-female-turtleneck-v5",
@@ -2819,7 +2819,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 89
+      "nodes": 109
     },
     {
       "id": "young-western-female-wide-leg-trousers-v7",
@@ -2829,9 +2829,9 @@
       "svgMask": "/images/mockups/on-model/generated/young-western-female-wide-leg-trousers-v7-mask.svg",
       "width": 1024,
       "height": 1536,
-      "addRegions": 2,
+      "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 171
+      "nodes": 143
     },
     {
       "id": "young-western-female-wrap-dress-v7",
@@ -2842,8 +2842,8 @@
       "width": 1024,
       "height": 1536,
       "addRegions": 1,
-      "cutRegions": 0,
-      "nodes": 128
+      "cutRegions": 1,
+      "nodes": 146
     },
     {
       "id": "young-western-female-zip-hoodie-v7",
@@ -2855,7 +2855,7 @@
       "height": 1536,
       "addRegions": 1,
       "cutRegions": 0,
-      "nodes": 132
+      "nodes": 181
     }
   ]
 }

@@ -23,7 +23,7 @@ test('renders the white mockup library with the Worker template runtime', () => 
     pagination: { page: 1, pageCount: 1, total: 0, start: 0, end: 0, pages: [1] }
   });
 
-  assert.match(html, /Choose a look\. Add your design\./);
+  assert.match(html, /Fashion mockups\. Add your design\./);
   assert.match(html, /fashion-mockups-artwork-motion-v2\.gif/);
   assert.match(html, /prefers-reduced-motion: reduce/);
   assert.match(html, /Fashion mockup categories/);
@@ -34,6 +34,7 @@ test('renders the white mockup library with the Worker template runtime', () => 
 test('renders a white mockup detail page with the Worker template runtime', () => {
   const html = workerTemplates.render('white-mockup-detail', {
     ...sharedLocals,
+    pageStyles: ['/css/white-mockup-detail.css?v=stale'],
     asset: {
       asset_name: 'crewneck-tee-male-front',
       garment_type: 'upper',
@@ -60,8 +61,14 @@ test('renders a white mockup detail page with the Worker template runtime', () =
     whiteFaqItems: []
   });
 
-  assert.match(html, /Crew-neck T-shirt Fashion Mockup/);
+  assert.match(html, /<h1 class="white-detail-title" id="whiteMockupTitle">Crew-neck T-shirt<\/h1>/);
+  assert.match(html, /id="whiteMockupToolbarUpload"/);
+  assert.match(html, /white-mockup-detail\.css\?v=20261004-artworks-left-v3/);
+  assert.doesNotMatch(html, /white-mockup-detail\.css\?v=stale/);
   assert.match(html, /whiteMockupCanvas/);
+  assert.match(html, /id="whiteMockupArtworkInput"[^>]+multiple/);
+  assert.match(html, /id="whiteMockupArtworkList"/);
+  assert.match(html, /<button[^>]+class="white-detail-remove-watermark"[^>]+data-upgrade-resource="watermark"[^>]+aria-haspopup="dialog"/);
   assert.match(html, /crewneck-tee-male-front-mask\.png\?v=direct-alpha-edge-v4/);
   assert.match(html, /<body class="category-catalog-page white-mockup-detail-page">/);
 });

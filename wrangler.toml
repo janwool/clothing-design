@@ -6,6 +6,8 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 DB_TYPE = "d1"
 APP_BASE_URL = "https://www.cloz-design.com"
+RESEND_FROM_EMAIL = "ClozDesign <notifications@cloz-design.com>"
+RESEND_REPLY_TO = "support@cloz-design.com"
 DODO_PAYMENTS_ENVIRONMENT = "live_mode"
 DODO_PRO_MONTHLY_PRODUCT_ID = "pdt_0NnnhMjKZE0S5y7c74oI6"
 DODO_PRO_YEARLY_PRODUCT_ID = "pdt_0NnnhXqc1hwnNQubQkHRX"
@@ -14,6 +16,9 @@ DODO_MAX_YEARLY_PRODUCT_ID = "pdt_0Nnni73BBrP63K1eCXnH9"
 
 [ai]
 binding = "AI"
+
+[triggers]
+crons = ["* * * * *"]
 
 [[d1_databases]]
 binding = "DB"
