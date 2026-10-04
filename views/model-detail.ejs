@@ -77,7 +77,7 @@
               field-of-view="28deg"
               shadow-intensity="0.32"
               shadow-softness="0.9"
-              exposure="1.5"
+              exposure="1"
               environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
               data-studio-light-reference-azimuth="-16"
@@ -109,8 +109,8 @@
             <button type="button" class="active" data-light-angle="45" aria-pressed="true"><i aria-hidden="true"></i><span>+45°</span></button>
           </div>
           <label class="quick-light-range">
-            <span>Brightness <output id="quickLightExposureOutput">150%</output></span>
-            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="150">
+            <span>Brightness <output id="quickLightExposureOutput">100%</output></span>
+            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="100">
           </label>
           <label class="quick-light-range">
             <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
@@ -901,7 +901,7 @@
                   field-of-view="28deg"
                   shadow-intensity="0.32"
                   shadow-softness="0.9"
-                  exposure="1.5"
+                  exposure="1"
                   environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
                   data-studio-light-reference-azimuth="-16"
@@ -935,9 +935,9 @@
                 </button>
               </div>
               <div class="appearance-color-row" role="group" aria-label="Fill colors">
-                <label class="appearance-custom-color" id="appearanceCustomColor">
-                  <span class="appearance-custom-swatch"><input id="appearanceColorStart" type="color" value="#ffffff" aria-label="Choose custom fill color"></span>
-                </label>
+                <button class="appearance-custom-color" id="appearanceCustomColor" type="button" aria-label="Choose custom fill color" aria-haspopup="dialog" aria-expanded="false">
+                  <span class="appearance-custom-swatch" aria-hidden="true"></span>
+                </button>
                 <button class="appearance-transparent-color" type="button" data-fill-color="none" aria-label="Transparent" aria-pressed="false"><span aria-hidden="true"></span></button>
                 <button type="button" data-fill-color="#ffffff" aria-label="White" aria-pressed="true" style="--fill-swatch:#ffffff"><span aria-hidden="true"></span></button>
                 <button type="button" data-fill-color="#f2eee5" aria-label="Ivory" aria-pressed="false" style="--fill-swatch:#f2eee5"><span aria-hidden="true"></span></button>
@@ -945,7 +945,8 @@
                 <button type="button" data-fill-color="#243653" aria-label="Navy" aria-pressed="false" style="--fill-swatch:#243653"><span aria-hidden="true"></span></button>
                 <button type="button" data-fill-color="#d9bfa0" aria-label="Beige" aria-pressed="false" style="--fill-swatch:#d9bfa0"><span aria-hidden="true"></span></button>
               </div>
-              <input id="appearanceColorEnd" type="color" value="#ffffff" hidden>
+              <input id="appearanceColorStart" type="hidden" value="#ffffff">
+              <input id="appearanceColorEnd" type="hidden" value="#ffffff">
               <input id="appearanceGradientAngle" type="range" min="0" max="360" value="135" hidden>
             </div>
           </section>
@@ -1019,7 +1020,7 @@ const defaultDetailRenderStandard = {
     shadowSoftness: 0.9,
     exportShadowIntensity: 0.46,
     exportShadowSoftness: 0.88,
-    exposure: 1.5,
+    exposure: 1,
     toneMapping: 'commerce',
     material: {
       neutralizeBaseColor: false,
@@ -1032,7 +1033,7 @@ const defaultDetailRenderStandard = {
 };
 const detailLightState = {
   azimuthOffsetDeg: 45,
-  exposure: 1.5,
+  exposure: 1,
   shadowSoftness: 0.9
 };
 window.ModelDetailLightingSettings = detailLightState;
@@ -1056,8 +1057,8 @@ const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json
         web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }
       };
     }
-    // Detail pages always start at 150%, including models with lighting overrides.
-    detailSceneStandard.web.exposure = 1.5;
+    // Detail pages always start at 100%, including models with lighting overrides.
+    detailSceneStandard.web.exposure = 1;
     Object.assign(detailLightState, {
       azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,
       exposure: detailSceneStandard.web.exposure,
@@ -1096,7 +1097,7 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
   }
   element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));
   element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));
-  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 1.5) * (Number(element.dataset.designExposureRatio) || 1)));
+  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 1) * (Number(element.dataset.designExposureRatio) || 1)));
   element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');
   element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');
   element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');
@@ -1150,7 +1151,7 @@ detailRenderStandardPromise.then((standard) => {
 
 function renderDetailLightingControls() {
   const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
-  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1.5)) * 100);
+  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1)) * 100);
   const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
   if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
   if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);
@@ -1643,7 +1644,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20260928-editor-preview-v3',
+      src: '/js/model-designer.js?v=20261004-fill-picker-v4',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'

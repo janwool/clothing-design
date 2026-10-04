@@ -83,7 +83,7 @@ test('offers camera-relative lighting controls on the model detail page', () => 
   assert.match(template, /data-light-angle="-45"/);
   assert.match(template, /data-light-angle="0"/);
   assert.match(template, /data-light-angle="45"/);
-  assert.match(template, /id="quickLightExposure" type="range" min="55" max="300" step="1" value="150"/);
+  assert.match(template, /id="quickLightExposure" type="range" min="55" max="300" step="1" value="100"/);
   assert.match(template, /id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90"/);
   assert.match(template, /window\.ModelDetailLightingSettings = detailLightState/);
   assert.match(template, /function applyDetailLightingSettings\(\)/);
@@ -120,7 +120,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20260928-editor-preview-v3'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20261004-fill-picker-v4'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -244,7 +244,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20260928-editor-preview-v3/);
+  assert.match(template, /model-designer\.js\?v=20261004-fill-picker-v4/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -475,7 +475,9 @@ test('places Fill directly below the 3D preview without the removed appearance s
   assert.match(template, /class="design-appearance-card">\s*<div class="appearance-section">\s*<div class="appearance-fill-header">\s*<strong>Fill<\/strong>/);
   assert.match(template, /data-fill-color="#ffffff"/);
   assert.match(template, /data-fill-color="none"/);
-  assert.match(template, /id="appearanceColorStart" type="color"/);
+  assert.match(template, /id="appearanceColorStart" type="hidden"/);
+  assert.match(template, /<button[^>]*id="appearanceCustomColor"[^>]*aria-haspopup="dialog"/);
+  assert.match(designerRuntime, /openColorPopover\(appearanceCustomColor, \{/);
   assert.match(template, /class="appearance-color-row"[\s\S]*?id="appearanceCustomColor"[\s\S]*?data-fill-color="none"[\s\S]*?data-fill-color="#ffffff"/);
   const fillColorRow = template.match(/<div class="appearance-color-row"[\s\S]*?<\/div>/)?.[0] || '';
   assert.doesNotMatch(fillColorRow, /<small>|>Custom<|>Transparent<|>White<|>Ivory<|>Charcoal<|>Navy<|>Beige</);

@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const vm = require('node:vm');
 
 const runtime = fs.readFileSync(
   path.join(__dirname, '..', 'public', 'js', 'model-designer.js'),
@@ -15,6 +16,70 @@ const view = fs.readFileSync(
   path.join(__dirname, '..', 'views', 'model-detail.ejs'),
   'utf8'
 );
+
+test('highlights filled UV panels and removes only the temporary paint on pointerout', () => {
+  const functions = ['setTemplatePathPreview', 'restoreTemplatePathPreview', 'setTemplateFillPaint']
+    .map((name) => runtime.match(new RegExp(`  function ${name}\\([\\s\\S]*?\\n  \\}`))[0])
+    .join('\n');
+  for (const color of [undefined, '#171717', 'linear-gradient(90deg, #171717, #ffffff)', 'none']) {
+    const classes = new Set();
+    const panel = {
+      dataset: { color },
+      classList: {
+        toggle(name, enabled) { enabled ? classes.add(name) : classes.delete(name); },
+        remove(...names) { names.forEach((name) => classes.delete(name)); }
+      }
+    };
+    const persistentPaint = { fill: color };
+    let transientPaint = null;
+    const context = vm.createContext({
+      getTemplateFillPath(target, create, persistent) {
+        assert.equal(target, panel);
+        assert.equal(persistent, false);
+        if (create && !transientPaint) {
+          transientPaint = {
+            dataset: {},
+            attributes: {},
+            style: { setProperty() {} },
+            setAttribute(name, value) { this.attributes[name] = value; },
+            remove() { transientPaint = null; }
+          };
+        }
+        return transientPaint;
+      }
+    });
+    vm.runInContext(functions, context);
+    context.setTemplatePathPreview(panel, 'hover');
+    assert.equal(transientPaint?.attributes.fill, 'rgba(0,102,255,0.24)');
+    assert.equal(classes.has('hover-template-path'), true);
+    context.restoreTemplatePathPreview(panel);
+    assert.equal(transientPaint, null);
+    assert.equal(classes.size, 0);
+    assert.equal(panel.dataset.color, color);
+    assert.equal(persistentPaint.fill, color);
+  }
+});
+
+test('retains custom Fill paint and zero opacity from the editor color picker', () => {
+  const context = vm.createContext({
+    state: { fillMode: 'gradient', fillCustomPaint: 'linear-gradient(45deg, #ff0000 0%, #00ff00 40%, #0000ff 100%)' },
+    appearanceColorStart: { value: '#ffffff' },
+    hexToRgb: () => ({ r: 17, g: 34, b: 51 })
+  });
+  for (const name of ['getAppearancePaint', 'rgbaFrom']) {
+    vm.runInContext(runtime.match(new RegExp(`  function ${name}\\([\\s\\S]*?\\n  \\}`))[0], context);
+  }
+  assert.equal(context.getAppearancePaint(), context.state.fillCustomPaint);
+  context.state.fillMode = 'solid';
+  context.state.fillCustomPaint = 'rgba(17, 34, 51, 0.5)';
+  assert.equal(context.getAppearancePaint(), 'rgba(17, 34, 51, 0.5)');
+  assert.equal(context.rgbaFrom('#112233', 0), 'rgba(17, 34, 51, 0)');
+  context.state.fillMode = 'transparent';
+  assert.equal(context.getAppearancePaint(), 'none');
+  context.state.fillMode = 'solid';
+  context.state.fillCustomPaint = null;
+  assert.equal(context.getAppearancePaint(), '#ffffff');
+});
 
 test('recognizes two stationary pointer releases without stealing a quick follow-up drag', () => {
   assert.doesNotMatch(runtime, /isTextDoubleClick|lastTextClick/);

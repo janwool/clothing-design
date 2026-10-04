@@ -187,6 +187,7 @@ window.initializeModelDesigner = () => {
     coverCaptureHidden: [],
     fillScope: 'whole',
     fillMode: 'solid',
+    fillCustomPaint: null,
     designView: '2d',
     projectId: '',
     projectName: '',
@@ -787,7 +788,7 @@ window.initializeModelDesigner = () => {
   }
 
   function restoreTemplatePathPreview(path) {
-    if (!path || path.dataset.color) return;
+    if (!path) return;
     getTemplateFillPath(path, false, false)?.remove();
     path.classList.remove('hover-template-path', 'selected-template-path');
   }
@@ -836,7 +837,9 @@ window.initializeModelDesigner = () => {
   }
 
   function setTemplatePathPreview(path, mode) {
-    if (!path || path.dataset.color) return;
+    if (!path) return;
+    // Highlight filled panels in a separate temporary layer so the 3D hover
+    // preview retains the garment paint and pointerout can remove only the tint.
     const fillPath = getTemplateFillPath(path, true, false);
     setTemplateFillPaint(fillPath, mode === 'selected' ? 'rgba(0,102,255,0.42)' : 'rgba(0,102,255,0.24)');
     path.classList.toggle('hover-template-path', mode === 'hover');
@@ -888,6 +891,7 @@ window.initializeModelDesigner = () => {
 
   function closeModal() {
     clearHoveredTemplatePreview();
+    closeColorPopover();
     setAssetTrayOpen(false);
     designAppearancePanel?.classList.remove('is-mobile-open');
     designModal.classList.remove('active');
@@ -2685,7 +2689,8 @@ window.initializeModelDesigner = () => {
 
   function rgbaFrom(hex, alpha) {
     const rgb = hexToRgb(hex);
-    const a = Math.max(0, Math.min(100, parseFloat(alpha) || 100)) / 100;
+    const parsedAlpha = parseFloat(alpha);
+    const a = Math.max(0, Math.min(100, Number.isFinite(parsedAlpha) ? parsedAlpha : 100)) / 100;
     return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${a})`;
   }
 
@@ -2776,6 +2781,7 @@ window.initializeModelDesigner = () => {
 
   function getAppearancePaint() {
     if (state.fillMode === 'transparent') return 'none';
+    if (state.fillCustomPaint) return state.fillCustomPaint;
     const start = appearanceColorStart?.value || '#ffffff';
     if (state.fillMode === 'solid') return start;
     const end = appearanceColorEnd?.value || '#c39bea';
@@ -2785,6 +2791,7 @@ window.initializeModelDesigner = () => {
 
   function serializeAppearanceState() {
     return {
+      customPaint: state.fillCustomPaint,
       colorStart: appearanceColorStart?.value || '#5f89f4',
       colorEnd: appearanceColorEnd?.value || '#c39bea',
       gradientAngle: Math.max(0, Math.min(360, Number(appearanceGradientAngle?.value) || 135)),
@@ -2800,11 +2807,13 @@ window.initializeModelDesigner = () => {
     const parsed = parseColorState(String(value || '').slice(0, 1200));
     return parsed.mode === 'gradient'
       ? gradientFromStops(parsed.stops, parsed.alpha, parsed.angle)
-      : parsed.start;
+      : parsed.alpha === 100 ? parsed.start : rgbaFrom(parsed.start, parsed.alpha);
   }
 
   function restoreAppearanceState(appearance) {
     if (!appearance || typeof appearance !== 'object') return;
+    state.fillCustomPaint = typeof appearance.customPaint === 'string'
+      ? normalizeSavedPaint(appearance.customPaint) : null;
     if (appearanceColorStart) appearanceColorStart.value = normalizeHex(appearance.colorStart || appearanceColorStart.value);
     if (appearanceColorEnd) appearanceColorEnd.value = normalizeHex(appearance.colorEnd || appearanceColorEnd.value);
     if (appearanceGradientAngle) {
@@ -2875,18 +2884,17 @@ window.initializeModelDesigner = () => {
   function renderAppearanceControls() {
     const paint = getAppearancePaint();
     if (appearanceGradientPreview) appearanceGradientPreview.style.background = paint;
-    const selectedColor = appearanceColorStart?.value?.toLowerCase() || '#ffffff';
     const isSolid = state.fillMode === 'solid';
     const recommendedColors = [...(designAppearancePanel?.querySelectorAll('[data-fill-color]:not([data-fill-color="none"])') || [])];
-    const matchesRecommended = recommendedColors.some((button) => button.dataset.fillColor === selectedColor);
+    const matchesRecommended = recommendedColors.some((button) => button.dataset.fillColor === paint);
     designAppearancePanel?.querySelectorAll('[data-fill-color]').forEach((button) => {
       const active = button.dataset.fillColor === 'none'
         ? state.fillMode === 'transparent'
-        : isSolid && button.dataset.fillColor === selectedColor;
+        : isSolid && button.dataset.fillColor === paint;
       button.classList.toggle('active', active);
       button.setAttribute('aria-pressed', String(active));
     });
-    appearanceCustomColor?.classList.toggle('active', isSolid && !matchesRecommended);
+    appearanceCustomColor?.classList.toggle('active', state.fillMode !== 'transparent' && !matchesRecommended);
     if (appearanceGradientAngleOutput) {
       appearanceGradientAngleOutput.value = `${Math.round(parseFloat(appearanceGradientAngle?.value || 135))}°`;
       appearanceGradientAngleOutput.textContent = appearanceGradientAngleOutput.value;
@@ -2913,14 +2921,30 @@ window.initializeModelDesigner = () => {
     if (colorButton) {
       const color = colorButton.dataset.fillColor;
       state.fillMode = color === 'none' ? 'transparent' : 'solid';
+      state.fillCustomPaint = null;
+      closeColorPopover();
       if (color !== 'none' && appearanceColorStart) appearanceColorStart.value = color;
       applyAppearanceFill();
     }
   });
 
-  appearanceColorStart?.addEventListener('input', () => {
-    state.fillMode = 'solid';
-    applyAppearanceFill();
+  appearanceCustomColor?.addEventListener('click', () => {
+    if (appearanceCustomColor.getAttribute('aria-expanded') === 'true') {
+      closeColorPopover();
+      return;
+    }
+    closeColorPopover();
+    openColorPopover(appearanceCustomColor, {
+      container: designModal.querySelector('.design-modal-content'),
+      placement: 'below',
+      value: getAppearancePaint(),
+      onChange(paint, settings) {
+        state.fillMode = settings.mode;
+        state.fillCustomPaint = settings.mode === 'solid' && settings.alpha === 100 ? settings.color : paint;
+        if (appearanceColorStart) appearanceColorStart.value = settings.color;
+        applyAppearanceFill();
+      }
+    });
   });
   renderAppearanceControls();
 
@@ -3302,6 +3326,7 @@ window.initializeModelDesigner = () => {
   }
 
   function closeColorPopover() {
+    appearanceCustomColor?.setAttribute('aria-expanded', 'false');
     colorPopover.classList.remove('visible');
     colorPopover.innerHTML = '';
     state.colorPicker = null;
@@ -3403,7 +3428,10 @@ window.initializeModelDesigner = () => {
       const width = colorPopover.offsetWidth || 284;
       const height = colorPopover.offsetHeight || 370;
       colorPopover.style.left = `${Math.max(8, Math.min(container.width - width - 8, anchor.left - container.left - width / 2))}px`;
-      colorPopover.style.top = `${Math.max(8, anchor.top - container.top - height - 12)}px`;
+      const below = anchor.bottom - container.top + 12;
+      const top = externalColorPicker.placement === 'below' && below + height <= container.height - 8
+        ? below : anchor.top - container.top - height - 12;
+      colorPopover.style.top = `${Math.max(8, top)}px`;
       return;
     }
     const buttonRect = button.getBoundingClientRect();
@@ -4470,6 +4498,7 @@ window.initializeModelDesigner = () => {
 
   document.addEventListener('pointerdown', (event) => {
     if (!colorPopover.classList.contains('visible')) return;
+    if (appearanceCustomColor?.contains(event.target)) return;
     if (event.target.closest('[data-editor-toolbar]')) return;
     closeColorPopover();
   });
@@ -4658,6 +4687,7 @@ window.initializeModelDesigner = () => {
     await loadTextureDimensions();
     state.fillScope = 'whole';
     state.fillMode = 'solid';
+    state.fillCustomPaint = null;
     if (appearanceColorStart) appearanceColorStart.value = normalized;
     if (appearanceColorEnd) appearanceColorEnd.value = normalized;
     const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
@@ -4722,6 +4752,7 @@ window.initializeModelDesigner = () => {
       state.projectName = project.name;
       state.fillScope = saved.fillScope || 'whole';
       state.fillMode = saved.fillMode || 'solid';
+      state.fillCustomPaint = null;
       state.finalTextureUrl = saved.textureUrl || null;
       window.syncModelTryOnLinks?.(project.id);
       if (saved.appearance) restoreAppearanceState(saved.appearance);
