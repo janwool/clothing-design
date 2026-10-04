@@ -736,6 +736,67 @@ body.ai-chooser-open { overflow: hidden; }
   color: var(--md-muted);
   font-size: 10px;
 }
+.model-product-page .model-artwork-hint,
+.model-product-page .model-artwork-status {
+  max-width: 356px;
+  margin: 10px 0 0;
+  color: #626059;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.model-product-page .model-artwork-status { margin-top: 6px; }
+.model-product-page .model-artwork-status[hidden] { display: none; }
+.model-product-page .model-artwork-status.is-error { color: #9c3027; }
+.model-product-page .model-artwork-anchor[hidden],
+.model-product-page .model-artwork-controls[hidden] { display: none; }
+.model-product-page .model-artwork-anchor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: translate(17px, -50%);
+  pointer-events: auto;
+}
+.model-product-page .model-artwork-handle,
+.model-product-page .model-artwork-resize {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  padding: 0;
+  color: #fff;
+  background: #11110f;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .2);
+  cursor: grab;
+  touch-action: none;
+}
+.model-product-page .model-artwork-resize { width: 28px; height: 28px; font-size: 16px; cursor: nwse-resize; }
+.model-product-page .model-artwork-handle:active { cursor: grabbing; }
+.model-product-page .model-artwork-handle:focus-visible,
+.model-product-page .model-artwork-resize:focus-visible { outline: 3px solid var(--md-lime); outline-offset: 2px; }
+.model-product-page .model-artwork-controls {
+  position: absolute;
+  z-index: 5;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  color: #11110f;
+  background: rgba(255, 255, 255, .95);
+  border: 1px solid rgba(17, 17, 15, .18);
+  box-shadow: 0 6px 22px rgba(17, 17, 15, .1);
+}
+.model-product-page .model-artwork-instruction { margin-right: auto; font-size: 11px; font-weight: 600; }
+.model-product-page .model-artwork-controls label,
+.model-product-page .model-artwork-controls output { font-size: 11px; font-weight: 650; }
+.model-product-page .model-artwork-controls input { width: min(130px, 22%); accent-color: #11110f; }
+.model-product-page .model-artwork-controls button { padding: 5px 9px; color: #11110f; background: transparent; border: 0; border-left: 1px solid var(--md-line); font-size: 11px; font-weight: 650; cursor: pointer; }
+.model-product-page .model-artwork-controls button:hover { color: #a53022; }
 .model-product-page .model-hero-share { display: none; }
 
 .model-product-page .model-viewer-section {
@@ -1042,6 +1103,9 @@ body.ai-chooser-open { overflow: hidden; }
 }
 
 @media (max-width: 520px) {
+  .model-product-page .model-artwork-controls { right: 8px; bottom: 8px; left: 8px; gap: 8px; padding: 7px 9px; }
+  .model-product-page .model-artwork-instruction { display: none; }
+  .model-product-page .model-artwork-controls input { flex: 1; width: auto; }
   .model-product-page .model-detail-title { font-size: clamp(34px, 10vw, 44px); }
   .model-product-page .model-3d-viewer { aspect-ratio: 1/1.12; }
   .model-product-page .quick-style-shelf { grid-template-columns: repeat(3, minmax(148px, 1fr)); }

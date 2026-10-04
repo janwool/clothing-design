@@ -1897,6 +1897,12 @@ window.initializeModelDesigner = () => {
     return textureUrl;
   }
 
+  function applyDetailArtworkToViewer(viewerElement) {
+    if (!designModal.classList.contains('active') && window.ModelDetailArtwork?.hasArtwork?.()) {
+      window.ModelDetailArtwork.applyToViewer(viewerElement);
+    }
+  }
+
   function stopModelRotation() {
     [detailViewer, designerViewer].forEach((viewerElement) => {
       if (!viewerElement) return;
@@ -2076,6 +2082,7 @@ window.initializeModelDesigner = () => {
       if (options.commercialFrame) {
         applyCommercialExportMaterialResponse(exportViewer, renderStandard);
       }
+      applyDetailArtworkToViewer(exportViewer);
       await exportViewer.updateComplete;
       await waitForVisibleModelRender(exportViewer);
       await new Promise(resolve => setTimeout(resolve, 360));
@@ -2104,6 +2111,7 @@ window.initializeModelDesigner = () => {
       if (!textureUrl) {
         await window.ExportEntitlements?.applyModelViewerWatermark?.(exportViewer);
       }
+      applyDetailArtworkToViewer(exportViewer);
       await exportViewer.updateComplete;
       await waitForVisibleModelRender(exportViewer);
       await new Promise(resolve => setTimeout(resolve, 360));
@@ -2161,6 +2169,7 @@ window.initializeModelDesigner = () => {
     if (!textureUrl) {
       await window.ExportEntitlements?.applyModelViewerWatermark?.(exportViewer);
     }
+    applyDetailArtworkToViewer(exportViewer);
     await exportViewer.updateComplete;
     await new Promise(resolve => setTimeout(resolve, 1800));
     return { x: 0, y: 0, width: 1200, height: 1500 };
@@ -4817,6 +4826,7 @@ window.initializeModelDesigner = () => {
       if (textureUrl) await applyTextureToViewer(viewer, textureUrl, { trackApplied: false });
       else if (state.selectedMaterial) await applyMaterialToViewer(viewer, state.selectedMaterial);
       if (!textureUrl) await window.ExportEntitlements?.applyModelViewerWatermark?.(viewer);
+      applyDetailArtworkToViewer(viewer);
       await viewer.updateComplete;
       const saved = exportMaterialStates.get(viewer);
       saved.designed = materials.map(material => material.pbrMetallicRoughness?.baseColorTexture?.texture || null);

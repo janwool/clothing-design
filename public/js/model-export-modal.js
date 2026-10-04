@@ -232,6 +232,7 @@
     if (generation !== null && (generation !== previewGeneration || !dialog.open || state.tab !== 'images')) return;
     const sceneChanged = viewer.getAttribute('src') !== sceneUrl;
     await useViewerSource(sceneUrl);
+    if (window.ModelDetailArtwork?.hasArtwork?.()) window.ModelDetailArtwork.applyToViewer(viewer);
     if (sceneChanged || generation !== null) {
       viewer.cameraTarget = 'auto auto auto';
       viewer.cameraOrbit = layoutKey === 'single' ? camera.front : '0deg 72deg 100%';
@@ -247,6 +248,7 @@
       await useViewerSource(videoSceneUrl);
       if (!isCurrent()) return;
     }
+    if (window.ModelDetailArtwork?.hasArtwork?.()) window.ModelDetailArtwork.applyToViewer(viewer);
     if (registeredVideoSceneUrl !== videoSceneUrl) {
       await window.ModelDesignerExport.registerPreparedVideoViewer(viewer);
       registeredVideoSceneUrl = videoSceneUrl;
@@ -255,6 +257,7 @@
     await waitFrame();
   }
   function clearLiveLayout() {
+    window.ModelDetailSurface?.detach(viewer);
     viewer.removeAttribute('src');
     layoutSceneUrls.forEach(url => URL.revokeObjectURL(url));
     layoutSceneUrls.clear();
