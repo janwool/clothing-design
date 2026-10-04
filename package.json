@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "build": "node scripts/sync-model-viewer-vendor.js && node scripts/build-model-detail-surface.js && node scripts/build-worker.js",
+    "build": "node scripts/sync-model-viewer-vendor.js && node scripts/build-worker.js",
     "sitemap": "node scripts/generate-sitemap.js",
     "indexnow": "node scripts/submit-indexnow.js",
     "assets:upload": "node scripts/upload-site-images-r2.js",

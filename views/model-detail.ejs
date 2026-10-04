@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20261004-inline-artwork-v4', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3']
+  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3']
 }) %>
 <% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
@@ -34,15 +34,7 @@
           <span class="tag tag-free">Free 3D model</span>
         </div>
         <div class="model-actions model-action-grid">
-          <% if (previewModelFileUrl) { %>
-            <button class="detail-action detail-action-primary" id="uploadModelArtworkBtn" type="button" data-analytics-managed="true" aria-describedby="modelArtworkHint">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4m0 0-4 4m4-4 4 4M5 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-              <span>Upload image</span>
-              <svg class="detail-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
-            </button>
-            <input id="quickModelArtworkInput" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" hidden>
-          <% } %>
-          <button class="detail-action" id="designNowBtn" type="button">
+          <button class="detail-action detail-action-primary" id="designNowBtn" type="button">
             <span>Edit in 3D</span>
             <svg class="detail-action-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
           </button>
@@ -63,10 +55,6 @@
             <span>Production</span>
           </button>
         </div>
-        <% if (previewModelFileUrl) { %>
-          <p class="model-artwork-hint" id="modelArtworkHint">PNG, JPG or WebP · up to 10 MB. Place and resize directly on the 3D garment.</p>
-          <p class="model-artwork-status" id="modelArtworkStatus" role="status" aria-live="polite" hidden></p>
-        <% } %>
         <span class="download-render-status" id="downloadRenderStatus" aria-live="polite"></span>
       </div>
 
@@ -97,25 +85,11 @@
               tone-mapping="commerce"
               data-catalog-render-standard="main"
               style="width: 100%; height: 100%;"
-            >
-              <div slot="hotspot-artwork" class="model-artwork-anchor" id="modelArtworkAnchor" data-position="0m 0m 0m" data-normal="0m 0m 1m" hidden>
-                <button class="model-artwork-handle" id="modelArtworkHandle" type="button" aria-label="Drag image on garment; use arrow keys to move">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M2 12h20m-8-7-2-3-2 3m4 14-2 3-2 3M5 10l-3 2 3 2m14-4 3 2-3 2"/></svg>
-                </button>
-                <button class="model-artwork-resize" id="modelArtworkResize" type="button" aria-label="Drag to resize image">↗</button>
-              </div>
-            </model-viewer>
+            ></model-viewer>
             <span class="model-contact-shadow" aria-hidden="true"></span>
             <div class="model-viewer-spinner" role="status" aria-live="polite">
               <i aria-hidden="true"></i>
               <span>Loading 3D</span>
-            </div>
-            <div class="model-artwork-controls" id="modelArtworkControls" role="group" aria-label="Image placement controls" hidden>
-              <span class="model-artwork-instruction">Drag on garment to position</span>
-              <label for="modelArtworkScale">Scale</label>
-              <input id="modelArtworkScale" type="range" min="30" max="250" value="100" aria-label="Image scale">
-              <output id="modelArtworkScaleValue" for="modelArtworkScale">100%</output>
-              <button id="removeModelArtworkBtn" type="button" aria-label="Remove image">Remove</button>
             </div>
           <% } else { %>
             <div class="model-viewer-placeholder">
@@ -1147,7 +1121,6 @@ function applyCatalogMaterialResponse(element, standard = detailSceneStandard) {
   const neutralFactor = [...baseColor, 1];
 
   (element.model.materials || []).forEach((material) => {
-    if (!material.isLoaded) return;
     const pbr = material.pbrMetallicRoughness;
     if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);
     pbr?.setMetallicFactor?.(0);
@@ -1670,7 +1643,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20261004-surface-artwork-v1',
+      src: '/js/model-designer.js?v=20260928-editor-preview-v3',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1942,11 +1915,8 @@ window.ModelDesignerConfig = Object.freeze({
 <% } %>
 
 <script src="/js/model-export-scene.js?v=20260925-zero-azimuth-v1" defer></script>
-<script src="/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0" defer></script>
-<script src="/js/model-detail-surface.bundle.js?v=20261004-projection-v9" defer></script>
-<script src="/js/model-detail-artwork.js?v=20261004-inline-artwork-v20" defer></script>
 <script src="/js/model-export-video.js?v=20261001-remove-comparison-v1" defer></script>
 <script src="/js/cloz-dropdown.js?v=20260924-v1" defer></script>
-<script src="/js/model-export-modal.js?v=20261004-detail-artwork-v1" defer></script>
+<script src="/js/model-export-modal.js?v=20261001-studio-render-copy-v7" defer></script>
 
 <%- include('partials/footer') %>
