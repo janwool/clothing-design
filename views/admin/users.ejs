@@ -5,12 +5,13 @@
 
   <main class="admin-main">
     <div class="admin-header">
-      <h1 class="admin-title">Users</h1>
+      <h1 class="admin-title"><%= typeof subscribersOnly !== 'undefined' && subscribersOnly ? 'Active Subscribers' : 'Users' %></h1>
+      <% if (typeof subscribersOnly !== 'undefined' && subscribersOnly) { %><a href="/admin/users" class="btn btn-secondary btn-small">View all users</a><% } %>
     </div>
 
     <div class="data-card">
       <div class="data-header">
-        <h2 class="data-title">All Users</h2>
+        <h2 class="data-title"><%= typeof subscribersOnly !== 'undefined' && subscribersOnly ? 'Active Subscribers' : 'All Users' %></h2>
         <div class="data-search">
           <input type="text" class="search-input" placeholder="Search users..." id="searchInput">
         </div>
@@ -71,8 +72,13 @@
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          <h3>No users yet</h3>
-          <p>Users will appear here once they register.</p>
+          <% if (typeof error !== 'undefined' && error) { %>
+            <h3>Unable to load users</h3><p role="alert"><%= error %></p>
+          <% } else if (typeof subscribersOnly !== 'undefined' && subscribersOnly) { %>
+            <h3>No active subscribers</h3><p>Users with current paid plan access will appear here.</p>
+          <% } else { %>
+            <h3>No users yet</h3><p>Users will appear here once they register.</p>
+          <% } %>
         </div>
       <% } %>
     </div>

@@ -28,6 +28,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -242,6 +243,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -368,6 +370,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -497,6 +500,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -652,6 +656,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -840,6 +845,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -1045,6 +1051,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -1233,6 +1240,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -1397,6 +1405,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -1494,15 +1503,15 @@ config = __locals.config,
     ; __append("\n\n  <main class=\"admin-main dashboard-page\">\n    <header class=\"dashboard-header\">\n      <div>\n        <h1 class=\"admin-title\">Dashboard</h1>\n      </div>\n      <button class=\"sidebar-toggle\" type=\"button\" aria-label=\"Open admin menu\" aria-controls=\"adminSidebar\" aria-expanded=\"false\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\">\n          <line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"/><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/><line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"/>\n        </svg>\n      </button>\n    </header>\n\n    <section class=\"dashboard-section\" aria-labelledby=\"accountSummaryTitle\">\n      <h2 id=\"accountSummaryTitle\" class=\"dashboard-section-title\">Account Summary</h2>\n      <div class=\"dashboard-account-grid\">\n        <a href=\"/admin/users\" class=\"dashboard-metric dashboard-metric-primary\">\n          <span class=\"dashboard-metric-label\">Users</span>\n          <strong class=\"dashboard-metric-value\">")
     ; __append(escapeFn( counts.users ))
     ; __append("</strong>\n          <span class=\"dashboard-metric-detail\">Registered accounts</span>\n          <span class=\"dashboard-metric-link\">View users <span aria-hidden=\"true\">→</span></span>\n        </a>\n        <a href=\"")
-    ; __append(escapeFn( counts.subscribers == null ? '/admin' : '/admin/users' ))
+    ; __append(escapeFn( counts.subscribers == null ? '/admin' : '/admin/users?view=subscribers' ))
     ; __append("\" class=\"dashboard-metric dashboard-metric-primary dashboard-subscriber-metric\" aria-label=\"Active subscribers: ")
-    ; __append(escapeFn( counts.subscribers == null ? 'unavailable. Refresh dashboard' : counts.subscribers + '. View users' ))
+    ; __append(escapeFn( counts.subscribers == null ? 'unavailable. Refresh dashboard' : counts.subscribers + '. View subscribers' ))
     ; __append("\">\n          <span class=\"dashboard-metric-label\">Active Subscribers</span>\n          <strong class=\"dashboard-metric-value\">")
     ; __append(escapeFn( counts.subscribers == null ? '—' : counts.subscribers ))
     ; __append("</strong>\n          <span class=\"dashboard-metric-detail\">")
     ; __append(escapeFn( counts.subscribers == null ? 'Count unavailable' : 'Paid plans · active access' ))
     ; __append("</span>\n          <span class=\"dashboard-metric-link\">")
-    ; __append(escapeFn( counts.subscribers == null ? 'Refresh dashboard' : 'View users' ))
+    ; __append(escapeFn( counts.subscribers == null ? 'Refresh dashboard' : 'View subscribers' ))
     ; __append(" <span aria-hidden=\"true\">→</span></span>\n        </a>\n      </div>\n    </section>\n\n    <section class=\"dashboard-section\" aria-labelledby=\"contentAssetsTitle\">\n      <h2 id=\"contentAssetsTitle\" class=\"dashboard-section-title\">Content &amp; Assets</h2>\n      <div class=\"dashboard-metric-grid\">\n        <a href=\"/admin/models-3d\" class=\"dashboard-metric\">\n          <span class=\"dashboard-metric-label\">3D Models</span><strong class=\"dashboard-metric-value\">")
     ; __append(escapeFn( counts.models3d ))
     ; __append("</strong>\n          <span class=\"dashboard-metric-detail\">Total models</span><span class=\"dashboard-metric-link\">Manage 3D models <span aria-hidden=\"true\">→</span></span>\n        </a>\n        <a href=\"/admin/models-2d\" class=\"dashboard-metric\">\n          <span class=\"dashboard-metric-label\">2D Templates</span><strong class=\"dashboard-metric-value\">")
@@ -1553,6 +1562,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -1830,6 +1840,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -2128,6 +2139,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -2300,6 +2312,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -2392,27 +2405,51 @@ config = __locals.config,
   footerVariant = __locals.footerVariant,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
     ; __append( include('partials/header') )
-    ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
+    ; __append("\n")
+    ;  const rendersOnly = page === 'admin-renders'; const libraryPath = rendersOnly ? '/admin/renders' : '/admin/images';
+    ; __append("\n<link rel=\"stylesheet\" href=\"/css/admin-renders.css?v=20261007-v1\">\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
-    ; __append("\n\n  <main class=\"admin-main project-admin-main user-upload-admin-main\">\n    <div class=\"admin-header project-page-header\">\n      <div>\n        <span class=\"admin-eyebrow\">Operations / User media</span>\n        <h1 class=\"admin-title\">User Uploads</h1>\n        <p class=\"admin-subtitle\">Review artwork, generated previews, textures, and AI try-on results stored by users.</p>\n      </div>\n      <button class=\"sidebar-toggle\" type=\"button\" aria-label=\"Open admin navigation\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"/>\n          <line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/>\n          <line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n\n    <section class=\"project-stats\" aria-label=\"Upload summary\">\n      <article class=\"project-stat project-stat-total\">\n        <span>All uploads</span>\n        <strong>")
+    ; __append("\n\n  <main class=\"admin-main project-admin-main user-upload-admin-main ")
+    ; __append(escapeFn( rendersOnly ? 'user-render-admin-main' : '' ))
+    ; __append("\">\n    <div class=\"admin-header project-page-header\">\n      <div>\n        <span class=\"admin-eyebrow\">Operations / User media</span>\n        <h1 class=\"admin-title\">")
+    ; __append(escapeFn( rendersOnly ? 'User Renders' : 'User Uploads' ))
+    ; __append("</h1>\n        <p class=\"admin-subtitle\">")
+    ; __append(escapeFn( rendersOnly ? 'Review product images rendered and saved by users.' : 'Review artwork, generated previews, textures, and AI try-on results stored by users.' ))
+    ; __append("</p>\n      </div>\n      <button class=\"sidebar-toggle\" type=\"button\" aria-label=\"Open admin navigation\">\n        <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n          <line x1=\"3\" y1=\"12\" x2=\"21\" y2=\"12\"/>\n          <line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"/>\n          <line x1=\"3\" y1=\"18\" x2=\"21\" y2=\"18\"/>\n        </svg>\n      </button>\n    </div>\n\n    <section class=\"project-stats\" aria-label=\"Upload summary\">\n      <article class=\"project-stat project-stat-total\">\n        <span>")
+    ; __append(escapeFn( rendersOnly ? 'Rendered images' : 'All uploads' ))
+    ; __append("</span>\n        <strong>")
     ; __append(escapeFn( imageStats.total ))
     ; __append("</strong>\n        <small>")
     ; __append(escapeFn( imageStats.creators ))
     ; __append(" contributing ")
     ; __append(escapeFn( imageStats.creators === 1 ? 'user' : 'users' ))
-    ; __append("</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>Artwork</span>\n        <strong>")
+    ; __append("</small>\n      </article>\n      ")
+    ;  if (!rendersOnly) {
+    ; __append("\n      <article class=\"project-stat\">\n        <span>Artwork</span>\n        <strong>")
     ; __append(escapeFn( imageStats.artwork ))
     ; __append("</strong>\n        <small>User-supplied design assets</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>AI try-on</span>\n        <strong>")
     ; __append(escapeFn( imageStats.tryOn ))
-    ; __append("</strong>\n        <small>Generated result images</small>\n      </article>\n      <article class=\"project-stat\">\n        <span>Storage</span>\n        <strong class=\"user-upload-storage\">")
+    ; __append("</strong>\n        <small>Generated result images</small>\n      </article>\n      ")
+    ;  } else {
+    ; __append("\n      <article class=\"project-stat\"><span>Users</span><strong>")
+    ; __append(escapeFn( imageStats.creators ))
+    ; __append("</strong><small>Users with saved renders</small></article>\n      ")
+    ;  }
+    ; __append("\n      <article class=\"project-stat\">\n        <span>Storage</span>\n        <strong class=\"user-upload-storage\">")
     ; __append(escapeFn( imageStats.storage ))
     ; __append("</strong>\n        <small>Total recorded file size</small>\n      </article>\n    </section>\n\n    <section class=\"project-library user-upload-library\">\n      <header class=\"project-library-header\">\n        <div>\n          <span class=\"admin-eyebrow\">Media library</span>\n          <h2>")
     ; __append(escapeFn( imagePagination.total ))
     ; __append(" matching ")
     ; __append(escapeFn( imagePagination.total === 1 ? 'image' : 'images' ))
-    ; __append("</h2>\n        </div>\n        <form class=\"project-filters\" action=\"/admin/images\" method=\"get\">\n          <label class=\"project-search-field\">\n            <span class=\"sr-only\">Search uploaded images</span>\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <circle cx=\"11\" cy=\"11\" r=\"8\"/>\n              <path d=\"m21 21-4.35-4.35\"/>\n            </svg>\n            <input type=\"search\" name=\"q\" value=\"")
+    ; __append("</h2>\n        </div>\n        <form class=\"project-filters\" action=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("\" method=\"get\">\n          <label class=\"project-search-field\">\n            <span class=\"sr-only\">")
+    ; __append(escapeFn( rendersOnly ? 'Search rendered images' : 'Search uploaded images' ))
+    ; __append("</span>\n            <svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\">\n              <circle cx=\"11\" cy=\"11\" r=\"8\"/>\n              <path d=\"m21 21-4.35-4.35\"/>\n            </svg>\n            <input type=\"search\" name=\"q\" value=\"")
     ; __append(escapeFn( imageFilters.search ))
-    ; __append("\" placeholder=\"File, user or image ID…\">\n          </label>\n          <select name=\"purpose\" aria-label=\"Filter by image purpose\">\n            <option value=\"all\" ")
+    ; __append("\" placeholder=\"File, user or image ID…\">\n          </label>\n          ")
+    ;  if (!rendersOnly) {
+    ; __append("\n          <select name=\"purpose\" aria-label=\"Filter by image purpose\">\n            <option value=\"all\" ")
     ; __append(escapeFn( imageFilters.purpose === 'all' ? 'selected' : '' ))
     ; __append(">All image types</option>\n            <option value=\"artwork\" ")
     ; __append(escapeFn( imageFilters.purpose === 'artwork' ? 'selected' : '' ))
@@ -2422,15 +2459,27 @@ config = __locals.config,
     ; __append(escapeFn( imageFilters.purpose === 'project-texture' ? 'selected' : '' ))
     ; __append(">Project textures</option>\n            <option value=\"try-on-result\" ")
     ; __append(escapeFn( imageFilters.purpose === 'try-on-result' ? 'selected' : '' ))
-    ; __append(">AI try-on results</option>\n          </select>\n          <button type=\"submit\" class=\"btn btn-primary btn-small\">Filter</button>\n          ")
-    ;  if (imageFilters.search || imageFilters.purpose !== 'all') {
-    ; __append("\n            <a href=\"/admin/images\" class=\"project-clear-filter\">Clear</a>\n          ")
+    ; __append(">AI try-on results</option>\n            <option value=\"ai-render-export\" ")
+    ; __append(escapeFn( imageFilters.purpose === 'ai-render-export' ? 'selected' : '' ))
+    ; __append(">Product renders</option>\n          </select>\n          ")
+    ;  }
+    ; __append("\n          <button type=\"submit\" class=\"btn btn-primary btn-small\">")
+    ; __append(escapeFn( rendersOnly ? 'Search' : 'Filter' ))
+    ; __append("</button>\n          ")
+    ;  if (imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all')) {
+    ; __append("\n            <a href=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("\" class=\"project-clear-filter\">Clear</a>\n          ")
     ;  }
     ; __append("\n        </form>\n      </header>\n\n      ")
     ;  if (error) {
     ; __append("\n        <div class=\"inquiry-error\" role=\"alert\">")
     ; __append(escapeFn( error ))
-    ; __append("</div>\n      ")
+    ; __append(" <a href=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("?q=")
+    ; __append(escapeFn( encodeURIComponent(imageFilters.search) ))
+    ; __append("\">Try again</a></div>\n      ")
     ;  }
     ; __append("\n\n      ")
     ;  if (items && items.length > 0) {
@@ -2446,7 +2495,9 @@ config = __locals.config,
     ; __append(escapeFn( item.image_url_safe ))
     ; __append("\" alt=\"")
     ; __append(escapeFn( item.original_name || 'User uploaded image' ))
-    ; __append("\" loading=\"lazy\">\n                    <span class=\"user-upload-open\" aria-hidden=\"true\">Open ↗</span>\n                  </a>\n                ")
+    ; __append("\" loading=\"lazy\">\n                    <span class=\"user-upload-open\" aria-hidden=\"true\">")
+    ; __append(escapeFn( rendersOnly ? 'Open original ↗' : 'Open ↗' ))
+    ; __append("</span>\n                    <span class=\"user-image-fallback\" hidden>Preview unavailable</span>\n                  </a>\n                ")
     ;  } else {
     ; __append("\n                  <div class=\"project-admin-placeholder\">\n                    <span>")
     ; __append(escapeFn( String(index + 1 + ((imagePagination.page - 1) * 30)).padStart(2, '0') ))
@@ -2466,7 +2517,9 @@ config = __locals.config,
     ; __append(escapeFn( item.original_name || 'Untitled image' ))
     ; __append("\">")
     ; __append(escapeFn( item.original_name || 'Untitled image' ))
-    ; __append("</h3>\n                <p>Uploaded ")
+    ; __append("</h3>\n                <p>")
+    ; __append(escapeFn( rendersOnly ? 'Rendered' : 'Uploaded' ))
+    ; __append(" ")
     ; __append(escapeFn( item.created_at_display ))
     ; __append("</p>\n                <dl class=\"project-admin-meta user-upload-meta\">\n                  <div><dt>Size</dt><dd>")
     ; __append(escapeFn( item.size_display ))
@@ -2482,7 +2535,9 @@ config = __locals.config,
     ;  if (imagePagination.pageCount > 1) {
     ; __append("\n          <nav class=\"inquiry-pagination project-pagination\" aria-label=\"Upload pages\">\n            ")
     ;  if (imagePagination.page > 1) {
-    ; __append("\n              <a href=\"/admin/images?q=")
+    ; __append("\n              <a href=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("?q=")
     ; __append(escapeFn( encodeURIComponent(imageFilters.search) ))
     ; __append("&purpose=")
     ; __append(escapeFn( encodeURIComponent(imageFilters.purpose) ))
@@ -2498,7 +2553,9 @@ config = __locals.config,
     ; __append(escapeFn( imagePagination.pageCount ))
     ; __append("</strong>\n            ")
     ;  if (imagePagination.page < imagePagination.pageCount) {
-    ; __append("\n              <a href=\"/admin/images?q=")
+    ; __append("\n              <a href=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("?q=")
     ; __append(escapeFn( encodeURIComponent(imageFilters.search) ))
     ; __append("&purpose=")
     ; __append(escapeFn( encodeURIComponent(imageFilters.purpose) ))
@@ -2513,16 +2570,18 @@ config = __locals.config,
     ; __append("\n      ")
     ;  } else if (!error) {
     ; __append("\n        <div class=\"empty-state project-empty-state\">\n          <div class=\"project-empty-mark user-upload-empty-mark\" aria-hidden=\"true\">\n            <svg width=\"34\" height=\"34\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\">\n              <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n              <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n              <path d=\"m21 15-5-5L5 21\"/>\n            </svg>\n          </div>\n          <h3>")
-    ; __append(escapeFn( imageFilters.search || imageFilters.purpose !== 'all' ? 'No matching uploads' : 'No user uploads yet' ))
+    ; __append(escapeFn( imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all') ? (rendersOnly ? 'No matching renders' : 'No matching uploads') : (rendersOnly ? 'No rendered images yet' : 'No user uploads yet') ))
     ; __append("</h3>\n          <p>")
-    ; __append(escapeFn( imageFilters.search || imageFilters.purpose !== 'all' ? 'Try another search or clear the active filter.' : 'Images will appear here when users upload artwork or generate visual results.' ))
+    ; __append(escapeFn( imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all') ? 'Try another search or clear the active filter.' : (rendersOnly ? 'Rendered product images will appear here when users save them.' : 'Images will appear here when users upload artwork or generate visual results.') ))
     ; __append("</p>\n          ")
-    ;  if (imageFilters.search || imageFilters.purpose !== 'all') {
-    ; __append("\n            <a href=\"/admin/images\" class=\"btn btn-secondary btn-small\">Clear filters</a>\n          ")
+    ;  if (imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all')) {
+    ; __append("\n            <a href=\"")
+    ; __append(escapeFn( libraryPath ))
+    ; __append("\" class=\"btn btn-secondary btn-small\">Clear filters</a>\n          ")
     ;  }
     ; __append("\n        </div>\n      ")
     ;  }
-    ; __append("\n    </section>\n  </main>\n</div>\n\n")
+    ; __append("\n    </section>\n  </main>\n</div>\n\n<script src=\"/js/admin-user-images.js?v=20261007-v1\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -2556,6 +2615,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -2870,6 +2930,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3044,6 +3105,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3238,6 +3300,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3361,6 +3424,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3490,6 +3554,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3597,7 +3662,9 @@ config = __locals.config,
     ; __append(escapeFn( page === 'admin-projects' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"m12 3 8 4.5v9L12 21l-8-4.5v-9z\"/>\n        <path d=\"m4 7.5 8 4.5 8-4.5M12 12v9\"/>\n      </svg>\n      User Projects\n    </a>\n\n    <a href=\"/admin/images\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-images' ? 'active' : '' ))
-    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n        <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n        <path d=\"m21 15-5-5L5 21\"/>\n      </svg>\n      User Uploads\n    </a>\n\n    <a href=\"/admin/inquiries\" class=\"sidebar-link ")
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/>\n        <circle cx=\"8.5\" cy=\"8.5\" r=\"1.5\"/>\n        <path d=\"m21 15-5-5L5 21\"/>\n      </svg>\n      User Uploads\n    </a>\n\n    <a href=\"/admin/renders\" class=\"sidebar-link ")
+    ; __append(escapeFn( page === 'admin-renders' ? 'active' : '' ))
+    ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\"/><path d=\"m3 16 6-6 4 4 3-3 5 5\"/></svg>\n      User Renders\n    </a>\n\n    <a href=\"/admin/inquiries\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-inquiries' ? 'active' : '' ))
     ; __append("\">\n      <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n        <path d=\"M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z\"/>\n        <path d=\"M8 9h8M8 13h5\"/>\n      </svg>\n      Custom Inquiries\n    </a>\n\n    <a href=\"/admin/feedback\" class=\"sidebar-link ")
     ; __append(escapeFn( page === 'admin-feedback' ? 'active' : '' ))
@@ -3637,6 +3704,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -3909,6 +3977,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -4083,6 +4152,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -4177,7 +4247,15 @@ config = __locals.config,
     ; __append( include('partials/header') )
     ; __append("\n\n<div class=\"admin-wrapper\">\n  ")
     ; __append( include('partials/sidebar') )
-    ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">Users</h1>\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">All Users</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
+    ; __append("\n\n  <main class=\"admin-main\">\n    <div class=\"admin-header\">\n      <h1 class=\"admin-title\">")
+    ; __append(escapeFn( typeof subscribersOnly !== 'undefined' && subscribersOnly ? 'Active Subscribers' : 'Users' ))
+    ; __append("</h1>\n      ")
+    ;  if (typeof subscribersOnly !== 'undefined' && subscribersOnly) {
+    ; __append("<a href=\"/admin/users\" class=\"btn btn-secondary btn-small\">View all users</a>")
+    ;  }
+    ; __append("\n    </div>\n\n    <div class=\"data-card\">\n      <div class=\"data-header\">\n        <h2 class=\"data-title\">")
+    ; __append(escapeFn( typeof subscribersOnly !== 'undefined' && subscribersOnly ? 'Active Subscribers' : 'All Users' ))
+    ; __append("</h2>\n        <div class=\"data-search\">\n          <input type=\"text\" class=\"search-input\" placeholder=\"Search users...\" id=\"searchInput\">\n        </div>\n      </div>\n\n      ")
     ;  if (items && items.length > 0) {
     ; __append("\n        <div class=\"users-table-scroll\" role=\"region\" aria-label=\"Users table\" tabindex=\"0\">\n        <table class=\"data-table\">\n          <thead>\n            <tr>\n              <th>ID</th>\n              <th>Username</th>\n              <th>Email</th>\n              <th>Plan</th>\n              <th>Projects</th>\n              <th>Image storage</th>\n              <th>Created</th>\n              <th>Actions</th>\n            </tr>\n          </thead>\n          <tbody>\n            ")
     ;  items.forEach(item => {
@@ -4227,7 +4305,17 @@ config = __locals.config,
     ;  })
     ; __append("\n          </tbody>\n        </table>\n        </div>\n      ")
     ;  } else {
-    ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          <h3>No users yet</h3>\n          <p>Users will appear here once they register.</p>\n        </div>\n      ")
+    ; __append("\n        <div class=\"empty-state\">\n          <svg width=\"48\" height=\"48\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\">\n            <path d=\"M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\"/>\n            <circle cx=\"12\" cy=\"7\" r=\"4\"/>\n          </svg>\n          ")
+    ;  if (typeof error !== 'undefined' && error) {
+    ; __append("\n            <h3>Unable to load users</h3><p role=\"alert\">")
+    ; __append(escapeFn( error ))
+    ; __append("</p>\n          ")
+    ;  } else if (typeof subscribersOnly !== 'undefined' && subscribersOnly) {
+    ; __append("\n            <h3>No active subscribers</h3><p>Users with current paid plan access will appear here.</p>\n          ")
+    ;  } else {
+    ; __append("\n            <h3>No users yet</h3><p>Users will appear here once they register.</p>\n          ")
+    ;  }
+    ; __append("\n        </div>\n      ")
     ;  }
     ; __append("\n    </div>\n  </main>\n</div>\n\n<script>\n// Search functionality\ndocument.getElementById('searchInput').addEventListener('input', function(e) {\n  const term = e.target.value.toLowerCase();\n  document.querySelectorAll('.data-table tbody tr').forEach(row => {\n    const text = row.textContent.toLowerCase();\n    row.style.display = text.includes(term) ? '' : 'none';\n  });\n});\n\n// Delete user\nasync function deleteUser(id) {\n  if (!confirm('Are you sure you want to delete this user?')) return;\n\n  try {\n    const response = await fetch('/admin/users/' + id, { method: 'DELETE' });\n    const result = await response.json();\n    if (result.success) {\n      window.location.reload();\n    } else {\n      alert('Error: ' + result.error);\n    }\n  } catch (err) {\n    alert('Error deleting user');\n  }\n}\n\nasync function saveUserPlan(id, row) {\n  const control = row.querySelector('[data-user-plan-control]');\n  const plan = control.querySelector('[data-user-plan]').value;\n  const billingInterval = control.querySelector('[data-user-billing]').value;\n  const button = control.querySelector('[data-action=\"save-plan\"]');\n  button.disabled = true;\n  try {\n    const response = await fetch('/admin/users/' + id + '/plan', {\n      method: 'PATCH',\n      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },\n      body: JSON.stringify({ plan, billingInterval })\n    });\n    const result = await response.json();\n    if (!response.ok || !result.success) throw new Error(result.error || 'Plan could not be updated.');\n    button.textContent = 'Saved';\n    window.setTimeout(() => { button.textContent = 'Save'; }, 1500);\n  } catch (error) {\n    alert(error.message || 'Plan could not be updated.');\n  } finally {\n    button.disabled = false;\n  }\n}\n\ndocument.querySelectorAll('[data-user-plan]').forEach(select => {\n  select.addEventListener('change', () => {\n    const billing = select.closest('[data-user-plan-control]').querySelector('[data-user-billing]');\n    billing.disabled = select.value === 'free' || select.value === 'business';\n  });\n});\n\n// Event delegation for delete buttons\ndocument.querySelector('.data-table tbody')?.addEventListener('click', function(e) {\n  const btn = e.target.closest('[data-action]');\n  if (!btn) return;\n  const id = btn.getAttribute('data-id');\n  const action = btn.getAttribute('data-action');\n  if (action === 'delete') {\n    deleteUser(id);\n  } else if (action === 'save-plan') {\n    saveUserPlan(id, btn.closest('tr'));\n  }\n});\n</script>\n\n")
     ; __append( include('partials/footer') )
@@ -4263,6 +4351,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -4479,6 +4568,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -4633,6 +4723,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -4789,6 +4880,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -5086,6 +5178,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -5258,6 +5351,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -5462,6 +5556,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -5804,6 +5899,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -5984,6 +6080,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -6311,6 +6408,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -6483,6 +6581,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -6603,7 +6702,7 @@ config = __locals.config,
     ;  })
     ; __append("\n              </div>\n            </div>\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">02 / Material finish</span>\n              <div class=\"dress-segmented dress-material-tabs\">\n                <button type=\"button\" class=\"active\" data-material=\"matte\">Matte</button>\n                <button type=\"button\" data-material=\"satin\">Satin</button>\n                <button type=\"button\" data-material=\"linen\">Linen</button>\n                <button type=\"button\" data-material=\"twill\">Twill</button>\n              </div>\n            </div>\n            <a class=\"dress-inline-link\" href=\"")
     ; __append(escapeFn( toolPage.editorHref ))
-    ; __append("\">Add artwork in full editor <span>↗</span></a>\n          </aside>\n\n          <div class=\"dress-model-stage\" id=\"dressModelStage\" aria-busy=\"false\">\n            <div class=\"dress-canvas-meta\"><span>")
+    ; __append("\">Add artwork in full editor <span>↗</span></a>\n          </aside>\n\n          <div class=\"dress-model-stage is-loading\" id=\"dressModelStage\" aria-busy=\"true\">\n            <div class=\"dress-canvas-meta\"><span>")
     ; __append(escapeFn( toolPage.primaryModel?.shortTitle || 'DRESS MODEL' ))
     ; __append("</span><span>REAL-TIME 3D</span></div>\n            <img class=\"dress-model-poster\" src=\"")
     ; __append(escapeFn( toolPage.image ))
@@ -6611,9 +6710,9 @@ config = __locals.config,
     ; __append(escapeFn( toolPage.heroModel.alt ))
     ; __append("\" width=\"1200\" height=\"1500\" loading=\"lazy\" decoding=\"async\">\n            <model-viewer\n              id=\"dressModelViewer\"\n              class=\"dress-model-viewer\"\n              data-model-src=\"")
     ; __append(escapeFn( toolPage.heroModel.src ))
-    ; __append("\"\n              alt=\"")
+    ; __append("\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              interaction-prompt=\"none\"\n              alt=\"")
     ; __append(escapeFn( toolPage.heroModel.alt ))
-    ; __append("\"\n              camera-controls\n              camera-orbit=\"0deg 75deg 110%\"\n              shadow-intensity=\"0.45\"\n              shadow-softness=\"0.9\"\n              exposure=\"0.9\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              tone-mapping=\"commerce\"\n              hidden\n            ></model-viewer>\n            <button class=\"dress-load-model\" id=\"dressLoadModel\" type=\"button\"><span>Load Live 3D</span><small>Rotate and customize the model</small></button>\n            <div class=\"dress-canvas-footer\"><span id=\"dressPreviewStatus\">Preview ready</span><strong>DRAG TO ROTATE</strong></div>\n          </div>\n\n          <aside class=\"dress-control-panel dress-control-panel-right\" aria-label=\"Dress view and export controls\">\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">03 / View</span>\n              <div class=\"dress-segmented dress-view-tabs\">\n                <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n                <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n                <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n              </div>\n            </div>\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">04 / Lighting</span>\n              <div class=\"dress-segmented dress-light-tabs\">\n                <button type=\"button\" class=\"active\" data-exposure=\"0.9\" data-shadow=\"0.45\">Studio</button>\n                <button type=\"button\" data-exposure=\"1.15\" data-shadow=\"0.25\">Soft</button>\n                <button type=\"button\" data-exposure=\"0.72\" data-shadow=\"0.8\">Contrast</button>\n              </div>\n            </div>\n            <button class=\"dress-export-button\" id=\"dressExportPreview\" type=\"button\">Export PNG <span>↓</span></button>\n          </aside>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-models-section\" id=\"dress-models\" aria-labelledby=\"models-title\">\n      <div class=\"container\">\n        <div class=\"dress-section-heading dress-reveal\">\n          <div><p class=\"dress-kicker\"><span></span> Online dress library</p><h2 id=\"models-title\">Choose a Dress Model to Customize</h2></div>\n          <a class=\"dress-inline-link\" href=\"/3d-models?category=dress\">View all dress models <span>→</span></a>\n        </div>\n        <div class=\"dress-model-grid\">\n          ")
+    ; __append("\"\n              camera-controls\n              camera-orbit=\"0deg 75deg 110%\"\n              shadow-intensity=\"0.45\"\n              shadow-softness=\"0.9\"\n              exposure=\"0.9\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              tone-mapping=\"commerce\"\n              hidden\n            ></model-viewer>\n            <button class=\"dress-load-model\" id=\"dressLoadModel\" type=\"button\" hidden><span>Retry preview</span></button>\n            <div class=\"dress-canvas-footer\"><span id=\"dressPreviewStatus\" role=\"status\" aria-live=\"polite\">Loading preview…</span><strong>DRAG TO ROTATE</strong></div>\n          </div>\n\n          <aside class=\"dress-control-panel dress-control-panel-right\" aria-label=\"Dress view and export controls\">\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">03 / View</span>\n              <div class=\"dress-segmented dress-view-tabs\">\n                <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n                <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n                <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n              </div>\n            </div>\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">04 / Lighting</span>\n              <div class=\"dress-segmented dress-light-tabs\">\n                <button type=\"button\" class=\"active\" data-exposure=\"0.9\" data-shadow=\"0.45\">Studio</button>\n                <button type=\"button\" data-exposure=\"1.15\" data-shadow=\"0.25\">Soft</button>\n                <button type=\"button\" data-exposure=\"0.72\" data-shadow=\"0.8\">Contrast</button>\n              </div>\n            </div>\n            <button class=\"dress-export-button\" id=\"dressExportPreview\" type=\"button\">Export PNG <span>↓</span></button>\n          </aside>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-models-section\" id=\"dress-models\" aria-labelledby=\"models-title\">\n      <div class=\"container\">\n        <div class=\"dress-section-heading dress-reveal\">\n          <div><p class=\"dress-kicker\"><span></span> Online dress library</p><h2 id=\"models-title\">Choose a Dress Model to Customize</h2></div>\n          <a class=\"dress-inline-link\" href=\"/3d-models?category=dress\">View all dress models <span>→</span></a>\n        </div>\n        <div class=\"dress-model-grid\">\n          ")
     ;  dressModels.slice(0, 4).forEach(function(model, index) {
     ; __append("\n            <article class=\"dress-model-card dress-reveal\" style=\"--delay:")
     ; __append(escapeFn( index * 60 ))
@@ -6695,7 +6794,7 @@ config = __locals.config,
     ; __append(escapeFn( toolPage.editorHref ))
     ; __append("\">Design a Dress Free <span>↗</span></a>\n        </div>\n        <div class=\"dress-final-model\">\n          <span class=\"dress-orbit-ring\" aria-hidden=\"true\"></span>\n          <img src=\"")
     ; __append(escapeFn( toolPage.image ))
-    ; __append("\" alt=\"3D dress model ready to customize in ClozDesign\" width=\"900\" height=\"1100\" loading=\"lazy\" decoding=\"async\">\n        </div>\n        <nav aria-label=\"Explore more ClozDesign tools\">\n          <a href=\"/3d-models?category=dress\">Dress models</a>\n          <a href=\"/tools/3d-clothing-mockup\">3D mockups</a>\n          <a href=\"/tools/transparent-mockup-maker\">PNG export</a>\n          <a href=\"/blog\">Design guides</a>\n        </nav>\n      </div>\n    </section>\n  </main>\n</div>\n\n<script src=\"/js/dress-designer-landing.js?v=20260919-seo-3d-v2\" defer></script>\n")
+    ; __append("\" alt=\"3D dress model ready to customize in ClozDesign\" width=\"900\" height=\"1100\" loading=\"lazy\" decoding=\"async\">\n        </div>\n        <nav aria-label=\"Explore more ClozDesign tools\">\n          <a href=\"/3d-models?category=dress\">Dress models</a>\n          <a href=\"/tools/3d-clothing-mockup\">3D mockups</a>\n          <a href=\"/tools/transparent-mockup-maker\">PNG export</a>\n          <a href=\"/blog\">Design guides</a>\n        </nav>\n      </div>\n    </section>\n  </main>\n</div>\n\n<script src=\"/js/dress-designer-landing.js?v=20261005-auto-3d-v3\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -6729,6 +6828,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -6854,6 +6954,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -6984,6 +7085,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -7243,6 +7345,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -7419,6 +7522,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -7571,6 +7675,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -7711,6 +7816,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -7870,7 +7976,7 @@ config = __locals.config,
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n              alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              disable-tap\n              disable-zoom\n              camera-orbit=\"0deg 72deg 142%\"\n              camera-target=\"auto auto auto\"\n              field-of-view=\"28deg\"\n              shadow-intensity=\"0.32\"\n              shadow-softness=\"0.9\"\n              exposure=\"1.5\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-camera-relative-studio-light=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-studio-light-reference-azimuth=\"-16\"\n              data-studio-light-azimuth-offset=\"45\"\n              tone-mapping=\"commerce\"\n              data-catalog-render-standard=\"main\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n            <span class=\"model-contact-shadow\" aria-hidden=\"true\"></span>\n            <div class=\"model-viewer-spinner\" role=\"status\" aria-live=\"polite\">\n              <i aria-hidden=\"true\"></i>\n              <span>Loading 3D</span>\n            </div>\n          ")
+    ; __append(" interactive 3D clothing model and apparel mockup\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              camera-controls\n              disable-tap\n              disable-zoom\n              camera-orbit=\"0deg 72deg 142%\"\n              camera-target=\"auto auto auto\"\n              field-of-view=\"28deg\"\n              shadow-intensity=\"0.32\"\n              shadow-softness=\"0.9\"\n              exposure=\"1\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-camera-relative-studio-light=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              data-studio-light-reference-azimuth=\"-16\"\n              data-studio-light-azimuth-offset=\"45\"\n              tone-mapping=\"commerce\"\n              data-catalog-render-standard=\"main\"\n              style=\"width: 100%; height: 100%;\"\n            ></model-viewer>\n            <span class=\"model-contact-shadow\" aria-hidden=\"true\"></span>\n            <div class=\"model-viewer-spinner\" role=\"status\" aria-live=\"polite\">\n              <i aria-hidden=\"true\"></i>\n              <span>Loading 3D</span>\n            </div>\n          ")
     ;  } else {
     ; __append("\n            <div class=\"model-viewer-placeholder\">\n              <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -7878,7 +7984,7 @@ config = __locals.config,
     ; __append(escapeFn( model.name ))
     ; __append("\" class=\"model-preview-img\">\n            </div>\n          ")
     ;  }
-    ; __append("\n        </div>\n        <aside class=\"viewer-lighting-panel\" id=\"quickLightingPanel\" aria-label=\"Studio lighting\">\n          <div class=\"quick-light-panel-header\">\n            <strong>Lighting</strong>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\"/><circle cx=\"16\" cy=\"7\" r=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2\"/></svg>\n          </div>\n          <div class=\"quick-light-color\"><i aria-hidden=\"true\"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>\n          <div class=\"quick-light-presets\" role=\"group\" aria-label=\"Light direction presets\">\n            <button type=\"button\" data-light-angle=\"-45\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>−45°</span></button>\n            <button type=\"button\" data-light-angle=\"0\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>Front</span></button>\n            <button type=\"button\" class=\"active\" data-light-angle=\"45\" aria-pressed=\"true\"><i aria-hidden=\"true\"></i><span>+45°</span></button>\n          </div>\n          <label class=\"quick-light-range\">\n            <span>Brightness <output id=\"quickLightExposureOutput\">150%</output></span>\n            <input id=\"quickLightExposure\" type=\"range\" min=\"55\" max=\"300\" step=\"1\" value=\"150\">\n          </label>\n          <label class=\"quick-light-range\">\n            <span>Softness <output id=\"quickLightSoftnessOutput\">90%</output></span>\n            <input id=\"quickLightSoftness\" type=\"range\" min=\"50\" max=\"100\" step=\"1\" value=\"90\">\n          </label>\n        </aside>\n        <div class=\"model-quick-style\" aria-label=\"Quick garment styling\">\n          <div class=\"quick-style-shelf\">\n            <div class=\"quick-style-fabric\">\n              <button class=\"quick-style-fabric-toggle\" id=\"quickFabricToggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"quickFabricMenu\">\n                <span class=\"quick-style-label\">Fabric</span>\n                <span class=\"quick-style-value\"><i id=\"quickFabricPreview\" aria-hidden=\"true\"></i><strong id=\"quickFabricName\">Cotton</strong><svg viewBox=\"0 0 12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" aria-hidden=\"true\"><path d=\"m2.5 4.5 3.5 3 3.5-3\"/></svg></span>\n              </button>\n              <div class=\"quick-fabric-menu\" id=\"quickFabricMenu\" hidden>\n                ")
+    ; __append("\n        </div>\n        <aside class=\"viewer-lighting-panel\" id=\"quickLightingPanel\" aria-label=\"Studio lighting\">\n          <div class=\"quick-light-panel-header\">\n            <strong>Lighting</strong>\n            <svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.6\" aria-hidden=\"true\"><path d=\"M4 7h10M18 7h2M4 17h2M10 17h10\"/><circle cx=\"16\" cy=\"7\" r=\"2\"/><circle cx=\"8\" cy=\"17\" r=\"2\"/></svg>\n          </div>\n          <div class=\"quick-light-color\"><i aria-hidden=\"true\"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>\n          <div class=\"quick-light-presets\" role=\"group\" aria-label=\"Light direction presets\">\n            <button type=\"button\" data-light-angle=\"-45\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>−45°</span></button>\n            <button type=\"button\" data-light-angle=\"0\" aria-pressed=\"false\"><i aria-hidden=\"true\"></i><span>Front</span></button>\n            <button type=\"button\" class=\"active\" data-light-angle=\"45\" aria-pressed=\"true\"><i aria-hidden=\"true\"></i><span>+45°</span></button>\n          </div>\n          <label class=\"quick-light-range\">\n            <span>Brightness <output id=\"quickLightExposureOutput\">100%</output></span>\n            <input id=\"quickLightExposure\" type=\"range\" min=\"55\" max=\"300\" step=\"1\" value=\"100\">\n          </label>\n          <label class=\"quick-light-range\">\n            <span>Softness <output id=\"quickLightSoftnessOutput\">90%</output></span>\n            <input id=\"quickLightSoftness\" type=\"range\" min=\"50\" max=\"100\" step=\"1\" value=\"90\">\n          </label>\n        </aside>\n        <div class=\"model-quick-style\" aria-label=\"Quick garment styling\">\n          <div class=\"quick-style-shelf\">\n            <div class=\"quick-style-fabric\">\n              <button class=\"quick-style-fabric-toggle\" id=\"quickFabricToggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"quickFabricMenu\">\n                <span class=\"quick-style-label\">Fabric</span>\n                <span class=\"quick-style-value\"><i id=\"quickFabricPreview\" aria-hidden=\"true\"></i><strong id=\"quickFabricName\">Cotton</strong><svg viewBox=\"0 0 12 12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.4\" aria-hidden=\"true\"><path d=\"m2.5 4.5 3.5 3 3.5-3\"/></svg></span>\n              </button>\n              <div class=\"quick-fabric-menu\" id=\"quickFabricMenu\" hidden>\n                ")
     ;  [
                   ['cotton-jersey', 'Cotton', '/images/material-previews/cotton.webp'],
                   ['rib-knit', 'Jersey', '/images/material-previews/jersey.webp'],
@@ -8206,7 +8312,7 @@ config = __locals.config,
     ; __append(escapeFn( model.image_url ))
     ; __append("\"\n                  alt=\"")
     ; __append(escapeFn( model.name ))
-    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  disable-tap\n                  camera-orbit=\"0deg 72deg 180%\"\n                  camera-target=\"auto auto auto\"\n                  field-of-view=\"28deg\"\n                  shadow-intensity=\"0.32\"\n                  shadow-softness=\"0.9\"\n                  exposure=\"1.5\"\n                  environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n                  data-camera-relative-studio-light=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n                  data-studio-light-reference-azimuth=\"-16\"\n                  data-studio-light-azimuth-offset=\"45\"\n                  tone-mapping=\"commerce\"\n                  data-entitlement-texture-watermark\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n                <div class=\"model-viewer-spinner\" id=\"designPreviewLoading\" role=\"status\" aria-live=\"polite\" hidden>\n                  <i aria-hidden=\"true\"></i>\n                  <span>Loading 3D</span>\n                </div>\n              ")
+    ; __append("\"\n                  loading=\"lazy\"\n                  camera-controls\n                  disable-tap\n                  camera-orbit=\"0deg 72deg 180%\"\n                  camera-target=\"auto auto auto\"\n                  field-of-view=\"28deg\"\n                  shadow-intensity=\"0.32\"\n                  shadow-softness=\"0.9\"\n                  exposure=\"1\"\n                  environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n                  data-camera-relative-studio-light=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n                  data-studio-light-reference-azimuth=\"-16\"\n                  data-studio-light-azimuth-offset=\"45\"\n                  tone-mapping=\"commerce\"\n                  data-entitlement-texture-watermark\n                  style=\"width: 100%; height: 100%;\"\n                  hidden\n                ></model-viewer>\n                <div class=\"model-viewer-spinner\" id=\"designPreviewLoading\" role=\"status\" aria-live=\"polite\" hidden>\n                  <i aria-hidden=\"true\"></i>\n                  <span>Loading 3D</span>\n                </div>\n              ")
     ;  } else {
     ; __append("\n                <div class=\"designer-placeholder\">\n                  <img src=\"")
     ; __append(escapeFn( model.image_url ))
@@ -8214,9 +8320,9 @@ config = __locals.config,
     ; __append(escapeFn( model.name ))
     ; __append("\">\n                </div>\n              ")
     ;  }
-    ; __append("\n            </div>\n          </section>\n        </div>\n\n        <!-- Garment appearance and material inspector -->\n        <aside class=\"design-appearance-panel\" id=\"designAppearancePanel\" aria-label=\"Garment appearance\">\n          <section class=\"design-appearance-card\">\n            <div class=\"appearance-section\">\n              <div class=\"appearance-fill-header\">\n                <strong>Fill</strong>\n                <button id=\"appearancePanelCollapse\" type=\"button\" aria-label=\"Close appearance controls\">\n                  <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m15 18-6-6 6-6\"/></svg>\n                </button>\n              </div>\n              <div class=\"appearance-color-row\" role=\"group\" aria-label=\"Fill colors\">\n                <label class=\"appearance-custom-color\" id=\"appearanceCustomColor\">\n                  <span class=\"appearance-custom-swatch\"><input id=\"appearanceColorStart\" type=\"color\" value=\"#ffffff\" aria-label=\"Choose custom fill color\"></span>\n                </label>\n                <button class=\"appearance-transparent-color\" type=\"button\" data-fill-color=\"none\" aria-label=\"Transparent\" aria-pressed=\"false\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#ffffff\" aria-label=\"White\" aria-pressed=\"true\" style=\"--fill-swatch:#ffffff\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#f2eee5\" aria-label=\"Ivory\" aria-pressed=\"false\" style=\"--fill-swatch:#f2eee5\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#3f4145\" aria-label=\"Charcoal\" aria-pressed=\"false\" style=\"--fill-swatch:#3f4145\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#243653\" aria-label=\"Navy\" aria-pressed=\"false\" style=\"--fill-swatch:#243653\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#d9bfa0\" aria-label=\"Beige\" aria-pressed=\"false\" style=\"--fill-swatch:#d9bfa0\"><span aria-hidden=\"true\"></span></button>\n              </div>\n              <input id=\"appearanceColorEnd\" type=\"color\" value=\"#ffffff\" hidden>\n              <input id=\"appearanceGradientAngle\" type=\"range\" min=\"0\" max=\"360\" value=\"135\" hidden>\n            </div>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </aside>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst zoomBtn = document.getElementById('zoomBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelInfoSection = document.querySelector('.model-info-section');\nconst modelViewerSection = document.querySelector('.model-viewer-section');\nconst heroSection = document.querySelector('.model-detail-hero');\nconst backgroundBtn = document.getElementById('backgroundBtn');\nconst heroBackgroundPopover = document.getElementById('heroBackgroundPopover');\nconst heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];\nconst heroGradientFrom = document.getElementById('heroGradientFrom');\nconst heroGradientTo = document.getElementById('heroGradientTo');\nconst heroGradientAngle = document.getElementById('heroGradientAngle');\nconst heroGradientAngleValue = document.getElementById('heroGradientAngleValue');\nconst applyHeroGradient = document.getElementById('applyHeroGradient');\nconst quickLightExposure = document.getElementById('quickLightExposure');\nconst quickLightExposureOutput = document.getElementById('quickLightExposureOutput');\nconst quickLightSoftness = document.getElementById('quickLightSoftness');\nconst quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');\nconst quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];\nconst modelViewerPromises = new WeakMap();\nconst defaultDetailRenderStandard = {\n  version: 'commercial-studio-stage-v3',\n  camera: {\n    webOrbit: '0deg 72deg 142%',\n    webEditorOrbit: '0deg 72deg 180%',\n    webFieldOfView: '28deg',\n    webTarget: 'auto auto auto'\n  },\n  material: {\n    neutralizeBaseColor: false,\n    baseColor: [0.96, 0.96, 0.95],\n    roughness: 0.68,\n    specularIorLevel: 0.32,\n    sheenWeight: 0.32,\n    normalStrengthMultiplier: 2.8,\n    normalStrengthMax: 0.45\n  },\n  web: {\n    environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',\n    lightingMode: 'camera-relative-45deg-white-softbox',\n    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',\n    balanceMethod: 'camera-relative-azimuth',\n    cameraRelativeLighting: true,\n    lightReferenceAzimuthDeg: -16,\n    lightAzimuthOffsetDeg: 45,\n    lightColor: '#ffffff',\n    environmentNeutralization: 'luminance-preserving-monochrome',\n    shadowIntensity: 0.32,\n    shadowSoftness: 0.9,\n    exportShadowIntensity: 0.46,\n    exportShadowSoftness: 0.88,\n    exposure: 1.5,\n    toneMapping: 'commerce',\n    material: {\n      neutralizeBaseColor: false,\n      baseColor: [0.82, 0.82, 0.8],\n      roughness: 0.62,\n      specularIorLevel: 0.28,\n      sheenWeight: 0.12\n    }\n  }\n};\nconst detailLightState = {\n  azimuthOffsetDeg: 45,\n  exposure: 1.5,\n  shadowSoftness: 0.9\n};\nwindow.ModelDetailLightingSettings = detailLightState;\nlet detailSceneStandard = defaultDetailRenderStandard;\nconst detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260928-editor-preview-v3')\n  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)\n  .then((standard) => {\n    detailSceneStandard = {\n      ...defaultDetailRenderStandard,\n      ...standard,\n      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },\n      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },\n      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }\n    };\n    const modelOverride = standard.modelOverrides?.[")
+    ; __append("\n            </div>\n          </section>\n        </div>\n\n        <!-- Garment appearance and material inspector -->\n        <aside class=\"design-appearance-panel\" id=\"designAppearancePanel\" aria-label=\"Garment appearance\">\n          <section class=\"design-appearance-card\">\n            <div class=\"appearance-section\">\n              <div class=\"appearance-fill-header\">\n                <strong>Fill</strong>\n                <button id=\"appearancePanelCollapse\" type=\"button\" aria-label=\"Close appearance controls\">\n                  <svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"m15 18-6-6 6-6\"/></svg>\n                </button>\n              </div>\n              <div class=\"appearance-color-row\" role=\"group\" aria-label=\"Fill colors\">\n                <button class=\"appearance-custom-color\" id=\"appearanceCustomColor\" type=\"button\" aria-label=\"Choose custom fill color\" aria-haspopup=\"dialog\" aria-expanded=\"false\">\n                  <span class=\"appearance-custom-swatch\" aria-hidden=\"true\"></span>\n                </button>\n                <button class=\"appearance-transparent-color\" type=\"button\" data-fill-color=\"none\" aria-label=\"Transparent\" aria-pressed=\"false\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#ffffff\" aria-label=\"White\" aria-pressed=\"true\" style=\"--fill-swatch:#ffffff\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#f2eee5\" aria-label=\"Ivory\" aria-pressed=\"false\" style=\"--fill-swatch:#f2eee5\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#3f4145\" aria-label=\"Charcoal\" aria-pressed=\"false\" style=\"--fill-swatch:#3f4145\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#243653\" aria-label=\"Navy\" aria-pressed=\"false\" style=\"--fill-swatch:#243653\"><span aria-hidden=\"true\"></span></button>\n                <button type=\"button\" data-fill-color=\"#d9bfa0\" aria-label=\"Beige\" aria-pressed=\"false\" style=\"--fill-swatch:#d9bfa0\"><span aria-hidden=\"true\"></span></button>\n              </div>\n              <input id=\"appearanceColorStart\" type=\"hidden\" value=\"#ffffff\">\n              <input id=\"appearanceColorEnd\" type=\"hidden\" value=\"#ffffff\">\n              <input id=\"appearanceGradientAngle\" type=\"range\" min=\"0\" max=\"360\" value=\"135\" hidden>\n            </div>\n          </section>\n          <section class=\"material-panel\" aria-label=\"Material presets\">\n            <div class=\"material-panel-header\">\n              <div>\n                <h3>Material</h3>\n              </div>\n              <span class=\"material-panel-count\" id=\"materialCount\">0</span>\n            </div>\n            <div class=\"material-swatch-grid\" id=\"materialSwatchGrid\"></div>\n          </section>\n        </aside>\n      </div>\n    </div>\n  </div>\n</div>\n\n<script>\n// Viewer controls\nconst rotateBtn = document.getElementById('rotateBtn');\nconst fabricMotionBtn = document.getElementById('fabricMotionBtn');\nconst zoomBtn = document.getElementById('zoomBtn');\nconst viewer = document.querySelector('#model3dViewer model-viewer');\nconst modelViewerStage = document.getElementById('model3dViewer');\nconst modelInfoSection = document.querySelector('.model-info-section');\nconst modelViewerSection = document.querySelector('.model-viewer-section');\nconst heroSection = document.querySelector('.model-detail-hero');\nconst backgroundBtn = document.getElementById('backgroundBtn');\nconst heroBackgroundPopover = document.getElementById('heroBackgroundPopover');\nconst heroBackgroundPresets = [...document.querySelectorAll('[data-hero-background]')];\nconst heroGradientFrom = document.getElementById('heroGradientFrom');\nconst heroGradientTo = document.getElementById('heroGradientTo');\nconst heroGradientAngle = document.getElementById('heroGradientAngle');\nconst heroGradientAngleValue = document.getElementById('heroGradientAngleValue');\nconst applyHeroGradient = document.getElementById('applyHeroGradient');\nconst quickLightExposure = document.getElementById('quickLightExposure');\nconst quickLightExposureOutput = document.getElementById('quickLightExposureOutput');\nconst quickLightSoftness = document.getElementById('quickLightSoftness');\nconst quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');\nconst quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];\nconst modelViewerPromises = new WeakMap();\nconst defaultDetailRenderStandard = {\n  version: 'commercial-studio-stage-v3',\n  camera: {\n    webOrbit: '0deg 72deg 142%',\n    webEditorOrbit: '0deg 72deg 180%',\n    webFieldOfView: '28deg',\n    webTarget: 'auto auto auto'\n  },\n  material: {\n    neutralizeBaseColor: false,\n    baseColor: [0.96, 0.96, 0.95],\n    roughness: 0.68,\n    specularIorLevel: 0.32,\n    sheenWeight: 0.32,\n    normalStrengthMultiplier: 2.8,\n    normalStrengthMax: 0.45\n  },\n  web: {\n    environmentImage: '/environments/commercial-apparel-studio-v5-front-white-20260917.hdr',\n    lightingMode: 'camera-relative-45deg-white-softbox',\n    sourceEnvironment: '/environments/commercial-apparel-studio-v2-20260829.hdr',\n    balanceMethod: 'camera-relative-azimuth',\n    cameraRelativeLighting: true,\n    lightReferenceAzimuthDeg: -16,\n    lightAzimuthOffsetDeg: 45,\n    lightColor: '#ffffff',\n    environmentNeutralization: 'luminance-preserving-monochrome',\n    shadowIntensity: 0.32,\n    shadowSoftness: 0.9,\n    exportShadowIntensity: 0.46,\n    exportShadowSoftness: 0.88,\n    exposure: 1,\n    toneMapping: 'commerce',\n    material: {\n      neutralizeBaseColor: false,\n      baseColor: [0.82, 0.82, 0.8],\n      roughness: 0.62,\n      specularIorLevel: 0.28,\n      sheenWeight: 0.12\n    }\n  }\n};\nconst detailLightState = {\n  azimuthOffsetDeg: 45,\n  exposure: 1,\n  shadowSoftness: 0.9\n};\nwindow.ModelDetailLightingSettings = detailLightState;\nlet detailSceneStandard = defaultDetailRenderStandard;\nconst detailRenderStandardPromise = fetch('/config/design3d-render-standard.json?v=20260928-editor-preview-v3')\n  .then((response) => response.ok ? response.json() : defaultDetailRenderStandard)\n  .then((standard) => {\n    detailSceneStandard = {\n      ...defaultDetailRenderStandard,\n      ...standard,\n      camera: { ...defaultDetailRenderStandard.camera, ...(standard.camera || {}) },\n      material: { ...defaultDetailRenderStandard.material, ...(standard.material || {}) },\n      web: { ...defaultDetailRenderStandard.web, ...(standard.web || {}) }\n    };\n    const modelOverride = standard.modelOverrides?.[")
     ; __append( JSON.stringify(String(model.id)) )
-    ; __append("];\n    if (modelOverride) {\n      detailSceneStandard = {\n        ...detailSceneStandard,\n        ...modelOverride,\n        camera: { ...detailSceneStandard.camera, ...(modelOverride.camera || {}) },\n        web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }\n      };\n    }\n    // Detail pages always start at 150%, including models with lighting overrides.\n    detailSceneStandard.web.exposure = 1.5;\n    Object.assign(detailLightState, {\n      azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,\n      exposure: detailSceneStandard.web.exposure,\n      shadowSoftness: detailSceneStandard.web.shadowSoftness\n    });\n    renderDetailLightingControls();\n    return detailSceneStandard;\n  })\n  .catch(() => defaultDetailRenderStandard);\nwindow.ModelDetailRenderStandardPromise = detailRenderStandardPromise;\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction catalogOrbitForAzimuth(standard, azimuth) {\n  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)\n    .trim()\n    .split(/\\s+/);\n  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;\n}\n\nfunction applyCatalogRenderAttributes(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard) return;\n  const webStandard = standard.web || defaultDetailRenderStandard.web;\n  const isSideView = element.dataset.catalogRenderStandard === 'side';\n  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);\n  if (webStandard.cameraRelativeLighting !== false) {\n    element.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage;\n    element.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth),\n      azimuthOffsetDeg: Number(element.dataset.studioLightAzimuthOffset)\n    });\n  }\n  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));\n  element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));\n  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 1.5) * (Number(element.dataset.designExposureRatio) || 1)));\n  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');\n  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');\n  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');\n  element.setAttribute(\n    'camera-orbit',\n    isSideView\n      ? catalogOrbitForAzimuth(standard, '90deg')\n      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit\n  );\n  element.autoRotate = false;\n  element.removeAttribute('auto-rotate');\n  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;\n}\n\nfunction applyCatalogMaterialResponse(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard || !element.model) return;\n  if (standard.web?.preserveNativeMaterials) return;\n  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;\n  const baseColor = Array.isArray(materialStandard.baseColor)\n    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))\n    : defaultDetailRenderStandard.material.baseColor;\n  const neutralFactor = [...baseColor, 1];\n\n  (element.model.materials || []).forEach((material) => {\n    const pbr = material.pbrMetallicRoughness;\n    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);\n    pbr?.setMetallicFactor?.(0);\n    if (!pbr?.metallicRoughnessTexture?.texture) {\n      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));\n    }\n    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);\n    try {\n      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);\n    } catch (error) {\n      // Some GLBs do not declare the optional sheen extension.\n    }\n    try {\n      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));\n    } catch (error) {\n      // Some GLBs do not declare the optional specular extension.\n    }\n  });\n}\n\ndetailRenderStandardPromise.then((standard) => {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    applyCatalogRenderAttributes(element, standard);\n    applyCatalogMaterialResponse(element, standard);\n  });\n});\n\nfunction renderDetailLightingControls() {\n  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));\n  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1.5)) * 100);\n  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);\n  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);\n  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);\n  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;\n  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;\n  quickLightPresetButtons.forEach((button) => {\n    const isActive = Number(button.dataset.lightAngle) === angle;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction applyDetailLightingSettings() {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);\n    element.setAttribute('exposure', String(detailLightState.exposure * (Number(element.dataset.designExposureRatio) || 1)));\n    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),\n      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg\n    });\n  });\n  renderDetailLightingControls();\n}\n\nquickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {\n  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);\n  applyDetailLightingSettings();\n}));\nquickLightExposure?.addEventListener('input', () => {\n  detailLightState.exposure = Number(quickLightExposure.value) / 100;\n  applyDetailLightingSettings();\n});\nquickLightSoftness?.addEventListener('input', () => {\n  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;\n  applyDetailLightingSettings();\n});\nrenderDetailLightingControls();\n\nfunction syncHeroColumnHeights() {\n  if (!modelInfoSection || !modelViewerSection) return;\n  if (window.matchMedia('(max-width: 820px)').matches) {\n    modelViewerSection.style.removeProperty('--model-viewer-height');\n    return;\n  }\n  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);\n}\n\nrequestAnimationFrame(syncHeroColumnHeights);\nwindow.addEventListener('resize', syncHeroColumnHeights, { passive: true });\nif ('ResizeObserver' in window && modelInfoSection) {\n  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);\n}\n\nfunction setHeroBackground(value, activePreset = null) {\n  if (!heroSection || !value) return;\n  heroSection.style.setProperty('--hero-background', value);\n  backgroundBtn?.style.setProperty('--control-background', value);\n  heroBackgroundPresets.forEach((button) => {\n    const isActive = button === activePreset;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction customHeroGradient() {\n  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;\n}\n\nfunction closeHeroBackgroundPopover({ restoreFocus = false } = {}) {\n  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;\n  heroBackgroundPopover.hidden = true;\n  backgroundBtn?.setAttribute('aria-expanded', 'false');\n  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });\n}\n\nbackgroundBtn?.addEventListener('click', () => {\n  const shouldOpen = heroBackgroundPopover?.hidden;\n  if (!heroBackgroundPopover) return;\n  heroBackgroundPopover.hidden = !shouldOpen;\n  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));\n  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });\n});\n\nheroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {\n  setHeroBackground(button.dataset.heroBackground, button);\n}));\n\n[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {\n  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;\n  setHeroBackground(customHeroGradient());\n}));\n\napplyHeroGradient?.addEventListener('click', () => {\n  setHeroBackground(customHeroGradient());\n  closeHeroBackgroundPopover({ restoreFocus: true });\n});\n\ndocument.addEventListener('pointerdown', (event) => {\n  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;\n  closeHeroBackgroundPopover();\n});\n\ndocument.addEventListener('keydown', (event) => {\n  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {\n    event.preventDefault();\n    closeHeroBackgroundPopover({ restoreFocus: true });\n  }\n});\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const renderStandardReady = element.dataset.catalogRenderStandard\n    ? detailRenderStandardPromise\n    : Promise.resolve(null);\n  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {\n    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;\n    if (!modelSource) throw new Error('3D model source unavailable');\n    if (element.getAttribute('src') && element.loaded && element.model) return element;\n    return new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);\n    });\n  }).then(async (readyViewer) => {\n    readyViewer.dismissPoster?.();\n    readyViewer.removeAttribute('poster');\n    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);\n    configureGarmentSoftnessAnimation(readyViewer);\n    if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {\n      await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);\n    }\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    delete modelViewerStage.dataset.loadError;\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';\n    throw error;\n  }\n}\n\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.(fabricMotionEnabled\n      ? 'model_detail_fabric_motion_enable'\n      : 'model_detail_fabric_motion_disable', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
+    ; __append("];\n    if (modelOverride) {\n      detailSceneStandard = {\n        ...detailSceneStandard,\n        ...modelOverride,\n        camera: { ...detailSceneStandard.camera, ...(modelOverride.camera || {}) },\n        web: { ...detailSceneStandard.web, ...(modelOverride.web || {}) }\n      };\n    }\n    // Detail pages always start at 100%, including models with lighting overrides.\n    detailSceneStandard.web.exposure = 1;\n    Object.assign(detailLightState, {\n      azimuthOffsetDeg: detailSceneStandard.web.lightAzimuthOffsetDeg,\n      exposure: detailSceneStandard.web.exposure,\n      shadowSoftness: detailSceneStandard.web.shadowSoftness\n    });\n    renderDetailLightingControls();\n    return detailSceneStandard;\n  })\n  .catch(() => defaultDetailRenderStandard);\nwindow.ModelDetailRenderStandardPromise = detailRenderStandardPromise;\nlet modelViewerModulePromise = null;\nlet fabricMotionEnabled = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;\nlet fabricMotionResumeTimer = null;\n\nfunction catalogOrbitForAzimuth(standard, azimuth) {\n  const orbitParts = String(standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit)\n    .trim()\n    .split(/\\s+/);\n  return `${azimuth} ${orbitParts[1] || '72deg'} ${orbitParts[2] || '142%'}`;\n}\n\nfunction applyCatalogRenderAttributes(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard) return;\n  const webStandard = standard.web || defaultDetailRenderStandard.web;\n  const isSideView = element.dataset.catalogRenderStandard === 'side';\n  element.setAttribute('environment-image', webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage);\n  if (webStandard.cameraRelativeLighting !== false) {\n    element.dataset.cameraRelativeStudioLight = webStandard.environmentImage || defaultDetailRenderStandard.web.environmentImage;\n    element.dataset.studioLightReferenceAzimuth = String(webStandard.lightReferenceAzimuthDeg ?? -16);\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg ?? webStandard.lightAzimuthOffsetDeg ?? 0);\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth),\n      azimuthOffsetDeg: Number(element.dataset.studioLightAzimuthOffset)\n    });\n  }\n  element.setAttribute('shadow-intensity', String(webStandard.shadowIntensity ?? 0.32));\n  element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness ?? webStandard.shadowSoftness ?? 0.9));\n  element.setAttribute('exposure', String((detailLightState.exposure ?? webStandard.exposure ?? 1) * (Number(element.dataset.designExposureRatio) || 1)));\n  element.setAttribute('tone-mapping', webStandard.toneMapping || 'commerce');\n  element.setAttribute('camera-target', standard.camera?.webTarget || 'auto auto auto');\n  element.setAttribute('field-of-view', standard.camera?.webFieldOfView || '28deg');\n  element.setAttribute(\n    'camera-orbit',\n    isSideView\n      ? catalogOrbitForAzimuth(standard, '90deg')\n      : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit\n  );\n  element.autoRotate = false;\n  element.removeAttribute('auto-rotate');\n  element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;\n}\n\nfunction applyCatalogMaterialResponse(element, standard = detailSceneStandard) {\n  if (!element?.dataset.catalogRenderStandard || !element.model) return;\n  if (standard.web?.preserveNativeMaterials) return;\n  const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;\n  const baseColor = Array.isArray(materialStandard.baseColor)\n    ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))\n    : defaultDetailRenderStandard.material.baseColor;\n  const neutralFactor = [...baseColor, 1];\n\n  (element.model.materials || []).forEach((material) => {\n    const pbr = material.pbrMetallicRoughness;\n    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);\n    pbr?.setMetallicFactor?.(0);\n    if (!pbr?.metallicRoughnessTexture?.texture) {\n      pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));\n    }\n    const sheenWeight = Number(materialStandard.sheenWeight ?? 0.32);\n    try {\n      material.setSheenColorFactor?.([sheenWeight, sheenWeight, sheenWeight]);\n    } catch (error) {\n      // Some GLBs do not declare the optional sheen extension.\n    }\n    try {\n      material.setSpecularFactor?.(Number(materialStandard.specularIorLevel ?? 0.32));\n    } catch (error) {\n      // Some GLBs do not declare the optional specular extension.\n    }\n  });\n}\n\ndetailRenderStandardPromise.then((standard) => {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    applyCatalogRenderAttributes(element, standard);\n    applyCatalogMaterialResponse(element, standard);\n  });\n});\n\nfunction renderDetailLightingControls() {\n  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));\n  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1)) * 100);\n  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);\n  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);\n  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);\n  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;\n  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;\n  quickLightPresetButtons.forEach((button) => {\n    const isActive = Number(button.dataset.lightAngle) === angle;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction applyDetailLightingSettings() {\n  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {\n    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);\n    element.setAttribute('exposure', String(detailLightState.exposure * (Number(element.dataset.designExposureRatio) || 1)));\n    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));\n    window.CameraRelativeStudioLight?.install(element, {\n      environmentImage: element.dataset.cameraRelativeStudioLight,\n      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),\n      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg\n    });\n  });\n  renderDetailLightingControls();\n}\n\nquickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {\n  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);\n  applyDetailLightingSettings();\n}));\nquickLightExposure?.addEventListener('input', () => {\n  detailLightState.exposure = Number(quickLightExposure.value) / 100;\n  applyDetailLightingSettings();\n});\nquickLightSoftness?.addEventListener('input', () => {\n  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;\n  applyDetailLightingSettings();\n});\nrenderDetailLightingControls();\n\nfunction syncHeroColumnHeights() {\n  if (!modelInfoSection || !modelViewerSection) return;\n  if (window.matchMedia('(max-width: 820px)').matches) {\n    modelViewerSection.style.removeProperty('--model-viewer-height');\n    return;\n  }\n  modelViewerSection.style.setProperty('--model-viewer-height', `${Math.ceil(modelInfoSection.getBoundingClientRect().height)}px`);\n}\n\nrequestAnimationFrame(syncHeroColumnHeights);\nwindow.addEventListener('resize', syncHeroColumnHeights, { passive: true });\nif ('ResizeObserver' in window && modelInfoSection) {\n  new ResizeObserver(syncHeroColumnHeights).observe(modelInfoSection);\n}\n\nfunction setHeroBackground(value, activePreset = null) {\n  if (!heroSection || !value) return;\n  heroSection.style.setProperty('--hero-background', value);\n  backgroundBtn?.style.setProperty('--control-background', value);\n  heroBackgroundPresets.forEach((button) => {\n    const isActive = button === activePreset;\n    button.classList.toggle('active', isActive);\n    button.setAttribute('aria-pressed', String(isActive));\n  });\n}\n\nfunction customHeroGradient() {\n  return `linear-gradient(${heroGradientAngle?.value || 135}deg, ${heroGradientFrom?.value || '#f8eee1'} 0%, ${heroGradientTo?.value || '#dbc4ae'} 100%)`;\n}\n\nfunction closeHeroBackgroundPopover({ restoreFocus = false } = {}) {\n  if (!heroBackgroundPopover || heroBackgroundPopover.hidden) return;\n  heroBackgroundPopover.hidden = true;\n  backgroundBtn?.setAttribute('aria-expanded', 'false');\n  if (restoreFocus) backgroundBtn?.focus({ preventScroll: true });\n}\n\nbackgroundBtn?.addEventListener('click', () => {\n  const shouldOpen = heroBackgroundPopover?.hidden;\n  if (!heroBackgroundPopover) return;\n  heroBackgroundPopover.hidden = !shouldOpen;\n  backgroundBtn.setAttribute('aria-expanded', String(shouldOpen));\n  if (shouldOpen) heroBackgroundPopover.querySelector('button')?.focus({ preventScroll: true });\n});\n\nheroBackgroundPresets.forEach((button) => button.addEventListener('click', () => {\n  setHeroBackground(button.dataset.heroBackground, button);\n}));\n\n[heroGradientFrom, heroGradientTo, heroGradientAngle].filter(Boolean).forEach((input) => input.addEventListener('input', () => {\n  if (heroGradientAngleValue) heroGradientAngleValue.value = `${heroGradientAngle.value}°`;\n  setHeroBackground(customHeroGradient());\n}));\n\napplyHeroGradient?.addEventListener('click', () => {\n  setHeroBackground(customHeroGradient());\n  closeHeroBackgroundPopover({ restoreFocus: true });\n});\n\ndocument.addEventListener('pointerdown', (event) => {\n  if (heroBackgroundPopover?.hidden || heroBackgroundPopover?.contains(event.target) || backgroundBtn?.contains(event.target)) return;\n  closeHeroBackgroundPopover();\n});\n\ndocument.addEventListener('keydown', (event) => {\n  if (event.key === 'Escape' && heroBackgroundPopover && !heroBackgroundPopover.hidden) {\n    event.preventDefault();\n    closeHeroBackgroundPopover({ restoreFocus: true });\n  }\n});\n\nfunction setFabricMotionState(element, shouldPlay) {\n  if (!element?.availableAnimations?.length) return false;\n  const preferredAnimation = element.availableAnimations.find((name) => /fabric|breeze|soft/i.test(name))\n    || element.availableAnimations[0];\n  element.animationName = preferredAnimation;\n  element.timeScale = 0.72;\n  if (shouldPlay && !document.hidden) {\n    element.play?.({ repetitions: Infinity });\n  } else {\n    element.pause?.();\n  }\n  fabricMotionBtn?.classList.toggle('active', shouldPlay);\n  fabricMotionBtn?.setAttribute('aria-pressed', String(shouldPlay));\n  return true;\n}\n\nfunction configureGarmentSoftnessAnimation(element) {\n  if (!element || element.dataset.softnessAnimationReady === 'true') return;\n  if (!element.availableAnimations?.length) return;\n  element.dataset.softnessAnimationReady = 'true';\n  if (fabricMotionBtn) fabricMotionBtn.hidden = false;\n  setFabricMotionState(element, fabricMotionEnabled);\n\n  const pauseDuringInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    element.pause?.();\n  };\n  const resumeAfterInteraction = () => {\n    window.clearTimeout(fabricMotionResumeTimer);\n    fabricMotionResumeTimer = window.setTimeout(() => {\n      setFabricMotionState(element, fabricMotionEnabled);\n    }, 650);\n  };\n  element.addEventListener('pointerdown', pauseDuringInteraction);\n  window.addEventListener('pointerup', resumeAfterInteraction);\n  element.addEventListener('pointercancel', resumeAfterInteraction);\n}\n\nfunction withModelViewerTimeout(promise, milliseconds, message) {\n  return Promise.race([\n    promise,\n    new Promise((_, reject) => window.setTimeout(() => reject(new Error(message)), milliseconds))\n  ]);\n}\n\nfunction loadModelViewerModule() {\n  window.ModelViewerElement = window.ModelViewerElement || {};\n  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';\n  if (customElements.get('model-viewer')) return Promise.resolve();\n  if (modelViewerModulePromise) return modelViewerModulePromise;\n\n  modelViewerModulePromise = new Promise((resolve, reject) => {\n    const script = document.createElement('script');\n    script.type = 'module';\n    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';\n    script.dataset.detailModelViewer = 'true';\n    script.addEventListener('load', resolve, { once: true });\n    script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });\n    document.head.appendChild(script);\n  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));\n\n  return modelViewerModulePromise;\n}\n\nfunction loadModelViewerElement(element) {\n  if (!element) return Promise.reject(new Error('3D viewer unavailable'));\n  if (modelViewerPromises.has(element)) return modelViewerPromises.get(element);\n\n  const renderStandardReady = element.dataset.catalogRenderStandard\n    ? detailRenderStandardPromise\n    : Promise.resolve(null);\n  const promise = Promise.all([loadModelViewerModule(), renderStandardReady]).then(([, renderStandard]) => {\n    if (renderStandard) applyCatalogRenderAttributes(element, renderStandard);\n    element.hidden = false;\n    element.setAttribute('loading', 'eager');\n    element.setAttribute('reveal', 'auto');\n    const modelSource = element.getAttribute('src') || element.dataset.modelSrc;\n    if (!modelSource) throw new Error('3D model source unavailable');\n    if (element.getAttribute('src') && element.loaded && element.model) return element;\n    return new Promise((resolve, reject) => {\n      element.addEventListener('load', () => resolve(element), { once: true });\n      element.addEventListener('error', () => reject(new Error('3D model failed to load')), { once: true });\n      if (!element.getAttribute('src')) element.setAttribute('src', modelSource);\n    });\n  }).then(async (readyViewer) => {\n    readyViewer.dismissPoster?.();\n    readyViewer.removeAttribute('poster');\n    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);\n    configureGarmentSoftnessAnimation(readyViewer);\n    if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {\n      await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);\n    }\n    return readyViewer;\n  }).catch((error) => {\n    modelViewerPromises.delete(element);\n    throw error;\n  });\n\n  modelViewerPromises.set(element, promise);\n  return promise;\n}\n\nwindow.loadClothingModelViewer = loadModelViewerElement;\nwindow.loadClothingModelViewerModule = loadModelViewerModule;\n\nasync function ensureDetailViewer() {\n  if (!viewer || !modelViewerStage) return null;\n  modelViewerStage.classList.remove('is-error');\n  modelViewerStage.classList.add('is-loading');\n  modelViewerStage.setAttribute('aria-busy', 'true');\n  try {\n    const readyViewer = await loadModelViewerElement(viewer);\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.classList.add('is-ready');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    delete modelViewerStage.dataset.loadError;\n    return readyViewer;\n  } catch (error) {\n    modelViewerStage.classList.remove('is-loading');\n    modelViewerStage.setAttribute('aria-busy', 'false');\n    modelViewerStage.dataset.loadError = error?.message || '3D viewer unavailable';\n    throw error;\n  }\n}\n\nensureDetailViewer().catch(() => {});\n\nif (rotateBtn && viewer) {\n  rotateBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = !readyViewer.autoRotate;\n    rotateBtn.classList.toggle('active', readyViewer.autoRotate);\n    rotateBtn.setAttribute('aria-pressed', String(readyViewer.autoRotate));\n  });\n}\n\ndocument.querySelectorAll('.model-view-angle').forEach((button) => {\n  button.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    readyViewer.autoRotate = false;\n    rotateBtn?.classList.remove('active');\n    rotateBtn?.setAttribute('aria-pressed', 'false');\n    readyViewer.cameraOrbit = catalogOrbitForAzimuth(detailSceneStandard, button.dataset.orbit);\n    readyViewer.jumpCameraToGoal?.();\n    document.querySelectorAll('.model-view-angle').forEach((item) => {\n      const isActive = item === button;\n      item.classList.toggle('active', isActive);\n      item.setAttribute('aria-pressed', String(isActive));\n    });\n  });\n});\n\nif (fabricMotionBtn && viewer) {\n  fabricMotionBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    if (!readyViewer) return;\n    fabricMotionEnabled = !fabricMotionEnabled;\n    setFabricMotionState(readyViewer, fabricMotionEnabled);\n    window.trackEvent?.(fabricMotionEnabled\n      ? 'model_detail_fabric_motion_enable'\n      : 'model_detail_fabric_motion_disable', {\n      interaction_type: fabricMotionEnabled ? 'enable_fabric_motion' : 'disable_fabric_motion',\n      item_id: ")
     ; __append( JSON.stringify(model.slug || '') )
     ; __append("\n    });\n  });\n}\n\ndocument.addEventListener('visibilitychange', () => {\n  if (!viewer?.availableAnimations?.length) return;\n  setFabricMotionState(viewer, fabricMotionEnabled && !document.hidden);\n});\n\nif (zoomBtn && viewer) {\n  let viewerZoomed = false;\n  let viewerBaseRadius = null;\n  zoomBtn.addEventListener('click', async () => {\n    const readyViewer = await ensureDetailViewer().catch(() => null);\n    const orbit = readyViewer?.getCameraOrbit?.();\n    if (!orbit) return;\n    if (!viewerBaseRadius) viewerBaseRadius = orbit.radius;\n    viewerZoomed = !viewerZoomed;\n    const radius = viewerZoomed ? viewerBaseRadius * 0.8 : viewerBaseRadius;\n    readyViewer.cameraOrbit = `${orbit.theta}rad ${orbit.phi}rad ${radius}m`;\n    readyViewer.jumpCameraToGoal?.();\n    zoomBtn.classList.toggle('active', viewerZoomed);\n    zoomBtn.setAttribute('aria-pressed', String(viewerZoomed));\n  });\n}\n\n// Demo color picker\nconst colorBtns = document.querySelectorAll('.color-btn');\ncolorBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    colorBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n// Demo pattern picker\nconst patternBtns = document.querySelectorAll('.pattern-btn');\npatternBtns.forEach(btn => {\n  btn.addEventListener('click', () => {\n    patternBtns.forEach(b => b.classList.remove('active'));\n    btn.classList.add('active');\n  });\n});\n\n</script>\n<script>\nwindow.ModelDesignerConfig = Object.freeze({\n  defaultTextContent: ")
     ; __append( JSON.stringify(t('designStudio.defaultText')) )
@@ -8244,7 +8350,7 @@ config = __locals.config,
     ; __append( JSON.stringify(aiTryOnPath) )
     ; __append(",\n  userAuthenticated: ")
     ; __append( JSON.stringify(Boolean(user)) )
-    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];\n\n  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {\n    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';\n    aiTryOnLinks.forEach((link) => {\n      const destination = new URL(link.href, window.location.origin);\n      if (safeProjectId) destination.searchParams.set('project', safeProjectId);\n      else destination.searchParams.delete('project');\n      link.href = `${destination.pathname}${destination.search}`;\n    });\n  }\n\n  window.syncModelTryOnLinks = syncModelTryOnLinks;\n  syncModelTryOnLinks();\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const registerLink = loginModal?.querySelector('.model-login-register a');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    if (!loginModal.open) loginModal.showModal();\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || !loginModal.open) return;\n    loginModal.close();\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginModal?.addEventListener('cancel', (event) => { event.preventDefault(); closeLoginModal(); });\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && loginModal.open) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  function rememberCustomizeIntent() {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  }\n\n  googleLogin?.addEventListener('click', rememberCustomizeIntent);\n  registerLink?.addEventListener('click', rememberCustomizeIntent);\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20260928-editor-preview-v3',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  const quickFabricToggle = document.getElementById('quickFabricToggle');\n  const quickFabricMenu = document.getElementById('quickFabricMenu');\n  const quickFabricName = document.getElementById('quickFabricName');\n  const quickFabricPreview = document.getElementById('quickFabricPreview');\n  const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];\n  const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];\n\n  function closeQuickFabricMenu({ restoreFocus = false } = {}) {\n    if (!quickFabricMenu || quickFabricMenu.hidden) return;\n    quickFabricMenu.hidden = true;\n    quickFabricToggle?.setAttribute('aria-expanded', 'false');\n    if (restoreFocus) quickFabricToggle?.focus({ preventScroll: true });\n  }\n\n  quickFabricToggle?.addEventListener('click', () => {\n    const shouldOpen = quickFabricMenu?.hidden;\n    if (!quickFabricMenu) return;\n    quickFabricMenu.hidden = !shouldOpen;\n    quickFabricToggle.setAttribute('aria-expanded', String(shouldOpen));\n    if (shouldOpen) quickFabricMenu.querySelector('button')?.focus({ preventScroll: true });\n  });\n\n  quickMaterialButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickMaterial?.(button.dataset.quickMaterial);\n      quickMaterialButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n      if (quickFabricName) quickFabricName.textContent = button.dataset.materialName || 'Fabric';\n      if (quickFabricPreview) quickFabricPreview.style.backgroundImage = `url(\"${button.dataset.materialPreview || ''}\")`;\n      closeQuickFabricMenu({ restoreFocus: true });\n    } catch (error) {\n      console.error('Failed to apply quick material:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  quickColorButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickColor?.(button.dataset.quickColor);\n      quickColorButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n    } catch (error) {\n      console.error('Failed to apply quick color:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  document.addEventListener('pointerdown', (event) => {\n    if (quickFabricMenu?.hidden || quickFabricMenu?.contains(event.target) || quickFabricToggle?.contains(event.target)) return;\n    closeQuickFabricMenu();\n  });\n\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && quickFabricMenu && !quickFabricMenu.hidden) {\n      event.preventDefault();\n      closeQuickFabricMenu({ restoreFocus: true });\n    }\n  });\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        window.ModelExportModal?.open();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh && window.location.hash !== '#design') requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  // Tool landing pages link directly to the editor using #design.\n  if (window.location.hash === '#design') {\n    const enterDesigner = () => requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enterDesigner, { once: true });\n    else enterDesigner();\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const projectParams = new URLSearchParams(window.location.search);\n  const hasSavedProject = projectParams.has('project') || projectParams.has('adminProject');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
+    ; __append("\n});\n\n(() => {\n  const entryButtons = [\n    document.getElementById('designNowBtn'),\n    document.getElementById('customizeFeatureBtn'),\n    document.getElementById('designCtaBtn'),\n    document.getElementById('renderCurrentModelBtn'),\n    document.getElementById('customizationInquiryBtn'),\n    document.getElementById('productionFeatureBtn')\n  ].filter(Boolean);\n  const aiTryOnLinks = [...document.querySelectorAll('[data-ai-try-on-link]')];\n\n  function syncModelTryOnLinks(projectId = new URLSearchParams(window.location.search).get('project')) {\n    const safeProjectId = /^[a-f0-9-]{36}$/i.test(String(projectId || '')) ? String(projectId) : '';\n    aiTryOnLinks.forEach((link) => {\n      const destination = new URL(link.href, window.location.origin);\n      if (safeProjectId) destination.searchParams.set('project', safeProjectId);\n      else destination.searchParams.delete('project');\n      link.href = `${destination.pathname}${destination.search}`;\n    });\n  }\n\n  window.syncModelTryOnLinks = syncModelTryOnLinks;\n  syncModelTryOnLinks();\n  let runtimePromise = null;\n  let runtimeReady = false;\n  const loginModal = document.getElementById('modelLoginModal');\n  const loginBackdrop = document.getElementById('modelLoginBackdrop');\n  const loginClose = document.getElementById('modelLoginClose');\n  const loginForm = document.getElementById('modelLoginForm');\n  const loginEmail = document.getElementById('modelLoginEmail');\n  const loginError = document.getElementById('modelLoginError');\n  const loginSubmit = document.getElementById('modelLoginSubmit');\n  const googleLogin = document.getElementById('modelGoogleLogin');\n  const registerLink = loginModal?.querySelector('.model-login-register a');\n  const resumeCustomizeKey = 'clozdesign_resume_customize';\n  let loginReturnFocus = null;\n\n  function openLoginModal() {\n    if (!loginModal) return;\n    loginReturnFocus = document.activeElement;\n    loginError.hidden = true;\n    loginError.textContent = '';\n    if (!loginModal.open) loginModal.showModal();\n    loginModal.setAttribute('aria-hidden', 'false');\n    document.body.classList.add('model-login-open');\n    requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));\n  }\n\n  function closeLoginModal() {\n    if (!loginModal || !loginModal.open) return;\n    loginModal.close();\n    loginModal.setAttribute('aria-hidden', 'true');\n    document.body.classList.remove('model-login-open');\n    loginReturnFocus?.focus?.({ preventScroll: true });\n  }\n\n  loginModal?.addEventListener('cancel', (event) => { event.preventDefault(); closeLoginModal(); });\n  loginBackdrop?.addEventListener('click', closeLoginModal);\n  loginClose?.addEventListener('click', closeLoginModal);\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && loginModal && loginModal.open) {\n      event.preventDefault();\n      closeLoginModal();\n    }\n  });\n\n  function rememberCustomizeIntent() {\n    sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n  }\n\n  googleLogin?.addEventListener('click', rememberCustomizeIntent);\n  registerLink?.addEventListener('click', rememberCustomizeIntent);\n\n  loginForm?.addEventListener('submit', async (event) => {\n    event.preventDefault();\n    if (!loginForm.reportValidity() || loginSubmit.disabled) return;\n    const data = new FormData(loginForm);\n    loginSubmit.disabled = true;\n    loginSubmit.setAttribute('aria-busy', 'true');\n    loginSubmit.querySelector('span').textContent = 'Signing in…';\n    loginError.hidden = true;\n    try {\n      const response = await fetch('/auth/login', {\n        method: 'POST',\n        credentials: 'same-origin',\n        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },\n        body: JSON.stringify({\n          email: data.get('email'),\n          password: data.get('password'),\n          next: window.location.pathname + window.location.search\n        })\n      });\n      const result = await response.json().catch(() => ({}));\n      if (!response.ok || !result.success) {\n        throw new Error(result.error || 'Unable to sign in. Please try again.');\n      }\n      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));\n      window.location.reload();\n    } catch (error) {\n      loginError.textContent = error.message || 'Unable to sign in. Please try again.';\n      loginError.hidden = false;\n      loginSubmit.disabled = false;\n      loginSubmit.removeAttribute('aria-busy');\n      loginSubmit.querySelector('span').textContent = 'Sign in and customize';\n    }\n  });\n\n  function loadDesignerMaterials() {\n    if (window.Design3DMaterials) return Promise.resolve();\n    const existing = document.querySelector('script[data-design-materials]');\n    if (existing) {\n      return new Promise((resolve, reject) => {\n        existing.addEventListener('load', resolve, { once: true });\n        existing.addEventListener('error', reject, { once: true });\n      });\n    }\n    return new Promise((resolve, reject) => {\n      const script = document.createElement('script');\n      script.src = '/js/design3d-materials.js?v=20260819-fabric-softness-v2';\n      script.dataset.designMaterials = 'true';\n      script.addEventListener('load', resolve, { once: true });\n      script.addEventListener('error', () => reject(new Error('Design materials failed to load')), { once: true });\n      document.body.appendChild(script);\n    });\n  }\n\n  function loadDesignerRuntimeFile() {\n    if (typeof window.initializeModelDesigner === 'function') return Promise.resolve();\n    const loadScript = ({ selector, src, dataset, ready, errorMessage }) => {\n      if (ready()) return Promise.resolve();\n      const existing = document.querySelector(selector);\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = src;\n        script.dataset[dataset] = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error(errorMessage)), { once: true });\n        document.body.appendChild(script);\n      });\n    };\n    return loadScript({\n      selector: 'script[data-editor-transform-runtime]',\n      src: '/js/editor-transform.js?v=20260815-text-selection-v4',\n      dataset: 'editorTransformRuntime',\n      ready: () => Boolean(window.ModelDesignerTransforms),\n      errorMessage: 'Editor transform helpers failed to load'\n    }).then(() => loadScript({\n      selector: 'script[data-model-designer-runtime]',\n      src: '/js/model-designer.js?v=20261004-fill-picker-v4',\n      dataset: 'modelDesignerRuntime',\n      ready: () => typeof window.initializeModelDesigner === 'function',\n      errorMessage: 'Design Studio runtime failed to load'\n    }));\n  }\n\n  function loadModelDesignerRuntime() {\n    if (runtimeReady) return Promise.resolve();\n    if (runtimePromise) return runtimePromise;\n    runtimePromise = Promise.all([loadDesignerMaterials(), loadDesignerRuntimeFile()]).then(() => {\n      if (typeof window.initializeModelDesigner !== 'function') {\n        throw new Error('Design Studio runtime unavailable');\n      }\n      window.initializeModelDesigner();\n      runtimeReady = true;\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n    }).catch((error) => {\n      runtimePromise = null;\n      throw error;\n    });\n    return runtimePromise;\n  }\n\n  const quickFabricToggle = document.getElementById('quickFabricToggle');\n  const quickFabricMenu = document.getElementById('quickFabricMenu');\n  const quickFabricName = document.getElementById('quickFabricName');\n  const quickFabricPreview = document.getElementById('quickFabricPreview');\n  const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];\n  const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];\n\n  function closeQuickFabricMenu({ restoreFocus = false } = {}) {\n    if (!quickFabricMenu || quickFabricMenu.hidden) return;\n    quickFabricMenu.hidden = true;\n    quickFabricToggle?.setAttribute('aria-expanded', 'false');\n    if (restoreFocus) quickFabricToggle?.focus({ preventScroll: true });\n  }\n\n  quickFabricToggle?.addEventListener('click', () => {\n    const shouldOpen = quickFabricMenu?.hidden;\n    if (!quickFabricMenu) return;\n    quickFabricMenu.hidden = !shouldOpen;\n    quickFabricToggle.setAttribute('aria-expanded', String(shouldOpen));\n    if (shouldOpen) quickFabricMenu.querySelector('button')?.focus({ preventScroll: true });\n  });\n\n  quickMaterialButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickMaterial?.(button.dataset.quickMaterial);\n      quickMaterialButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n      if (quickFabricName) quickFabricName.textContent = button.dataset.materialName || 'Fabric';\n      if (quickFabricPreview) quickFabricPreview.style.backgroundImage = `url(\"${button.dataset.materialPreview || ''}\")`;\n      closeQuickFabricMenu({ restoreFocus: true });\n    } catch (error) {\n      console.error('Failed to apply quick material:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  quickColorButtons.forEach((button) => button.addEventListener('click', async () => {\n    if (button.getAttribute('aria-busy') === 'true') return;\n    button.setAttribute('aria-busy', 'true');\n    try {\n      await loadModelDesignerRuntime();\n      await window.applyModelQuickColor?.(button.dataset.quickColor);\n      quickColorButtons.forEach((item) => {\n        const isActive = item === button;\n        item.classList.toggle('active', isActive);\n        item.setAttribute('aria-pressed', String(isActive));\n      });\n    } catch (error) {\n      console.error('Failed to apply quick color:', error);\n    } finally {\n      button.removeAttribute('aria-busy');\n    }\n  }));\n\n  document.addEventListener('pointerdown', (event) => {\n    if (quickFabricMenu?.hidden || quickFabricMenu?.contains(event.target) || quickFabricToggle?.contains(event.target)) return;\n    closeQuickFabricMenu();\n  });\n\n  document.addEventListener('keydown', (event) => {\n    if (event.key === 'Escape' && quickFabricMenu && !quickFabricMenu.hidden) {\n      event.preventDefault();\n      closeQuickFabricMenu({ restoreFocus: true });\n    }\n  });\n\n  async function handleDesignerEntry(event) {\n    const entryId = event.currentTarget.id;\n    if (!window.ModelDesignerConfig.userAuthenticated && entryId === 'designNowBtn') {\n      openLoginModal();\n      return;\n    }\n    entryButtons.forEach((button) => {\n      button.disabled = true;\n      button.setAttribute('aria-busy', 'true');\n    });\n    try {\n      await loadModelDesignerRuntime();\n      entryButtons.forEach((button) => button.removeEventListener('click', handleDesignerEntry));\n      if (entryId === 'renderCurrentModelBtn') {\n        window.ModelExportModal?.open();\n      } else if (entryId === 'customizationInquiryBtn' || entryId === 'productionFeatureBtn') {\n        window.openModelCustomizationInquiry?.();\n      } else {\n        window.openModelDesigner?.();\n      }\n    } catch (error) {\n      console.error(error);\n    } finally {\n      entryButtons.forEach((button) => {\n        button.disabled = false;\n        button.removeAttribute('aria-busy');\n      });\n    }\n  }\n\n  entryButtons.forEach((button) => button.addEventListener('click', handleDesignerEntry));\n  window.loadModelDesignerRuntime = loadModelDesignerRuntime;\n\n  if (window.ModelDesignerConfig.userAuthenticated) {\n    try {\n      const resume = JSON.parse(sessionStorage.getItem(resumeCustomizeKey) || 'null');\n      const isFresh = resume?.path === window.location.pathname && Date.now() - resume.createdAt < 5 * 60 * 1000;\n      sessionStorage.removeItem(resumeCustomizeKey);\n      if (isFresh && window.location.hash !== '#design') requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    } catch (error) {\n      sessionStorage.removeItem(resumeCustomizeKey);\n    }\n  }\n\n  // Tool landing pages link directly to the editor using #design.\n  if (window.location.hash === '#design') {\n    const enterDesigner = () => requestAnimationFrame(() => document.getElementById('designNowBtn')?.click());\n    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', enterDesigner, { once: true });\n    else enterDesigner();\n  }\n\n  const exportProxies = [\n    'exportDesignedModelCover',\n    'exportDesignedModelCoverFormats',\n    'prepareDesignedModelCoverCapture',\n    'cleanupDesignedModelCoverCapture'\n  ];\n  exportProxies.forEach((methodName) => {\n    window[methodName] = async (...args) => {\n      await loadModelDesignerRuntime();\n      return window[methodName](...args);\n    };\n  });\n\n  let hasPendingArtwork = false;\n  try {\n    hasPendingArtwork = Boolean(JSON.parse(sessionStorage.getItem('clothingdesign_pending_artwork') || 'null')?.dataUrl);\n  } catch (error) {\n    hasPendingArtwork = false;\n  }\n  const projectParams = new URLSearchParams(window.location.search);\n  const hasSavedProject = projectParams.has('project') || projectParams.has('adminProject');\n  if (hasPendingArtwork || hasSavedProject) {\n    const loadSavedDesign = () => loadModelDesignerRuntime().catch((error) => console.error(error));\n    if (document.readyState === 'loading') {\n      document.addEventListener('DOMContentLoaded', loadSavedDesign, { once: true });\n    } else {\n      loadSavedDesign();\n    }\n  }\n})();\n</script>\n")
     ;  if (supportsOnModelMockup) {
     ; __append("\n  <script>\n  (() => {\n    const modal = document.getElementById('modelMockupModal');\n    const launchButtons = [\n      document.getElementById('modelMockupBtn'),\n      document.getElementById('designModelMockupBtn')\n    ].filter(Boolean);\n    let studioPromise = null;\n\n    function loadStylesheet() {\n      const existing = document.querySelector('link[data-on-model-studio]');\n      if (existing?.sheet) return Promise.resolve();\n      if (existing) {\n        return new Promise((resolve, reject) => {\n          existing.addEventListener('load', resolve, { once: true });\n          existing.addEventListener('error', reject, { once: true });\n        });\n      }\n      return new Promise((resolve, reject) => {\n        const link = document.createElement('link');\n        link.rel = 'stylesheet';\n        link.href = '/css/on-model-mockup.css?v=20260821';\n        link.dataset.onModelStudio = 'true';\n        link.addEventListener('load', resolve, { once: true });\n        link.addEventListener('error', () => reject(new Error('Mockup studio styles failed to load')), { once: true });\n        document.head.appendChild(link);\n      });\n    }\n\n    function loadStudioScript() {\n      if (window.ModelMockupStudio) return Promise.resolve();\n      return new Promise((resolve, reject) => {\n        const script = document.createElement('script');\n        script.src = '/js/on-model-mockup.js?v=20260926-paid-v1';\n        script.dataset.onModelStudio = 'true';\n        script.addEventListener('load', resolve, { once: true });\n        script.addEventListener('error', () => reject(new Error('Mockup studio failed to load')), { once: true });\n        document.body.appendChild(script);\n      });\n    }\n\n    function loadStudio() {\n      if (window.ModelMockupStudio) return Promise.resolve(window.ModelMockupStudio);\n      if (!studioPromise) {\n        studioPromise = Promise.all([loadStylesheet(), loadStudioScript()])\n          .then(() => {\n            if (!window.ModelMockupStudio) throw new Error('Mockup studio unavailable');\n            modal.hidden = false;\n            return window.ModelMockupStudio;\n          })\n          .catch((error) => {\n            studioPromise = null;\n            throw error;\n          });\n      }\n      return studioPromise;\n    }\n\n    async function openStudio() {\n      launchButtons.forEach((button) => {\n        button.disabled = true;\n        button.setAttribute('aria-busy', 'true');\n      });\n      try {\n        const studio = await loadStudio();\n        launchButtons.forEach((button) => button.removeEventListener('click', openStudio));\n        studio.open();\n      } catch (error) {\n        console.error(error);\n      } finally {\n        launchButtons.forEach((button) => {\n          button.disabled = false;\n          button.removeAttribute('aria-busy');\n        });\n      }\n    }\n\n    launchButtons.forEach((button) => button.addEventListener('click', openStudio));\n  })();\n  </script>\n")
     ;  }
@@ -8286,6 +8392,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -8559,6 +8666,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -8748,6 +8856,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -8897,6 +9006,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -9195,6 +9305,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -9448,6 +9559,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -9581,6 +9693,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -9714,6 +9827,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -10087,6 +10201,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -10224,6 +10339,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -10375,6 +10491,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -10547,6 +10664,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -10990,6 +11108,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -11206,6 +11325,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -11427,6 +11547,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,
@@ -11689,6 +11810,7 @@ config = __locals.config,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
   historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
   pageCount = __locals.pageCount,
   title = __locals.title,
   page = __locals.page,

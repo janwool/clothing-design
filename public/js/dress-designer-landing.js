@@ -24,30 +24,49 @@
   if (!stage || !viewer || !loadButton || !status) return;
 
   let readyPromise = null;
-  const timeout = (promise, milliseconds) => Promise.race([
-    promise,
-    new Promise((_, reject) => window.setTimeout(() => reject(new Error('timeout')), milliseconds))
-  ]);
+  const timeout = (promise, milliseconds) => {
+    let timer;
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => { timer = window.setTimeout(() => reject(new Error('timeout')), milliseconds); })
+    ]).finally(() => window.clearTimeout(timer));
+  };
+
+  const waitForLoad = (element, milliseconds, start = () => {}) => new Promise((resolve, reject) => {
+    const cleanup = () => {
+      window.clearTimeout(timer);
+      element.removeEventListener('load', onLoad);
+      element.removeEventListener('error', onError);
+    };
+    const onLoad = () => { cleanup(); resolve(); };
+    const onError = () => { cleanup(); reject(new Error('3D preview unavailable')); };
+    const timer = window.setTimeout(onError, milliseconds);
+    element.addEventListener('load', onLoad);
+    element.addEventListener('error', onError);
+    try { start(); } catch (error) { cleanup(); reject(error); }
+  });
 
   const loadViewerLibrary = () => {
-    if (customElements.get('model-viewer')) return Promise.resolve();
-    const existing = document.querySelector('script[data-dress-model-viewer]');
-    if (existing) {
-      return timeout(new Promise((resolve, reject) => {
-        existing.addEventListener('load', resolve, { once: true });
-        existing.addEventListener('error', reject, { once: true });
-      }), 15000).then(() => customElements.whenDefined('model-viewer'));
+    // Configure the bundled decoder before a compressed garment starts loading.
+    window.ModelViewerElement = window.ModelViewerElement || {};
+    window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
+    const viewerClass = customElements.get('model-viewer');
+    if (viewerClass) {
+      viewerClass.meshoptDecoderLocation = window.ModelViewerElement.meshoptDecoderLocation;
+      return Promise.resolve();
     }
-
-    return timeout(new Promise((resolve, reject) => {
-      const script = document.createElement('script');
+    let script = document.querySelector('script[data-dress-model-viewer]');
+    const existing = Boolean(script);
+    if (!script) {
+      script = document.createElement('script');
       script.type = 'module';
-      script.src = '/vendor/model-viewer/model-viewer.min.js';
+      script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';
       script.dataset.dressModelViewer = 'true';
-      script.addEventListener('load', resolve, { once: true });
-      script.addEventListener('error', reject, { once: true });
-      document.head.appendChild(script);
-    }), 15000).then(() => customElements.whenDefined('model-viewer'));
+    }
+    return waitForLoad(script, 15000, () => {
+      if (!existing) document.head.appendChild(script);
+    }).then(() => timeout(customElements.whenDefined('model-viewer'), 5000))
+      .catch((error) => { script.remove(); throw error; });
   };
 
   const ensureReady = () => {
@@ -56,24 +75,25 @@
 
     stage.classList.add('is-loading');
     stage.setAttribute('aria-busy', 'true');
-    loadButton.querySelector('span').textContent = 'Loading 3D…';
-    status.textContent = 'LOADING 3D';
+    loadButton.hidden = true;
+    status.textContent = 'Loading preview…';
 
     readyPromise = loadViewerLibrary()
       .then(() => {
         viewer.hidden = false;
         if (viewer.loaded) return;
-        return timeout(new Promise((resolve, reject) => {
-          viewer.addEventListener('load', resolve, { once: true });
-          viewer.addEventListener('error', reject, { once: true });
+        return waitForLoad(viewer, 45000, () => {
+          if (!viewer.dataset.modelSrc) throw new Error('Dress model unavailable');
           viewer.src = viewer.dataset.modelSrc;
-        }), 45000);
+        });
       })
       .then(() => {
         stage.classList.remove('is-loading');
         stage.classList.add('is-ready');
         stage.setAttribute('aria-busy', 'false');
-        status.textContent = 'INTERACTIVE 3D READY';
+        applyColor(page.querySelector('.dress-swatch.active')?.dataset.color || '#852c36');
+        applyMaterial(page.querySelector('.dress-material-tabs button.active')?.dataset.material || 'matte');
+        status.textContent = 'Drag to rotate';
         window.trackEvent?.('dress_designer_3d_preview_load', {
           interaction_type: 'load_3d_preview',
           tool_name: 'dress-designer'
@@ -84,10 +104,10 @@
         readyPromise = null;
         viewer.hidden = true;
         viewer.removeAttribute('src');
-        stage.classList.remove('is-loading');
+        stage.classList.remove('is-loading', 'is-ready');
         stage.setAttribute('aria-busy', 'false');
-        loadButton.querySelector('span').textContent = 'Try Live 3D Again';
-        status.textContent = 'MODEL PREVIEW AVAILABLE';
+        loadButton.hidden = false;
+        status.textContent = 'Preview couldn’t load. Please retry.';
         throw error;
       });
     return readyPromise;
@@ -199,4 +219,5 @@
       exportButton.firstChild.textContent = originalText;
     }
   });
+  ensureReady().catch(() => {});
 })();

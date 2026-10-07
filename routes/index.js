@@ -3403,7 +3403,7 @@ router.get('/tools/:slug', async (req, res) => {
       structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
-      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20260919-seo-3d-v2'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=4-card-image-fill'] : undefined,
+      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20261005-auto-3d-v3'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=4-card-image-fill'] : undefined,
       bodyClass: isDressDesigner ? 'dress-designer-page' : req.params.slug === '3d-pants-generator' ? 'pants-generator-page' : '',
       toolPage: renderedToolPage
     });

@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
+const vm = require('node:vm');
 
 const root = path.join(__dirname, '..');
 const read = (...parts) => fs.readFileSync(path.join(root, ...parts), 'utf8');
@@ -32,9 +33,14 @@ test('uses live database dress models instead of generated campaign imagery', ()
   assert.doesNotMatch(template, /\/images\/dress-designer\/(?:atelier-hero|collection-board)/);
 });
 
-test('keeps the 3D preview lazy and supports core studio controls', () => {
+test('automatically loads the 3D preview and supports core studio controls', () => {
   assert.match(template, /<model-viewer[\s\S]*?data-model-src=[\s\S]*?hidden/);
-  assert.match(template, /id="dressLoadModel"/);
+  assert.match(template, /loading="eager"/);
+  assert.match(template, /reveal="auto"/);
+  assert.match(template, /id="dressLoadModel"[^>]*hidden/);
+  assert.doesNotMatch(template, /Load Live 3D/);
+  assert.match(runtime, /ensureReady\(\)\.catch\(\(\) => \{\}\);\s*\}\)\(\);/);
+  assert.match(runtime, /meshoptDecoderLocation = '\/vendor\/model-viewer\/meshopt_decoder\.js/);
   assert.match(template, /data-color=/);
   assert.match(template, /data-material=/);
   assert.match(template, /data-orbit=/);
@@ -45,6 +51,72 @@ test('keeps the 3D preview lazy and supports core studio controls', () => {
   assert.match(runtime, /setRoughnessFactor/);
   assert.match(runtime, /viewer\.cameraOrbit = orbit/);
   assert.match(runtime, /viewer\.toDataURL\('image\/png'\)/);
+});
+
+test('starts without a click and recovers from library and model load failures', async () => {
+  const classes = new Set();
+  const stage = { classList: {
+    add(...names) { names.forEach(name => classes.add(name)); },
+    remove(...names) { names.forEach(name => classes.delete(name)); }
+  }, setAttribute() {} };
+  const viewer = new EventTarget();
+  viewer.dataset = { modelSrc: '/dress.glb' };
+  viewer.removeAttribute = () => {};
+  let modelFails = true;
+  let registered = false;
+  let script = null;
+  let scriptCount = 0;
+  const viewerClass = {};
+  const button = new EventTarget();
+  const status = {};
+  const window = { setTimeout, clearTimeout };
+  Object.defineProperty(viewer, 'src', { set(value) {
+    assert.equal(value, '/dress.glb');
+    assert.match(window.ModelViewerElement.meshoptDecoderLocation, /meshopt_decoder\.js/);
+    queueMicrotask(() => {
+      viewer.loaded = !modelFails;
+      viewer.dispatchEvent(new Event(modelFails ? 'error' : 'load'));
+    });
+  } });
+  const page = { querySelectorAll: () => [], querySelector: () => null };
+  const elements = { dressModelStage: stage, dressModelViewer: viewer, dressLoadModel: button, dressPreviewStatus: status };
+  const document = {
+    querySelector: selector => selector === '.dress-page' ? page : script,
+    getElementById: id => elements[id],
+    createElement() {
+      const element = new EventTarget();
+      element.dataset = {};
+      element.remove = () => { script = null; };
+      return element;
+    },
+    head: { appendChild(element) {
+      script = element;
+      scriptCount += 1;
+      queueMicrotask(() => {
+        registered = scriptCount > 1;
+        element.dispatchEvent(new Event(registered ? 'load' : 'error'));
+      });
+    } }
+  };
+  vm.runInNewContext(runtime, { document, window, customElements: {
+    get: () => registered ? viewerClass : undefined,
+    whenDefined: () => Promise.resolve()
+  } });
+  const settle = () => new Promise(resolve => setImmediate(resolve));
+  await settle();
+  assert.equal(scriptCount, 1, 'initial library request must start without interaction');
+  assert.equal(script, null, 'failed library must be removed for retry');
+  assert.equal(button.hidden, false);
+  button.dispatchEvent(new Event('click'));
+  await settle();
+  assert.equal(scriptCount, 2);
+  assert.equal(button.hidden, false, 'model failure should offer retry');
+  modelFails = false;
+  button.dispatchEvent(new Event('click'));
+  await settle();
+  assert.equal(classes.has('is-ready'), true);
+  assert.equal(button.hidden, true);
+  assert.equal(status.textContent, 'Drag to rotate');
 });
 
 test('adds model ItemList structured data for search engines', () => {

@@ -68,13 +68,16 @@
             <a class="dress-inline-link" href="<%= toolPage.editorHref %>">Add artwork in full editor <span>↗</span></a>
           </aside>
 
-          <div class="dress-model-stage" id="dressModelStage" aria-busy="false">
+          <div class="dress-model-stage is-loading" id="dressModelStage" aria-busy="true">
             <div class="dress-canvas-meta"><span><%= toolPage.primaryModel?.shortTitle || 'DRESS MODEL' %></span><span>REAL-TIME 3D</span></div>
             <img class="dress-model-poster" src="<%= toolPage.image %>" alt="<%= toolPage.heroModel.alt %>" width="1200" height="1500" loading="lazy" decoding="async">
             <model-viewer
               id="dressModelViewer"
               class="dress-model-viewer"
               data-model-src="<%= toolPage.heroModel.src %>"
+              loading="eager"
+              reveal="auto"
+              interaction-prompt="none"
               alt="<%= toolPage.heroModel.alt %>"
               camera-controls
               camera-orbit="0deg 75deg 110%"
@@ -85,8 +88,8 @@
               tone-mapping="commerce"
               hidden
             ></model-viewer>
-            <button class="dress-load-model" id="dressLoadModel" type="button"><span>Load Live 3D</span><small>Rotate and customize the model</small></button>
-            <div class="dress-canvas-footer"><span id="dressPreviewStatus">Preview ready</span><strong>DRAG TO ROTATE</strong></div>
+            <button class="dress-load-model" id="dressLoadModel" type="button" hidden><span>Retry preview</span></button>
+            <div class="dress-canvas-footer"><span id="dressPreviewStatus" role="status" aria-live="polite">Loading preview…</span><strong>DRAG TO ROTATE</strong></div>
           </div>
 
           <aside class="dress-control-panel dress-control-panel-right" aria-label="Dress view and export controls">
@@ -222,5 +225,5 @@
   </main>
 </div>
 
-<script src="/js/dress-designer-landing.js?v=20260919-seo-3d-v2" defer></script>
+<script src="/js/dress-designer-landing.js?v=20261005-auto-3d-v3" defer></script>
 <%- include('partials/footer') %>

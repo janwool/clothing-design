@@ -1,14 +1,16 @@
 <%- include('partials/header') %>
+<% const rendersOnly = page === 'admin-renders'; const libraryPath = rendersOnly ? '/admin/renders' : '/admin/images'; %>
+<link rel="stylesheet" href="/css/admin-renders.css?v=20261007-v1">
 
 <div class="admin-wrapper">
   <%- include('partials/sidebar') %>
 
-  <main class="admin-main project-admin-main user-upload-admin-main">
+  <main class="admin-main project-admin-main user-upload-admin-main <%= rendersOnly ? 'user-render-admin-main' : '' %>">
     <div class="admin-header project-page-header">
       <div>
         <span class="admin-eyebrow">Operations / User media</span>
-        <h1 class="admin-title">User Uploads</h1>
-        <p class="admin-subtitle">Review artwork, generated previews, textures, and AI try-on results stored by users.</p>
+        <h1 class="admin-title"><%= rendersOnly ? 'User Renders' : 'User Uploads' %></h1>
+        <p class="admin-subtitle"><%= rendersOnly ? 'Review product images rendered and saved by users.' : 'Review artwork, generated previews, textures, and AI try-on results stored by users.' %></p>
       </div>
       <button class="sidebar-toggle" type="button" aria-label="Open admin navigation">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -21,10 +23,11 @@
 
     <section class="project-stats" aria-label="Upload summary">
       <article class="project-stat project-stat-total">
-        <span>All uploads</span>
+        <span><%= rendersOnly ? 'Rendered images' : 'All uploads' %></span>
         <strong><%= imageStats.total %></strong>
         <small><%= imageStats.creators %> contributing <%= imageStats.creators === 1 ? 'user' : 'users' %></small>
       </article>
+      <% if (!rendersOnly) { %>
       <article class="project-stat">
         <span>Artwork</span>
         <strong><%= imageStats.artwork %></strong>
@@ -35,6 +38,9 @@
         <strong><%= imageStats.tryOn %></strong>
         <small>Generated result images</small>
       </article>
+      <% } else { %>
+      <article class="project-stat"><span>Users</span><strong><%= imageStats.creators %></strong><small>Users with saved renders</small></article>
+      <% } %>
       <article class="project-stat">
         <span>Storage</span>
         <strong class="user-upload-storage"><%= imageStats.storage %></strong>
@@ -48,31 +54,34 @@
           <span class="admin-eyebrow">Media library</span>
           <h2><%= imagePagination.total %> matching <%= imagePagination.total === 1 ? 'image' : 'images' %></h2>
         </div>
-        <form class="project-filters" action="/admin/images" method="get">
+        <form class="project-filters" action="<%= libraryPath %>" method="get">
           <label class="project-search-field">
-            <span class="sr-only">Search uploaded images</span>
+            <span class="sr-only"><%= rendersOnly ? 'Search rendered images' : 'Search uploaded images' %></span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <circle cx="11" cy="11" r="8"/>
               <path d="m21 21-4.35-4.35"/>
             </svg>
             <input type="search" name="q" value="<%= imageFilters.search %>" placeholder="File, user or image ID…">
           </label>
+          <% if (!rendersOnly) { %>
           <select name="purpose" aria-label="Filter by image purpose">
             <option value="all" <%= imageFilters.purpose === 'all' ? 'selected' : '' %>>All image types</option>
             <option value="artwork" <%= imageFilters.purpose === 'artwork' ? 'selected' : '' %>>Artwork</option>
             <option value="project-preview" <%= imageFilters.purpose === 'project-preview' ? 'selected' : '' %>>Project previews</option>
             <option value="project-texture" <%= imageFilters.purpose === 'project-texture' ? 'selected' : '' %>>Project textures</option>
             <option value="try-on-result" <%= imageFilters.purpose === 'try-on-result' ? 'selected' : '' %>>AI try-on results</option>
+            <option value="ai-render-export" <%= imageFilters.purpose === 'ai-render-export' ? 'selected' : '' %>>Product renders</option>
           </select>
-          <button type="submit" class="btn btn-primary btn-small">Filter</button>
-          <% if (imageFilters.search || imageFilters.purpose !== 'all') {%>
-            <a href="/admin/images" class="project-clear-filter">Clear</a>
+          <% } %>
+          <button type="submit" class="btn btn-primary btn-small"><%= rendersOnly ? 'Search' : 'Filter' %></button>
+          <% if (imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all')) {%>
+            <a href="<%= libraryPath %>" class="project-clear-filter">Clear</a>
           <% }%>
         </form>
       </header>
 
       <% if (error) {%>
-        <div class="inquiry-error" role="alert"><%= error %></div>
+        <div class="inquiry-error" role="alert"><%= error %> <a href="<%= libraryPath %>?q=<%= encodeURIComponent(imageFilters.search) %>">Try again</a></div>
       <% }%>
 
       <% if (items && items.length > 0) {%>
@@ -83,7 +92,8 @@
                 <% if (item.image_url_safe) {%>
                   <a href="<%= item.image_url_safe %>" target="_blank" rel="noopener" aria-label="Open <%= item.original_name || 'uploaded image' %>">
                     <img src="<%= item.image_url_safe %>" alt="<%= item.original_name || 'User uploaded image' %>" loading="lazy">
-                    <span class="user-upload-open" aria-hidden="true">Open ↗</span>
+                    <span class="user-upload-open" aria-hidden="true"><%= rendersOnly ? 'Open original ↗' : 'Open ↗' %></span>
+                    <span class="user-image-fallback" hidden>Preview unavailable</span>
                   </a>
                 <% } else {%>
                   <div class="project-admin-placeholder">
@@ -102,7 +112,7 @@
                   </div>
                 </div>
                 <h3 title="<%= item.original_name || 'Untitled image' %>"><%= item.original_name || 'Untitled image' %></h3>
-                <p>Uploaded <%= item.created_at_display %></p>
+                <p><%= rendersOnly ? 'Rendered' : 'Uploaded' %> <%= item.created_at_display %></p>
                 <dl class="project-admin-meta user-upload-meta">
                   <div><dt>Size</dt><dd><%= item.size_display %></dd></div>
                   <div><dt>Format</dt><dd><%= String(item.mime_type || 'image').replace('image/', '').toUpperCase() %></dd></div>
@@ -116,13 +126,13 @@
         <% if (imagePagination.pageCount > 1) {%>
           <nav class="inquiry-pagination project-pagination" aria-label="Upload pages">
             <% if (imagePagination.page > 1) {%>
-              <a href="/admin/images?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page - 1 %>">← Previous</a>
+              <a href="<%= libraryPath %>?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page - 1 %>">← Previous</a>
             <% } else {%>
               <span>← Previous</span>
             <% }%>
             <strong>Page <%= imagePagination.page %> of <%= imagePagination.pageCount %></strong>
             <% if (imagePagination.page < imagePagination.pageCount) {%>
-              <a href="/admin/images?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page + 1 %>">Next →</a>
+              <a href="<%= libraryPath %>?q=<%= encodeURIComponent(imageFilters.search) %>&purpose=<%= encodeURIComponent(imageFilters.purpose) %>&page=<%= imagePagination.page + 1 %>">Next →</a>
             <% } else {%>
               <span>Next →</span>
             <% }%>
@@ -137,10 +147,10 @@
               <path d="m21 15-5-5L5 21"/>
             </svg>
           </div>
-          <h3><%= imageFilters.search || imageFilters.purpose !== 'all' ? 'No matching uploads' : 'No user uploads yet' %></h3>
-          <p><%= imageFilters.search || imageFilters.purpose !== 'all' ? 'Try another search or clear the active filter.' : 'Images will appear here when users upload artwork or generate visual results.' %></p>
-          <% if (imageFilters.search || imageFilters.purpose !== 'all') {%>
-            <a href="/admin/images" class="btn btn-secondary btn-small">Clear filters</a>
+          <h3><%= imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all') ? (rendersOnly ? 'No matching renders' : 'No matching uploads') : (rendersOnly ? 'No rendered images yet' : 'No user uploads yet') %></h3>
+          <p><%= imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all') ? 'Try another search or clear the active filter.' : (rendersOnly ? 'Rendered product images will appear here when users save them.' : 'Images will appear here when users upload artwork or generate visual results.') %></p>
+          <% if (imageFilters.search || (!rendersOnly && imageFilters.purpose !== 'all')) {%>
+            <a href="<%= libraryPath %>" class="btn btn-secondary btn-small">Clear filters</a>
           <% }%>
         </div>
       <% }%>
@@ -148,4 +158,5 @@
   </main>
 </div>
 
+<script src="/js/admin-user-images.js?v=20261007-v1" defer></script>
 <%- include('partials/footer') %>

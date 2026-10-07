@@ -38,6 +38,13 @@ test('dashboard counts only users with current paid plan access', async () => {
       await run('INSERT INTO user_subscriptions VALUES (?, ?, ?, ?)', row);
     }
     assert.equal((await get(subscriberQuery)).count, 4);
+    const filter = routeSource.match(/subscribersOnly \? `WHERE ([\s\S]*?)` : ''/)?.[1];
+    assert.ok(filter, 'subscriber list uses a paid access filter');
+    const members = await new Promise((resolve, reject) => database.all(
+      `SELECT u.id FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id WHERE ${filter} ORDER BY u.id`,
+      (error, rows) => error ? reject(error) : resolve(rows)
+    ));
+    assert.deepEqual(members.map(row => row.id), [1, 2, 3, 4]);
   } finally {
     await new Promise((resolve, reject) => database.close(error => error ? reject(error) : resolve()));
   }
@@ -59,6 +66,8 @@ test('dashboard subscriber card renders count, empty value, and unavailable stat
   assert.match(render(null), /href="\/admin" class="dashboard-metric dashboard-metric-primary dashboard-subscriber-metric"/);
   assert.match(render(null), /Refresh dashboard/);
   const html = render(4);
+  assert.match(html, /href="\/admin\/users\?view=subscribers"/);
+  assert.match(html, /View subscribers/);
   assert.ok(html.indexOf('Account Summary') < html.indexOf('Content &amp; Assets'));
   assert.ok(html.indexOf('Content &amp; Assets') < html.indexOf('User Activity'));
   assert.ok(html.indexOf('User Activity') < html.indexOf('Quick Actions'));
@@ -67,4 +76,15 @@ test('dashboard subscriber card renders count, empty value, and unavailable stat
     counts: { ...baseCounts, subscribers: 4 }
   });
   assert.match(workerHtml, /Active Subscribers[\s\S]*?dashboard-metric-value">4/);
+  assert.match(workerHtml, /href="\/admin\/users\?view=subscribers"/);
+});
+
+test('subscriber list has a distinct heading, empty state, and all-users link in both runtimes', () => {
+  const file = path.join(root, 'views/admin/users.ejs');
+  const locals = { title: 'Active Subscribers', page: 'admin-users', i18next: { language: 'en' }, subscribersOnly: true, items: [] };
+  for (const html of [ejs.render(fs.readFileSync(file, 'utf8'), locals, { filename: file }), workerTemplates.render('admin/users', locals)]) {
+    assert.match(html, /No active subscribers/);
+    assert.match(html, /href="\/admin\/users"[^>]*>View all users/);
+    assert.doesNotMatch(html, /Users will appear here once they register/);
+  }
 });

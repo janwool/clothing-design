@@ -24,11 +24,11 @@
           <span class="dashboard-metric-detail">Registered accounts</span>
           <span class="dashboard-metric-link">View users <span aria-hidden="true">→</span></span>
         </a>
-        <a href="<%= counts.subscribers == null ? '/admin' : '/admin/users' %>" class="dashboard-metric dashboard-metric-primary dashboard-subscriber-metric" aria-label="Active subscribers: <%= counts.subscribers == null ? 'unavailable. Refresh dashboard' : counts.subscribers + '. View users' %>">
+        <a href="<%= counts.subscribers == null ? '/admin' : '/admin/users?view=subscribers' %>" class="dashboard-metric dashboard-metric-primary dashboard-subscriber-metric" aria-label="Active subscribers: <%= counts.subscribers == null ? 'unavailable. Refresh dashboard' : counts.subscribers + '. View subscribers' %>">
           <span class="dashboard-metric-label">Active Subscribers</span>
           <strong class="dashboard-metric-value"><%= counts.subscribers == null ? '—' : counts.subscribers %></strong>
           <span class="dashboard-metric-detail"><%= counts.subscribers == null ? 'Count unavailable' : 'Paid plans · active access' %></span>
-          <span class="dashboard-metric-link"><%= counts.subscribers == null ? 'Refresh dashboard' : 'View users' %> <span aria-hidden="true">→</span></span>
+          <span class="dashboard-metric-link"><%= counts.subscribers == null ? 'Refresh dashboard' : 'View subscribers' %> <span aria-hidden="true">→</span></span>
         </a>
       </div>
     </section>

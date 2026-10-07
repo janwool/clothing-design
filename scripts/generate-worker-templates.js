@@ -12,6 +12,7 @@ const templateLocals = [
   'emailUsers',
   'csrf',
   'historyPage',
+  'subscribersOnly',
   'pageCount',
   'title',
   'page',

@@ -1,0 +1,15 @@
+.user-render-admin-main .project-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.user-render-admin-main .user-upload-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.user-render-admin-main .user-upload-preview { background: #f2f3f5; }
+.user-render-admin-main .user-upload-open { opacity: 1; transform: none; }
+.user-render-admin-main .project-library { min-height: calc(100vh - 100px); }
+@media (max-width: 1000px) {
+  .user-render-admin-main .user-upload-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .user-render-admin-main .project-stats,
+  .user-render-admin-main .user-upload-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.user-upload-preview img[hidden], .user-image-fallback[hidden] { display: none; }
+.user-image-fallback { display: grid; place-items: center; height: 100%; color: var(--color-text-secondary); font-size: 14px; }

@@ -306,7 +306,7 @@ const FEEDBACK_STATUSES = new Set(['all', 'new', 'reviewed', 'resolved', 'archiv
 const PROJECT_PAGE_SIZE = 24;
 const PROJECT_TYPES = new Set(['all', '3d', 'white_mockup']);
 const IMAGE_PAGE_SIZE = 30;
-const IMAGE_PURPOSES = new Set(['all', 'artwork', 'project-preview', 'project-texture', 'try-on-result']);
+const IMAGE_PURPOSES = new Set(['all', 'artwork', 'project-preview', 'project-texture', 'try-on-result', 'ai-render-export']);
 
 function normalizeInquiryStatus(value) {
   const status = String(value || 'all').trim().toLowerCase();
@@ -347,7 +347,8 @@ function imagePurposeLabel(value) {
     artwork: 'Artwork',
     'project-preview': 'Project preview',
     'project-texture': 'Project texture',
-    'try-on-result': 'AI try-on'
+    'try-on-result': 'AI try-on',
+    'ai-render-export': 'Product render'
   })[value] || 'Other';
 }
 
@@ -791,8 +792,10 @@ router.delete('/projects/:id', requireAuth, async (req, res) => {
 });
 
 // ==================== User Uploads ====================
-router.get('/images', requireAuth, async (req, res) => {
-  const purpose = normalizeImagePurpose(req.query.purpose);
+async function loadAdminImages(req, res) {
+  const rendersOnly = req.path === '/renders';
+  if (rendersOnly) res.set('Cache-Control', 'private, no-store');
+  const purpose = rendersOnly ? 'ai-render-export' : normalizeImagePurpose(req.query.purpose);
   const search = String(req.query.q || '').trim().slice(0, 100);
   const requestedPage = normalizeInquiryPage(req.query.page);
 
@@ -841,11 +844,11 @@ router.get('/images', requireAuth, async (req, res) => {
       SUM(CASE WHEN purpose = 'try-on-result' THEN 1 ELSE 0 END) as try_on,
       COUNT(DISTINCT user_id) as creators,
       COALESCE(SUM(size_bytes), 0) as storage_bytes
-      FROM user_images`);
+      FROM user_images${rendersOnly ? " WHERE purpose = 'ai-render-export'" : ''}`);
 
     res.render('admin/images', {
-      title: 'User Uploads',
-      page: 'admin-images',
+      title: rendersOnly ? 'User Renders' : 'User Uploads',
+      page: rendersOnly ? 'admin-renders' : 'admin-images',
       items: (items || []).map(item => ({
         ...item,
         image_url_safe: safeProjectPreviewUrl(item.url),
@@ -865,18 +868,21 @@ router.get('/images', requireAuth, async (req, res) => {
       error: ''
     });
   } catch (err) {
-    console.error('Failed to load user uploads:', err);
-    res.render('admin/images', {
-      title: 'User Uploads',
-      page: 'admin-images',
+    console.error('Failed to load user media:', err);
+    res.status(500).render('admin/images', {
+      title: rendersOnly ? 'User Renders' : 'User Uploads',
+      page: rendersOnly ? 'admin-renders' : 'admin-images',
       items: [],
       imageFilters: { purpose, search },
       imagePagination: { page: 1, pageCount: 1, total: 0 },
       imageStats: { total: 0, artwork: 0, tryOn: 0, creators: 0, storage: '0 B' },
-      error: 'User uploads could not be loaded.'
+      error: rendersOnly ? 'Rendered images could not be loaded. Please try again.' : 'User uploads could not be loaded.'
     });
   }
-});
+}
+
+router.get('/images', requireAuth, loadAdminImages);
+router.get('/renders', requireProjectAdmin, loadAdminImages);
 
 // ==================== 3D Models CRUD ====================
 router.get('/models-3d', requireAuth, async (req, res) => {
@@ -1139,6 +1145,7 @@ router.delete('/tools/:id', requireAuth, async (req, res) => {
 
 // ==================== Users Management ====================
 router.get('/users', requireAuth, async (req, res) => {
+  const subscribersOnly = req.query.view === 'subscribers';
   try {
     await Promise.all([ensureEntitlementTables(), ensureUserContentTables()]);
     const items = await db.all(`SELECT u.id, u.email, u.name, u.created_at,
@@ -1147,12 +1154,15 @@ router.get('/users', requireAuth, async (req, res) => {
       (SELECT COUNT(*) FROM design_projects p WHERE p.user_id = u.id AND p.deleted_at IS NULL) AS project_count,
       (SELECT COALESCE(SUM(i.size_bytes), 0) FROM user_images i WHERE i.user_id = u.id) AS storage_bytes
       FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id
+      ${subscribersOnly ? `WHERE LOWER(s.plan) IN ('pro', 'max', 'business')
+        AND LOWER(s.status) IN ('active', 'trialing', 'past_due', 'scheduled_cancel')
+        AND (s.current_period_end IS NULL OR julianday(s.current_period_end) > julianday('now'))` : ''}
       ORDER BY u.created_at DESC`);
-    res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: (items || []).map(item => ({
+    res.render('admin/users', { title: subscribersOnly ? 'Active Subscribers' : 'Users Management', page: 'admin-users', subscribersOnly, items: (items || []).map(item => ({
       ...item, storage_display: formatImageBytes(item.storage_bytes)
     })) });
   } catch (err) {
-    res.render('admin/users', { title: 'Users Management', page: 'admin-users', items: [] });
+    res.status(500).render('admin/users', { title: subscribersOnly ? 'Active Subscribers' : 'Users Management', page: 'admin-users', subscribersOnly, error: 'The user list could not be loaded. Please refresh and try again.', items: [] });
   }
 });
 
