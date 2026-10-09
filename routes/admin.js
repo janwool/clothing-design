@@ -903,9 +903,10 @@ router.get('/models-3d', requireAuth, async (req, res) => {
       categories: categories || []
     });
   } catch (err) {
-    res.render('admin/models-3d', {
+    res.status(500).render('admin/models-3d', {
       title: '3D Models Management',
       page: 'admin-models-3d',
+      error: 'The model list could not be loaded. Please refresh and try again.',
       items: [],
       categories: []
     });

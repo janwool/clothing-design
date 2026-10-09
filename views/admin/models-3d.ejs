@@ -14,12 +14,26 @@
     <div class="data-card">
       <div class="data-header">
         <h2 class="data-title">All Models</h2>
-        <div class="data-search">
-          <input type="text" class="search-input" placeholder="Search models..." id="searchInput">
+        <div class="model-list-filters">
+          <label class="model-list-filter" for="categoryFilter">
+            <span>Category</span>
+            <select class="search-input" id="categoryFilter">
+              <option value="">All categories</option>
+              <% (categories || []).forEach(cat => { %>
+                <option value="<%= cat.id %>" data-name="<%= cat.name %>"><%= cat.name %></option>
+              <% }) %>
+            </select>
+          </label>
+          <label class="model-list-filter" for="searchInput">
+            <span>Search</span>
+            <input type="search" class="search-input" placeholder="Search models..." id="searchInput">
+          </label>
+          <button type="button" class="btn btn-secondary btn-small" id="clearModelFilters" disabled>Clear filters</button>
         </div>
       </div>
 
       <% if (items && items.length > 0) { %>
+        <div class="model-list-table" id="modelListTable" role="region" aria-label="3D models table" tabindex="0">
         <table class="data-table">
           <thead>
             <tr>
@@ -36,7 +50,7 @@
           </thead>
           <tbody>
             <% items.forEach(item => { %>
-              <tr data-id="<%= item.id %>" data-item='<%- JSON.stringify(item) %>'>
+              <tr data-id="<%= item.id %>" data-item="<%= JSON.stringify(item) %>">
                 <td>#<%= item.id %></td>
                 <td>
                   <% if (item.image_url) { %>
@@ -78,13 +92,25 @@
             <% }) %>
           </tbody>
         </table>
+        </div>
+        <div class="empty-state" id="modelFilterEmpty" hidden>
+          <h3>No matching models</h3>
+          <p>Try another category or clear your search.</p>
+          <button type="button" class="btn btn-secondary btn-small" id="clearEmptyModelFilters">Clear filters</button>
+        </div>
+        <p class="model-list-count" id="modelFilterCount" role="status" aria-live="polite"><%= items.length %> models</p>
       <% } else { %>
         <div class="empty-state">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
           </svg>
-          <h3>No models yet</h3>
-          <p>Add your first 3D model to get started.</p>
+          <% if (typeof error !== 'undefined' && error) { %>
+            <h3>Unable to load models</h3>
+            <p role="alert"><%= error %></p>
+          <% } else { %>
+            <h3>No models yet</h3>
+            <p>Add your first 3D model to get started.</p>
+          <% } %>
         </div>
       <% } %>
     </div>
@@ -615,14 +641,53 @@ async function deleteModel(id) {
   }
 }
 
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function(e) {
-  const term = e.target.value.toLowerCase();
-  document.querySelectorAll('.data-table tbody tr').forEach(row => {
-    const text = row.textContent.toLowerCase();
-    row.style.display = text.includes(term) ? '' : 'none';
-  });
+// Combine keyword and category filters, including secondary and legacy categories.
+const modelSearchInput = document.getElementById('searchInput');
+const modelCategoryFilter = document.getElementById('categoryFilter');
+const modelClearFilters = document.getElementById('clearModelFilters');
+const modelRows = Array.from(document.querySelectorAll('.data-table tbody tr')).map(row => {
+  const item = JSON.parse(row.dataset.item);
+  return {
+    row,
+    categoryIds: String(item.category_ids || '').split(',').map(value => value.trim()).filter(Boolean),
+    legacyCategory: String(item.category || '').trim().toLowerCase(),
+    text: row.textContent.toLowerCase()
+  };
 });
+
+function filterModels() {
+  const term = modelSearchInput.value.trim().toLowerCase();
+  const categoryId = modelCategoryFilter.value;
+  const categoryName = String(modelCategoryFilter.selectedOptions[0]?.dataset.name || '').trim().toLowerCase();
+  let count = 0;
+  modelRows.forEach(model => {
+    const matchesCategory = !categoryId || model.categoryIds.includes(categoryId) ||
+      (!model.categoryIds.length && model.legacyCategory === categoryName);
+    const visible = matchesCategory && model.text.includes(term);
+    model.row.hidden = !visible;
+    if (visible) count += 1;
+  });
+  modelClearFilters.disabled = !term && !categoryId;
+  const empty = document.getElementById('modelFilterEmpty');
+  if (empty) empty.hidden = count > 0;
+  const table = document.getElementById('modelListTable');
+  if (table) table.hidden = count === 0;
+  const status = document.getElementById('modelFilterCount');
+  if (status) status.textContent = count + (count === 1 ? ' model' : ' models') + ' of ' + modelRows.length;
+}
+
+function clearModelFilters() {
+  modelSearchInput.value = '';
+  modelCategoryFilter.value = '';
+  filterModels();
+  modelSearchInput.focus();
+}
+
+modelSearchInput.addEventListener('input', filterModels);
+modelCategoryFilter.addEventListener('change', filterModels);
+modelClearFilters.addEventListener('click', clearModelFilters);
+document.getElementById('clearEmptyModelFilters')?.addEventListener('click', clearModelFilters);
+filterModels();
 
 // Close modal on overlay click
 modal.addEventListener('click', function(e) {

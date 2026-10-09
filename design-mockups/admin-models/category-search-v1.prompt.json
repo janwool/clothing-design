@@ -1,0 +1,11 @@
+{
+  "tool": "built-in image_gen",
+  "prompt": "Use case: ui-mockup. Create a high fidelity full-page design mockup board for an existing ClozDesign ADMIN 3D Models management page, including a large desktop view on the left and mobile view plus no-results state on the right. Preserve existing utilitarian admin style: Inter font, #f8f9fa background, white cards, thin light gray borders, charcoal headings, blue accents only where existing actions require them, 260px white sidebar desktop, 32px main padding, subtle 6px rounded inputs. Desktop sidebar ClozDesign ADMIN, Dashboard, 3D Models selected, 2D Models, Categories, Users. Page heading '3D Models' and '+ Add Model' button. Main white data card heading 'All Models', adjacent category select labeled Category with 'All categories', search input labeled Search with placeholder 'Search models...', subtle 'Clear filters' button. Under toolbar, readable full model management table columns ID Preview Name Slug Category Files Status Created Actions with tasteful white garment thumbnail previews, model names T-Shirt and Hoodie, category names Tops, badges GLB SVG active, Edit Delete. Mock data is for design preview only, no marketing or fake metrics. Show footer status '2 models'. Mobile filters stack at comfortable full width, table scrolls horizontally without shrinking text. No-results variant shows 'No matching models' and 'Try another category or clear your search.' and Clear filters. Cover the entire list page, not a hero. No new analytics, decoration, marketing, charts, or layout redesign.",
+  "implementation_notes": [
+    "Reuse existing sidebar and button styles rather than restyle them to match the generated concept.",
+    "Desktop toolbar keeps the existing title and controls on one row when space permits.",
+    "Category and keyword filters combine; secondary category IDs and legacy category names are supported.",
+    "Mobile filters stack and model table scrolls horizontally.",
+    "Browser verification used three local fixture models, not production data."
+  ]
+}

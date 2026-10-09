@@ -2242,3 +2242,23 @@
 }
 .project-view-design:hover { background: #243329; color: #fff; }
 .project-view-design:focus-visible { outline: 3px solid #91af91; outline-offset: 3px; }
+
+/* 3D model list filters */
+.model-list-filters {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.model-list-filter { display: grid; gap: 6px; font-size: 12px; font-weight: 500; }
+.model-list-filter .search-input { height: 40px; background: var(--color-white); }
+.model-list-filters > button { min-height: 40px; }
+.model-list-table { overflow-x: auto; }
+.model-list-table .data-table { min-width: 1000px; }
+.model-list-table[hidden], #modelFilterEmpty[hidden], .model-list-table tr[hidden] { display: none; }
+.model-list-count { padding: 16px 32px; margin: 0; color: var(--color-muted); font-size: 13px; border-top: 1px solid var(--color-border); }
+@media (max-width: 768px) {
+  .model-list-filters, .model-list-filter { width: 100%; }
+  .model-list-filters > button { width: 100%; }
+  .model-list-count { padding: 16px 24px; }
+}
