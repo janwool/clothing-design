@@ -12,26 +12,14 @@ const {
   getGoogleOAuthConfig,
   oauthStatesMatch
 } = require('../lib/google-oauth');
-const isWorkerRuntime = Boolean(globalThis.__WORKER_ENV__) || process.env.CF_WORKER === 'true';
 const { pageStructuredData } = require('../lib/seo');
 
-// Initialize database
-async function initAuthTables() {
-  try {
-    await db.run(`CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      name TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
-  } catch (err) {
-    console.error('Failed to init auth tables:', err.message);
-  }
-}
-if (!isWorkerRuntime) {
-  initAuthTables();
-}
+const { ensureUserAccountTable } = require('../lib/user-accounts');
+const ACCOUNT_DISABLED_ERROR = 'This account has been disabled. Sign-in and registration are unavailable.';
+
+router.use((req, res, next) => {
+  ensureUserAccountTable().then(() => next()).catch(next);
+});
 
 function buildAuthPageData(req, page, title) {
   const path = page === 'register' ? '/auth/register' : '/auth/login';
@@ -41,6 +29,7 @@ function buildAuthPageData(req, page, title) {
 
   const nextPath = getAuthReturnPath(req);
   const oauthErrors = {
+    account_disabled: ACCOUNT_DISABLED_ERROR,
     cancelled: 'Google sign-in was cancelled.',
     invalid_state: 'That Google sign-in request expired. Please try again.',
     unavailable: 'Google sign-in is temporarily unavailable. Please try again.',
@@ -139,7 +128,7 @@ router.get('/google/callback', async (req, res) => {
       redirectUri: config.redirectUri
     });
     const profile = await fetchGoogleUserProfile(tokens.access_token);
-    let user = await db.get('SELECT id, email, name FROM users WHERE email = ?', [profile.email]);
+    let user = await db.get('SELECT id, email, name, deleted_at FROM users WHERE email = ?', [profile.email]);
 
     if (!user) {
       const unusablePassword = await bcrypt.hash(`google:${profile.subject}:${randomBytes(32).toString('hex')}`, 10);
@@ -151,10 +140,12 @@ router.get('/google/callback', async (req, res) => {
         user = { id: result.lastID, email: profile.email, name: profile.name };
       } catch (error) {
         // A simultaneous first sign-in can win the unique-email insert race.
-        user = await db.get('SELECT id, email, name FROM users WHERE email = ?', [profile.email]);
+        user = await db.get('SELECT id, email, name, deleted_at FROM users WHERE email = ?', [profile.email]);
         if (!user) throw error;
       }
     }
+
+    if (user.deleted_at) return redirectGoogleError(res, 'account_disabled', nextPath);
 
     req.session.user = { id: user.id, email: user.email, name: user.name || profile.name };
     res.set('Cache-Control', 'no-store');
@@ -185,6 +176,14 @@ router.post('/login', async (req, res) => {
       });
     }
     
+    if (user.deleted_at) {
+      if (wantsJson(req)) return res.status(403).json({ success: false, error: ACCOUNT_DISABLED_ERROR });
+      return res.status(403).render('auth/login', {
+        ...buildAuthPageData(req, 'login', req.t('auth.login')),
+        error: ACCOUNT_DISABLED_ERROR
+      });
+    }
+
     const match = await bcrypt.compare(password, user.password);
     if (!match) {
       if (wantsJson(req)) {
@@ -244,6 +243,14 @@ router.post('/register', async (req, res) => {
       });
     }
     
+    const existing = await db.get('SELECT id, deleted_at FROM users WHERE email = ?', [email]);
+    if (existing) {
+      return res.status(existing.deleted_at ? 403 : 409).render('auth/register', {
+        ...buildAuthPageData(req, 'register', req.t('auth.register')),
+        error: existing.deleted_at ? ACCOUNT_DISABLED_ERROR : req.t('auth.emailExists')
+      });
+    }
+
     const hash = await bcrypt.hash(password, 10);
     const result = await db.run('INSERT INTO users (email, password, name) VALUES (?, ?, ?)', [email, hash, name]);
     req.session.user = { id: result.lastID, email, name };

@@ -5,6 +5,7 @@ const { createHmac, timingSafeEqual } = require('node:crypto');
 const i18next = require('i18next');
 const middleware = require('i18next-http-middleware');
 const db = require('./lib/db');
+const { ensureUserAccountTable, validateUserSession } = require('./lib/user-accounts');
 const { getHeaderLoginUrl } = require('./lib/auth-return-path');
 const { isGoogleAuthConfigured } = require('./lib/google-oauth');
 const {
@@ -33,13 +34,7 @@ function requireLocalOnly(moduleName) {
 
 async function initAppTables() {
   try {
-    await db.run(`CREATE TABLE IF NOT EXISTS users (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      email TEXT UNIQUE NOT NULL,
-      password TEXT NOT NULL,
-      name TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )`);
+    await ensureUserAccountTable();
   } catch (err) {
     console.error('Failed to init app tables:', err.message);
   }
@@ -358,6 +353,8 @@ if (isWorkerRuntime) {
     cookie: { secure: false }
   }));
 }
+
+app.use(validateUserSession);
 
 app.use((req, res, next) => {
   res.locals.i18next = req.i18n;

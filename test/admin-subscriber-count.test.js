@@ -20,7 +20,7 @@ test('dashboard counts only users with current paid plan access', async () => {
     database.get(sql, (error, row) => error ? reject(error) : resolve(row));
   });
   try {
-    await run('CREATE TABLE users (id INTEGER PRIMARY KEY)');
+    await run('CREATE TABLE users (id INTEGER PRIMARY KEY, deleted_at DATETIME)');
     await run('CREATE TABLE user_subscriptions (user_id INTEGER, plan TEXT, status TEXT, current_period_end TEXT)');
     for (let id = 1; id <= 9; id += 1) await run('INSERT INTO users (id) VALUES (?)', [id]);
     const rows = [
@@ -38,13 +38,15 @@ test('dashboard counts only users with current paid plan access', async () => {
       await run('INSERT INTO user_subscriptions VALUES (?, ?, ?, ?)', row);
     }
     assert.equal((await get(subscriberQuery)).count, 4);
-    const filter = routeSource.match(/subscribersOnly \? `WHERE ([\s\S]*?)` : ''/)?.[1];
+    const filter = routeSource.match(/subscribersOnly \? `AND ([\s\S]*?)` : ''/)?.[1];
     assert.ok(filter, 'subscriber list uses a paid access filter');
     const members = await new Promise((resolve, reject) => database.all(
-      `SELECT u.id FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id WHERE ${filter} ORDER BY u.id`,
+      `SELECT u.id FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id WHERE u.deleted_at IS NULL AND ${filter} ORDER BY u.id`,
       (error, rows) => error ? reject(error) : resolve(rows)
     ));
     assert.deepEqual(members.map(row => row.id), [1, 2, 3, 4]);
+    await run('UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = 1');
+    assert.equal((await get(subscriberQuery)).count, 3);
   } finally {
     await new Promise((resolve, reject) => database.close(error => error ? reject(error) : resolve()));
   }

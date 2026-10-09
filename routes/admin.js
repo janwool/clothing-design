@@ -3,6 +3,7 @@ const router = express.Router();
 router.use('/email', require('./admin-email'));
 const path = require('path');
 const db = require('../lib/db');
+const { ensureUserAccountTable } = require('../lib/user-accounts');
 const { parseProjectRow } = require('../lib/user-projects');
 const { requireProjectAdmin } = require('../lib/project-admin-auth');
 const { generateSlug } = require('../lib/slug');
@@ -399,19 +400,20 @@ function safeFeedbackSourceUrl(value) {
 // Admin Dashboard
 router.get('/', requireAuth, async (req, res) => {
   try {
+    await ensureUserAccountTable();
     await ensureCustomizationInquiriesTable();
     const models3d = await db.get('SELECT COUNT(*) as count FROM models_3d');
     const models2d = await db.get('SELECT COUNT(*) as count FROM models_2d');
     const gallery = await db.get('SELECT COUNT(*) as count FROM gallery_items');
     const tools = await db.get('SELECT COUNT(*) as count FROM tools');
-    const users = await db.get('SELECT COUNT(*) as count FROM users');
+    const users = await db.get('SELECT COUNT(*) as count FROM users WHERE deleted_at IS NULL');
     let subscribers = null;
     try {
       await ensureEntitlementTables();
       subscribers = await db.get(`SELECT COUNT(*) AS count
         FROM user_subscriptions s
         JOIN users u ON u.id = s.user_id
-        WHERE LOWER(s.plan) IN ('pro', 'max', 'business')
+        WHERE u.deleted_at IS NULL AND LOWER(s.plan) IN ('pro', 'max', 'business')
           AND LOWER(s.status) IN ('active', 'trialing', 'past_due', 'scheduled_cancel')
           AND (s.current_period_end IS NULL OR julianday(s.current_period_end) > julianday('now'))`);
     } catch (error) {
@@ -1147,14 +1149,15 @@ router.delete('/tools/:id', requireAuth, async (req, res) => {
 router.get('/users', requireAuth, async (req, res) => {
   const subscribersOnly = req.query.view === 'subscribers';
   try {
-    await Promise.all([ensureEntitlementTables(), ensureUserContentTables()]);
+    await Promise.all([ensureUserAccountTable(), ensureEntitlementTables(), ensureUserContentTables()]);
     const items = await db.all(`SELECT u.id, u.email, u.name, u.created_at,
       COALESCE(s.plan, 'free') AS plan, s.billing_interval, s.status AS subscription_status,
       s.current_period_end,
       (SELECT COUNT(*) FROM design_projects p WHERE p.user_id = u.id AND p.deleted_at IS NULL) AS project_count,
       (SELECT COALESCE(SUM(i.size_bytes), 0) FROM user_images i WHERE i.user_id = u.id) AS storage_bytes
       FROM users u LEFT JOIN user_subscriptions s ON s.user_id = u.id
-      ${subscribersOnly ? `WHERE LOWER(s.plan) IN ('pro', 'max', 'business')
+      WHERE u.deleted_at IS NULL
+      ${subscribersOnly ? `AND LOWER(s.plan) IN ('pro', 'max', 'business')
         AND LOWER(s.status) IN ('active', 'trialing', 'past_due', 'scheduled_cancel')
         AND (s.current_period_end IS NULL OR julianday(s.current_period_end) > julianday('now'))` : ''}
       ORDER BY u.created_at DESC`);
@@ -1178,7 +1181,8 @@ router.patch('/users/:id/plan', requireAuth, async (req, res) => {
 
   try {
     await ensureEntitlementTables();
-    const user = await db.get('SELECT id FROM users WHERE id = ?', [req.params.id]);
+    await ensureUserAccountTable();
+    const user = await db.get('SELECT id FROM users WHERE id = ? AND deleted_at IS NULL', [req.params.id]);
     if (!user) return res.status(404).json({ success: false, error: 'User not found.' });
 
     if (requestedPlan === 'free') {
@@ -1223,10 +1227,13 @@ router.patch('/users/:id/plan', requireAuth, async (req, res) => {
 
 router.delete('/users/:id', requireAuth, async (req, res) => {
   try {
-    await ensureEntitlementTables();
-    await db.run('DELETE FROM user_entitlement_usage WHERE user_id = ?', [req.params.id]);
-    await db.run('DELETE FROM user_subscriptions WHERE user_id = ?', [req.params.id]);
-    await db.run('DELETE FROM users WHERE id = ?', [req.params.id]);
+    await ensureUserAccountTable();
+    const result = await db.run(
+      'UPDATE users SET deleted_at = COALESCE(deleted_at, CURRENT_TIMESTAMP) WHERE id = ?',
+      [req.params.id]
+    );
+    if (!result.changes) return res.status(404).json({ success: false, error: 'User not found.' });
+    if (String(req.session.user.id) === String(req.params.id)) delete req.session.user;
     res.json({ success: true });
   } catch (err) {
     res.json({ success: false, error: err.message });

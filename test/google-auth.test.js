@@ -41,7 +41,7 @@ test('protects the Google callback and reuses the existing account session', () 
   assert.match(authRoute, /Date\.now\(\) - Number\(pending\.createdAt\) < 10 \* 60 \* 1000/);
   assert.match(authRoute, /oauthStatesMatch\(pending\.state, req\.query\?\.state\)/);
   assert.match(authRoute, /fetchGoogleUserProfile\(tokens\.access_token\)/);
-  assert.match(authRoute, /SELECT id, email, name FROM users WHERE email = \?/);
+  assert.match(authRoute, /SELECT id, email, name, deleted_at FROM users WHERE email = \?/);
   assert.match(authRoute, /req\.session\.user = \{ id: user\.id, email: user\.email, name: user\.name \|\| profile\.name \}/);
   assert.match(authRoute, /res\.redirect\(nextPath \|\| '\/tools\/t-shirt-mockup-generator'\)/);
 });
