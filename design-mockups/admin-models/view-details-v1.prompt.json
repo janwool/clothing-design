@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image_gen",
+  "prompt": "Use case: ui-mockup. High fidelity full-page UI design board for ClozDesign existing ADMIN 3D Models list. Include desktop entire page and 390px mobile view. Match existing design exactly: 260px white desktop sidebar, Inter type, light gray #f8f9fa canvas, white bordered data card, charcoal text, restrained blue pill action buttons. Page heading '3D Models', '+ Add Model'. Card heading 'All Models', Category select 'All categories', Search field 'Search models...', 'Clear filters'. Table ID Preview Name Slug Category Files Status Created Actions. New feature in Actions: a clear 'View details ↗' text link before Edit and Delete for active models. Model row T-Shirt, category Tops, GLB SVG, active. Second row Hoodie inactive, Actions muted 'Not published' followed by Edit Delete. Footer '2 models of 2'. Design all page content and mobile filters stacked with table horizontally scrollable; separate small detail showing mobile Actions column with View details Edit Delete touchable comfortably. Do not redesign existing sidebar, buttons or typography. White garment thumbnail images only; fixture rows are design illustrations, no marketing, no fake metrics, no charts. Show a credible polished admin list, not a landing page.",
+  "implementation_notes": [
+    "Reuse existing navigation and filters; the generated sidebar variations are not implemented.",
+    "Mobile uses the existing scrollable table rather than a new action sheet.",
+    "Public details are available for active models only; unpublished models retain Edit and Delete."
+  ]
+}

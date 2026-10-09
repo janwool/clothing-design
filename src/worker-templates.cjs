@@ -3250,7 +3250,17 @@ config = __locals.config,
     ; __append(escapeFn( item.status ))
     ; __append("</span>\n                </td>\n                <td>")
     ; __append(escapeFn( new Date(item.created_at).toLocaleDateString() ))
-    ; __append("</td>\n                <td>\n                  <div class=\"table-actions\">\n                    <button class=\"btn btn-ghost btn-small\" data-action=\"edit\" data-id=\"")
+    ; __append("</td>\n                <td>\n                  <div class=\"table-actions model-list-actions\">\n                    ")
+    ;  if (item.detail_url) {
+    ; __append("\n                      <a class=\"btn btn-ghost btn-small\" href=\"")
+    ; __append(escapeFn( item.detail_url ))
+    ; __append("\" target=\"_blank\" rel=\"noopener noreferrer\" aria-label=\"View details for ")
+    ; __append(escapeFn( item.name ))
+    ; __append(" (opens in a new tab)\">View details <span aria-hidden=\"true\">↗</span></a>\n                    ")
+    ;  } else {
+    ; __append("\n                      <span class=\"model-detail-unavailable\" title=\"Publish this model to make its detail page available.\">Not published</span>\n                    ")
+    ;  }
+    ; __append("\n                    <button class=\"btn btn-ghost btn-small\" data-action=\"edit\" data-id=\"")
     ; __append(escapeFn( item.id ))
     ; __append("\">Edit</button>\n                    <button class=\"btn btn-ghost btn-small btn-delete\" data-action=\"delete\" data-id=\"")
     ; __append(escapeFn( item.id ))
@@ -3542,7 +3552,7 @@ config = __locals.config,
     ; __append(escapeFn( i18next && i18next.language === 'ar' ? 'rtl' : 'ltr' ))
     ; __append("\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <title>")
     ; __append(escapeFn( title ))
-    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20261009-model-category-filter-v1\">\n</head>\n<body class=\"admin-body\">\n")
+    ; __append("</title>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap\" rel=\"stylesheet\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20260910-material-grid-v12\">\n  <link rel=\"stylesheet\" href=\"/css/admin.css?v=20261009-model-details-v1\">\n</head>\n<body class=\"admin-body\">\n")
   return __output;
 
 },

@@ -2254,11 +2254,17 @@
 .model-list-filter .search-input { height: 40px; background: var(--color-white); }
 .model-list-filters > button { min-height: 40px; }
 .model-list-table { overflow-x: auto; }
-.model-list-table .data-table { min-width: 1000px; }
+.model-list-table .data-table { display: table; min-width: 1000px; }
 .model-list-table[hidden], #modelFilterEmpty[hidden], .model-list-table tr[hidden] { display: none; }
 .model-list-count { padding: 16px 32px; margin: 0; color: var(--color-muted); font-size: 13px; border-top: 1px solid var(--color-border); }
 @media (max-width: 768px) {
   .model-list-filters, .model-list-filter { width: 100%; }
   .model-list-filters > button { width: 100%; }
   .model-list-count { padding: 16px 24px; }
+}
+
+.model-list-actions { align-items: center; white-space: nowrap; }
+.model-detail-unavailable { color: var(--color-muted); font-size: 12px; padding: 8px 12px; }
+@media (max-width: 768px) {
+  .model-list-actions .btn { min-height: 44px; display: inline-flex; align-items: center; gap: 4px; }
 }

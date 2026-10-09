@@ -83,7 +83,12 @@
                 </td>
                 <td><%= new Date(item.created_at).toLocaleDateString() %></td>
                 <td>
-                  <div class="table-actions">
+                  <div class="table-actions model-list-actions">
+                    <% if (item.detail_url) { %>
+                      <a class="btn btn-ghost btn-small" href="<%= item.detail_url %>" target="_blank" rel="noopener noreferrer" aria-label="View details for <%= item.name %> (opens in a new tab)">View details <span aria-hidden="true">↗</span></a>
+                    <% } else { %>
+                      <span class="model-detail-unavailable" title="Publish this model to make its detail page available.">Not published</span>
+                    <% } %>
                     <button class="btn btn-ghost btn-small" data-action="edit" data-id="<%= item.id %>">Edit</button>
                     <button class="btn btn-ghost btn-small btn-delete" data-action="delete" data-id="<%= item.id %>">Delete</button>
                   </div>

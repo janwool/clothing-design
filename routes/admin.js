@@ -6,7 +6,7 @@ const db = require('../lib/db');
 const { ensureUserAccountTable } = require('../lib/user-accounts');
 const { parseProjectRow } = require('../lib/user-projects');
 const { requireProjectAdmin } = require('../lib/project-admin-auth');
-const { generateSlug } = require('../lib/slug');
+const { generateSlug, normalize3dModel } = require('../lib/slug');
 const { ensureCustomizationInquiriesTable } = require('../lib/customization-inquiries-db');
 const { ensureFeedbackTable } = require('../lib/feedback-db');
 const { ensureUserContentTables } = require('../lib/user-content-db');
@@ -899,7 +899,15 @@ router.get('/models-3d', requireAuth, async (req, res) => {
     res.render('admin/models-3d', {
       title: '3D Models Management',
       page: 'admin-models-3d',
-      items: items || [],
+      items: (items || []).map(item => {
+        const model = normalize3dModel(item);
+        return {
+          ...item,
+          detail_url: item.status === 'active'
+            ? `/3d-models/${encodeURIComponent(model.category_slug)}/${encodeURIComponent(model.slug)}`
+            : ''
+        };
+      }),
       categories: categories || []
     });
   } catch (err) {
