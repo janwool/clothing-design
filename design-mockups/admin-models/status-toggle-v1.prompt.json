@@ -1,0 +1,8 @@
+{
+  "tool": "built-in image_gen",
+  "prompt": "Use case: ui-mockup. Full-page high fidelity design for existing ClozDesign ADMIN 3D Models management table plus 390px mobile detail. Preserve existing style Inter, 260px white sidebar, pale gray background, white bordered card, charcoal typography, compact controls and blue pill Add Model. Page '3D Models', card 'All Models', category select, keyword search, Clear filters. Table model rows Preview Name Slug Category Files Status Created Actions. Core change: status badges are clickable buttons, green 'active' and muted gray 'inactive' with subtle switch affordance. Actions View details ↗ Edit Delete for active row and Not published Edit Delete for inactive. Show three small state callouts under entire desktop layout: button disabled 'Saving…' during request, success 'active', failure retains 'inactive' and inline red 'Status could not be updated. Try again.' Screenshot-like realistic admin, no hero, decorative charts, marketing or extra features. Mobile shows stacked filters and horizontally scrollable table with comfortable touchable status controls. Existing navigation and page layout remain unchanged; no modal or confirmation step. Fictional garment rows only as design fixture, no analytics.",
+  "implementation_notes": [
+    "Retain existing sidebar, headings, files badges and filters; implement only status controls and their request states.",
+    "Publication changes update detail links without refreshing or resetting filters."
+  ]
+}

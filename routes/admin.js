@@ -903,9 +903,7 @@ router.get('/models-3d', requireAuth, async (req, res) => {
         const model = normalize3dModel(item);
         return {
           ...item,
-          detail_url: item.status === 'active'
-            ? `/3d-models/${encodeURIComponent(model.category_slug)}/${encodeURIComponent(model.slug)}`
-            : ''
+          detail_url: `/3d-models/${encodeURIComponent(model.category_slug)}/${encodeURIComponent(model.slug)}`
         };
       }),
       categories: categories || []
@@ -941,6 +939,24 @@ router.post('/models-3d', requireAuth, async (req, res) => {
     res.json({ success: true, id: result.lastID });
   } catch (err) {
     res.json({ success: false, error: err.message });
+  }
+});
+
+router.patch('/models-3d/:id/status', requireAuth, async (req, res) => {
+  const status = req.body?.status;
+  if (!['active', 'inactive'].includes(status)) {
+    return res.status(400).json({ success: false, error: 'Choose active or inactive.' });
+  }
+  try {
+    const result = await db.run(
+      'UPDATE models_3d SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [status, req.params.id]
+    );
+    if (!result.changes) return res.status(404).json({ success: false, error: '3D model not found.' });
+    return res.json({ success: true, status });
+  } catch (error) {
+    console.error('Admin model status update failed:', error);
+    return res.status(500).json({ success: false, error: 'Status could not be updated. Try again.' });
   }
 });
 

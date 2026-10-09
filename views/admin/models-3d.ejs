@@ -79,15 +79,16 @@
                   </div>
                 </td>
                 <td>
-                  <span class="status-badge status-<%= item.status %>"><%= item.status %></span>
+                  <button type="button" class="status-badge model-status-toggle status-<%= item.status %>" data-action="toggle-status" data-id="<%= item.id %>" role="switch" aria-checked="<%= item.status === 'active' ? 'true' : 'false' %>" aria-label="Published status for <%= item.name %>" title="Click to set <%= item.status === 'active' ? 'inactive' : 'active' %>"><span class="model-status-indicator" aria-hidden="true"></span><span data-status-label><%= item.status %></span></button>
+                  <span class="model-status-error" role="alert" hidden></span>
                 </td>
                 <td><%= new Date(item.created_at).toLocaleDateString() %></td>
                 <td>
                   <div class="table-actions model-list-actions">
-                    <% if (item.detail_url) { %>
-                      <a class="btn btn-ghost btn-small" href="<%= item.detail_url %>" target="_blank" rel="noopener noreferrer" aria-label="View details for <%= item.name %> (opens in a new tab)">View details <span aria-hidden="true">↗</span></a>
+                    <% if (item.status === 'active' && item.detail_url) { %>
+                      <a class="btn btn-ghost btn-small" data-model-details href="<%= item.detail_url %>" target="_blank" rel="noopener noreferrer" aria-label="View details for <%= item.name %> (opens in a new tab)">View details <span aria-hidden="true">↗</span></a>
                     <% } else { %>
-                      <span class="model-detail-unavailable" title="Publish this model to make its detail page available.">Not published</span>
+                      <span class="model-detail-unavailable" data-model-details title="Publish this model to make its detail page available.">Not published</span>
                     <% } %>
                     <button class="btn btn-ghost btn-small" data-action="edit" data-id="<%= item.id %>">Edit</button>
                     <button class="btn btn-ghost btn-small btn-delete" data-action="delete" data-id="<%= item.id %>">Delete</button>
@@ -694,6 +695,62 @@ modelClearFilters.addEventListener('click', clearModelFilters);
 document.getElementById('clearEmptyModelFilters')?.addEventListener('click', clearModelFilters);
 filterModels();
 
+async function toggleModelStatus(button) {
+  if (button.disabled) return;
+  const row = button.closest('tr');
+  const item = JSON.parse(row.dataset.item);
+  const nextStatus = item.status === 'active' ? 'inactive' : 'active';
+  const label = button.querySelector('[data-status-label]');
+  const error = row.querySelector('.model-status-error');
+  button.disabled = true;
+  button.setAttribute('aria-busy', 'true');
+  label.textContent = 'Saving…';
+  error.hidden = true;
+  try {
+    const response = await fetch('/admin/models-3d/' + encodeURIComponent(item.id) + '/status', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ status: nextStatus })
+    });
+    const result = await response.json();
+    if (!response.ok || !result.success || !['active', 'inactive'].includes(result.status)) {
+      throw new Error(result.error || 'Status could not be updated. Try again.');
+    }
+    item.status = result.status;
+    row.dataset.item = JSON.stringify(item);
+    button.classList.toggle('status-active', item.status === 'active');
+    button.classList.toggle('status-inactive', item.status === 'inactive');
+    button.setAttribute('aria-checked', String(item.status === 'active'));
+    button.title = 'Click to set ' + (item.status === 'active' ? 'inactive' : 'active');
+    const details = document.createElement(item.status === 'active' ? 'a' : 'span');
+    details.setAttribute('data-model-details', '');
+    if (item.status === 'active') {
+      details.className = 'btn btn-ghost btn-small';
+      details.href = item.detail_url;
+      details.target = '_blank';
+      details.rel = 'noopener noreferrer';
+      details.setAttribute('aria-label', 'View details for ' + item.name + ' (opens in a new tab)');
+      details.textContent = 'View details ↗';
+    } else {
+      details.className = 'model-detail-unavailable';
+      details.title = 'Publish this model to make its detail page available.';
+      details.textContent = 'Not published';
+    }
+    row.querySelector('[data-model-details]').replaceWith(details);
+  } catch (failure) {
+    error.textContent = 'Status could not be updated. Try again.';
+    error.hidden = false;
+  } finally {
+    label.textContent = item.status;
+    button.disabled = false;
+    button.removeAttribute('aria-busy');
+    const model = modelRows.find(model => model.row === row);
+    // Exclude transient failure text from keyword filtering.
+    if (model) model.text = Array.from(row.cells).map(cell => cell.textContent.replace(error.textContent, '')).join(' ').toLowerCase();
+    filterModels();
+  }
+}
+
 // Close modal on overlay click
 modal.addEventListener('click', function(e) {
   if (e.target === modal) closeModal();
@@ -705,7 +762,9 @@ document.querySelector('.data-table tbody')?.addEventListener('click', function(
   if (!btn) return;
   const id = btn.getAttribute('data-id');
   const action = btn.getAttribute('data-action');
-  if (action === 'edit') {
+  if (action === 'toggle-status') {
+    toggleModelStatus(btn);
+  } else if (action === 'edit') {
     editModel(id);
   } else if (action === 'delete') {
     deleteModel(id);

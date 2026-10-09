@@ -2268,3 +2268,14 @@
 @media (max-width: 768px) {
   .model-list-actions .btn { min-height: 44px; display: inline-flex; align-items: center; gap: 4px; }
 }
+
+.model-status-toggle { border: 0; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.model-status-toggle:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.model-status-toggle:disabled { cursor: wait; opacity: .6; }
+.model-status-indicator { width: 22px; height: 14px; border-radius: 14px; background: #c4c9ce; position: relative; }
+.model-status-indicator::after { content: ''; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: white; }
+.status-active .model-status-indicator { background: #10b981; }
+.status-active .model-status-indicator::after { left: 10px; }
+.model-status-error { display: block; margin-top: 8px; width: 180px; color: #b42318; font-size: 12px; }
+.model-status-error[hidden] { display: none; }
+@media (max-width: 768px) { .model-status-toggle { min-height: 44px; padding: 8px 12px; } }
