@@ -111,16 +111,38 @@
   }
 
   var revealItems = Array.prototype.slice.call(document.querySelectorAll('.home-scroll-reveal'));
-  if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.documentElement.classList.add('home-motion-ready');
+  var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  if ('IntersectionObserver' in window && !motionPreference.matches) {
     var revealObserver = new IntersectionObserver(function reveal(entries) {
       entries.forEach(function revealEntry(entry) {
         if (!entry.isIntersecting) return;
         entry.target.classList.add('is-visible');
         revealObserver.unobserve(entry.target);
       });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.08 });
-    revealItems.forEach(function observeItem(item) { revealObserver.observe(item); });
+    }, { rootMargin: '0px 0px -32px 0px', threshold: 0.08 });
+    revealItems.forEach(function observeItem(item) {
+      var siblings = Array.prototype.filter.call(item.parentElement.children, function isRevealSibling(child) {
+        return child.classList.contains('home-scroll-reveal');
+      });
+      item.style.setProperty('--home-reveal-delay', Math.min(siblings.indexOf(item), 3) * 100 + 'ms');
+      if (item.closest('.home-entry')) {
+        var entryOrder = item.matches('.home-entry-intro') ? 0 : item.matches('.home-entry-card-models') ? 1 : item.matches('.home-entry-card-mockups') ? 2 : 3;
+        item.style.setProperty('--home-reveal-delay', entryOrder * 120 + 'ms');
+      }
+    });
+    document.documentElement.classList.add('home-motion-ready');
+    // Paint the starting state before observing content already in the viewport.
+    window.requestAnimationFrame(function prepareReveal() {
+      window.requestAnimationFrame(function observeReveals() {
+        if (motionPreference.matches) return;
+        revealItems.forEach(function observeItem(item) { revealObserver.observe(item); });
+      });
+    });
+    motionPreference.addEventListener('change', function updateMotionPreference(event) {
+      if (!event.matches) return;
+      revealObserver.disconnect();
+      revealItems.forEach(function showItem(item) { item.classList.add('is-visible'); });
+    });
   } else {
     revealItems.forEach(function showItem(item) { item.classList.add('is-visible'); });
   }

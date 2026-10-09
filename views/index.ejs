@@ -9,20 +9,20 @@
 
 <section class="home-canvas home-entry" aria-labelledby="home-entry-heading">
   <div class="home-canvas-shell">
-    <header class="home-entry-intro">
+    <header class="home-entry-intro home-scroll-reveal">
       <span class="home-entry-kicker">3D MODELS · FASHION MOCKUPS</span>
       <h1 id="home-entry-heading">Create apparel designs with<br> 3D models and fashion mockups.</h1>
       <p>Choose a garment, test color and artwork, then see every idea from every angle or on a real silhouette.</p>
     </header>
     <div class="home-entry-grid">
-      <a class="home-entry-card home-entry-card-models" href="/mockups" data-analytics-event="home_entry_3d_models_click">
+      <a class="home-entry-card home-entry-card-models home-scroll-reveal" href="/mockups" data-analytics-event="home_entry_3d_models_click">
         <span class="home-entry-copy">
           <strong>Explore 3D Models</strong>
           <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
         </span>
-        <img src="<%= activeHomepageModel.image_url %>" alt="<%= activeHomepageModel.name %> 3D model" width="1200" height="1500" fetchpriority="high" decoding="async">
+        <img src="/images/home/model-collection-v1.webp" alt="3D clothing collection with a T-shirt, hoodie, jacket, shirt, dress, trousers and skirt" width="1536" height="1024" fetchpriority="high" decoding="async">
       </a>
-      <a class="home-entry-card home-entry-card-mockups" href="/white-mockups" data-analytics-event="home_entry_white_mockups_click">
+      <a class="home-entry-card home-entry-card-mockups home-scroll-reveal" href="/white-mockups" data-analytics-event="home_entry_white_mockups_click">
         <span class="home-entry-copy">
           <strong>Browse Fashion Mockups</strong>
           <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
@@ -30,9 +30,21 @@
         <img src="<%= primaryWhiteMockup.base_image_url %>" alt="<%= primaryWhiteMockup.alt %>" width="1024" height="1536" fetchpriority="high" decoding="async">
       </a>
     </div>
-    <div class="home-definition">
-      <h2>What is ClozDesign?</h2>
-      <p>A browser-based apparel mockup workspace built around editable 3D garments and on-model fashion mockups.</p>
+  </div>
+</section>
+
+<section class="home-canvas home-definition" id="home-about" aria-labelledby="home-about-heading">
+  <div class="home-canvas-shell home-definition-layout">
+    <header class="home-definition-title home-scroll-reveal">
+      <h2 id="home-about-heading">What is ClozDesign?</h2>
+    </header>
+    <div class="home-definition-content home-scroll-reveal">
+      <span class="home-eyebrow">ABOUT CLOZDESIGN</span>
+      <p class="home-definition-lead">A browser-based workspace for apparel design and fashion mockups.</p>
+      <div class="home-definition-description">
+        <p>For apparel designers, clothing brands and creative teams. Turn ideas into clear visual references for collection planning, design reviews and product presentations.</p>
+        <p>Explore a look before sampling, share it with your team, or start a production conversation.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -115,38 +127,39 @@
   </div>
 </section>
 
-<section class="home-canvas home-production" aria-labelledby="home-production-heading">
-  <div class="home-canvas-shell">
+<section class="home-canvas home-production" id="home-production" aria-labelledby="home-production-heading">
+  <div class="home-canvas-shell home-production-layout">
+    <figure class="home-production-visual home-scroll-reveal">
+      <img src="/images/home/production-reference-v1.webp" alt="Ivory T-shirt beside front and back design references, fabric swatches and a ruler" width="1536" height="1024" loading="lazy" decoding="async">
+      <figcaption>Illustrative production reference</figcaption>
+    </figure>
     <div class="home-production-copy home-scroll-reveal">
       <span class="home-eyebrow">PRODUCTION</span>
-      <h2 id="home-production-heading">From mockup to what comes next.</h2>
-      <p>A clearer path from design to production.</p>
+      <h2 id="home-production-heading">Take your design into production.</h2>
+      <p>Send an inquiry from your model workspace. Your current design is attached automatically.</p>
+      <dl class="home-production-requirements">
+        <div><dt>Order details</dt><dd>Quantity and delivery destination</dd></div>
+        <div><dt>Requirements</dt><dd>Fabric, colors, sizes and timeline</dd></div>
+      </dl>
+      <a class="home-production-cta" href="<%= activeHomepageModelHref.replace('#design', '#productionFeatureTitle') %>" data-analytics-event="home_production_workspace_click">Open production workspace <span aria-hidden="true">&#8599;</span></a>
+      <p class="home-production-note">Materials, samples, pricing and timing are discussed after your request.</p>
     </div>
-    <ol class="home-production-flow home-scroll-reveal">
-      <li>
-        <div class="home-production-media home-production-media-garment"><img src="<%= activeHomepageModel.image_url %>" alt="Designed 3D T-shirt" width="1200" height="1500" loading="lazy"><span class="home-production-print" aria-hidden="true">CLOZ</span></div>
-        <div class="home-production-step-copy"><strong>1. 3D Design</strong><span>Customize a model and finalize your design.</span></div>
-      </li>
-      <li><div class="home-production-media"><img src="<%= primaryWhiteMockup.base_image_url %>" alt="On-model fashion T-shirt review" width="1024" height="1536" loading="lazy"></div><div class="home-production-step-copy"><strong>2. On-Model Review</strong><span>See your design on real silhouettes.</span></div></li>
-      <li><div class="home-production-media"><img src="/images/hero/apparel-design-hero-v3.webp" alt="Apparel collection review visual" width="1120" height="1400" loading="lazy"></div><div class="home-production-step-copy"><strong>3. Collection Review</strong><span>Compare styles and build your range.</span></div></li>
-      <li><div class="home-production-media home-production-package" aria-hidden="true"><span>CLOZDESIGN</span></div><div class="home-production-step-copy"><strong>4. Supplier Handoff</strong><span>Share visuals and specs with your manufacturer.</span></div></li>
-    </ol>
   </div>
 </section>
 
 <section class="home-final-cta" aria-labelledby="home-final-heading">
-  <div class="home-final-inner home-scroll-reveal">
-    <div class="home-final-copy">
+  <div class="home-final-inner">
+    <div class="home-final-copy home-scroll-reveal">
       <span class="home-eyebrow">ClozDesign</span>
       <h2 id="home-final-heading">Start with the right model.<br>Make every apparel idea clearer.</h2>
       <p>3D models and fashion mockups for a more confident creative process.</p>
     </div>
-    <a class="home-final-panel" href="/mockups" data-analytics-event="home_bottom_model_library_click">
+    <a class="home-final-panel home-scroll-reveal" href="/mockups" data-analytics-event="home_bottom_model_library_click">
       <img src="<%= activeHomepageModel.image_url %>" alt="" width="1200" height="1500" loading="lazy">
       <span>Explore the collection <i aria-hidden="true">&#8594;</i></span>
     </a>
   </div>
 </section>
 
-<script src="/js/home-v2.js?v=20260916-active-3d-v1" defer></script>
+<script src="/js/home-v2.js?v=20261010-entry-reveal-v3" defer></script>
 <%- include('partials/footer') %>
