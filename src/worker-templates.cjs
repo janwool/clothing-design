@@ -23,7 +23,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -238,7 +247,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -365,7 +383,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -495,7 +522,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -651,7 +687,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -840,7 +885,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -1046,7 +1100,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -1235,7 +1298,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -1400,7 +1472,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -1557,7 +1638,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -1835,7 +1925,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -2134,7 +2233,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -2307,7 +2415,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -2610,7 +2727,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -2925,7 +3051,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -3100,7 +3235,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -3333,7 +3477,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -3457,7 +3610,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -3587,7 +3749,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -3737,7 +3908,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4010,7 +4190,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4185,7 +4374,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4384,7 +4582,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4601,7 +4808,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4756,7 +4972,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -4913,7 +5138,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -5211,7 +5445,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -5384,7 +5627,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -5589,7 +5841,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -5932,7 +6193,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -6113,7 +6383,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -6441,7 +6720,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -6614,7 +6902,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -6712,127 +7009,77 @@ config = __locals.config,
   footerVariant = __locals.footerVariant,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
     ; __append( include('partials/header') )
-    ; __append("\n\n")
-    ;  const dressModels = toolPage.modelStarters || [];
-    ; __append("\n<div class=\"dress-page\">\n  <main>\n    <section class=\"dress-hero\" aria-labelledby=\"dress-hero-title\">\n      <div class=\"container dress-hero-grid\">\n        <div class=\"dress-hero-copy dress-reveal\">\n          <nav class=\"dress-breadcrumbs\" aria-label=\"Breadcrumb\">\n            <a href=\"/\">ClozDesign</a><span>/</span><a href=\"/tools\">Tools</a><span>/</span><span>Dress Designer</span>\n          </nav>\n          <p class=\"dress-kicker\"><span></span> Free online 3D dress maker</p>\n          <h1 id=\"dress-hero-title\">Design a Dress<br>Online in 3D <em>— Free</em></h1>\n          <p class=\"dress-hero-lede\">Change color, review every angle, add artwork, and export a transparent dress mockup.</p>\n          <div class=\"dress-hero-actions\">\n            <a class=\"dress-button dress-button-primary\" href=\"")
-    ; __append(escapeFn( toolPage.editorHref ))
-    ; __append("\">Design a Dress Free <span aria-hidden=\"true\">↗</span></a>\n            <a class=\"dress-button dress-button-quiet\" href=\"#dress-models\">Browse Dress Models</a>\n          </div>\n          <ul class=\"dress-proof\" aria-label=\"Dress designer benefits\">\n            <li><strong>Free</strong><span>Browser tool</span></li>\n            <li><strong>Live</strong><span>3D preview</span></li>\n            <li><strong>PNG</strong><span>Transparent export</span></li>\n          </ul>\n        </div>\n\n        <div class=\"dress-hero-stage dress-reveal\" style=\"--delay:100ms\">\n          <div class=\"dress-stage-top\"><span>3D MODEL / 01</span><span>")
-    ; __append(escapeFn( toolPage.primaryModel?.shortTitle || 'DRESS MODEL' ))
-    ; __append("</span></div>\n          <span class=\"dress-orbit-ring\" aria-hidden=\"true\"></span>\n          <img src=\"")
-    ; __append(escapeFn( toolPage.image ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( toolPage.heroModel.alt ))
-    ; __append("\" width=\"1200\" height=\"1500\" fetchpriority=\"high\" decoding=\"async\">\n          <div class=\"dress-hero-orbits\" aria-label=\"Choose a 3D preview angle\">\n            <button type=\"button\" class=\"active\" data-hero-orbit=\"0deg 75deg 110%\">Front</button>\n            <button type=\"button\" data-hero-orbit=\"90deg 75deg 110%\">Side</button>\n            <button type=\"button\" data-hero-orbit=\"180deg 75deg 110%\">Back</button>\n          </div>\n          <a class=\"dress-stage-link\" href=\"#studio\">Explore live 3D <span>↓</span></a>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-studio-section\" id=\"studio\" aria-labelledby=\"studio-title\">\n      <div class=\"container\">\n        <div class=\"dress-section-heading dress-reveal\">\n          <div><p class=\"dress-kicker\"><span></span> Interactive preview</p><h2 id=\"studio-title\">Customize a Real 3D Dress Model</h2></div>\n          <p>Try the essentials here, then open the full editor for artwork placement and export.</p>\n        </div>\n\n        <div class=\"dress-studio dress-reveal\">\n          <aside class=\"dress-control-panel\" aria-label=\"Dress appearance controls\">\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">01 / Color</span>\n              <div class=\"dress-palette\">\n                ")
-    ;  [
-                  ['#eee7da', 'Ivory'], ['#202020', 'Noir'], ['#852c36', 'Oxblood'], ['#68766a', 'Sage']
-                ].forEach(function(color, index) {
-    ; __append("\n                  <button class=\"dress-swatch")
-    ; __append(escapeFn( index === 2 ? ' active' : '' ))
-    ; __append("\" type=\"button\" data-color=\"")
-    ; __append(escapeFn( color[0] ))
-    ; __append("\" aria-label=\"Preview ")
-    ; __append(escapeFn( color[1] ))
-    ; __append("\" style=\"--swatch:")
-    ; __append(escapeFn( color[0] ))
-    ; __append("\"><span></span><small>")
-    ; __append(escapeFn( color[1] ))
-    ; __append("</small></button>\n                ")
-    ;  })
-    ; __append("\n              </div>\n            </div>\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">02 / Material finish</span>\n              <div class=\"dress-segmented dress-material-tabs\">\n                <button type=\"button\" class=\"active\" data-material=\"matte\">Matte</button>\n                <button type=\"button\" data-material=\"satin\">Satin</button>\n                <button type=\"button\" data-material=\"linen\">Linen</button>\n                <button type=\"button\" data-material=\"twill\">Twill</button>\n              </div>\n            </div>\n            <a class=\"dress-inline-link\" href=\"")
-    ; __append(escapeFn( toolPage.editorHref ))
-    ; __append("\">Add artwork in full editor <span>↗</span></a>\n          </aside>\n\n          <div class=\"dress-model-stage is-loading\" id=\"dressModelStage\" aria-busy=\"true\">\n            <div class=\"dress-canvas-meta\"><span>")
-    ; __append(escapeFn( toolPage.primaryModel?.shortTitle || 'DRESS MODEL' ))
-    ; __append("</span><span>REAL-TIME 3D</span></div>\n            <img class=\"dress-model-poster\" src=\"")
-    ; __append(escapeFn( toolPage.image ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( toolPage.heroModel.alt ))
-    ; __append("\" width=\"1200\" height=\"1500\" loading=\"lazy\" decoding=\"async\">\n            <model-viewer\n              id=\"dressModelViewer\"\n              class=\"dress-model-viewer\"\n              data-model-src=\"")
-    ; __append(escapeFn( toolPage.heroModel.src ))
-    ; __append("\"\n              loading=\"eager\"\n              reveal=\"auto\"\n              interaction-prompt=\"none\"\n              alt=\"")
-    ; __append(escapeFn( toolPage.heroModel.alt ))
-    ; __append("\"\n              camera-controls\n              camera-orbit=\"0deg 75deg 110%\"\n              shadow-intensity=\"0.45\"\n              shadow-softness=\"0.9\"\n              exposure=\"0.9\"\n              environment-image=\"/environments/commercial-apparel-studio-v5-front-white-20260917.hdr\"\n              tone-mapping=\"commerce\"\n              hidden\n            ></model-viewer>\n            <button class=\"dress-load-model\" id=\"dressLoadModel\" type=\"button\" hidden><span>Retry preview</span></button>\n            <div class=\"dress-canvas-footer\"><span id=\"dressPreviewStatus\" role=\"status\" aria-live=\"polite\">Loading preview…</span><strong>DRAG TO ROTATE</strong></div>\n          </div>\n\n          <aside class=\"dress-control-panel dress-control-panel-right\" aria-label=\"Dress view and export controls\">\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">03 / View</span>\n              <div class=\"dress-segmented dress-view-tabs\">\n                <button type=\"button\" class=\"active\" data-orbit=\"0deg 75deg 110%\">Front</button>\n                <button type=\"button\" data-orbit=\"90deg 75deg 110%\">Side</button>\n                <button type=\"button\" data-orbit=\"180deg 75deg 110%\">Back</button>\n              </div>\n            </div>\n            <div class=\"dress-control-group\">\n              <span class=\"dress-control-label\">04 / Lighting</span>\n              <div class=\"dress-segmented dress-light-tabs\">\n                <button type=\"button\" class=\"active\" data-exposure=\"0.9\" data-shadow=\"0.45\">Studio</button>\n                <button type=\"button\" data-exposure=\"1.15\" data-shadow=\"0.25\">Soft</button>\n                <button type=\"button\" data-exposure=\"0.72\" data-shadow=\"0.8\">Contrast</button>\n              </div>\n            </div>\n            <button class=\"dress-export-button\" id=\"dressExportPreview\" type=\"button\">Export PNG <span>↓</span></button>\n          </aside>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-models-section\" id=\"dress-models\" aria-labelledby=\"models-title\">\n      <div class=\"container\">\n        <div class=\"dress-section-heading dress-reveal\">\n          <div><p class=\"dress-kicker\"><span></span> Online dress library</p><h2 id=\"models-title\">Choose a Dress Model to Customize</h2></div>\n          <a class=\"dress-inline-link\" href=\"/3d-models?category=dress\">View all dress models <span>→</span></a>\n        </div>\n        <div class=\"dress-model-grid\">\n          ")
-    ;  dressModels.slice(0, 4).forEach(function(model, index) {
-    ; __append("\n            <article class=\"dress-model-card dress-reveal\" style=\"--delay:")
-    ; __append(escapeFn( index * 60 ))
-    ; __append("ms\">\n              <a class=\"dress-model-image\" href=\"")
-    ; __append(escapeFn( model.href ))
-    ; __append("#design\" aria-label=\"Customize ")
-    ; __append(escapeFn( model.title ))
-    ; __append("\">\n                <img src=\"")
-    ; __append(escapeFn( model.image ))
-    ; __append("\" alt=\"")
-    ; __append(escapeFn( model.title ))
-    ; __append(" 3D dress model\" width=\"900\" height=\"900\" loading=\"lazy\" decoding=\"async\">\n                <span>")
-    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
-    ; __append("</span>\n              </a>\n              <div><h3><a href=\"")
-    ; __append(escapeFn( model.href ))
-    ; __append("#design\">")
-    ; __append(escapeFn( model.shortTitle ))
-    ; __append("</a></h3><p>")
-    ; __append(escapeFn( model.body ))
-    ; __append("</p><a href=\"")
-    ; __append(escapeFn( model.href ))
-    ; __append("#design\">Customize model <span>↗</span></a></div>\n            </article>\n          ")
-    ;  })
-    ; __append("\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-capabilities-section\" aria-labelledby=\"capabilities-title\">\n      <div class=\"container\">\n        <div class=\"dress-section-heading dress-reveal\">\n          <div><p class=\"dress-kicker\"><span></span> Clear design decisions</p><h2 id=\"capabilities-title\">Preview Color, Artwork, and Every Angle</h2></div>\n          <p>Use one consistent 3D model from first colorway to final presentation.</p>\n        </div>\n        <div class=\"dress-capability-grid\">\n          ")
-    ;  [
-            ['Live colorways', 'Compare palette directions directly on the dress silhouette.'],
-            ['360° review', 'Check the front, side, and back before committing to a sample.'],
-            ['Transparent PNG', 'Export a clean visual for decks, stores, and approvals.']
-          ].forEach(function(item, index) { const visual = dressModels[index] || dressModels[0];
-    ; __append("\n            <article class=\"dress-capability-card dress-reveal\" style=\"--delay:")
-    ; __append(escapeFn( index * 70 ))
-    ; __append("ms\">\n              ")
-    ;  if (visual) {
-    ; __append("<div class=\"dress-capability-visual\"><img src=\"")
-    ; __append(escapeFn( visual.image ))
-    ; __append("\" alt=\"")
+    ; __append("\n")
+    ;
+const dressShapes = {
+ 'classic-one-piece-dress-3d-model':'classic',
+ 'tailored-one-piece-dress-3d-model':'tailored',
+ 'layered-one-piece-dress-3d-model':'layered',
+ 'asymmetric-sleeve-high-neck-fitted-mini-dress-3d-model-5ca784d5f507':'asymmetric',
+ 'cross-strap-open-back-maxi-dress-3d-model-82a2f37d1c1e':'cross-strap',
+ 'high-neck-cutout-puff-sleeve-fitted-dress-3d-model-9c52e3d64a59':'puff-sleeve',
+ 'lightweight-one-piece-dress-3d-model':'lightweight',
+ 'utility-one-piece-dress-3d-model':'utility'
+};
+const dressLabels = {'asymmetric':'Asymmetric sleeve','cross-strap':'Cross-strap maxi','puff-sleeve':'Cutout & puff sleeve','lightweight':'Cape dress','utility':'Utility'};
+const dressModels = toolPage.modelStarters || [];
+const dressLibraryImage = model => dressShapes[model.href.split('/').pop()] ? '/images/dress-designer/library-' + dressShapes[model.href.split('/').pop()] + '-v9.webp' : model.image;
+const modelHref = toolPage.editorHref.replace(/#.*$/, '');
+const journey = [['dress-models','Choose a silhouette'],['dress-design','Design in 3D'],['dress-export','Render & export'],['dress-try-on','AI Try-on'],['dress-production','Production']];
+
+    ; __append("\n<main class=\"dress-page\" id=\"main-content\">\n  <section class=\"dress-hero\" aria-labelledby=\"dress-hero-title\"><div class=\"dress-shell\">\n    <div class=\"dress-hero-grid\">\n      <div class=\"dress-hero-copy\">\n        <p class=\"dress-kicker\">Dress Designer</p>\n        <h1 id=\"dress-hero-title\">Dress,<br> <span>by design.</span></h1>\n        <p class=\"dress-lede\">Choose a silhouette. Make it yours in 3D. Take your design through rendering, try-on, and production.</p>\n        <div class=\"dress-actions\"><a class=\"dress-button\" href=\"/mockups/dress\">Choose your dress <span aria-hidden=\"true\">→</span></a><a class=\"dress-link\" href=\"#dress-design\">Explore the process <span aria-hidden=\"true\">↓</span></a></div>\n        <p class=\"dress-note\">Free to design in your browser. Export requires Pro or above.</p>\n      </div>\n      ")
+    ; __append( include('partials/dress-motion', { motionId:'hero', motionName:'dress collection', motionAlt:'A designed collection inspired by the platform Classic, Tailored and Layered silhouettes, with curved contrast panels and considered seam details', motionCaption:'A collection of silhouettes / Design concepts', motionBase:'dress-collection', motionVersion:'v9', motionWidth:1600, motionHeight:1000, motionEager:true }) )
+    ; __append("\n    </div>\n    <nav class=\"dress-journey\" aria-label=\"Dress design process\">")
+    ;  journey.forEach(function(item,index) {
+    ; __append("<a href=\"#")
     ; __append(escapeFn( item[0] ))
-    ; __append(" shown on a 3D dress model\" width=\"800\" height=\"800\" loading=\"lazy\" decoding=\"async\"><span>0")
-    ; __append(escapeFn( index + 1 ))
-    ; __append("</span></div>")
-    ;  }
-    ; __append("\n              <h3>")
-    ; __append(escapeFn( item[0] ))
-    ; __append("</h3><p>")
+    ; __append("\"><span>")
+    ; __append(escapeFn( String(index+1).padStart(2,'0') ))
+    ; __append("</span><strong>")
     ; __append(escapeFn( item[1] ))
-    ; __append("</p>\n            </article>\n          ")
+    ; __append("</strong><i aria-hidden=\"true\">→</i></a>")
     ;  })
-    ; __append("\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-workflow-section\" aria-labelledby=\"workflow-title\">\n      <div class=\"container\">\n        <div class=\"dress-workflow-heading dress-reveal\">\n          <p class=\"dress-kicker dress-kicker-light\"><span></span> Simple workflow</p>\n          <h2 id=\"workflow-title\">How to Design a Dress Online</h2>\n        </div>\n        <ol class=\"dress-workflow-list\">\n          ")
-    ;  toolPage.steps.forEach(function(step, index) { const visual = dressModels[index % Math.max(dressModels.length, 1)];
-    ; __append("\n            <li class=\"dress-reveal\" style=\"--delay:")
-    ; __append(escapeFn( index * 60 ))
-    ; __append("ms\">\n              <span class=\"dress-step-number\">")
-    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
-    ; __append("</span>\n              ")
-    ;  if (visual) {
-    ; __append("<img src=\"")
-    ; __append(escapeFn( visual.image ))
-    ; __append("\" alt=\"\" width=\"360\" height=\"360\" loading=\"lazy\" decoding=\"async\">")
+    ; __append("</nav>\n  </div></section>\n\n  <section class=\"dress-section dress-models-section\" id=\"dress-models\" aria-labelledby=\"models-title\"><div class=\"dress-shell\">\n    <div class=\"dress-section-heading\"><div><p class=\"dress-kicker\">01 / Choose a silhouette</p><h2 id=\"models-title\">A silhouette for your idea.</h2><p>Explore different cuts, lengths, and sleeve shapes. Choose a base model to create your own.</p></div><a class=\"dress-link\" href=\"/mockups/dress\">All dress models →</a></div>\n    ")
+    ;  if (dressModels.length) {
+    ; __append("<div class=\"dress-model-carousel\" data-dress-carousel tabindex=\"0\" role=\"region\" aria-label=\"Dress silhouettes. Scroll horizontally to browse.\"><div class=\"dress-model-track\"><div class=\"dress-model-group\" data-carousel-group>")
+    ;  dressModels.slice(0,8).forEach(function(model) {
+    ; __append("\n      <article class=\"dress-model-card\"><a class=\"dress-model-card-link\" href=\"")
+    ; __append(escapeFn( model.href ))
+    ; __append("#design\" aria-label=\"Design with the ")
+    ; __append(escapeFn( model.title ))
+    ; __append("\"><div class=\"dress-model-image\"><img src=\"")
+    ; __append(escapeFn( dressLibraryImage(model) ))
+    ; __append("\" alt=\"Designed example inspired by the ")
+    ; __append(escapeFn( model.title ))
+    ; __append(" silhouette\" width=\"900\" height=\"1125\" loading=\"lazy\" decoding=\"async\"></div><div class=\"dress-model-card-caption\"><h3>")
+    ; __append(escapeFn( dressLabels[dressShapes[model.href.split('/').pop()]] || model.shortTitle ))
+    ; __append("<span aria-hidden=\"true\">↗</span></h3></div></a></article>\n    ")
+    ;  })
+    ; __append("</div></div></div>")
+    ;  } else {
+    ; __append("<div class=\"dress-library-empty\"><h3>Dress models are temporarily unavailable</h3><p>Check the model library for available silhouettes.</p><a class=\"dress-link\" href=\"/mockups/dress\">Browse the library →</a></div>")
     ;  }
-    ; __append("\n              <div><h3>")
-    ; __append(escapeFn( step.title ))
-    ; __append("</h3><p>")
-    ; __append(escapeFn( step.body ))
-    ; __append("</p></div>\n            </li>\n          ")
-    ;  })
-    ; __append("\n        </ol>\n      </div>\n    </section>\n\n    <section class=\"dress-audience-faq-section\">\n      <div class=\"container dress-audience-faq-grid\">\n        <div class=\"dress-audience dress-reveal\">\n          <p class=\"dress-kicker\"><span></span> Made for real work</p>\n          <h2>3D Dress Mockups for Planning and Review</h2>\n          <p>Build visuals for a capsule collection, boutique review, fashion portfolio, or client presentation.</p>\n          <nav aria-label=\"Related dress design resources\">\n            <a href=\"/3d-models?category=dress\"><span>Dress 3D models</span><strong>→</strong></a>\n            <a href=\"/tools/3d-clothing-mockup\"><span>3D clothing mockups</span><strong>→</strong></a>\n            <a href=\"/tools/transparent-mockup-maker\"><span>Transparent mockups</span><strong>→</strong></a>\n            <a href=\"/blog/how-to-design-clothes-online\"><span>Online clothing design guide</span><strong>→</strong></a>\n          </nav>\n        </div>\n        <div class=\"dress-faq dress-reveal\" style=\"--delay:80ms\">\n          <p class=\"dress-kicker\"><span></span> Common questions</p>\n          <h2>Online Dress Designer FAQ</h2>\n          <div class=\"dress-faq-list\">\n            ")
-    ;  toolPage.faq.forEach(function(item, index) {
-    ; __append("\n              <details class=\"dress-faq-item\" ")
-    ; __append(escapeFn( index === 0 ? 'open' : '' ))
-    ; __append(">\n                <summary><span>")
-    ; __append(escapeFn( String(index + 1).padStart(2, '0') ))
-    ; __append("</span>")
-    ; __append(escapeFn( item.question ))
-    ; __append("<i></i></summary>\n                <p>")
-    ; __append(escapeFn( item.answer ))
-    ; __append("</p>\n              </details>\n            ")
-    ;  })
-    ; __append("\n          </div>\n        </div>\n      </div>\n    </section>\n\n    <section class=\"dress-final-cta\" aria-labelledby=\"final-cta-title\">\n      <div class=\"container dress-final-grid dress-reveal\">\n        <div>\n          <p class=\"dress-kicker dress-kicker-light\"><span></span> No install. Free to start.</p>\n          <h2 id=\"final-cta-title\">Start Your 3D<br>Dress Design</h2>\n          <p>Choose a real model, shape the look, and turn your idea into a presentation-ready mockup.</p>\n          <a class=\"dress-button dress-button-light\" href=\"")
+    ; __append("\n  </div></section>\n\n  <section class=\"dress-section dress-design-section\" id=\"dress-design\" aria-labelledby=\"design-title\"><div class=\"dress-shell\">\n    <div class=\"dress-design-layout\"><div class=\"dress-feature-copy\"><p class=\"dress-kicker\">02 / Design in 3D</p><h2 id=\"design-title\">Your colors.<br>Your perspective.</h2><p>Work directly on the dress. Adjust colors and materials, place your artwork, and turn the model to review every angle.</p><a class=\"dress-button\" href=\"")
     ; __append(escapeFn( toolPage.editorHref ))
-    ; __append("\">Design a Dress Free <span>↗</span></a>\n        </div>\n        <div class=\"dress-final-model\">\n          <span class=\"dress-orbit-ring\" aria-hidden=\"true\"></span>\n          <img src=\"")
-    ; __append(escapeFn( toolPage.image ))
-    ; __append("\" alt=\"3D dress model ready to customize in ClozDesign\" width=\"900\" height=\"1100\" loading=\"lazy\" decoding=\"async\">\n        </div>\n        <nav aria-label=\"Explore more ClozDesign tools\">\n          <a href=\"/3d-models?category=dress\">Dress models</a>\n          <a href=\"/tools/3d-clothing-mockup\">3D mockups</a>\n          <a href=\"/tools/transparent-mockup-maker\">PNG export</a>\n          <a href=\"/blog\">Design guides</a>\n        </nav>\n      </div>\n    </section>\n  </main>\n</div>\n\n<script src=\"/js/dress-designer-landing.js?v=20261005-auto-3d-v3\" defer></script>\n")
+    ; __append("\">Design in 3D ↗</a><div class=\"dress-design-capabilities\"><span>Color</span><span>Material</span><span>Artwork</span><span>360° view</span></div></div>\n    <figure class=\"dress-rotation\" data-dress-video>\n      <div class=\"dress-rotation-stage\">\n        <img class=\"dress-rotation-poster\" src=\"/images/dress-designer/classic-rotation-poster-v14.webp\" alt=\"Ivory Classic dress shown in a full 360-degree product view\" width=\"840\" height=\"900\" loading=\"lazy\" decoding=\"async\">\n        <video class=\"dress-rotation-video\" muted loop playsinline preload=\"none\" poster=\"/images/dress-designer/classic-rotation-poster-v14.webp\" aria-label=\"Classic dress rotating through a full 360-degree view\" tabindex=\"-1\" data-src=\"/videos/dress-designer/classic-rotation-v14.mp4\"></video>\n      </div>\n      <figcaption class=\"dress-motion-caption\">Classic dress / 360° product preview</figcaption>\n    </figure>\n    </div>\n  </div></section>\n\n  <section class=\"dress-section dress-export-section\" id=\"dress-export\" aria-labelledby=\"export-title\"><div class=\"dress-shell\">\n    <div class=\"dress-export-layout\">\n      <div class=\"dress-export-media\"><figure class=\"dress-export-visual\"><div><img src=\"/images/dress-designer/classic-product-front-v18.webp\" alt=\"Front product view of the ivory Classic dress\" width=\"840\" height=\"900\" loading=\"lazy\" decoding=\"async\"><span>Front view</span></div><div><img src=\"/images/dress-designer/classic-product-back-v18.webp\" alt=\"Back product view of the same ivory Classic dress\" width=\"840\" height=\"900\" loading=\"lazy\" decoding=\"async\"><span>Back view</span></div></figure><p class=\"dress-note\">One design. Consistent product views.</p></div>\n      <div class=\"dress-feature-copy\"><p class=\"dress-kicker\">03 / Render & export</p><h2 id=\"export-title\">Studio views.<br>Ready to export.</h2><p>Choose your product views and export images for collection reviews, product presentations, and approvals. Continue in the model workspace for video and 3D file exports.</p><ul class=\"dress-export-formats\"><li>Product images and transparent PNG</li><li>Video and 3D file exports</li></ul><a class=\"dress-button\" href=\"")
+    ; __append(escapeFn( modelHref ))
+    ; __append("#renderCurrentModelBtn\">Explore export options ↗</a><p class=\"dress-note\">Export requires Pro or above.</p></div>\n    </div>\n  </div></section>\n\n  <section class=\"dress-section dress-try-on-section\" id=\"dress-try-on\" aria-labelledby=\"try-on-title\"><div class=\"dress-shell dress-try-on-layout\">\n    <div class=\"dress-feature-copy\"><p class=\"dress-kicker\">04 / AI Try-on</p><h2 id=\"try-on-title\">From a design<br>to a finished look.</h2><p>See your dress on a model. Choose a pose and scene in AI Try-on to create fashion images from your 3D design.</p><a class=\"dress-button\" href=\"")
+    ; __append(escapeFn( modelHref ))
+    ; __append("/try-on\">Explore AI Try-on ↗</a></div>\n    <figure class=\"dress-tryon-demo\" data-tryon-demo aria-label=\"AI try-on example: a dress and model combine into an image of the model wearing the dress\">\n      <div class=\"dress-tryon-stage\">\n        <div class=\"dress-tryon-inputs\" aria-hidden=\"true\">\n          <div class=\"dress-tryon-input-card\"><img src=\"/images/dress-designer/classic-rotation-poster-v14.webp\" alt=\"\" width=\"840\" height=\"900\" loading=\"lazy\" decoding=\"async\"><span>Dress</span></div>\n          <span class=\"dress-tryon-plus\">+</span>\n          <div class=\"dress-tryon-input-card\"><img src=\"/images/dress-designer/try-on-model-input-v17.webp\" alt=\"\" width=\"600\" height=\"900\" loading=\"lazy\" decoding=\"async\"><span>Model</span></div>\n        </div>\n        <img class=\"dress-tryon-result\" src=\"/images/dress-designer/try-on-classic-result-v17.webp\" alt=\"AI-generated try-on showing the same model wearing the plain ivory Classic dress\" width=\"600\" height=\"900\" loading=\"lazy\" decoding=\"async\">\n      </div>\n      <figcaption class=\"dress-motion-caption\">Dress + model → AI-generated try-on example</figcaption>\n    </figure>\n  </div></section>\n\n  <section class=\"dress-section dress-production-section\" id=\"dress-production\" aria-labelledby=\"production-title\"><div class=\"dress-shell\">\n    <div class=\"dress-production-overview\">\n      <div class=\"dress-feature-copy\"><p class=\"dress-kicker\">05 / Production</p><h2 id=\"production-title\">Take your dress<br>into production.</h2><p>Open Production in your model workspace to send your current design and the details needed to review your request.</p><a class=\"dress-button\" href=\"")
+    ; __append(escapeFn( modelHref ))
+    ; __append("#productionFeatureTitle\">Request production ↗</a><p class=\"dress-note\">Materials, samples, pricing, and timing are discussed after your request.</p></div>\n      <aside class=\"dress-inquiry-summary\" aria-labelledby=\"dress-inquiry-title\">\n        <header><h3 id=\"dress-inquiry-title\">Production inquiry</h3><p>What to prepare</p></header>\n        <figure class=\"dress-inquiry-reference\"><div class=\"dress-inquiry-views\"><img src=\"/images/dress-designer/classic-product-front-v18.webp\" alt=\"Front of the ivory Classic dress, an illustrative design reference\" width=\"675\" height=\"900\" loading=\"lazy\" decoding=\"async\"><img src=\"/images/dress-designer/classic-product-back-v18.webp\" alt=\"Matching back view of the Classic dress\" width=\"675\" height=\"900\" loading=\"lazy\" decoding=\"async\"></div><figcaption><strong>Design reference</strong><span>Your current design and artwork layout are attached in the workspace.</span></figcaption></figure>\n        <dl class=\"dress-inquiry-details\"><div><dt><span>01</span> Quantity</dt><dd>Required order size</dd></div><div><dt><span>02</span> Contact</dt><dd>Name and email</dd></div><div><dt><span>03</span> Delivery</dt><dd>Full shipping address</dd></div><div><dt><span>04</span> Requirements</dt><dd>Fabric, colors, sizes and timeline</dd></div></dl>\n        <p class=\"dress-inquiry-caption\">Illustrative design reference</p>\n      </aside>\n    </div>\n  </div></section>\n\n  <section class=\"dress-section dress-faq-section\" aria-labelledby=\"faq-title\"><div class=\"dress-shell dress-faq-grid\"><div><p class=\"dress-kicker\">How to Design a Dress Online</p><h2 id=\"faq-title\">Online Dress Designer FAQ</h2><nav class=\"dress-resources\" aria-label=\"Related design resources\"><a class=\"dress-link\" href=\"/pricing\">Plans & export access →</a><a class=\"dress-link\" href=\"/blog/how-to-design-clothes-online\">Online clothing design guide →</a><a class=\"dress-link\" href=\"/tools/3d-clothing-mockup-generator\">3D clothing mockup tool →</a></nav></div><div class=\"dress-faq-list\">")
+    ;  toolPage.faq.forEach(function(item,index) {
+    ; __append("<details class=\"dress-faq-item\" ")
+    ; __append(escapeFn( index===0 ? 'open' : '' ))
+    ; __append("><summary>")
+    ; __append(escapeFn( item.question ))
+    ; __append("<span aria-hidden=\"true\">+</span></summary><p>")
+    ; __append(escapeFn( item.answer ))
+    ; __append("</p></details>")
+    ;  })
+    ; __append("</div></div></section>\n  <section class=\"dress-final-cta\" id=\"dress-start\" aria-labelledby=\"final-title\"><div class=\"dress-shell\"><p class=\"dress-kicker\">Start with your silhouette</p><h2 id=\"final-title\">Choose your first silhouette.</h2><div class=\"dress-actions\"><a class=\"dress-button\" href=\"")
+    ; __append(escapeFn( toolPage.editorHref ))
+    ; __append("\">Design a Dress Free ↗</a><a class=\"dress-link\" href=\"#dress-models\">Choose a dress model →</a></div></div></section>\n</main>\n<script src=\"/js/dress-designer-landing.js?v=20261010-content-reveal-v29\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -6861,7 +7108,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -6987,7 +7243,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -7118,7 +7383,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -7378,7 +7652,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -7555,7 +7838,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -7708,7 +8000,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -7849,7 +8150,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -8425,7 +8735,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -8699,7 +9018,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -8866,6 +9194,173 @@ config = __locals.config,
   return __output;
 
 },
+  "partials/dress-motion.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  authLoginUrl = __locals.authLoginUrl,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  feedbackFilters = __locals.feedbackFilters,
+  feedbackPagination = __locals.feedbackPagination,
+  feedbackStats = __locals.feedbackStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  imageFilters = __locals.imageFilters,
+  imagePagination = __locals.imagePagination,
+  imageStats = __locals.imageStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  entitlements = __locals.entitlements,
+  billingSubscription = __locals.billingSubscription,
+  checkoutState = __locals.checkoutState,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant,
+  showWorkspaceFooter = __locals.showWorkspaceFooter;
+    ; __append("<figure class=\"dress-motion dress-motion-")
+    ; __append(escapeFn( motionId ))
+    ; __append("\" data-motion>\n  <picture><source media=\"(prefers-reduced-motion: reduce)\" srcset=\"/images/dress-designer/")
+    ; __append(escapeFn( motionBase ))
+    ; __append("-poster-")
+    ; __append(escapeFn( motionVersion ))
+    ; __append(".webp\"><img id=\"dress-motion-")
+    ; __append(escapeFn( motionId ))
+    ; __append("\" src=\"/images/dress-designer/")
+    ; __append(escapeFn( motionBase ))
+    ; __append("-")
+    ; __append(escapeFn( motionEager ? 'motion' : 'poster' ))
+    ; __append("-")
+    ; __append(escapeFn( motionVersion ))
+    ; __append(".webp\" data-animation=\"/images/dress-designer/")
+    ; __append(escapeFn( motionBase ))
+    ; __append("-motion-")
+    ; __append(escapeFn( motionVersion ))
+    ; __append(".webp\" data-poster=\"/images/dress-designer/")
+    ; __append(escapeFn( motionBase ))
+    ; __append("-poster-")
+    ; __append(escapeFn( motionVersion ))
+    ; __append(".webp\" alt=\"")
+    ; __append(escapeFn( motionAlt ))
+    ; __append("\" width=\"")
+    ; __append(escapeFn( motionWidth ))
+    ; __append("\" height=\"")
+    ; __append(escapeFn( motionHeight ))
+    ; __append("\" loading=\"")
+    ; __append(escapeFn( motionEager ? 'eager' : 'lazy' ))
+    ; __append("\" fetchpriority=\"")
+    ; __append(escapeFn( motionEager ? 'high' : 'auto' ))
+    ; __append("\" decoding=\"async\"></picture>\n  <figcaption class=\"dress-motion-caption\"><span>")
+    ; __append(escapeFn( motionCaption ))
+    ; __append("</span></figcaption>\n</figure>\n")
+  return __output;
+
+},
   "partials/footer.ejs": function anonymous(locals, escapeFn, include, rethrow
 ) {
 escapeFn = escapeFn || function (markup) {
@@ -8889,7 +9384,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -9039,7 +9543,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -9338,7 +9851,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -9592,7 +10114,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -9726,7 +10257,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -9860,7 +10400,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -10234,7 +10783,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -10372,7 +10930,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -10524,7 +11091,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -10697,7 +11273,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -11141,7 +11726,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -11358,7 +11952,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -11580,7 +12183,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,
@@ -11843,7 +12455,16 @@ function encode_char(c) {
   var __output = "";
   function __append(s) { if (s !== undefined && s !== null) __output += s }
   var __locals = (locals || {}),
-config = __locals.config,
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
   campaigns = __locals.campaigns,
   emailUsers = __locals.emailUsers,
   csrf = __locals.csrf,

@@ -7,6 +7,8 @@ const viewsDir = path.join(rootDir, 'views');
 const outputDir = path.join(rootDir, 'src');
 const outputFile = path.join(outputDir, 'worker-templates.cjs');
 const templateLocals = [
+  'motionId', 'motionName', 'motionAlt', 'motionCaption', 'motionBase',
+  'motionVersion', 'motionWidth', 'motionHeight', 'motionEager',
   'config',
   'campaigns',
   'emailUsers',

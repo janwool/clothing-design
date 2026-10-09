@@ -1,0 +1,4 @@
+<figure class="dress-motion dress-motion-<%= motionId %>" data-motion>
+  <picture><source media="(prefers-reduced-motion: reduce)" srcset="/images/dress-designer/<%= motionBase %>-poster-<%= motionVersion %>.webp"><img id="dress-motion-<%= motionId %>" src="/images/dress-designer/<%= motionBase %>-<%= motionEager ? 'motion' : 'poster' %>-<%= motionVersion %>.webp" data-animation="/images/dress-designer/<%= motionBase %>-motion-<%= motionVersion %>.webp" data-poster="/images/dress-designer/<%= motionBase %>-poster-<%= motionVersion %>.webp" alt="<%= motionAlt %>" width="<%= motionWidth %>" height="<%= motionHeight %>" loading="<%= motionEager ? 'eager' : 'lazy' %>" fetchpriority="<%= motionEager ? 'high' : 'auto' %>" decoding="async"></picture>
+  <figcaption class="dress-motion-caption"><span><%= motionCaption %></span></figcaption>
+</figure>

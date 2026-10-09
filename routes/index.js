@@ -472,8 +472,12 @@ async function getActiveDressModelStarters(req) {
         WHEN 'classic-one-piece-dress-3d-model' THEN 0
         WHEN 'tailored-one-piece-dress-3d-model' THEN 1
         WHEN 'layered-one-piece-dress-3d-model' THEN 2
-        WHEN 'minimal-one-piece-dress-3d-model' THEN 3
-        ELSE 4
+        WHEN 'asymmetric-sleeve-high-neck-fitted-mini-dress-3d-model-5ca784d5f507' THEN 3
+        WHEN 'cross-strap-open-back-maxi-dress-3d-model-82a2f37d1c1e' THEN 4
+        WHEN 'high-neck-cutout-puff-sleeve-fitted-dress-3d-model-9c52e3d64a59' THEN 5
+        WHEN 'lightweight-one-piece-dress-3d-model' THEN 6
+        WHEN 'utility-one-piece-dress-3d-model' THEN 7
+        ELSE 8
       END,
       m.updated_at DESC,
       m.created_at DESC,
@@ -485,7 +489,7 @@ async function getActiveDressModelStarters(req) {
     const categorySlug = model.category_slug || 'dress';
     return {
       title: String(model.name || 'Dress model').replace(/\s+3D(?:\s+Garment)?\s+Model$/i, '').trim(),
-      shortTitle: metadata.shortTitle || String(model.name || 'Dress').split(/\s+/).slice(0, 2).join(' '),
+      shortTitle: metadata.shortTitle || String(model.name || 'Dress').replace(/\s+3D(?:\s+Garment)?\s+Model$/i, '').trim(),
       body: metadata.body || 'A browser-ready 3D dress for color, artwork, and 360° review.',
       href: `/3d-models/${categorySlug}/${model.slug}`,
       image: model.image_url,
@@ -1526,7 +1530,7 @@ const TOOL_PAGE_CONTENT = {
       alt: 'Free online one-piece dress designer 3D model'
     },
     editorHref: '/3d-models/dress/classic-one-piece-dress-3d-model#design',
-    subtitle: 'Design a dress online for free with editable 3D models. Change colors, review every angle, add artwork, and export a transparent dress mockup.',
+    subtitle: 'Choose a dress silhouette, design in 3D, render and export, explore AI try-on, and prepare a production inquiry. Free to design in your browser.',
     intent: 'Move a dress idea from early planning into a usable 3D visual preview. Choose a dress model, compare silhouette and color direction, upload artwork, review multiple angles, and export a mockup before sampling or photography.',
     primaryKeyword: 'online dress designer tool free',
     keywords: ['design a dress online free', 'free dress design tool online', 'dress mockup maker', 'design your own dress online', '3D dress designer', 'fashion dress design tool'],
@@ -1537,10 +1541,11 @@ const TOOL_PAGE_CONTENT = {
     ],
     freePositioning: 'ClozDesign gives dress designers a free starting point for visual planning, especially when a flat sketch is not enough and a full CAD workflow is too much.',
     steps: [
-      { title: 'Open the 3D dress model', body: 'Rotate the garment and review the one-piece silhouette from front, side, and back views.' },
-      { title: 'Choose a dress color', body: 'Compare neutral, dark, seasonal, and accent colors directly on the garment.' },
-      { title: 'Upload artwork', body: 'Add a PNG, JPG, WebP, or SVG graphic and continue in the full browser editor.' },
-      { title: 'Export the dress mockup', body: 'Download a transparent product preview for a moodboard, boutique draft, line review, or design approval.' }
+      { title: 'Choose a dress silhouette', body: 'Select a real dress model from the library and open its design workspace.' },
+      { title: 'Design in 3D', body: 'Choose color and material, place your artwork, and review the garment from every angle.' },
+      { title: 'Render and export', body: 'Create product images, video, or a 3D file in the model workspace. Export requires Pro or above.' },
+      { title: 'Explore AI Try-on', body: 'Choose a model, pose, and scene to create an AI fashion image of your dress design.' },
+      { title: 'Prepare a production request', body: 'Open Production in the model workspace. Share quantity, delivery details, and garment requirements with your current design attached.' }
     ],
     useCases: ['Fashion concept boards', 'Boutique product planning', '3D design review'],
     useCaseDetails: [
@@ -1549,10 +1554,11 @@ const TOOL_PAGE_CONTENT = {
       'Use dress models and mockup visuals to explain silhouette, proportion, and surface direction.'
     ],
     faq: [
-      { question: 'Can I design a dress online for free?', answer: 'Yes. Choose the 3D dress model, test colors and viewing angles, upload artwork, and preview your dress in the browser for free. Exporting requires Pro or above.' },
-      { question: 'Can I design a dress online without CAD?', answer: 'Yes. The page provides a browser-based visual workflow for dress concepts without requiring desktop CAD or image-editing software.' },
-      { question: 'Is this for fashion designers or shoppers?', answer: 'It is built for apparel creators, boutique teams, students, and designers who need mockups and planning references.' },
-      { question: 'Can I compare different dress categories?', answer: 'Yes. Use category-specific dress models to compare silhouette, length, proportion, color, and surface design direction.' }
+      { question: 'Can I design a dress online for free?', answer: 'Yes. Choose a dress silhouette and use the 3D editor to explore colors, materials, artwork, and viewing angles for free. Exporting requires Pro or above.' },
+      { question: 'Can I upload my own artwork?', answer: 'Yes. Open the selected dress in the 3D editor, upload your artwork, and adjust its placement on the garment.' },
+      { question: 'What can I render and export?', answer: 'The model workspace includes product images, transparent PNG, video, and 3D file export options. Export requires Pro or above.' },
+      { question: 'How does AI Try-on fit into the process?', answer: 'After designing your dress, open AI Try-on from the model workspace to choose a model, pose, and scene for an AI-generated fashion image.' },
+      { question: 'How do I discuss production?', answer: 'Open Production in the model workspace and share your contact details, delivery address, quantity, and requirements. Your current 3D design and artwork layout are attached to the request. The team discusses materials, samples, pricing, and timing after reviewing your inquiry.' }
     ],
     outputHighlights: ['Free browser editor', 'Live 3D dress preview', 'Transparent PNG export'],
     planningEyebrow: 'Online dress workflow',
@@ -3403,7 +3409,7 @@ router.get('/tools/:slug', async (req, res) => {
       structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
-      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20261005-auto-3d-v3'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=4-card-image-fill'] : undefined,
+      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20261010-production-alignment-v30'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=4-card-image-fill'] : undefined,
       bodyClass: isDressDesigner ? 'dress-designer-page' : req.params.slug === '3d-pants-generator' ? 'pants-generator-page' : '',
       toolPage: renderedToolPage
     });
