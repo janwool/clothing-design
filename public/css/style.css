@@ -9228,3 +9228,25 @@ body {
 .image-asset-empty[hidden] {
   display: none;
 }
+
+/* Catalog results enter gently, matching the brand homepage motion. */
+body.catalog-motion-ready .mockups-masonry-card,
+body.catalog-motion-ready .white-catalog-card {
+  opacity: 0;
+  translate: 0 24px;
+  transition: opacity 700ms ease var(--catalog-reveal-delay, 0ms),
+    translate 700ms cubic-bezier(.2, .65, .3, 1) var(--catalog-reveal-delay, 0ms);
+}
+body.catalog-motion-ready .mockups-masonry-card.is-catalog-visible,
+body.catalog-motion-ready .white-catalog-card.is-catalog-visible {
+  opacity: 1;
+  translate: 0 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  body.catalog-motion-ready .mockups-masonry-card,
+  body.catalog-motion-ready .white-catalog-card {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+}

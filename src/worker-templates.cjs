@@ -6567,7 +6567,7 @@ motionId = __locals.motionId,
     ; __append(escapeFn( allModelCountLabel ))
     ; __append("\"><strong>")
     ; __append(escapeFn( currentCatalogTotal ))
-    ; __append("</strong> models</span>\n          </div>\n        </div>\n\n        <div class=\"mockups-hero-media\">\n          <picture>\n            <source srcset=\"/images/hero/mockups-library-fashion-studio-v1.webp\" type=\"image/webp\">\n            <img src=\"/images/hero/mockups-library-fashion-studio-v1.png\" alt=\"Oversized T-shirt, technical jacket, and modern dress in a cool digital fashion studio\" width=\"1536\" height=\"1024\" fetchpriority=\"high\" decoding=\"async\">\n          </picture>\n        </div>\n      </div>\n    </header>\n\n    <section class=\"mockups-catalog\" id=\"free-3d-models\">\n  <div class=\"mockups-catalog-shell\">\n    <div class=\"mockups-catalog-heading\">\n      <div>\n        <span class=\"mockups-catalog-kicker\">")
+    ; __append("</strong> models</span>\n          </div>\n        </div>\n\n        <div class=\"mockups-hero-media\">\n          <picture>\n            <source srcset=\"/images/hero/mockups-library-brand-studio-v2.webp\" type=\"image/webp\">\n            <img src=\"/images/hero/mockups-library-brand-studio-v2.webp\" alt=\"Ivory T-shirt, charcoal hoodie and ivory dress in the daylight ClozDesign studio\" width=\"1536\" height=\"1024\" fetchpriority=\"high\" decoding=\"async\">\n          </picture>\n        </div>\n      </div>\n    </header>\n\n    <section class=\"mockups-catalog\" id=\"free-3d-models\">\n  <div class=\"mockups-catalog-shell\">\n    <div class=\"mockups-catalog-heading\">\n      <div>\n        <span class=\"mockups-catalog-kicker\">")
     ; __append(escapeFn( mockupQuery.q ? 'Search results' : 'Curated garment archive' ))
     ; __append("</span>\n        <h2>")
     ; __append(escapeFn( mockupQuery.q ? `Results for “${mockupQuery.q}”` : (activeMockupCategory ? `${activeMockupCategory.name} collection` : 'Explore the collection') ))
@@ -6691,7 +6691,7 @@ motionId = __locals.motionId,
     ;  });
     ; __append("\n        </ol>\n        <nav class=\"category-field-guide-links\" aria-label=\"Related resources\">\n          <a href=\"/tools/3d-clothing-mockup-generator\">Tools <span aria-hidden=\"true\">›</span></a>\n          <a href=\"/blog/3d-apparel-mockup-workflow\">Guides <span aria-hidden=\"true\">›</span></a>\n        </nav>\n      </div>\n    </div>\n  </section>\n")
     ;  }
-    ; __append("\n\n  </div>\n</div>\n\n")
+    ; __append("\n\n  </div>\n</div>\n\n<script src=\"/js/catalog-reveal.js?v=20261011-v1\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;
@@ -10020,7 +10020,7 @@ motionId = __locals.motionId,
     ; __append( JSON.stringify(structuredData).replace(/</g, '\\u003c') )
     ; __append("</script>\n  ")
     ;  }
-    ; __append("\n  <link rel=\"icon\" href=\"/images/brand/clozdesign-icon.png?v=20260925-round\" type=\"image/png\" sizes=\"400x400\">\n  <link rel=\"icon\" href=\"/favicon.ico?v=20260925-round\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico?v=20260925-round\">\n  <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png?v=20260925-round\" sizes=\"180x180\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClozDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20261011-footer-social-v4\">\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260913-loading-spinner-v2\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260925-round-image\">\n  <link rel=\"stylesheet\" href=\"/css/feedback-widget.css?v=20260917-global-v1\">\n  ")
+    ; __append("\n  <link rel=\"icon\" href=\"/images/brand/clozdesign-icon.png?v=20260925-round\" type=\"image/png\" sizes=\"400x400\">\n  <link rel=\"icon\" href=\"/favicon.ico?v=20260925-round\" type=\"image/x-icon\" sizes=\"48x48\">\n  <link rel=\"shortcut icon\" href=\"/favicon.ico?v=20260925-round\">\n  <link rel=\"apple-touch-icon\" href=\"/apple-touch-icon.png?v=20260925-round\" sizes=\"180x180\">\n  <link rel=\"alternate\" type=\"application/rss+xml\" title=\"ClozDesign apparel mockup guides\" href=\"/feed.xml\">\n  <link rel=\"stylesheet\" href=\"/css/style.css?v=20261011-catalog-motion-v5\">\n  <link rel=\"stylesheet\" href=\"/css/growth.css?v=20260913-loading-spinner-v2\">\n  <link rel=\"stylesheet\" href=\"/css/product-refresh.css?v=20260925-round-image\">\n  <link rel=\"stylesheet\" href=\"/css/feedback-widget.css?v=20260917-global-v1\">\n  ")
     ;  const headPageStyles = typeof pageStyles !== 'undefined' && Array.isArray(pageStyles) ? pageStyles : [];
     ; __append("\n  ")
     ;  headPageStyles.forEach(function(stylesheet) {
@@ -12580,7 +12580,7 @@ motionId = __locals.motionId,
   };
   const activeLabel = activeCategory ? activeCategory.label : 'All fashion mockups';
 
-    ; __append("\n\n<header class=\"white-catalog-intro\">\n  <div class=\"white-catalog-shell\">\n    <div class=\"white-catalog-copy\">\n      <span class=\"white-catalog-eyebrow\">Fashion mockups</span>\n      <h1>\n        <span class=\"white-catalog-desktop-title\">Fashion mockups. Add your design.</span>\n        <span class=\"white-catalog-mobile-title\">Fashion mockups</span>\n      </h1>\n      <p>Browse garments worn on real models, then open a look to place your artwork.</p>\n      <a class=\"white-catalog-jump\" href=\"#white-mockup-library\">Browse mockups <span aria-hidden=\"true\">↓</span></a>\n    </div>\n    <picture class=\"white-catalog-hero-media\">\n      <source media=\"(prefers-reduced-motion: reduce)\" srcset=\"/images/hero/fashion-mockups-artwork-poster-v2.webp\">\n      <img src=\"/images/hero/fashion-mockups-artwork-motion-v2.gif\" alt=\"Abstract artwork placed on a white T-shirt mockup\" width=\"700\" height=\"350\" loading=\"eager\" fetchpriority=\"high\">\n    </picture>\n  </div>\n</header>\n\n<section class=\"white-catalog-section\" id=\"white-mockup-library\" aria-labelledby=\"white-catalog-results-title\">\n  <div class=\"white-catalog-shell white-catalog-layout\">\n    <nav class=\"white-catalog-categories\" aria-label=\"Fashion mockup categories\">\n      <h2>Garments</h2>\n      <div class=\"white-catalog-category-list\">\n        <a href=\"/white-mockups#white-mockup-library\" class=\"")
+    ; __append("\n\n<header class=\"white-catalog-intro\">\n  <picture class=\"white-catalog-hero-media\">\n    <img src=\"/images/hero/fashion-mockups-brand-studio-v2.webp\" alt=\"Printed ivory T-shirt and charcoal denim worn by models in a naturally lit fashion studio\" width=\"1536\" height=\"1024\" loading=\"eager\" fetchpriority=\"high\" decoding=\"async\">\n  </picture>\n  <div class=\"white-catalog-shell\">\n    <div class=\"white-catalog-copy\">\n      <span class=\"white-catalog-eyebrow\">Fashion mockups</span>\n      <h1>\n        <span class=\"white-catalog-desktop-title\">Fashion mockups. Add your design.</span>\n        <span class=\"white-catalog-mobile-title\">Fashion mockups</span>\n      </h1>\n      <p>Browse garments worn on real models, then open a look to place your artwork.</p>\n      <a class=\"white-catalog-jump\" href=\"#white-mockup-library\">Browse mockups <span aria-hidden=\"true\">↓</span></a>\n    </div>\n\n  </div>\n</header>\n\n<section class=\"white-catalog-section\" id=\"white-mockup-library\" aria-labelledby=\"white-catalog-results-title\">\n  <div class=\"white-catalog-shell white-catalog-layout\">\n    <nav class=\"white-catalog-categories\" aria-label=\"Fashion mockup categories\">\n      <h2>Garments</h2>\n      <div class=\"white-catalog-category-list\">\n        <a href=\"/white-mockups#white-mockup-library\" class=\"")
     ; __append(escapeFn( !activeType ? 'active' : '' ))
     ; __append("\" ")
     ;  if (!activeType) {
@@ -12684,7 +12684,7 @@ motionId = __locals.motionId,
     ;  }
     ; __append("\n        </nav>\n      ")
     ;  }
-    ; __append("\n    </div>\n  </div>\n</section>\n\n")
+    ; __append("\n    </div>\n  </div>\n</section>\n\n<script src=\"/js/catalog-reveal.js?v=20261011-v1\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

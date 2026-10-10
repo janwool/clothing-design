@@ -61,12 +61,12 @@ test('shows every garment category without a hidden More menu or warm image filt
   assert.doesNotMatch(mockupStyles, /sepia\(/);
   assert.match(mockupStyles, /mix-blend-mode: normal/);
   assert.match(mockupStyles, /background-image: none/);
-  assert.match(mockupStyles, /\.mockups-masonry-card[\s\S]*?border-radius: 12px/);
+  assert.match(mockupStyles, /\.mockups-masonry-card[\s\S]*?border-radius: 0/);
   assert.doesNotMatch(mockupStyles, /transform: scale\(1\.055\)/);
 });
 
 test('uses the generated fashion studio image and a product-specific hero message', () => {
-  assert.match(template, /mockups-library-fashion-studio-v1\.webp/);
+  assert.match(template, /mockups-library-brand-studio-v2\.webp/);
   assert.match(template, /Pick a 3D garment\.<br>Start designing\./);
   assert.match(template, /Browse free clothing models, open any style in your browser/);
   assert.doesNotMatch(template, /heroModels/);

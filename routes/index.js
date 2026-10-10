@@ -2395,7 +2395,7 @@ router.get('/white-mockups', async (req, res) => {
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260926-hero-gif-v5'],
+      pageStyles: ['/css/white-mockups.css?v=20261011-full-width-hero-v7'],
       assets: library.assets,
       assetSummary: summary,
       activeType,
@@ -2415,7 +2415,7 @@ router.get('/white-mockups', async (req, res) => {
       title: 'On-Model Fashion Mockups | ClozDesign',
       metaDescription: 'Browse customizable on-model fashion mockups by clothing type.',
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20260926-hero-gif-v5'],
+      pageStyles: ['/css/white-mockups.css?v=20261011-full-width-hero-v7'],
       assets: [],
       assetSummary: { total: 0, mappedModels: 0, counts: {} },
       activeType: '',
@@ -2502,7 +2502,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       ],
       page: 'white-mockups',
       pageStyles: [
-        '/css/white-mockups.css?v=20260926-hero-gif-v5',
+        '/css/white-mockups.css?v=20261011-full-width-hero-v7',
         '/css/white-mockup-detail.css?v=20261004-artworks-left-v3'
       ],
       asset,
@@ -2603,7 +2603,7 @@ router.get('/mockups', async (req, res) => {
         getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
       }),
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20260926-3d-icon-label-v6'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
       models: displayModels,
       catalogModels: normalizedModels,
       catalogTotal: libraryTotal,
@@ -2634,7 +2634,7 @@ router.get('/mockups', async (req, res) => {
         ]
       }),
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20260926-3d-icon-label-v6'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
       models: [],
       catalogModels: [],
       catalogTotal: 0,
@@ -3139,7 +3139,7 @@ router.get('/mockups/:slug', async (req, res) => {
         }
       ],
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20260926-3d-icon-label-v6'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
       activeCategory: { ...category, meta_title: seoTitle, description },
       currentCategoryTotal: normalizedItems.length,
       models: displayModels,
