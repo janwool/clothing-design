@@ -1,165 +1,141 @@
 <%- include('partials/header') %>
 <%
   const activeHomepageModel = homeContent.primaryModel;
-  const activeHomepageModelHref = `/3d-models/${activeHomepageModel.category_slug}/${activeHomepageModel.slug}#design`;
+  const activeHomepageModelPath = `/3d-models/${activeHomepageModel.category_slug}/${activeHomepageModel.slug}`;
+  const activeHomepageModelHref = `${activeHomepageModelPath}#design`;
   const homepageModelCards = Array.isArray(homeContent.modelCards) ? homeContent.modelCards : [];
-  const homepageWhiteMockups = Array.isArray(homeContent.whiteMockups) ? homeContent.whiteMockups : [];
-  const primaryWhiteMockup = homepageWhiteMockups[0];
+  const homepageTryOnEnabled = homeContent.aiTryOnEnabled === true;
+  const homepageTryOnModel = (homeContent.featuredModels || []).find(function(model) { return model.category_slug === 'dress'; }) || activeHomepageModel;
+  const homepageTryOnHref = `/3d-models/${homepageTryOnModel.category_slug}/${homepageTryOnModel.slug}/try-on`;
 %>
 
-<section class="home-canvas home-entry" aria-labelledby="home-entry-heading">
-  <div class="home-canvas-shell">
-    <header class="home-entry-intro home-scroll-reveal">
-      <span class="home-entry-kicker">3D MODELS · FASHION MOCKUPS</span>
-      <h1 id="home-entry-heading">Create apparel designs with<br> 3D models and fashion mockups.</h1>
-      <p>Choose a garment, test color and artwork, then see every idea from every angle or on a real silhouette.</p>
-    </header>
-    <div class="home-entry-grid">
-      <a class="home-entry-card home-entry-card-models home-scroll-reveal" href="/mockups" data-analytics-event="home_entry_3d_models_click">
-        <span class="home-entry-copy">
-          <strong>Explore 3D Models</strong>
-          <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
-        </span>
-        <img src="/images/home/model-collection-v1.webp" alt="3D clothing collection with a T-shirt, hoodie, jacket, shirt, dress, trousers and skirt" width="1536" height="1024" fetchpriority="high" decoding="async">
-      </a>
-      <a class="home-entry-card home-entry-card-mockups home-scroll-reveal" href="/white-mockups" data-analytics-event="home_entry_white_mockups_click">
-        <span class="home-entry-copy">
-          <strong>Browse Fashion Mockups</strong>
-          <span class="home-entry-arrow" aria-hidden="true">&#8594;</span>
-        </span>
-        <img src="<%= primaryWhiteMockup.base_image_url %>" alt="<%= primaryWhiteMockup.alt %>" width="1024" height="1536" fetchpriority="high" decoding="async">
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="home-canvas home-definition" id="home-about" aria-labelledby="home-about-heading">
-  <div class="home-canvas-shell home-definition-layout">
-    <header class="home-definition-title home-scroll-reveal">
-      <h2 id="home-about-heading">What is ClozDesign?</h2>
-    </header>
-    <div class="home-definition-content home-scroll-reveal">
-      <span class="home-eyebrow">ABOUT CLOZDESIGN</span>
-      <p class="home-definition-lead">A browser-based workspace for apparel design and fashion mockups.</p>
-      <div class="home-definition-description">
-        <p>For apparel designers, clothing brands and creative teams. Turn ideas into clear visual references for collection planning, design reviews and product presentations.</p>
-        <p>Explore a look before sampling, share it with your team, or start a production conversation.</p>
+<section class="home-brand-hero" aria-labelledby="home-entry-heading">
+  <img class="home-hero-image" src="/images/home/brand-v4/hero.webp" alt="Ivory cotton dress and charcoal tailoring in a naturally lit fashion studio" width="1536" height="1024" fetchpriority="high" decoding="async">
+  <div class="home-shell home-hero-inner">
+    <div class="home-hero-copy home-scroll-reveal">
+      <h1 id="home-entry-heading">Clothing,<br>from your perspective.</h1>
+      <p>A space to explore silhouettes, develop designs and see them worn.</p>
+      <div class="home-actions">
+        <a class="home-button" href="/mockups" data-analytics-event="home_explore_brand_click">Explore ClozDesign <span aria-hidden="true">→</span></a>
+        <a class="home-link" href="<%= typeof user !== 'undefined' && user ? '/mockups' : '/auth/login?next=%2Fmockups' %>" data-home-start-design data-requires-login="<%= typeof user !== 'undefined' && user ? 'false' : 'true' %>" data-analytics-event="home_start_designing_click">Start designing <span aria-hidden="true">↗</span></a>
       </div>
     </div>
+    <span class="home-hero-caption">ClozDesign / Clothing creation</span>
   </div>
 </section>
+<a class="home-scroll-cue home-shell" href="#home-about">Explore what you can create <span aria-hidden="true">↓</span></a>
 
-<section class="home-canvas home-model-library" aria-labelledby="home-model-heading">
-  <div class="home-canvas-shell home-split-layout">
-    <div class="home-product-stage home-scroll-reveal" data-home-model-stage aria-busy="true">
-      <model-viewer
-        class="home-model-viewer"
-        data-home-model-viewer
-        src="<%= activeHomepageModel.file_url %>"
-        poster="<%= activeHomepageModel.image_url %>"
-        alt="Interactive <%= activeHomepageModel.name %> 3D model"
-        loading="lazy"
-        reveal="auto"
-        camera-controls
-        interaction-prompt="none"
-        shadow-intensity="0.32"
-        shadow-softness="0.9"
-        exposure="0.82"
-        environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
-        data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
-        data-studio-light-reference-azimuth="-16"
-        data-studio-light-azimuth-offset="45"
-        tone-mapping="commerce"
-        camera-orbit="0deg 76deg 108%"
-        min-camera-orbit="auto 55deg 82%"
-        max-camera-orbit="auto 105deg 145%"
-      ></model-viewer>
-      <span class="home-model-loading" data-home-model-loading aria-live="polite"><i aria-hidden="true"></i>Loading 3D</span>
-      <span class="home-model-gesture" aria-hidden="true">Drag to rotate</span>
-      <span class="home-model-caption" aria-hidden="true">Same garment.<br>Every angle.<br>More possibilities.</span>
-      <a class="home-model-editor-link" href="<%= activeHomepageModelHref %>" data-analytics-event="home_3d_tshirt_design_click">Open in 3D editor <span aria-hidden="true">&#8594;</span></a>
-      <span class="home-orbit-mark" aria-hidden="true">
-        <svg viewBox="0 0 120 24" role="presentation"><path d="M3 12c15-12 99-12 114 0-15 12-99 12-114 0Z"/><path d="m110 8 7 4-7 4"/></svg>
-      </span>
-    </div>
-    <div class="home-section-copy home-scroll-reveal">
-      <span class="home-eyebrow">3D LIBRARY</span>
-      <h2 id="home-model-heading">Start with the right shape.</h2>
-      <p>Explore a growing library of editable 3D clothing models. Adjust details, test color and artwork, and view your design from every angle.</p>
-      <nav class="home-category-grid" aria-label="3D model categories">
-        <% homepageModelCards.forEach(function(card) {%>
-          <a class="home-category-card" href="/mockups?q=<%= encodeURIComponent(card.query) %>#free-3d-models" data-analytics-event="<%= card.analytics %>">
-            <img src="<%= card.image_url %>" alt="" width="1200" height="1500" loading="lazy"><span><%= card.label %></span><i aria-hidden="true">&#8594;</i>
-          </a>
-        <% });%>
-        <a class="home-category-card" href="/mockups" data-analytics-event="home_category_more_click">
-          <span class="home-category-count">100+</span><span>More models</span><i aria-hidden="true">&#8594;</i>
-        </a>
+<section class="home-section home-about" id="home-about" aria-labelledby="home-about-heading">
+  <div class="home-shell home-about-layout">
+    <div class="home-copy home-scroll-reveal">
+      <h2 id="home-about-heading">What is<br> ClozDesign?</h2>
+      <p>A browser-based platform for clothing design, fashion mockups<% if (homepageTryOnEnabled) { %> and AI try-on<% } %>.</p>
+      <nav class="home-capabilities" aria-label="Explore ClozDesign capabilities">
+        <a href="#home-models">Customize a 3D garment <span aria-hidden="true">↗</span></a>
+        <a href="#home-mockups">Place artwork on a fashion mockup <span aria-hidden="true">↗</span></a>
+        <% if (homepageTryOnEnabled) { %><a href="#home-try-on">Generate an AI try-on <span aria-hidden="true">↗</span></a><% } %>
       </nav>
     </div>
-  </div>
-</section>
-
-<section class="home-canvas home-white-mockups" aria-labelledby="home-white-mockups-heading">
-  <div class="home-canvas-shell home-split-layout home-white-layout">
-    <div class="home-mockup-carousel home-scroll-reveal" data-home-carousel aria-roledescription="carousel" aria-label="Fashion mockup examples">
-      <div class="home-carousel-viewport">
-        <div class="home-carousel-track" data-home-carousel-track>
-          <% homepageWhiteMockups.forEach(function(mockup) {%>
-            <figure class="home-carousel-slide" data-home-carousel-slide><img src="<%= mockup.base_image_url %>" alt="<%= mockup.alt %>" width="1024" height="1536" loading="lazy" decoding="async"></figure>
-          <% });%>
-        </div>
-      </div>
-      <button class="home-carousel-control home-carousel-control-prev" type="button" data-home-carousel-prev aria-label="Previous mockup">&#8592;</button>
-      <button class="home-carousel-control home-carousel-control-next" type="button" data-home-carousel-next aria-label="Next mockup">&#8594;</button>
-      <div class="home-carousel-dots" role="group" aria-label="Choose mockup slide">
-        <button type="button" data-home-carousel-dot="0" aria-label="Show mockup 1" aria-current="true"></button>
-        <button type="button" data-home-carousel-dot="1" aria-label="Show mockup 2"></button>
-        <button type="button" data-home-carousel-dot="2" aria-label="Show mockup 3"></button>
-      </div>
-    </div>
-    <div class="home-section-copy home-scroll-reveal">
-      <span class="home-eyebrow">ON-MODEL FASHION MOCKUPS</span>
-      <h2 id="home-white-mockups-heading">See every idea on a real silhouette.</h2>
-      <p>Switch between people, poses and garment types, then place artwork and adjust color directly in the browser.</p>
-      <a class="home-text-link" href="/white-mockups" data-analytics-event="home_white_mockups_browse_click">Browse Fashion Mockups <span aria-hidden="true">&#8594;</span></a>
-    </div>
-  </div>
-</section>
-
-<section class="home-canvas home-production" id="home-production" aria-labelledby="home-production-heading">
-  <div class="home-canvas-shell home-production-layout">
-    <figure class="home-production-visual home-scroll-reveal">
-      <img src="/images/home/production-reference-v1.webp" alt="Ivory T-shirt beside front and back design references, fabric swatches and a ruler" width="1536" height="1024" loading="lazy" decoding="async">
-      <figcaption>Illustrative production reference</figcaption>
+    <figure class="home-about-visual home-scroll-reveal">
+      <img src="/images/home/brand-v4/about.webp" alt="A white 3D garment concept beside an on-model artwork preview and an ivory dress" width="1122" height="1402" loading="lazy" decoding="async">
+      <figcaption class="home-about-captions"><span>3D garment</span><span>On-model preview</span></figcaption>
     </figure>
-    <div class="home-production-copy home-scroll-reveal">
-      <span class="home-eyebrow">PRODUCTION</span>
-      <h2 id="home-production-heading">Take your design into production.</h2>
-      <p>Send an inquiry from your model workspace. Your current design is attached automatically.</p>
-      <dl class="home-production-requirements">
-        <div><dt>Order details</dt><dd>Quantity and delivery destination</dd></div>
-        <div><dt>Requirements</dt><dd>Fabric, colors, sizes and timeline</dd></div>
-      </dl>
-      <a class="home-production-cta" href="<%= activeHomepageModelHref.replace('#design', '#productionFeatureTitle') %>" data-analytics-event="home_production_workspace_click">Open production workspace <span aria-hidden="true">&#8599;</span></a>
-      <p class="home-production-note">Materials, samples, pricing and timing are discussed after your request.</p>
+  </div>
+</section>
+
+<section class="home-section home-models" id="home-models" aria-labelledby="home-model-heading">
+  <div class="home-shell home-model-layout">
+    <div class="home-model-stage home-scroll-reveal" data-home-model-stage aria-busy="true" tabindex="0" aria-label="Interactive T-shirt preview. Drag to rotate when ready.">
+      <img class="home-collection-image" src="/images/home/brand-v4/collection.webp" alt="White T-shirt, charcoal hoodie and ivory dress collection" width="1122" height="1402" loading="lazy" decoding="async">
+      <model-viewer data-home-model-viewer src="<%= activeHomepageModel.file_url %>" poster="<%= activeHomepageModel.image_url %>" alt="Interactive <%= activeHomepageModel.name %>" loading="eager" reveal="auto" camera-controls interaction-prompt="none" shadow-intensity="0.3" shadow-softness="0.9" exposure="0.85" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce" camera-orbit="0deg 76deg 108%" min-camera-orbit="auto 55deg 82%" max-camera-orbit="auto 105deg 145%" tabindex="-1"></model-viewer>
+      <span class="home-model-hint" data-home-model-hint>Drag to rotate</span>
+      <div class="home-model-failure" data-home-model-error hidden><span>Interactive preview unavailable.</span><button type="button" data-home-model-retry>Retry</button></div>
+    </div>
+    <div class="home-copy home-scroll-reveal">
+      <span class="home-eyebrow">3D CLOTHING DESIGN</span>
+      <h2 id="home-model-heading">Design the<br>garment in 3D.</h2>
+      <p>Change colors and materials, place your artwork and rotate the model to review every angle.</p>
+      <a class="home-button" href="/mockups" data-analytics-event="home_entry_3d_models_click">Explore 3D models <span aria-hidden="true">→</span></a>
+      <nav class="home-category-links" aria-label="3D clothing categories">
+        <% homepageModelCards.forEach(function(card) { %>
+          <a href="/mockups?q=<%= encodeURIComponent(card.query) %>#free-3d-models" data-analytics-event="<%= card.analytics %>"><%= card.label %></a>
+        <% }); %>
+        <a href="/mockups" data-analytics-event="home_category_more_click">All models <span aria-hidden="true">↗</span></a>
+      </nav>
+      <a class="home-link home-editor-link" href="<%= activeHomepageModelHref %>" data-analytics-event="home_3d_tshirt_design_click">Open the 3D editor <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </section>
 
-<section class="home-final-cta" aria-labelledby="home-final-heading">
-  <div class="home-final-inner">
-    <div class="home-final-copy home-scroll-reveal">
-      <span class="home-eyebrow">ClozDesign</span>
-      <h2 id="home-final-heading">Start with the right model.<br>Make every apparel idea clearer.</h2>
-      <p>3D models and fashion mockups for a more confident creative process.</p>
+<section class="home-section home-mockups" id="home-mockups" aria-labelledby="home-white-mockups-heading">
+  <div class="home-shell home-mockup-layout">
+    <div class="home-copy home-scroll-reveal">
+      <h2 id="home-white-mockups-heading">Put your artwork<br>on a model.</h2>
+      <p>Choose an editable fashion mockup and place your design.</p>
+      <a class="home-link" href="/white-mockups" data-analytics-event="home_white_mockups_browse_click">Browse fashion mockups <span aria-hidden="true">↗</span></a>
     </div>
-    <a class="home-final-panel home-scroll-reveal" href="/mockups" data-analytics-event="home_bottom_model_library_click">
-      <img src="<%= activeHomepageModel.image_url %>" alt="" width="1200" height="1500" loading="lazy">
-      <span>Explore the collection <i aria-hidden="true">&#8594;</i></span>
-    </a>
+    <div class="home-mockup-visual home-scroll-reveal">
+      <figure class="home-mockup-portrait">
+        <div class="home-portrait-window"><img src="/images/home/brand-v4/mockups.webp" alt="Man wearing a white T-shirt with a black geometric chest graphic" width="1402" height="1122" loading="lazy" decoding="async"></div>
+        <figcaption>T-shirt mockup</figcaption>
+      </figure>
+      <figure class="home-mockup-portrait home-mockup-portrait-right">
+        <div class="home-portrait-window"><img src="/images/home/brand-v4/mockups.webp" alt="Woman wearing a washed charcoal denim jacket" width="1402" height="1122" loading="lazy" decoding="async"></div>
+        <figcaption>Outerwear mockup</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
-<script src="/js/home-v2.js?v=20261010-entry-reveal-v3" defer></script>
+<% if (homepageTryOnEnabled) { %>
+<section class="home-section home-try-on" id="home-try-on" aria-labelledby="home-try-on-heading">
+  <div class="home-shell home-try-on-layout">
+    <div class="home-copy home-scroll-reveal">
+      <span class="home-eyebrow">AI TRY-ON</span>
+      <h2 id="home-try-on-heading">Try your design<br>on a model.</h2>
+      <p>Use your current garment design. Choose a model or upload a photo, then generate a try-on image.</p>
+      <a class="home-button" href="<%= homepageTryOnHref %>" data-analytics-event="home_ai_try_on_click">Explore AI Try-On <span aria-hidden="true">→</span></a>
+      <p class="home-note">Generation uses credits.</p>
+    </div>
+    <figure class="home-try-on-visual home-scroll-reveal">
+      <img src="/images/home/brand-v4/try-on.webp" alt="Illustrative AI try-on sequence: an ivory dress, a model photo, and the same model wearing the dress" width="1402" height="1122" loading="lazy" decoding="async">
+      <figcaption class="home-try-on-captions"><span>Your garment</span><span>Model photo</span><span>Try-on preview<small>Illustrative preview</small></span></figcaption>
+    </figure>
+  </div>
+</section>
+<% } %>
+
+<section class="home-section home-output" id="home-production" aria-labelledby="home-production-heading">
+  <div class="home-shell home-output-layout">
+    <figure class="home-output-visual home-scroll-reveal">
+      <img src="/images/home/brand-v4/output.webp" alt="Front and back views of an ivory T-shirt, with a close-up of its black floral artwork and cotton texture" width="1122" height="1402" loading="lazy" decoding="async">
+      <figcaption class="home-paired-captions"><span>Front view</span><span>Back view · Detail</span></figcaption>
+    </figure>
+    <div class="home-copy home-scroll-reveal">
+      <span class="home-eyebrow">EXPORT &amp; PRODUCTION</span>
+      <h2 id="home-production-heading">Share the design.<br>Start the conversation.</h2>
+      <p>Export product views for your collection. Send a production inquiry from the garment workspace with your current design attached.</p>
+      <div class="home-output-actions">
+        <a class="home-link" href="<%= activeHomepageModelPath %>#modelTechnicalTitle" data-analytics-event="home_export_click">Explore exports <span aria-hidden="true">↗</span></a>
+        <a class="home-link" href="<%= activeHomepageModelPath %>#productionFeatureTitle" data-analytics-event="home_production_workspace_click">Request production <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="home-note">Export requires Pro or above.</p>
+      <p class="home-production-details">Quantity · Contact · Delivery · Requirements</p>
+    </div>
+  </div>
+</section>
+
+<section class="home-brand-closing" aria-labelledby="home-final-heading">
+  <img class="home-closing-image" src="/images/home/brand-v4/closing.webp" alt="Close-up of ivory cotton dress details with charcoal tailoring in the same daylight studio" width="1536" height="1024" loading="lazy" decoding="async">
+  <div class="home-shell home-closing-inner">
+    <div class="home-closing-copy home-scroll-reveal">
+      <h2 id="home-final-heading">Begin with<br>a garment.</h2>
+      <p>Find a silhouette and make it your own.</p>
+      <a class="home-button" href="/mockups" data-analytics-event="home_bottom_model_library_click">Explore 3D models <span aria-hidden="true">→</span></a>
+      <a class="home-link" href="/white-mockups">Browse fashion mockups <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</section>
+
+<script src="/js/home-v2.js?v=20261011-brand-v4-3" defer></script>
 <%- include('partials/footer') %>

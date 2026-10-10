@@ -1,149 +1,149 @@
-(function initHomeCanvas() {
+(function initBrandHomepage() {
   'use strict';
 
-  var modelStage = document.querySelector('[data-home-model-stage]');
-  var modelViewer = document.querySelector('[data-home-model-viewer]');
-  var modelLoading = document.querySelector('[data-home-model-loading]');
-  var modelViewerRequested = false;
+  var startDesign = document.querySelector('[data-home-start-design]');
+  var signingIn = false;
+  if (startDesign) startDesign.addEventListener('click', async function start(event) {
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    if (startDesign.dataset.requiresLogin !== 'true' || !window.AccountLoginDialog) return;
+    event.preventDefault();
+    if (signingIn) return;
+    signingIn = true;
+    try {
+      var signedIn = await window.AccountLoginDialog.open({ title: 'Sign in to start designing', next: '/mockups' });
+      if (signedIn) {
+        startDesign.dataset.requiresLogin = 'false';
+        window.location.assign('/mockups');
+      }
+    } finally { signingIn = false; }
+  });
 
-  function setModelReady() {
-    if (!modelStage) return;
-    modelStage.classList.add('is-model-ready');
-    modelStage.classList.remove('is-model-error');
-    modelStage.setAttribute('aria-busy', 'false');
+  var motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var stage = document.querySelector('[data-home-model-stage]');
+  var viewer = document.querySelector('[data-home-model-viewer]');
+  var errorPanel = document.querySelector('[data-home-model-error]');
+  var retry = document.querySelector('[data-home-model-retry]');
+  var hint = document.querySelector('[data-home-model-hint]');
+  var requested = false;
+  var initializationAttempts = 0;
+  var ready = false;
+  var timeout;
+
+  function showFailure() {
+    ready = false;
+    window.clearTimeout(timeout);
+    stage.classList.remove('is-model-ready', 'is-live');
+    stage.classList.add('is-model-error');
+    stage.setAttribute('aria-busy', 'false');
+    viewer.setAttribute('tabindex', '-1');
+    if (errorPanel) errorPanel.hidden = false;
   }
 
-  function setModelError() {
-    if (!modelStage) return;
-    modelStage.classList.add('is-model-error');
-    modelStage.setAttribute('aria-busy', 'false');
-    if (modelLoading) modelLoading.textContent = '3D preview unavailable';
+  function showReady() {
+    ready = true;
+    window.clearTimeout(timeout);
+    stage.classList.remove('is-model-error');
+    stage.classList.add('is-model-ready');
+    stage.setAttribute('aria-busy', 'false');
+    viewer.setAttribute('tabindex', '0');
+    if (errorPanel) errorPanel.hidden = true;
+    // Keep the approved collection composition until a natural drag/focus gesture.
+    // The live model is initialized beforehand; there is no loading button.
+    if (viewer.model && viewer.model.materials) {
+      viewer.model.materials.forEach(function setIvory(material) {
+        if (material.pbrMetallicRoughness) {
+          material.pbrMetallicRoughness.setBaseColorFactor([0.91, 0.90, 0.87, 1]);
+        }
+      });
+    }
   }
 
-  function loadModelViewer() {
-    if (!modelViewer || modelViewerRequested) return;
-    modelViewerRequested = true;
+  function showInteractive() {
+    if (!ready) return;
+    stage.classList.add('is-live');
+    if (hint) hint.textContent = 'Drag to rotate · Scroll to zoom';
+  }
 
+  function initializeModel() {
+    if (!viewer || requested) return;
+    requested = true;
+    stage.setAttribute('aria-busy', 'true');
+    if (errorPanel) errorPanel.hidden = true;
+    timeout = window.setTimeout(function checkModel() { if (!ready) showFailure(); }, 25000);
+    if (window.customElements && window.customElements.get('model-viewer')) {
+      if (viewer.loaded) showReady();
+      return;
+    }
     window.ModelViewerElement = window.ModelViewerElement || {};
     window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      modelViewer.removeAttribute('auto-rotate');
-    }
-
-    modelViewer.addEventListener('load', setModelReady, { once: true });
-    modelViewer.addEventListener('error', setModelError, { once: true });
-    modelViewer.addEventListener('pointerdown', function markModelInteraction() {
-      modelStage.classList.add('has-interacted');
-    }, { once: true });
-
-    if (window.customElements && window.customElements.get('model-viewer')) return;
-
     var script = document.createElement('script');
     script.type = 'module';
-    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1';
-    script.addEventListener('error', setModelError, { once: true });
+    // Browsers cache failed module imports. Give a retry a fresh module URL.
+    script.src = '/vendor/model-viewer/model-viewer.min.js?v=4.3.1' + (initializationAttempts++ ? '&retry=' + Date.now() : '');
+    script.addEventListener('error', function onScriptError() {
+      requested = false;
+      script.remove();
+      showFailure();
+    }, { once: true });
     document.head.appendChild(script);
   }
 
-  if (modelStage && 'IntersectionObserver' in window) {
-    var modelObserver = new IntersectionObserver(function loadVisibleModel(entries) {
-      if (!entries.some(function isVisible(entry) { return entry.isIntersecting; })) return;
-      modelObserver.disconnect();
-      loadModelViewer();
-    }, { rootMargin: '500px 0px', threshold: 0.01 });
-    modelObserver.observe(modelStage);
-  } else {
-    loadModelViewer();
+  if (stage && viewer) {
+    viewer.addEventListener('load', showReady);
+    viewer.addEventListener('error', showFailure);
+    stage.addEventListener('pointerdown', showInteractive);
+    stage.addEventListener('focusin', showInteractive);
+    if (retry) retry.addEventListener('click', function retryModel(event) {
+      event.stopPropagation();
+      ready = false;
+      stage.classList.remove('is-model-error');
+      var source = viewer.getAttribute('src');
+      viewer.removeAttribute('src');
+      window.requestAnimationFrame(function restoreSource() { viewer.setAttribute('src', source); });
+      requested = false;
+      initializeModel();
+    });
+    if ('IntersectionObserver' in window) {
+      var modelObserver = new IntersectionObserver(function preload(entries) {
+        if (!entries.some(function visible(entry) { return entry.isIntersecting; })) return;
+        modelObserver.disconnect();
+        initializeModel();
+      }, { rootMargin: '500px 0px', threshold: 0.01 });
+      modelObserver.observe(stage);
+    } else {
+      initializeModel();
+    }
   }
 
-  var carousel = document.querySelector('[data-home-carousel]');
-
-  if (carousel) {
-    var slides = Array.prototype.slice.call(carousel.querySelectorAll('[data-home-carousel-slide]'));
-    var dots = Array.prototype.slice.call(carousel.querySelectorAll('[data-home-carousel-dot]'));
-    var previous = carousel.querySelector('[data-home-carousel-prev]');
-    var next = carousel.querySelector('[data-home-carousel-next]');
-    var activeIndex = 0;
-    var timer = null;
-
-    function render(index) {
-      activeIndex = (index + slides.length) % slides.length;
-      slides.forEach(function updateSlide(slide, slideIndex) {
-        var previousIndex = (activeIndex - 1 + slides.length) % slides.length;
-        var nextIndex = (activeIndex + 1) % slides.length;
-        slide.classList.toggle('is-active', slideIndex === activeIndex);
-        slide.classList.toggle('is-previous', slideIndex === previousIndex);
-        slide.classList.toggle('is-next', slideIndex === nextIndex);
-        slide.setAttribute('aria-hidden', slideIndex === activeIndex ? 'false' : 'true');
-      });
-      dots.forEach(function updateDot(dot, dotIndex) {
-        dot.setAttribute('aria-current', dotIndex === activeIndex ? 'true' : 'false');
-      });
-    }
-
-    function stopAutoplay() {
-      if (timer) window.clearInterval(timer);
-      timer = null;
-    }
-
-    function startAutoplay() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      stopAutoplay();
-      timer = window.setInterval(function autoplayNext() { render(activeIndex + 1); }, 5200);
-    }
-
-    previous.addEventListener('click', function showPrevious() { render(activeIndex - 1); startAutoplay(); });
-    next.addEventListener('click', function showNext() { render(activeIndex + 1); startAutoplay(); });
-    dots.forEach(function bindDot(dot) {
-      dot.addEventListener('click', function showSelectedSlide() {
-        render(Number(dot.getAttribute('data-home-carousel-dot')) || 0);
-        startAutoplay();
-      });
-    });
-
-    carousel.addEventListener('mouseenter', stopAutoplay);
-    carousel.addEventListener('mouseleave', startAutoplay);
-    carousel.addEventListener('focusin', stopAutoplay);
-    carousel.addEventListener('focusout', startAutoplay);
-    render(0);
-    startAutoplay();
+  var items = Array.prototype.slice.call(document.querySelectorAll('.home-scroll-reveal'));
+  function showAll() { items.forEach(function show(item) { item.classList.add('is-visible'); }); }
+  if (!('IntersectionObserver' in window) || motion.matches) {
+    showAll();
+    return;
   }
-
-  var revealItems = Array.prototype.slice.call(document.querySelectorAll('.home-scroll-reveal'));
-  var motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
-  if ('IntersectionObserver' in window && !motionPreference.matches) {
-    var revealObserver = new IntersectionObserver(function reveal(entries) {
-      entries.forEach(function revealEntry(entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('is-visible');
-        revealObserver.unobserve(entry.target);
-      });
-    }, { rootMargin: '0px 0px -32px 0px', threshold: 0.08 });
-    revealItems.forEach(function observeItem(item) {
-      var siblings = Array.prototype.filter.call(item.parentElement.children, function isRevealSibling(child) {
-        return child.classList.contains('home-scroll-reveal');
-      });
-      item.style.setProperty('--home-reveal-delay', Math.min(siblings.indexOf(item), 3) * 100 + 'ms');
-      if (item.closest('.home-entry')) {
-        var entryOrder = item.matches('.home-entry-intro') ? 0 : item.matches('.home-entry-card-models') ? 1 : item.matches('.home-entry-card-mockups') ? 2 : 3;
-        item.style.setProperty('--home-reveal-delay', entryOrder * 120 + 'ms');
-      }
+  var observer = new IntersectionObserver(function reveal(entries) {
+    entries.forEach(function show(entry) {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      observer.unobserve(entry.target);
     });
-    document.documentElement.classList.add('home-motion-ready');
-    // Paint the starting state before observing content already in the viewport.
-    window.requestAnimationFrame(function prepareReveal() {
-      window.requestAnimationFrame(function observeReveals() {
-        if (motionPreference.matches) return;
-        revealItems.forEach(function observeItem(item) { revealObserver.observe(item); });
-      });
+  }, { rootMargin: '0px 0px -24px 0px', threshold: 0.05 });
+  items.forEach(function stagger(item) {
+    var siblings = Array.prototype.filter.call(item.parentElement.children, function isReveal(node) {
+      return node.classList.contains('home-scroll-reveal');
     });
-    motionPreference.addEventListener('change', function updateMotionPreference(event) {
-      if (!event.matches) return;
-      revealObserver.disconnect();
-      revealItems.forEach(function showItem(item) { item.classList.add('is-visible'); });
+    item.style.setProperty('--home-reveal-delay', Math.max(0, siblings.indexOf(item)) * 100 + 'ms');
+  });
+  document.documentElement.classList.add('home-motion-ready');
+  window.requestAnimationFrame(function firstPaint() {
+    window.requestAnimationFrame(function observe() {
+      if (motion.matches) { showAll(); return; }
+      items.forEach(function watch(item) { observer.observe(item); });
     });
-  } else {
-    revealItems.forEach(function showItem(item) { item.classList.add('is-visible'); });
-  }
+  });
+  motion.addEventListener('change', function update(event) {
+    if (!event.matches) return;
+    observer.disconnect();
+    showAll();
+  });
 })();

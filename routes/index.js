@@ -833,8 +833,10 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
       answer: 'Yes. The mockup workflow is built for ecommerce previews, product detail pages, POD listings, portfolio images, client approvals, and campaign planning.'
     }
   ];
-  const metaDescription = 'Browse free 3D clothing models, create apparel mockups online, preview print placement, and export transparent product images for ecommerce and POD listings.';
-  const primaryImage = firstImage(req, heroImages.map(image => image.src));
+  const metaDescription = isAiTryOnEnabled()
+    ? 'Design clothing in 3D, place artwork on fashion mockups, and generate AI try-on previews. Export product visuals or start a production inquiry with ClozDesign.'
+    : 'Design clothing in 3D and place artwork on fashion mockups. Export product visuals or start a production inquiry with ClozDesign.';
+  const primaryImage = firstImage(req, ['/images/home/brand-v4/hero.webp']);
   const structuredData = [
     {
       '@context': 'https://schema.org',
@@ -858,7 +860,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     {
       '@context': 'https://schema.org',
       '@type': 'WebPage',
-      name: 'Free 3D Clothing Models for Apparel Mockups',
+      name: 'ClozDesign — Clothing Design & Fashion Mockups',
       description: metaDescription,
       url: pageUrl,
       image: primaryImage,
@@ -912,18 +914,6 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
           url: toAbsoluteUrl(req, '/3d-models/t-shirt-mockup/classic-crew-neck-t-shirt-3d-model')
         }
       ]
-    },
-    {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faq.map(item => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.answer
-        }
-      }))
     }
   ];
 
@@ -937,6 +927,7 @@ function buildHomeContent(req, models = [], categories = [], modelTotal = models
     useCases,
     faq,
     primaryModel,
+    aiTryOnEnabled: isAiTryOnEnabled(),
     modelCards,
     whiteMockups: homeWhiteMockups,
     featuredModels,
@@ -2348,7 +2339,7 @@ router.get('/', async (req, res) => {
     );
 
     res.render('index', {
-      title: req.t('home.title'),
+      title: 'Clothing Design & Fashion Mockups',
       metaDescription: homeContent.metaDescription,
       metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,
@@ -2360,7 +2351,7 @@ router.get('/', async (req, res) => {
     console.error('Error loading home page content:', err);
     const homeContent = buildHomeContent(req);
     res.render('index', {
-      title: req.t('home.title'),
+      title: 'Clothing Design & Fashion Mockups',
       metaDescription: homeContent.metaDescription,
       metaImage: homeContent.primaryImage,
       structuredData: homeContent.structuredData,

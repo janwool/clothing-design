@@ -5,3 +5,6 @@
 
 # Local model experiments are kept in git, outside production assets.
 /previews/
+
+# Design review boards are local-only and must not ship as website assets.
+/design-previews/

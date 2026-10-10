@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const googleEnabled = document.currentScript?.dataset.googleAuth === 'true';
-  let dialog, pending, finish, returnFocus;
+  let dialog, pending, finish, returnFocus, loginNext;
   function mount() {
     if (dialog) return;
     dialog = document.createElement('dialog');
@@ -30,7 +30,7 @@
       const data = new FormData(event.target);
       button.disabled = true; button.textContent = 'Signing in…'; errorBox.textContent = '';
       try {
-        const response = await fetch('/auth/login', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(20000), body: JSON.stringify({ email: data.get('email'), password: data.get('password'), next: location.pathname + location.search }) });
+        const response = await fetch('/auth/login', { method: 'POST', credentials: 'same-origin', headers: { Accept: 'application/json', 'Content-Type': 'application/json' }, signal: AbortSignal.timeout(20000), body: JSON.stringify({ email: data.get('email'), password: data.get('password'), next: loginNext }) });
         const result = await response.json().catch(() => ({}));
         if (!response.ok || !result.success) throw new Error(result.error || 'Unable to sign in. Please try again.');
         if (dialog.open) dialog.close('signed-in');
@@ -38,14 +38,17 @@
       finally { button.disabled = false; button.textContent = 'Sign in'; }
     });
   }
-  window.AccountLoginDialog = { open() {
+  window.AccountLoginDialog = { open(options = {}) {
     if (pending) return pending;
     mount(); returnFocus = document.activeElement;
     dialog.returnValue = '';
     dialog.querySelector('[role="alert"]').textContent = '';
     const next = new URL(location.href);
     next.searchParams.set('resumeTryOn', '1');
-    const returnPath = next.pathname + next.search;
+    const requestedNext = typeof options.next === 'string' && options.next.startsWith('/') && !options.next.startsWith('//') ? options.next : '';
+    const returnPath = requestedNext || next.pathname + next.search;
+    loginNext = requestedNext || location.pathname + location.search;
+    dialog.querySelector('#tryOnLoginTitle').textContent = options.title || 'Sign in to Try-on';
     const google = dialog.querySelector('.account-login-google');
     if (google) google.href = '/auth/google?next=' + encodeURIComponent(returnPath);
     dialog.querySelector('.account-login-register a').href = '/auth/register?next=' + encodeURIComponent(returnPath);
