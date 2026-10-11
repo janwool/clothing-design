@@ -1,34 +1,19 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20260922-shared-login-v42', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3']
+  pageStyles: ['/css/model-detail-v2.css?v=20261011-native-tryon-v43', '/css/model-detail-v3.css?v=20261011-v12', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3', '/css/design-studio.css?v=20261011-studio-v58', '/css/ai-try-on.css?v=20261011-designed-v18']
 }) %>
-<% const detailContent = modelDetailContent || {}; %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
-<% const howToSteps = detailContent.howToSteps || []; %>
-<% const applications = detailContent.applications || []; %>
-<% const faqItems = detailContent.faqItems || []; %>
-<% const relatedLinks = detailContent.relatedLinks || []; %>
-<% const detailCta = detailContent.cta || {}; %>
-<% const howToIcons = ['open', 'inspect', 'simulate', 'download']; %>
 <% const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; %>
 <% const supportsOnModelMockup = Boolean(modelMockupProfile); %>
-<% const tryOnModels = typeof aiTryOnModels !== 'undefined' && Array.isArray(aiTryOnModels) ? aiTryOnModels : []; %>
 <% const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean(aiTryOnEnabled); %>
 <% const modelDisplayName = String(model.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
-<% const modelCategoryName = model.category_label || model.category || 'Apparel'; %>
 <% const modelDetailPath = `/3d-models/${model.category_slug || model.category}/${model.slug}`; %>
 <% const aiTryOnPath = `${modelDetailPath}/try-on`; %>
 
 <section class="model-detail-hero">
   <div class="container">
-    <nav class="model-breadcrumb" aria-label="Breadcrumb">
-      <a href="/mockups">3D Models</a><span>/</span>
-      <a href="/mockups/<%= model.category_slug || model.category %>"><%= model.category_label || model.category %></a><span>/</span>
-      <span><%= modelDisplayName %></span>
-    </nav>
     <div class="model-detail-grid">
       <div class="model-info-section" role="region" aria-label="Model overview">
-        <span class="model-product-kicker">Digital atelier / <%= modelCategoryName %></span>
         <h1 class="model-detail-title"><%= modelDisplayName %></h1>
         <div class="model-detail-meta" aria-label="Model capabilities">
           <span class="tag tag-free">Free 3D model</span>
@@ -84,6 +69,7 @@
               data-studio-light-azimuth-offset="45"
               tone-mapping="commerce"
               data-catalog-render-standard="main"
+              data-detail-preview-radius="120%"
               style="width: 100%; height: 100%;"
             ></model-viewer>
             <span class="model-contact-shadow" aria-hidden="true"></span>
@@ -97,26 +83,6 @@
             </div>
           <% } %>
         </div>
-        <aside class="viewer-lighting-panel" id="quickLightingPanel" aria-label="Studio lighting">
-          <div class="quick-light-panel-header">
-            <strong>Lighting</strong>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
-          </div>
-          <div class="quick-light-color"><i aria-hidden="true"></i><span><strong>Neutral White</strong><small>Pure white · no color cast</small></span></div>
-          <div class="quick-light-presets" role="group" aria-label="Light direction presets">
-            <button type="button" data-light-angle="-45" aria-pressed="false"><i aria-hidden="true"></i><span>−45°</span></button>
-            <button type="button" data-light-angle="0" aria-pressed="false"><i aria-hidden="true"></i><span>Front</span></button>
-            <button type="button" class="active" data-light-angle="45" aria-pressed="true"><i aria-hidden="true"></i><span>+45°</span></button>
-          </div>
-          <label class="quick-light-range">
-            <span>Brightness <output id="quickLightExposureOutput">100%</output></span>
-            <input id="quickLightExposure" type="range" min="55" max="300" step="1" value="100">
-          </label>
-          <label class="quick-light-range">
-            <span>Softness <output id="quickLightSoftnessOutput">90%</output></span>
-            <input id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90">
-          </label>
-        </aside>
         <div class="model-quick-style" aria-label="Quick garment styling">
           <div class="quick-style-shelf">
             <div class="quick-style-fabric">
@@ -163,6 +129,7 @@
               </div>
             </div>
           </div>
+          <% if (typeof canRemoveWatermarks === 'undefined' || !canRemoveWatermarks) { %>
           <a
             class="quick-style-upgrade"
             id="removeWatermarkBtn"
@@ -174,9 +141,10 @@
             data-id="<%= model.slug %>"
           >
             <svg class="detail-action-upgrade-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 3 9.8 8.8 4 11l5.8 2.2L12 19l2.2-5.8L20 11l-5.8-2.2L12 3Z"/><path d="m18.5 3 .7 1.8L21 5.5l-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg>
-            <span><strong>No Watermark</strong><small>Pro &amp; Max</small></span>
+            <span><strong>Remove watermark</strong><small>Pro &amp; Max</small></span>
             <svg class="detail-action-upgrade-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M5 12h14M14 7l5 5-5 5"/></svg>
           </a>
+          <% } %>
         </div>
         <button class="viewer-internal-control" id="rotateBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Rotate</button>
         <button class="viewer-internal-control" id="fabricMotionBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Fabric Motion</button>
@@ -185,275 +153,6 @@
     <% if (supportsOnModelMockup) { %><button type="button" id="modelMockupBtn" hidden aria-hidden="true" tabindex="-1">Open model preview</button><% } %>
   </div>
 </section>
-
-<section class="experience-flow" aria-labelledby="experienceFlowTitle">
-  <div class="container">
-    <h2 id="experienceFlowTitle">From a blank garment to a worn campaign</h2>
-    <div class="experience-flow-steps">
-      <article>
-        <span>01</span>
-        <svg class="flow-icon flow-icon-edit" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 5.5 18.5.5l5 5-5 5M13.5 5.5 3 16l-1.5 6.5L8 21l10.5-10.5M12 3H3a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-9"/></svg>
-        <h3>Customize</h3><p>Edit every surface. Add materials, artwork, and details.</p>
-      </article>
-      <article>
-        <span>02</span>
-        <svg class="flow-icon flow-icon-person" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="6.5" r="4.5"/><path d="M3 22c.7-5.2 3.7-8 9-8s8.3 2.8 9 8H3Z"/></svg>
-        <% if (aiTryOnAvailable) { %>
-          <h3>Try on</h3><p>See your design on real models with AI try-on.</p>
-        <% } else { %>
-          <h3>Render</h3><p>Create a studio-quality product image from the angle you choose.</p>
-        <% } %>
-      </article>
-      <article>
-        <span>03</span>
-        <svg class="flow-icon flow-icon-eye" viewBox="0 0 28 20" aria-hidden="true"><path d="M1 10S5.6 2.5 14 2.5 27 10 27 10s-4.6 7.5-13 7.5S1 10 1 10Z"/><circle cx="14" cy="10" r="3.5"/></svg>
-        <h3>Review</h3><p>Refine the look, fit, and story before production.</p>
-      </article>
-      <article>
-        <span>04</span>
-        <svg class="flow-icon flow-icon-factory" viewBox="0 0 26 24" aria-hidden="true"><path d="M1 23V8l7 5V8l7 5V2h5v11l5-3v13H1Z"/><path d="M6 18h3M13 18h3M20 18h2"/></svg>
-        <h3>Produce</h3><p>Connect with our team to bring it to life.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section class="detail-customize-feature" aria-labelledby="customizeFeatureTitle">
-  <div class="container detail-feature-grid">
-    <div class="detail-feature-copy">
-      <h2 id="customizeFeatureTitle">Every surface<br>is a decision</h2>
-      <p>Use our 3D studio to customize every detail of the garment. Fabrics, colors, prints, type, and trims—your vision, precisely where you want it.</p>
-      <button class="feature-cta" id="customizeFeatureBtn" type="button">Open 3D studio</button>
-    </div>
-    <div class="studio-concept-card" aria-label="3D design studio preview">
-      <div class="studio-concept-toolbar"><span>← Back to library</span><strong><%= modelDisplayName %></strong><span><i></i> All changes saved</span></div>
-      <div class="studio-concept-body">
-        <div class="studio-tool-list"><span class="active">Select</span><span>Surface</span><span>Material</span><span>Color</span><span>Artwork</span><span>Text</span><span>Details</span><span>Layers</span><span>Export</span></div>
-        <div class="studio-garment-preview"><img src="<%= model.image_url %>" alt="<%= modelDisplayName %> design preview" loading="lazy"><span class="studio-selection-frame" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div>
-        <div class="studio-property-panel">
-          <span>Surface</span><strong>Front panel</strong>
-          <span>Material</span><strong>Linen blend</strong>
-          <div class="studio-material-row"><i></i><i></i><i></i><i></i><i></i></div>
-          <span>Color</span><div class="studio-color-row"><i></i><i></i><i></i><i></i><i></i><i></i></div>
-          <span>Artwork</span><strong>Brush stroke 02.png</strong>
-          <span>Type</span><strong>ClozDesign Atelier</strong>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<% if (aiTryOnAvailable && supportsOnModelMockup && tryOnModels.length) { %>
-<section class="ai-tryon-feature" aria-labelledby="aiTryOnFeatureTitle">
-  <div class="container ai-tryon-feature-grid">
-    <div class="ai-tryon-copy">
-      <h2 id="aiTryOnFeatureTitle">See the design<br>on someone</h2>
-      <p>AI try-on shows how your design looks on real people with realistic fit, drape, and light. Choose a model, pose, and scene that matches your story.</p>
-      <span class="ai-fitted-badge"><i></i> AI fitted</span>
-      <a class="feature-cta feature-cta-light" href="<%= aiTryOnPath %>" data-ai-try-on-link>Choose a model</a>
-    </div>
-    <div class="ai-model-panel">
-      <div class="ai-model-tabs"><span class="active">Models</span><span>Poses</span><span>Scenes</span></div>
-      <p>Select a model</p>
-      <div class="ai-avatar-grid">
-        <% tryOnModels.slice(0, 6).forEach(function(tryOnModel, index) { %>
-          <% const displayModelName = String(tryOnModel.title || 'Model').replace(/^Model\s+\d+\s+/i, '').split(/\s+(?:Female|Male|Front|Walking|From3d)/i)[0]; %>
-          <button type="button" class="<%= index === 0 ? 'active' : '' %>" disabled aria-disabled="true"><img src="<%= tryOnModel.base_image_url %>" alt="<%= displayModelName %>" loading="lazy"><span><%= displayModelName %></span></button>
-        <% }); %>
-      </div>
-      <dl><div><dt>Height</dt><dd>178 cm</dd></div><div><dt>Size</dt><dd>S</dd></div><div><dt>Body type</dt><dd>Athletic</dd></div></dl>
-    </div>
-    <div class="ai-model-stage">
-      <img id="aiFeaturePreview" src="<%= tryOnModels[0].base_image_url %>" alt="AI try-on model preview" loading="lazy">
-      <div class="ai-stage-thumbnails">
-        <% tryOnModels.slice(0, 4).forEach(function(tryOnModel, index) { %><button type="button" class="<%= index === 0 ? 'active' : '' %>" disabled aria-disabled="true"><img src="<%= tryOnModel.base_image_url %>" alt="View <%= index + 1 %>" loading="lazy"></button><% }); %>
-      </div>
-    </div>
-  </div>
-</section>
-<% } %>
-
-<section class="production-feature" aria-labelledby="productionFeatureTitle">
-  <div class="container production-feature-grid">
-    <div class="production-title-wrap"><span class="production-icon" aria-hidden="true">⌁</span><h2 id="productionFeatureTitle">When the design is ready,<br>talk to people who can make it</h2></div>
-    <div class="production-copy"><p>Our production experts will review your design and recommend the best materials, techniques, and factories for your goals.</p><button class="feature-cta production-cta" id="productionFeatureBtn" type="button">Request custom production</button></div>
-    <div class="production-promises"><span>Your design file and notes will be attached automatically.</span><span>We’ll reply within 3 business days.</span><span>Confidential, professional, and global.</span></div>
-  </div>
-</section>
-
-<section class="model-technical-section" aria-labelledby="modelTechnicalTitle">
-  <div class="container model-technical-grid">
-    <div>
-      <span class="detail-eyebrow">Garment details</span>
-      <h2 id="modelTechnicalTitle">Built to inspect.<br>Ready to render.</h2>
-      <% if (detailContent.searchIntentSummary) { %><p><%= detailContent.searchIntentSummary %></p><% } %>
-    </div>
-    <div class="model-specs">
-      <h3>Technical specifications</h3>
-      <div class="specs-grid">
-        <% (detailContent.formatNotes || []).forEach(function(note) { %><div class="spec-item"><span class="spec-label"><%= note.label %></span><span class="spec-value"><%= note.value %></span></div><% }); %>
-        <% if (model.poly_count) { %><div class="spec-item"><span class="spec-label">Geometry</span><span class="spec-value"><%= model.poly_count %></span></div><% } %>
-        <% if (model.file_size) { %><div class="spec-item"><span class="spec-label">File size</span><span class="spec-value"><%= model.file_size %></span></div><% } %>
-      </div>
-      <% if (relatedLinks.length) { %><nav class="model-intent-links" aria-label="Related 3D clothing resources"><% relatedLinks.forEach(function(link) { %><a href="<%= link.href %>"><%= link.label %></a><% }); %></nav><% } %>
-    </div>
-  </div>
-</section>
-
-<% if (howToSteps.length || applications.length || faqItems.length || detailContent.geoSummary) { %>
-<section class="model-seo-section generator-section">
-  <div class="container">
-    <% if (howToSteps.length) { %>
-      <div class="model-seo-block model-howto-section">
-        <div class="generator-section-header">
-          <span class="generator-eyebrow">Design workflow</span>
-          <h2>From model to finished mockup</h2>
-          <p>Customize the garment, inspect every angle, and export a presentation-ready visual.</p>
-        </div>
-        <div class="pattern-step-card-grid">
-          <% howToSteps.forEach(function(step, index) { %>
-            <% const icon = howToIcons[index] || 'inspect'; %>
-            <% const stepTitle = step.name || step.title; %>
-            <% const stepText = step.text || step.body; %>
-            <article class="pattern-step-card">
-              <div class="pattern-step-media pattern-step-media-<%= icon %>">
-                <span><%= String(index + 1).padStart(2, '0') %></span>
-                <% if (icon === 'download') { %>
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <rect x="16" y="14" width="52" height="56" rx="6"/>
-                    <path d="M40 22v25"/>
-                    <path d="m29 38 11 11 11-11"/>
-                    <path d="M27 59h26"/>
-                  </svg>
-                <% } else if (icon === 'open') { %>
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <rect x="12" y="18" width="56" height="44" rx="6"/>
-                    <path d="M12 31h56"/>
-                    <path d="M27 49h16"/>
-                    <path d="M47 41l10 8-10 8"/>
-                  </svg>
-                <% } else if (icon === 'simulate') { %>
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <path d="M19 55c8-22 20-31 37-31"/>
-                    <path d="M51 19h11v11"/>
-                    <circle cx="24" cy="56" r="6"/>
-                    <circle cx="55" cy="25" r="6"/>
-                    <path d="M35 56h22"/>
-                  </svg>
-                <% } else { %>
-                  <svg viewBox="0 0 80 80" aria-hidden="true">
-                    <path d="M18 18h20v20H18z"/>
-                    <path d="M42 18h20v20H42z"/>
-                    <path d="M18 42h20v20H18z"/>
-                    <path d="M42 42h20v20H42z"/>
-                    <path d="M25 28h6M49 28h6M25 52h6M49 52h6"/>
-                  </svg>
-                <% } %>
-              </div>
-              <div class="pattern-step-copy">
-                <h3><%= stepTitle %></h3>
-                <p><%= stepText %></p>
-              </div>
-            </article>
-          <% }); %>
-        </div>
-      </div>
-    <% } %>
-
-    <% if (detailContent.geoSummary) { %>
-      <div class="model-seo-block model-geo-summary">
-        <div class="generator-section-header">
-          <span class="generator-eyebrow">AI overview</span>
-          <h2><%= model.name %> summary</h2>
-          <p><%= detailContent.geoSummary %></p>
-        </div>
-      </div>
-    <% } %>
-
-    <% if (applications.length) { %>
-      <div class="model-seo-block model-applications-section">
-        <div class="generator-section-header">
-          <span class="generator-eyebrow">Applications</span>
-          <h2>Built for real apparel decisions</h2>
-        </div>
-        <div class="generator-output-grid model-application-grid">
-          <% applications.forEach(function(application) { %>
-            <article class="generator-output-card">
-              <h3><%= application.title %></h3>
-              <p><%= application.text || application.body %></p>
-            </article>
-          <% }); %>
-        </div>
-      </div>
-    <% } %>
-
-    <% if (faqItems.length) { %>
-      <div class="model-seo-block model-faq-section generator-faq-section">
-        <div class="generator-section-header">
-          <span class="generator-eyebrow">FAQ</span>
-          <h2>Questions about this model</h2>
-        </div>
-        <div class="generator-faq-list">
-          <% faqItems.forEach(function(item, index) { %>
-            <details class="generator-faq-item" <%= index === 0 ? 'open' : '' %>>
-              <summary><%= item.question %></summary>
-              <p><%= item.answer %></p>
-            </details>
-          <% }); %>
-        </div>
-      </div>
-    <% } %>
-  </div>
-</section>
-<% } %>
-
-<!-- Related Models -->
-<% if (related && related.length > 0) { %>
-<section class="related-models-section">
-  <div class="container">
-    <h2 class="section-title">Related <%= modelCategoryName %> models</h2>
-    
-    <div class="models-grid">
-      <% related.forEach(function(item) { %>
-        <% const relatedDisplayName = String(item.name || '').replace(/\s+(?:3D\s+)?(?:Garment\s+)?Model$/i, ''); %>
-        <a href="/3d-models/<%= item.category_slug || item.category %>/<%= item.slug %>" class="model-card">
-          <div class="model-preview-3d">
-            <% if (item.image_url) { %>
-              <img src="<%= item.cover_image_url || item.image_url %>" alt="Free <%= item.name %> 3D model and apparel mockup" class="model-img" loading="lazy">
-            <% } else { %>
-              <div class="model-placeholder">
-                <span><%= item.name.charAt(0) %></span>
-              </div>
-            <% } %>
-          </div>
-          <div class="model-info">
-            <div>
-              <h3 class="model-name"><%= relatedDisplayName %></h3>
-              <span class="category-model-status">Free</span>
-            </div>
-            <span class="category-model-action">Open model <span aria-hidden="true">›</span></span>
-          </div>
-        </a>
-      <% }); %>
-    </div>
-  </div>
-</section>
-<% } %>
-
-<% if (detailCta.title || detailCta.text) { %>
-<section class="model-detail-cta">
-  <div class="container">
-    <div class="pattern-design-cta-inner">
-      <div>
-        <span class="generator-eyebrow">Design 3D</span>
-        <h2>Ready to make it yours?</h2>
-        <p>Customize this model, test your ideas, and create a review-ready mockup.</p>
-      </div>
-      <button class="btn btn-primary btn-large" id="designCtaBtn">Start Designing</button>
-    </div>
-  </div>
-</section>
-<% } %>
 
 <% if (!user) { %>
 <%- include('partials/model-login', { loginReturnPath: modelDetailPath }) %>
@@ -744,31 +443,19 @@
       <div class="design-modal-heading">
         <h2 id="designModalTitle">Design Studio</h2>
         <span class="design-modal-title-divider" aria-hidden="true">/</span>
-        <p><%= model.name %></p>
+        <p title="<%= modelDisplayName %>"><%= modelDisplayName %></p>
       </div>
-      <div class="design-header-history" role="group" aria-label="Design history">
-        <button id="toolUndo" title="Undo" type="button" aria-label="Undo">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
-          </svg>
-        </button>
-        <button id="toolRedo" title="Redo" type="button" aria-label="Redo">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-            <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
-          </svg>
-        </button>
+      <div class="studio-global-tools" role="toolbar" aria-label="Canvas and creation tools">
+        <button id="toolSelect" class="active" type="button" aria-label="Select" title="Select" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="m5 3 14 10-7 1-3 7Z"/></svg></button>
+        <button id="toolPan" type="button" aria-label="Move canvas" title="Move canvas" aria-pressed="false"><svg viewBox="0 0 24 24"><path d="M8 12V6a2 2 0 0 1 4 0v6-8a2 2 0 0 1 4 0v8-6a2 2 0 0 1 4 0v8c0 5-3 7-7 7-3 0-5-2-7-5l-3-4a2 2 0 0 1 3-3l2 3Z"/></svg></button>
+        <button id="canvasRotate" type="button" aria-label="Rotate canvas" title="Rotate canvas"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2 6M20 4v7h-7"/></svg></button>
+        <span class="studio-tool-divider"></span>
+        <button id="canvasZoomOut" type="button" aria-label="Zoom out">−</button><span id="canvasZoomLabel">100%</span><button id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
+        <span class="studio-tool-divider"></span>
+        <button id="toolText" type="button" aria-label="Add text" title="Add text"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></button>
+        <button id="toolShape" type="button" aria-label="Add shape" title="Add shape" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></button>
       </div>
-      <div class="design-save-status" id="designSaveStatus" role="status" aria-live="polite">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
-          <path d="M20 6L9 17l-5-5"/>
-        </svg>
-        <span id="designSaveStatusText">Ready</span>
-      </div>
-      <div class="design-view-switcher" id="designViewSwitcher" role="group" aria-label="Editor view">
-        <button type="button" class="active" data-design-view="2d" aria-pressed="true">2D</button>
-        <button type="button" data-design-view="3d" aria-pressed="false">3D</button>
-        <button type="button" data-design-view="split" aria-pressed="false">Split</button>
-      </div>
+      <div class="design-save-status" id="designSaveStatus" role="status" aria-live="polite"><span id="designSaveStatusText"></span></div>
       <div class="design-modal-actions">
         <button class="btn btn-primary btn-small" id="saveDesignModal" type="button">
           <span class="apply-label-desktop">Apply design</span>
@@ -790,7 +477,7 @@
         <!-- Editor Tool Rail -->
         <div class="designer-toolbar" aria-label="Design tools">
           <div class="toolbar-group">
-            <button class="toolbar-btn active" id="toolImage" title="Add Image" type="button" aria-controls="imageAssetTray" aria-pressed="true">
+            <button class="toolbar-btn active" id="toolImage" title="Image" type="button" aria-controls="imageAssetTray" aria-pressed="true">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
                 <circle cx="8.5" cy="8.5" r="1.5"/>
@@ -798,26 +485,12 @@
               </svg>
               <span>Image</span>
             </button>
-            <button class="toolbar-btn" id="toolText" title="Add Text" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 7V4h16v3M9 20h6M12 4v16"/>
-              </svg>
-              <span>Text</span>
-            </button>
-            <button class="toolbar-btn" id="toolShape" title="Add Shape" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              </svg>
-              <span>Shape</span>
-            </button>
+            <button class="toolbar-btn" id="toolMaterial" title="Material" type="button" aria-controls="garmentMaterialPanel" aria-pressed="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M12 4v16M16 4v16M4 8h16M4 12h16M4 16h16"/></svg><span>Material</span></button>
           </div>
         </div>
 
         <!-- Contextual artwork library -->
         <section class="image-asset-tray" id="imageAssetTray" aria-label="Image assets" hidden>
-          <div class="image-asset-header">
-            <h3>Images</h3>
-          </div>
           <button class="image-asset-card image-asset-upload" id="imageAssetUpload" type="button">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
               <path d="M12 16V4m0 0L8 8m4-4 4 4"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/>
@@ -829,7 +502,12 @@
             <p class="image-asset-empty" id="imageAssetEmpty" role="status">No images uploaded yet</p>
           </div>
           <div class="image-asset-progress" aria-hidden="true"><span id="imageAssetProgress"></span></div>
-          <input id="imageAssetUploadInput" type="file" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" multiple hidden>
+          <input id="imageAssetUploadInput" type="file" accept=".png,.jpg,.jpeg,.webp,.svg,image/png,image/jpeg,image/webp,image/svg+xml" multiple hidden>
+        </section>
+
+        <section class="material-panel studio-material-panel" id="garmentMaterialPanel" aria-label="Whole garment material" hidden>
+          <div class="material-swatch-grid" id="materialSwatchGrid"></div>
+          <span id="materialCount" hidden></span>
         </section>
 
         <!-- Main Texture Design Area -->
@@ -859,34 +537,32 @@
               <% } %>
               <rect id="texturePattern" width="1024" height="1024" fill="none"/>
               <g id="textureElements"></g>
+              <g id="textureOutlineLayer" class="editor-ui" pointer-events="none" aria-hidden="true"></g>
               <g id="selectionLayer" class="editor-ui"></g>
             </svg>
           </div>
-          <div class="canvas-zoom-controls" aria-label="Canvas view controls">
-            <button id="canvasRotate" type="button" aria-label="Rotate canvas clockwise. Current rotation: 0 degrees" title="Rotate canvas 90° clockwise">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M20 11a8 8 0 1 0-2.34 5.66"/>
-                <path d="M20 4v7h-7"/>
-              </svg>
-            </button>
-            <span class="canvas-zoom-divider" aria-hidden="true"></span>
-            <button id="canvasZoomOut" type="button" aria-label="Zoom out">−</button>
-            <span id="canvasZoomLabel">100%</span>
-            <button id="canvasZoomIn" type="button" aria-label="Zoom in">+</button>
-            <span class="canvas-zoom-divider" aria-hidden="true"></span>
-            <button id="canvasZoomFit" type="button" aria-label="Fit canvas">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
-                <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"/>
-              </svg>
-            </button>
-          </div>
+          <div class="studio-canvas-history" role="group" aria-label="Design history">
+        <button id="toolUndo" title="Undo" type="button" aria-label="Undo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/>
+          </svg>
+        </button>
+        <button id="toolRedo" title="Redo" type="button" aria-label="Redo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3L21 13"/>
+          </svg>
+        </button>
+      </div>
+
         </div>
 
         <!-- Live 3D preview -->
         <div class="preview-3d-panel">
           <section class="design-inspector-card design-preview-card">
+            <div class="studio-preview-caption"><strong>3D preview</strong><span>Drag to rotate</span></div>
             <div class="preview-model-stage">
               <% if (previewModelFileUrl) { %>
+                <img class="studio-preview-poster" id="designPreviewPoster" src="<%= model.image_url %>" alt="" aria-hidden="true">
                 <model-viewer
                   class="model-viewer-natural"
                   id="designerViewer"
@@ -913,7 +589,11 @@
                 ></model-viewer>
                 <div class="model-viewer-spinner" id="designPreviewLoading" role="status" aria-live="polite" hidden>
                   <i aria-hidden="true"></i>
-                  <span>Loading 3D</span>
+                  <span>Preparing preview…</span>
+                </div>
+                <div class="studio-preview-error" id="designPreviewError" role="status" hidden>
+                  <span>Preview unavailable</span>
+                  <button type="button" id="designPreviewRetry">Retry</button>
                 </div>
               <% } else { %>
                 <div class="designer-placeholder">
@@ -930,9 +610,7 @@
             <div class="appearance-section">
               <div class="appearance-fill-header">
                 <strong>Fill</strong>
-                <button id="appearancePanelCollapse" type="button" aria-label="Close appearance controls">
-                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-                </button>
+
               </div>
               <div class="appearance-color-row" role="group" aria-label="Fill colors">
                 <button class="appearance-custom-color" id="appearanceCustomColor" type="button" aria-label="Choose custom fill color" aria-haspopup="dialog" aria-expanded="false">
@@ -944,21 +622,16 @@
                 <button type="button" data-fill-color="#3f4145" aria-label="Charcoal" aria-pressed="false" style="--fill-swatch:#3f4145"><span aria-hidden="true"></span></button>
                 <button type="button" data-fill-color="#243653" aria-label="Navy" aria-pressed="false" style="--fill-swatch:#243653"><span aria-hidden="true"></span></button>
                 <button type="button" data-fill-color="#d9bfa0" aria-label="Beige" aria-pressed="false" style="--fill-swatch:#d9bfa0"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#d4d5d3" aria-label="Light gray" aria-pressed="false" style="--fill-swatch:#d4d5d3"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#a7b09b" aria-label="Sage green" aria-pressed="false" style="--fill-swatch:#a7b09b"><span aria-hidden="true"></span></button>
+                <button type="button" data-fill-color="#d4ada9" aria-label="Dusty rose" aria-pressed="false" style="--fill-swatch:#d4ada9"><span aria-hidden="true"></span></button>
               </div>
               <input id="appearanceColorStart" type="hidden" value="#ffffff">
               <input id="appearanceColorEnd" type="hidden" value="#ffffff">
               <input id="appearanceGradientAngle" type="range" min="0" max="360" value="135" hidden>
             </div>
           </section>
-          <section class="material-panel" aria-label="Material presets">
-            <div class="material-panel-header">
-              <div>
-                <h3>Material</h3>
-              </div>
-              <span class="material-panel-count" id="materialCount">0</span>
-            </div>
-            <div class="material-swatch-grid" id="materialSwatchGrid"></div>
-          </section>
+
         </aside>
       </div>
     </div>
@@ -983,12 +656,11 @@ const heroGradientTo = document.getElementById('heroGradientTo');
 const heroGradientAngle = document.getElementById('heroGradientAngle');
 const heroGradientAngleValue = document.getElementById('heroGradientAngleValue');
 const applyHeroGradient = document.getElementById('applyHeroGradient');
-const quickLightExposure = document.getElementById('quickLightExposure');
-const quickLightExposureOutput = document.getElementById('quickLightExposureOutput');
-const quickLightSoftness = document.getElementById('quickLightSoftness');
-const quickLightSoftnessOutput = document.getElementById('quickLightSoftnessOutput');
-const quickLightPresetButtons = [...document.querySelectorAll('[data-light-angle]')];
 const modelViewerPromises = new WeakMap();
+const detailEntryParams = new URLSearchParams(window.location.search);
+const entryColorValue = detailEntryParams.get('color') || '';
+const initialGarmentColor = !detailEntryParams.has('project') && !detailEntryParams.has('adminProject') && /^[0-9a-f]{6}$/i.test(entryColorValue)
+  ? `#${entryColorValue.toLowerCase()}` : null;
 const defaultDetailRenderStandard = {
   version: 'commercial-studio-stage-v3',
   camera: {
@@ -1064,7 +736,6 @@ const detailRenderStandardPromise = fetch('/config/design3d-render-standard.json
       exposure: detailSceneStandard.web.exposure,
       shadowSoftness: detailSceneStandard.web.shadowSoftness
     });
-    renderDetailLightingControls();
     return detailSceneStandard;
   })
   .catch(() => defaultDetailRenderStandard);
@@ -1107,23 +778,30 @@ function applyCatalogRenderAttributes(element, standard = detailSceneStandard) {
       ? catalogOrbitForAzimuth(standard, '90deg')
       : standard.camera?.webOrbit || defaultDetailRenderStandard.camera.webOrbit
   );
+  if (element.dataset.detailPreviewRadius) {
+    const previewOrbit = String(element.getAttribute('camera-orbit')).trim().split(/\s+/);
+    element.setAttribute('camera-orbit', `${previewOrbit[0]} ${previewOrbit[1]} ${element.dataset.detailPreviewRadius}`);
+  }
   element.autoRotate = false;
   element.removeAttribute('auto-rotate');
   element.dataset.catalogRenderVersion = standard.version || defaultDetailRenderStandard.version;
 }
 
-function applyCatalogMaterialResponse(element, standard = detailSceneStandard) {
+async function applyCatalogMaterialResponse(element, standard = detailSceneStandard) {
   if (!element?.dataset.catalogRenderStandard || !element.model) return;
-  if (standard.web?.preserveNativeMaterials) return;
+  if (standard.web?.preserveNativeMaterials && !initialGarmentColor) return;
+  if (initialGarmentColor) await Promise.all(element.model.materials.map(material => material.ensureLoaded?.()));
   const materialStandard = standard.web?.material || standard.material || defaultDetailRenderStandard.web.material;
   const baseColor = Array.isArray(materialStandard.baseColor)
     ? materialStandard.baseColor.slice(0, 3).map((value) => Number(value))
     : defaultDetailRenderStandard.material.baseColor;
-  const neutralFactor = [...baseColor, 1];
+  const neutralFactor = initialGarmentColor
+    ? [...initialGarmentColor.slice(1).match(/../g).map(value => parseInt(value, 16) / 255), 1]
+    : [...baseColor, 1];
 
   (element.model.materials || []).forEach((material) => {
     const pbr = material.pbrMetallicRoughness;
-    if (materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);
+    if (initialGarmentColor || materialStandard.neutralizeBaseColor) pbr?.setBaseColorFactor?.(neutralFactor);
     pbr?.setMetallicFactor?.(0);
     if (!pbr?.metallicRoughnessTexture?.texture) {
       pbr?.setRoughnessFactor?.(Number(materialStandard.roughness ?? 0.68));
@@ -1148,49 +826,6 @@ detailRenderStandardPromise.then((standard) => {
     applyCatalogMaterialResponse(element, standard);
   });
 });
-
-function renderDetailLightingControls() {
-  const angle = Math.max(-90, Math.min(90, Number(detailLightState.azimuthOffsetDeg) || 0));
-  const exposurePercent = Math.round(Math.max(0.55, Math.min(3, Number(detailLightState.exposure) || 1)) * 100);
-  const softnessPercent = Math.round(Math.max(0.5, Math.min(1, Number(detailLightState.shadowSoftness) || 0.9)) * 100);
-  if (quickLightExposure) quickLightExposure.value = String(exposurePercent);
-  if (quickLightSoftness) quickLightSoftness.value = String(softnessPercent);
-  if (quickLightExposureOutput) quickLightExposureOutput.textContent = `${exposurePercent}%`;
-  if (quickLightSoftnessOutput) quickLightSoftnessOutput.textContent = `${softnessPercent}%`;
-  quickLightPresetButtons.forEach((button) => {
-    const isActive = Number(button.dataset.lightAngle) === angle;
-    button.classList.toggle('active', isActive);
-    button.setAttribute('aria-pressed', String(isActive));
-  });
-}
-
-function applyDetailLightingSettings() {
-  document.querySelectorAll('[data-catalog-render-standard]').forEach((element) => {
-    element.dataset.studioLightAzimuthOffset = String(detailLightState.azimuthOffsetDeg);
-    element.setAttribute('exposure', String(detailLightState.exposure * (Number(element.dataset.designExposureRatio) || 1)));
-    element.setAttribute('shadow-softness', String(detailLightState.shadowSoftness));
-    window.CameraRelativeStudioLight?.install(element, {
-      environmentImage: element.dataset.cameraRelativeStudioLight,
-      referenceAzimuthDeg: Number(element.dataset.studioLightReferenceAzimuth || -16),
-      azimuthOffsetDeg: detailLightState.azimuthOffsetDeg
-    });
-  });
-  renderDetailLightingControls();
-}
-
-quickLightPresetButtons.forEach((button) => button.addEventListener('click', () => {
-  detailLightState.azimuthOffsetDeg = Number(button.dataset.lightAngle);
-  applyDetailLightingSettings();
-}));
-quickLightExposure?.addEventListener('input', () => {
-  detailLightState.exposure = Number(quickLightExposure.value) / 100;
-  applyDetailLightingSettings();
-});
-quickLightSoftness?.addEventListener('input', () => {
-  detailLightState.shadowSoftness = Number(quickLightSoftness.value) / 100;
-  applyDetailLightingSettings();
-});
-renderDetailLightingControls();
 
 function syncHeroColumnHeights() {
   if (!modelInfoSection || !modelViewerSection) return;
@@ -1322,7 +957,11 @@ function loadModelViewerModule() {
     script.addEventListener('load', resolve, { once: true });
     script.addEventListener('error', () => reject(new Error('3D viewer failed to load')), { once: true });
     document.head.appendChild(script);
-  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable'));
+  }).then(() => withModelViewerTimeout(customElements.whenDefined('model-viewer'), 5000, '3D viewer unavailable')).catch((error) => {
+    modelViewerModulePromise = null;
+    document.querySelector('script[data-detail-model-viewer]')?.remove();
+    throw error;
+  });
 
   return modelViewerModulePromise;
 }
@@ -1350,7 +989,7 @@ function loadModelViewerElement(element) {
   }).then(async (readyViewer) => {
     readyViewer.dismissPoster?.();
     readyViewer.removeAttribute('poster');
-    applyCatalogMaterialResponse(readyViewer, detailSceneStandard);
+    await applyCatalogMaterialResponse(readyViewer, detailSceneStandard);
     configureGarmentSoftnessAnimation(readyViewer);
     if (readyViewer.hasAttribute('data-entitlement-texture-watermark')) {
       await window.ExportEntitlements?.applyModelViewerWatermark?.(readyViewer);
@@ -1475,6 +1114,7 @@ patternBtns.forEach(btn => {
 </script>
 <script>
 window.ModelDesignerConfig = Object.freeze({
+  initialGarmentColor,
   defaultTextContent: <%- JSON.stringify(t('designStudio.defaultText')) %>,
   currentModelCategory: <%- JSON.stringify(model.category || model.category_label || model.category_slug || '') %>,
   categorySlug: <%- JSON.stringify(model.category_slug || '') %>,
@@ -1644,7 +1284,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20261004-fill-picker-v4',
+      src: '/js/model-designer.js?v=20261011-studio-v58',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1674,6 +1314,14 @@ window.ModelDesignerConfig = Object.freeze({
   const quickFabricPreview = document.getElementById('quickFabricPreview');
   const quickMaterialButtons = [...document.querySelectorAll('[data-quick-material]')];
   const quickColorButtons = [...document.querySelectorAll('[data-quick-color]')];
+  if (initialGarmentColor) {
+    quickColorButtons.forEach(button => {
+      const active = button.dataset.quickColor === initialGarmentColor
+        || (initialGarmentColor === '#171717' && button.getAttribute('aria-label') === 'Black');
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  }
 
   function closeQuickFabricMenu({ restoreFocus = false } = {}) {
     if (!quickFabricMenu || quickFabricMenu.hidden) return;
@@ -1909,10 +1557,11 @@ window.ModelDesignerConfig = Object.freeze({
 <% if (aiTryOnAvailable) { %>
 <dialog id="detailTryOnDialog" class="detail-tryon-dialog" aria-label="AI Try-on editor">
   <p class="detail-tryon-message" role="status">Loading editor…</p>
-  <iframe id="detailTryOnFrame" title="AI Try-on editor" allow="fullscreen" ></iframe>
+  <%- include('partials/ai-try-on-workspace', { embeddedTryOn: true, personModels: typeof tryOnPersonModels !== 'undefined' && Array.isArray(tryOnPersonModels) ? tryOnPersonModels : [], categorySlug: model.category_slug || model.category }) %>
   <button type="button" class="detail-tryon-loading-close" aria-label="Close AI Try-on">×</button>
 </dialog>
-<script src="/js/detail-try-on.js?v=20260923-analytics-v5" defer></script>
+<script src="/js/ai-try-on.js?v=20261011-designed-v18" defer></script>
+<script src="/js/detail-try-on.js?v=20261011-native-dialog-v7" defer></script>
 <% } %>
 
 <script src="/js/model-export-scene.js?v=20260925-zero-azimuth-v1" defer></script>
@@ -1920,4 +1569,4 @@ window.ModelDesignerConfig = Object.freeze({
 <script src="/js/cloz-dropdown.js?v=20260924-v1" defer></script>
 <script src="/js/model-export-modal.js?v=20261001-studio-render-copy-v7" defer></script>
 
-<%- include('partials/footer') %>
+<%- include('partials/footer', { footerVariant: 'workbench', enableGrowthShare: false }) %>

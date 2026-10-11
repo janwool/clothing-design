@@ -19,6 +19,7 @@ function editor({ projectId = '', failAt, authenticated = true, missingClient = 
     tryOnDesignTransferKey: 'handoff',
     modelDesignerConfig: { userAuthenticated: authenticated, modelSlug: 'shirt', modelId: 1 },
     saveDesignModal: { classList: { add() {}, remove() {} } },
+    closeColorPopover() {}, closeStudioPopover() {}, closeShapesPopover() {},
     clearHoveredTemplatePreview() {}, setAssetTrayOpen() {}, designAppearancePanel: null,
     designModal: { classList: { remove() { closed = true; } }, setAttribute() {} },
     document: { body: { style: {} } }, modalReturnFocus: null,
@@ -26,7 +27,7 @@ function editor({ projectId = '', failAt, authenticated = true, missingClient = 
     rasterizeModelTexture: async () => 'new-design',
     applyFinalTextureToViewers: async texture => { calls.push('publish'); detail = texture; },
     applyTextureToModel: async () => { calls.push('editor-preview'); return true; },
-    waitForPendingArtworkUploads: async () => {}, serializeProjectElements: () => '<g/>',
+    persistUnsavedArtwork: async () => {}, waitForPendingArtworkUploads: async () => {}, serializeProjectElements: () => '<g/>',
     serializeAppearanceState: () => ({}), captureProjectPreview: async () => 'data:image/webp;base64,test',
     window: {
       location: { href: 'https://example.com/3d-models/shirt/test', pathname: '/3d-models/shirt/test' },
@@ -121,12 +122,13 @@ test('detail viewer loading after a rejected draft uses only the last committed 
 test('material changes inside the editor do not change detail-page materials', async () => {
   const designer = { model: {} }, detail = { model: {} }, applied = [];
   const context = vm.createContext({
-    state: { appliedTextureUrl: 'draft' }, designerViewer: designer, materialSwatchGrid: null,
+    state: { appliedTextureUrl: 'draft', appearanceRevision: 0 }, textureSvg: { querySelectorAll: () => [] }, setPanelMaterial: async () => {}, saveHistory() {}, designerViewer: designer, materialSwatchGrid: null,
     setDesignSaveStatus() {}, getLoadedDesignViewers: () => [designer, detail],
     applyMaterialToViewer: async viewer => applied.push(viewer),
-    applyTextureToViewer: async viewer => applied.push(viewer)
+    applyTextureToViewer: async viewer => applied.push(viewer),
+    scheduleTexturePreviewUpdate: () => applied.push('current canvas')
   });
   vm.runInContext(extract('applyMaterialPreset', true), context);
   await context.applyMaterialPreset({ id: 'linen' }, { previewOnly: true });
-  assert.deepEqual(applied, [designer, designer]);
+  assert.deepEqual(applied, [designer, 'current canvas']);
 });

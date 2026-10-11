@@ -13,21 +13,6 @@
 
 
 /* Match the shared navigation treatment used on the brand homepage. */
-.white-mockup-library-page .navbar {
-  background: #fff;
-  backdrop-filter: none;
-}
-.white-mockup-library-page .navbar-logo .logo-text {
-  font-weight: 500;
-  letter-spacing: -0.05em;
-}
-.white-mockup-library-page .navbar-brand-icon { width: 32px; height: 32px; }
-.white-mockup-library-page .nav-link { font-size: 14px; color: var(--catalog-ink); }
-.white-mockup-library-page .opening-offer-banner {
-  background: #f3f2ee;
-  border-bottom: 1px solid #e4e3df;
-}
-.white-mockup-library-page .opening-offer-banner:hover { background: #eae9e4; }
 
 .white-mockup-library-page .white-catalog-shell {
   width: min(calc(100% - 80px), 1320px);

@@ -49,7 +49,7 @@ test('uses the Cloudflare image model for virtual try-on without exposing creden
   assert.match(browser, /fetch\('\/api\/ai-try-on'/);
   assert.match(browser, /captureGarmentImage/);
   assert.match(browser, /modelName: root\.dataset\.modelName/);
-  assert.match(browser, /projectId: new URLSearchParams\(window\.location\.search\)\.get\('project'\)/);
+  assert.match(browser, /projectId: root\.dataset\.projectId \|\| new URLSearchParams\(window\.location\.search\)\.get\('project'\)/);
   assert.match(browser, /personModelId: selectedModel\.dataset\.modelId/);
   assert.match(browser, /personModelName: selectedModel\.dataset\.modelName/);
   assert.match(integration, /images: \[personImage, garmentImage\]/);
@@ -96,7 +96,7 @@ test('normalizes Cloudflare binding and REST response envelopes', () => {
 });
 
 test('keeps the try-on page focused on 3D design and full-body model selection', () => {
-  const view = read('views/ai-try-on.ejs');
+  const view = read('views/ai-try-on.ejs') + read('views/partials/ai-try-on-workspace.ejs');
   const designerView = read('views/designer-3d.ejs');
   const styles = read('public/css/ai-try-on.css');
   assert.match(view, /<model-viewer/);
@@ -115,12 +115,12 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.doesNotMatch(view, /tryon-result__wash/);
   assert.match(view, /data-preview-state="after" data-after-result hidden/);
   assert.match(view, /class="tryon-result__ai-label" data-after-result hidden/);
-  assert.match(view, /alt="<%= tryOnModels\[0\]\.name %>, selected model for AI try-on"/);
+  assert.match(view, /alt="Selected model for AI try-on"/);
   assert.doesNotMatch(view, /tryOnModels\[0\]\.name %> wearing/);
   assert.match(view, /id="downloadTryOn" disabled aria-disabled="true"/);
   assert.match(read('public/js/ai-try-on.js'), /if \(state === 'after' && !generatedImageUrl\) state = 'before'/);
   assert.match(read('public/js/ai-try-on.js'), /setResultAvailability\(true\);\s*setPreviewState\('after'\)/);
-  assert.match(read('public/js/ai-try-on.js'), /loadProjectFromUrl\('3d'\)/);
+  assert.match(read('public/js/ai-try-on.js'), /loadProjectFromUrl\('3d', projectId\)/);
   assert.match(read('public/js/ai-try-on.js'), /clozdesign_tryon_design_v1/);
   assert.match(designerView, /id="designerAiTryOn"/);
   assert.match(designerView, /<% if \(aiTryOnAvailable\) \{ %><a class="btn btn-secondary btn-small" id="designerAiTryOn"/);
@@ -134,7 +134,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
   assert.doesNotMatch(designerView, /unpkg\.com\/@google\/model-viewer/);
   assert.match(read('public/js/ai-try-on.js'), /\/api\/project-texture\?url=/);
   assert.match(read('public/js/ai-try-on.js'), /setBaseColorFactor\?\.\(\[1, 1, 1, 1\]\)/);
-  assert.match(read('public/js/ai-try-on.js'), /designLoadPromise = loadCurrentDesign\(\)/);
+  assert.match(read('public/js/ai-try-on.js'), /then\(\(\) => loadCurrentDesign\(\)\)/);
   assert.match(read('public/js/ai-try-on.js'), /await designLoadPromise;[\s\S]*captureGarmentImage/);
   assert.match(read('public/js/ai-try-on.js'), /viewer\.autoRotate = false/);
   assert.doesNotMatch(read('public/js/ai-try-on.js'), /viewer\.autoRotate = true/);
@@ -145,7 +145,7 @@ test('keeps the try-on page focused on 3D design and full-body model selection',
 });
 
 test('enables the Meshopt decoder before loading the Try-on model viewer', () => {
-  const view = read('views/ai-try-on.ejs');
+  const view = read('views/ai-try-on.ejs') + read('views/partials/ai-try-on-workspace.ejs');
   const decoderAssignment = view.indexOf("window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0'");
   const viewerModule = view.indexOf('<script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>');
 
@@ -158,7 +158,7 @@ test('tracks the complete AI try-on entry, access, generation, and result funnel
   const browser = read('public/js/ai-try-on.js');
   const entry = read('public/js/detail-try-on.js');
   const access = read('public/js/upgrade-modal.js');
-  const view = read('views/ai-try-on.ejs');
+  const view = read('views/ai-try-on.ejs') + read('views/partials/ai-try-on-workspace.ejs');
   const modelDetail = read('views/model-detail.ejs');
   const header = read('views/partials/header.ejs');
 
@@ -195,8 +195,8 @@ test('tracks the complete AI try-on entry, access, generation, and result funnel
     'ai_tryon_access_check_error'
   ].forEach(eventName => assert.match(access, new RegExp(eventName)));
 
-  assert.match(view, /ai-try-on\.js\?v=20260926-compact-no-names-v10/);
-  assert.match(modelDetail, /detail-try-on\.js\?v=20260923-analytics-v5/);
+  assert.match(view, /ai-try-on\.js\?v=20261011-designed-v18/);
+  assert.match(modelDetail, /detail-try-on\.js\?v=20261011-native-dialog-v7/);
   assert.match(header, /upgrade-modal\.js\?v=[a-z0-9-]+/);
 });
 
@@ -214,5 +214,32 @@ test('ships the try-on template with its matching stylesheet even when route loc
     include(name, locals) { calls.push({ name, locals }); return ''; }
   });
   const header = calls.find(call => call.name === 'partials/header');
-  assert.deepEqual(header.locals.pageStyles, ['/css/ai-try-on.css?v=20260926-compact-no-names-v10']);
+  assert.deepEqual(header.locals.pageStyles, ['/css/ai-try-on.css?v=20261011-designed-v18']);
+});
+
+test('passes user requirements to the image model while preserving the try-on instructions', async () => {
+  const previousEnv = globalThis.__WORKER_ENV__;
+  let input;
+  globalThis.__WORKER_ENV__ = { AI: { run: async (_model, value) => {
+    input = value;
+    return { state: 'Completed', result: { image: 'data:image/webp;base64,AAAA' } };
+  } } };
+  try {
+    await runCloudflareTryOn({ personImage: 'data:image/png;base64,AAAA', garmentImage: 'data:image/png;base64,BBBB', requirements: '  Keep the sleeves unfolded.  ' });
+    assert.match(input.prompt, /preserving their identity/);
+    assert.match(input.prompt, /Additional user requirements/);
+    assert.ok(input.prompt.endsWith('Keep the sleeves unfolded.'));
+    assert.deepEqual(input.images, ['data:image/png;base64,AAAA', 'data:image/png;base64,BBBB']);
+  } finally { globalThis.__WORKER_ENV__ = previousEnv; }
+});
+
+test('starts with no selected model and keeps upload outside the library', () => {
+  const ejs = require('ejs');
+  const template = read('views/partials/ai-try-on-workspace.ejs');
+  const html = ejs.render(template, { personModels: require('../lib/try-on-models.json'), model: { name: 'T-shirt', slug: 'test' }, categorySlug: 't-shirt', tryOnCreditCost: 10 });
+  assert.doesNotMatch(html, /class="model-card is-selected"/);
+  assert.match(html, /data-generate disabled aria-disabled="true"/);
+  assert.match(html, /id="tryOnEmptyState"/);
+  assert.ok(html.indexOf('tryon-fixed-upload') < html.indexOf('tryon-library'));
+  assert.match(html, /id="tryOnRequirements" maxlength="1000"/);
 });

@@ -1,0 +1,22 @@
+<% const studio = toolPage.tshirtStudio; const firstModel = toolPage.modelStarters?.[0]; %>
+<section class="tmg-scene tmg-scene-<%= studio.slug %> tmg-section" aria-labelledby="tmg-scene-title">
+  <div class="tmg-shell">
+  <% if (studio.audience) { %>
+    <div class="tmg-scene-heading"><h2 id="tmg-scene-title"><%= studio.audience === 'women' ? 'Choose your silhouette' : 'Everyday T-shirt fits' %></h2><a class="tmg-text-link" href="/mockups/t-shirt-mockup">Browse T-shirts ↗</a></div>
+    <div class="tmg-audience-products tmg-audience-<%= studio.audience %>">
+      <% (toolPage.modelStarters || []).slice(0, 3).forEach(model => { %>
+        <a class="tmg-audience-card" href="<%= model.href %>#design" aria-label="Customize <%= model.title %>"><figure><img src="<%= model.image %>" alt="<%= model.title %>" width="640" height="800" loading="lazy" decoding="async"></figure><div><h3><%= model.title %></h3><span aria-hidden="true">↗</span></div></a>
+      <% }); %>
+    </div>
+  <% } else if (studio.slug === 'white-t-shirt-mockup' || studio.slug === 'black-t-shirt-mockup') { %>
+    <div class="tmg-scene-heading"><h2 id="tmg-scene-title"><%= studio.slug === 'black-t-shirt-mockup' ? 'Black T-shirt styles' : 'White T-shirt styles' %></h2><a class="tmg-text-link" href="/mockups/t-shirt-mockup">Browse T-shirts ↗</a></div>
+    <%- include('tshirt-blank-gallery', { toolPage }) %>
+  <% } else if (studio.slug === 't-shirt-logo-mockup') { %>
+    <div class="tmg-logo-product"><figure class="tmg-logo-main"><img src="/images/mockups/generated/tshirt-pod-listing.webp" alt="Example chest mark on a white T-shirt" width="1122" height="1402" loading="lazy"></figure><div class="tmg-logo-detail"><h2 id="tmg-scene-title">Chest logo<br>placement</h2><figure><img src="/images/mockups/generated/tshirt-pod-listing.webp" alt="Close view of the example chest mark and neckline" width="1122" height="1402" loading="lazy"><figcaption>Chest mark example</figcaption></figure><% if(firstModel) { %><a class="tmg-text-link tmg-editor-link" href="<%= firstModel.href %>#design">Customize your logo ↗</a><% } %></div></div>
+  <% } else if (studio.slug === 'graphic-t-shirt-mockup') { %>
+    <div class="tmg-graphic-product"><h2 id="tmg-scene-title">Front &amp; back graphics</h2><figure><div class="tmg-graphic-image"><img src="/images/mockups/generated/tshirt-front-back-approval.webp" alt="Example small front graphic paired with a larger back print" width="1122" height="1403" loading="lazy"></div><figcaption>Front and back artwork example</figcaption></figure><div class="tmg-graphic-footer"><p>Separate artwork for each garment panel.</p><% if(firstModel) { %><a class="tmg-text-link tmg-editor-link" href="<%= firstModel.href %>#design">Customize both sides ↗</a><% } %></div></div>
+  <% } else if (studio.slug === 'transparent-t-shirt-mockup') { %>
+    <div class="tmg-transparent-product"><figure data-tmg-scene-background="transparent"><img src="/images/tshirt-scenes/cotton-crewneck-white.png" alt="Actual white cotton T-shirt PNG with transparent background" width="412" height="550" loading="lazy"></figure><div><h2 id="tmg-scene-title">Transparent<br>T-shirt PNG</h2><div class="tmg-scene-swatches" role="group" aria-label="Example image background"><% [{name:'Transparent',value:'transparent'},{name:'White',value:'#ffffff'},{name:'Dark',value:'#252525'},{name:'Sand',value:'#eee5d7'}].forEach((background,index) => { %><button type="button" data-tmg-scene-swatch="<%= background.value %>" aria-label="<%= background.name %> background" aria-pressed="<%= index === 0 %>" style="--scene-swatch:<%= background.value === 'transparent' ? '#e4e4e1' : background.value %>"></button><% }); %></div><% if(firstModel) { %><a class="tmg-text-link tmg-editor-link" href="<%= firstModel.href %>#design">Create your PNG ↗</a><% } %></div></div>
+  <% } %>
+  </div>
+</section>

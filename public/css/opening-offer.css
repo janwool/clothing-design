@@ -4,8 +4,8 @@ body.has-opening-offer { --navbar-height: 110px; }
 .has-opening-offer .navbar-menu > .nav-dropdown > .nav-link {
   min-height: calc(var(--navbar-height) - 34px);
 }
-.opening-offer-banner { display: flex; align-items: center; justify-content: center; gap: 18px; height: 34px; padding: 0 16px; color: #11110f; background: #cfff35; font: 12px/1.2 var(--font-family); text-decoration: none; white-space: nowrap; }
-.opening-offer-banner:hover { color: #11110f; background: #c5f529; }
+.opening-offer-banner { display: flex; align-items: center; justify-content: center; gap: 18px; height: 34px; padding: 0 16px; color: #11110f; background: #f3f2ee; border-bottom: 1px solid #e4e3df; font: 12px/1.2 var(--font-family); text-decoration: none; white-space: nowrap; }
+.opening-offer-banner:hover { color: #11110f; background: #eae9e4; }
 .opening-offer-label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
 .opening-offer-code { font-weight: 750; padding: 3px 7px; border: 1px dashed #1117; border-radius: 3px; letter-spacing: .06em; }
 .opening-offer-deadline { opacity: .75; font-size: 11px; }

@@ -1084,10 +1084,8 @@ body.ai-chooser-open { overflow: hidden; }
 /* Fullscreen try-on keeps the detail page and current design in place. */
 .detail-tryon-dialog { position: fixed; inset: 0; width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: #f5f3ef; }
 .detail-tryon-dialog::backdrop { background: #f5f3ef; }
-.detail-tryon-dialog iframe { display: block; width: 100%; height: 100%; border: 0; }
 .detail-tryon-loading-close { position: absolute; right: 18px; top: 12px; width: 40px; height: 40px; border: 0; background: white; color: #111; font-size: 30px; }
 .detail-tryon-dialog.is-ready .detail-tryon-loading-close { display: none; }
 body.detail-tryon-open { overflow: hidden; }
-.detail-tryon-dialog:not(.is-ready) iframe { visibility: hidden; }
 .detail-tryon-message { position: absolute; left: 24px; top: 20px; margin: 0; font-size: 14px; color: #666; }
 .detail-tryon-dialog.is-ready .detail-tryon-message { display: none; }

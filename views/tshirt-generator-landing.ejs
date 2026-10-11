@@ -1,199 +1,78 @@
-<%- include('partials/header', {
-  bodyClass: 'tmg-page',
-  pageStyles: ['/css/tshirt-generator-landing.css?v=20260913-spinner-v7']
-}) %>
-
-<% const tshirtModels = toolPage.modelStarters || []; %>
-<% const firstModel = tshirtModels[0] || {}; %>
-
-<div class="tmg-landing" data-tmg-carousel>
-  <section class="tmg-hero" aria-labelledby="tmg-title">
+<%- include('partials/header', { bodyClass: 'tmg-page', pageStyles: ['/css/tshirt-generator-landing.css?nav=20261011&v=20261011-black-photos-v20'] }) %>
+<%
+  const studio = toolPage.tshirtStudio;
+  const tshirtModels = toolPage.modelStarters || [];
+  const firstModel = tshirtModels[0];
+  const blankModels = toolPage.blankModels || tshirtModels;
+  const fitLabel = model => /ruffle/i.test(model.title) ? 'Ruffle trim' : /crop/i.test(model.title) ? (/three[- ]quarter/i.test(model.title) ? '¾ sleeve crop' : 'Fitted crop') : /fitted/i.test(model.title) ? 'Fitted' : /polo/i.test(model.title) ? 'Polo' : /long[- ]sleeve/i.test(model.title) ? 'Long sleeve' : /oversized|drop[- ]shoulder/i.test(model.title) ? 'Relaxed' : 'Regular';
+  const isHub = toolPage.slug === 't-shirt-mockup-generator';
+%>
+<div class="tmg-landing" data-tmg-carousel data-color="<%= studio.color %>">
+  <section class="tmg-hero tmg-section" aria-labelledby="tmg-title">
     <div class="tmg-shell tmg-hero-grid">
       <div class="tmg-hero-copy">
-        <p class="tmg-eyebrow">Free browser T-shirt studio</p>
-        <h1 id="tmg-title">Design your next<br>T-shirt in 3D.</h1>
-        <p class="tmg-hero-lede">Start with a real garment fit, add your artwork, check every angle, and export a clean mockup—right in your browser.</p>
+        <nav class="tmg-breadcrumb" aria-label="Breadcrumb"><a href="/tools">Tools</a><span aria-hidden="true">/</span><% if (!isHub) { %><a href="/tools/t-shirt-mockup-generator">T-shirt mockups</a><span aria-hidden="true">/</span><% } %><span><%= isHub ? 'T-shirt mockups' : studio.label %></span></nav>
+        <h1 id="tmg-title"><% studio.heading.split('\n').forEach((line, index) => { %><% if (index) { %><br><% } %><%= line %><% }); %></h1>
+        <p class="tmg-hero-lede"><%= studio.lede || toolPage.subtitle %></p>
         <div class="tmg-actions">
-          <a class="tmg-button tmg-button-dark" href="<%= firstModel.href %>#design">
-            <%= firstModel.shortTitle === 'Basic' ? 'Start with the basic tee' : 'Start with this T-shirt' %>
-            <span aria-hidden="true">→</span>
-          </a>
-          <a class="tmg-button tmg-button-light" href="/mockups/t-shirt-mockup">Explore all fits</a>
+          <% if (firstModel) { %><a class="tmg-button tmg-button-dark tmg-editor-link" href="<%= firstModel.href %>#design">Customize this T-shirt <span aria-hidden="true">↗</span></a><% } %>
+          <a class="tmg-text-link" href="/mockups">Explore the fits <span aria-hidden="true">→</span></a>
         </div>
-        <p class="tmg-note">Free during beta <span aria-hidden="true">·</span> No Photoshop required</p>
       </div>
-
-      <div class="tmg-model-panel" aria-label="Interactive T-shirt model carousel">
+      <% if (firstModel) { %>
+      <div class="tmg-model-panel" aria-label="T-shirt garment preview">
         <div class="tmg-model-stage" aria-busy="true">
           <div class="tmg-model-track">
-            <% tshirtModels.forEach(function(model, index) { %>
-              <div
-                class="tmg-model-slide<%= index === 0 ? ' is-active' : '' %>"
-                data-tmg-slide
-                data-index="<%= index %>"
-                data-position="<%= index === 0 ? 'active' : (index === 1 ? 'next' : (index === tshirtModels.length - 1 ? 'previous' : 'hidden-next')) %>"
-                aria-hidden="<%= index === 0 ? 'false' : 'true' %>"
-              >
-                <model-viewer
-                  class="tmg-model-viewer"
-                  src="<%= model.modelSrc %>"
-                  alt="<%= model.title %> interactive 3D preview"
-                  loading="eager"
-                  reveal="auto"
-                  camera-controls
-                  interaction-prompt="none"
-                  shadow-intensity="0.32"
-                  shadow-softness="0.9"
-                  exposure="0.82"
-                  environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
-                  data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr"
-                  data-studio-light-reference-azimuth="-16"
-                  data-studio-light-azimuth-offset="45"
-                  tone-mapping="commerce"
-                  camera-orbit="0deg 76deg 108%"
-                  min-camera-orbit="auto 55deg 85%"
-                  max-camera-orbit="auto 105deg 140%"
-                  tabindex="<%= index === 0 ? '0' : '-1' %>"
-                ></model-viewer>
-              </div>
+            <% tshirtModels.forEach((model, index) => { %>
+            <div class="tmg-model-slide<%= index === 0 ? ' is-active' : '' %>" data-tmg-slide data-index="<%= index %>" data-position="<%= index === 0 ? 'active' : 'hidden-next' %>" aria-hidden="<%= index === 0 ? 'false' : 'true' %>">
+              <model-viewer class="tmg-model-viewer" src="<%= index === 0 ? model.modelSrc : '' %>" data-model-src="<%= model.modelSrc %>" alt="<%= model.title %> interactive preview" loading="<%= index === 0 ? 'eager' : 'lazy' %>" reveal="auto" camera-controls interaction-prompt="none" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.82" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" data-camera-relative-studio-light="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" data-studio-light-reference-azimuth="-16" data-studio-light-azimuth-offset="45" tone-mapping="commerce" camera-orbit="0deg 76deg 108%" min-camera-orbit="auto 55deg 85%" max-camera-orbit="auto 105deg 140%" tabindex="<%= index === 0 ? '0' : '-1' %>"></model-viewer>
+            </div>
             <% }); %>
           </div>
-          <div class="tmg-model-loading" data-tmg-loading aria-live="polite">
-            <span aria-hidden="true"></span>
-            <strong>Loading 3D</strong>
+          <div class="tmg-view-controls" role="group" aria-label="Garment view">
+            <% [{name:'Front',orbit:'0deg 76deg 108%'},{name:'Back',orbit:'180deg 76deg 108%'},{name:'Side',orbit:'90deg 76deg 108%'}].forEach((view,index) => { %><button type="button" data-tmg-angle="<%= view.orbit %>" aria-pressed="<%= index === 0 %>"><%= view.name %></button><% }); %>
           </div>
-
-          <button class="tmg-carousel-arrow tmg-carousel-arrow-left" type="button" data-tmg-prev aria-label="Previous T-shirt model">
-            <span aria-hidden="true">‹</span>
-          </button>
-          <button class="tmg-carousel-arrow tmg-carousel-arrow-right" type="button" data-tmg-next aria-label="Next T-shirt model">
-            <span aria-hidden="true">›</span>
-          </button>
+          <div class="tmg-color-controls" role="group" aria-label="Preview garment color">
+            <% [{name:'White',hex:'#f5f3ed'},{name:'Black',hex:'#171717'}].forEach(color => { %><button type="button" data-tmg-color="<%= color.hex %>" data-color-name="<%= color.name %>" aria-label="<%= color.name %> garment preview" aria-pressed="<%= studio.color === color.hex %>" style="--swatch:<%= color.hex %>"></button><% }); %>
+          </div>
+          <div class="tmg-model-loading" data-tmg-loading role="status" aria-label="Loading T-shirt"><span aria-hidden="true"></span></div>
+          <div class="tmg-model-error" data-tmg-error hidden><p>Preview unavailable. You can still open the editor.</p><button type="button" data-tmg-retry>Retry preview</button></div>
         </div>
-
         <div class="tmg-model-controls">
-          <p class="tmg-model-count" aria-live="polite"><span data-tmg-current>01</span> / <%= String(tshirtModels.length).padStart(2, '0') %></p>
-          <div class="tmg-model-control-row">
-            <div class="tmg-model-tabs" role="tablist" aria-label="Choose a T-shirt fit">
-              <% tshirtModels.forEach(function(model, index) { %>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected="<%= index === 0 ? 'true' : 'false' %>"
-                  tabindex="<%= index === 0 ? '0' : '-1' %>"
-                  class="tmg-model-tab<%= index === 0 ? ' is-active' : '' %>"
-                  data-tmg-model
-                  data-index="<%= index %>"
-                  data-title="<%= model.title %>"
-                  data-href="<%= model.href %>#design"
-                ><%= model.shortTitle || model.title %></button>
-              <% }); %>
-            </div>
-            <p class="tmg-drag-hint" aria-hidden="true"><span>↻</span> Drag to rotate</p>
+          <div class="tmg-model-tabs" role="group" aria-label="Choose a T-shirt fit">
+            <% tshirtModels.forEach((model,index) => { %><button type="button" class="tmg-model-tab<%= index === 0 ? ' is-active' : '' %>" aria-pressed="<%= index === 0 %>" data-tmg-model data-index="<%= index %>" data-title="<%= model.title %>" data-href="<%= model.href %>#design"><%= fitLabel(model) %></button><% }); %>
           </div>
+          <p class="tmg-preview-caption" data-tmg-caption><%= firstModel.title %></p>
+          <p class="tmg-drag-hint" data-tmg-status aria-live="polite" hidden></p>
         </div>
       </div>
+      <% } else { %>
+      <div class="tmg-empty"><img src="/images/mockups/generated/tshirt-pod-listing.webp" alt="Illustrative T-shirt artwork preview" width="640" height="800"><h2>No garment preview available.</h2><p>Browse the T-shirt library to choose another blank.</p><a class="tmg-text-link" href="/mockups/t-shirt-mockup">Browse T-shirts →</a></div>
+      <% } %>
     </div>
   </section>
 
-  <section class="tmg-fit-section" id="tshirt-fits" aria-labelledby="tmg-fit-title">
+  <% if (isHub) { %>
+  <section class="tmg-fit-section tmg-section" id="tshirt-fits" aria-labelledby="tmg-fit-title">
     <div class="tmg-shell">
-      <p class="tmg-eyebrow">Choose your fit</p>
-      <h2 id="tmg-fit-title">Pick the shape before the artwork.</h2>
-      <p class="tmg-section-lede">Start with a real garment fit and find the right look for your design.</p>
-      <div class="tmg-fit-grid">
-        <% tshirtModels.forEach(function(model) { %>
-          <article class="tmg-fit-card">
-            <a class="tmg-fit-image" href="<%= model.href %>" aria-label="Open <%= model.title %>">
-              <img src="<%= model.image %>" alt="<%= model.title %>" width="640" height="640" loading="lazy" decoding="async">
-            </a>
-            <div class="tmg-fit-card-copy">
-              <h3><%= model.title %></h3>
-              <a href="<%= model.href %>">Open model <span aria-hidden="true">→</span></a>
-            </div>
-          </article>
-        <% }); %>
-      </div>
+      <div class="tmg-section-heading"><div><h2 id="tmg-fit-title">T-shirt styles</h2></div></div>
+      <% if (blankModels.length) { %>
+      <%- include('partials/tshirt-blank-gallery', { toolPage }) %>
+      <% } else { %><p class="tmg-note">No previews available right now. <a href="/mockups/t-shirt-mockup">Browse the T-shirt library.</a></p><% } %>
     </div>
   </section>
+  <% } else { %>
+  <%- include('partials/tshirt-workflow-showcase', { toolPage }) %>
+  <% } %>
 
-  <section class="tmg-workflow" aria-labelledby="tmg-workflow-title">
-    <div class="tmg-shell tmg-workflow-grid">
-      <figure class="tmg-workflow-visual">
-        <img src="/images/mockups/generated/tshirt-workflow-studio.webp" alt="The ClozDesign basic T-shirt shown blank, with artwork, and as a finished product mockup" width="1536" height="1024" loading="lazy" decoding="async">
-      </figure>
+  <%- include('partials/tshirt-fashion-gallery', { toolPage }) %>
 
-      <div class="tmg-workflow-copy">
-        <p class="tmg-eyebrow">One simple workflow</p>
-        <h2 id="tmg-workflow-title">From blank garment<br>to finished mockup.</h2>
-        <ol class="tmg-step-list">
-          <li><span>01</span><strong>Choose a T-shirt</strong></li>
-          <li><span>02</span><strong>Add artwork and review every angle</strong></li>
-          <li><span>03</span><strong>Download your product preview</strong></li>
-        </ol>
-        <a class="tmg-button tmg-button-dark tmg-editor-link" href="<%= firstModel.href %>#design">Open T-Shirt Editor <span aria-hidden="true">→</span></a>
-      </div>
-    </div>
-  </section>
+  <section class="tmg-related tmg-section" aria-labelledby="tmg-related-title"><div class="tmg-shell"><div class="tmg-section-heading"><div><h2 id="tmg-related-title">T-shirt mockup options</h2></div></div><div class="tmg-related-grid"><% toolPage.tshirtWorkflows.filter(item => item.slug !== toolPage.slug).forEach(item => { %><a href="/tools/<%= item.slug %>"><div><h3><%= item.label %></h3><p><%= item.summary %></p></div><span aria-hidden="true">→</span></a><% }); %></div><div class="tmg-existing-links"><a href="/tools/oversized-t-shirt-mockup-generator">Oversized fits ↗</a><a href="/tools/front-and-back-t-shirt-mockup">Front &amp; back views ↗</a><a href="/tools/bulk-t-shirt-mockup-generator">Colorway sets ↗</a><a href="/tools/print-on-demand-mockup-generator">Print-on-demand ↗</a><% if (!isHub) { %><a href="/tools/t-shirt-mockup-generator">All T-shirt mockups ↗</a><% } %></div></div></section>
 
-  <section class="tmg-use-cases" aria-labelledby="tmg-use-cases-title">
-    <div class="tmg-shell">
-      <p class="tmg-eyebrow">Made for the next decision</p>
-      <h2 id="tmg-use-cases-title">See it before you print it.</h2>
-      <div class="tmg-use-case-grid">
-        <% const useCases = [
-          { title: 'Print-on-demand listings', image: '/images/mockups/generated/tshirt-pod-listing.webp', alt: 'ClozDesign basic short-sleeve T-shirt prepared as a product listing' },
-          { title: 'Streetwear drop reviews', image: '/images/mockups/generated/tshirt-streetwear-review.webp', alt: 'ClozDesign oversized drop-shoulder T-shirt with blue artwork' },
-          { title: 'Front and back approvals', image: '/images/mockups/generated/tshirt-front-back-approval.webp', alt: 'ClozDesign long-sleeve shirt shown from the front and back' }
-        ]; %>
-        <% useCases.forEach(function(item) { %>
-          <article class="tmg-use-case-card">
-            <img src="<%= item.image %>" alt="<%= item.alt %>" width="1122" height="1402" loading="lazy" decoding="async">
-            <h3><%= item.title %></h3>
-          </article>
-        <% }); %>
-      </div>
-    </div>
-  </section>
+  <section class="tmg-faq tmg-section" aria-labelledby="tmg-faq-title"><div class="tmg-shell tmg-faq-grid"><div><h2 id="tmg-faq-title">Frequently asked questions</h2><a class="tmg-text-link" href="/pricing">View plans →</a></div><div class="tmg-faq-list"><% toolPage.faq.forEach((item,index) => { %><details><summary><%= item.question %><span aria-hidden="true">+</span></summary><p><%= item.answer %></p></details><% }); %></div></div></section>
 
-  <section class="tmg-faq" aria-labelledby="tmg-faq-title">
-    <div class="tmg-shell tmg-faq-grid">
-      <div>
-        <h2 id="tmg-faq-title">Questions before you start.</h2>
-        <p>Everything you need to know, in one place.</p>
-      </div>
-      <div class="tmg-faq-list">
-        <% (toolPage.faq || []).slice(0, 4).forEach(function(item, index) { %>
-          <details<%= index === 0 ? ' open' : '' %>>
-            <summary><%= index === 3 ? 'Can I use oversized and long-sleeve models?' : item.question %><span aria-hidden="true"></span></summary>
-            <p><%= item.answer %></p>
-          </details>
-        <% }); %>
-      </div>
-    </div>
-  </section>
-
-  <section class="tmg-final-wrap">
-    <div class="tmg-shell">
-      <div class="tmg-final-cta">
-        <div>
-          <h2>Start with the fit that matches your idea.</h2>
-          <p>Open the T-shirt editor and bring your design to life.</p>
-        </div>
-        <div class="tmg-final-actions">
-          <a class="tmg-button tmg-button-white tmg-editor-link" href="<%= firstModel.href %>#design">Open T-Shirt Editor <span aria-hidden="true">→</span></a>
-          <a class="tmg-text-link" href="/mockups">Browse Apparel Models <span aria-hidden="true">→</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
 </div>
-
-<script>
-  window.ModelViewerElement = window.ModelViewerElement || {};
-  window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';
-</script>
-<script src="/js/tshirt-generator-landing.js?v=20260910-v5" defer></script>
-<script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
-
+<script>window.ModelViewerElement = window.ModelViewerElement || {}; window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';</script>
+<script src="/js/tshirt-generator-landing.js?v=20261011-black-photos-v20" defer></script>
+<script type="module" data-tmg-runtime src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
 <%- include('partials/footer') %>

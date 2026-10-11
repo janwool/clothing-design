@@ -156,6 +156,10 @@ router.post('/', async (req, res) => {
     });
   }
 
+  const requirements = req.body?.requirements;
+  if (requirements !== undefined && (typeof requirements !== 'string' || requirements.length > 1000)) {
+    return res.status(400).json({ success: false, error: 'Requirements must be text of up to 1,000 characters.' });
+  }
   const personImage = req.body?.personImage;
   const garmentImage = req.body?.garmentImage;
   if (!validImageData(personImage) || !validImageData(garmentImage)) {
@@ -177,7 +181,7 @@ router.post('/', async (req, res) => {
       }
       creditReservation = creditAccess;
     }
-    const result = await runCloudflareTryOn({ personImage, garmentImage });
+    const result = await runCloudflareTryOn({ personImage, garmentImage, requirements: requirements?.trim() || '' });
     generationCompleted = true;
     const savedResult = req.session?.user?.id
       ? await saveTryOnResult(req.session.user.id, result.image, {

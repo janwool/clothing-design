@@ -1,0 +1,38 @@
+{
+  "tool": "image_gen",
+  "prompt": "Use case: identity-preserve. Edit target: the single supplied original Fashion Mockup catalog photograph. Change ONLY the entire white upper garment to realistic matte BLACK cotton (#171717 black, natural soft lighting with visible fabric grain and fold highlights). Dye ALL parts of this same garment black: torso, full sleeves, collar ribbing, neckline piping, button placket, cuffs, stitching and bottom hem, leaving absolutely no white garment strip at neckline/sleeve/hem. Retain exactly the original garment shape and cut, seams, fabric folds, silhouette and fit. Preserve the exact person identity, face, hair, skin color, body, pose, hands, trousers, footwear, entire original backdrop, lighting, shadows, camera, framing and aspect ratio. Do not crop or move the person. Do not add any text, graphic, logo, watermark or border. Produce one finished standalone photorealistic catalog image, not a collage or UI.",
+  "assets": [
+    {
+      "name": "young-western-female-tee-v4",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-13f373a9-35b4-4106-96d6-068508747a93.png"
+    },
+    {
+      "name": "crewneck-tee-male-front",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-90e341c7-05dd-46a4-93b6-b43411274035.png"
+    },
+    {
+      "name": "model-010-longline-short-sleeve-top-from3d-v2-female",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-3dcbb83a-4017-47f1-837d-1cc6424f1eda.png"
+    },
+    {
+      "name": "model-023-classic-v-neck-tshirt-from3d-v2-male",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-f8bb61d6-384c-4eba-926b-09fffe318c8a.png"
+    },
+    {
+      "name": "young-western-female-henley-v7",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-1a49d7a2-4647-4c1d-8fb6-3d5d9e625b13.png"
+    },
+    {
+      "name": "panel-tee-european-male-candid",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-4a9f57de-0e03-492f-99ec-3f482e66da6a.png"
+    },
+    {
+      "name": "young-western-female-polo-v5",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-afd7842a-d95c-48d4-aefb-966c7e82f113.png"
+    },
+    {
+      "name": "long-sleeve-crewneck-male-front",
+      "path": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-e045f8e7-1cc2-426f-a1ee-9d0f9910de14.png"
+    }
+  ]
+}

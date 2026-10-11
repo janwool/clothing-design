@@ -2,93 +2,86 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
-
+const ejs = require('ejs');
+const { mainStudio, workflows, workflowPaths, selectAudienceStarters } = require('../lib/tshirt-workflows');
 const root = path.join(__dirname, '..');
-const template = fs.readFileSync(path.join(root, 'views', 'tshirt-generator-landing.ejs'), 'utf8');
-const stylesheet = fs.readFileSync(path.join(root, 'public', 'css', 'tshirt-generator-landing.css'), 'utf8');
-const carousel = fs.readFileSync(path.join(root, 'public', 'js', 'tshirt-generator-landing.js'), 'utf8');
-const routes = fs.readFileSync(path.join(root, 'routes', 'index.js'), 'utf8');
-
-test('uses a dedicated landing page for the T-shirt generator only', () => {
-  assert.match(routes, /req\.params\.slug === 't-shirt-mockup-generator'[\s\S]*?'tshirt-generator-landing'[\s\S]*?: 'tool-detail'/);
-  assert.match(template, /Design your next<br>T-shirt in 3D\./);
-  assert.doesNotMatch(template, /tool-detail-hero|tool-quick-editor|keywordClusters/);
+const template = fs.readFileSync(path.join(root, 'views/tshirt-generator-landing.ejs'), 'utf8');
+const sitemap = fs.readFileSync(path.join(root, 'public/sitemap.xml'), 'utf8');
+const starter = { title: 'Basic short-sleeve T-shirt', href: '/3d-models/t-shirt-mockup/real-blank', image: '/blank.webp', modelSrc: '/blank.glb' };
+const renderInclude = (name, locals) => {
+  if (name === 'tshirt-blank-gallery') name = `partials/${name}`;
+  return name.startsWith('partials/tshirt-')
+    ? ejs.render(fs.readFileSync(path.join(root, 'views', `${name}.ejs`), 'utf8'), { ...locals, include: renderInclude })
+    : '';
+};
+const render = (studio, slug, models = [starter], blankModels = models) => ejs.render(template, {
+  include: renderInclude,
+  toolPage: { ...studio, slug, tshirtStudio: studio, tshirtWorkflows: workflows, modelStarters: models, blankModels, faq: studio.faq }
 });
 
-test('keeps one aligned page shell and the approved concise section order', () => {
-  assert.match(stylesheet, /\.tmg-shell\s*\{[\s\S]*?1200px/);
-  const sections = [
-    'tmg-hero',
-    'tmg-fit-section',
-    'tmg-workflow',
-    'tmg-use-cases',
-    'tmg-faq',
-    'tmg-final-wrap'
-  ];
-  sections.reduce((previousIndex, section) => {
-    const index = template.indexOf(section);
-    assert.ok(index > previousIndex, `${section} should appear in the approved order`);
-    return index;
-  }, -1);
+test('hub automatically loads 3D with only a spinner, truthful pricing and workflow links', () => {
+  const html = render(mainStudio, 't-shirt-mockup-generator');
+  assert.match(html, /T-shirt mockup<br>generator\./);
+  assert.doesNotMatch(html, /tmg-model-poster|Preparing preview/);
+  assert.match(html, /data-tmg-loading role="status" aria-label="Loading T-shirt"/);
+  assert.match(html, /src="\/blank.glb"[\s\S]*?loading="eager"/);
+  assert.match(html, /Finished design exports and watermark removal require Pro/);
+  assert.match(html, /data-tmg-retry/);
+  assert.doesNotMatch(html, /Load interactive 3D|Free during beta/);
+  assert.doesNotMatch(html, /Canva|canva-t-shirt-mockup/);
+  workflowPaths.forEach(url => assert.ok(html.includes(`href="${url}"`)));
 });
 
-test('preloads every real 3D model in one transparent animated carousel', () => {
-  assert.match(template, /<model-viewer[\s\S]*?camera-controls[\s\S]*?<\/model-viewer>/);
-  assert.match(template, /tshirtModels\.forEach[\s\S]*?class="tmg-model-viewer"[\s\S]*?src="<%= model\.modelSrc %>"/);
-  assert.match(template, /loading="eager"/);
-  assert.match(template, /\/vendor\/model-viewer\/model-viewer\.min\.js/);
-  assert.match(template, /ModelViewerElement\.meshoptDecoderLocation/);
-  assert.match(template, /data-tmg-prev/);
-  assert.match(template, /data-tmg-next/);
-  assert.match(carousel, /slides\.forEach/);
-  assert.match(carousel, /slide\.dataset\.position = slidePosition/);
-  assert.doesNotMatch(carousel, /setAttribute\('src'/);
-  assert.match(stylesheet, /\.tmg-model-panel\s*\{[\s\S]*?background: transparent/);
-  assert.match(stylesheet, /\.tmg-model-stage\s*\{[\s\S]*?background: transparent !important/);
-  assert.match(stylesheet, /\.tmg-model-viewer\s*\{[\s\S]*?background: transparent !important/);
-  assert.match(stylesheet, /transform 620ms cubic-bezier/);
-  assert.doesNotMatch(template, /slot="poster"|tmg-model-peek/);
-  assert.doesNotMatch(template, /Retry interactive 3D|Load interactive 3D/);
-});
-
-test('keeps the first-model CTA accurate while generic editor CTAs follow the carousel', () => {
-  assert.match(template, /class="tmg-button tmg-button-dark" href="<%= firstModel\.href %>#design">[\s\S]*?firstModel\.shortTitle === 'Basic'[\s\S]*?Start with this T-shirt/);
-  assert.match(template, /class="tmg-button tmg-button-light" href="\/mockups\/t-shirt-mockup">Explore all fits<\/a>/);
-  assert.equal((template.match(/tmg-editor-link/g) || []).length, 2);
-  assert.match(carousel, /editorLinks\.forEach/);
-});
-
-test('uses four active T-shirt database models and their current online assets', () => {
-  [
-    'basic-short-sleeve-tshirt-3d-model',
-    'oversized-crew-neck-t-shirt-mockup-with-drop-shoulder-fit',
-    'short-sleeve-polo-shirt-3d-model',
-    'long-sleeve-crewneck-shirt-3d-model'
-  ].forEach(slug => {
-    assert.match(routes, new RegExp(slug));
+test('every scene page has its own product layout, FAQs and reciprocal links', () => {
+  assert.equal(workflows.length, 7);
+  assert.equal(new Set(workflows.map(item => item.heading)).size, 7);
+  workflows.forEach(studio => {
+    const html = render(studio, studio.slug);
+    assert.ok(html.includes(`tmg-scene-${studio.slug}`));
+    assert.doesNotMatch(html, /tmg-check-section|tmg-workflow-copy|tmg-step-list/);
+    studio.faq.forEach(item => assert.ok(html.includes(ejs.escapeXML(item.answer))));
+    assert.ok(html.includes('href="/tools/t-shirt-mockup-generator"'));
+    assert.ok(!html.includes(`href="/tools/${studio.slug}"`));
+    assert.ok(fs.existsSync(path.join(root, 'public', studio.workflowImage)));
+    assert.ok(sitemap.includes(`<loc>https://www.cloz-design.com/tools/${studio.slug}</loc>`));
   });
-  assert.match(routes, /getActiveTshirtModelStarters\(req\)/);
-  assert.match(routes, /WHERE m\.status = \?[\s\S]*?category_tshirt\.slug = \?/);
-  assert.match(routes, /selectFirstMatch\(name => \/short\[- \]sleeve/);
-  assert.match(routes, /selectFirstMatch\(name => \/oversized\|drop/);
-  assert.match(routes, /selectFirstMatch\(name => \/polo/);
-  assert.match(routes, /selectFirstMatch\(name => \/long\[- \]sleeve/);
-  assert.match(routes, /selectedModels\.slice\(0, 4\)/);
-  assert.match(routes, /modelSrc: getPreviewModelFileUrl\(model, req\)/);
-  assert.match(routes, /image: model\.image_url/);
-  assert.match(routes, /\['active', 't-shirt-mockup', 't-shirt-mockup'\]/);
 });
 
-test('uses generated garment photography instead of programmatic workflow artwork', () => {
-  [
-    'tshirt-workflow-studio.webp',
-    'tshirt-pod-listing.webp',
-    'tshirt-streetwear-review.webp',
-    'tshirt-front-back-approval.webp'
-  ].forEach(file => {
-    assert.match(template, new RegExp(`/images/mockups/generated/${file.replace('.', '\\.')}`));
-    assert.ok(fs.existsSync(path.join(root, 'public', 'images', 'mockups', 'generated', file)));
-  });
-  assert.doesNotMatch(template, /tmg-artwork-sample|tmg-workflow-arrow|toolPage\.visualGallery/);
-  assert.doesNotMatch(stylesheet, /tmg-artwork-sample|tmg-workflow-image-export/);
+test('empty model state provides a useful destination without dead editor links', () => {
+  const html = render(mainStudio, 't-shirt-mockup-generator', []);
+  assert.match(html, /No garment preview available/);
+  assert.match(html, /href="\/mockups\/t-shirt-mockup"/);
+  assert.doesNotMatch(html, /undefined#design|<model-viewer/);
+  assert.doesNotMatch(html, /data-tmg-blank-gallery/);
+});
+
+test('blank gallery includes the catalog beyond the four interactive hero styles', () => {
+  const catalog = Array.from({ length: 24 }, (_, index) => ({
+    ...starter, title: `Catalog T-shirt ${index + 1}`, href: `/3d-models/t-shirt-mockup/blank-${index + 1}`
+  }));
+  const html = render(mainStudio, 't-shirt-mockup-generator', catalog.slice(0, 4), catalog);
+  assert.equal((html.match(/<model-viewer/g) || []).length, 4);
+  assert.equal((html.match(/class="tmg-fit-card"/g) || []).length, 24);
+  assert.match(html, /href="\/3d-models\/t-shirt-mockup\/blank-24#design"/);
+  assert.match(html, /data-tmg-blank-track[\s\S]*?tabindex="0"/);
+});
+
+test('black and white pages have different automatic preview colors', () => {
+  const black = workflows.find(item => item.slug === 'black-t-shirt-mockup');
+  const white = workflows.find(item => item.slug === 'white-t-shirt-mockup');
+  assert.match(render(black, black.slug), /data-color="#171717"/);
+  assert.match(render(white, white.slug), /data-color="#f5f3ed"/);
+});
+
+test('audience collections prioritize available silhouettes and keep real editor destinations', () => {
+  const models = ['Crewneck Straight-Cut Short-Sleeve T-Shirt', 'Relaxed Crewneck Drop-Shoulder Elbow-Sleeve T-Shirt', 'High-Neck Straight-Cut Long-Sleeve T-Shirt', 'V-Neck Fitted Short-Sleeve T-Shirt', 'Fitted Crewneck Long-Sleeve Crop T-Shirt', 'Ruffle-Trim Crewneck Short-Sleeve T-Shirt'].map((title, index) => ({ ...starter, title, href: `/actual-model-${index}` }));
+  const women = selectAudienceStarters(models, 'women');
+  const men = selectAudienceStarters(models, 'men');
+  assert.equal(women[0], models[3]);
+  assert.equal(women[1], models[4]);
+  assert.equal(women[2], models[5]);
+  assert.deepEqual(men.slice(0, 3), models.slice(0, 3));
+  assert.equal(new Set(women).size, women.length);
+  assert.deepEqual(selectAudienceStarters([], 'women'), []);
+  assert.deepEqual(selectAudienceStarters([models[0]], 'women'), [models[0]]);
 });

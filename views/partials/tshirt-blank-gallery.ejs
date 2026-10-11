@@ -1,0 +1,18 @@
+<% const galleryModels = toolPage.blankModels || toolPage.modelStarters || []; %>
+<% if (galleryModels.length) { %>
+<div class="tmg-blank-gallery" data-tmg-blank-gallery>
+  <% if (toolPage.slug === 't-shirt-mockup-generator') { %>
+  <div class="tmg-blank-toolbar"><div class="tmg-blank-actions"><a class="tmg-text-link" href="/mockups/t-shirt-mockup">Browse all T-shirts ↗</a></div></div>
+  <% } %>
+  <div class="tmg-fit-track" id="tmg-blank-track" data-tmg-blank-track role="region" aria-label="T-shirt styles. Scroll horizontally to browse." tabindex="0">
+    <% galleryModels.forEach(model => { %>
+    <a class="tmg-fit-card" href="<%= model.href %>#design" aria-label="Customize <%= model.title %>">
+      <div class="tmg-card-content">
+      <div class="tmg-fit-image"><img src="<%= model.image %>" alt="<%= model.title %>" width="800" height="1000" loading="lazy" decoding="async"></div>
+      <div class="tmg-fit-card-copy"><h3><%= model.title %></h3></div>
+      </div>
+    </a>
+    <% }); %>
+  </div>
+</div>
+<% } %>

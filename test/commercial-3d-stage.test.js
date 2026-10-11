@@ -12,7 +12,7 @@ test('uses one commercial studio treatment across public interactive garment sta
     'views/tshirt-generator-landing.ejs',
     'views/hoodie-generator-landing.ejs',
     'views/tool-detail.ejs',
-    'views/ai-try-on.ejs',
+    'views/partials/ai-try-on-workspace.ejs',
     'views/designer-3d.ejs'
   ];
 

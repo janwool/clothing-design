@@ -1,0 +1,27 @@
+{
+  "tool": "built-in imagegen",
+  "prompt": "Use case: precise-object-edit. Edit the attached existing ClozDesign product cover. Change ONLY the garment fabric color to a true matte black cotton jersey, including collar, cuffs and inside neckline; maintain visible folds and subtle cotton texture under soft studio lighting. Preserve the exact original garment silhouette, shoulder placement, sleeve length, collar shape, hem, camera angle, framing, product scale and plain warm off-white background. Keep the existing small 'Cloz DESIGN' chest mark at the same location and size, make it subtle light grey for legibility on black. Maintain a clean commercial e-commerce product cover, a single garment with no body or mannequin, no extra text or branding, no border or inset image, no second background layer. Portrait 4:5 composition, entire garment visible, consistent with reference.",
+  "files": [
+    {
+      "slug": "crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-a5cb446a-e8bf-4e97-b9ac-4880114fcc5c.png",
+      "target": "public/images/tshirt-studio/black-covers-v2/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.webp"
+    },
+    {
+      "slug": "relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-0f9951cc-e272-4275-83bd-f9fd863e9642.png",
+      "target": "public/images/tshirt-studio/black-covers-v2/relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea.webp"
+    },
+    {
+      "slug": "chest-pocket-three-quarter-sleeve-polo-shirt-3d-model-3026783b6b40",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-0d23929e-4b69-4a1d-a2d2-92ddbe4c5082.png",
+      "target": "public/images/tshirt-studio/black-covers-v2/chest-pocket-three-quarter-sleeve-polo-shirt-3d-model-3026783b6b40.webp"
+    },
+    {
+      "slug": "high-neck-straight-cut-long-sleeve-top-3d-model-0eee7d43debd",
+      "source": "/Users/chengwuxue/.codex/generated_images/01a129a3-15fe-7882-9f02-1deba8a3733b/exec-06c3ec70-7e73-4ac0-ba44-534fe84af41c.png",
+      "target": "public/images/tshirt-studio/black-covers-v2/high-neck-straight-cut-long-sleeve-top-3d-model-0eee7d43debd.webp"
+    }
+  ],
+  "encoding": "WebP quality 92; original imagegen output retained at each source path; no cropping or resizing."
+}

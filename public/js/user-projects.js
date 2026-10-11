@@ -94,8 +94,8 @@
     return result.project;
   }
 
-  async function loadProjectFromUrl(expectedType) {
-    const projectId = adminProjectId || new URLSearchParams(window.location.search).get('project');
+  async function loadProjectFromUrl(expectedType, explicitProjectId) {
+    const projectId = adminProjectId || explicitProjectId || new URLSearchParams(window.location.search).get('project');
     if (!projectId) return null;
     const result = await request(isAdminPreview
       ? `/admin/projects/${encodeURIComponent(projectId)}/design`

@@ -29,9 +29,12 @@ const {
 } = require('../lib/seo');
 const { modelCover, siteImage } = require('../lib/site-assets');
 const { isAiTryOnEnabled } = require('../lib/feature-flags');
+const { selectTshirtFashion } = require('../lib/tshirt-fashion');
+const { mainStudio: tshirtMainStudio, workflows: tshirtWorkflows, bySlug: tshirtWorkflowBySlug, selectAudienceStarters } = require('../lib/tshirt-workflows');
 const { articles: blogArticles, articleResourceLinks, findArticle, relatedArticles } = require('../lib/blog-content');
 const { targetForLegacyPattern, targetForLegacyPatternId } = require('../lib/legacy-patterns');
 const svgMaskQueueManifest = require('../public/config/on-model-svg-mask-queue.json');
+const tshirtBlackPosters = require('../public/config/tshirt-studio-posters.json');
 const { FASHION_MOCKUP_CATEGORIES, getFashionMockupCategory } = require('../lib/fashion-mockup-categories');
 
 const MOCKUP_WORKFLOW_IMAGES = [
@@ -263,7 +266,7 @@ function tshirtStarterShortTitle(model, title) {
   return words.slice(0, 3).join(' ') || `Tee ${model.id}`;
 }
 
-async function getActiveTshirtModelStarters(req) {
+async function getActiveTshirtModelStarters(req, limit = 4) {
   await ensureModelCategoryTable();
   const models = await db.all(`
     ${getModelCategorySelect()}
@@ -302,7 +305,10 @@ async function getActiveTshirtModelStarters(req) {
     if (match) selectedModels.push(match);
   };
 
-  selectFirstMatch(name => /short[- ]sleeve/i.test(name) && !/drop[- ]shoulder|long[- ]sleeve|polo|ruffle|placket|set/i.test(name));
+  selectFirstMatch(name => /crewneck|crew[- ]neck/i.test(name) && /straight[- ]cut|straight[- ]fit/i.test(name) && /short[- ]sleeve/i.test(name) && !/cuff|roll/i.test(name));
+  if (!selectedModels.length) {
+    selectFirstMatch(name => /short[- ]sleeve/i.test(name) && !/cuff|roll|drop[- ]shoulder|long[- ]sleeve|polo|ruffle|placket|set/i.test(name));
+  }
   selectFirstMatch(name => /oversized|drop[- ]shoulder/i.test(name));
   selectFirstMatch(name => /polo/i.test(name));
   selectFirstMatch(name => /long[- ]sleeve/i.test(name));
@@ -310,16 +316,19 @@ async function getActiveTshirtModelStarters(req) {
     if (selectedModels.length < 4 && !selectedModels.includes(model)) selectedModels.push(model);
   });
 
-  return selectedModels.slice(0, 4).map(model => {
+  const orderedModels = [...selectedModels, ...normalizedModels.filter(model => !selectedModels.includes(model))];
+  return orderedModels.slice(0, limit).map(model => {
     const metadata = TSHIRT_STARTER_METADATA[model.slug] || {};
     const title = metadata.title || tshirtStarterTitle(model);
     const categorySlug = model.category_slug || 't-shirt-mockup';
     return {
       title,
       shortTitle: metadata.shortTitle || tshirtStarterShortTitle(model, title),
+      blackImage: tshirtBlackPosters[model.slug] || null,
       body: metadata.body || sanitizePublicModelDescription(model.description),
       href: `/3d-models/${categorySlug}/${model.slug}`,
-      image: model.image_url,
+      image: shouldUseLocalModelAssets(req) && fs.existsSync(path.join(__dirname, '..', 'public', 'images', 'model-covers', 'render-branded-v2', `${model.slug}.webp`))
+        ? `/images/model-covers/render-branded-v2/${model.slug}.webp` : model.image_url,
       modelSrc: getPreviewModelFileUrl(model, req)
     };
   });
@@ -1751,6 +1760,18 @@ const TOOL_VARIANT_CONTENT = {
 };
 
 function getToolPage(slug) {
+  const studio = slug === 't-shirt-mockup-generator' ? tshirtMainStudio : tshirtWorkflowBySlug[slug];
+  if (studio) {
+    const base = TOOL_PAGE_CONTENT['t-shirt-mockup-generator'];
+    return { ...base, ...studio, slug,
+      title: slug === 't-shirt-mockup-generator' ? 'T-Shirt Mockup Generator — Free 3D Preview' : studio.title,
+      subtitle: slug === 't-shirt-mockup-generator' ? 'Create T-shirt mockups online. Choose a blank, preview colors and angles, then place your artwork in the editor. Free to explore; finished exports need Pro.' : studio.subtitle,
+      image: studio.workflowImage,
+      steps: [], faq: studio.faq, tshirtStudio: studio, tshirtWorkflows, related: [],
+      modelStarters: [],
+      editorHref: '/mockups/t-shirt-mockup'
+    };
+  }
   const variant = TOOL_VARIANT_CONTENT[slug];
   const basePage = variant ? TOOL_PAGE_CONTENT[variant.base] : null;
   const page = variant ? {
@@ -1812,6 +1833,7 @@ function buildToolStructuredData(req, toolPage) {
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
         isAccessibleForFree: true,
+        ...(toolPage.tshirtStudio ? { description: 'Free garment preview. Finished design exports require Pro or above.' } : {}),
         featureList: [
           'Interactive 3D garment preview',
           'Garment color controls',
@@ -1828,7 +1850,7 @@ function buildToolStructuredData(req, toolPage) {
         screenshot: firstImage(req, [toolPage.image])
       }
     }),
-    {
+    ...(toolPage.tshirtStudio ? [] : [{
       '@context': 'https://schema.org',
       '@type': 'HowTo',
       name: `How to use ${toolPage.title}`,
@@ -1839,7 +1861,7 @@ function buildToolStructuredData(req, toolPage) {
         name: step.title || undefined,
         text: step.body || step
       }))
-    },
+    }]),
     {
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
@@ -2395,7 +2417,7 @@ router.get('/white-mockups', async (req, res) => {
       metaDescription: description,
       metaImage: firstImage(req, library.assets.map(asset => asset.base_image_url)),
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20261011-full-width-hero-v7'],
+      pageStyles: ['/css/white-mockups.css?v=20261011-navigation-v8'],
       assets: library.assets,
       assetSummary: summary,
       activeType,
@@ -2415,7 +2437,7 @@ router.get('/white-mockups', async (req, res) => {
       title: 'On-Model Fashion Mockups | ClozDesign',
       metaDescription: 'Browse customizable on-model fashion mockups by clothing type.',
       page: 'white-mockups',
-      pageStyles: ['/css/white-mockups.css?v=20261011-full-width-hero-v7'],
+      pageStyles: ['/css/white-mockups.css?v=20261011-navigation-v8'],
       assets: [],
       assetSummary: { total: 0, mappedModels: 0, counts: {} },
       activeType: '',
@@ -2502,7 +2524,7 @@ router.get('/white-mockups/:assetName', async (req, res) => {
       ],
       page: 'white-mockups',
       pageStyles: [
-        '/css/white-mockups.css?v=20261011-full-width-hero-v7',
+        '/css/white-mockups.css?v=20261011-navigation-v8',
         '/css/white-mockup-detail.css?v=20261004-artworks-left-v3'
       ],
       asset,
@@ -2603,7 +2625,7 @@ router.get('/mockups', async (req, res) => {
         getUrl: model => `/3d-models/${model.category_slug || model.category}/${model.slug}`
       }),
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-navigation-v12'],
       models: displayModels,
       catalogModels: normalizedModels,
       catalogTotal: libraryTotal,
@@ -2634,7 +2656,7 @@ router.get('/mockups', async (req, res) => {
         ]
       }),
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-navigation-v12'],
       models: [],
       catalogModels: [],
       catalogTotal: 0,
@@ -2709,6 +2731,7 @@ router.get('/tools', (req, res) => {
   const description = 'Design clothing online with free 3D garment models, apparel mockup generators, artwork previews, and transparent exports for ecommerce and POD.';
   res.render('tools', { 
     title: req.t('tools.title'),
+    tshirtWorkflows,
     metaDescription: description,
     metaImage: firstImage(req, [siteImage('tools/3d-mockup.webp')]),
     structuredData: buildSimplePageStructuredData(req, {
@@ -2736,7 +2759,8 @@ router.get('/tools', (req, res) => {
           { '@type': 'ListItem', position: 10, name: 'Long Sleeve Shirt Mockup Generator', url: toAbsoluteUrl(req, '/tools/long-sleeve-shirt-mockup-generator') },
           { '@type': 'ListItem', position: 11, name: 'Streetwear Hoodie Mockup Generator', url: toAbsoluteUrl(req, '/tools/streetwear-hoodie-mockup-generator') },
           { '@type': 'ListItem', position: 12, name: 'Transparent Apparel Mockup Generator', url: toAbsoluteUrl(req, '/tools/transparent-apparel-mockup-generator') },
-          { '@type': 'ListItem', position: 13, name: '3D Pants Generator', url: toAbsoluteUrl(req, '/tools/3d-pants-generator') }
+          { '@type': 'ListItem', position: 13, name: '3D Pants Generator', url: toAbsoluteUrl(req, '/tools/3d-pants-generator') },
+          ...tshirtWorkflows.map((item, index) => ({ '@type': 'ListItem', position: index + 14, name: item.title, url: toAbsoluteUrl(req, `/tools/${item.slug}`) }))
         ]
       }
     }),
@@ -3139,7 +3163,7 @@ router.get('/mockups/:slug', async (req, res) => {
         }
       ],
       page: 'design-3d',
-      pageStyles: ['/css/mockups-library.css?v=20261011-home-brand-v9'],
+      pageStyles: ['/css/mockups-library.css?v=20261011-navigation-v12'],
       activeCategory: { ...category, meta_title: seoTitle, description },
       currentCategoryTotal: normalizedItems.length,
       models: displayModels,
@@ -3292,14 +3316,22 @@ router.get('/tools/:slug', async (req, res) => {
   const toolPage = getToolPage(req.params.slug);
   if (toolPage) {
     const isTshirtGenerator = req.params.slug === 't-shirt-mockup-generator';
+    const isTshirtStudio = isTshirtGenerator || Boolean(tshirtWorkflowBySlug[req.params.slug]);
     let renderedToolPage = toolPage;
-    if (isTshirtGenerator) {
+    if (isTshirtStudio) {
       try {
-        const activeModelStarters = await getActiveTshirtModelStarters(req);
+        const audience = toolPage.tshirtStudio?.audience;
+        const availableBlanks = await getActiveTshirtModelStarters(req, isTshirtGenerator || audience || req.params.slug === 'white-t-shirt-mockup' ? 24 : 4);
+        const activeBlanks = audience ? selectAudienceStarters(availableBlanks, audience) : availableBlanks;
+        const activeModelStarters = activeBlanks.slice(0, 4).map(model => toolPage.slug === 'black-t-shirt-mockup'
+          ? { ...model, href: `${model.href}?color=171717`, image: model.blackImage || model.image }
+          : model);
         if (activeModelStarters.length) {
           renderedToolPage = {
             ...toolPage,
             modelStarters: activeModelStarters,
+            blankModels: toolPage.slug === 'black-t-shirt-mockup' ? activeModelStarters.filter(model => model.blackImage) : activeBlanks,
+            ...(toolPage.tshirtStudio?.color === '#171717' && activeModelStarters[0].blackImage ? { image: activeModelStarters[0].blackImage } : {}),
             heroModel: {
               src: activeModelStarters[0].modelSrc,
               alt: `${activeModelStarters[0].title} 3D model`
@@ -3309,6 +3341,16 @@ router.get('/tools/:slug', async (req, res) => {
         }
       } catch (error) {
         console.error('Error loading active T-shirt generator models:', error);
+      }
+    }
+    if (['white-t-shirt-mockup', 'black-t-shirt-mockup', 'women-t-shirt-mockup', 'men-t-shirt-mockup'].includes(req.params.slug)) {
+      try {
+        const catalog = await listOnModelMockupAssets({ fashionCategory: 't-shirts-tops', pageSize: 60 });
+        renderedToolPage.fashionMockups = selectTshirtFashion(catalog.assets, {
+          audience: toolPage.tshirtStudio?.audience, black: req.params.slug === 'black-t-shirt-mockup'
+        });
+      } catch (error) {
+        console.error('Error loading T-shirt fashion mockups:', error);
       }
     }
     const isHoodieGenerator = req.params.slug === 'hoodie-mockup-generator';
@@ -3377,12 +3419,12 @@ router.get('/tools/:slug', async (req, res) => {
       }
     }
     const isIndexableTool = Boolean(
-      TOOL_VARIANT_CONTENT[req.params.slug]
+      TOOL_VARIANT_CONTENT[req.params.slug] || isTshirtStudio
       || ['3d-pants-generator', 't-shirt-mockup-generator', 'hoodie-mockup-generator', 'dress-designer', '3d-clothing-mockup-generator', 'bulk-t-shirt-mockup-generator', 'print-on-demand-mockup-generator'].includes(req.params.slug)
     );
     const viewName = req.params.slug === '3d-pants-generator'
       ? 'pants-generator-landing'
-      : isTshirtGenerator
+      : isTshirtStudio
       ? 'tshirt-generator-landing'
       : isHoodieGenerator
         ? 'hoodie-generator-landing'
@@ -3593,7 +3635,12 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       }
     }
 
+    const detailEntitlements = res.locals.user?.id
+      ? await require('../lib/user-entitlements').getUserEntitlements(res.locals.user.id)
+      : null;
+
     res.render('model-detail', {
+      canRemoveWatermarks: Boolean(detailEntitlements?.features?.removeWatermarks),
       title: modelDetailContent.pageTitle,
       metaDescription: modelDetailContent.metaDescription,
       metaRobots: shouldIndexModel(normalizedModel) ? undefined : 'noindex,follow',
@@ -3601,10 +3648,13 @@ router.get('/3d-models/:category/:slug', async (req, res) => {
       structuredData: modelDetailContent.structuredData,
       page: 'design-3d',
       pageStyles: ['/css/model-detail-v2.css?v=20260916-material-previews-v34'],
-      model: normalizedModel,
+      model: req.query.color === '171717' && !req.query.project && !req.query.adminProject && tshirtBlackPosters[normalizedModel.slug]
+        ? { ...normalizedModel, image_url: tshirtBlackPosters[normalizedModel.slug] }
+        : normalizedModel,
       modelDetailContent,
       onModelMockupProfile,
       aiTryOnModels,
+      tryOnPersonModels: aiTryOnEnabled ? require('../lib/try-on-models.json') : [],
       aiTryOnEnabled,
       related: normalizedRelated,
       useLocalModelAssets: shouldUseLocalModelAssets(req)

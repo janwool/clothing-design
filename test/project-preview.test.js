@@ -14,6 +14,7 @@ function runFunction(name, globals) {
 }
 function resolve(project, transfer = null, transferProjectId = '') {
   return runFunction('resolveCurrentDesign', {
+    root: { dataset: {} },
     window: { location: { search: '?project=saved-project' }, UserProjects: { loadProjectFromUrl: async () => project } },
     URLSearchParams,
     projectMatchesCurrentModel: () => true,
@@ -81,4 +82,27 @@ test('mobile cover capture reveals the current editor and restores the 2D view e
     else assert.equal(await context.captureProjectPreview(), 'current-design');
     assert.equal(textureDesigner.dataset.designView, '2d');
   }
+});
+
+test('garment thumbnails remove off-centre canvas padding and fit without clipping', async () => {
+  const pixels = new Uint8ClampedArray(8 * 6 * 4);
+  for (let y = 2; y <= 4; y++) for (let x = 1; x <= 2; x++) pixels[(y * 8 + x) * 4 + 3] = 255;
+  let draw, closed = false, canvases = 0;
+  const result = await runFunction('captureGarmentThumbnail', {
+    viewer: { toBlob: async options => { assert.equal(options.idealAspect, true); return {}; } },
+    createImageBitmap: async () => ({ width: 8, height: 6, close: () => { closed = true; } }),
+    document: { createElement: () => {
+      const sourceCanvas = canvases++ === 0;
+      return { getContext: () => sourceCanvas
+        ? { drawImage() {}, getImageData: () => ({ data: pixels }) }
+        : { drawImage: (...args) => { draw = args; } }, toDataURL: () => 'framed-garment' };
+    } }
+  });
+  assert.equal(result, 'framed-garment');
+  assert.deepEqual(draw.slice(1, 5), [1, 2, 2, 3]);
+  const [x, y, width, height] = draw.slice(5);
+  assert.ok(Math.abs(x + width / 2 - 240) < .001);
+  assert.ok(Math.abs(y + height / 2 - 280) < .001);
+  assert.ok(width <= 480 * .82 && height <= 560 * .82);
+  assert.equal(closed, true);
 });

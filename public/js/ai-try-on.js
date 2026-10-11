@@ -1,6 +1,9 @@
-(() => {
+function initializeAiTryOn() {
   const root = document.getElementById('aiTryOnApp');
   if (!root) return;
+  if (root.dataset.initialized) { root.dispatchEvent(new Event('tryon:refresh')); return; }
+  root.dataset.initialized = 'true';
+  const nativeDialog = root.closest('dialog');
 
   const resultImage = document.getElementById('tryOnResultImage');
   const loading = document.getElementById('tryOnLoading');
@@ -8,15 +11,21 @@
   const timeHint = document.getElementById('tryOnTimeHint');
   const designStatusText = root.querySelector('.ai-tryon__status span');
   const viewer = document.getElementById('tryOnGarmentViewer');
+  if (viewer && !viewer.getAttribute('src') && viewer.dataset.modelSrc) viewer.src = viewer.dataset.modelSrc;
   const viewerPanel = document.getElementById('tryOnViewerPanel');
+  if (viewer) window.CameraRelativeStudioLight?.install(viewer);
   const previewToggle = root.querySelector('.tryon-result__toggle');
   const afterResultControls = [...root.querySelectorAll('[data-after-result]')];
   const downloadButton = document.getElementById('downloadTryOn');
   const modelCards = [...root.querySelectorAll('[data-model-card]')];
   const generateButtons = [...root.querySelectorAll('[data-generate]')];
   const previewButtons = [...root.querySelectorAll('[data-preview-state]')];
-  let selectedModel = modelCards[0] || null;
-  let personImageUrl = selectedModel?.dataset.modelImage || resultImage.src;
+  let selectedModel = null;
+  let personImageUrl = '';
+  const customModel = document.getElementById('tryOnCustomModel');
+  const emptyState = document.getElementById('tryOnEmptyState');
+  const uploadButtons = [...root.querySelectorAll('[data-upload-photo]')];
+  const removeButtons = [...root.querySelectorAll('[data-remove-photo]')];
   let generatedImageUrl = '';
   let generating = false;
   let toastTimer;
@@ -88,10 +97,10 @@
   }
 
   async function resolveCurrentDesign() {
-    const projectId = new URLSearchParams(window.location.search).get('project');
+    const projectId = root.dataset.projectId || new URLSearchParams(window.location.search).get('project');
     if (projectId && window.UserProjects) {
       try {
-        const project = await window.UserProjects.loadProjectFromUrl('3d');
+        const project = await window.UserProjects.loadProjectFromUrl('3d', projectId);
         if (!projectMatchesCurrentModel(project)) throw new Error('This design belongs to another 3D model.');
         if (project?.designData) {
           // Same-tab handoff retains the full-resolution in-memory design.
@@ -202,6 +211,7 @@
       const previewUrl = window.UserProjects.textureUrl(design.previewImageUrl);
       const image = await loadTextureImage(previewUrl);
       image.alt = 'Saved 3D design';
+      image.dataset.savedDesignPreview = 'true';
       const panel = document.getElementById('tryOnViewerPanel');
       panel.querySelectorAll('model-viewer, img, .tryon-viewer__controls, .tryon-viewer__hint').forEach(node => { node.hidden = true; node.style.display = 'none'; });
       panel.appendChild(image);
@@ -284,6 +294,8 @@
   function refreshGenerateLabels() {
     const idleLabel = `${generatedImageUrl ? 'Regenerate' : 'Generate try-on'} · ${Number(root.dataset.creditCost) || 10} credits`;
     generateButtons.forEach(button => {
+      button.disabled = generating || !selectedModel;
+      button.setAttribute('aria-disabled', String(button.disabled));
       const label = button.querySelector('span');
       if (label) label.textContent = generating ? 'Generating…' : idleLabel;
       else button.textContent = generating ? 'Generating…' : idleLabel;
@@ -309,7 +321,9 @@
     });
     setPreviewZoom(100);
     selectedModel = card;
-    document.getElementById('tryOnSelectedAvatar').src = card.dataset.modelImage;
+    customModel.classList.toggle('is-selected', card === customModel);
+    customModel.setAttribute('aria-pressed', String(card === customModel));
+    document.getElementById('tryOnError').hidden = true;
     personImageUrl = card.dataset.modelImage;
     generatedImageUrl = '';
     trackTryOn('ai_tryon_person_model_select', {
@@ -318,22 +332,22 @@
       selection_source: card.dataset.modelId === 'upload' ? 'upload' : 'library'
     });
     setResultAvailability(false);
-    resultImage.classList.add('is-updating');
-    window.setTimeout(() => {
-      resultImage.src = personImageUrl;
-      resultImage.alt = `${card.dataset.modelName}, selected model for ${root.dataset.modelName}`;
-      resultImage.classList.remove('is-updating', 'is-before');
-      setPreviewState('before');
-    }, 170);
+    resultImage.alt = `${card.dataset.modelName}, selected model for ${root.dataset.modelName}`;
+    setPreviewState('before');
   }
 
   function setPreviewState(state) {
     if (state === 'after' && !generatedImageUrl) state = 'before';
+    root.classList.toggle('has-person', Boolean(selectedModel));
+    emptyState.hidden = Boolean(selectedModel);
+    resultImage.hidden = !selectedModel;
+    if (!selectedModel) resultImage.removeAttribute('src');
+    else resultImage.src = state === 'after' && generatedImageUrl ? generatedImageUrl : personImageUrl;
+    resultImage.classList.toggle('is-before', state === 'before');
     previewButtons.forEach(button => {
       button.classList.toggle('is-active', button.dataset.previewState === state);
+      button.setAttribute('aria-pressed', String(button.dataset.previewState === state));
     });
-    resultImage.src = state === 'after' && generatedImageUrl ? generatedImageUrl : personImageUrl;
-    resultImage.classList.toggle('is-before', state === 'before');
   }
 
   function showToast(message = 'Try-on ready', isError = false) {
@@ -350,12 +364,13 @@
     loading.hidden = !isGenerating;
     resultImage.classList.toggle('is-updating', isGenerating);
     generateButtons.forEach(button => {
-      button.disabled = isGenerating;
+      button.disabled = isGenerating || !selectedModel;
     });
     refreshGenerateLabels();
     timeHint.textContent = isGenerating ? 'Generating…' : '';
     document.getElementById('tryOnPhoto').disabled = isGenerating;
-    document.getElementById('tryOnUploadButton').disabled = isGenerating;
+    [...uploadButtons, ...removeButtons, ...modelCards, customModel, ...root.querySelectorAll('[data-model-filter]')].forEach(button => { button.disabled = isGenerating; });
+    document.getElementById('tryOnRequirements').disabled = isGenerating;
     document.getElementById('tryOnStyleFilter').disabled = isGenerating;
   }
 
@@ -382,7 +397,7 @@
     if (savedProjectPreviewUrl) return imageUrlToDataUri(savedProjectPreviewUrl);
     await angleCapturePromise;
     const fallbackImage = root.dataset.garmentFallback;
-    if (!viewer?.toDataURL) {
+    if (!viewer?.toBlob) {
       if (fallbackImage) return imageUrlToDataUri(fallbackImage);
       throw new Error('The 3D garment is not ready yet.');
     }
@@ -398,13 +413,23 @@
     const autoRotate = viewer.autoRotate;
     viewer.autoRotate = false;
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    const image = viewer.toDataURL('image/png');
-    viewer.autoRotate = autoRotate;
-    return image;
+    try {
+      await renderFrame();
+      const blob = await viewer.toBlob({ mimeType: 'image/png', idealAspect: true });
+      return await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(new Error('Could not capture the garment.'));
+        reader.readAsDataURL(blob);
+      });
+    } finally {
+      viewer.autoRotate = autoRotate;
+    }
   }
 
   async function generateTryOn() {
     if (generating || !selectedModel) return;
+    document.getElementById('tryOnError').hidden = true;
     const isRegeneration = Boolean(generatedImageUrl);
     const startedAt = performance.now();
     let generationStage = 'access_check';
@@ -440,10 +465,11 @@
         body: JSON.stringify({
           personImage,
           garmentImage,
+          requirements: document.getElementById('tryOnRequirements').value.trim(),
           modelId: root.dataset.modelId,
           modelSlug: root.dataset.modelSlug,
           modelName: root.dataset.modelName,
-          projectId: new URLSearchParams(window.location.search).get('project'),
+          projectId: root.dataset.projectId || new URLSearchParams(window.location.search).get('project'),
           personModelId: selectedModel.dataset.modelId,
           personModelName: selectedModel.dataset.modelName
         })
@@ -491,6 +517,9 @@
       setGenerating(false);
       setResultAvailability(false);
       setPreviewState('before');
+      const errorPanel = document.getElementById('tryOnError');
+      errorPanel.textContent = error.message || 'Try-on could not be created. Please try again.';
+      errorPanel.hidden = false;
       showToast(error.message || 'AI try-on failed. Please try again.', true);
       trackTryOn('ai_tryon_generate_error', {
         ...generationFailureContext(error, generationStage),
@@ -506,6 +535,8 @@
     const style = document.getElementById('tryOnStyleFilter').value;
     modelCards.forEach(card => { card.hidden = Boolean((style && card.dataset.modelStyle !== style) || (modelCollection && card.dataset.modelCollection !== modelCollection)); });
     document.getElementById('tryOnModelEmpty').hidden = modelCards.some(card => !card.hidden);
+    picker.scrollLeft = 0;
+    updateRailArrows();
   }
   root.querySelectorAll('[data-model-filter]').forEach(button => button.addEventListener('click', () => {
     modelCollection = button.dataset.modelFilter;
@@ -517,10 +548,51 @@
     trackTryOn('ai_tryon_model_filter_change', { model_style: event.target.value || 'all' });
   });
   let uploadedPhotoUrl = '';
-  document.getElementById('tryOnUploadButton')?.addEventListener('click', () => {
+  uploadButtons.forEach(button => button.addEventListener('click', () => {
+    if (generating) return;
     trackTryOn('ai_tryon_photo_upload_click');
     document.getElementById('tryOnPhoto').click();
-  });
+  }));
+  customModel.addEventListener('click', () => selectModel(customModel));
+  function syncUploadedPhoto() {
+    const hasPhoto = Boolean(uploadedPhotoUrl);
+    document.getElementById('tryOnUploadButton').hidden = hasPhoto;
+    customModel.hidden = !hasPhoto;
+    root.querySelector('.tryon-fixed-upload [data-remove-photo]').hidden = !hasPhoto;
+    root.querySelector('.tryon-attached-photo').hidden = !hasPhoto;
+    for (const id of ['tryOnCustomImage', 'tryOnAttachedImage']) {
+      const image = document.getElementById(id);
+      if (hasPhoto) image.src = uploadedPhotoUrl;
+      else image.removeAttribute('src');
+    }
+  }
+  removeButtons.forEach(button => button.addEventListener('click', () => {
+    if (generating) return;
+    if (selectedModel === customModel) {
+      selectedModel = null;
+      personImageUrl = '';
+      generatedImageUrl = '';
+      customModel.classList.remove('is-selected');
+      customModel.setAttribute('aria-pressed', 'false');
+      setResultAvailability(false);
+      setPreviewState('before');
+    }
+    if (uploadedPhotoUrl) URL.revokeObjectURL(uploadedPhotoUrl);
+    uploadedPhotoUrl = '';
+    syncUploadedPhoto();
+    trackTryOn('ai_tryon_photo_remove');
+    document.getElementById('tryOnUploadButton').focus();
+  }));
+  const picker = root.querySelector('.model-picker');
+  function updateRailArrows() {
+    root.querySelectorAll('[data-scroll-models]').forEach(button => {
+      button.disabled = Number(button.dataset.scrollModels) < 0 ? picker.scrollLeft <= 1 : picker.scrollLeft + picker.clientWidth >= picker.scrollWidth - 1;
+    });
+  }
+  root.querySelectorAll('[data-scroll-models]').forEach(button => button.addEventListener('click', () => picker.scrollBy({ left: Number(button.dataset.scrollModels) * picker.clientWidth * .8, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })));
+  picker.addEventListener('scroll', updateRailArrows, { passive: true });
+  new ResizeObserver(updateRailArrows).observe(picker);
+  updateRailArrows();
   document.getElementById('tryOnPhoto')?.addEventListener('change', async event => {
     const file = event.target.files?.[0];
     if (!file || generating) return;
@@ -540,7 +612,12 @@
       await image.decode();
       if (uploadedPhotoUrl) URL.revokeObjectURL(uploadedPhotoUrl);
       uploadedPhotoUrl = nextUrl;
-      selectModel({ dataset: { modelId: 'upload', modelName: 'Your photo', modelImage: nextUrl } });
+      customModel.dataset.modelId = 'upload';
+      customModel.dataset.modelName = 'Your photo';
+      customModel.dataset.modelImage = nextUrl;
+      syncUploadedPhoto();
+      if (selectedModel === customModel) selectedModel = null;
+      selectModel(customModel);
       trackTryOn('ai_tryon_photo_upload_success', { file_type: file.type, file_size: file.size });
     } catch {
       URL.revokeObjectURL(nextUrl);
@@ -550,12 +627,12 @@
     event.target.value = '';
   });
   function closeEditor(event) {
-    if (window.parent === window) return;
+    if (!nativeDialog) return;
     event?.preventDefault();
-    window.parent.postMessage({ type: 'tryon:close' }, location.origin);
+    nativeDialog.close();
   }
   root.querySelector('.ai-tryon__close')?.addEventListener('click', closeEditor);
-  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !previewDialog.open) closeEditor(event); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && nativeDialog?.open && !previewDialog.open) closeEditor(event); });
   previewButtons.forEach(button => button.addEventListener('click', () => {
     setPreviewState(button.dataset.previewState);
     trackTryOn('ai_tryon_preview_toggle', { preview_state: button.dataset.previewState });
@@ -647,7 +724,41 @@
   async function renderFrame() {
     await viewer.updateComplete;
     viewer.jumpCameraToGoal();
+    window.CameraRelativeStudioLight?.sync(viewer);
     await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  }
+  async function captureGarmentThumbnail() {
+    // toDataURL can include the larger shared WebGL canvas from the detail page.
+    // toBlob exports only this viewer's viewport before we frame the garment.
+    const blob = await viewer.toBlob({ mimeType: 'image/png', idealAspect: true });
+    const bitmap = await createImageBitmap(blob);
+    try {
+      const source = document.createElement('canvas');
+      source.width = bitmap.width;
+      source.height = bitmap.height;
+      const context = source.getContext('2d', { willReadFrequently: true });
+      context.drawImage(bitmap, 0, 0);
+      const pixels = context.getImageData(0, 0, source.width, source.height).data;
+      let left = source.width, top = source.height, right = -1, bottom = -1;
+      for (let y = 0; y < source.height; y++) {
+        for (let x = 0; x < source.width; x++) {
+          if (pixels[(y * source.width + x) * 4 + 3] < 32) continue;
+          left = Math.min(left, x); right = Math.max(right, x);
+          top = Math.min(top, y); bottom = Math.max(bottom, y);
+        }
+      }
+      if (right < left) throw new Error('The garment preview is empty.');
+      const width = right - left + 1, height = bottom - top + 1;
+      const output = document.createElement('canvas');
+      output.width = 480; output.height = 560;
+      const scale = Math.min(output.width * .82 / width, output.height * .82 / height);
+      output.getContext('2d').drawImage(source, left, top, width, height,
+        (output.width - width * scale) / 2, (output.height - height * scale) / 2,
+        width * scale, height * scale);
+      return output.toDataURL('image/png');
+    } finally {
+      bitmap.close();
+    }
   }
   async function captureGarmentAngles() {
     await designLoadPromise;
@@ -659,7 +770,7 @@
         viewer.cameraOrbit = `${card.dataset.garmentAngle}deg 74deg 108%`;
         await renderFrame();
         const image = card.querySelector('img');
-        image.src = viewer.toDataURL('image/png');
+        image.src = await captureGarmentThumbnail();
         image.hidden = false;
         card.querySelector('.tryon-angle__status').hidden = true;
         card.disabled = false;
@@ -681,6 +792,21 @@
       root.querySelector('.tryon-angles').setAttribute('aria-busy', 'false');
     }
   }
-  designLoadPromise = loadCurrentDesign();
-  const angleCapturePromise = captureGarmentAngles();
-})();
+  let angleCapturePromise = Promise.resolve();
+  function restoreDesign() {
+    if (generating) return;
+    savedProjectPreviewUrl = '';
+    generatedImageUrl = '';
+    setResultAvailability(false);
+    setPreviewState('before');
+    viewerPanel.querySelectorAll('[data-saved-design-preview]').forEach(node => node.remove());
+    viewerPanel.querySelectorAll('model-viewer, img, .tryon-viewer__controls, .tryon-viewer__hint').forEach(node => { node.hidden = false; node.style.removeProperty('display'); });
+    previewButton.disabled = true;
+    designLoadPromise = angleCapturePromise.catch(() => {}).then(() => loadCurrentDesign());
+    angleCapturePromise = captureGarmentAngles();
+  }
+  root.addEventListener('tryon:refresh', restoreDesign);
+  restoreDesign();
+}
+window.initializeAiTryOn = initializeAiTryOn;
+if (!document.getElementById('aiTryOnApp')?.closest('dialog')) initializeAiTryOn();

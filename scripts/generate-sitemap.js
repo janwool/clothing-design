@@ -15,7 +15,9 @@ const {
 const baseUrl = (process.env.SITEMAP_BASE_URL || 'https://www.cloz-design.com').replace(/\/+$/, '');
 const outputPath = path.resolve(__dirname, '..', 'public', 'sitemap.xml');
 const robotsPath = path.resolve(__dirname, '..', 'public', 'robots.txt');
+const { workflowPaths: tshirtWorkflowPaths, workflows: tshirtWorkflows } = require('../lib/tshirt-workflows');
 const staticToolPaths = [
+  ...tshirtWorkflowPaths,
   '/tools/t-shirt-mockup-generator',
   '/tools/hoodie-mockup-generator',
   '/tools/3d-pants-generator',
@@ -32,6 +34,7 @@ const staticToolPaths = [
 ];
 
 const staticToolImages = {
+  ...Object.fromEntries(tshirtWorkflows.map(item => [`/tools/${item.slug}`, item.workflowImage])),
   '/tools/3d-pants-generator': siteImage('categories/pants.webp'),
   '/tools/t-shirt-mockup-generator': siteImage('mockups/t-shirt-mockup-generator.webp'),
   '/tools/hoodie-mockup-generator': siteImage('mockups/hoodie-mockup-generator.webp'),

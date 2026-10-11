@@ -77,26 +77,11 @@ test('applies the saved commercial cover scene to detail and editor viewers', ()
   assert.match(template, /readyViewer\.cameraOrbit = catalogOrbitForAzimuth\(detailSceneStandard, button\.dataset\.orbit\)/);
 });
 
-test('offers camera-relative lighting controls on the model detail page', () => {
-  assert.match(template, /class="viewer-lighting-panel" id="quickLightingPanel"/);
-  assert.doesNotMatch(template, /viewer-explore-hint|Drag to explore 360°|id="quickLightingToggle"/);
-  assert.match(template, /data-light-angle="-45"/);
-  assert.match(template, /data-light-angle="0"/);
-  assert.match(template, /data-light-angle="45"/);
-  assert.match(template, /id="quickLightExposure" type="range" min="55" max="300" step="1" value="100"/);
-  assert.match(template, /id="quickLightSoftness" type="range" min="50" max="100" step="1" value="90"/);
+test('keeps automatic studio lighting without a lighting control panel', () => {
+  assert.doesNotMatch(template, /quickLightingPanel|quickLightExposure|quickLightSoftness|data-light-angle|renderDetailLightingControls/);
   assert.match(template, /window\.ModelDetailLightingSettings = detailLightState/);
-  assert.match(template, /function applyDetailLightingSettings\(\)/);
   assert.match(template, /CameraRelativeStudioLight\?\.install\(element/);
   assert.match(designerRuntime, /const detailLighting = window\.ModelDetailLightingSettings \|\| \{\}/);
-  assert.match(designerRuntime, /detailLighting\.azimuthOffsetDeg \?\? webStandard\.lightAzimuthOffsetDeg/);
-  assert.match(designerRuntime, /detailLighting\.exposure \?\?/);
-  assert.match(modelDetailStyles, /\.viewer-lighting-panel \{/);
-  assert.match(modelDetailStyles, /\.model-3d-viewer model-viewer \{[\s\S]*?width: calc\(100% - clamp\(/);
-  assert.match(modelDetailStyles, /@media \(max-width: 820px\) \{[\s\S]*?\.model-3d-viewer model-viewer \{ width: calc\(100% - 202px\) !important; \}/);
-  assert.match(modelDetailStyles, /@media \(max-width: 520px\) \{[\s\S]*?\.model-3d-viewer model-viewer \{ width: calc\(100% - 158px\) !important; \}/);
-  assert.doesNotMatch(modelDetailStyles, /\.viewer-lighting-panel \{ position: static; width: 100%;/);
-  assert.match(modelDetailStyles, /\.quick-light-range \{/);
 });
 
 test('removes the redundant three-column model showcase module', () => {
@@ -120,7 +105,7 @@ test('loads the Design Studio runtime and material library only after intent', (
   assert.doesNotMatch(template, /<script\s+src="\/js\/model-designer\.js/);
   assert.match(template, /script\.src = '\/js\/design3d-materials\.js\?v=20260819-fabric-softness-v2'/);
   assert.match(template, /src: '\/js\/editor-transform\.js\?v=20260815-text-selection-v4'/);
-  assert.match(template, /src: '\/js\/model-designer\.js\?v=20261004-fill-picker-v4'/);
+  assert.match(template, /src: '\/js\/model-designer\.js\?v=20261011-studio-v58'/);
   assert.match(template, /button\.addEventListener\('click', handleDesignerEntry\)/);
   assert.match(designerRuntime, /window\.initializeModelDesigner = \(\) =>/);
   assert.doesNotMatch(designerRuntime, /<%/);
@@ -177,11 +162,11 @@ test('applies a saved project to the detail viewer without opening the editor', 
   const loadProjectBlock = designerRuntime.slice(loadProjectStart, navigationStart);
 
   assert.match(loadProjectBlock, /await window\.loadClothingModelViewer\?\.\(detailViewer\)\.catch\(\(\) => null\);/);
-  assert.match(loadProjectBlock, /applyMaterialPreset\(material\)/);
+  assert.match(loadProjectBlock, /applyMaterialPreset\(material,\{record:false\}\)/);
   assert.match(loadProjectBlock, /applyTextureToViewer\(viewerElement, state\.finalTextureUrl\)/);
   assert.match(loadProjectBlock, /parseSavedProjectElements\(saved\.elements\)/);
   assert.match(loadProjectBlock, /replaceTextureElements\(wrapper\)/);
-  assert.match(loadProjectBlock, /if \(saved\.appearance\) restoreAppearanceState\(saved\.appearance\)/);
+  assert.match(loadProjectBlock, /if \(saved\.appearance\) await restoreAppearanceState\(saved\.appearance\)/);
   assert.match(loadProjectBlock, /else if \(saved\.textureUrl\) await restoreLegacyAppearanceFromTexture\(saved\.textureUrl\)/);
   assert.match(loadProjectBlock, /window\.Design3DMaterials\.materials\.find\(item => item\.id === saved\.materialId\)/);
   assert.doesNotMatch(loadProjectBlock, /document\.createElement\('div'\)/);
@@ -244,7 +229,7 @@ test('waits for the detail viewer to receive an applied design before closing th
   assert.match(designerRuntime, /const dominant = \(bins\) => \[\.\.\.bins\.values\(\)\]\.sort/);
   assert.match(designerRuntime, /appearanceColorStart\.value = color/);
   assert.match(designerRuntime, /querySelectorAll\('\.texture-template-path'\)\]\.forEach\(\(path\) => setElementColor\(path, color\)\)/);
-  assert.match(template, /model-designer\.js\?v=20261004-fill-picker-v4/);
+  assert.match(template, /model-designer\.js\?v=20261011-studio-v58/);
 });
 
 test('replays only the latest live color or gradient after 3D materials are ready', () => {
@@ -252,9 +237,10 @@ test('replays only the latest live color or gradient after 3D materials are read
   assert.match(designerRuntime, /const updateId = \+\+state\.textureUpdateId;[\s\S]*await applyTextureToModel\(textureUrl, updateId\)/);
   assert.match(designerRuntime, /const materials = await waitForViewerMaterials\(designerViewer\)/);
   assert.match(designerRuntime, /isCurrent: \(\) => updateId === state\.textureUpdateId && state\.pendingTextureUrl === textureUrl/);
-  assert.match(designerRuntime, /if \(typeof options\.isCurrent === 'function' && !options\.isCurrent\(\)\) return false/);
+  assert.match(designerRuntime, /viewerTextureRequests\.get\(viewerElement\) === request/);
+  assert.match(designerRuntime, /if \(!isCurrent\(\)\) return false/);
   assert.match(designerRuntime, /viewerElement\.requestUpdate\?\.\(\);\s+await viewerElement\.updateComplete/);
-  assert.match(designerRuntime, /if \(state\.pendingTextureUrl\) \{\s+applyTextureToModel\(state\.pendingTextureUrl, state\.textureUpdateId\)/);
+  assert.match(designerRuntime, /if \(state\.pendingTextureUrl\) \{\s+(?:return )?applyTextureToModel\(state\.pendingTextureUrl, state\.textureUpdateId\)/);
 });
 
 test('uses the camera-aware model-viewer shadow instead of a fixed CSS ellipse', () => {
@@ -376,15 +362,12 @@ test('temporarily highlights the corresponding 3D surface while hovering a UV pa
   assert.match(styles, /\.texture-template-fill \{[\s\S]*?transition: none;/);
 });
 
-test('opens a surface color toolbar when a UV path is selected', () => {
-  assert.match(designerRuntime, /title\.innerHTML = '<span class="surface-toolbar-icon" aria-hidden="true"><\/span> Surface color'/);
-  assert.match(designerRuntime, /elementToolbar\.classList\.toggle\('is-surface-toolbar'/);
-  assert.match(designerRuntime, /requestAnimationFrame\(\(\) => \{/);
-  assert.match(designerRuntime, /openColorPopover\(surfaceColorButton\)/);
-  assert.match(designerRuntime, /setElementColor\(group, color\)/);
-  assert.match(designerRuntime, /fillPath\.style\.setProperty\('fill', paint, 'important'\)/);
-  assert.match(designerRuntime, /setTemplateFillPaint\(fillPath, getSvgPaint\(group, color, 'fill'\)\)/);
-  assert.match(designerRuntime, /scheduleTexturePreviewUpdate\(\)/);
+test('surface controls offer color and local material without opening a panel automatically', () => {
+  const surface = designerRuntime.slice(designerRuntime.indexOf('function buildElementToolbar(group)'), designerRuntime.indexOf('function positionElementToolbar'));
+  assert.match(designerRuntime, /is-surface-toolbar/);
+  assert.match(surface, /material/);
+  assert.match(surface, /reset/);
+  assert.match(designerRuntime, /setTemplateFillPaint/);
 });
 
 test('supports unlabeled multi-stop gradients in the contextual color picker', () => {
@@ -401,12 +384,11 @@ test('supports unlabeled multi-stop gradients in the contextual color picker', (
   assert.match(styles, /\.gradient-angle-dial \{/);
 });
 
-test('keeps element and surface toolbars centered in the visible canvas', () => {
-  assert.match(designerRuntime, /elementToolbar\.className = 'element-toolbar is-canvas-centered'/);
-  assert.match(designerRuntime, /const centeredLeft = textureCanvasArea\.scrollLeft/);
-  assert.match(designerRuntime, /elementToolbar\.style\.top = `\$\{textureCanvasArea\.scrollTop \+ edgeInset\}px`/);
-  assert.match(designerRuntime, /positionColorPopover\(expandedColorButton\)/);
-  assert.match(styles, /\.element-toolbar \{[\s\S]*?max-width: calc\(100% - 36px\);[\s\S]*?backdrop-filter: blur\(18px\)/);
+test('contextual toolbars follow the selected bounds and stay inside the visible canvas', () => {
+  assert.match(designerRuntime, /elementToolbar.className = 'element-toolbar'/);
+  assert.match(designerRuntime, /group.getBoundingClientRect/);
+  assert.match(designerRuntime, /textureCanvasArea.scrollLeft/);
+  assert.match(designerRuntime, /positionColorPopover/);
 });
 
 test('keeps UV guide outlines out of garment fills and the 3D preview fully framed', () => {
@@ -423,9 +405,6 @@ test('keeps UV guide outlines out of garment fills and the 3D preview fully fram
   assert.match(styles, /grid-area: preview;\s*height: calc\(100% - 24px\);\s*box-sizing: border-box;\s*margin: 18px 16px 6px 0;/);
   assert.match(designerRuntime, /webEditorOrbit: '0deg 72deg 180%'/);
   assert.match(designerRuntime, /designerViewer\?\.setAttribute\('min-camera-orbit', 'auto auto 180%'\)/);
-  assert.match(designerRuntime, /designerViewer\?\.removeAttribute\('min-camera-orbit'\)/);
-  assert.match(styles, /\.design-modal \.texture-designer\[data-design-view="3d"\] \.preview-3d-panel \{[\s\S]*?height: calc\(100% - 36px\);/);
-  assert.match(styles, /@media \(max-width: 900px\) \{[\s\S]*?\.design-modal \.texture-designer:not\(\[data-design-view="3d"\]\) \.preview-3d-panel \{[\s\S]*?position: absolute;[\s\S]*?right: 12px;[\s\S]*?display: block;/);
 });
 
 test('shows uploaded artwork without built-in image presets', () => {
@@ -441,7 +420,7 @@ test('shows uploaded artwork without built-in image presets', () => {
   assert.match(userContentRoute, /purpose \? ' AND purpose = \?' : ''/);
   assert.match(designerRuntime, /window\.UserProjects\.listImages\('artwork'\)/);
   assert.match(designerRuntime, /createUploadedAssetCard\(dataUrl, file\.name\)[\s\S]*addArtworkFromSource\(dataUrl, button\)[\s\S]*UserProjects\.uploadImage/);
-  assert.match(designerRuntime, /is not supported\. Use PNG, JPG, or WebP/);
+  assert.match(designerRuntime, /is not supported\. Use PNG, JPG, WebP, or SVG/);
   assert.match(designerRuntime, /file\.size > 10 \* 1024 \* 1024/);
   assert.match(designerRuntime, /setUploadedAssetState\(button, 'uploading'/);
   assert.match(designerRuntime, /pendingArtworkUploads: new Set\(\)/);
@@ -450,7 +429,7 @@ test('shows uploaded artwork without built-in image presets', () => {
   assert.doesNotMatch(designerRuntime, /wrapper\.innerHTML = getCleanElementsHtml\(\)/);
   assert.match(template, /id="imageUploadToast"[^>]*role="status"[^>]*aria-live="polite"/);
   assert.match(designerRuntime, /showImageUploadToast\(`Uploading \$\{file\.name\}…`, 'loading'\)/);
-  assert.match(template, /accept="\.png,\.jpg,\.jpeg,\.webp,image\/png,image\/jpeg,image\/webp"/);
+  assert.match(template, /accept="\.png,\.jpg,\.jpeg,\.webp,\.svg,image\/png,image\/jpeg,image\/webp,image\/svg\+xml"/);
   assert.match(designerRuntime, /createUploadedAssetCard\(image\.url, image\.name \|\| 'Uploaded image', image\.url, image\.id\)/);
   assert.match(designerRuntime, /renderedUploadedAssetKeys\.has\(assetKey\)/);
   assert.match(designerRuntime, /updateImageAssetEmptyState\(\)/);
@@ -463,7 +442,7 @@ test('shows uploaded artwork without built-in image presets', () => {
 });
 
 test('matches the approved studio composition for tools, preview, and appearance', () => {
-  assert.match(template, /class="design-header-history"/);
+  assert.match(template, /class="studio-canvas-history"/);
   assert.doesNotMatch(template, /class="toolbar-group toolbar-history"/);
   assert.match(styles, /\.design-modal \.preview-model-stage \{[\s\S]*?background: transparent;/);
   assert.match(styles, /\.design-modal \.preview-model-stage::before,[\s\S]*?display: none;/);
@@ -499,10 +478,10 @@ test('shows the twelve material choices in two rows of six', () => {
 test('opens the Images panel on the left while keeping appearance controls on the right', () => {
   assert.doesNotMatch(template, /id="toolAppearance"/);
   assert.match(template, /class="toolbar-btn active" id="toolImage"[^>]*aria-pressed="true"/);
-  assert.match(designerRuntime, /designModal\.classList\.add\('active'\);[\s\S]*?setDesignView\('2d'\);\s*setTool\('image'\);\s*setAssetTrayOpen\(true\)/);
+  assert.match(designerRuntime, /designModal\.classList\.add\('active'\);[\s\S]*?initializeCanvasLayout\(\);\s*setTool\('select'\);\s*setAssetTrayOpen\(true\)/);
   const assetTrayToggle = designerRuntime.slice(
     designerRuntime.indexOf('function setAssetTrayOpen(open)'),
-    designerRuntime.indexOf('\n  function setDesignView(view)')
+    designerRuntime.indexOf('\n  function initializeCanvasLayout()')
   );
   assert.doesNotMatch(assetTrayToggle, /designAppearancePanel\.hidden = open/);
   assert.match(styles, /"toolbar sidebar canvas preview"\s*"toolbar sidebar canvas appearance"/);
@@ -523,11 +502,46 @@ test('keeps on-model mockup code, styles, and image maps behind its launch actio
 test('keeps AI try-on entry points behind the disabled-by-default feature flag', () => {
   assert.match(template, /const aiTryOnAvailable = typeof aiTryOnEnabled !== 'undefined' && Boolean\(aiTryOnEnabled\)/);
   assert.match(template, /const aiTryOnPath = `\$\{modelDetailPath\}\/try-on`/);
-  assert.match(template, /<% if \(aiTryOnAvailable && supportsOnModelMockup && tryOnModels\.length\) \{ %>/);
-  assert.match(template, /<h3>Render<\/h3><p>Create a studio-quality product image/);
+  assert.match(template, /<% if \(aiTryOnAvailable && previewModelFileUrl\) \{ %>/);
+  assert.doesNotMatch(template, /experience-flow|Every surface is a decision|Ready to make it yours/);
   assert.match(template, /syncModelTryOnLinks/);
   assert.match(designerRuntime, /persistTryOnDesign/);
   assert.match(designerRuntime, /clozdesign_tryon_design_v1/);
   assert.doesNotMatch(template, /data-ai-tryon-open|id="aiTryOnChooser"|\/js\/model-detail-v2\.js/);
   assert.doesNotMatch(modelDetailStyles, /\.ai-coming-soon-control|\.ai-coming-soon-tooltip/);
+});
+
+ test('shows the watermark upgrade action only without the watermark entitlement', () => {
+  const ejs = require('ejs');
+  const start = template.indexOf("<% if (typeof canRemoveWatermarks");
+  const end = template.indexOf('<% } %>', start) + '<% } %>'.length;
+  assert.ok(start >= 0);
+  const action = template.slice(start, end);
+  const data = { model: { slug: 'test-model' } };
+  assert.match(ejs.render(action, data), /id="removeWatermarkBtn"/);
+  assert.match(ejs.render(action, { ...data, canRemoveWatermarks: false }), /id="removeWatermarkBtn"/);
+  assert.doesNotMatch(ejs.render(action, { ...data, canRemoveWatermarks: true }), /id="removeWatermarkBtn"/);
+});
+
+test('renders the embedded try-on workspace when optional person models are missing', () => {
+  const ejs = require('ejs');
+  const workspaceInclude = template.split('\n').find(line => line.includes("include('partials/ai-try-on-workspace'"));
+  assert.ok(workspaceInclude);
+  const model = { slug: 'test-model', category: 't-shirt' };
+  for (const data of [{}, { tryOnPersonModels: null }, { tryOnPersonModels: {} }]) {
+    const output = ejs.render(workspaceInclude, {
+      model, ...data,
+      include: (name, props) => {
+        assert.equal(name, 'partials/ai-try-on-workspace');
+        assert.deepEqual(props.personModels, []);
+        return 'workspace rendered';
+      }
+    });
+    assert.match(output, /workspace rendered/);
+  }
+  const people = [{ id: 'person-1' }];
+  ejs.render(workspaceInclude, { model, tryOnPersonModels: people, include: (name, props) => {
+    assert.equal(props.personModels, people);
+    return '';
+  } });
 });

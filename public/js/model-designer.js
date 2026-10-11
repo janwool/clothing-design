@@ -32,6 +32,9 @@ window.initializeModelDesigner = () => {
   const customizationPreview2dLoading = document.getElementById('customizationPreview2dLoading');
   const designerViewer = document.getElementById('designerViewer');
   const designPreviewLoading = document.getElementById('designPreviewLoading');
+  const designPreviewError = document.getElementById('designPreviewError');
+  const designPreviewRetry = document.getElementById('designPreviewRetry');
+  const designPreviewPoster = document.getElementById('designPreviewPoster');
   const detailViewer = document.querySelector('#model3dViewer model-viewer');
   const textureCanvasArea = document.querySelector('.texture-canvas-area');
   const textureCanvasFrame = document.getElementById('textureCanvasFrame');
@@ -43,11 +46,9 @@ window.initializeModelDesigner = () => {
   const materialCount = document.getElementById('materialCount');
   const canvasZoomOut = document.getElementById('canvasZoomOut');
   const canvasZoomIn = document.getElementById('canvasZoomIn');
-  const canvasZoomFit = document.getElementById('canvasZoomFit');
   const canvasZoomLabel = document.getElementById('canvasZoomLabel');
   const canvasRotate = document.getElementById('canvasRotate');
   const textureDesigner = document.querySelector('.design-modal .texture-designer');
-  const designViewSwitcher = document.getElementById('designViewSwitcher');
   const imageAssetTray = document.getElementById('imageAssetTray');
   const imageAssetViewport = document.getElementById('imageAssetViewport');
   const imageAssetTrack = document.getElementById('imageAssetTrack');
@@ -60,15 +61,12 @@ window.initializeModelDesigner = () => {
   const imageUploadToast = document.getElementById('imageUploadToast');
   const imageUploadToastText = document.getElementById('imageUploadToastText');
   const designAppearancePanel = document.getElementById('designAppearancePanel');
-  const appearancePanelCollapse = document.getElementById('appearancePanelCollapse');
   const appearanceColorStart = document.getElementById('appearanceColorStart');
   const appearanceCustomColor = document.getElementById('appearanceCustomColor');
   const appearanceColorEnd = document.getElementById('appearanceColorEnd');
   const appearanceGradientAngle = document.getElementById('appearanceGradientAngle');
-  const appearanceGradientAngleOutput = document.getElementById('appearanceGradientAngleOutput');
-  const appearanceGradientPreview = document.getElementById('appearanceGradientPreview');
   const elementToolbar = document.createElement('div');
-  elementToolbar.className = 'element-toolbar is-canvas-centered';
+  elementToolbar.className = 'element-toolbar';
   elementToolbar.dataset.editorToolbar = 'true';
   textureCanvasArea.appendChild(elementToolbar);
   const colorPopover = document.createElement('div');
@@ -76,6 +74,25 @@ window.initializeModelDesigner = () => {
   colorPopover.dataset.editorToolbar = 'true';
   textureCanvasArea.appendChild(colorPopover);
   let externalColorPicker = null;
+  const studioPopover = document.createElement('div');
+  studioPopover.className = 'studio-popover';
+  studioPopover.dataset.editorToolbar = 'true';
+  studioPopover.setAttribute('role', 'dialog');
+  studioPopover.hidden = true;
+  textureCanvasArea.appendChild(studioPopover);
+  const shapesPopover = document.createElement('div');
+  shapesPopover.className = 'studio-popover studio-shapes-popover';
+  shapesPopover.hidden = true;
+  shapesPopover.setAttribute('role', 'dialog');
+  shapesPopover.setAttribute('aria-label', 'Basic shapes');
+  document.querySelector('.design-modal-header').appendChild(shapesPopover);
+  let openStudioControl = null;
+  let studioAnchor = null;
+  let imageWorker = null;
+  let imageTask = null;
+  let imageTaskCounter = 0;
+  const fabricTileCache = new Map();
+  const panelMaterialRequests = new WeakMap();
 
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const defaultTextContent = modelDesignerConfig.defaultTextContent || 'Text';
@@ -98,7 +115,6 @@ window.initializeModelDesigner = () => {
   const editorTransforms = window.ModelDesignerTransforms;
   if (!editorTransforms) throw new Error('Editor transform helpers are unavailable');
   const {
-    clampRectToBounds,
     placeRectAtFixedAnchor,
     resizeCursor,
     resizeFromPointer
@@ -165,6 +181,8 @@ window.initializeModelDesigner = () => {
     zoom: 1,
     zoomMode: 'fit',
     canvasRotation: 0,
+    canvasPanX: 0,
+    canvasPanY: 0,
     textureLoadPromise: null,
     textureUpdateTimer: null,
     textureUpdateId: 0,
@@ -178,6 +196,7 @@ window.initializeModelDesigner = () => {
     appliedTextureUrl: null,
     pendingTextureUrl: null,
     materialTextureCache: new WeakMap(),
+    appearanceRevision:0,
     finalTextureUrl: null,
     detailSceneUrl: null,
     isExportingRender: false,
@@ -188,7 +207,6 @@ window.initializeModelDesigner = () => {
     fillScope: 'whole',
     fillMode: 'solid',
     fillCustomPaint: null,
-    designView: '2d',
     projectId: '',
     projectName: '',
     uploadedAssetUrls: new Map(),
@@ -221,6 +239,8 @@ window.initializeModelDesigner = () => {
 
   aiTryOnLinks.forEach((link) => link.addEventListener('click', prepareTryOnNavigation));
   const renderedUploadedAssetKeys = new Set();
+  const artworkDataCache = new Map();
+  const viewerTextureRequests = new WeakMap();
   let imageUploadToastTimer = null;
   let modalReturnFocus = null;
   let customizationReturnFocus = null;
@@ -233,7 +253,6 @@ window.initializeModelDesigner = () => {
   const toolButtons = {
     select: document.getElementById('toolSelect'),
     pan: document.getElementById('toolPan'),
-    draw: document.getElementById('toolDraw'),
     text: document.getElementById('toolText'),
     image: document.getElementById('toolImage'),
     shape: document.getElementById('toolShape'),
@@ -315,29 +334,52 @@ window.initializeModelDesigner = () => {
     renderSelection();
     designModal.classList.add('active');
     designModal.setAttribute('aria-hidden', 'false');
-    setDesignView('2d');
-    setTool('image');
+    initializeCanvasLayout();
+    setTool('select');
     setAssetTrayOpen(true);
     document.body.style.overflow = 'hidden';
     renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
-    if (designPreviewLoading && !designerViewer?.loaded) designPreviewLoading.hidden = false;
-    window.loadClothingModelViewer?.(designerViewer)
-      .then(() => {
-        if (designPreviewLoading) designPreviewLoading.hidden = true;
-        if (state.pendingTextureUrl) {
-          applyTextureToModel(state.pendingTextureUrl, state.textureUpdateId);
-        } else if (hasEditableArtwork()) {
-          scheduleTexturePreviewUpdate();
-        }
-      })
-      .catch((error) => {
-        if (designPreviewLoading) designPreviewLoading.hidden = true;
-        console.warn('Failed to load the design preview:', error);
-      });
+    prepareDesignPreview();
     requestAnimationFrame(() => {
       designModalClose?.focus({ preventScroll: true });
     });
   }
+
+  let designPreviewPromise = null;
+  function prepareDesignPreview() {
+    if (!designerViewer || designPreviewPromise) return designPreviewPromise;
+    if (designPreviewError) designPreviewError.hidden = true;
+    if (designPreviewPoster) designPreviewPoster.hidden = Boolean(designerViewer.loaded);
+    if (designPreviewLoading) designPreviewLoading.hidden = Boolean(designerViewer.loaded);
+    designPreviewPromise = Promise.resolve()
+      .then(() => window.loadClothingModelViewer(designerViewer))
+      .then(() => {
+        if (designPreviewPoster) designPreviewPoster.hidden = true;
+        if (state.pendingTextureUrl) {
+          return applyTextureToModel(state.pendingTextureUrl, state.textureUpdateId);
+        }
+        if (state.appliedTextureUrl) {
+          return applyTextureToViewer(designerViewer, state.appliedTextureUrl);
+        }
+        if (hasEditableArtwork()) scheduleTexturePreviewUpdate();
+      })
+      .catch((error) => {
+        if (designPreviewPoster) designPreviewPoster.hidden = false;
+        if (designPreviewError) designPreviewError.hidden = false;
+        console.warn('Failed to load the design preview:', error);
+      })
+      .finally(() => {
+        if (designPreviewLoading) designPreviewLoading.hidden = true;
+        designPreviewPromise = null;
+      });
+    return designPreviewPromise;
+  }
+
+  designPreviewRetry?.addEventListener('click', () => {
+    if (designPreviewPromise) return;
+    designerViewer?.removeAttribute('src');
+    prepareDesignPreview();
+  });
 
   function hexToRgbUnit(hex) {
     const normalized = String(hex || '#ffffff').replace('#', '').trim();
@@ -393,6 +435,19 @@ window.initializeModelDesigner = () => {
     });
     cache.set(key, texturePromise);
     return texturePromise;
+  }
+
+  const originalSurfaceMaps = new WeakMap();
+  function rememberSurfaceMaps(material) {
+    if (originalSurfaceMaps.has(material)) return;
+    const pbr = material.pbrMetallicRoughness;
+    originalSurfaceMaps.set(material, {
+      normal: material.normalTexture?.texture || null,
+      scale: material.normalTexture?.scale ?? 1,
+      roughness: pbr?.metallicRoughnessTexture?.texture || null,
+      factor: pbr?.roughnessFactor ?? 0.86,
+      metal: pbr?.metallicFactor ?? 0
+    });
   }
 
   function setMaterialTextureSlot(slot, texture) {
@@ -525,8 +580,9 @@ window.initializeModelDesigner = () => {
       });
       const colorFactor = maps.baseColor ? [1, 1, 1, 1] : [...hexToRgbUnit(material.color), 1];
       materials.forEach((modelMaterial) => {
+        rememberSurfaceMaps(modelMaterial);
         const pbr = modelMaterial.pbrMetallicRoughness;
-        pbr?.setBaseColorFactor?.(colorFactor);
+        if (!options.preserveColor) pbr?.setBaseColorFactor?.(colorFactor);
         pbr?.setMetallicFactor?.(material.metalness ?? 0);
         pbr?.setRoughnessFactor?.(material.roughness ?? 0.8);
         applyFabricSurfaceResponse(modelMaterial, material);
@@ -550,8 +606,13 @@ window.initializeModelDesigner = () => {
     }
   }
 
-  async function applyMaterialPreset(material, { previewOnly = false } = {}) {
+  async function applyMaterialPreset(material, { previewOnly = false, record = true } = {}) {
+    state.appearanceRevision++;
     state.selectedMaterial = material;
+    // A whole-garment material pass replaces all per-piece overrides.
+    const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
+    await Promise.all(paths.map(path => setPanelMaterial(path,material)));
+    if (record) saveHistory();
     setDesignSaveStatus('Unapplied changes', true);
     materialSwatchGrid?.querySelectorAll('.material-swatch').forEach((button) => {
       const isActive = button.dataset.materialId === material.id;
@@ -559,10 +620,10 @@ window.initializeModelDesigner = () => {
       button.setAttribute('aria-pressed', String(isActive));
     });
     const loadedViewers = previewOnly ? [designerViewer].filter(viewer => viewer?.model) : getLoadedDesignViewers();
-    await Promise.all(loadedViewers.map((viewerElement) => applyMaterialToViewer(viewerElement, material)));
-    if (state.appliedTextureUrl) {
-      await Promise.all(loadedViewers.map((viewerElement) => applyTextureToViewer(viewerElement, state.appliedTextureUrl)));
-    }
+    await Promise.all(loadedViewers.map((viewerElement) => applyMaterialToViewer(viewerElement, material, {includeBaseColorMap:false, preserveColor:true})));
+    // Material loading may finish after an artwork edit. Rebuild from the current
+    // canvas instead of replaying the texture that preceded the material change.
+    scheduleTexturePreviewUpdate();
   }
 
   function renderMaterialSwatches() {
@@ -595,7 +656,7 @@ window.initializeModelDesigner = () => {
       const preview = button.querySelector('.material-swatch-preview');
       preview.style.backgroundColor = material.color;
       preview.style.backgroundImage = `url("${materialPreviewUrls[material.id] || material.maps.baseColor}")`;
-      button.addEventListener('click', () => applyMaterialPreset(material, { previewOnly: true }));
+      button.addEventListener('click', () => applyMaterialPreset(material, { previewOnly: true }).catch(error => setDesignSaveStatus(error.message || 'Material could not be loaded', true)));
       materialSwatchGrid.appendChild(button);
     });
   }
@@ -785,6 +846,39 @@ window.initializeModelDesigner = () => {
     const scaleX = state.svgWidth / width;
     const scaleY = state.svgHeight / height;
     layer.setAttribute('transform', `matrix(${scaleX} 0 0 ${scaleY} ${-x * scaleX} ${-y * scaleY})`);
+    document.getElementById('textureOutlineLayer')?.setAttribute('transform', layer.getAttribute('transform'));
+  }
+
+  function refreshTemplateOutline(layer) {
+    const outline = document.getElementById('textureOutlineLayer');
+    if (!outline) return;
+    outline.replaceChildren();
+    outline.setAttribute('transform', layer.getAttribute('transform'));
+    function copyContours(source, target) {
+      for (const child of source.children) {
+        if (child.classList.contains('texture-template-path')) {
+          const contour = child.cloneNode(false);
+          for (const attr of [...contour.attributes]) {
+            if (attr.name === 'id' || attr.name === 'class' || attr.name === 'style' || attr.name.startsWith('data-')) contour.removeAttribute(attr.name);
+          }
+          contour.style.setProperty('fill', 'none', 'important');
+          contour.style.setProperty('stroke', '#fff', 'important');
+          contour.style.setProperty('stroke-width', '1', 'important');
+          contour.style.setProperty('opacity', '1', 'important');
+          contour.style.setProperty('stroke-opacity', '1', 'important');
+          contour.setAttribute('vector-effect', 'non-scaling-stroke');
+          target.appendChild(contour);
+        } else if (['g', 'svg', 'a'].includes(child.localName)) {
+          const group = document.createElementNS('http://www.w3.org/2000/svg', child.localName === 'a' ? 'g' : child.localName);
+          for (const name of ['transform', 'viewBox', 'x', 'y', 'width', 'height', 'preserveAspectRatio']) {
+            if (child.hasAttribute(name)) group.setAttribute(name, child.getAttribute(name));
+          }
+          copyContours(child, group);
+          if (group.children.length) target.appendChild(group);
+        }
+      }
+    }
+    copyContours(layer, outline);
   }
 
   function restoreTemplatePathPreview(path) {
@@ -841,7 +935,7 @@ window.initializeModelDesigner = () => {
     // Highlight filled panels in a separate temporary layer so the 3D hover
     // preview retains the garment paint and pointerout can remove only the tint.
     const fillPath = getTemplateFillPath(path, true, false);
-    setTemplateFillPaint(fillPath, mode === 'selected' ? 'rgba(0,102,255,0.42)' : 'rgba(0,102,255,0.24)');
+    setTemplateFillPaint(fillPath, mode === 'selected' ? 'rgba(23,23,23,0.04)' : 'rgba(23,23,23,0.02)');
     path.classList.toggle('hover-template-path', mode === 'hover');
     path.classList.toggle('selected-template-path', mode === 'selected');
   }
@@ -886,12 +980,15 @@ window.initializeModelDesigner = () => {
         node.setAttribute('stroke-width', layer.getAttribute('stroke-width'));
       }
     });
+    refreshTemplateOutline(layer);
+    if (state.history.length <= 1 && !textureElements.children.length) {state.history=[]; state.historyIndex=-1; saveHistory();}
     scheduleTexturePreviewUpdate({ requireArtwork: true });
   }
 
   function closeModal() {
     clearHoveredTemplatePreview();
     closeColorPopover();
+    closeStudioPopover(); closeShapesPopover();
     setAssetTrayOpen(false);
     designAppearancePanel?.classList.remove('is-mobile-open');
     designModal.classList.remove('active');
@@ -904,9 +1001,26 @@ window.initializeModelDesigner = () => {
   designCtaBtn?.addEventListener('click', openModal);
   designModalOverlay?.addEventListener('click', closeModal);
   designModalClose?.addEventListener('click', closeModal);
+  function handleCanvasWheel(event) {
+    if (event.target.closest('[data-editor-toolbar],button,input,select,textarea') || state.active) return;
+    const matrix=textureSvg.getScreenCTM();
+    if (!matrix || !event.deltaY) return;
+    event.preventDefault();
+    const unit=event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? textureCanvasArea.clientHeight : 1;
+    const nextZoom=Math.max(0.2,Math.min(2.5,state.zoom*Math.exp(-event.deltaY*unit*0.0015)));
+    if (nextZoom === state.zoom) return;
+    const point=svgPoint(event);
+    applyCanvasZoom(nextZoom);
+    const screenPoint=point.matrixTransform(textureSvg.getScreenCTM());
+    state.canvasPanX+=event.clientX-screenPoint.x;
+    state.canvasPanY+=event.clientY-screenPoint.y;
+    textureCanvasFrame.style.transform=`translate(${state.canvasPanX}px, ${state.canvasPanY}px)`;
+    positionElementToolbar();
+  }
+  textureCanvasArea.addEventListener('wheel',handleCanvasWheel,{passive:false});
+
   canvasZoomOut?.addEventListener('click', () => applyCanvasZoom(state.zoom * 0.85));
   canvasZoomIn?.addEventListener('click', () => applyCanvasZoom(state.zoom / 0.85));
-  canvasZoomFit?.addEventListener('click', fitCanvasZoom);
   canvasRotate?.addEventListener('click', rotateCanvas);
 
   function updateAssetTrayScrollState() {
@@ -925,97 +1039,54 @@ window.initializeModelDesigner = () => {
   function setAssetTrayOpen(open) {
     if (!imageAssetTray || !textureDesigner) return;
     imageAssetTray.hidden = !open;
-    if (open) designAppearancePanel?.classList.remove('is-mobile-open');
+    if (open) document.getElementById('garmentMaterialPanel').hidden = true;
+    document.getElementById('toolMaterial')?.classList.remove('active');
+    document.getElementById('toolMaterial')?.setAttribute('aria-pressed', 'false');
     textureDesigner.classList.toggle('asset-tray-open', open);
     toolButtons.image?.setAttribute('aria-pressed', String(open));
     toolButtons.image?.classList.toggle('active', open);
     if (open) {
       requestAnimationFrame(() => {
         updateAssetTrayScrollState();
-        imageAssetViewport?.focus({ preventScroll: true });
       });
     }
     if (state.zoomMode === 'fit') requestAnimationFrame(fitCanvasZoom);
   }
 
-  function setDesignView(view) {
-    if (!textureDesigner || !['2d', '3d', 'split'].includes(view)) return;
-    state.designView = view;
-    textureDesigner.dataset.designView = view;
-    if (view === '3d') {
-      designerViewer?.removeAttribute('min-camera-orbit');
-    } else {
-      designerViewer?.setAttribute('min-camera-orbit', 'auto auto 180%');
-    }
-    designViewSwitcher?.querySelectorAll('[data-design-view]').forEach((button) => {
-      const isActive = button.dataset.designView === view;
-      button.classList.toggle('active', isActive);
-      button.setAttribute('aria-pressed', String(isActive));
-    });
-    if (view === '3d') {
-      setAssetTrayOpen(false);
-      window.loadClothingModelViewer?.(designerViewer)
-        .then(() => {
-          if (state.pendingTextureUrl) {
-            return applyTextureToModel(state.pendingTextureUrl, state.textureUpdateId);
-          }
-          if (hasEditableArtwork()) scheduleTexturePreviewUpdate();
-          return null;
-        })
-        .catch(() => {});
-    }
+  function initializeCanvasLayout() {
+    designerViewer?.setAttribute('min-camera-orbit', 'auto auto 180%');
     requestAnimationFrame(fitCanvasZoom);
-  }
-
-  function openAppearancePanel() {
-    if (!designAppearancePanel || !textureDesigner) return;
-    setAssetTrayOpen(false);
-    designAppearancePanel.hidden = false;
-    designAppearancePanel.classList.remove('is-collapsed');
-    textureDesigner.classList.remove('appearance-collapsed');
-    if (window.matchMedia('(max-width: 900px)').matches) {
-      designAppearancePanel.classList.add('is-mobile-open');
-    }
-    designAppearancePanel.querySelector('.design-appearance-card')
-      ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
   }
 
   function setTool(tool) {
     state.tool = tool;
     state.textClickCandidate = null;
-    Object.values(toolButtons).forEach(btn => btn?.classList.remove('active'));
+    ['select','pan','text','shape'].forEach(key => { toolButtons[key]?.classList.remove('active'); toolButtons[key]?.setAttribute('aria-pressed',String(key === tool)); });
     if (toolButtons[tool]) toolButtons[tool].classList.add('active');
-    if (tool !== 'image') setAssetTrayOpen(false);
-    textureSvg.classList.toggle('is-drawing', tool === 'draw');
-    textureSvg.style.cursor = tool === 'pan' ? 'grab' : tool === 'draw' ? 'crosshair' : 'default';
+    // Canvas tools do not change the asset-panel tab.
+
+    textureSvg.style.cursor = tool === 'pan' ? 'grab' : 'default';
+    textureCanvasArea.style.cursor = tool === 'pan' ? 'grab' : 'default';
+    textureCanvasArea.style.touchAction = tool === 'pan' ? 'none' : '';
   }
 
-  Object.entries(toolButtons).forEach(([tool, btn]) => {
-    btn?.addEventListener('click', () => setTool(tool));
+  ['select','pan','text','shape'].forEach(tool => {
+    toolButtons[tool]?.addEventListener('click', () => setTool(tool));
   });
 
-  designViewSwitcher?.addEventListener('click', (event) => {
-    const button = event.target.closest('[data-design-view]');
-    if (button) setDesignView(button.dataset.designView);
-  });
-
-  appearancePanelCollapse?.addEventListener('click', () => {
-    const shouldCollapse = !designAppearancePanel?.classList.contains('is-collapsed');
-    designAppearancePanel?.classList.toggle('is-collapsed', shouldCollapse);
-    designAppearancePanel?.classList.remove('is-mobile-open');
-    textureDesigner?.classList.toggle('appearance-collapsed', shouldCollapse);
-    requestAnimationFrame(fitCanvasZoom);
-  });
-
-  designAppearancePanel?.addEventListener('click', (event) => {
-    if (designAppearancePanel.classList.contains('is-collapsed') && event.target === designAppearancePanel) {
-      openAppearancePanel();
-    }
-  });
-
-  setDesignView('2d');
+  initializeCanvasLayout();
 
   function getCanvasCenter() {
+    const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
+    const path = state.selectedTemplatePath || paths.sort((a,b) => {
+      const first=a.getBBox(), second=b.getBBox();
+      return second.width*second.height-first.width*first.height;
+    })[0];
+    if (path) {
+      const bounds=path.getBoundingClientRect();
+      return {cx:svgPoint({clientX:bounds.x+bounds.width/2,clientY:bounds.y+bounds.height/2}).x,
+        cy:svgPoint({clientX:bounds.x+bounds.width/2,clientY:bounds.y+bounds.height/2}).y};
+    }
     const viewBox = textureSvg.getAttribute('viewBox');
     if (viewBox) {
       const parts = viewBox.split(/\s+/).map(parseFloat);
@@ -1045,7 +1116,10 @@ window.initializeModelDesigner = () => {
     const includeTemplateHighlight = options.includeTemplateHighlight === true;
     const exportSvg = textureSvg.cloneNode(true);
     exportSvg.style.removeProperty('--canvas-rotation');
+    ['width','height','max-width','max-height','transform'].forEach(prop => exportSvg.style.removeProperty(prop));
     exportSvg.querySelector('#selectionLayer')?.remove();
+    exportSvg.querySelector('#textureOutlineLayer')?.remove();
+    exportSvg.querySelectorAll('[data-image-loading]').forEach(node => node.remove());
     exportSvg.querySelectorAll('.texture-element.selected').forEach((element) => {
       element.classList.remove('selected');
     });
@@ -1220,21 +1294,31 @@ window.initializeModelDesigner = () => {
 
   async function applyTextureToViewer(viewerElement, textureUrl, options = {}) {
     if (!viewerElement || !textureUrl) return false;
+    const request = {};
+    viewerTextureRequests.set(viewerElement, request);
+    const canvasRevision = state.textureUpdateId;
+    const isCurrent = () => viewerTextureRequests.get(viewerElement) === request
+      && (viewerElement !== designerViewer || canvasRevision === state.textureUpdateId)
+      && (typeof options.isCurrent !== 'function' || options.isCurrent());
     try {
       await viewerElement.updateComplete;
+      if (!isCurrent()) return false;
       if (typeof viewerElement.createTexture !== 'function') return false;
       const model = viewerElement.model;
       const materials = model?.materials || [];
       if (!materials.length) return false;
       await Promise.all(materials.map(material => material.ensureLoaded?.()));
       const texture = options.texture || await createViewerTexture(viewerElement, textureUrl);
-      const materialMaps = state.selectedMaterial
-        ? await loadMaterialMaps(viewerElement, state.selectedMaterial)
-        : {};
-      if (typeof options.isCurrent === 'function' && !options.isCurrent()) return false;
+      const panelMapUrls = await buildPanelMaterialMaps();
+      const materialMaps = panelMapUrls ? {
+        normal:await createViewerTexture(viewerElement,panelMapUrls.normal),
+        roughness:await createViewerTexture(viewerElement,panelMapUrls.roughness)
+      } : state.selectedMaterial ? await loadMaterialMaps(viewerElement,state.selectedMaterial) : {};
+      if (!isCurrent()) return false;
       let appliedMaterialCount = 0;
       materials.forEach((material) => {
         try {
+          rememberSurfaceMaps(material);
           const pbr = material.pbrMetallicRoughness;
           if (!options.preserveMaterial && pbr?.setBaseColorFactor) {
             pbr.setBaseColorFactor(getDesignedTextureFactor());
@@ -1271,7 +1355,23 @@ window.initializeModelDesigner = () => {
                 setFabricTextureRepeat(pbr?.metallicRoughnessTexture, state.selectedMaterial.textureRepeat);
               }
             } else {
+              if (!panelMapUrls) {
+                const original = originalSurfaceMaps.get(material);
+                material.normalTexture?.setTexture?.(original.normal);
+                material.normalTexture?.setScale?.(original.scale);
+                pbr?.metallicRoughnessTexture?.setTexture?.(original.roughness);
+                pbr?.setRoughnessFactor?.(original.factor);
+                pbr?.setMetallicFactor?.(original.metal);
+              }
               applyFabricSurfaceResponse(material, { sheen: 0.12, sheenRoughness: 0.82, specular: 0.28 });
+            }
+            if (panelMapUrls) {
+              setMaterialTextureSlot(material.normalTexture,materialMaps.normal);
+              material.normalTexture?.setScale?.(1);
+              applyArtworkTextureTransform(material.normalTexture);
+              setMaterialTextureSlot(pbr?.metallicRoughnessTexture,materialMaps.roughness);
+              pbr?.setRoughnessFactor?.(1); pbr?.setMetallicFactor?.(0);
+              applyArtworkTextureTransform(pbr?.metallicRoughnessTexture);
             }
           }
         } catch (error) {
@@ -1464,19 +1564,18 @@ window.initializeModelDesigner = () => {
     state.hoveredTemplatePath = path;
     clearTimeout(state.hoverTextureTimer);
     const updateId = ++state.hoverTextureUpdateId;
+    const textureRevision = state.textureUpdateId;
+    const isCurrent = () => updateId === state.hoverTextureUpdateId && state.hoveredTemplatePath === path && textureRevision === state.textureUpdateId;
     state.hoverTextureTimer = setTimeout(async () => {
-      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) return;
+      if (!isCurrent()) return;
       state.hoverMaterialSnapshot ||= captureViewerBaseColorTextures(designerViewer);
       const textureUrl = await rasterizeModelTexture({ includeTemplateHighlight: true });
-      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) return;
+      if (!isCurrent()) return;
       await applyTextureToViewer(designerViewer, textureUrl, {
         preserveMaterial: true,
-        trackApplied: false
+        trackApplied: false,
+        isCurrent
       });
-      if (updateId !== state.hoverTextureUpdateId || state.hoveredTemplatePath !== path) {
-        restoreViewerBaseColorTextures(state.hoverMaterialSnapshot);
-        state.hoverMaterialSnapshot = null;
-      }
     }, 60);
   }
 
@@ -1495,8 +1594,12 @@ window.initializeModelDesigner = () => {
     // Initial template/model loading must not replace the GLB's original fabric
     // texture with an empty white canvas. Later edits may intentionally clear it.
     if (options.requireArtwork && !hasEditableArtwork()) return;
+    // A real edit supersedes temporary hover textures and their saved snapshot.
+    // In-flight hover uploads also check this revision before touching materials.
+    clearHoveredTemplatePreview();
     clearTimeout(state.textureUpdateTimer);
     const updateId = ++state.textureUpdateId;
+    state.pendingTextureUrl = null;
     state.textureUpdateTimer = setTimeout(async () => {
       try {
         const textureUrl = await rasterizeModelTexture();
@@ -1519,6 +1622,24 @@ window.initializeModelDesigner = () => {
       const count = state.pendingArtworkUploads.size;
       setDesignSaveStatus(`Finishing ${count} image upload${count === 1 ? '' : 's'}…`);
       await Promise.all([...state.pendingArtworkUploads]);
+    }
+  }
+
+  async function persistUnsavedArtwork() {
+    for (const image of textureElements.querySelectorAll('image')) {
+      const source = image.getAttribute('href') || '';
+      if (!source.startsWith('data:image/') || state.uploadedAssetUrls.has(source)) continue;
+      let uploadSource = source;
+      if (isSvgArtwork(image.parentElement)) {
+        const decoded = await loadViewerTextureImage(source);
+        const canvas = document.createElement('canvas');
+        const scale = Math.min(1, 2048/Math.max(decoded.naturalWidth,decoded.naturalHeight));
+        canvas.width = Math.max(1,Math.round(decoded.naturalWidth*scale)); canvas.height = Math.max(1,Math.round(decoded.naturalHeight*scale));
+        canvas.getContext('2d').drawImage(decoded,0,0,canvas.width,canvas.height);
+        uploadSource = canvas.toDataURL('image/png');
+      }
+      const saved = await window.UserProjects.uploadImage(uploadSource,'Artwork.png','artwork');
+      state.uploadedAssetUrls.set(source,saved.url);
     }
   }
 
@@ -1558,6 +1679,7 @@ window.initializeModelDesigner = () => {
       });
     }
     try {
+      await waitForPendingArtworkUploads();
       const textureDataUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
       if (!modelDesignerConfig.userAuthenticated) {
         await applyFinalTextureToViewers(textureDataUrl);
@@ -1571,6 +1693,7 @@ window.initializeModelDesigner = () => {
       saveStage = 'wait_artwork_uploads';
       await waitForPendingArtworkUploads();
       saveStage = 'serialize_design';
+      await persistUnsavedArtwork();
       const elements = serializeProjectElements();
       const projectName = state.projectName || `${modelDesignerConfig.modelName || 'Garment'} Design`;
       const projectSourceId = String(modelDesignerConfig.modelId || modelDesignerConfig.modelSlug || '');
@@ -2429,6 +2552,8 @@ window.initializeModelDesigner = () => {
 
   function getCleanElementsClone() {
     const clone = textureElements.cloneNode(true);
+    clone.querySelectorAll('[data-image-loading]').forEach(node => node.remove());
+    clone.querySelectorAll('[aria-busy]').forEach(node => node.removeAttribute('aria-busy'));
     clone.querySelectorAll('[contenteditable]').forEach((element) => {
       element.removeAttribute('contenteditable');
       element.classList.remove('is-editing');
@@ -2464,6 +2589,10 @@ window.initializeModelDesigner = () => {
       height: parseFloat(group.dataset.height || 1),
       baseWidth: parseFloat(group.dataset.baseWidth || group.dataset.width || 1),
       baseHeight: parseFloat(group.dataset.baseHeight || group.dataset.height || 1),
+      imageWidth: parseFloat(group.dataset.imageWidth || group.dataset.width || 1),
+      imageHeight: parseFloat(group.dataset.imageHeight || group.dataset.height || 1),
+      cropX: parseFloat(group.dataset.cropX || 0),
+      cropY: parseFloat(group.dataset.cropY || 0),
       fontSize: parseFloat(group.dataset.fontSize || 24),
       rotate: parseFloat(group.dataset.rotate || 0)
     };
@@ -2481,17 +2610,30 @@ window.initializeModelDesigner = () => {
     group.dataset.baseHeight = data.baseHeight || data.height;
     group.dataset.fontSize = data.fontSize || parseFloat(group.dataset.fontSize || 24);
     group.dataset.rotate = data.rotate;
+    if (group.dataset.type === 'image') {
+      for (const key of ['imageWidth','imageHeight','cropX','cropY']) group.dataset[key] = data[key];
+    }
     group.setAttribute('transform', `translate(${data.x} ${data.y}) rotate(${data.rotate} ${data.width / 2} ${data.height / 2})`);
     renderElementContent(group);
   }
 
-  function constrainToCanvas(data) {
-    return clampRectToBounds(data, {
-      x: 0,
-      y: 0,
-      width: state.svgWidth,
-      height: state.svgHeight
-    });
+  function normalizeElementGeometry(data) {
+    return {...data, x:Number.isFinite(data.x) ? data.x : 0,
+      y:Number.isFinite(data.y) ? data.y : 0,
+      width:Math.max(minSize,data.width),height:Math.max(minSize,data.height)};
+  }
+
+  function cropImageFromPointer(data, handle, dx, dy) {
+    const radians = -(data.rotate || 0) * Math.PI / 180;
+    const localX = dx * Math.cos(radians) - dy * Math.sin(radians);
+    const localY = dx * Math.sin(radians) + dy * Math.cos(radians);
+    const clamp = (value, low, high) => Math.max(low, Math.min(high, value));
+    let width = data.width, height = data.height, cropX = data.cropX, cropY = data.cropY;
+    if (handle === 'w') {const amount = clamp(localX, -cropX, width - minSize); cropX += amount; width -= amount;}
+    if (handle === 'e') width = clamp(width + localX, minSize, data.imageWidth - cropX);
+    if (handle === 'n') {const amount = clamp(localY, -cropY, height - minSize); cropY += amount; height -= amount;}
+    if (handle === 's') height = clamp(height + localY, minSize, data.imageHeight - cropY);
+    return {...data, ...placeRectAtFixedAnchor(data, handle, width, height), cropX, cropY};
   }
 
   function renderElementContent(group) {
@@ -2511,7 +2653,34 @@ window.initializeModelDesigner = () => {
     } else if (type === 'rect' || type === 'image') {
       content.setAttribute('width', data.width);
       content.setAttribute('height', data.height);
-      if (type === 'image') content.setAttribute('preserveAspectRatio', 'none');
+      if (type === 'image') {
+        content.setAttribute('x', -data.cropX);
+        content.setAttribute('y', -data.cropY);
+        content.setAttribute('width', data.imageWidth);
+        content.setAttribute('height', data.imageHeight);
+        content.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+        let clip = group.querySelector('[data-image-clip]');
+        if (!clip) {
+          clip = createSvg('clipPath', {'data-image-clip':'true', clipPathUnits:'userSpaceOnUse'});
+          clip.appendChild(createSvg('rect', {x:0, y:0}));
+          const defs = createSvg('defs', {}); defs.appendChild(clip); group.prepend(defs);
+        }
+        clip.id = `${group.id}-crop`;
+        clip.firstElementChild.setAttribute('width', data.width);
+        clip.firstElementChild.setAttribute('height', data.height);
+        content.setAttribute('clip-path', `url(#${clip.id})`);
+      }
+      const loading = group.querySelector('[data-image-loading]');
+      loading?.setAttribute('width', data.width);
+      loading?.setAttribute('height', data.height);
+    } else if (type === 'circle') {
+      content.setAttribute('cx', data.width/2); content.setAttribute('cy', data.height/2);
+      content.setAttribute('rx', data.width/2); content.setAttribute('ry', data.height/2);
+    } else if (type === 'triangle') {
+      content.setAttribute('points', `${data.width/2},0 ${data.width},${data.height} 0,${data.height}`);
+    } else if (type === 'line') {
+      content.setAttribute('x2', data.width); content.setAttribute('y2', data.height);
+
     } else if (type === 'arrow') {
       const line = group.querySelector('line.texture-content');
       const head = group.querySelector('polygon');
@@ -2552,6 +2721,8 @@ window.initializeModelDesigner = () => {
       setTemplateFillPaint(fillPath, getSvgPaint(group, color, 'fill'));
       getTemplateFillPath(group, false, false)?.remove();
       group.dataset.areaEmpty = 'false';
+      const panelMaterial = window.Design3DMaterials?.materials.find(item => item.id === group.dataset.materialId);
+      if (panelMaterial) setPanelMaterial(group, panelMaterial);
       return;
     }
     const type = group.dataset.type;
@@ -2570,8 +2741,10 @@ window.initializeModelDesigner = () => {
         textBox.style.backgroundClip = '';
         textBox.style.color = color;
       }
-    } else if (type === 'rect') {
-      group.querySelector('rect.texture-content')?.setAttribute('fill', getSvgPaint(group, color, 'fill'));
+    } else if (['rect','circle','triangle'].includes(type)) {
+      group.querySelector('.texture-content')?.setAttribute('fill', getSvgPaint(group, color, 'fill'));
+    } else if (type === 'line') {
+      group.querySelector('.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
     } else if (type === 'arrow') {
       const paint = getSvgPaint(group, color, 'stroke');
       group.querySelector('line.texture-content')?.setAttribute('stroke', paint);
@@ -2579,10 +2752,6 @@ window.initializeModelDesigner = () => {
     } else if (type === 'path') {
       group.querySelector('path.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
     }
-  }
-
-  function colorToCss(value) {
-    return value || '#111827';
   }
 
   function getSvgPaint(group, value, prop) {
@@ -2789,8 +2958,10 @@ window.initializeModelDesigner = () => {
     return gradientFrom(start, end, 100, angle);
   }
 
-  function serializeAppearanceState() {
+  function serializeAppearanceState({ includeTiles = false } = {}) {
     return {
+      panelMaterials: [...textureSvg.querySelectorAll('.texture-template-path[data-material-id]')].map(path => ({id:path.dataset.templatePathId, materialId:path.dataset.materialId, ...(includeTiles ? {tile:path.dataset.materialTile} : {})})),
+      fillMode: state.fillMode,
       customPaint: state.fillCustomPaint,
       colorStart: appearanceColorStart?.value || '#5f89f4',
       colorEnd: appearanceColorEnd?.value || '#c39bea',
@@ -2810,8 +2981,9 @@ window.initializeModelDesigner = () => {
       : parsed.alpha === 100 ? parsed.start : rgbaFrom(parsed.start, parsed.alpha);
   }
 
-  function restoreAppearanceState(appearance) {
+  async function restoreAppearanceState(appearance) {
     if (!appearance || typeof appearance !== 'object') return;
+    if (['solid','gradient','transparent'].includes(appearance.fillMode)) state.fillMode = appearance.fillMode;
     state.fillCustomPaint = typeof appearance.customPaint === 'string'
       ? normalizeSavedPaint(appearance.customPaint) : null;
     if (appearanceColorStart) appearanceColorStart.value = normalizeHex(appearance.colorStart || appearanceColorStart.value);
@@ -2822,6 +2994,21 @@ window.initializeModelDesigner = () => {
     const pathsById = new Map(
       [...textureSvg.querySelectorAll('.texture-template-path')].map((path) => [path.dataset.templatePathId, path])
     );
+    const materialLoads = [];
+    (Array.isArray(appearance.panelMaterials) ? appearance.panelMaterials : []).forEach(saved => {
+      const path = pathsById.get(saved.id);
+      const material = window.Design3DMaterials?.materials.find(item => item.id === saved.materialId);
+      if (!path || !material) return;
+      if (/^data:image\/png;base64,/.test(saved.tile || '')) {
+        const id = `${path.dataset.templatePathId}-fabric`;
+        document.getElementById(id)?.remove();
+        const pattern = createSvg('pattern',{id,patternUnits:'userSpaceOnUse',width:128,height:128});
+        pattern.append(createSvg('image',{href:saved.tile,width:128,height:128})); textureSvg.querySelector('defs').append(pattern);
+        path.dataset.materialId = material.id; path.dataset.materialTile = saved.tile;
+        setTemplateFillPaint(getTemplateFillPath(path,true,true),`url(#${id})`);
+      } else materialLoads.push(setPanelMaterial(path,material));
+    });
+    if (materialLoads.length) await Promise.all(materialLoads);
     (Array.isArray(appearance.panelFills) ? appearance.panelFills : []).forEach((savedFill) => {
       const path = pathsById.get(String(savedFill?.id || ''));
       if (path && typeof savedFill?.paint === 'string') setElementColor(path, normalizeSavedPaint(savedFill.paint));
@@ -2883,7 +3070,6 @@ window.initializeModelDesigner = () => {
 
   function renderAppearanceControls() {
     const paint = getAppearancePaint();
-    if (appearanceGradientPreview) appearanceGradientPreview.style.background = paint;
     const isSolid = state.fillMode === 'solid';
     const recommendedColors = [...(designAppearancePanel?.querySelectorAll('[data-fill-color]:not([data-fill-color="none"])') || [])];
     const matchesRecommended = recommendedColors.some((button) => button.dataset.fillColor === paint);
@@ -2895,10 +3081,7 @@ window.initializeModelDesigner = () => {
       button.setAttribute('aria-pressed', String(active));
     });
     appearanceCustomColor?.classList.toggle('active', state.fillMode !== 'transparent' && !matchesRecommended);
-    if (appearanceGradientAngleOutput) {
-      appearanceGradientAngleOutput.value = `${Math.round(parseFloat(appearanceGradientAngle?.value || 135))}°`;
-      appearanceGradientAngleOutput.textContent = appearanceGradientAngleOutput.value;
-    }
+
   }
 
   function applyAppearanceFill() {
@@ -2913,6 +3096,7 @@ window.initializeModelDesigner = () => {
     allPaths.forEach((path) => setElementColor(path, paint));
     setDesignSaveStatus('Unapplied changes', true);
     renderSelection();
+    saveHistory();
     scheduleTexturePreviewUpdate();
   }
 
@@ -2935,8 +3119,8 @@ window.initializeModelDesigner = () => {
     }
     closeColorPopover();
     openColorPopover(appearanceCustomColor, {
-      container: designModal.querySelector('.design-modal-content'),
-      placement: 'below',
+      container: textureCanvasArea,
+      placement: 'canvas-right',
       value: getAppearancePaint(),
       onChange(paint, settings) {
         state.fillMode = settings.mode;
@@ -2950,9 +3134,9 @@ window.initializeModelDesigner = () => {
 
   function setElementStrokeColor(group, color) {
     if (!group) return;
-    if (group.dataset.type === 'rect') {
+    if (['rect','circle','triangle','line'].includes(group.dataset.type)) {
       group.dataset.strokeColor = color;
-      group.querySelector('rect.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
+      group.querySelector('.texture-content')?.setAttribute('stroke', getSvgPaint(group, color, 'stroke'));
     }
   }
 
@@ -2969,8 +3153,8 @@ window.initializeModelDesigner = () => {
     } else if (group.dataset.type === 'arrow') {
       group.dataset.strokeWidth = width;
       group.querySelector('line.texture-content')?.setAttribute('stroke-width', width);
-    } else if (group.dataset.type === 'rect') {
-      group.querySelector('rect.texture-content')?.setAttribute('stroke-width', width);
+    } else if (['rect','circle','triangle','line'].includes(group.dataset.type)) {
+      group.querySelector('.texture-content')?.setAttribute('stroke-width', width);
     }
   }
 
@@ -2980,7 +3164,7 @@ window.initializeModelDesigner = () => {
     if (group.classList?.contains('texture-template-path')) {
       if (patch.color) setElementColor(group, patch.color);
       renderSelection();
-      scheduleTexturePreviewUpdate();
+      if (options.commit) saveHistory(); else scheduleTexturePreviewUpdate();
       return;
     }
     if (patch.fontSize !== undefined && group.dataset.type === 'text') {
@@ -3030,24 +3214,30 @@ window.initializeModelDesigner = () => {
       textBox.className = 'texture-text-box';
       textBox.dataset.color = options.color || '#111827';
       textBox.textContent = options.text || defaultTextContent;
+      Object.assign(textBox.style,{fontFamily:'Arial',fontWeight:'400',lineHeight:'1.2',whiteSpace:'pre-wrap',height:'100%',width:'100%',overflowWrap:'break-word'});
       content.appendChild(textBox);
     } else if (type === 'rect') {
       content = createSvg('rect', {
         class: 'texture-content',
         x: 0,
         y: 0,
-        rx: 8,
-        fill: '#3b82f6',
-        stroke: '#1e3a8a',
-        'stroke-width': 2
+        rx: options.rounded ? 12 : 0,
+        fill: '#171717',
+        stroke: '#171717',
+        'stroke-width': 0
       });
+    } else if (type === 'circle' || type === 'triangle') {
+      content = createSvg(type === 'circle' ? 'ellipse' : 'polygon', {class:'texture-content', fill:'#171717', stroke:'#171717', 'stroke-width':0});
+    } else if (type === 'line') {
+      content = createSvg('line', {class:'texture-content',x1:0,y1:0,stroke:'#171717','stroke-width':3,'stroke-linecap':'round'});
     } else if (type === 'image') {
+      if (/^data:image\/svg\+xml/i.test(options.src || '')) { group.dataset.sourceFormat = 'svg'; group.dataset.svgMarkup = options.src.split(',')[1]; }
       content = createSvg('image', {
         class: 'texture-content',
         x: 0,
         y: 0,
         href: options.src,
-        preserveAspectRatio: 'none'
+        preserveAspectRatio: 'xMidYMid meet'
       });
     } else if (type === 'arrow') {
       const line = createSvg('line', {
@@ -3081,6 +3271,7 @@ window.initializeModelDesigner = () => {
 
   function selectElement(element) {
     if (element !== state.selected) {
+      closeStudioPopover();
       closeColorPopover();
       state.textClickCandidate = null;
     }
@@ -3190,140 +3381,527 @@ window.initializeModelDesigner = () => {
     });
   }
 
+  function initializeStudioTooltips() {
+    const selector = '.studio-global-tools button, .studio-canvas-history button, .designer-toolbar button, .element-toolbar button, .studio-shape-grid button';
+    const tooltip = document.createElement('div');
+    tooltip.id = 'studioToolHint';
+    tooltip.className = 'studio-tool-hint';
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.hidden = true;
+    designModal.appendChild(tooltip);
+    let anchor = null, timer;
+    const hide = () => {
+      clearTimeout(timer);
+      if (anchor) {
+        const ids = (anchor.getAttribute('aria-describedby') || '').split(' ').filter(id => id && id !== tooltip.id);
+        if (ids.length) anchor.setAttribute('aria-describedby', ids.join(' '));
+        else anchor.removeAttribute('aria-describedby');
+      }
+      anchor = null;
+      tooltip.hidden = true;
+    };
+    const prepare = button => {
+      const label = button.dataset.tooltip || button.getAttribute('aria-label') || button.title || button.textContent.trim();
+      button.dataset.tooltip = label;
+      if (!button.hasAttribute('aria-label')) button.setAttribute('aria-label', label);
+      button.removeAttribute('title');
+    };
+    designModal.querySelectorAll(selector).forEach(prepare);
+    const show = (button, delay) => {
+      hide();
+      if (button.disabled || button.getAttribute('aria-expanded') === 'true') return;
+      prepare(button);
+      anchor = button;
+      timer = setTimeout(() => {
+        if (!button.isConnected) return hide();
+        tooltip.textContent = button.dataset.tooltip;
+        tooltip.hidden = false;
+        const bounds = button.getBoundingClientRect();
+        const size = tooltip.getBoundingClientRect();
+        const modal = designModal.getBoundingClientRect();
+        const left = Math.max(modal.left + 8, Math.min(bounds.left + (bounds.width - size.width) / 2, modal.right - size.width - 8));
+        const top = bounds.bottom + size.height + 8 <= modal.bottom - 8 ? bounds.bottom + 8 : bounds.top - size.height - 8;
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+        button.setAttribute('aria-describedby', [button.getAttribute('aria-describedby'), tooltip.id].filter(Boolean).join(' '));
+      }, delay);
+    };
+    designModal.addEventListener('pointerover', event => {
+      if (event.pointerType === 'touch') return;
+      const button = event.target.closest(selector);
+      if (button && !button.contains(event.relatedTarget)) show(button, 350);
+    });
+    designModal.addEventListener('pointerout', event => { if (anchor && anchor.contains(event.target) && !anchor.contains(event.relatedTarget)) hide(); });
+    designModal.addEventListener('focusin', event => { const button = event.target.closest(selector); if (button?.matches(':focus-visible')) show(button, 0); });
+    designModal.addEventListener('focusout', hide);
+    designModal.addEventListener('pointerdown', hide);
+    designModal.addEventListener('keydown', hide);
+    designModal.addEventListener('wheel', hide, {passive: true});
+  }
+  initializeStudioTooltips();
+
+  const studioIcons = {
+    opacity: '<circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/>',
+    color: '<path d="m5 10 7-7 8 8-7 7-8-8ZM3 20h13M21 14s-3 3-3 5a3 3 0 0 0 6 0c0-2-3-5-3-5Z"/>',
+    material: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 4v16M12 4v16M16 4v16M4 8h16M4 12h16M4 16h16"/>',
+    reset: '<path d="M4 4v6h6M4 10a8 8 0 1 1 0 7"/>',
+    duplicate: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>',
+    layers: '<path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/>',
+    background: '<rect x="3" y="5" width="16" height="16" rx="2"/><path d="m4 17 5-5 4 4 3-3 3 3M19 2v6M16 5h6"/><circle cx="8" cy="9" r="1"/>',
+    upscale: '<path d="M14 3h7v7M21 3l-8 8M10 21H3v-7M3 21l8-8"/>',
+    delete: '<path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>',
+    font: '<text x="2" y="17" fill="currentColor" stroke="none" font-size="16" font-family="Arial">Aa</text>',
+    size: '<path d="M3 5h10M8 5v15M5 20h6M19 4v16m-3-13 3-3 3 3m-6 10 3 3 3-3"/>',
+    style: '<text x="6" y="18" fill="currentColor" stroke="none" font-size="19" font-weight="bold">B</text>',
+    align: '<path d="M4 5h16M7 10h10M4 15h16M7 20h10"/>',
+    textColor: '<path d="m6 17 6-13 6 13M8 13h8M3 21h18"/>',
+    spacing: '<path d="M3 7v10M21 7v10M4 12h16m-13-3-3 3 3 3m10-6 3 3-3 3"/>',
+    line: '<path d="m4 20 16-16"/>',
+    stroke: '<rect x="4" y="4" width="16" height="16"/>',
+    rect: '<rect x="4" y="6" width="16" height="12"/>',
+    rounded: '<rect x="4" y="6" width="16" height="12" rx="4"/>',
+    circle: '<circle cx="12" cy="12" r="8"/>',
+    triangle: '<path d="m12 4 9 16H3Z"/>'
+  };
+  const studioSvg = name => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${studioIcons[name] || ''}</svg>`;
+  shapesPopover.innerHTML = '<strong>Shapes</strong><div class="studio-shape-grid">' + ['rect', 'rounded', 'circle', 'triangle', 'line'].map((name, index) => `<button type="button" data-basic-shape="${name}" title="${['Rectangle','Rounded rectangle','Circle','Triangle','Line'][index]}" aria-label="${['Rectangle','Rounded rectangle','Circle','Triangle','Line'][index]}">${studioSvg(name)}</button>`).join('') + '</div>';
+
+  function closeStudioPopover() {
+    studioPopover.hidden = true;
+    openStudioControl = null;
+    studioAnchor = null;
+    elementToolbar.querySelectorAll('[data-studio-control]').forEach(button => button.setAttribute('aria-expanded', 'false'));
+  }
+
+  function closeShapesPopover() {
+    shapesPopover.hidden = true;
+    toolButtons.shape?.setAttribute('aria-expanded', 'false');
+  }
+
+  function getPopoverPlacement(area, toolbar, anchor, size) {
+    const gap = 12, inset = 8;
+    const width = Math.min(size.width, Math.max(0, area.right-area.left-inset*2));
+    const height = Math.min(size.height, Math.max(0, area.bottom-area.top-inset*2));
+    const clamp = (value, min, max) => Math.max(min,Math.min(max,value));
+    const candidates = [
+      {left:toolbar.right+gap,top:toolbar.top},
+      {left:toolbar.left-width-gap,top:toolbar.top},
+      {left:anchor.left,top:toolbar.bottom+gap},
+      {left:anchor.left,top:toolbar.top-height-gap}
+    ].map(position=>({left:clamp(position.left,area.left+inset,area.right-width-inset),
+      top:clamp(position.top,area.top+inset,area.bottom-height-inset)}));
+    const position = candidates.find(p=>p.left>=toolbar.right+gap || p.left+width<=toolbar.left-gap ||
+      p.top>=toolbar.bottom+gap || p.top+height<=toolbar.top-gap);
+    if (position) return {...position,width,maxHeight:height};
+    const below=Math.max(0,area.bottom-toolbar.bottom-gap-inset);
+    const above=Math.max(0,toolbar.top-area.top-gap-inset);
+    const useBelow=below>=above;
+    const maxHeight=Math.min(height,useBelow?below:above);
+    return {left:candidates[2].left,top:useBelow?toolbar.bottom+gap:toolbar.top-maxHeight-gap,width,maxHeight};
+  }
+
+  function placeToolbarPopover(popover, container, toolbar, anchor) {
+    const area=container.getBoundingClientRect();
+    popover.style.maxHeight=`${Math.max(0,area.height-16)}px`;
+    popover.style.maxWidth=`${Math.max(0,area.width-16)}px`;
+    popover.style.boxSizing='border-box';
+    popover.style.overflowY='auto';
+    const placement=getPopoverPlacement(area,toolbar,anchor,{width:popover.offsetWidth,height:popover.offsetHeight});
+    popover.style.maxHeight=`${placement.maxHeight}px`;
+    popover.style.left=`${container.scrollLeft+placement.left-area.left}px`;
+    popover.style.top=`${container.scrollTop+placement.top-area.top}px`;
+  }
+
+  function positionStudioPopover() {
+    if (studioPopover.hidden || !studioAnchor?.isConnected) return;
+    placeToolbarPopover(studioPopover,textureCanvasArea,elementToolbar.getBoundingClientRect(),studioAnchor.getBoundingClientRect());
+  }
+
+  function getEditorMaterials() {
+    const available = window.Design3DMaterials?.materials || [];
+    return available.filter(material => material.generated);
+  }
+
+  function renderLocalMaterialChoices() {
+    const grid = studioPopover.querySelector('.studio-local-materials');
+    if (!grid) return;
+    grid.replaceChildren();
+    getEditorMaterials().forEach(material => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.localMaterial = material.id;
+      button.setAttribute('aria-pressed', String(state.selected?.dataset.materialId === material.id));
+      button.className = 'material-swatch';
+      button.classList.toggle('active', state.selected?.dataset.materialId === material.id);
+      const preview = document.createElement('span');
+      preview.className = 'material-swatch-preview';
+      preview.style.backgroundColor = material.color;
+      preview.style.backgroundImage = `url("${materialPreviewUrls[material.id] || material.maps?.baseColor}")`;
+      const name = document.createElement('span');
+      name.className = 'material-swatch-name';
+      name.textContent = material.name;
+      button.append(preview, name);
+      grid.append(button);
+    });
+  }
+
+  function rangeControl(label, prop, value, min, max, step = 1) {
+    return `<label class="studio-range-label">${label}<output>${value}</output><input type="range" data-studio-prop="${prop}" aria-label="${label}" min="${min}" max="${max}" step="${step}" value="${value}"></label>`;
+  }
+
+  function openStudioPopover(button, control) {
+    if (openStudioControl === control && !studioPopover.hidden) { closeStudioPopover(); return; }
+    closeColorPopover();
+    closeStudioPopover();
+    closeShapesPopover();
+    const group = state.selected;
+    if (!group) return;
+    studioAnchor = button;
+    openStudioControl = control;
+    studioPopover.dataset.control = control;
+    button.setAttribute('aria-expanded', 'true');
+    const box = group.querySelector('.texture-text-box');
+    const title = {font:'Font',size:'Font size',style:'Style',align:'Alignment',spacing:'Spacing',opacity:'Opacity',layers:'Layers',material:'Material',line:'Stroke width'}[control];
+    studioPopover.setAttribute('aria-label', title || 'Element properties');
+    studioPopover.innerHTML = `<strong>${title || 'Element properties'}</strong>`;
+    if (control === 'opacity') studioPopover.innerHTML += rangeControl('Opacity', 'opacity', Math.round(Number(group.getAttribute('opacity') || 1) * 100), 0, 100);
+    if (control === 'size') studioPopover.innerHTML += `<label class="studio-number-label">Font size<input type="number" aria-label="Font size" data-studio-prop="fontSize" min="8" max="320" value="${Math.round(getData(group).fontSize)}"></label>`;
+    if (control === 'line') studioPopover.innerHTML += rangeControl('Stroke width', 'lineWidth', Number(group.querySelector('.texture-content')?.getAttribute('stroke-width') || 2), 0, 40);
+    if (control === 'spacing') studioPopover.innerHTML += rangeControl('Letter spacing', 'letterSpacing', parseFloat(box?.style.letterSpacing) || 0, -4, 24, 0.5) + rangeControl('Line height', 'lineHeight', parseFloat(box?.style.lineHeight) || 1.2, 0.8, 3, 0.1);
+    if (control === 'font') {
+      studioPopover.innerHTML += '<input type="search" placeholder="Search fonts" aria-label="Search fonts" data-font-search><div class="studio-font-list"></div>';
+      ['Arial', 'Georgia', 'Courier New', 'Verdana', 'Helvetica', 'Times New Roman'].forEach(font => {
+        const option = document.createElement('button');
+        option.type = 'button'; option.dataset.font = font; option.textContent = font; option.style.fontFamily = font;
+        option.setAttribute('aria-pressed', String((box?.style.fontFamily || 'Arial').replaceAll('"','') === font));
+        studioPopover.querySelector('.studio-font-list').append(option);
+      });
+    }
+    if (control === 'style') studioPopover.innerHTML += `<div class="studio-toggle-row"><button type="button" data-text-style="bold" aria-label="Bold" aria-pressed="${box?.style.fontWeight === '700'}"><b>B</b></button><button type="button" data-text-style="italic" aria-label="Italic" aria-pressed="${box?.style.fontStyle === 'italic'}"><i>I</i></button><button type="button" data-text-style="underline" aria-label="Underline" aria-pressed="${box?.style.textDecoration === 'underline'}"><u>U</u></button></div>`;
+    if (control === 'align') studioPopover.innerHTML += '<div class="studio-menu">' + ['left','center','right'].map(align => `<button type="button" data-text-align="${align}" aria-pressed="${(box?.style.textAlign || 'left') === align}">${align[0].toUpperCase()+align.slice(1)}</button>`).join('') + '</div>';
+    if (control === 'layers') studioPopover.innerHTML += '<div class="studio-menu">' + [['forward','Bring forward'],['backward','Send backward'],['front','Bring to front'],['back','Send to back']].map(([action,label]) => `<button type="button" data-layer-action="${action}">${label}</button>`).join('') + '</div>';
+    if (control === 'material') {
+      studioPopover.innerHTML += '<span class="studio-muted">Selected piece</span><div class="studio-local-materials"></div><small>Selected piece only</small>';
+      renderLocalMaterialChoices();
+    }
+    studioPopover.hidden = false;
+    positionStudioPopover();
+  }
+
+  function commitTextAppearance(patch, commit = true) {
+    const group = state.selected;
+    const box = group?.querySelector('.texture-text-box');
+    if (!box) return;
+    Object.assign(box.style, patch);
+    autoFitTextHeight(group);
+    renderSelection();
+    if (commit) saveHistory(); else scheduleTexturePreviewUpdate();
+  }
+
+  studioPopover.addEventListener('pointerdown', event => event.stopPropagation());
+  studioPopover.addEventListener('input', event => {
+    const input = event.target;
+    if (input.matches('[data-font-search]')) {
+      studioPopover.querySelectorAll('[data-font]').forEach(option => { option.hidden = !option.dataset.font.toLowerCase().includes(input.value.toLowerCase()); });
+      positionStudioPopover(); return;
+    }
+    if (!input.dataset.studioProp) return;
+    input.previousElementSibling?.matches('output') && (input.previousElementSibling.value = input.value);
+    const prop = input.dataset.studioProp;
+    if (prop === 'letterSpacing') commitTextAppearance({ letterSpacing: `${input.value}px` }, false);
+    else if (prop === 'lineHeight') commitTextAppearance({ lineHeight: input.value }, false);
+    else updateSelectedElement({ [prop]: input.value });
+  });
+  studioPopover.addEventListener('keydown', event => {
+    if (event.key === 'Escape') {event.stopPropagation();closeStudioPopover();}
+  });
+  shapesPopover.addEventListener('keydown', event => {if(event.key === 'Escape') {event.stopPropagation();closeShapesPopover();toolButtons.shape.focus();}});
+  studioPopover.addEventListener('change', event => {
+    if (event.target.dataset.studioProp) saveHistory();
+  });
+  studioPopover.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button) return;
+    if (button.dataset.font) { commitTextAppearance({ fontFamily: button.dataset.font }); closeStudioPopover(); }
+    if (button.dataset.textStyle) {
+      const box = state.selected?.querySelector('.texture-text-box');
+      if (!box) return;
+      const style = button.dataset.textStyle;
+      const enabled = button.getAttribute('aria-pressed') !== 'true';
+      commitTextAppearance(style === 'bold' ? {fontWeight: enabled ? '700' : '400'} : style === 'italic' ? {fontStyle: enabled ? 'italic' : 'normal'} : {textDecoration: enabled ? 'underline' : 'none'});
+      button.setAttribute('aria-pressed', String(enabled));
+    }
+    if (button.dataset.textAlign) { commitTextAppearance({textAlign: button.dataset.textAlign}); closeStudioPopover(); }
+    if (button.dataset.layerAction) { reorderSelected(button.dataset.layerAction); closeStudioPopover(); }
+    if (button.dataset.localMaterial) {
+      const path = state.selected;
+      const material = getEditorMaterials().find(item => item.id === button.dataset.localMaterial);
+      if (!material || !path?.classList.contains('texture-template-path')) return;
+      button.disabled = true;
+      try { await setPanelMaterial(path, material); saveHistory(); renderLocalMaterialChoices(); }
+      catch (error) { showImageUploadToast('Material could not be loaded. Please try again.', 'error', 5000); }
+      finally { button.disabled = false; }
+    }
+
+  });
+
+  function tintFabricPixels(pixels, color) {
+    const rgb = hexToRgbUnit(parseColorState(color).start).map(channel => channel * 255);
+    let total = 0, weight = 0;
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const alpha = pixels.data[i + 3] / 255;
+      total += (pixels.data[i] * 0.2126 + pixels.data[i + 1] * 0.7152 + pixels.data[i + 2] * 0.0722) * alpha;
+      weight += alpha;
+    }
+    const mean = weight ? total / weight : 255;
+    for (let i = 0; i < pixels.data.length; i += 4) {
+      const luminance = pixels.data[i] * 0.2126 + pixels.data[i + 1] * 0.7152 + pixels.data[i + 2] * 0.0722;
+      // Preserve fine weave contrast, removing both the sample's hue and its
+      // overall darkness so dark denim can also be dyed white or pastel.
+      const shade = Math.max(0.9, Math.min(1.08, 1 + (luminance - mean) / 255 * 0.3));
+      for (let channel = 0; channel < 3; channel++) pixels.data[i + channel] = Math.round(rgb[channel] * shade);
+    }
+    return pixels;
+  }
+
+  async function getFabricTile(material, color) {
+    const key = `${material.id}:${color}`;
+    if (!fabricTileCache.has(key)) {
+      fabricTileCache.set(key, (async () => {
+        const image = await loadViewerTextureImage(await resolveArtworkDataUrl(material.maps.baseColor));
+        const canvas = document.createElement('canvas'); canvas.width = canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(image,0,0,128,128);
+        ctx.putImageData(tintFabricPixels(ctx.getImageData(0,0,128,128), color), 0, 0);
+        return canvas.toDataURL('image/png');
+      })().catch(error => { fabricTileCache.delete(key); throw error; }));
+    }
+    return fabricTileCache.get(key);
+  }
+
+  async function setPanelMaterial(path, material) {
+    const color = path.dataset.color || '#ffffff';
+    const revision = state.appearanceRevision;
+    const request = (panelMaterialRequests.get(path) || 0) + 1; panelMaterialRequests.set(path,request);
+    const tile = await getFabricTile(material, color);
+    if (!path.isConnected || revision !== state.appearanceRevision || panelMaterialRequests.get(path) !== request) return;
+    const id = `${path.dataset.templatePathId}-fabric`;
+    let pattern = document.getElementById(id);
+    if (!pattern) { pattern = createSvg('pattern', {id, patternUnits:'userSpaceOnUse', width:128, height:128}); textureSvg.querySelector('defs').append(pattern); }
+    pattern.replaceChildren(createSvg('image', {href:tile, width:128, height:128, preserveAspectRatio:'none'}));
+    path.dataset.materialId = material.id;
+    path.dataset.materialTile = tile;
+    setTemplateFillPaint(getTemplateFillPath(path, true, true), `url(#${id})`);
+    scheduleTexturePreviewUpdate();
+  }
+
+  function resetPanelAppearance(path) {
+    if (!path?.classList.contains('texture-template-path')) return;
+    panelMaterialRequests.set(path,(panelMaterialRequests.get(path) || 0)+1);
+    delete path.dataset.materialId; delete path.dataset.materialTile;
+    document.getElementById(`${path.dataset.templatePathId}-fabric`)?.remove();
+    getTemplateFillPath(path, true, true)?.remove();
+    delete path.dataset.color;
+    const wholePaint = state.fillCustomPaint || appearanceColorStart?.value;
+    if (wholePaint) setElementColor(path,wholePaint);
+    if (state.selectedMaterial) setPanelMaterial(path, state.selectedMaterial).then(saveHistory);
+    else { saveHistory(); scheduleTexturePreviewUpdate(); }
+  }
+
+  const panelMapCache = new Map();
+  async function buildPanelMaterialMaps() {
+    const paths = [...textureSvg.querySelectorAll('.texture-template-path[data-material-id]')];
+    if (!paths.length) return null;
+    const key = `${state.svgWidth}:${state.svgHeight}:` + paths.map(path => `${path.dataset.templatePathId}:${path.dataset.materialId}`).join('|');
+    if (!panelMapCache.has(key)) {
+      panelMapCache.set(key, (async () => {
+        const maps = {};
+        for (const channel of ['normal','roughness']) {
+          const atlas = textureSvg.cloneNode(true);
+          atlas.style.removeProperty('width'); atlas.style.removeProperty('height'); atlas.style.removeProperty('max-width'); atlas.style.removeProperty('transform');
+          atlas.setAttribute('width',state.svgWidth); atlas.setAttribute('height',state.svgHeight);
+          atlas.querySelector('#textureElements')?.remove(); atlas.querySelector('#selectionLayer')?.remove();
+          atlas.querySelector('#textureOutlineLayer')?.remove();
+          atlas.querySelector('#texturePattern')?.remove(); atlas.querySelector('#textureBg')?.remove();
+          atlas.querySelectorAll('.texture-template-fill').forEach(node => node.remove());
+          atlas.querySelectorAll('.texture-template-path').forEach(node => node.remove());
+          atlas.querySelector('#textureWhiteBase')?.setAttribute('fill',channel === 'normal' ? '#8080ff' : '#00db00');
+          const layer = atlas.querySelector('#textureTemplateLayer');
+          const defs = atlas.querySelector('defs');
+          for (const path of paths) {
+            const material = window.Design3DMaterials.materials.find(item => item.id === path.dataset.materialId);
+            if (!material?.maps[channel]) continue;
+            const image = await loadViewerTextureImage(await resolveArtworkDataUrl(material.maps[channel]));
+            const tile = document.createElement('canvas'); tile.width = tile.height = 128;
+            const ctx = tile.getContext('2d'); ctx.drawImage(image,0,0,128,128);
+            const pixels = ctx.getImageData(0,0,128,128);
+            for (let i = 0; i < pixels.data.length; i += 4) {
+              if (channel === 'normal') {
+                pixels.data[i] = 128 + (pixels.data[i]-128)*(material.normalScale ?? 0.3);
+                pixels.data[i+1] = 128 + (pixels.data[i+1]-128)*(material.normalScale ?? 0.3);
+              } else {
+                const roughness = pixels.data[i+1] * (material.roughness ?? 0.86);
+                pixels.data[i] = 0; pixels.data[i+1] = roughness; pixels.data[i+2] = 0;
+              }
+            }
+            ctx.putImageData(pixels,0,0);
+            const id = `${path.dataset.templatePathId}-${channel}-atlas`;
+            const pattern = createSvg('pattern',{id,patternUnits:'userSpaceOnUse',width:128,height:128});
+            pattern.append(createSvg('image',{href:tile.toDataURL('image/png'),width:128,height:128})); defs.append(pattern);
+            const shape = path.cloneNode(true);
+            shape.removeAttribute('class'); shape.removeAttribute('style');
+            shape.setAttribute('fill',`url(#${id})`); shape.setAttribute('fill-opacity','1');
+            shape.setAttribute('stroke',`url(#${id})`); shape.setAttribute('stroke-width','8');
+            shape.setAttribute('vector-effect','non-scaling-stroke'); shape.setAttribute('paint-order','stroke fill');
+            layer.append(shape);
+          }
+          const url = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(atlas))));
+          const image = await loadViewerTextureImage(url);
+          const canvas = document.createElement('canvas'); canvas.width=state.svgWidth; canvas.height=state.svgHeight;
+          canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+          maps[channel] = canvas.toDataURL('image/png');
+        }
+        return maps;
+      })().catch(error => {panelMapCache.delete(key);throw error;}));
+      if (panelMapCache.size > 8) panelMapCache.delete(panelMapCache.keys().next().value);
+    }
+    return panelMapCache.get(key);
+  }
+
+  function isSvgArtwork(group) {
+    const source = group?.querySelector('image')?.getAttribute('href') || '';
+    return group?.dataset.sourceFormat === 'svg' || /^data:image\/svg\+xml/i.test(source) || /\.svg(?:[?#]|$)/i.test(source);
+  }
+
+  function processSelectedImage(operation) {
+    const group = editableSelection();
+    if (!group || group.dataset.type !== 'image' || isSvgArtwork(group) || imageTask) return;
+    closeColorPopover();
+    closeStudioPopover();
+    const loading = document.createElementNS(SVG_NS, 'foreignObject');
+    const dimensions = getData(group);
+    loading.setAttribute('data-image-loading', 'true');
+    loading.setAttribute('width', dimensions.width);
+    loading.setAttribute('height', dimensions.height);
+    loading.setAttribute('pointer-events', 'none');
+    loading.innerHTML = `<div xmlns="http://www.w3.org/1999/xhtml" class="studio-image-loading" role="status" aria-label="${operation === 'upscale' ? 'Upscaling image' : 'Removing background'}"><i></i></div>`;
+    group.appendChild(loading);
+    group.setAttribute('aria-busy', 'true');
+    const id = ++imageTaskCounter;
+    const source = group.querySelector('image').getAttribute('href');
+    imageTask = {id, group, operation};
+    state.pendingArtworkUploads.add(new Promise(resolve => { imageTask.resolve = resolve; }));
+    const pending = [...state.pendingArtworkUploads].at(-1);
+    imageTask.pending = pending;
+    let timeout;
+    const finish = () => {
+      clearTimeout(timeout);
+      group.querySelector('[data-image-loading]')?.remove();
+      group.removeAttribute('aria-busy');
+      imageTask?.resolve(); state.pendingArtworkUploads.delete(pending); imageTask = null;
+    };
+    const fail = () => {
+      finish();
+      showImageUploadToast(operation === 'upscale' ? 'Image could not be upscaled. Try again.' : 'Background could not be removed. Try again.', 'error', 5000);
+    };
+    timeout = setTimeout(() => { if (imageTask?.id !== id) return; imageWorker?.terminate(); imageWorker=null; fail(); },10*60*1000);
+    try {
+      if (!imageWorker) imageWorker = new Worker('/js/editor-image-worker.js?v=20261011-v5', {type:'module'});
+      imageWorker.onmessage = async ({data}) => {
+        if (data.id !== imageTask?.id) return;
+        if (data.error) { fail(); return; }
+        if (!data.blob) return;
+        try {
+          const result = await blobToDataUrl(data.blob);
+          if (imageTask?.id !== id) return;
+          // An undo, delete, or project change must never resurrect stale artwork.
+          if (group.isConnected && group.querySelector('image').getAttribute('href') === source) {
+            group.querySelector('image').setAttribute('href', result);
+            delete group.dataset.sourceFormat; delete group.dataset.svgMarkup;
+            group.querySelector('[data-image-loading]')?.remove(); group.removeAttribute('aria-busy');
+            saveHistory(); renderSelection();
+            showImageUploadToast(operation === 'upscale' ? 'Image upscaled' : 'Background removed', 'success', 2400);
+          }
+          finish();
+        } catch (error) { fail(); }
+      };
+      imageWorker.onerror = () => { imageWorker.terminate(); imageWorker = null; fail(); };
+      imageWorker.postMessage({id, operation, source});
+    } catch (error) { fail(); }
+  }
+
   function buildElementToolbar(group) {
-    elementToolbar.classList.toggle('is-surface-toolbar', group.classList?.contains('texture-template-path'));
-    if (group.classList?.contains('texture-template-path')) {
-      elementToolbar.innerHTML = '';
-      const title = document.createElement('span');
-      title.className = 'surface-toolbar-title';
-      title.innerHTML = '<span class="surface-toolbar-icon" aria-hidden="true"></span> Surface color';
-      const control = document.createElement('label');
-      control.className = 'element-toolbar-control surface-color-control';
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'color-chip';
-      button.dataset.colorProp = 'color';
-      const value = getColorValue(group, 'color');
-      button.dataset.colorValue = value;
-      button.style.background = colorToCss(value);
-      button.setAttribute('aria-label', 'Area color');
-      button.setAttribute('aria-haspopup', 'dialog');
-      button.setAttribute('aria-expanded', String(colorPopover.classList.contains('visible')));
-      const valueLabel = document.createElement('span');
-      valueLabel.className = 'surface-color-value';
-      const parsedValue = parseColorState(value);
-      valueLabel.textContent = parsedValue.mode === 'gradient' ? 'Gradient' : parsedValue.start.toUpperCase();
-      control.appendChild(button);
-      control.appendChild(valueLabel);
-      elementToolbar.appendChild(title);
-      elementToolbar.appendChild(control);
-      positionElementToolbar(group);
-      return;
-    }
+    const surface = group.classList.contains('texture-template-path');
     const type = group.dataset.type;
-    const data = getData(group);
+    elementToolbar.classList.toggle('is-surface-toolbar', surface);
+    elementToolbar.classList.toggle('is-text-toolbar', type === 'text');
     elementToolbar.innerHTML = '';
-
-    const addColor = (label, value, name) => {
-      const control = document.createElement('label');
-      control.className = 'element-toolbar-control';
-      control.textContent = label;
+    elementToolbar.setAttribute('role', 'toolbar');
+    elementToolbar.setAttribute('aria-label', surface ? 'Selected piece' : 'Selected element');
+    const add = (icon, label, attrs = {}) => {
       const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'color-chip';
-      button.dataset.colorProp = name;
-      button.dataset.colorValue = value;
-      button.style.background = colorToCss(value);
-      button.setAttribute('aria-label', label);
-      control.appendChild(button);
-      elementToolbar.appendChild(control);
+      button.type = 'button'; button.dataset.tooltip = label; button.setAttribute('aria-label',label);
+      Object.entries(attrs).forEach(([key,value]) => button.setAttribute(key,value));
+      button.innerHTML = studioSvg(icon);
+      if (attrs['data-studio-control'] || attrs['data-color-prop']) {
+        button.setAttribute('aria-haspopup','dialog');
+        button.setAttribute('aria-expanded', String(openStudioControl === attrs['data-studio-control'] && !studioPopover.hidden));
+      }
+      elementToolbar.append(button); return button;
     };
-    const addNumber = (label, value, name, min, max) => {
-      const control = document.createElement('label');
-      control.className = 'element-toolbar-control';
-      control.textContent = label;
-      const input = document.createElement('input');
-      input.type = 'number';
-      input.value = value;
-      input.min = min;
-      input.max = max;
-      input.dataset.prop = name;
-      control.appendChild(input);
-      elementToolbar.appendChild(control);
+    const control = (icon,label,name = icon) => add(icon,label,{'data-studio-control':name});
+    const color = (icon,label,prop = 'color') => {
+      const button = add(icon,label,{'data-color-prop':prop});
+      button.dataset.colorValue = getColorValue(group,prop);
+      button.style.setProperty('--selected-color', parseColorState(button.dataset.colorValue).start);
     };
-
-    if (type === 'text') {
-      const textBox = group.querySelector('.texture-text-box');
-      addNumber('Size', Math.round(data.fontSize), 'fontSize', 8, 160);
-      addColor('Color', textBox?.dataset.color || '#111827', 'color');
-      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
-    } else if (type === 'rect') {
-      const rect = group.querySelector('rect.texture-content');
-      addColor('Fill', rect?.getAttribute('fill') || '#3b82f6', 'color');
-      addColor('Stroke', rect?.getAttribute('stroke') || '#1e3a8a', 'strokeColor');
-      addNumber('W', rect?.getAttribute('stroke-width') || 2, 'lineWidth', 0, 40);
-    } else if (type === 'image') {
-      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
+    const divider = () => { const node = document.createElement('span'); node.className = 'studio-tool-divider'; elementToolbar.append(node); };
+    if (surface) {
+      color('color','Fill'); control('material','Material'); divider();
+      add('reset','Reset',{'data-element-action':'reset'});
     } else {
-      const content = group.querySelector('.texture-content');
-      addColor('Color', content?.getAttribute('stroke') || '#111827', 'color');
-      addNumber('W', content?.getAttribute('stroke-width') || group.dataset.strokeWidth || 6, 'lineWidth', 1, 80);
-      addNumber('Opacity', Math.round((parseFloat(group.getAttribute('opacity') || '1')) * 100), 'opacity', 0, 100);
+      if (type === 'text') {
+        control('font','Font'); control('size','Font size'); control('style','Style'); control('align','Alignment');
+        color('textColor','Text color'); control('spacing','Spacing'); control('opacity','Opacity');
+      } else if (type === 'image') {
+        control('opacity','Opacity');
+        if (!isSvgArtwork(group)) { add('background','Remove background',{'data-process-image':'background'}); add('upscale','Upscale',{'data-process-image':'upscale'}); }
+      } else {
+        color('color','Fill'); color('stroke','Stroke color','strokeColor'); control('line','Stroke width'); control('opacity','Opacity');
+      }
+      divider();
+      add('duplicate','Duplicate',{'data-element-action':'duplicate'}); control('layers','Layers');
+      divider(); add('delete','Delete',{'data-delete-element':'true'});
     }
-
-    const actions = document.createElement('div');
-    actions.className = 'element-toolbar-actions';
-    actions.setAttribute('role', 'group');
-    actions.setAttribute('aria-label', 'Element actions');
-    const addAction = (action, label, icon, disabled = false) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'element-toolbar-action';
-      button.dataset.elementAction = action;
-      button.title = label;
-      button.setAttribute('aria-label', label);
-      button.disabled = disabled;
-      button.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">${icon}</svg>`;
-      actions.appendChild(button);
-    };
-    if (type === 'text') addAction('edit', 'Edit text', '<path d="M4 7V4h16v3M9 20h6M12 4v16"/>');
-    addAction('duplicate', 'Duplicate', '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V4H4v12h4"/>');
-    addAction('backward', 'Send backward', '<path d="M4 4h16M12 8v12m-5-5 5 5 5-5"/>', !group.previousElementSibling);
-    addAction('forward', 'Bring forward', '<path d="M4 20h16M12 16V4m-5 5 5-5 5 5"/>', !group.nextElementSibling);
-
-    const deleteButton = document.createElement('button');
-    deleteButton.type = 'button';
-    deleteButton.className = 'element-toolbar-delete';
-    deleteButton.dataset.deleteElement = 'true';
-    deleteButton.setAttribute('aria-label', 'Delete selected element');
-    deleteButton.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>';
-    actions.appendChild(deleteButton);
-    elementToolbar.appendChild(actions);
-
+    if (openStudioControl) {
+      studioAnchor = elementToolbar.querySelector(`[data-studio-control="${openStudioControl}"]`);
+      studioAnchor?.setAttribute('aria-expanded','true');
+    }
     positionElementToolbar(group);
   }
 
   function positionElementToolbar(group = state.selected) {
-    if (!group) {
-      elementToolbar.classList.remove('visible');
-      return;
-    }
+    if (!group) { elementToolbar.classList.remove('visible'); closeStudioPopover(); return; }
     elementToolbar.classList.add('visible');
-    const compact = window.matchMedia('(max-width: 900px)').matches;
-    const edgeInset = compact ? 10 : 18;
-    const toolbarWidth = elementToolbar.offsetWidth || 320;
-    const availableWidth = Math.max(0, textureCanvasArea.clientWidth - edgeInset * 2);
-    const centeredLeft = textureCanvasArea.scrollLeft
-      + edgeInset
-      + Math.max(0, (availableWidth - toolbarWidth) / 2);
-    elementToolbar.style.left = `${centeredLeft}px`;
-    elementToolbar.style.top = `${textureCanvasArea.scrollTop + edgeInset}px`;
-
+    const area = textureCanvasArea.getBoundingClientRect();
+    const bounds = group.getBoundingClientRect();
+    const width = elementToolbar.offsetWidth, height = elementToolbar.offsetHeight;
+    const gap = group.classList.contains('texture-template-path') ? 12 : 56;
+    const left = Math.max(8, Math.min(area.width-width-8, bounds.left-area.left + (bounds.width-width)/2));
+    let top = bounds.top-area.top-height-gap;
+    if (top < 8) top = bounds.bottom-area.top+12;
+    elementToolbar.style.left = `${textureCanvasArea.scrollLeft+left}px`;
+    elementToolbar.style.top = `${textureCanvasArea.scrollTop+Math.max(8,Math.min(area.height-height-8,top))}px`;
     const expandedColorButton = elementToolbar.querySelector('[data-color-prop][aria-expanded="true"]');
-    if (expandedColorButton && colorPopover.classList.contains('visible')) {
-      positionColorPopover(expandedColorButton);
-    }
+    if (expandedColorButton && colorPopover.classList.contains('visible')) positionColorPopover(expandedColorButton);
+    positionStudioPopover();
   }
+
+  document.addEventListener('pointerdown', event => {
+    if (!event.target.closest('[data-editor-toolbar]')) closeStudioPopover();
+    if (!shapesPopover.contains(event.target) && !toolButtons.shape?.contains(event.target)) closeShapesPopover();
+  });
+  textureCanvasArea.addEventListener('scroll', () => positionElementToolbar(), {passive:true});
 
   function closeColorPopover() {
     appearanceCustomColor?.setAttribute('aria-expanded', 'false');
@@ -3342,6 +3920,7 @@ window.initializeModelDesigner = () => {
     const group = state.selected;
     if (!external && (!group || !prop)) return;
     externalColorPicker = external;
+    const surface = !external && group?.classList.contains('texture-template-path');
     if (external) external.container.appendChild(colorPopover);
     const current = parseColorState(external ? external.value : getColorValue(group, prop));
     const stops = normalizeGradientStops(current.stops, current.start, current.end).map((stop, index) => ({
@@ -3361,7 +3940,7 @@ window.initializeModelDesigner = () => {
       h: activeHsv.h,
       s: activeHsv.s,
       v: activeHsv.v,
-      alpha: current.alpha
+      alpha: surface ? 100 : current.alpha
     };
 
     colorPopover.innerHTML = `
@@ -3414,41 +3993,41 @@ window.initializeModelDesigner = () => {
       </div>
     `;
     if (!('EyeDropper' in window)) colorPopover.querySelector('[data-eyedropper]')?.setAttribute('hidden', '');
+    if (surface) colorPopover.querySelector('.slider-row')?.remove();
     colorPopover.classList.add('visible');
-    positionColorPopover(button);
     button.setAttribute('aria-expanded', 'true');
     renderColorPopover();
   }
 
   function positionColorPopover(button) {
     if (!button || !colorPopover.classList.contains('visible')) return;
-    if (externalColorPicker) {
-      const anchor = button.getBoundingClientRect();
-      const container = externalColorPicker.container.getBoundingClientRect();
-      const width = colorPopover.offsetWidth || 284;
-      const height = colorPopover.offsetHeight || 370;
-      colorPopover.style.left = `${Math.max(8, Math.min(container.width - width - 8, anchor.left - container.left - width / 2))}px`;
-      const below = anchor.bottom - container.top + 12;
-      const top = externalColorPicker.placement === 'below' && below + height <= container.height - 8
-        ? below : anchor.top - container.top - height - 12;
-      colorPopover.style.top = `${Math.max(8, top)}px`;
+    const anchor=button.getBoundingClientRect();
+    const container=externalColorPicker?.container || textureCanvasArea;
+    if (externalColorPicker?.placement === 'canvas-right') {
+      const area=container.getBoundingClientRect();
+      colorPopover.style.maxHeight=`${Math.max(0,area.height-16)}px`;
+      colorPopover.style.maxWidth=`${Math.max(0,area.width-24)}px`;
+      colorPopover.style.boxSizing='border-box';
+      colorPopover.style.overflowY='auto';
+      const placement=getFillPopoverPlacement(area,{width:colorPopover.offsetWidth,height:colorPopover.offsetHeight});
+      colorPopover.style.left=`${container.scrollLeft+placement.left-area.left}px`;
+      colorPopover.style.top=`${container.scrollTop+placement.top-area.top}px`;
       return;
     }
-    const buttonRect = button.getBoundingClientRect();
-    const areaRect = textureCanvasArea.getBoundingClientRect();
-    const popoverWidth = colorPopover.offsetWidth || 336;
-    const popoverHeight = colorPopover.offsetHeight || 560;
-    const visibleLeft = textureCanvasArea.scrollLeft + 8;
-    const visibleTop = textureCanvasArea.scrollTop + 8;
-    const visibleRight = textureCanvasArea.scrollLeft + textureCanvasArea.clientWidth - 8;
-    const visibleBottom = textureCanvasArea.scrollTop + textureCanvasArea.clientHeight - 8;
-    const left = buttonRect.left - areaRect.left + textureCanvasArea.scrollLeft;
-    let top = buttonRect.bottom - areaRect.top + textureCanvasArea.scrollTop + 8;
-    if (top + popoverHeight > visibleBottom) {
-      top = buttonRect.top - areaRect.top + textureCanvasArea.scrollTop - popoverHeight - 8;
-    }
-    colorPopover.style.left = `${Math.max(visibleLeft, Math.min(visibleRight - popoverWidth, left))}px`;
-    colorPopover.style.top = `${Math.max(visibleTop, Math.min(visibleBottom - popoverHeight, top))}px`;
+    const toolbar=externalColorPicker ? anchor : elementToolbar.getBoundingClientRect();
+    placeToolbarPopover(colorPopover,container,toolbar,anchor);
+  }
+
+  function getFillPopoverPlacement(area, size) {
+    const inset=12;
+    const width=Math.min(size.width,Math.max(0,area.right-area.left-inset*2));
+    const height=Math.min(size.height,Math.max(0,area.bottom-area.top-16));
+    return {
+      left:area.right-width-inset,
+      top:area.bottom-height-8,
+      width,
+      height
+    };
   }
 
   function getPickerCss() {
@@ -3593,7 +4172,7 @@ window.initializeModelDesigner = () => {
     }
     const hue = hsvToHex(state.colorPicker.h, 1, 1);
     const area = colorPopover.querySelector('.color-area');
-    if (area) area.style.background = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;
+    if (area) area.style.backgroundImage = `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, ${hue})`;
     const cursor = colorPopover.querySelector('.color-area-cursor');
     if (cursor) {
       cursor.style.left = `${state.colorPicker.s * 100}%`;
@@ -3610,6 +4189,8 @@ window.initializeModelDesigner = () => {
     colorPopover.querySelectorAll('[data-recent-color]').forEach((button) => {
       button.classList.toggle('active', normalizeHex(button.dataset.recentColor) === normalizeHex(getActivePickerColor()));
     });
+    const anchor = externalColorPicker ? appearanceCustomColor : elementToolbar.querySelector('[data-color-prop][aria-expanded="true"]');
+    positionColorPopover(anchor);
   }
 
   function applyColorPicker(commit = false) {
@@ -3628,17 +4209,11 @@ window.initializeModelDesigner = () => {
     updateSelectedElement({ [state.colorPicker.prop]: value }, { commit });
     elementToolbar.querySelectorAll(`[data-color-prop="${state.colorPicker.prop}"]`).forEach((button) => {
       button.dataset.colorValue = value;
-      button.style.background = value;
+      button.style.setProperty('--selected-color', parseColorState(value).start);
     });
-    const surfaceValue = elementToolbar.querySelector('.surface-color-value');
-    if (surfaceValue) {
-      surfaceValue.textContent = state.colorPicker.mode === 'gradient'
-        ? 'Gradient'
-        : state.colorPicker.solidColor.toUpperCase();
-    }
   }
 
-  function setActiveColorFromHex(hex) {
+  function setActiveColorFromHex(hex, { preserveHsv = false } = {}) {
     if (!state.colorPicker) return;
     const normalized = normalizeHex(hex);
     if (state.colorPicker.mode === 'gradient') {
@@ -3647,6 +4222,7 @@ window.initializeModelDesigner = () => {
     } else {
       state.colorPicker.solidColor = normalized;
     }
+    if (preserveHsv) return;
     const rgb = hexToRgb(normalized);
     const hsv = rgbToHsv(rgb.r, rgb.g, rgb.b);
     state.colorPicker.h = hsv.h;
@@ -3668,7 +4244,7 @@ window.initializeModelDesigner = () => {
     const rect = field.getBoundingClientRect();
     const ratio = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
     state.colorPicker.h = ratio * 360;
-    setActiveColorFromHex(hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v));
+    setActiveColorFromHex(hsvToHex(state.colorPicker.h, state.colorPicker.s, state.colorPicker.v), {preserveHsv:true});
     renderColorPopover();
     applyColorPicker(false);
   }
@@ -3682,7 +4258,7 @@ window.initializeModelDesigner = () => {
     const v = 1 - Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
     state.colorPicker.s = s;
     state.colorPicker.v = v;
-    setActiveColorFromHex(hsvToHex(state.colorPicker.h, s, v));
+    setActiveColorFromHex(hsvToHex(state.colorPicker.h, s, v), {preserveHsv:true});
     renderColorPopover();
     applyColorPicker(false);
   }
@@ -3693,6 +4269,7 @@ window.initializeModelDesigner = () => {
       positionElementToolbar(null);
       return;
     }
+    if (state.selected.classList.contains('texture-template-path')) { buildElementToolbar(state.selected); return; }
     const data = getData(state.selected);
     const screenMatrix = textureSvg.getScreenCTM();
     const selectionScale = Math.max(0.001, screenMatrix
@@ -3769,13 +4346,51 @@ window.initializeModelDesigner = () => {
   }
 
   toolButtons.text?.addEventListener('click', () => {
-    createElement('text', { text: defaultTextContent, width: 190, height: 54 });
+    createElement('text', { text: defaultTextContent, width:Math.min(400,190/state.zoom), height:80, fontSize:Math.min(72,Math.max(24,20/state.zoom)) });
   });
 
-  toolButtons.shape?.addEventListener('click', () => createElement('rect', { width: 120, height: 120 }));
+  toolButtons.shape?.addEventListener('click', () => {
+    closeStudioPopover(); closeColorPopover();
+    const open = shapesPopover.hidden;
+    shapesPopover.hidden = !open;
+    toolButtons.shape.setAttribute('aria-expanded', String(open));
+    if (open) {
+      const header = shapesPopover.parentElement.getBoundingClientRect();
+      const anchor = toolButtons.shape.getBoundingClientRect();
+      shapesPopover.style.left = `${Math.max(8, Math.min(header.width-shapesPopover.offsetWidth-8, anchor.left-header.left))}px`;
+      shapesPopover.style.top = `${anchor.bottom-header.top+8}px`;
+    }
+  });
+  shapesPopover.addEventListener('click', event => {
+    const button = event.target.closest('[data-basic-shape]');
+    if (!button) return;
+    const shape = button.dataset.basicShape;
+    createElement(shape === 'rounded' ? 'rect' : shape, {width:120, height:shape === 'line' ? 24 : 120, rounded:shape === 'rounded'});
+    closeShapesPopover();
+  });
+  document.getElementById('toolMaterial')?.addEventListener('click', () => {
+    imageAssetTray.hidden = true;
+    document.getElementById('garmentMaterialPanel').hidden = false;
+    textureDesigner.classList.add('asset-tray-open');
+    toolButtons.image.classList.remove('active'); toolButtons.image.setAttribute('aria-pressed','false');
+    document.getElementById('toolMaterial').classList.add('active');
+    document.getElementById('toolMaterial').setAttribute('aria-pressed','true');
+    requestAnimationFrame(fitCanvasZoom);
+  });
   toolButtons.arrow?.addEventListener('click', () => createElement('arrow', { width: 150, height: 38 }));
 
-  function importArtworkDataUrl(dataUrl) {
+  function sanitizeArtworkSvg(dataUrl) {
+    const markup = decodeURIComponent(escape(atob(dataUrl.split(',')[1] || '')));
+    const parsed = new DOMParser().parseFromString(markup,'image/svg+xml');
+    if (parsed.querySelector('parsererror') || parsed.documentElement.localName !== 'svg') throw new Error('SVG could not be read.');
+    parsed.querySelectorAll('script,foreignObject,iframe,object,embed,style,animate,animateTransform,set').forEach(node => node.remove());
+    parsed.querySelectorAll('*').forEach(node => [...node.attributes].forEach(attr => {
+      if (/^on/i.test(attr.name) || (/(?:href|src)$/i.test(attr.name) && !attr.value.startsWith('#')) || (attr.name === 'style' && /url\(|@import|expression/i.test(attr.value))) node.removeAttribute(attr.name);
+    }));
+    return 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(parsed.documentElement))));
+  }
+
+  function importArtworkDataUrl(dataUrl, dimensions) {
     if (!/^data:image\//i.test(String(dataUrl || ''))) return false;
     const artworkImage = new Image();
     let imported = false;
@@ -3788,9 +4403,13 @@ window.initializeModelDesigner = () => {
       const width = Math.max(minSize, safeWidth * fitScale);
       const height = Math.max(minSize, safeHeight * fitScale);
       createElement('image', { src: dataUrl, width, height });
-      setTool('image');
+      setTool('select');
       setAssetTrayOpen(true);
     };
+    if (dimensions?.width > 0 && dimensions?.height > 0) {
+      createArtwork(dimensions.width, dimensions.height);
+      return true;
+    }
     artworkImage.addEventListener('load', () => {
       createArtwork(artworkImage.naturalWidth, artworkImage.naturalHeight);
     }, { once: true });
@@ -3810,12 +4429,23 @@ window.initializeModelDesigner = () => {
 
   async function resolveArtworkDataUrl(source) {
     if (/^data:image\//i.test(String(source || ''))) return source;
+    if (artworkDataCache.has(source)) return artworkDataCache.get(source);
     const sourceUrl = /^https:\/\//i.test(String(source || ''))
       ? window.UserProjects.textureUrl(source)
       : source;
-    const response = await fetch(sourceUrl, { credentials: 'same-origin' });
-    if (!response.ok) throw new Error('Unable to load artwork');
-    return blobToDataUrl(await response.blob());
+    const pending = (async () => {
+      const response = await fetch(sourceUrl, { credentials: 'same-origin' });
+      if (!response.ok) throw new Error('Unable to load artwork');
+      return blobToDataUrl(await response.blob());
+    })();
+    artworkDataCache.set(source, pending);
+    // Bound decoded artwork memory while retaining the most recently used assets.
+    if (artworkDataCache.size > 16) artworkDataCache.delete(artworkDataCache.keys().next().value);
+    try { return await pending; }
+    catch (error) {
+      if (artworkDataCache.get(source) === pending) artworkDataCache.delete(source);
+      throw error;
+    }
   }
 
   async function addArtworkFromSource(source, button, persistedSource) {
@@ -3826,7 +4456,8 @@ window.initializeModelDesigner = () => {
       if (storedUrl) state.uploadedAssetUrls.set(dataUrl, storedUrl);
       imageAssetTrack?.querySelectorAll('.image-asset-card').forEach((card) => card.classList.remove('active'));
       button?.classList.add('active');
-      importArtworkDataUrl(dataUrl);
+      const thumbnail = button?.querySelector('img');
+      importArtworkDataUrl(dataUrl, thumbnail?.complete ? {width:thumbnail.naturalWidth, height:thumbnail.naturalHeight} : null);
       if (button?.classList.contains('is-uploaded')) {
         window.trackEvent?.('designer_artwork_upload_select', {
           interaction_type: 'editor_asset_upload',
@@ -3861,11 +4492,16 @@ window.initializeModelDesigner = () => {
     button._assetDataUrl = dataUrl;
     button._assetUrl = storedUrl;
     const image = document.createElement('img');
+    const prepareArtwork = () => resolveArtworkDataUrl(dataUrl).catch(() => {});
+    image.addEventListener('load', prepareArtwork, {once:true});
+    button.addEventListener('pointerenter', prepareArtwork, {once:true});
+    button.addEventListener('focus', prepareArtwork, {once:true});
     image.src = dataUrl;
     image.alt = name;
     image.loading = 'lazy';
     image.decoding = 'async';
     button.appendChild(image);
+    const caption = document.createElement('span'); caption.className = 'studio-asset-name'; caption.textContent = name; button.append(caption);
     imageAssetTrack.insertBefore(button, imageAssetTrack.firstElementChild || null);
     renderedUploadedAssetKeys.add(assetKey);
     updateImageAssetEmptyState();
@@ -3908,16 +4544,16 @@ window.initializeModelDesigner = () => {
 
   function handleArtworkFiles(files) {
     const selectedFiles = [...(files || [])];
-    const mimeByExtension = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp' };
+    const mimeByExtension = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', svg: 'image/svg+xml' };
     const acceptedFiles = [];
 
     selectedFiles.forEach((file) => {
       const extension = String(file.name || '').split('.').pop().toLowerCase();
       const inferredMime = mimeByExtension[extension] || '';
-      const mimeType = ['image/png', 'image/jpeg', 'image/webp'].includes(file.type) ? file.type : inferredMime;
+      const mimeType = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'].includes(file.type) ? file.type : inferredMime;
       if (!mimeType) {
-        setDesignSaveStatus(`${file.name || 'This file'} is not supported. Use PNG, JPG, or WebP.`, true);
-        showImageUploadToast('Unsupported file. Use PNG, JPG, or WebP.', 'error', 5000);
+        setDesignSaveStatus(`${file.name || 'This file'} is not supported. Use PNG, JPG, WebP, or SVG.`, true);
+        showImageUploadToast('Unsupported file. Use PNG, JPG, WebP, or SVG.', 'error', 5000);
         return;
       }
       if (file.size > 10 * 1024 * 1024) {
@@ -3943,7 +4579,7 @@ window.initializeModelDesigner = () => {
       uploadTask.finally(() => state.pendingArtworkUploads.delete(uploadTask));
       reader.addEventListener('load', async () => {
         try {
-          const dataUrl = String(reader.result || '');
+          const dataUrl = mimeType === 'image/svg+xml' ? sanitizeArtworkSvg(String(reader.result || '')) : String(reader.result || '');
           if (!dataUrl.startsWith('data:image/')) {
             setDesignSaveStatus(`${file.name || 'Image'} could not be read`, true);
             showImageUploadToast('Image could not be read.', 'error', 5000);
@@ -3952,7 +4588,7 @@ window.initializeModelDesigner = () => {
           const button = createUploadedAssetCard(dataUrl, file.name);
           if (index === 0) await addArtworkFromSource(dataUrl, button);
           try {
-            if (modelDesignerConfig.userAuthenticated && window.UserProjects) {
+            if (mimeType !== 'image/svg+xml' && modelDesignerConfig.userAuthenticated && window.UserProjects) {
               setUploadedAssetState(button, 'uploading', `Uploading ${file.name}`);
               setDesignSaveStatus(`Uploading ${file.name}…`);
               showImageUploadToast(`Uploading ${file.name}…`, 'loading');
@@ -4041,44 +4677,36 @@ window.initializeModelDesigner = () => {
     addArtworkFromSource(source);
   });
 
-  function startDraw(event) {
-    const point = svgPoint(event);
-    const path = createSvg('path', {
-      d: `M ${point.x} ${point.y}`,
-      fill: 'none',
-      stroke: '#111827',
-      'stroke-width': 6,
-      'stroke-linecap': 'round',
-      'stroke-linejoin': 'round'
-    });
-    textureElements.appendChild(path);
-    state.active = { mode: 'draw', path, points: [point] };
+  function beginCanvasPan(event, target) {
+    event.preventDefault();
+    target.setPointerCapture(event.pointerId);
+    state.active = {mode:'pan',startClientX:event.clientX,startClientY:event.clientY,
+      startPanX:state.canvasPanX,startPanY:state.canvasPanY};
+    textureCanvasArea.style.cursor='grabbing';
   }
 
-  function finishDraw() {
-    if (!state.active || state.active.mode !== 'draw') return;
-    const { path, points } = state.active;
-    state.active = null;
-    if (points.length < 2) {
-      path.remove();
-      return;
-    }
-    const bbox = path.getBBox();
-    const d = points.map((point, index) => {
-      const cmd = index === 0 ? 'M' : 'L';
-      return `${cmd} ${point.x - bbox.x} ${point.y - bbox.y}`;
-    }).join(' ');
-    path.remove();
-    createElement('path', {
-      x: bbox.x,
-      y: bbox.y,
-      width: Math.max(minSize, bbox.width),
-      height: Math.max(minSize, bbox.height),
-      baseWidth: Math.max(minSize, bbox.width),
-      baseHeight: Math.max(minSize, bbox.height),
-      d
-    });
+  function updateCanvasPan(event) {
+    if (state.active?.mode !== 'pan') return;
+    state.canvasPanX=state.active.startPanX+event.clientX-state.active.startClientX;
+    state.canvasPanY=state.active.startPanY+event.clientY-state.active.startClientY;
+    textureCanvasFrame.style.transform=`translate(${state.canvasPanX}px, ${state.canvasPanY}px)`;
+    positionElementToolbar();
   }
+
+  textureCanvasArea.addEventListener('pointerdown', event => {
+    if (state.tool !== 'pan' || event.button !== 0 || textureSvg.contains(event.target) || event.target.closest('[data-editor-toolbar],button')) return;
+    beginCanvasPan(event,textureCanvasArea);
+  });
+  textureCanvasArea.addEventListener('pointermove', event => {
+    if (state.active?.mode !== 'pan' || !textureCanvasArea.hasPointerCapture(event.pointerId)) return;
+    updateCanvasPan(event);
+  });
+  const finishCanvasPan = event => {
+    if (!textureCanvasArea.hasPointerCapture(event.pointerId)) return;
+    state.active=null; textureCanvasArea.style.cursor='grab'; textureCanvasArea.releasePointerCapture(event.pointerId);
+  };
+  textureCanvasArea.addEventListener('pointerup',finishCanvasPan);
+  textureCanvasArea.addEventListener('pointercancel',finishCanvasPan);
 
   textureSvg.addEventListener('pointerdown', (event) => {
     if (event.button !== 0) return;
@@ -4091,22 +4719,8 @@ window.initializeModelDesigner = () => {
       return;
     }
     if (state.tool === 'pan') {
-      textureSvg.setPointerCapture(event.pointerId);
-      state.active = {
-        mode: 'pan',
-        startClientX: event.clientX,
-        startClientY: event.clientY,
-        startScrollLeft: textureCanvasArea.scrollLeft,
-        startScrollTop: textureCanvasArea.scrollTop
-      };
-      textureSvg.style.cursor = 'grabbing';
-      return;
-    }
-
-    if (state.tool === 'draw') {
-      event.preventDefault();
-      textureSvg.setPointerCapture(event.pointerId);
-      startDraw(event);
+      beginCanvasPan(event,textureSvg);
+      textureSvg.style.cursor='grabbing';
       return;
     }
 
@@ -4132,12 +4746,7 @@ window.initializeModelDesigner = () => {
       event.preventDefault();
       selectElement(templatePath);
       scheduleTexturePreviewUpdate();
-      requestAnimationFrame(() => {
-        const surfaceColorButton = elementToolbar.querySelector('[data-color-prop="color"]');
-        if (surfaceColorButton && state.selected === templatePath) {
-          openColorPopover(surfaceColorButton);
-        }
-      });
+
       return;
     }
     if (target) {
@@ -4189,14 +4798,7 @@ window.initializeModelDesigner = () => {
     const point = svgPoint(event);
 
     if (state.active.mode === 'pan') {
-      textureCanvasArea.scrollLeft = state.active.startScrollLeft - (event.clientX - state.active.startClientX);
-      textureCanvasArea.scrollTop = state.active.startScrollTop - (event.clientY - state.active.startClientY);
-      return;
-    }
-
-    if (state.active.mode === 'draw') {
-      state.active.points.push(point);
-      state.active.path.setAttribute('d', `${state.active.path.getAttribute('d')} L ${point.x} ${point.y}`);
+      updateCanvasPan(event);
       return;
     }
 
@@ -4213,22 +4815,28 @@ window.initializeModelDesigner = () => {
       ) > 4) {
         state.active.moved = true;
       }
-      setData(state.selected, constrainToCanvas({ ...data, x: data.x + dx, y: data.y + dy }));
+      setData(state.selected, normalizeElementGeometry({ ...data, x: data.x + dx, y: data.y + dy }));
     } else if (state.active.mode === 'resize') {
       const isText = state.selected.dataset.type === 'text';
       const isImage = state.selected.dataset.type === 'image';
       const handle = state.active.handle;
       const isCorner = handle.length === 2;
-      const patch = resizeFromPointer(data, handle, dx, dy, {
+      const patch = isImage && !isCorner ? cropImageFromPointer(data, handle, dx, dy) : resizeFromPointer(data, handle, dx, dy, {
         minSize,
         lockAspect: event.shiftKey || (isImage && isCorner) || (isText && isCorner)
       });
+      if (isImage && isCorner) {
+        patch.imageWidth = data.imageWidth * patch.scale;
+        patch.imageHeight = data.imageHeight * patch.scale;
+        patch.cropX = data.cropX * patch.scale;
+        patch.cropY = data.cropY * patch.scale;
+      }
       if (isText) {
         patch.fontSize = isCorner
           ? Math.max(8, data.fontSize * patch.scale)
           : data.fontSize;
       }
-      setData(state.selected, constrainToCanvas({ ...data, ...patch }));
+      setData(state.selected, normalizeElementGeometry({ ...data, ...patch }));
       if (isText && (handle === 'e' || handle === 'w')) {
         const textBox = state.selected.querySelector('.texture-text-box');
         if (textBox) {
@@ -4236,7 +4844,7 @@ window.initializeModelDesigner = () => {
           textBox.style.height = 'auto';
           const fittedHeight = Math.max(minSize, Math.ceil(textBox.scrollHeight));
           textBox.style.height = previousHeight || '100%';
-          setData(state.selected, constrainToCanvas({
+          setData(state.selected, normalizeElementGeometry({
             ...placeRectAtFixedAnchor(data, handle, patch.width, fittedHeight),
             fontSize: data.fontSize
           }));
@@ -4247,7 +4855,7 @@ window.initializeModelDesigner = () => {
       const cy = data.y + data.height / 2;
       const startAngle = Math.atan2(start.y - cy, start.x - cx);
       const currentAngle = Math.atan2(point.y - cy, point.x - cx);
-      setData(state.selected, constrainToCanvas({
+      setData(state.selected, normalizeElementGeometry({
         ...data,
         rotate: data.rotate + (currentAngle - startAngle) * 180 / Math.PI
       }));
@@ -4279,14 +4887,13 @@ window.initializeModelDesigner = () => {
     } else if (mode === 'move') {
       state.textClickCandidate = null;
     }
-    if (mode === 'draw') {
-      finishDraw();
-    } else if (mode !== 'pan') {
+    if (mode !== 'pan') {
       saveHistory();
     }
     state.active = null;
     if (state.tool === 'pan') {
       textureSvg.style.cursor = 'grab';
+      textureCanvasArea.style.cursor = 'grab';
     }
     if (event.pointerId !== undefined && textureSvg.hasPointerCapture(event.pointerId)) {
       textureSvg.releasePointerCapture(event.pointerId);
@@ -4329,12 +4936,17 @@ window.initializeModelDesigner = () => {
   });
 
   elementToolbar.addEventListener('click', (event) => {
+    const processButton = event.target.closest('[data-process-image]');
+    if (processButton) { processSelectedImage(processButton.dataset.processImage); return; }
+    const controlButton = event.target.closest('[data-studio-control]');
+    if (controlButton) { openStudioPopover(controlButton, controlButton.dataset.studioControl); return; }
     const actionButton = event.target.closest('[data-element-action]');
     if (actionButton) {
       event.preventDefault();
       event.stopPropagation();
       const action = actionButton.dataset.elementAction;
       if (action === 'edit') editTextElement(state.selected);
+      else if (action === 'reset') resetPanelAppearance(state.selected);
       else if (action === 'duplicate') duplicateSelected();
       else reorderSelected(action);
       return;
@@ -4350,6 +4962,7 @@ window.initializeModelDesigner = () => {
     if (!button) return;
     event.preventDefault();
     event.stopPropagation();
+    closeStudioPopover();
     openColorPopover(button);
   });
 
@@ -4511,18 +5124,38 @@ window.initializeModelDesigner = () => {
   });
 
   function saveHistory() {
-    const snapshot = getCleanElementsHtml();
+    document.getElementById('toolUndo').disabled = state.historyIndex <= 0;
+    document.getElementById('toolRedo').disabled = state.historyIndex >= state.history.length-1;
+    const snapshot = JSON.stringify({elements:getCleanElementsHtml(), appearance:serializeAppearanceState({includeTiles:true}), materialId:state.selectedMaterial?.id || ''});
     if (state.history[state.historyIndex] === snapshot) return;
     const hadHistory = state.historyIndex >= 0;
     state.history = state.history.slice(0, state.historyIndex + 1);
     state.history.push(snapshot);
     state.historyIndex++;
+    document.getElementById('toolUndo').disabled = state.historyIndex <= 0;
+    document.getElementById('toolRedo').disabled = true;
     if (hadHistory) setDesignSaveStatus('Unapplied changes', true);
     scheduleTexturePreviewUpdate();
   }
 
   function restoreHistory(index) {
-    textureElements.innerHTML = state.history[index] || '';
+    document.getElementById('toolUndo').disabled = index <= 0;
+    document.getElementById('toolRedo').disabled = index >= state.history.length-1;
+    state.appearanceRevision++;
+    const snapshot = JSON.parse(state.history[index] || '{}');
+    textureElements.innerHTML = snapshot.elements || '';
+    textureSvg.querySelectorAll('.texture-template-fill[data-persistent="true"]').forEach(node => node.remove());
+    textureSvg.querySelectorAll('.texture-template-path').forEach(path => {
+      delete path.dataset.color; delete path.dataset.materialId; delete path.dataset.materialTile;
+    });
+    state.selectedMaterial = window.Design3DMaterials?.materials.find(item => item.id === snapshot.materialId) || null;
+    restoreAppearanceState(snapshot.appearance);
+    renderAppearanceControls();
+    materialSwatchGrid?.querySelectorAll('[data-material-id]').forEach(button => {
+      const active = button.dataset.materialId === snapshot.materialId;
+      button.classList.toggle('active',active); button.setAttribute('aria-pressed',String(active));
+    });
+
     selectElement(null);
     const ids = [...textureElements.querySelectorAll('.texture-element')]
       .map(element => parseInt((element.id || '').replace('element-', ''), 10))
@@ -4558,11 +5191,13 @@ window.initializeModelDesigner = () => {
     const original = editableSelection();
     if (!original) return;
     const copy = original.cloneNode(true);
+    copy.querySelectorAll('[data-image-loading]').forEach(node => node.remove());
+    copy.removeAttribute('aria-busy');
     copy.id = `element-${++state.elementCounter}`;
     copy.classList.remove('selected');
     textureElements.insertBefore(copy, original.nextSibling);
     const data = getData(original);
-    setData(copy, constrainToCanvas({ ...data, x: data.x + 16, y: data.y + 16 }));
+    setData(copy, normalizeElementGeometry({ ...data, x: data.x + 16, y: data.y + 16 }));
     // Recreate SVG paints under the new ID so later edits remain independent.
     if (copy.dataset.color) setElementColor(copy, copy.dataset.color);
     if (copy.dataset.strokeColor) setElementStrokeColor(copy, copy.dataset.strokeColor);
@@ -4574,6 +5209,11 @@ window.initializeModelDesigner = () => {
     state.textEditor?.commit();
     const group = editableSelection();
     if (!group) return;
+    if (direction === 'front' || direction === 'back') {
+      if (direction === 'front') textureElements.append(group);
+      else textureElements.prepend(group);
+      renderSelection(); saveHistory(); return;
+    }
     const sibling = direction === 'forward' ? group.nextElementSibling : group.previousElementSibling;
     if (!sibling) return;
     if (direction === 'forward') textureElements.insertBefore(sibling, group);
@@ -4590,7 +5230,7 @@ window.initializeModelDesigner = () => {
     // Arrow directions follow the screen, including a rotated canvas.
     const angle = -(state.canvasRotation || 0) * Math.PI / 180;
     const data = getData(group);
-    setData(group, constrainToCanvas({ ...data,
+    setData(group, normalizeElementGeometry({ ...data,
       x: data.x + offset[0] * Math.cos(angle) - offset[1] * Math.sin(angle),
       y: data.y + offset[0] * Math.sin(angle) + offset[1] * Math.cos(angle)
     }));
@@ -4604,6 +5244,8 @@ window.initializeModelDesigner = () => {
     state.selected.remove();
     clearSelection();
     saveHistory();
+    // Deletion must refresh even when history deduplicates an identical snapshot.
+    scheduleTexturePreviewUpdate();
   }
 
   document.getElementById('toolUndo')?.addEventListener('click', undo);
@@ -4625,13 +5267,9 @@ window.initializeModelDesigner = () => {
     if (event.isComposing || event.target.closest?.('input, textarea, select, [contenteditable="true"]')) return;
     if (event.key === 'Escape') {
       event.preventDefault();
-      if (colorPopover.classList.contains('visible')) closeColorPopover();
-      else if (imageAssetTray && !imageAssetTray.hidden) {
-        setAssetTrayOpen(false);
-        setTool('select');
-        openAppearancePanel();
-      }
-      else if (designAppearancePanel?.classList.contains('is-mobile-open')) designAppearancePanel.classList.remove('is-mobile-open');
+      if (!studioPopover.hidden) closeStudioPopover();
+      else if (!shapesPopover.hidden) closeShapesPopover();
+      else if (colorPopover.classList.contains('visible')) closeColorPopover();
       else closeModal();
     } else if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'z') {
       event.preventDefault();
@@ -4655,7 +5293,7 @@ window.initializeModelDesigner = () => {
     if (designPreviewLoading) designPreviewLoading.hidden = true;
     renderStandardPromise.then((renderStandard) => applyFabricLighting(designerViewer, renderStandard));
     if (state.selectedMaterial) {
-      applyMaterialToViewer(designerViewer, state.selectedMaterial);
+      applyMaterialToViewer(designerViewer, state.selectedMaterial, {includeBaseColorMap:false, preserveColor:true});
     }
     scheduleTexturePreviewUpdate({ requireArtwork: true });
   });
@@ -4678,7 +5316,7 @@ window.initializeModelDesigner = () => {
   async function applyQuickMaterial(materialId) {
     const material = window.Design3DMaterials?.materials?.find((item) => item.id === materialId);
     if (!material) throw new Error('Material preset is unavailable.');
-    await applyMaterialPreset(material);
+    await applyMaterialPreset(material,{record:false});
     return { id: material.id, name: material.name };
   }
 
@@ -4742,7 +5380,8 @@ window.initializeModelDesigner = () => {
       await Promise.all([...wrapper.querySelectorAll('image')].map(async (image) => {
         const storedUrl = image.getAttribute('href') || image.getAttributeNS('http://www.w3.org/1999/xlink', 'href') || '';
         if (!storedUrl) return;
-        const dataUrl = await resolveArtworkDataUrl(storedUrl);
+        const svgMarkup = image.parentElement?.dataset.svgMarkup;
+        const dataUrl = svgMarkup ? sanitizeArtworkSvg('data:image/svg+xml;base64,' + svgMarkup) : await resolveArtworkDataUrl(storedUrl);
         state.uploadedAssetUrls.set(dataUrl, storedUrl);
         image.setAttribute('href', dataUrl);
         image.removeAttributeNS('http://www.w3.org/1999/xlink', 'href');
@@ -4755,7 +5394,7 @@ window.initializeModelDesigner = () => {
       state.fillCustomPaint = null;
       state.finalTextureUrl = saved.textureUrl || null;
       window.syncModelTryOnLinks?.(project.id);
-      if (saved.appearance) restoreAppearanceState(saved.appearance);
+      if (saved.appearance) await restoreAppearanceState(saved.appearance);
       else if (saved.textureUrl) await restoreLegacyAppearanceFromTexture(saved.textureUrl);
       if (!saved.textureUrl) {
         state.finalTextureUrl = await rasterizeModelTexture({ includeSelectionHighlight: false });
@@ -4772,19 +5411,27 @@ window.initializeModelDesigner = () => {
       await window.loadClothingModelViewer?.(detailViewer).catch(() => null);
       if (saved.materialId && window.Design3DMaterials) {
         const material = window.Design3DMaterials.materials.find(item => item.id === saved.materialId);
-        if (material) await applyMaterialPreset(material);
+        if (material) await applyMaterialPreset(material,{record:false});
       }
+      if (saved.appearance) await restoreAppearanceState(saved.appearance);
       if (state.finalTextureUrl) {
         const applied = await Promise.all(getLoadedDesignViewers().map(viewerElement => applyTextureToViewer(viewerElement, state.finalTextureUrl)));
         if (!applied.some(Boolean)) throw new Error('Saved project texture could not be applied.');
       }
+      state.history=[]; state.historyIndex=-1; saveHistory();
       setDesignSaveStatus('Saved project loaded');
     } catch (error) {
       console.error(error);
       setDesignSaveStatus(error.status === 401 ? 'Sign in to open this project' : (error.message || 'Project could not be loaded'), true);
     }
   }
-  cloudProjectLoadPromise = loadCloudProject();
+  cloudProjectLoadPromise = loadCloudProject().then(async () => {
+    const params = new URLSearchParams(window.location.search);
+    const entryColor = modelDesignerConfig.initialGarmentColor;
+    if (!params.has('project') && !params.has('adminProject') && /^#[0-9a-f]{6}$/i.test(entryColor || '')) {
+      await applyQuickColor(entryColor);
+    }
+  });
 
   let pendingArtwork = null;
   try {

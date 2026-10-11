@@ -1,0 +1,51 @@
+# ----------------------------------------
+# Traffic acquisition: Session source / medium
+# Account: ClozDesign
+# Property: ClozDesign
+# ----------------------------------------
+# 
+# All Users
+# Start date: 20260909
+# End date: 20261006
+Session source / medium,Sessions,Engaged sessions,Engagement rate,Average engagement time per session,Events per session,Event count,Key events,Session key event rate,Total revenue
+chatgpt.com / ai-assistant,1558,1122,0.7201540436456996,166.07894736842104,28.653401797175867,44642,0,0,0
+(direct) / (none),1050,425,0.40476190476190477,185.24571428571429,22.72952380952381,23866,0,0,0
+google / organic,386,287,0.7435233160621761,277.0259067357513,42.42227979274612,16375,0,0,0
+bing / organic,213,166,0.7793427230046949,189.88262910798122,28.342723004694836,6037,0,0,0
+accounts.google.com / referral,177,101,0.5706214689265536,221.54237288135593,36.54237288135593,6468,0,0,0
+(not set),87,0,0,58.11494252873563,16.06896551724138,1398,0,0,0
+pinterest / organic-social,82,61,0.7439024390243902,149.64634146341464,23.158536585365855,1899,0,0,0
+chatgpt.com / referral,53,18,0.33962264150943394,104.79245283018868,12,636,0,0,0
+(data not available),32,1,0.03125,138.3125,17.59375,563,0,0,0
+duckduckgo / organic,24,24,1,87.41666666666667,23.125,555,0,0,0
+tagassistant.google.com / referral,23,15,0.6521739130434783,49.26086956521739,20.08695652173913,462,0,0,0
+yahoo / organic,19,12,0.631578947368421,165.78947368421052,26.63157894736842,506,0,0,0
+ph.search.yahoo.com / referral,12,12,1,548.1666666666666,35.833333333333336,430,0,0,0
+t.co / referral,10,7,0.7,39.5,20.9,209,0,0,0
+chatgpt.com / (none),7,5,0.7142857142857143,203.85714285714286,33.285714285714285,233,0,0,0
+copy-link / organic-social,6,2,0.3333333333333333,2.8333333333333335,4.333333333333333,26,0,0,0
+yandex.ru / referral,6,4,0.6666666666666666,155.66666666666666,46.166666666666664,277,0,0,0
+classroom.google.com / referral,4,3,0.75,2315.5,184.75,739,0,0,0
+m.facebook.com / referral,4,1,0.25,0,3.25,13,0,0,0
+search.brave.com / referral,4,2,0.5,214.5,33.25,133,0,0,0
+checkout.dodopayments.com / referral,3,3,1,78,8.666666666666666,26,0,0,0
+facebook.com / referral,3,1,0.3333333333333333,2.3333333333333335,3.3333333333333335,10,0,0,0
+native-share / organic-social,3,3,1,148,15.333333333333334,46,0,0,0
+id.search.yahoo.com / referral,2,2,1,96,11,22,0,0,0
+l.facebook.com / referral,2,1,0.5,9.5,9,18,0,0,0
+192.168.2.22:8091 / referral,1,0,0,0,3,3,0,0,0
+at.search.yahoo.com / referral,1,1,1,41,11,11,0,0,0
+au.search.yahoo.com / referral,1,1,1,6,4,4,0,0,0
+cn.bing.com / referral,1,1,1,758,154,154,0,0,0
+copilot.com / ai-assistant,1,0,0,0,3,3,0,0,0
+ecosia.org / organic,1,1,1,43,19,19,0,0,0
+fr.search.yahoo.com / referral,1,1,1,141,26,26,0,0,0
+in.search.yahoo.com / referral,1,1,1,85,24,24,0,0,0
+l.instagram.com / referral,1,1,1,29,21,21,0,0,0
+login.microsoftonline.com / referral,1,1,1,147,4,4,0,0,0
+nz.search.yahoo.com / referral,1,1,1,26,13,13,0,0,0
+producthunt.com / referral,1,1,1,2,4,4,0,0,0
+sentinal-v2.dodopayments.com / referral,1,1,1,29,13,13,0,0,0
+sim.3ue.co / referral,1,1,1,11,4,4,0,0,0
+thedesigntools.site / referral,1,0,0,3,4,4,0,0,0
+yandex / organic,1,0,0,8,4,4,0,0,0

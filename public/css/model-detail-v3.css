@@ -1,0 +1,52 @@
+/* Single-screen garment preview, matched to the supplied reference. */
+.model-product-page .model-detail-hero { padding: var(--navbar-height) 0 0; background: var(--hero-background); }
+.model-product-page .model-detail-hero > .container { width: calc(100% - 48px); height: calc(100svh - var(--navbar-height)); min-height: 0; }
+.model-product-page .model-detail-grid { position: relative; display: block; height: 100%; min-height: 0; padding: 0; }
+.model-product-page .model-info-section { position: absolute; z-index: 3; top: 15%; left: max(0px, calc(clamp(24px, 5.3vw, 88px) - 24px)); width: 240px; max-width: 240px; padding: 0; }
+.model-product-page .model-detail-title { max-width: 240px; font-size: 26px; font-weight: 400; line-height: 1.18; letter-spacing: -.035em; }
+.model-product-page .model-detail-meta { margin-top: 12px; }
+.model-product-page .model-detail-meta .tag-free { padding: 0; min-height: 0; border: 0; background: transparent; color: #77756e; font-size: 12px; font-weight: 400; text-transform: none; letter-spacing: 0; }
+.model-product-page .model-action-grid { width: 160px; max-width: 160px; margin-top: 24px; gap: 8px; }
+.model-product-page .detail-action { justify-content: center; gap: 0; min-height: 38px; padding: 9px 12px; border: 1px solid #d3d1cd; border-radius: 5px; background: transparent; box-shadow: none; font-size: 11px; font-weight: 500; text-align: center; }
+.model-product-page .detail-action svg { display: none; }
+.model-product-page .detail-action-primary { background: #171717; color: #fff; border-color: #171717; }
+.model-product-page .model-viewer-section { position: static; display: block; width: 100%; height: 100%; padding: 0; }
+.model-product-page .model-3d-viewer { position: absolute; inset: 0 0 94px 180px; width: calc(100% - 180px); height: auto; aspect-ratio: auto; min-height: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.model-product-page .model-3d-viewer model-viewer { width: 100% !important; height: 100%; background: transparent; border: 0; }
+.model-product-page .model-quick-style { position: absolute; z-index: 5; bottom: 26px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; width: max-content; max-width: 100%; gap: 12px; margin: 0; padding: 0; border-radius: 0; background: transparent; box-shadow: none; }
+.model-product-page .quick-style-shelf { display: flex; align-items: center; padding: 12px 8px; background: #ffffffed; border: 0; border-radius: 12px; box-shadow: none; }
+.model-product-page .quick-style-fabric, .model-product-page .quick-style-control { display: flex; align-items: center; gap: 12px; padding: 0 18px; }
+.model-product-page .quick-style-label { font-size: 10px; font-weight: 400; letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.model-product-page .quick-style-fabric-toggle { display: flex; align-items: center; gap: 10px; }
+.model-product-page .quick-style-value { width: 104px; height: 26px; margin: 0; padding: 0 10px; border: 1px solid #e2e1de; border-radius: 4px; }
+.model-product-page .quick-style-value i { display: none; }
+.model-product-page .quick-style-value strong { font-size: 10px; font-weight: 400; }
+.model-product-page .quick-color-swatches, .model-product-page .quick-background-swatches { margin: 0; gap: 7px; }
+.model-product-page .quick-color-swatches button, .model-product-page .quick-background-swatches button { width: 20px; height: 20px; min-width: 20px; flex: 0 0 20px; border-radius: 50%; border-color: #d8d7d3; }
+.model-product-page .quick-color-swatches button.active::after { inset: -3px; border-color: #9b9991; }
+.model-product-page .quick-background-swatches button.active { border-color: #aaa79e; box-shadow: 0 0 0 2px #fff,0 0 0 3px #aaa79e; }
+/* Separate upgrade action uses the site’s lime accent. */
+.model-product-page .quick-style-upgrade { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: auto; min-height: 50px; padding: 12px 18px; border: 0; border-radius: 10px; background: #dfff60; box-shadow: 0 3px 12px #1918140a; color: #171717; white-space: nowrap; transition: background 160ms ease, box-shadow 160ms ease; }
+.model-product-page .quick-style-upgrade:hover { background: #d2f344; box-shadow: 0 5px 16px #19181414; }
+.model-product-page .quick-style-upgrade:focus-visible { outline: 2px solid #171717; outline-offset: 3px; }
+.model-product-page .quick-style-upgrade strong { font-size: 11px; font-weight: 600; }
+.model-product-page .quick-style-upgrade small, .model-product-page .detail-action-upgrade-arrow { display: none; }
+.model-product-page .detail-action-upgrade-icon { display: block; width: 18px; height: 18px; }
+@media (max-width: 1050px) and (min-width: 821px) {
+ .model-product-page .model-info-section { left: 0; }
+ .model-product-page .quick-style-fabric, .model-product-page .quick-style-control, .model-product-page .quick-style-upgrade { padding-right: 12px; padding-left: 12px; }
+}
+@media (max-width: 820px) {
+ .model-product-page .model-detail-hero > .container { width: calc(100% - 32px); height: auto; }
+ .model-product-page .model-detail-grid { display: flex; flex-direction: column; gap: 20px; padding: 0 0 24px; }
+ .model-product-page .model-info-section { position: relative; top: auto; left: 0; width: 100%; max-width: none; padding: 0; }
+ .model-product-page .model-detail-title { max-width: none; font-size: 24px; }
+ .model-product-page .model-action-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); width: 100%; max-width: none; margin-top: 16px; }
+ .model-product-page .model-viewer-section { order: -1; }
+ .model-product-page .model-3d-viewer { position: relative; inset: auto; width: 100%; height: 58svh; min-height: 340px; aspect-ratio: auto; }
+ .model-product-page .model-quick-style { position: relative; left: auto; bottom: auto; transform: none; width: 100%; max-width: none; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 0; margin-top: 12px; }
+ .model-product-page .quick-style-shelf { width: 100%; flex-wrap: wrap; justify-content: center; gap: 16px 0; padding: 16px 8px; overflow: visible; }
+ .model-product-page .quick-style-fabric, .model-product-page .quick-style-control { padding: 0 10px; gap: 8px; }
+ .model-product-page .quick-style-background { border-left: 0 !important; }
+ .model-product-page .quick-style-upgrade { border-left: 0; }
+}

@@ -18,23 +18,20 @@
     return `${mockupBasePath}${params.length ? `?${params.join('&')}` : ''}#free-3d-models`;
   };
   const allModelCountLabel = currentCatalogTotal ? `${currentCatalogTotal} free 3D models` : 'Free 3D model library';
+  const libraryFaqItems = activeMockupCategory && typeof landingContent !== 'undefined'
+    ? (landingContent.faq?.items || [])
+    : [
+      { question: 'What types of clothing models are available?', answer: 'The library includes T-shirts, shirts, hoodies, dresses, pants and other garment categories. Use the category menu or search to find a style.' },
+      { question: 'What can I customize?', answer: 'Open a model to adjust garment colors and materials, place artwork, and change the viewing angle in the browser editor.' },
+      { question: 'How can I use apparel mockups?', answer: 'Use apparel mockups to review artwork placement and color options, present designs, or prepare product visuals. A mockup does not replace a physical garment sample or a manufacturing tech pack.' }
+    ];
   const masonryTones = ['ice', 'white', 'mist', 'cloud', 'frost', 'silver'];
-  const allCatalogSteps = [
-    { title: 'Choose a model', body: 'Pick the garment that fits your idea.' },
-    { title: 'Inspect & customize', body: 'Rotate, zoom, and explore details and settings.' },
-    { title: 'Open in workspace', body: 'Launch the 3D mockup workspace and start designing.' }
-  ];
+
 %>
 
 <div class="mockups-page-shell">
   <aside class="mockups-sidebar" aria-label="3D model library navigation">
     <div class="mockups-sidebar-inner">
-      <span class="mockups-sidebar-kicker">3D model library</span>
-      <div class="mockups-sidebar-heading">
-        <strong>Browse</strong>
-        <span><%= mockupTotal %> garments</span>
-      </div>
-
       <nav class="mockups-sidebar-nav" aria-label="Garment categories">
         <a href="/mockups#free-3d-models" class="<%= activeMockupCategory ? '' : 'is-active' %>" <%= activeMockupCategory ? '' : 'aria-current="page"' %>>
           <svg class="category-filter-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -55,11 +52,6 @@
         <% }); %>
       </nav>
 
-      <div class="mockups-sidebar-foot" aria-hidden="true">
-        <span>01</span>
-        <i></i>
-        <span>Garment archive</span>
-      </div>
     </div>
   </aside>
 
@@ -67,9 +59,9 @@
     <header class="mockups-hero" aria-labelledby="mockups-hero-title">
       <div class="mockups-hero-shell">
         <div class="mockups-hero-copy">
-          <span class="mockups-eyebrow"><%= activeMockupCategory ? `Free ${activeMockupCategory.name} 3D models` : 'Free 3D clothing models' %></span>
-          <h1 id="mockups-hero-title"><% if (activeMockupCategory) { %>Explore <%= activeMockupCategory.name %> models.<br>Start designing.<% } else { %>Pick a 3D garment.<br>Start designing.<% } %></h1>
-          <p><%= activeMockupCategory ? `Browse free ${activeMockupCategory.name} models, open a style in your browser, and customize colors, materials, and artwork.` : 'Browse free clothing models, open any style in your browser, and customize colors, materials, and artwork.' %></p>
+          <h1 id="mockups-hero-title"><%= activeMockupCategory ? `${activeMockupCategory.name} 3D models` : '3D clothing models' %></h1>
+
+          <p><%= activeMockupCategory ? `Browse ${activeMockupCategory.name.toLowerCase()} 3D models for apparel mockups. Customize garment colors, materials and artwork in the browser.` : 'Browse 3D clothing models for T-shirts, hoodies, shirts, dresses and pants. Customize garment colors, materials and artwork in the browser.' %></p>
 
           <div class="mockups-hero-tools">
             <form class="mockups-search" action="<%= mockupBasePath %>#free-3d-models" method="get" role="search">
@@ -98,8 +90,7 @@
   <div class="mockups-catalog-shell">
     <div class="mockups-catalog-heading">
       <div>
-        <span class="mockups-catalog-kicker"><%= mockupQuery.q ? 'Search results' : 'Curated garment archive' %></span>
-        <h2><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : (activeMockupCategory ? `${activeMockupCategory.name} collection` : 'Explore the collection') %></h2>
+        <h2><%= mockupQuery.q ? `Results for “${mockupQuery.q}”` : (activeMockupCategory ? `${activeMockupCategory.name} collection` : 'All models') %></h2>
         <p aria-live="polite">
           <% if (mockupPagination.total) { %>
             Showing <%= mockupPagination.start %>–<%= mockupPagination.end %> of <%= mockupPagination.total %>
@@ -145,7 +136,6 @@
       <% } else { %>
         <div class="empty-state all-catalog-empty-state">
           <strong>No garments match this search.</strong>
-          <p>Try a broader garment type or clear the current search.</p>
           <a class="btn btn-secondary" href="<%= mockupBasePath %>#free-3d-models">Clear search</a>
         </div>
       <% } %>
@@ -184,25 +174,26 @@
   </div>
 </section>
 
+
 <% if (mockupPagination.page === 1 && !mockupQuery.q) { %>
-  <section class="category-field-guide all-catalog-field-guide">
+  <section class="category-field-guide all-catalog-field-guide" aria-labelledby="mockups-about-title">
     <div class="category-catalog-shell">
       <div class="category-field-guide-panel">
         <div class="category-field-guide-intro">
-          <h2>From model to mockup</h2>
-          <p>Open any 3D model and start creating realistic apparel mockups in minutes.</p>
+          <h2 id="mockups-about-title"><%= activeMockupCategory ? `${activeMockupCategory.name} apparel mockups` : '3D apparel mockups' %></h2>
+          <p>Model types, customization and uses.</p>
         </div>
-        <ol class="category-field-guide-steps">
-          <% allCatalogSteps.forEach(function(step, index) { %>
-            <li>
-              <span><%= index + 1 %></span>
-              <div><h3><%= step.title %></h3><p><%= step.body %></p></div>
-            </li>
+        <div class="generator-faq-list">
+          <% libraryFaqItems.forEach(function(item) { %>
+            <details class="generator-faq-item">
+              <summary><%= item.question %></summary>
+              <p><%= item.answer %></p>
+            </details>
           <% }); %>
-        </ol>
-        <nav class="category-field-guide-links" aria-label="Related resources">
-          <a href="/tools/3d-clothing-mockup-generator">Tools <span aria-hidden="true">›</span></a>
-          <a href="/blog/3d-apparel-mockup-workflow">Guides <span aria-hidden="true">›</span></a>
+        </div>
+        <nav class="category-field-guide-links" aria-label="Apparel mockup resources">
+          <a href="/tools/3d-clothing-mockup-generator">3D mockup editor <span aria-hidden="true">›</span></a>
+          <a href="/blog/3d-apparel-mockup-workflow">Apparel mockup workflow <span aria-hidden="true">›</span></a>
         </nav>
       </div>
     </div>

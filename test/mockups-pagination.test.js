@@ -65,10 +65,10 @@ test('shows every garment category without a hidden More menu or warm image filt
   assert.doesNotMatch(mockupStyles, /transform: scale\(1\.055\)/);
 });
 
-test('uses the generated fashion studio image and a product-specific hero message', () => {
+test('keeps the model library copy concise and product-specific', () => {
   assert.match(template, /mockups-library-brand-studio-v2\.webp/);
-  assert.match(template, /Pick a 3D garment\.<br>Start designing\./);
-  assert.match(template, /Browse free clothing models, open any style in your browser/);
+  assert.match(template, /'3D clothing models'/);
+  assert.doesNotMatch(template, /Start designing|Curated garment archive|From model to mockup|allCatalogSteps|mockups-sidebar-foot/);
   assert.doesNotMatch(template, /heroModels/);
   assert.doesNotMatch(template, /mockups-orbit/);
 });
@@ -79,5 +79,5 @@ test('renders every 3D category with the same redesigned mockup library', () => 
   assert.match(route, /pageStyles: \['\/css\/mockups-library\.css\?v=[^']+'\]/);
   assert.match(template, /const activeMockupCategory/);
   assert.match(template, /activeMockupCategory && cat\.slug === activeMockupCategory\.slug \? 'is-active'/);
-  assert.match(template, /Explore <%= activeMockupCategory\.name %> models\./);
+  assert.ok(template.includes('`${activeMockupCategory.name} 3D models`'));
 });

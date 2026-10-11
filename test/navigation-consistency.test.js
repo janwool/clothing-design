@@ -11,21 +11,18 @@ const refreshStyles = fs.readFileSync(path.join(root, 'public', 'css', 'product-
 const detailStyles = fs.readFileSync(path.join(root, 'public', 'css', 'model-detail-v2.css'), 'utf8');
 const workerTemplates = require('../src/worker-templates.cjs');
 
-test('uses one navigation treatment across standard pages', () => {
-  assert.match(header, /product-refresh\.css\?v=[a-z0-9-]+/);
-  assert.match(header, /style\.css\?v=[a-z0-9-]+/);
-  assert.match(routes, /model-detail-v2\.css\?v=20260916-material-previews-v34/);
-  assert.match(styles, /--navbar-height: 76px/);
-  assert.match(refreshStyles, /\.navbar-logo \{[^}]*font-size: 28px;[^}]*font-weight: 720;/s);
-  assert.match(refreshStyles, /\.navbar-container \{[^}]*max-width: 1320px;/s);
-  assert.match(refreshStyles, /\.navbar \.navbar-actions > \.btn \{[^}]*min-height: 48px;/s);
-  assert.match(refreshStyles, /\.navbar-link,[\s\S]*?\.user-toggle \{[^}]*font-size: 16px;/s);
-  assert.match(refreshStyles, /\.navbar-link,[\s\S]*?\.user-toggle \{[^}]*font-weight: 500;/s);
-  assert.match(refreshStyles, /\.navbar \.navbar-actions > \.btn \{[^}]*font-size: 16px;/s);
-  assert.match(refreshStyles, /\.navbar-menu > \.nav-link::after/);
-  assert.doesNotMatch(refreshStyles, /\.category-catalog-page \.navbar(?:\s|\{|\.)/);
-  assert.doesNotMatch(refreshStyles, /\.category-catalog-page \{[^}]*--navbar-height/s);
-  assert.doesNotMatch(detailStyles, /\.model-product-page \{\s*--navbar-height:/);
+test('owns navigation styles independently of page styles', () => {
+  const navStyles = fs.readFileSync(path.join(root, 'public/css/navigation.css'), 'utf8');
+  assert.match(header, /navigation\.css\?v=/);
+  assert.match(navStyles, /--navbar-height: 76px/);
+  assert.match(navStyles, /\.navbar \.navbar-brand-icon \{ width: 32px; height: 32px;/);
+  assert.match(navStyles, /\.navbar \.nav-link \{ font-size: 14px;/);
+  assert.match(navStyles, /\.mobile-menu\.active/);
+  for (const filename of ['style.css', 'product-refresh.css', 'home-v2.css', 'mockups-library.css', 'white-mockups.css', 'tshirt-generator-landing.css']) {
+    const css = fs.readFileSync(path.join(root, 'public/css', filename), 'utf8');
+    const parsed = require('postcss').parse(css);
+    parsed.walkRules(rule => assert.doesNotMatch(rule.selector, /\.(?:navbar(?:-[\w-]+)?|nav-link|nav-dropdown|mobile-(?:menu|toggle|link))/));
+  }
 });
 
 test('shows signed-in users a direct Workbench navigation button', () => {
@@ -57,5 +54,5 @@ test('omits Start designing from desktop and mobile navigation for signed-out us
 });
 
 test('loads the user image library runtime with the current cache version', () => {
-  assert.match(header, /user-projects\.js\?v=20260923-cover-project-v7/);
+  assert.match(header, /user-projects\.js\?v=20261011-explicit-project-v8/);
 });

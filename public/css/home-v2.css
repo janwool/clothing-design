@@ -2,13 +2,6 @@
 .home-canvas-page { --home-ink:#171717; --home-text:#575757; --home-line:#dadad7; --home-gutter:clamp(24px,5.3vw,88px); color:var(--home-ink); background:#fff; font-family:"Helvetica Neue",Helvetica,sans-serif; }
 .home-canvas-page main { overflow:clip; }
 .home-canvas-page figure { margin:0; }
-.home-canvas-page .navbar { background:#fff; backdrop-filter:none; }
-.home-canvas-page .navbar-container { max-width:none; padding-inline:var(--home-gutter); }
-.home-canvas-page .navbar-logo .logo-text { font-weight:500; letter-spacing:-.05em; }
-.home-canvas-page .navbar-brand-icon { width:32px; height:32px; }
-.home-canvas-page .nav-link { font-size:14px; color:var(--home-ink); }
-.home-canvas-page .opening-offer-banner { background:#f3f2ee; border-bottom:1px solid #e4e3df; }
-.home-canvas-page .opening-offer-banner:hover { background:#eae9e4; }
 .home-shell { width:calc(100% - 2 * var(--home-gutter)); max-width:1600px; margin-inline:auto; min-width:0; }
 .home-section { min-height:calc(100svh - var(--navbar-height,76px)); padding-block:clamp(72px,10vh,116px); display:flex; align-items:center; scroll-margin-top:calc(var(--navbar-height,76px) + 20px); }
 .home-copy { min-width:0; }

@@ -155,6 +155,23 @@
     projectPreviewUrl: ''
   };
 
+  // Catalog color choices initialize the preview without changing saved projects.
+  const entryParams = new URLSearchParams(window.location.search);
+  const entryColor = entryParams.get('color') || '';
+  if (!entryParams.has('project') && !entryParams.has('adminProject') && /^#?[0-9a-f]{6}$/i.test(entryColor)) {
+    state.garmentColor = '#' + entryColor.replace(/^#/, '').toLowerCase();
+    garmentColorLabel.textContent = state.garmentColor === '#171717' ? 'Black' : 'Custom color';
+    garmentColorButtons.forEach(button => {
+      const active = button.dataset.garmentColor === state.garmentColor;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+    customGarmentColor.value = state.garmentColor;
+    customGarmentColorSwatch.classList.add('active');
+    customGarmentColorSwatch.setAttribute('aria-pressed', 'true');
+    customGarmentColorSwatch.querySelector('i').style.background = state.garmentColor;
+  }
+
   const baseCanvas = document.createElement('canvas');
   const foregroundCanvas = document.createElement('canvas');
   const artworkCanvas = document.createElement('canvas');

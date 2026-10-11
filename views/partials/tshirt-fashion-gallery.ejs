@@ -1,0 +1,22 @@
+<% const fashionCards = toolPage.fashionMockups || []; %>
+<% if (fashionCards.length) { %>
+<section class="tmg-fashion tmg-section" aria-labelledby="tmg-fashion-title">
+  <div class="tmg-shell">
+    <div class="tmg-section-heading"><h2 id="tmg-fashion-title"><%= toolPage.tshirtStudio.audience === 'women' ? "Women's" : toolPage.tshirtStudio.audience === 'men' ? "Men's" : toolPage.slug === 'black-t-shirt-mockup' ? 'Black' : 'White' %> T-shirt fashion mockups</h2><a class="tmg-text-link" href="/white-mockups?type=t-shirts-tops">Browse fashion mockups ↗</a></div>
+    <div data-tmg-blank-gallery>
+      <div class="tmg-fit-track" data-tmg-blank-track role="region" aria-label="T-shirt fashion mockups" tabindex="0">
+      <% fashionCards.forEach(card => { %>
+        <a class="tmg-fit-card tmg-fashion-card" href="<%= card.href %>" aria-label="Customize <%= card.title %>">
+          <div class="tmg-card-content">
+          <div class="tmg-fashion-image">
+            <img src="<%= card.image %>" alt="<%= card.color ? 'Black ' : '' %><%= card.title %> on a model" width="1024" height="1536" loading="lazy" decoding="async">
+          </div>
+          <div class="tmg-fit-card-copy"><h3><%= card.title %></h3></div>
+          </div>
+        </a>
+      <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
