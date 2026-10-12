@@ -59,10 +59,10 @@
     return `<span class="export-mini"><img src="/images/export-layouts/${kind}.webp" alt="" width="480" height="320" decoding="async"></span>`;
   }
   function create() {
-    dialog = document.createElement('dialog'); dialog.id = 'modelExportDialog'; dialog.className = 'model-export-dialog'; dialog.setAttribute('aria-label', 'Export design');
+    dialog = document.createElement('dialog'); dialog.id = 'modelExportDialog'; dialog.className = 'model-export-dialog'; dialog.setAttribute('aria-label', 'Export');
     dialog.innerHTML = `<div class="export-shell">
       <div class="export-header"><div class="export-tabs" role="tablist" aria-label="Export options">${[['images','Images'],['video','Video'],['model','3D File'],['share','Share']].map(([key,label]) => `<button type="button" role="tab" data-tab="${key}" aria-selected="false">${label}</button>`).join('')}</div><button class="export-close" type="button" aria-label="Close export dialog">×</button></div>
-      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls disable-tap interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.7" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><span class="export-live-label" hidden><i></i>Live 3D preview · 360° rotation running</span><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div><div class="export-preview-caption" hidden></div></div><div class="export-options"></div></div>
+      <div class="export-main"><div class="export-preview"><div class="export-visual"><model-viewer id="exportLiveViewer" src="${esc(config.previewModelFileUrl)}" poster="${esc(config.previewImageUrl)}" alt="3D export preview" loading="eager" reveal="auto" camera-controls disable-tap interaction-prompt="none" camera-orbit="${camera.front}" field-of-view="28deg" shadow-intensity="0.32" shadow-softness="0.9" exposure="0.7" environment-image="/environments/commercial-apparel-studio-v5-front-white-20260917.hdr" tone-mapping="commerce"></model-viewer><button type="button" class="export-expand" aria-label="Expand preview">⛶</button></div></div><div class="export-options"></div></div>
       <div class="export-footer"><span class="export-status" role="status" aria-live="polite"></span><div class="export-actions"></div></div>
     </div>`;
     document.body.append(dialog);
@@ -72,6 +72,16 @@
     dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
     dialog.addEventListener('click', e => { if (!e.target.closest('.cloz-dropdown')) exportDropdown.close(); });
     dialog.querySelector('.export-tabs').addEventListener('click', e => { const tab = e.target.closest('[data-tab]'); if (tab) switchTab(tab.dataset.tab); });
+    dialog.querySelector('.export-tabs').addEventListener('keydown', e => {
+      if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+      const tabs = [...dialog.querySelectorAll('[data-tab]')];
+      const index = tabs.indexOf(e.target);
+      if (index < 0) return;
+      e.preventDefault();
+      const next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : (index + (e.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      switchTab(tabs[next].dataset.tab);
+      tabs[next].focus();
+    });
     dialog.querySelector('.export-expand').addEventListener('click', () => dialog.querySelector('.export-visual').requestFullscreen?.());
     dialog.querySelector('.export-options').addEventListener('click', handleOptionsClick);
     exportDropdown = window.ClozDropdown.bind(dialog.querySelector('.export-options'), handleDropdownChange, { isDisabled: () => state.busy });
@@ -86,14 +96,10 @@
     const footer = dialog.querySelector('.export-actions');
     const visual = dialog.querySelector('.export-visual');
     visual.classList.toggle('export-video-visual', state.tab === 'video');
-    dialog.querySelector('.export-live-label').hidden = state.tab !== 'video';
-    const imagePreview = state.tab === 'images';
-    const caption = dialog.querySelector('.export-preview-caption');
-    caption.hidden = state.tab !== 'model' && !imagePreview; caption.textContent = 'Drag to inspect the 3D model';
     if (state.tab === 'images') {
       options.innerHTML = `<div class="export-group"><h3>View layout</h3><div class="export-layout-grid">${layouts.map(([key,label]) => `<button type="button" class="export-layout ${state.layout === key ? 'selected' : ''}" data-layout="${key}" aria-label="${esc(label)}" aria-pressed="${state.layout === key}">${cardImage(key)}</button>`).join('')}</div></div>
         <div class="export-group"><h3>Background</h3>${backgroundSwatches()}</div>
-        <p class="export-product-note">Export a more lifelike product image with studio-quality lighting and fabric detail, ready for ecommerce product pages. Your design and background stay as chosen. The image downloads automatically when ready.</p>`;
+        <p class="export-product-note"><a class="export-render-technology" href="/rendering" target="_blank" rel="noopener"><strong>ClozDesign Render Technology</strong></a> creates lifelike product images, ready for commercial use.</p>`;
       footer.innerHTML = renderTaskId && window.DownloadList?.status(renderTaskId) === 'rendering'
         ? '<button type="button" class="primary" data-action="view-downloads">View rendering in Downloads</button>'
         : '<button type="button" class="primary" data-action="image">Render image</button>';
@@ -111,12 +117,12 @@
         if (current()) startAnimation();
       }).catch(error => { if (videoGeneration === videoRenderGeneration) setStatus(error.message, true); });
     } else if (state.tab === 'model') {
-      options.innerHTML = `<div class="export-group"><h2>3D model file</h2><h3>Format</h3><div class="export-format-card selected"><strong>◉ &nbsp; GLB</strong><span>Model + textures in one file</span></div></div><div class="export-group"><h3>Include</h3><div class="export-checks"><span>✓ &nbsp; Current material</span><span>✓ &nbsp; Applied artwork</span><span>✓ &nbsp; Texture maps</span></div></div><div class="export-group export-file-info"><p>A visual 3D model for presentation and preview.</p></div>`;
+      options.innerHTML = `<div class="export-group"><h2>3D model file</h2><h3>Format</h3><div class="export-format-card selected"><strong>◉ &nbsp; GLB</strong></div></div><div class="export-group"><h3>Include</h3><div class="export-checks"><span>✓ &nbsp; Current material</span><span>✓ &nbsp; Applied artwork</span><span>✓ &nbsp; Texture maps</span></div></div>`;
       footer.innerHTML = '<button type="button" class="primary" data-action="glb">Download GLB</button>';
     } else {
       const shareUrl=state.shareUrl;
       const qrUrl=shareUrl ? `/api/share/qr?url=${encodeURIComponent(shareUrl)}` : '';
-      options.innerHTML = `<div class="export-group"><h2>Share your design</h2></div><div class="export-group"><h3>Share link</h3><div class="export-link-row"><input readonly aria-label="Share link" value="${esc(shareUrl)}" placeholder="Create a link to share"><button type="button" ${shareUrl ? 'data-share-copy' : 'data-share-create'}>${shareUrl ? 'Copy link' : 'Create link'}</button></div><p class="export-share-message" role="status" aria-live="polite"></p></div>${shareUrl ? `<div class="export-qr-card"><img src="${esc(qrUrl)}" alt="QR code for share link"><div><strong>Scan to view</strong><p>Open this link on your phone.</p></div><a href="${esc(qrUrl)}" download="design-qr.svg">Download QR</a></div>` : ''}${shareUrl ? '<button type="button" class="export-revoke" data-share-revoke>Revoke link</button>' : ''}`;
+      options.innerHTML = `<div class="export-group"><h2>Share your design</h2></div>${!shareUrl ? '<div class="export-share-empty"><span aria-hidden="true">↗</span><strong>No share link yet</strong></div>' : ''}<div class="export-group"><h3>Share link</h3><div class="export-link-row"><input readonly aria-label="Share link" value="${esc(shareUrl)}" placeholder="Create a link to share"><button type="button" ${shareUrl ? 'data-share-copy' : 'data-share-create'}>${shareUrl ? 'Copy link' : 'Create link'}</button></div><p class="export-share-message" role="status" aria-live="polite"></p></div>${shareUrl ? `<div class="export-qr-card"><img src="${esc(qrUrl)}" alt="QR code for share link"><div><strong>Scan to view</strong></div><a href="${esc(qrUrl)}" download="design-qr.svg">Download QR</a></div>` : ''}${shareUrl ? '<button type="button" class="export-revoke" data-share-revoke>Revoke link</button>' : ''}`;
       footer.innerHTML = '<button type="button" class="primary" data-action="done">Done</button>';
     }
     if (state.tab === 'images' || state.tab === 'video') previewBackground();

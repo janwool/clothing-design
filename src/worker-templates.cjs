@@ -8241,7 +8241,7 @@ motionId = __locals.motionId,
   showWorkspaceFooter = __locals.showWorkspaceFooter;
     ; __append( include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20261011-native-tryon-v43', '/css/model-detail-v3.css?v=20261011-v12', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261001-product-render-copy-v3', '/css/design-studio.css?v=20261011-studio-v58', '/css/ai-try-on.css?v=20261011-designed-v18']
+  pageStyles: ['/css/model-detail-v2.css?v=20261011-native-tryon-v43', '/css/model-detail-v3.css?v=20261011-v12', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261012-render-technology-v10', '/css/design-studio.css?v=20261011-studio-v58', '/css/ai-try-on.css?v=20261011-designed-v18']
 }) )
     ; __append("\n")
     ;  const previewModelFileUrl = model.preview_file_url || model.file_url;
@@ -8487,7 +8487,7 @@ motionId = __locals.motionId,
     ; __append( include('partials/ai-try-on-workspace', { embeddedTryOn: true, personModels: typeof tryOnPersonModels !== 'undefined' && Array.isArray(tryOnPersonModels) ? tryOnPersonModels : [], categorySlug: model.category_slug || model.category }) )
     ; __append("\n  <button type=\"button\" class=\"detail-tryon-loading-close\" aria-label=\"Close AI Try-on\">×</button>\n</dialog>\n<script src=\"/js/ai-try-on.js?v=20261011-designed-v18\" defer></script>\n<script src=\"/js/detail-try-on.js?v=20261011-native-dialog-v7\" defer></script>\n")
     ;  }
-    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20261001-remove-comparison-v1\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20261001-studio-render-copy-v7\" defer></script>\n\n")
+    ; __append("\n\n<script src=\"/js/model-export-scene.js?v=20260925-zero-azimuth-v1\" defer></script>\n<script src=\"/js/model-export-video.js?v=20261001-remove-comparison-v1\" defer></script>\n<script src=\"/js/cloz-dropdown.js?v=20260924-v1\" defer></script>\n<script src=\"/js/model-export-modal.js?v=20261012-render-technology-v10\" defer></script>\n\n")
     ; __append( include('partials/footer', { footerVariant: 'workbench', enableGrowthShare: false }) )
     ; __append("\n")
   return __output;
@@ -8992,7 +8992,7 @@ const detailHref = `/3d-models/${categorySlug}/${model.slug}`;
     ;  }
     ; __append("\n\n          <div class=\"tryon-viewer__controls\">\n            <button type=\"button\" id=\"resetTryOnViewer\" aria-label=\"Reset 3D view\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 6v5h-5M4 18v-5h5M6.1 9A7 7 0 0 1 18.7 7.7L20 11M4 13l1.3 3.3A7 7 0 0 0 17.9 15\"/></svg>\n            </button>\n            <button type=\"button\" id=\"fullscreenTryOnViewer\" aria-label=\"View 3D design fullscreen\">\n              <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5\"/></svg>\n            </button>\n          </div>\n\n          <span class=\"tryon-viewer__hint\">\n            <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M8 11V7a2 2 0 0 1 4 0v4-6a2 2 0 0 1 4 0v6-4a2 2 0 0 1 4 0v7c0 4-3 7-7 7h-1c-2 0-3.4-.8-4.6-2.3L3.8 14a2 2 0 0 1 3-2.6L8 13\"/></svg>\n            Drag to rotate\n          </span>\n        </div>\n      </section>\n\n\n      <section class=\"tryon-requirements\">\n        <label for=\"tryOnRequirements\">Your requirements <span>Optional</span></label>\n        <div class=\"tryon-input-box\">\n          <textarea id=\"tryOnRequirements\" maxlength=\"1000\" placeholder=\"Describe your requirements…\"></textarea>\n          <div class=\"tryon-input-attachments\">\n            <div class=\"tryon-attached-photo\" hidden><img id=\"tryOnAttachedImage\" alt=\"Your uploaded model\"><button type=\"button\" data-remove-photo aria-label=\"Remove attached model photo\">×</button></div>\n            <button type=\"button\" data-upload-photo class=\"tryon-upload\" aria-label=\"Upload or replace model photo\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"M20 12v8H4V4h10M17 3h6m-3-3v6M7 16l4-4 4 4 2-2\"/></svg><span>Upload photo</span></button>\n          </div>\n        </div>\n      </section>\n      </div>\n      <div class=\"tryon-flow__generate\">\n\n        <p class=\"tryon-error\" id=\"tryOnError\" role=\"alert\" hidden></p>\n        <input type=\"file\" id=\"tryOnPhoto\" accept=\"image/png,image/jpeg,image/webp\" hidden>\n        <button class=\"ai-button ai-button--primary ai-button--wide\" type=\"button\" data-generate disabled aria-disabled=\"true\">\n          <span>Generate try-on · ")
     ; __append(escapeFn( tryOnCreditCost ))
-    ; __append(" credits</span>\n        </button>\n        <p id=\"tryOnTimeHint\"></p>\n      </div>\n    </aside>\n  </div>\n\n  <div class=\"tryon-toast\" id=\"tryOnToast\" role=\"status\" aria-live=\"polite\" hidden>\n    <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n    Try-on ready\n  </div>\n</section>\n\n")
+    ; __append(" credits</span>\n        </button>\n        <p id=\"tryOnTimeHint\"></p>\n      </div>\n    </aside>\n  </div>\n\n  <div class=\"tryon-toast\" id=\"tryOnToast\" role=\"status\" aria-live=\"polite\" hidden>\n    <svg aria-hidden=\"true\" viewBox=\"0 0 24 24\"><path d=\"m5 12 4 4L19 6\"/></svg>\n    Try-on ready\n  </div>\n</section>\n")
   return __output;
 
 },
@@ -9513,7 +9513,7 @@ motionId = __locals.motionId,
     ;  if (isHoodieFooter) {
     ; __append("\n            <a href=\"/tools/hoodie-mockup-generator\" class=\"footer-link\">Hoodie Generator</a>\n            <a href=\"/tools\" class=\"footer-link\">Apparel Tools</a>\n          ")
     ;  }
-    ; __append("\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"mailto:support@cloz-design.com\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n\n        ")
+    ; __append("\n          <a href=\"/pricing\" class=\"footer-link\">Pricing</a>\n        </div>\n\n        <!-- Resources -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Resources</p>\n          <a href=\"/tools\" class=\"footer-link\">Design Tools</a>\n          <a href=\"/rendering\" class=\"footer-link\">Product Image Rendering</a>\n          <a href=\"/blog\" class=\"footer-link\">Blog</a>\n          <a href=\"/feed.xml\" class=\"footer-link\">RSS Feed</a>\n          <a href=\"/mockups\" class=\"footer-link\">Free 3D Models</a>\n        </div>\n\n        <!-- Company and trust -->\n        <div class=\"footer-column\">\n          <p class=\"footer-title\">Company</p>\n          <a href=\"mailto:support@cloz-design.com\" class=\"footer-link\">Contact</a>\n          <a href=\"/privacy\" class=\"footer-link\">Privacy</a>\n          <a href=\"/terms\" class=\"footer-link\">Terms</a>\n        </div>\n\n        ")
     ;  if (isHoodieFooter) {
     ; __append("\n          <div class=\"footer-column footer-newsletter\">\n            <p class=\"footer-title\">Stay in the loop</p>\n            <p>Get updates, new features, and design tips.</p>\n            <form action=\"mailto:support@cloz-design.com\" method=\"post\" enctype=\"text/plain\">\n              <label class=\"sr-only\" for=\"hoodie-footer-email\">Your email address</label>\n              <input id=\"hoodie-footer-email\" type=\"email\" name=\"email\" autocomplete=\"email\" placeholder=\"Your email address\" required>\n              <button type=\"submit\" aria-label=\"Join ClozDesign updates\">→</button>\n            </form>\n            <small>No spam. Unsubscribe anytime.</small>\n          </div>\n        ")
     ;  }
@@ -11438,6 +11438,180 @@ motionId = __locals.motionId,
     ; __append("<li><span aria-hidden=\"true\">✓</span> All AI models</li>\n        <li><span aria-hidden=\"true\">✓</span> 250 monthly credits</li>")
     ;  }
     ; __append("\n        <li><span aria-hidden=\"true\">✓</span> Unlimited image storage</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-inverse\" href=\"/auth/register?plan=pro&amp;billing=monthly\" data-pricing-cta data-plan-link data-plan=\"pro\" data-analytics-managed=\"true\">Choose Pro</a>\n    </article>\n\n    <article class=\"pricing-card pricing-card-business\">\n      <div class=\"pricing-card-heading\"><h2>Business</h2></div>\n      <div class=\"pricing-price-block\">\n        <div class=\"pricing-price-line\"><strong>Custom</strong></div>\n        <span class=\"pricing-alt-price\" aria-hidden=\"true\">&nbsp;</span>\n      </div>\n      <ul class=\"pricing-features\">\n        <li><span aria-hidden=\"true\">✓</span> Custom projects &amp; limits</li>\n        <li><span aria-hidden=\"true\">✓</span> Custom storage</li>\n        <li><span aria-hidden=\"true\">✓</span> Unlimited image, video &amp; GLB exports</li>\n        <li><span aria-hidden=\"true\">✓</span> No watermarks</li>\n        <li><span aria-hidden=\"true\">✓</span> Interactive 3D sharing</li>\n        <li><span aria-hidden=\"true\">✓</span> Priority support</li>\n      </ul>\n      <a class=\"pricing-cta pricing-cta-secondary\" href=\"mailto:support@cloz-design.com?subject=ClozDesign%20Business%20plan%20inquiry\" data-pricing-cta data-plan=\"business\" data-analytics-managed=\"true\">Contact sales</a>\n    </article>\n  </div>\n\n  <div class=\"container pricing-inline-note\">\n    <svg viewBox=\"0 0 24 24\" aria-hidden=\"true\">\n      <ellipse cx=\"12\" cy=\"5\" rx=\"8\" ry=\"3\"></ellipse>\n      <path d=\"M4 5v7c0 1.7 3.6 3 8 3s8-1.3 8-3V5\"></path>\n      <path d=\"M4 12v7c0 1.7 3.6 3 8 3s8-1.3 8-3v-7\"></path>\n    </svg>\n    <span aria-hidden=\"true\"></span>\n    <p>Create unlimited projects with Pro. Keep your work in one place.</p>\n  </div>\n</section>\n\n<script src=\"/js/pricing.js?v=20260926-ip-currency-v3\" defer></script>\n")
+    ; __append( include('partials/footer') )
+    ; __append("\n")
+  return __output;
+
+},
+  "render-comparison.ejs": function anonymous(locals, escapeFn, include, rethrow
+) {
+escapeFn = escapeFn || function (markup) {
+  return markup == undefined
+    ? ''
+    : String(markup)
+      .replace(_MATCH_HTML, encode_char);
+};
+var _ENCODE_HTML_RULES = {
+      "&": "&amp;"
+    , "<": "&lt;"
+    , ">": "&gt;"
+    , '"': "&#34;"
+    , "'": "&#39;"
+    }
+  , _MATCH_HTML = /[&<>'"]/g;
+function encode_char(c) {
+  return _ENCODE_HTML_RULES[c] || c;
+};
+;
+  var __output = "";
+  function __append(s) { if (s !== undefined && s !== null) __output += s }
+  var __locals = (locals || {}),
+motionId = __locals.motionId,
+  motionName = __locals.motionName,
+  motionAlt = __locals.motionAlt,
+  motionCaption = __locals.motionCaption,
+  motionBase = __locals.motionBase,
+  motionVersion = __locals.motionVersion,
+  motionWidth = __locals.motionWidth,
+  motionHeight = __locals.motionHeight,
+  motionEager = __locals.motionEager,
+  config = __locals.config,
+  campaigns = __locals.campaigns,
+  emailUsers = __locals.emailUsers,
+  csrf = __locals.csrf,
+  historyPage = __locals.historyPage,
+  subscribersOnly = __locals.subscribersOnly,
+  pageCount = __locals.pageCount,
+  title = __locals.title,
+  page = __locals.page,
+  error = __locals.error,
+  next = __locals.next,
+  oauthError = __locals.oauthError,
+  authLoginUrl = __locals.authLoginUrl,
+  googleAuthEnabled = __locals.googleAuthEnabled,
+  googleAuthUrl = __locals.googleAuthUrl,
+  loginReturnPath = __locals.loginReturnPath,
+  openingOffer = __locals.openingOffer,
+  tryOnCreditCost = __locals.tryOnCreditCost,
+  personModels = __locals.personModels,
+  tryOnPersonModels = __locals.tryOnPersonModels,
+  aiTryOnEnabled = __locals.aiTryOnEnabled,
+  categorySlug = __locals.categorySlug,
+  metaDescription = __locals.metaDescription,
+  metaRobots = __locals.metaRobots,
+  metaImage = __locals.metaImage,
+  canonicalUrl = __locals.canonicalUrl,
+  defaultMetaImage = __locals.defaultMetaImage,
+  defaultMetaRobots = __locals.defaultMetaRobots,
+  bodyClass = __locals.bodyClass,
+  pageStyles = __locals.pageStyles,
+  structuredData = __locals.structuredData,
+  user = __locals.user,
+  i18next = __locals.i18next,
+  t = __locals.t,
+  homeContent = __locals.homeContent,
+  toolPage = __locals.toolPage,
+  tshirtWorkflows = __locals.tshirtWorkflows,
+  modelDetailContent = __locals.modelDetailContent,
+  onModelMockupProfile = __locals.onModelMockupProfile,
+  items = __locals.items,
+  categories = __locals.categories,
+  models = __locals.models,
+  catalogModels = __locals.catalogModels,
+  catalogTotal = __locals.catalogTotal,
+  catalogPagination = __locals.catalogPagination,
+  landingContent = __locals.landingContent,
+  category = __locals.category,
+  resourceType = __locals.resourceType,
+  resourceTypeLabel = __locals.resourceTypeLabel,
+  related = __locals.related,
+  model = __locals.model,
+  counts = __locals.counts,
+  inquiryFilters = __locals.inquiryFilters,
+  inquiryPagination = __locals.inquiryPagination,
+  inquiryStats = __locals.inquiryStats,
+  feedbackFilters = __locals.feedbackFilters,
+  feedbackPagination = __locals.feedbackPagination,
+  feedbackStats = __locals.feedbackStats,
+  projectFilters = __locals.projectFilters,
+  projectPagination = __locals.projectPagination,
+  projectStats = __locals.projectStats,
+  imageFilters = __locals.imageFilters,
+  imagePagination = __locals.imagePagination,
+  imageStats = __locals.imageStats,
+  articles = __locals.articles,
+  article = __locals.article,
+  resources = __locals.resources,
+  shareSurface = __locals.shareSurface,
+  shareTitle = __locals.shareTitle,
+  shareKicker = __locals.shareKicker,
+  sharePrompt = __locals.sharePrompt,
+  assets = __locals.assets,
+  assetSummary = __locals.assetSummary,
+  activeType = __locals.activeType,
+  activeCategory = __locals.activeCategory,
+  pagination = __locals.pagination,
+  asset = __locals.asset,
+  displayTitle = __locals.displayTitle,
+  typeLabel = __locals.typeLabel,
+  typeName = __locals.typeName,
+  relatedAssets = __locals.relatedAssets,
+  whiteFaqItems = __locals.whiteFaqItems,
+  projects = __locals.projects,
+  images = __locals.images,
+  account = __locals.account,
+  workspaceStats = __locals.workspaceStats,
+  entitlements = __locals.entitlements,
+  billingSubscription = __locals.billingSubscription,
+  checkoutState = __locals.checkoutState,
+  currentView = __locals.currentView,
+  headerEyebrow = __locals.headerEyebrow,
+  headerDetail = __locals.headerDetail,
+  eyebrow = __locals.eyebrow,
+  heading = __locals.heading,
+  intro = __locals.intro,
+  updatedAt = __locals.updatedAt,
+  sections = __locals.sections,
+  footerVariant = __locals.footerVariant,
+  showWorkspaceFooter = __locals.showWorkspaceFooter;
+    ; __append( include('partials/header', { bodyClass: 'render-comparison-page', pageStyles: ['/css/render-comparison.css?v=20261012-v3'] }) )
+    ; __append("\n")
+    ;  const examples = config.examples || [];
+    ; __append("\n<div class=\"render-guide\">\n  <section class=\"render-section render-intro\" aria-labelledby=\"render-title\">\n    <div class=\"render-shell\">\n      <div class=\"render-intro-heading\"><h1 id=\"render-title\">From preview to product image.</h1><p>Realistic lighting and fabric detail for your product images.</p></div>\n      ")
+    ;  if (examples.length) { const example = examples[0];
+    ; __append("\n        <div class=\"render-pair\">\n          <figure><div class=\"render-image-frame\"><img src=\"")
+    ; __append(escapeFn( example.preview ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( example.name ))
+    ; __append(" website preview\" width=\"1128\" height=\"820\" fetchpriority=\"high\"></div><figcaption>Website preview</figcaption></figure>\n          <figure><div class=\"render-image-frame\"><img src=\"")
+    ; __append(escapeFn( example.rendered ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( example.name ))
+    ; __append(" AI-rendered example\" width=\"1128\" height=\"820\" fetchpriority=\"high\"></div><figcaption>AI-rendered example</figcaption></figure>\n        </div>\n      ")
+    ;  } else {
+    ; __append("\n        <div class=\"render-pair render-pending\" aria-label=\"Render examples pending\">\n          <figure><div class=\"render-placeholder\">Preview example coming soon</div><figcaption>Website preview</figcaption></figure>\n          <figure><div class=\"render-placeholder\">Render example coming soon</div><figcaption>AI-rendered example</figcaption></figure>\n        </div>\n      ")
+    ;  }
+    ; __append("\n    </div>\n  </section>\n  ")
+    ;  examples.forEach(function(example, index) { if (index === 0 && !example.previewDetail) return;
+    ; __append("\n    <section class=\"render-section render-detail\" aria-labelledby=\"render-example-")
+    ; __append(escapeFn( index ))
+    ; __append("\"><div class=\"render-shell\">\n      <h2 id=\"render-example-")
+    ; __append(escapeFn( index ))
+    ; __append("\">")
+    ; __append(escapeFn( index === 0 ? 'Light. Texture. Detail.' : example.name ))
+    ; __append("</h2>\n      <div class=\"render-pair\">\n        <figure><div class=\"render-image-frame\"><img src=\"")
+    ; __append(escapeFn( index === 0 ? example.previewDetail : example.preview ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( example.name ))
+    ; __append(" browser preview detail\" width=\"1128\" height=\"820\" loading=\"lazy\"></div><figcaption>Website preview</figcaption></figure>\n        <figure><div class=\"render-image-frame\"><img src=\"")
+    ; __append(escapeFn( index === 0 ? example.renderedDetail : example.rendered ))
+    ; __append("\" alt=\"")
+    ; __append(escapeFn( example.name ))
+    ; __append(" rendered fabric detail\" width=\"1128\" height=\"820\" loading=\"lazy\"></div><figcaption>AI-rendered example</figcaption></figure>\n      </div>\n    </div></section>\n  ")
+    ;  });
+    ; __append("\n  <section class=\"render-section render-start\" aria-labelledby=\"render-start-title\"><div class=\"render-shell\">\n    <h2 id=\"render-start-title\">Render your design.</h2>\n    <div class=\"render-steps\"><div><span>01</span><h3>Open Export</h3></div><div><span>02</span><h3>Choose your views &amp; background</h3></div><div><span>03</span><h3>Render image</h3></div></div>\n    <a class=\"render-button\" href=\"")
+    ; __append(escapeFn( examples[0]?.modelHref || '/mockups' ))
+    ; __append("\">Start with a garment <span aria-hidden=\"true\">↗</span></a>\n    <a class=\"render-pricing\" href=\"/pricing\">Export requires Pro or above</a>\n  </div></section>\n</div>\n<script src=\"/js/render-comparison.js?v=20261012-v3\" defer></script>\n")
     ; __append( include('partials/footer') )
     ; __append("\n")
   return __output;

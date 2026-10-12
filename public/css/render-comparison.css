@@ -1,0 +1,46 @@
+.render-comparison-page { color:#171717; background:#faf9f6; }
+.render-guide { padding-top:var(--navbar-height,76px); }
+.render-shell { width:calc(100% - clamp(40px,10vw,160px)); max-width:1440px; margin:auto; }
+.render-section { min-height:calc(100svh - var(--navbar-height,76px)); display:flex; align-items:center; padding:64px 0; }
+.render-intro-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:40px; }
+.render-guide h1,.render-guide h2 { margin:0; font-weight:400; letter-spacing:-.045em; line-height:1.08; text-wrap:balance; }
+.render-guide h1 { font-size:clamp(40px,4.5vw,68px); }
+.render-intro-heading p { margin:0 0 5px; max-width:430px; font-size:15px; line-height:1.6; color:#65645f; }
+.render-pair { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.render-pair figure { margin:0; min-width:0; }
+.render-pair img { display:block; width:100%; aspect-ratio:3/2; object-fit:contain; background:#eeede8; border-radius:5px; }
+.render-pair figcaption { padding:14px 0; font-size:13px; color:#65645f; }
+.render-placeholder { display:grid; place-items:center; aspect-ratio:3/2; background:#eeede8; border:1px solid #deded8; border-radius:5px; color:#77756e; font-size:13px; }
+.render-detail { border-top:1px solid #deded8; }
+.render-guide h2 { font-size:clamp(34px,4vw,56px); margin-bottom:40px; }
+.render-start { border-top:1px solid #deded8; background:#fff; }
+.render-steps { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; margin:64px 0; }
+.render-steps > div { padding-top:20px; border-top:1px solid #deded8; }
+.render-steps span { font-size:12px; color:#77756e; }
+.render-steps h3 { margin:18px 0 0; font-size:18px; font-weight:400; line-height:1.4; }
+.render-button { display:inline-flex; justify-content:space-between; align-items:center; gap:40px; min-height:50px; padding:14px 22px; background:#171717; color:#fff; border-radius:4px; font-size:14px; }
+.render-button:hover { background:#323232; color:#fff; }
+.render-pricing { display:block; width:fit-content; margin-top:18px; color:#77756e; font-size:12px; }
+.render-guide a:focus-visible { outline:2px solid #171717; outline-offset:4px; }
+.render-image-error { display:grid; place-items:center; aspect-ratio:3/2; border:1px solid #deded8; background:#eeede8; color:#77756e; font-size:13px; border-radius:5px; }
+@media(max-width:760px) { .render-section { min-height:auto; padding:48px 0; } .render-intro-heading { display:block; margin-bottom:28px; } .render-intro-heading p { margin-top:22px; font-size:14px; } .render-pair { grid-template-columns:1fr; gap:18px; } .render-steps { grid-template-columns:1fr; gap:24px; margin:40px 0; } .render-steps h3 { margin-top:10px; font-size:17px; } .render-button { width:100%; } }
+
+.render-image-frame { overflow:hidden; border-radius:5px; background:#eeede8; aspect-ratio:564/410; }
+.render-image-frame img { height:100%; aspect-ratio:auto; }
+.render-detail .render-image-frame { aspect-ratio:3/2; }
+.render-detail .render-image-frame img { object-fit:cover; transform:scale(2.5); transform-origin:28% 24%; }
+
+/* Match the complete comparison-page design, with imagery as the focus. */
+.render-intro-heading { display:block; text-align:center; max-width:1040px; margin:0 auto 40px; }
+.render-intro-heading p { max-width:none; margin:20px 0 0; }
+.render-detail h2,.render-start h2 { text-align:center; }
+.render-start .render-shell { max-width:1040px; text-align:center; }
+.render-steps { text-align:left; }
+.render-pricing { margin:18px auto 0; }
+.render-pair figcaption { text-align:center; }
+.render-image-frame { position:relative; }
+.render-image-frame img[hidden] { display:none; }
+.render-image-error { width:100%; height:100%; aspect-ratio:auto; align-content:center; justify-items:center; gap:16px; padding:24px; }
+.render-image-error button { min-height:44px; padding:8px 24px; border:1px solid #deded8; border-radius:4px; background:#fff; color:#171717; font:inherit; cursor:pointer; }
+.render-guide button:focus-visible { outline:2px solid #171717; outline-offset:4px; }
+@media(max-width:760px) { .render-intro-heading { margin-bottom:28px; } .render-intro-heading h1 { font-size:clamp(36px,8vw,48px); } .render-intro-heading p { margin-top:18px; } .render-detail h2 { font-size:34px; } }

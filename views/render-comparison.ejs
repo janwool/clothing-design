@@ -1,0 +1,37 @@
+<%- include('partials/header', { bodyClass: 'render-comparison-page', pageStyles: ['/css/render-comparison.css?v=20261012-v3'] }) %>
+<% const examples = config.examples || []; %>
+<div class="render-guide">
+  <section class="render-section render-intro" aria-labelledby="render-title">
+    <div class="render-shell">
+      <div class="render-intro-heading"><h1 id="render-title">From preview to product image.</h1><p>Realistic lighting and fabric detail for your product images.</p></div>
+      <% if (examples.length) { const example = examples[0]; %>
+        <div class="render-pair">
+          <figure><div class="render-image-frame"><img src="<%= example.preview %>" alt="<%= example.name %> website preview" width="1128" height="820" fetchpriority="high"></div><figcaption>Website preview</figcaption></figure>
+          <figure><div class="render-image-frame"><img src="<%= example.rendered %>" alt="<%= example.name %> AI-rendered example" width="1128" height="820" fetchpriority="high"></div><figcaption>AI-rendered example</figcaption></figure>
+        </div>
+      <% } else { %>
+        <div class="render-pair render-pending" aria-label="Render examples pending">
+          <figure><div class="render-placeholder">Preview example coming soon</div><figcaption>Website preview</figcaption></figure>
+          <figure><div class="render-placeholder">Render example coming soon</div><figcaption>AI-rendered example</figcaption></figure>
+        </div>
+      <% } %>
+    </div>
+  </section>
+  <% examples.forEach(function(example, index) { if (index === 0 && !example.previewDetail) return; %>
+    <section class="render-section render-detail" aria-labelledby="render-example-<%= index %>"><div class="render-shell">
+      <h2 id="render-example-<%= index %>"><%= index === 0 ? 'Light. Texture. Detail.' : example.name %></h2>
+      <div class="render-pair">
+        <figure><div class="render-image-frame"><img src="<%= index === 0 ? example.previewDetail : example.preview %>" alt="<%= example.name %> browser preview detail" width="1128" height="820" loading="lazy"></div><figcaption>Website preview</figcaption></figure>
+        <figure><div class="render-image-frame"><img src="<%= index === 0 ? example.renderedDetail : example.rendered %>" alt="<%= example.name %> rendered fabric detail" width="1128" height="820" loading="lazy"></div><figcaption>AI-rendered example</figcaption></figure>
+      </div>
+    </div></section>
+  <% }); %>
+  <section class="render-section render-start" aria-labelledby="render-start-title"><div class="render-shell">
+    <h2 id="render-start-title">Render your design.</h2>
+    <div class="render-steps"><div><span>01</span><h3>Open Export</h3></div><div><span>02</span><h3>Choose your views &amp; background</h3></div><div><span>03</span><h3>Render image</h3></div></div>
+    <a class="render-button" href="<%= examples[0]?.modelHref || '/mockups' %>">Start with a garment <span aria-hidden="true">↗</span></a>
+    <a class="render-pricing" href="/pricing">Export requires Pro or above</a>
+  </div></section>
+</div>
+<script src="/js/render-comparison.js?v=20261012-v3" defer></script>
+<%- include('partials/footer') %>

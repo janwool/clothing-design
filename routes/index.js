@@ -2317,6 +2317,18 @@ router.get('/api/mockup-asset', async (req, res) => {
   }
 });
 
+// Product rendering comparison
+router.get('/rendering', (req, res) => {
+  const config = require('../public/config/render-comparison.json');
+  res.render('render-comparison', {
+    title: 'Product Image Rendering | ClozDesign',
+    page: 'rendering',
+    metaDescription: 'Compare website garment previews with rendered product images, lighting, and fabric detail.',
+    metaRobots: config.examples.length ? 'max-image-preview:large' : 'noindex, follow',
+    config
+  });
+});
+
 // Home page
 router.get('/', async (req, res) => {
   try {

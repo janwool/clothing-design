@@ -1,0 +1,13 @@
+{
+  "examples": [
+    {
+      "name": "Relaxed crewneck T-shirt",
+      "preview": "/images/render-comparison/tshirt-clozdesign-preview-v3.png",
+      "rendered": "/images/render-comparison/tshirt-clozdesign-render-v3.png",
+      "previewDetail": "/images/render-comparison/tshirt-clozdesign-preview-v3.png",
+      "renderedDetail": "/images/render-comparison/tshirt-clozdesign-render-v3.png",
+      "source": "browser-screenshot-and-imagegen",
+      "modelHref": "/3d-models/t-shirt-mockup/relaxed-crewneck-drop-shoulder-elbow-sleeve-t-shirt-3d-model-8d00c82be4ea"
+    }
+  ]
+}
