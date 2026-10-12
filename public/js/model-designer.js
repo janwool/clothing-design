@@ -5475,6 +5475,154 @@ window.initializeModelDesigner = () => {
     if (settings.wrapT != null) sampler?.setWrapT?.(settings.wrapT);
   }
   window.ModelDesignerExport = {
+    async prepareAiDesign() {
+      const camera = captureViewerCamera(detailViewer);
+      const autoRotate = detailViewer.autoRotate;
+      const controls = detailViewer.cameraControls;
+      let materials = [], textures = [], factors = [];
+      detailViewer.autoRotate = false;
+      detailViewer.cameraControls = false;
+      try {
+        await Promise.all([loadTextureDimensions(), cloudProjectLoadPromise]);
+        materials = await getLoadedViewerMaterials(detailViewer);
+        textures = captureViewerBaseColorTextures(detailViewer);
+        factors = materials.map(material => [...material.pbrMetallicRoughness.baseColorFactor]);
+        const paths = [...textureSvg.querySelectorAll('.texture-template-path')];
+        if (!paths.length || paths.length > 512) throw new Error('This garment does not have a supported design template yet.');
+        const panels = paths.map((path, id) => {
+          // Distinct deterministic colors for this template; no garment-part IDs.
+          const hue = (id * 137.508) % 360;
+          const saturation = 0.7;
+          const lightness = 0.45 + Math.floor(id / 64) * 0.025;
+          const c = (1 - Math.abs(2 * lightness - 1)) * saturation;
+          const x = c * (1 - Math.abs((hue / 60) % 2 - 1));
+          const m = lightness - c / 2;
+          const rgb = hue < 60 ? [c,x,0] : hue < 120 ? [x,c,0] : hue < 180 ? [0,c,x] : hue < 240 ? [0,x,c] : hue < 300 ? [x,0,c] : [c,0,x];
+          return { id, color: '#' + rgb.map(v => Math.round((v + m) * 255).toString(16).padStart(2,'0')).join('') };
+        });
+        const rasterGuide = async (white) => {
+          const svg = textureSvg.cloneNode(true);
+          svg.querySelectorAll('#textureElements, #selectionLayer, #textureOutlineLayer, #textureBg, .texture-template-fill, style').forEach(node => node.remove());
+          svg.removeAttribute('style');
+          svg.querySelectorAll('.texture-template-path').forEach((path, index) => {
+            path.removeAttribute('style');
+            path.setAttribute('fill', white ? '#ffffff' : panels[index].color);
+            path.setAttribute('fill-opacity','1');
+            path.setAttribute('stroke','none');
+            path.removeAttribute('filter');
+            path.setAttribute('opacity','1');
+            if (!white) {
+              // UV-up arrows let the model infer rotation from the rendered surface.
+              // Bounds and transforms come from this SVG, never a garment preset.
+              const bounds = paths[index].getBBox();
+              if (bounds.width > 0 && bounds.height > 0) {
+                let defs = svg.querySelector('defs');
+                if (!defs) { defs = document.createElementNS('http://www.w3.org/2000/svg','defs'); svg.prepend(defs); }
+                const pattern = document.createElementNS('http://www.w3.org/2000/svg','pattern');
+                pattern.setAttribute('id',`ai-direction-${index}`);
+                pattern.setAttribute('patternUnits','userSpaceOnUse');
+                pattern.setAttribute('x',bounds.x); pattern.setAttribute('y',bounds.y);
+                pattern.setAttribute('width',bounds.width / 3); pattern.setAttribute('height',bounds.height / 3);
+                pattern.setAttribute('viewBox','0 0 100 100');
+                const backing = document.createElementNS('http://www.w3.org/2000/svg','rect');
+                backing.setAttribute('width','100'); backing.setAttribute('height','100'); backing.setAttribute('fill',panels[index].color);
+                const arrow = document.createElementNS('http://www.w3.org/2000/svg','path');
+                arrow.setAttribute('d','M50 18 L70 43 L57 43 L57 78 L43 78 L43 43 L30 43 Z');
+                arrow.setAttribute('fill','#111111'); arrow.setAttribute('fill-opacity','.45');
+                pattern.append(backing,arrow); defs.append(pattern);
+                path.setAttribute('fill',`url(#ai-direction-${index})`);
+              }
+            }
+          });
+          const image = await loadViewerTextureImage('data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(svg)))));
+          const {width, height} = getTextureSize();
+          const scale = 1024 / Math.max(width, height);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1,Math.round(width * scale));
+          canvas.height = Math.max(1,Math.round(height * scale));
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(image,0,0,canvas.width,canvas.height);
+          return canvas.toDataURL('image/png');
+        };
+        const uvTemplate = await rasterGuide(false);
+        const whiteTexture = await rasterGuide(true);
+        const orbit = detailViewer.getCameraOrbit();
+        const whiteViews = {};
+        const colorViews = [];
+        const captureSmall = async () => {
+          const image = await loadViewerTextureImage(await captureModelViewerImage(detailViewer));
+          const scale = Math.min(1, 768 / Math.max(image.width,image.height));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(image.width * scale); canvas.height = Math.round(image.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#faf9f6'; ctx.fillRect(0,0,canvas.width,canvas.height);
+          ctx.drawImage(image,0,0,canvas.width,canvas.height);
+          return canvas.toDataURL('image/jpeg',0.85);
+        };
+        const applyGuide = async url => {
+          const texture = await createViewerTexture(detailViewer,url);
+          materials.forEach(material => {
+            const pbr = material.pbrMetallicRoughness;
+            pbr.setBaseColorFactor([1,1,1,1]);
+            pbr.baseColorTexture.setTexture(texture);
+            applyArtworkTextureTransform(pbr.baseColorTexture);
+          });
+        };
+        for (const [white,url] of [[true,whiteTexture],[false,uvTemplate]]) {
+          await applyGuide(url);
+          for (const [view,angle] of [['front',0],['back',180],['left',90],['right',270]]) {
+            if (white && !['front','back'].includes(view)) continue;
+            await applyViewerCamera(detailViewer,{ cameraOrbit: `${angle}deg 90deg ${orbit.radius}m` });
+            const image = await captureSmall();
+            if (white) whiteViews[view] = image;
+            else colorViews.push({view,image});
+          }
+        }
+        return { uvTemplate, designContext: { panels, whiteViews, colorViews } };
+      } finally {
+        restoreViewerBaseColorTextures(textures);
+        materials.forEach((material,index) => material.pbrMetallicRoughness.setBaseColorFactor(factors[index]));
+        await applyViewerCamera(detailViewer,camera);
+        detailViewer.autoRotate = autoRotate;
+        detailViewer.cameraControls = controls;
+      }
+    },
+    async applyAiDesign(dataUrl) {
+      if (!/^data:image\/(png|jpeg|webp);base64,/.test(dataUrl || '')) throw new Error('The generated design could not be read.');
+      await Promise.all([loadTextureDimensions(), cloudProjectLoadPromise]);
+      await loadViewerTextureImage(dataUrl);
+      const previous = textureElements.innerHTML;
+      const previousFinal = state.finalTextureUrl;
+      const previousApplied = state.appliedTextureUrl;
+      const viewers = [detailViewer, ...(designerViewer?.loaded ? [designerViewer] : [])];
+      const snapshots = viewers.map(viewer => ({ viewer, textures: captureViewerBaseColorTextures(viewer), factors: (viewer.model?.materials || []).map(material => [...material.pbrMetallicRoughness.baseColorFactor]) }));
+      try {
+        textureElements.replaceChildren();
+        const group = createElement('image', { src: dataUrl, x: 0, y: 0, width: state.svgWidth, height: state.svgHeight });
+        group.querySelector('image').setAttribute('preserveAspectRatio', 'none');
+        clearSelection();
+        const texture = await rasterizeModelTexture({ includeSelectionHighlight: false });
+        for (const viewer of viewers) {
+          if (!await applyTextureToViewer(viewer, texture)) throw new Error('The design could not be applied. Please try again.');
+        }
+        const preview = await captureModelViewerImage(detailViewer);
+        state.finalTextureUrl = texture;
+        state.appliedTextureUrl = texture;
+        saveHistory();
+        setDesignSaveStatus('Unsaved changes', true);
+        return preview;
+      } catch (error) {
+        textureElements.innerHTML = previous;
+        state.finalTextureUrl = previousFinal;
+        state.appliedTextureUrl = previousApplied;
+        snapshots.forEach(({viewer,textures,factors}) => {
+          restoreViewerBaseColorTextures(textures);
+          (viewer.model?.materials || []).forEach((material,index) => material.pbrMetallicRoughness.setBaseColorFactor(factors[index]));
+        });
+        throw error;
+      }
+    },
     openColorPicker(button, options) {
       closeColorPopover();
       openColorPopover(button, options);

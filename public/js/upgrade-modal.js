@@ -98,10 +98,10 @@
     const paid = current !== 'free';
     const priceCaption = quoteLoading ? 'Checking local prices' : `Prices in ${quote.currency}${pricingUnavailable ? ' · Local pricing unavailable' : ''}`;
     dialog.querySelector('.upgrade-footer > span').textContent = `${priceCaption} · ${paid ? 'Contact us to change your subscription' : 'Taxes calculated at checkout · Checkout opens in a new tab'}`;
-    const titles = { tryOnCredits: current === 'free' ? 'Unlock AI Try-on' : 'More Try-on credits', projects: 'More room to create', storage: 'More space for your designs', exports: 'Unlock unlimited exports', watermark: 'Export without watermarks' };
+    const titles = { designCredits: 'More AI Design credits', tryOnCredits: current === 'free' ? 'Unlock AI Try-on' : 'More Try-on credits', projects: 'More room to create', storage: 'More space for your designs', exports: 'Unlock unlimited exports', watermark: 'Export without watermarks' };
     dialog.querySelector('#upgradeTitle').textContent = titles[resource] || 'Upgrade plan';
-    const quota = access?.[resource];
-    let reason = { tryOnCredits: current === 'free' ? 'Choose a plan to generate AI Try-ons.' : `Each Try-on needs ${access?.tryOnCredits?.costPerGeneration || 10} credits. You don’t have enough credits left.`, projects: 'You’ve reached your project limit.', storage: 'Your storage is full.', exports: 'Upgrade to Pro or above to export images, videos, 3D models and share links.', watermark: 'Watermark-free exports are included in Pro and Business.' }[resource] || 'Choose the plan that fits your workflow.';
+    const quota = resource === 'designCredits' ? access?.tryOnCredits : access?.[resource];
+    let reason = { designCredits: 'Each design needs 20 credits. Upgrade your subscription to continue.', tryOnCredits: current === 'free' ? 'Choose a plan to generate AI Try-ons.' : `Each Try-on needs ${access?.tryOnCredits?.costPerGeneration || 10} credits. You don’t have enough credits left.`, projects: 'You’ve reached your project limit.', storage: 'Your storage is full.', exports: 'Upgrade to Pro or above to export images, videos, 3D models and share links.', watermark: 'Watermark-free exports are included in Pro and Business.' }[resource] || 'Choose the plan that fits your workflow.';
     if (quota?.resetsAt && Number.isFinite(Date.parse(quota.resetsAt))) reason += ` Resets ${new Date(quota.resetsAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}.`;
     dialog.querySelector('#upgradeReason').textContent = reason;
     dialog.querySelector('.upgrade-current').textContent = `Current plan · ${access?.plan?.name || 'Free'}`;

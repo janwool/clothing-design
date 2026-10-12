@@ -1,6 +1,6 @@
 <%- include('partials/header', {
   bodyClass: 'category-catalog-page model-product-page',
-  pageStyles: ['/css/model-detail-v2.css?v=20261011-native-tryon-v43', '/css/model-detail-v3.css?v=20261011-v12', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261012-render-technology-v10', '/css/design-studio.css?v=20261011-studio-v58', '/css/ai-try-on.css?v=20261011-designed-v18']
+  pageStyles: ['/css/detail-ai-design.css?v=20261013-credit-label-v8', '/css/model-detail-v2.css?v=20261011-native-tryon-v43', '/css/model-detail-v3.css?v=20261011-v12', '/css/cloz-dropdown.css?v=20260924-v1', '/css/model-export-modal.css?v=20261012-render-technology-v10', '/css/design-studio.css?v=20261011-studio-v58', '/css/ai-try-on.css?v=20261011-designed-v18']
 }) %>
 <% const previewModelFileUrl = model.preview_file_url || model.file_url; %>
 <% const modelMockupProfile = typeof onModelMockupProfile !== 'undefined' ? onModelMockupProfile : null; %>
@@ -149,6 +149,26 @@
         <button class="viewer-internal-control" id="rotateBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Rotate</button>
         <button class="viewer-internal-control" id="fabricMotionBtn" type="button" aria-pressed="false" aria-hidden="true" tabindex="-1" hidden>Fabric Motion</button>
       </div>
+      <aside class="detail-ai-design" aria-labelledby="ai-design-title" data-ai-design data-authenticated="<%= user ? 'true' : 'false' %>" data-model-slug="<%= model.slug %>">
+        <h2 id="ai-design-title">AI Design</h2>
+        <div class="ai-chat-history" data-design-history role="log" aria-label="Design conversation" aria-live="polite" tabindex="0"><div class="ai-chat-message ai-chat-assistant ai-chat-greeting">Describe your design or add reference images. I’ll apply it to this 3D garment.</div></div>
+        <form data-ai-design-form>
+          <div class="ai-chat-composer">
+            <div class="ai-reference-grid" data-reference-grid hidden></div>
+            <textarea id="ai-design-prompt" name="prompt" rows="4" maxlength="1000" required placeholder="Describe your design…" aria-label="Describe your design"></textarea>
+            <div class="ai-composer-actions">
+              <input id="ai-design-reference" type="file" multiple accept="image/png,image/jpeg,image/webp" aria-label="Add reference images" data-design-reference tabindex="-1" hidden>
+              <button type="button" class="ai-reference-add" data-reference-add aria-label="Add reference images" title="Add reference images">＋</button>
+              <span data-reference-count>0/4 images</span>
+              <span class="ai-design-credit-cost">20 credits</span>
+              <button type="submit" class="ai-design-generate" aria-label="Generate design" title="Generate design · 20 credits">↑</button>
+            </div>
+          </div>
+          <p class="ai-reference-error" data-reference-error role="status" aria-live="polite"></p>
+        </form>
+        <p class="ai-design-status" role="status" aria-live="polite" data-design-status></p>
+        <a class="ai-design-access" data-design-access hidden></a>
+      </aside>
     </div>
     <% if (supportsOnModelMockup) { %><button type="button" id="modelMockupBtn" hidden aria-hidden="true" tabindex="-1">Open model preview</button><% } %>
   </div>
@@ -1166,9 +1186,14 @@ window.ModelDesignerConfig = Object.freeze({
   const registerLink = loginModal?.querySelector('.model-login-register a');
   const resumeCustomizeKey = 'clozdesign_resume_customize';
   let loginReturnFocus = null;
+  let loginIntent = 'customize';
 
-  function openLoginModal() {
+  function openLoginModal(options = {}) {
     if (!loginModal) return;
+    loginIntent = options.intent === 'ai-design' ? 'ai-design' : 'customize';
+    loginModal.querySelector('#modelLoginTitle').textContent = loginIntent === 'ai-design' ? 'Sign in to continue' : 'Sign in to customize';
+    loginModal.querySelector('#modelLoginDescription').hidden = loginIntent === 'ai-design';
+    loginSubmit.querySelector('span').textContent = loginIntent === 'ai-design' ? 'Sign in and continue' : 'Sign in and customize';
     loginReturnFocus = document.activeElement;
     loginError.hidden = true;
     loginError.textContent = '';
@@ -1177,6 +1202,8 @@ window.ModelDesignerConfig = Object.freeze({
     document.body.classList.add('model-login-open');
     requestAnimationFrame(() => loginEmail?.focus({ preventScroll: true }));
   }
+
+  window.ModelLoginModal = { open: openLoginModal };
 
   function closeLoginModal() {
     if (!loginModal || !loginModal.open) return;
@@ -1197,6 +1224,7 @@ window.ModelDesignerConfig = Object.freeze({
   });
 
   function rememberCustomizeIntent() {
+    if (loginIntent === 'ai-design') return;
     sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));
   }
 
@@ -1226,14 +1254,14 @@ window.ModelDesignerConfig = Object.freeze({
       if (!response.ok || !result.success) {
         throw new Error(result.error || 'Unable to sign in. Please try again.');
       }
-      sessionStorage.setItem(resumeCustomizeKey, JSON.stringify({ path: window.location.pathname, createdAt: Date.now() }));
+      rememberCustomizeIntent();
       window.location.reload();
     } catch (error) {
       loginError.textContent = error.message || 'Unable to sign in. Please try again.';
       loginError.hidden = false;
       loginSubmit.disabled = false;
       loginSubmit.removeAttribute('aria-busy');
-      loginSubmit.querySelector('span').textContent = 'Sign in and customize';
+      loginSubmit.querySelector('span').textContent = loginIntent === 'ai-design' ? 'Sign in and continue' : 'Sign in and customize';
     }
   });
 
@@ -1284,7 +1312,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20261011-studio-v58',
+      src: '/js/model-designer.js?v=20261013-ai-design-v62',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1307,6 +1335,8 @@ window.ModelDesignerConfig = Object.freeze({
     });
     return runtimePromise;
   }
+
+  window.ensureModelDesignerRuntime = loadModelDesignerRuntime;
 
   const quickFabricToggle = document.getElementById('quickFabricToggle');
   const quickFabricMenu = document.getElementById('quickFabricMenu');
@@ -1570,3 +1600,5 @@ window.ModelDesignerConfig = Object.freeze({
 <script src="/js/model-export-modal.js?v=20261012-render-technology-v10" defer></script>
 
 <%- include('partials/footer', { footerVariant: 'workbench', enableGrowthShare: false }) %>
+
+<script src="/js/detail-ai-design.js?v=20261013-login-modal-v13" defer></script>

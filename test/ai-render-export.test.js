@@ -8,6 +8,12 @@ const tables = require('../lib/user-content-db');
 const db = require('../lib/db');
 const originalEntitlements = entitlements.getUserEntitlements;
 const originalStore = entitlements.canStoreImage;
+const originalReserve = entitlements.reserveDesignCredits;
+const originalRelease = entitlements.releaseTryOnCredit;
+const reservations = [];
+const refunds = [];
+entitlements.reserveDesignCredits = async id => { if(id === 'no-credits') return {allowed:false}; const reservation = {userId:id,periodKey:'2026-10',amount:20}; reservations.push(reservation); return {allowed:true,reservation,remaining:80}; };
+entitlements.releaseTryOnCredit = async reservation => { refunds.push(reservation); };
 const originalUpload = storage.uploadImageDataUrl;
 const originalDelete = storage.deleteObject;
 const originalTables = tables.ensureUserContentTables;
@@ -31,7 +37,7 @@ const png = `data:image/png;base64,${Buffer.from([137, 80, 78, 71, 13, 10, 26, 1
 
 test('AI image rendering checks the user, plan, and screenshot before calling the model', async () => {
   const app = express();
-  app.use(express.json());
+  app.use(express.json({ limit: '14mb' }));
   app.use((req, res, next) => { req.session = req.get('x-user') ? { user: { id: req.get('x-user') } } : {}; next(); });
   app.use('/api/ai-render-export', router);
   const server = app.listen(0, '127.0.0.1');
@@ -57,10 +63,11 @@ test('AI image rendering checks the user, plan, and screenshot before calling th
 test('AI export uses the same Cloudflare binding pattern as try-on and saves the result', async () => {
   const previousEnv = globalThis.__WORKER_ENV__;
   let call;
-  globalThis.__WORKER_ENV__ = { AI: { run: async (model, input, options) => { call = { model, input, options }; return { state: 'Completed', result: { image: png } }; } } };
+  const calls = [];
+  globalThis.__WORKER_ENV__ = { AI: { run: async (model, input, options) => { call = { model, input, options }; calls.push(call); return { state: 'Completed', result: { image: png } }; } } };
   const app = express();
-  app.use(express.json());
-  app.use((req, res, next) => { req.session = { user: { id: 'paid' } }; next(); });
+  app.use(express.json({ limit: '14mb' }));
+  app.use((req, res, next) => { req.session = { user: { id: req.get('x-user') || 'paid' } }; next(); });
   app.use('/api/ai-render-export', router);
   const server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
@@ -87,6 +94,80 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     assert.equal(transparentResponse.status, 200);
     assert.equal(call.input.background, 'transparent');
     assert.equal(call.input.size, '1024x1024');
+    const endpoint = `http://127.0.0.1:${server.address().port}/api/ai-render-export`;
+    for (const prompt of ['', ' '.repeat(5), 'x'.repeat(1001), { text: 'invalid' }]) {
+      const invalidDesign = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, mode: 'design', prompt }) });
+      assert.equal(invalidDesign.status, 400);
+    }
+    const beforeBlocked = calls.length;
+    const insufficient = await fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json','x-user':'no-credits'},body:JSON.stringify({image:png,mode:'design',prompt:'Blue stripes'})});
+    assert.equal(insufficient.status,403);
+    assert.equal((await insufficient.json()).code,'INSUFFICIENT_CREDITS');
+    assert.equal(calls.length,beforeBlocked);
+    const concept = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, mode: 'design', prompt: 'Sage green cotton with contrast stitching.' }) });
+    assert.equal(concept.status, 200);
+    assert.match(call.input.prompt, /Sage green cotton with contrast stitching/);
+    assert.match(call.input.prompt, /Keep the same garment type/);
+    assert.match((await concept.json()).image.name, /design-concept/);
+    const designContext = { panels: [{id: 0, color: '#ff8800'}, {id: 1, color: '#0088ff'}], whiteViews: {front: png, back: png}, colorViews: ['front','back','left','right'].map(view => ({view, image: png})) };
+    const beforeAtlas = calls.length;
+    const beforeAtlasReservations = reservations.length;
+    const atlasResponse = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, uvTemplate: png, designContext, target: 'texture', mode: 'design', prompt: 'Sage green with botanical chest print.', referenceImages: [png] }) });
+    assert.equal(atlasResponse.status, 200);
+    assert.equal(calls.length - beforeAtlas, 2);
+    assert.deepEqual(calls[beforeAtlas].input.images, [png, png, png, png]);
+    assert.match(calls[beforeAtlas].input.prompt, /front and back white model/);
+    assert.deepEqual(call.input.images, [png, png, png, png, png, png]);
+    assert.match(call.input.prompt, /flat garment UV color atlas/);
+    assert.match(call.input.prompt, /never assume a standard UV layout/);
+    assert.match(call.input.prompt, /Sage green with botanical chest print/);
+    const atlasPayload = await atlasResponse.json();
+    assert.equal(reservations.length - beforeAtlasReservations, 1);
+    assert.equal(reservations.at(-1).amount, 20);
+    assert.equal(atlasPayload.usage.creditsCharged,20);
+    assert.equal(atlasPayload.usage.creditsRemaining,80);
+    assert.equal(atlasPayload.image.textureDataUrl, png);
+    assert.equal(atlasPayload.image.conceptDataUrl, png);
+    assert.match(atlasPayload.image.name, /design-texture/);
+    for (const badContext of [undefined, {...designContext, panels: []}, {...designContext, colorViews: []}, {...designContext, panels: [{id: 0,color: 'bad'}]}]) {
+      const beforeInvalid = calls.length;
+      const invalidContext = await fetch(endpoint, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({image: png, uvTemplate: png, designContext: badContext, mode: 'design', target: 'texture', prompt: 'Botanical'})});
+      assert.equal(invalidContext.status, 400);
+      assert.equal(calls.length, beforeInvalid);
+    }
+    const alternateContext = {...designContext, panels: [{id: 91,color: '#aa2200'}, {id: 7,color: '#22aa00'}, {id: 33,color: '#0022aa'}]};
+    globalThis.__WORKER_ENV__.AI_DESIGN_IMAGE_MODEL = 'configured/image-model';
+    const alternate = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'},body:JSON.stringify({image:png,uvTemplate:png,designContext:alternateContext,modelSlug:'another-garment',mode:'design',target:'texture',prompt:'Ocean blue abstract waves'})});
+    assert.equal(alternate.status, 200);
+    assert.equal(call.model, 'configured/image-model');
+    assert.match(call.input.prompt, /Ocean blue abstract waves/);
+    assert.match(call.input.prompt, /"id":91/);
+    assert.doesNotMatch(call.input.prompt, /Sage green|Halloween|lower-left|rotate 180/);
+    delete globalThis.__WORKER_ENV__.AI_DESIGN_IMAGE_MODEL;
+    const beforeFailureUploads = uploaded.length;
+    const beforeRefunds = refunds.length;
+    let stage = 0;
+    const goodRun = globalThis.__WORKER_ENV__.AI.run;
+    globalThis.__WORKER_ENV__.AI.run = async () => { if (++stage === 2) throw new Error('Mapping failed'); return {image: png}; };
+    const mappingFailed = await fetch(endpoint, {method:'POST', headers:{'Content-Type':'application/json'},body:JSON.stringify({image:png,uvTemplate:png,designContext,mode:'design',target:'texture',prompt:'Abstract jacket'})});
+    assert.equal(mappingFailed.status, 502);
+    assert.equal(uploaded.length, beforeFailureUploads);
+    assert.equal(refunds.length, beforeRefunds + 1);
+    assert.equal(refunds.at(-1).amount,20);
+    globalThis.__WORKER_ENV__.AI.run = goodRun;
+    const missingTemplate = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, target: 'texture', mode: 'design', prompt: 'Sage green' }) });
+    assert.equal(missingTemplate.status, 400);
+    const designRequest = references => fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png, mode: 'design', prompt: 'Use reference 1 print and reference 2 color.', referenceImages: references }) });
+    const withReferences = await designRequest([png, png]);
+    assert.equal(withReferences.status, 200);
+    assert.deepEqual(call.input.images, [png, png, png]);
+    assert.match(call.input.prompt, /numbered Reference 1/);
+    for (const references of [[png, png, png, png, png], 'invalid', ['data:image/png;base64,SGVsbG8=']]) {
+      assert.equal((await designRequest(references)).status, 400);
+    }
+    const large = Buffer.alloc(5 * 1024 * 1024 + 1);
+    Buffer.from([137,80,78,71,13,10,26,10]).copy(large);
+    assert.equal((await designRequest([`data:image/png;base64,${large.toString('base64')}`])).status, 413);
     globalThis.__WORKER_ENV__.AI.run = async () => { throw new Error('Model execution failed (Payment error)'); };
     const unavailable = await fetch(`http://127.0.0.1:${server.address().port}/api/ai-render-export`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ image: png }) });
     assert.equal(unavailable.status, 503);
@@ -96,6 +177,8 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     await new Promise(resolve => server.close(resolve));
     entitlements.getUserEntitlements = originalEntitlements;
     entitlements.canStoreImage = originalStore;
+    entitlements.reserveDesignCredits = originalReserve;
+    entitlements.releaseTryOnCredit = originalRelease;
     storage.uploadImageDataUrl = originalUpload;
     storage.deleteObject = originalDelete;
     tables.ensureUserContentTables = originalTables;

@@ -99,3 +99,13 @@ test('analytics failure cannot prevent checkout', async () => {
   await h.click('[data-upgrade-plan]', { upgradePlan: 'pro' });
   assert.equal(h.paymentTab.location.href, 'https://checkout.example/pay');
 });
+
+test('design credit upgrade uses the existing subscription dialog and twenty-credit copy', async () => {
+  const h = setup();
+  await h.window.UpgradeModal.open({resource:'designCredits',entitlements:{...free,tryOnCredits:{remaining:10,costPerGeneration:10}}});
+  assert.equal(h.dialog.open,true);
+  assert.equal(h.elements.get('#upgradeTitle').textContent,'More AI Design credits');
+  assert.match(h.elements.get('#upgradeReason').textContent,/Each design needs 20 credits/);
+  assert.doesNotMatch(h.elements.get('#upgradeReason').textContent,/Try-on|10 credits/);
+  assert.match(h.elements.get('.upgrade-plans').innerHTML,/data-upgrade-plan="pro"/);
+});
