@@ -5591,10 +5591,12 @@ window.initializeModelDesigner = () => {
         detailViewer.cameraControls = controls;
       }
     },
-    async applyAiDesign(dataUrl) {
-      if (!/^data:image\/(png|jpeg|webp);base64,/.test(dataUrl || '')) throw new Error('The generated design could not be read.');
+    async applyAiDesign(source) {
+      if (!/^data:image\/(png|jpeg|webp);base64,/.test(source || '') && !/^https:\/\//i.test(source || '')) throw new Error('The generated design could not be read.');
       await Promise.all([loadTextureDimensions(), cloudProjectLoadPromise]);
+      const dataUrl = await resolveArtworkDataUrl(source);
       await loadViewerTextureImage(dataUrl);
+      if (/^https:\/\//i.test(source)) state.uploadedAssetUrls.set(dataUrl, source);
       const previous = textureElements.innerHTML;
       const previousFinal = state.finalTextureUrl;
       const previousApplied = state.appliedTextureUrl;

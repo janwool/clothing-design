@@ -8,7 +8,7 @@ The existing detail-page conversation calls `POST /api/ai-render-export` with `m
 2. On the selected garment's actual model-viewer, the browser captures white front/back views and colored front/back/left/right views. Texture slots, base color factors, camera and controls are restored in `finally`.
 3. The backend generates a front/back design concept from the white garment, current design screenshot, user's brief and up to four reference images.
 4. A second generation receives that concept, the colored atlas, the four actual colored model views and the dynamic color legend. Its prompt requests garment-part identification and artwork orientation from those references. No clothing slug, theme, semantic panel ID or fixed print rotation is used.
-5. The final atlas is stored through the existing image library/storage flow. The response includes `image.textureDataUrl`, `image.conceptDataUrl` and `image.workflow: "concept-to-uv"`. The browser applies the atlas through the editor's existing UV transform and history. Application errors restore the previous artwork and base color texture.
+5. The final atlas is stored through the existing image library/storage flow. The response includes `image.textureUrl` (the uploaded CDN URL), `image.textureDataUrl` (legacy client compatibility), `image.conceptDataUrl` and `image.workflow: "concept-to-uv"`. The browser retrieves the CDN atlas through the authenticated project-texture proxy, applies it through the editor's existing UV transform and history, and records the CDN source URL so project artwork can be saved and reopened. Application errors restore the previous artwork and base color texture.
 
 ## Request context
 

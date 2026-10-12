@@ -195,7 +195,7 @@ router.post('/', async (req, res) => {
       throw error;
     }
     generationCompleted = true;
-    return res.json({ success: true, ...(designMode ? { usage: { creditsCharged: AI_DESIGN_CREDIT_COST, creditsRemaining: creditReservation.remaining } } : {}), image: { id, url: uploaded.url, name: filename, downloadUrl: `/api/ai-render-export/${id}/download`, createdAt: now.toISOString(), ...(textureMode ? { textureDataUrl: imageDataUrl, conceptDataUrl, workflow: 'concept-to-uv' } : {}) } });
+    return res.json({ success: true, ...(designMode ? { usage: { creditsCharged: AI_DESIGN_CREDIT_COST, creditsRemaining: creditReservation.remaining } } : {}), image: { id, url: uploaded.url, name: filename, downloadUrl: `/api/ai-render-export/${id}/download`, createdAt: now.toISOString(), ...(textureMode ? { textureUrl: uploaded.url, textureDataUrl: imageDataUrl, conceptDataUrl, workflow: 'concept-to-uv' } : {}) } });
   } catch (error) {
     console.error('AI export request failed:', error.message);
     if (error.status === 503 || error.status === 402 || /payment error|insufficient balance|wholesale billing service unavailable/i.test(error.message)) {

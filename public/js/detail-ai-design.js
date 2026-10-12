@@ -199,7 +199,7 @@
       const resultImage = document.createElement('img');
       resultImage.alt = 'Generated design concept';
       status.textContent = 'Applying…';
-      resultImage.src = await window.ModelDesignerExport.applyAiDesign(data.image.textureDataUrl);
+      resultImage.src = await window.ModelDesignerExport.applyAiDesign(data.image.textureUrl || data.image.url);
       resultImage.onload = scrollConversation;
       resultImage.onerror = () => { status.textContent = 'Preview unavailable. Download your image below.'; };
       const download = document.createElement('a');

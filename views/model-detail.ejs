@@ -1312,7 +1312,7 @@ window.ModelDesignerConfig = Object.freeze({
       errorMessage: 'Editor transform helpers failed to load'
     }).then(() => loadScript({
       selector: 'script[data-model-designer-runtime]',
-      src: '/js/model-designer.js?v=20261013-guide-no-bands-v63',
+      src: '/js/model-designer.js?v=20261013-ai-cdn-texture-v64',
       dataset: 'modelDesignerRuntime',
       ready: () => typeof window.initializeModelDesigner === 'function',
       errorMessage: 'Design Studio runtime failed to load'
@@ -1601,4 +1601,4 @@ window.ModelDesignerConfig = Object.freeze({
 
 <%- include('partials/footer', { footerVariant: 'workbench', enableGrowthShare: false }) %>
 
-<script src="/js/detail-ai-design.js?v=20261013-login-modal-v13" defer></script>
+<script src="/js/detail-ai-design.js?v=20261013-ai-cdn-texture-v14" defer></script>

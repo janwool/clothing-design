@@ -126,6 +126,9 @@ test('AI export uses the same Cloudflare binding pattern as try-on and saves the
     assert.equal(reservations.at(-1).amount, 20);
     assert.equal(atlasPayload.usage.creditsCharged,20);
     assert.equal(atlasPayload.usage.creditsRemaining,80);
+    assert.equal(atlasPayload.image.textureUrl, atlasPayload.image.url);
+    assert.match(atlasPayload.image.textureUrl, /^https:\/\/cdn\.example\/users\/paid\//);
+    assert.equal(inserted.at(-1).values[3], atlasPayload.image.textureUrl);
     assert.equal(atlasPayload.image.textureDataUrl, png);
     assert.equal(atlasPayload.image.conceptDataUrl, png);
     assert.match(atlasPayload.image.name, /design-texture/);
