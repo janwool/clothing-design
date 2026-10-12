@@ -1,0 +1,8 @@
+{
+  "prompt": "IMAGE 1 FRONT and IMAGE 2 BACK are screenshots of the exact same blank white 3D hoodie. Create a premium HALLOWEEN hoodie design on this exact garment. Output one coordinated two-view design reference image: FRONT left, BACK right. Preserve original full silhouette, sleeve pose, hood, kangaroo pocket, drawstrings and geometry. Charcoal-black torso, burnt-orange hood/cuffs/hem, cream and restrained purple accents. FRONT: an integrated vintage Halloween print with perfectly legible 'Happy Halloween' lettering above a charming jack-o-lantern, crescent moon, flying bats and small playful ghosts. Text and illustration form one coherent refined screen-print design, no separate generic rectangular text labels. IMPORTANT keep the ENTIRE front print compact on upper chest, entirely below drawstring neckline and ABOVE kangaroo pocket with generous unprinted space; do not extend art to waist. BACK: smaller coordinated moon/bat ornament with 'Happy Halloween' below hood, comfortably above hem. Both sleeves have coordinated cream/orange bat and star patterns, no words or giant faces. Pocket remains plain charcoal black. High-quality commercial apparel graphic, festive spooky rather than gore, no repeated clutter or extra slogans. Preserve identical garment colors and patterns across front/back. No people, mannequin, props, UI cursor, extra views or UV atlas. Neutral studio background with garment folds retained. Output only the designed front/back hoodie reference.",
+  "inputs": [
+    "../ai-uv-two-stage-v1/white-front.png",
+    "../ai-uv-two-stage-v1/white-back.png"
+  ],
+  "output": "designed-front-back.png"
+}

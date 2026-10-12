@@ -1,0 +1,45 @@
+{
+  "method": "Fill original SVG path fill attributes directly; rasterize in browser canvas; apply to original decoded GLB in model-viewer; capture browser front/back/left/right; feed the UV image and screenshots to built-in imagegen. No Blender calls after user correction.",
+  "geometry_check": {
+    "paths_unchanged": true,
+    "viewBox_unchanged": true,
+    "path_count": 29,
+    "unique_island_colors": 27
+  },
+  "inputs": [
+    "color-guide.svg",
+    "color-guide.svg.png",
+    "browser-color-views.png",
+    "../ai-christmas-hoodie-v1/christmas-artwork.png"
+  ],
+  "test_constraint": "No manual part ID or direction annotations supplied to the image model. User Christmas request plus color correlation only.",
+  "status": "completed_not_passed",
+  "first_result": {
+    "status": "semantic_placement_failed",
+    "details": "Main crest and letters appeared on sleeves; front torso received only decorative patterns. The generated image approximated original atlas layout but did not correctly use color-matched screenshots to identify physical parts.",
+    "generated_size": [
+      1254,
+      1254
+    ],
+    "dark_design_outside_exact_masks_fraction": 0.0618,
+    "metric_note": "Heuristic occupancy check after proportional resizing to source canvas; not a semantic accuracy score.",
+    "artifacts": [
+      "generated-atlas.png",
+      "generated-front-v1.png",
+      "generated-back-v1.png",
+      "generated-page-v1.png"
+    ]
+  },
+  "second_result": {
+    "status": "semantic_placement_failed_after_feedback",
+    "details": "Actual 3D failure screenshot fed back to imagegen along with original SVG atlas and browser color views. Corrected image still kept the crest and lettering on the sleeve UV regions, leaving chest without required greeting. No manual repositioning or text replacement was performed.",
+    "artifacts": [
+      "generated-atlas-v2.png",
+      "generated-front-v2.png",
+      "generated-back-v2.png",
+      "generated-page-v2.png"
+    ]
+  },
+  "conclusion": "Directly coloring the original SVG, browser texture application and screenshot capture work. Color-coded atlas plus multiview images did not produce correct semantic placement in these two generations. Need separate region-identification output and validation before constrained per-region generation.",
+  "production_changes": "None; standalone local experiment only."
+}

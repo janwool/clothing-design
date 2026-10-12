@@ -1,0 +1,39 @@
+{
+  "method": "Browser only: white original SVG applied to original decoded model; browser front/back screenshots; imagegen creates designed garment views; second imagegen converts approved design to color-guided UV; region-labelled mapping and local correction tested. No Blender used.",
+  "inputs": [
+    "white-front.png",
+    "white-back.png",
+    "designed-front-back.png",
+    "../ai-uv-color-guided-v1/color-guide.svg.png",
+    "../ai-uv-color-guided-v1/browser-color-views.png"
+  ],
+  "initial_mapping": "Failed: mapped front/back crests onto sleeve islands and changed some outlines.",
+  "identified_mapping": "Assistant visually matched colors to numbered UV regions and supplied explicit part and orientation metadata. This is not a deployed independent automatic recognition service.",
+  "labelled_result": "Torso crests and upright lettering corrected. One sleeve plain, pocket wrong red, front Chinese ribbon occluded.",
+  "status": "completed_partial_reconstruction",
+  "production_changes": "None; local experiment only.",
+  "stage1": "White model front/back screenshots produced a coherent two-view designed hoodie with torso lettering and Nordic patterned sleeves.",
+  "final_result": {
+    "artifacts": [
+      "generated-atlas-refined.png",
+      "refined-front.png",
+      "refined-back.png",
+      "final-comparison.png",
+      "browser-test.html"
+    ],
+    "passed": [
+      "Front large crest mapped to front torso and upright",
+      "Back smaller ornament mapped to back torso and upright",
+      "Both sleeves patterned after feedback",
+      "Pocket recolored to forest green",
+      "Front hem red after feedback"
+    ],
+    "not_passed": [
+      "Front Chinese ribbon remains occluded by physical pocket; shrink/placement instruction was not followed",
+      "Pixel-exact UV boundaries and hood seam coverage not guaranteed",
+      "Result is not a faithful reconstruction of all details in stage1 design"
+    ],
+    "critical_dependency": "Explicit region identity and rotation metadata were supplied by this assistant after visually reading the color-coded screenshots. No independent automatic region-recognition service was implemented."
+  },
+  "conclusion": "Separating appearance design from UV reconstruction yields a clear reference, but does not by itself solve semantic UV matching. Explicit part labels and direction help, then validated print-safe zones and deterministic composition are needed for faithful reconstruction. Text and art remain integrated; no local retypesetting or manual image repositioning was performed on the generated atlases."
+}

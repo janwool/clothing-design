@@ -1,0 +1,8 @@
+{
+  "prompt": "These two images are browser screenshots of the EXACT same blank white 3D hoodie: IMAGE 1 FRONT, IMAGE 2 BACK. Create a coordinated premium Christmas apparel design painted on this exact hoodie. Output ONE two-view design reference image: FRONT on the LEFT, BACK on the RIGHT, using the original camera directions, full garment silhouettes, arms pose, hood shape, pocket, strings and folds. Keep geometry and fit exactly unchanged. The garment torso is deep forest green, hood/cuffs/hem cranberry red, sleeves feature elegant ivory Nordic snowflakes and small holly details. FRONT: detailed tasteful vintage Christmas crest above the kangaroo pocket with beautifully integrated legible 'Merry Christmas' typography, reindeer wearing Santa hat, evergreen tree, gold ornaments, holly, and an ornate ribbon containing '圣诞快乐'. Text and illustration must be one coherent original graphic, never a generic separate rectangular text box. Position all front lettering fully below the neckline and above the pocket, sized to avoid obscuring it. BACK: a smaller coordinated ornament/greeting with Merry Christmas and 圣诞快乐 below the hood, no large lettering on sleeves. Maintain consistent sleeve, cuff and hood designs across front/back. No humans, mannequins, props, extra garments, UI pointers or interface controls. Clean neutral studio background, commercial clothing design preview with naturally shaded existing folds. No separate flat artwork or UV atlas at this stage: create the actual designed FRONT and BACK hoodie images. No explanatory labels or extra text outside the garments.",
+  "inputs": [
+    "white-front.png",
+    "white-back.png"
+  ],
+  "output": "designed-front-back.png"
+}

@@ -1,0 +1,28 @@
+{
+  "theme": "Halloween hoodie",
+  "workflow": [
+    "Browser white front/back screenshots supplied to image model for clothing design",
+    "Designed clothing and colored original SVG UV panels supplied to image model for atlas generation",
+    "AI edits corrected front rotation, print placement and cuff color",
+    "Applied atlas to original decoded garment GLB in browser model-viewer"
+  ],
+  "selectedTexture": "generated-atlas-placed.png",
+  "design": "designed-front-back.png",
+  "regionMappingReusedFrom": "../ai-uv-two-stage-v1/identified-region-mapping.json",
+  "validation": {
+    "front": "Happy Halloween upright, complete pumpkin above pocket, both cuffs orange",
+    "back": "Greeting visible; hood partly overlaps moon",
+    "side": "Bat patterns applied on sleeve"
+  },
+  "limitations": [
+    "Mapping used previously identified panel IDs, not a fully autonomous recognition service",
+    "Hood center remains charcoal rather than fully orange in concept; pocket edge has orange accent; generated borders and fine seams differ from concept"
+  ],
+  "screenshots": [
+    "browser-preview.png",
+    "browser-front.png",
+    "browser-back.png",
+    "browser-left.png"
+  ],
+  "renderer": "Browser model-viewer; no Blender"
+}

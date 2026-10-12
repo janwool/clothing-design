@@ -1,0 +1,54 @@
+{
+  "source": "Assistant visual reading of the original color-coded UV and browser screenshots; supplied explicitly to imagegen for this local experiment. Not an independently deployed automatic recognition service.",
+  "regionMap": {
+    "0": {
+      "part": "back hem",
+      "color": "cranberry red"
+    },
+    "1": {
+      "part": "sleeve",
+      "lettering": false
+    },
+    "2": {
+      "part": "other sleeve",
+      "lettering": false
+    },
+    "6": {
+      "part": "hood center",
+      "color": "cranberry red"
+    },
+    "8": {
+      "part": "hood side",
+      "color": "cranberry red"
+    },
+    "9": {
+      "part": "other hood side",
+      "color": "cranberry red"
+    },
+    "14": {
+      "part": "cuff",
+      "color": "cranberry red"
+    },
+    "15": {
+      "part": "other cuff",
+      "color": "cranberry red"
+    },
+    "17": {
+      "part": "front torso",
+      "rotation": 180
+    },
+    "19": {
+      "part": "back torso",
+      "rotation": 0
+    },
+    "20": {
+      "part": "front hem",
+      "color": "cranberry red"
+    },
+    "24": {
+      "part": "kangaroo pocket",
+      "color": "plain forest green"
+    }
+  },
+  "prompt": "Reconstruct the approved Christmas hoodie in IMAGE 2 as the EXACT fixed UV atlas in IMAGE 1. IMAGE 1 has numbered regions; IMAGE 3 contains corresponding color-coded 3D screenshots. The region identity has now been visually checked: REGION 17 (cyan large island at lower left) is FRONT TORSO; its neck is at the BOTTOM of that island, so place the ENTIRE approved large reindeer/Merry Christmas/圣诞快乐 crest UPSIDE DOWN (180-degree rotation) within region 17, above the physical pocket. REGION 19 (purple large island at lower right) is BACK TORSO; its neck is at the TOP, so place the approved smaller Merry Christmas/圣诞快乐 back ornament UPRIGHT in region 19. REGIONS 1 and 2 (blue and lime curved islands above those body panels) are SLEEVES, NOT torso. Put ONLY the approved ivory Nordic snowflake/holly bands there, NO words and NO reindeer faces on either sleeve. REGION 24 magenta polygon is the KANGAROO POCKET: plain forest green. REGIONS 8,9,6 are HOOD panels, cranberry red; regions14,15 cuffs and 0,20 hem are cranberry red. Remaining fine strips get suitable matching red/green trim, no oversized artwork. This is NOT redesign: retain the exact coordinated typography, Chinese ribbon and illustrations from IMAGE 2. Keep every island's original outline, size, orientation and location PIXEL-ALIGNED to IMAGE 1, including its square canvas and empty background. The region 17 artwork is deliberately upside down IN THE ATLAS to become upright on the 3D hoodie. Do not alter any island shape to make it look like a garment part. Remove ALL numeric labels and temporary color identifiers from final output. Output one flat UV base-color texture atlas only, no model/photo/mockup/board. No garment fold shading, lighting or perspective; no added islands. Neutral background outside the exact original islands. Preserve all thin strips at their exact coordinates."
+}

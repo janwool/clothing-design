@@ -152,7 +152,8 @@
     watermarkEnabled: false,
     projectId: '',
     projectName: '',
-    projectPreviewUrl: ''
+    projectPreviewUrl: '',
+    pendingPreviewDataUrl: null
   };
 
   // Catalog color choices initialize the preview without changing saved projects.
@@ -286,7 +287,6 @@
       artworkList.querySelectorAll('.white-detail-artwork-select')[activeIndex]?.focus();
     } else toolbarUpload.focus();
     state.artworkRevision += 1;
-    state.projectPreviewUrl = '';
     setStatus(`${removed.artworkName} removed.`);
     queueProjectSave();
     scheduleRender({ forceQuality: true });
@@ -788,7 +788,6 @@
     state.layers.push(layer);
     activateLayer(layer.id);
     state.artworkRevision += 1;
-    state.projectPreviewUrl = '';
     setStatus(`${layer.artworkName} added. Select an image to edit it.`);
     trackWhiteMockup(`white_mockup_artwork_${source}_load_success`, {
       design_entry: 'white_mockup_detail',
@@ -962,7 +961,7 @@
       state.offsetY = Math.max(-canvas.height, Math.min(canvas.height, interaction.startOffsetY + point.y - interaction.startPoint.y));
     } else if (interaction.mode === 'scale') {
       const ratio = distance(point, center) / interaction.startDistance;
-      state.scale = Math.max(16, Math.min(180, interaction.startScale * ratio));
+      state.scale = Math.max(0.1, interaction.startScale * ratio);
     } else if (interaction.mode === 'rotate') {
       const currentAngle = Math.atan2(point.y - center.y, point.x - center.x);
       state.rotation = interaction.startRotation + (currentAngle - interaction.startAngle) * 180 / Math.PI;
@@ -1031,6 +1030,7 @@
     if (!state.ready || !state.artworkImage) return;
     trackWhiteMockup('white_mockup_png_download_begin');
     render({ overlay: false, forceQuality: true });
+    const downloadedPreviewDataUrl = canvas.toDataURL('image/jpeg', 0.86);
     downloadButton.disabled = true;
     updateToolbar();
     try {
@@ -1047,6 +1047,7 @@
       document.body.appendChild(link);
       link.click();
       link.remove();
+      queueProjectSave({ immediate: true, previewDataUrl: downloadedPreviewDataUrl });
       setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
       setStatus(`PNG downloaded at ${canvas.width} × ${canvas.height}.`);
       trackWhiteMockup('white_mockup_png_download_success', {
@@ -1066,12 +1067,12 @@
     }
   }
 
-  function queueProjectSave({ immediate = false } = {}) {
+  function queueProjectSave({ immediate = false, previewDataUrl = null } = {}) {
     if (window.UserProjects?.isAdminPreview) return;
     if (editor.dataset.authenticated !== 'true' || (!state.layers.length && !state.projectId) || !window.UserProjects) return;
     captureActiveLayer();
+    if (previewDataUrl) state.pendingPreviewDataUrl = previewDataUrl;
     state.artworkRevision += 1;
-    state.projectPreviewUrl = '';
     window.clearTimeout(state.autoSaveTimer);
     state.autoSaveTimer = window.setTimeout(saveProject, immediate ? 0 : 700);
   }
@@ -1142,19 +1143,20 @@
         state.projectName = reservedProject.name;
       }
       let previewImageUrl = state.projectPreviewUrl;
-      if (!previewImageUrl) {
+      const pendingPreviewDataUrl = state.pendingPreviewDataUrl;
+      if (!previewImageUrl || pendingPreviewDataUrl) {
         saveStage = 'render_preview';
         render({ overlay: false, forceQuality: true });
         saveStage = 'upload_preview';
         const preview = await window.UserProjects.uploadImage(
-          canvas.toDataURL('image/jpeg', 0.86),
+          pendingPreviewDataUrl || canvas.toDataURL('image/jpeg', 0.86),
           `${template.assetName}-preview.jpg`,
           'project-preview',
           state.projectId
         );
-        if (revision !== state.artworkRevision) return;
         previewImageUrl = preview.url;
         state.projectPreviewUrl = previewImageUrl;
+        if (state.pendingPreviewDataUrl === pendingPreviewDataUrl) state.pendingPreviewDataUrl = null;
       }
       if (revision !== state.artworkRevision) return;
       saveStage = 'finalize_project';
@@ -1310,8 +1312,8 @@
   toolbarAdjustments.forEach(button => button.addEventListener('click', () => {
     if (!state.ready || !state.artworkImage || !requireEditorSignIn('edit')) return;
     const action = button.dataset.artworkAdjust;
-    if (action === 'smaller') state.scale = Math.max(16, state.scale - 5);
-    if (action === 'larger') state.scale = Math.min(180, state.scale + 5);
+    if (action === 'smaller') state.scale = Math.max(0.1, state.scale - 5);
+    if (action === 'larger') state.scale += 5;
     if (action === 'rotate-left') state.rotation -= 15;
     if (action === 'rotate-right') state.rotation += 15;
     setStatus(action.startsWith('rotate') ? 'Artwork rotation updated.' : 'Artwork size updated.');
@@ -1387,8 +1389,8 @@
     else if (event.key === 'ArrowRight') state.offsetX += step;
     else if (event.key === 'ArrowUp') state.offsetY -= step;
     else if (event.key === 'ArrowDown') state.offsetY += step;
-    else if (event.key === '+' || event.key === '=') state.scale = Math.min(180, state.scale + 2);
-    else if (event.key === '-') state.scale = Math.max(16, state.scale - 2);
+    else if (event.key === '+' || event.key === '=') state.scale += 2;
+    else if (event.key === '-') state.scale = Math.max(0.1, state.scale - 2);
     else if (event.key === '[') state.rotation -= 2;
     else if (event.key === ']') state.rotation += 2;
     else handled = false;

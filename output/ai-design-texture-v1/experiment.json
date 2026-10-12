@@ -1,0 +1,57 @@
+{
+  "case": "Sage green T-shirt with one small botanical center-chest print",
+  "tool": "Built-in imagegen; Blender 3.1.0; browser model-viewer 4.3.1",
+  "source": {
+    "model": "https://cdn.cloz-design.com/catalog/20261004-qualified-v1/glb/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.glb",
+    "template": "https://cdn.cloz-design.com/catalog/20261004-qualified-online-v2/texture/crewneck-straight-cut-short-sleeve-t-shirt-3d-model-b42a1ab90447.svg"
+  },
+  "prompts": {
+    "direct_atlas": "Edit this exact square UV atlas into a flat base-color texture. Keep canvas, UV island positions and scale unchanged. Fill the entire atlas including gutters with sage green #87977C. Lower right deep-neck panel is front, lower left is back, upper curved panels are sleeves, thin rectangles are trims. Put only one dark-green olive branch near (765,560), approximately 90×135px in a 1024 square. Back/sleeves plain. Remove all guide outlines. No shading, grain, shadows, labels, seam lines, folds or garment photographs.",
+    "graphic": "One upright slender olive branch with 8–12 narrow leaves and two fruits, forest-green #263B28 ink only, on genuinely transparent background. Premium small chest print, centered, thin clean botanical strokes. No paper, lettering, shadows, garment, UV atlas or mockup."
+  },
+  "artifacts": {
+    "direct_atlas": "generated-atlas-v1.png",
+    "graphic": "generated-print-v2.png",
+    "composed_atlas": "composed-atlas-v2.png",
+    "browser_screenshot": "browser-comparison.png",
+    "interactive": "compare.html",
+    "direct_model": "direct-final/designed-garment.glb",
+    "composed_model": "composed-final/designed-garment.glb"
+  },
+  "mapping": {
+    "atlas_size": [
+      1024,
+      1024
+    ],
+    "front_artwork_center": [
+      765,
+      560
+    ],
+    "front_artwork_max_box": [
+      90,
+      135
+    ],
+    "base_color": "#87977C",
+    "UV_channel": "TEXCOORD_0 / Blender UVMap",
+    "fabric_channel": "TEXCOORD_1 / Blender UVMap.001; do not use for artwork",
+    "render_conversion": "SVG viewBox is 0 -1 1 1. The successful Blender render uses UVMap with V mapped to 1-V via texture transform. Export retains this transform. Do not assume this transform is universal: calibrate each model/browser texture upload convention.",
+    "geometry": "Garment geometry unchanged; hidden helper Cube removed only from experimental rendering/export."
+  },
+  "results": {
+    "direct_atlas": "After V conversion, botanical graphic renders upright on front, back remains blank. Model invented baked shading and changed print size; narrow UV strip boundaries not retained. Suitable as experimental appearance, not reliable exact atlas output.",
+    "composed": "Generated transparent graphic composited at exact front coordinate over constant-color atlas. Front upright; back/sleeves blank. Left/right/cover/back rendered. Browser loads both embedded-texture GLBs interactively. Uniform-color gutters prevent white bleed for this case.",
+    "render_note": "Existing normal-map shoulder artifacts remain in both variants and are not texture-generation defects."
+  },
+  "recommended_pipeline": [
+    "Chat extracts editable design plan: baseColor, artwork prompt, target panel, size, position",
+    "AI generates graphics or seamless tile assets",
+    "Local renderer maps assets onto validated UV panels with correct channel/orientation and gutters",
+    "Apply texture to model; preserve normal/roughness",
+    "Capture 3D preview into chat; keep design layers for iterative edits"
+  ],
+  "limits": [
+    "One garment and one small print tested. Full-body repeats, exact text/logos and cross-seam continuous artwork not validated.",
+    "Browser comparison is a local experiment; production generation endpoint remains unchanged during this experiment.",
+    "Initial uncalibrated render attempts are retained in intermediate folders for audit."
+  ]
+}

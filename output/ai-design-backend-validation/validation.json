@@ -1,0 +1,53 @@
+{
+  "backend": {
+    "provider": "mocked",
+    "tests": "passed",
+    "twoStages": true,
+    "dynamicBriefAndPanelLegend": true,
+    "configurableImageModel": true,
+    "failureDoesNotStorePartialAtlas": true
+  },
+  "browser": [
+    {
+      "garment": "hoodie",
+      "panels": 29,
+      "uniqueColors": 29,
+      "whiteViews": [
+        "front",
+        "back"
+      ],
+      "colorViews": [
+        "front",
+        "back",
+        "left",
+        "right"
+      ],
+      "cameraRestored": true,
+      "atlasApplied": true
+    },
+    {
+      "garment": "t-shirt",
+      "panels": 12,
+      "uniqueColors": 12,
+      "whiteViews": [
+        "front",
+        "back"
+      ],
+      "colorViews": [
+        "front",
+        "back",
+        "left",
+        "right"
+      ],
+      "cameraRestored": true,
+      "atlasApplied": true
+    }
+  ],
+  "build": "passed",
+  "broaderRegression": {
+    "passed": 48,
+    "failed": 5,
+    "details": "docs/ai-design-pipeline.md"
+  },
+  "liveProviderGeneration": "not run"
+}

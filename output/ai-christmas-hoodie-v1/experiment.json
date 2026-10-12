@@ -1,0 +1,65 @@
+{
+  "case": "Christmas hoodie with Merry Christmas and 圣诞快乐",
+  "pipeline": "AI generated detailed Christmas artwork; exact Chinese text, back lettering, per-panel colors and sleeve snowflakes composed locally onto actual UV template. No geometry generation.",
+  "source_slug": "drawstring-kangaroo-pocket-hoodie-3d-model-7f5053171327",
+  "prompts": [
+    "Transparent vintage Christmas print, EXACT Merry Christmas top and 圣诞快乐 bottom, reindeer in Santa hat/scarf, Christmas tree, gold stars, holly, candy canes, baubles, snowflakes; forest green, cranberry red, ivory, gold. Crisp detailed print, no garment, no extra words.",
+    "Preserve crest and Merry Christmas; remove outer backdrop and replace traditional lettering with EXACT simplified 圣诞快乐."
+  ],
+  "artifacts": [
+    "christmas-artwork.png",
+    "christmas-atlas.png",
+    "final/front.png",
+    "final/back.png",
+    "final/cover.png",
+    "final/designed-garment.glb",
+    "preview.html"
+  ],
+  "technical": {
+    "resolution": [
+      2048,
+      2048
+    ],
+    "front_island": 17,
+    "back_island": 19,
+    "sleeve_islands": [
+      1,
+      2
+    ],
+    "hood_islands": [
+      8,
+      9
+    ],
+    "front_rotation": 180,
+    "front_print_size": [
+      220,
+      300
+    ],
+    "front_print_center": [
+      678,
+      1770
+    ],
+    "UV_normalization": "Use original SVG viewBox -0.4046443495 -1.787119739 1.822161303 1.822161303. UVMap transformed by scale (1/span,-1/span) and offset (0.4046443495/span,1.035041564/span). These values are specific to this hoodie.",
+    "compression": "Meshopt decoded locally before Blender import; geometry/UV preserved."
+  },
+  "findings": [
+    "Complex graphic and exact text can be composed into garment UV and rendered on a real hoodie.",
+    "Generated Chinese spelling was not relied on: local font rendering ensures exact simplified characters.",
+    "Initial large graphic intersected hoodie pocket and hood; resized and repositioned using actual 3D renders.",
+    "Drawstrings still naturally cross the center-chest image; final Chinese text is above pocket and back text unobstructed.",
+    "No cross-seam continuous artwork validation; this case uses independent panel designs.",
+    "Experiment only; production endpoint unchanged."
+  ],
+  "revision_v2": {
+    "reason": "Separate local typography damaged the unified artwork aesthetic.",
+    "change": "Use entire AI-generated crest, lettering and ornamental ribbon without cropping, replacing text or adding a rectangle. Composite intact artwork on front and back, preserve sleeve patterns and garment colors.",
+    "artifacts": [
+      "compose-v2.py",
+      "christmas-atlas-v2.png",
+      "final-v2/designed-garment.glb",
+      "final-v2/front.png",
+      "final-v2/back.png"
+    ],
+    "validated": "Front and back Blender renders inspected; pocket is clear of design. Generated lettering is retained as requested."
+  }
+}
