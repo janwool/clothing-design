@@ -42,3 +42,7 @@ The request also includes `image` (current design screenshot), `uvTemplate` (PNG
 - The selected broader regression run passes 48 of 53 checks. Five existing assertions fail in lighting presets, editor/runtime version expectations, save/apply helper expectations and keyboard nudging. Those unrelated assertions were not rewritten as part of this work.
 
 Browser evidence is saved under `output/ai-design-backend-validation/`.
+
+## Guide fill regression
+
+Arrow patterns use `preserveAspectRatio="none"` so their backing paint covers the entire rectangular tile. SVG's default `meet` created transparent horizontal gaps, which appeared as white stripes in the model references and could be copied into the generated design. The backend prompt also explicitly excludes guide artifacts from the design. Browser validation on the 12-panel T-shirt sampled 570 interior pixels with zero white pixels; see `output/ai-design-backend-validation/guide-no-bands.json` and the corresponding screenshot. Existing generated atlases are raster images and retain the old stripes until regenerated.

@@ -5524,6 +5524,9 @@ window.initializeModelDesigner = () => {
                 pattern.setAttribute('x',bounds.x); pattern.setAttribute('y',bounds.y);
                 pattern.setAttribute('width',bounds.width / 3); pattern.setAttribute('height',bounds.height / 3);
                 pattern.setAttribute('viewBox','0 0 100 100');
+                // Fill the entire rectangular tile. SVG's default "meet" leaves
+                // transparent bands when an island is not square.
+                pattern.setAttribute('preserveAspectRatio','none');
                 const backing = document.createElementNS('http://www.w3.org/2000/svg','rect');
                 backing.setAttribute('width','100'); backing.setAttribute('height','100'); backing.setAttribute('fill',panels[index].color);
                 const arrow = document.createElementNS('http://www.w3.org/2000/svg','path');

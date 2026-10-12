@@ -1,0 +1,11 @@
+{
+  "panels": 12,
+  "views": [
+    "front",
+    "back",
+    "left",
+    "right"
+  ],
+  "interiorSamples": 570,
+  "whiteSamples": 0
+}
