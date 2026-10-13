@@ -1776,6 +1776,7 @@ window.initializeModelDesigner = () => {
           ...window.UserProjects?.projectSaveFailureContext?.(error, saveStage)
         });
       }
+      if (options.throwOnError) throw error;
       if (error.status === 401) window.UserProjects.goToSignIn();
       else setDesignSaveStatus(error.message || 'Project could not be saved', true);
       return false;
@@ -5768,6 +5769,16 @@ window.initializeModelDesigner = () => {
       return blob;
     },
     getProjectId: () => state.projectId || '',
+    async saveAiDesignProject() {
+      await cloudProjectLoadPromise;
+      if (!modelDesignerConfig.userAuthenticated) throw new Error('Sign in to save your design.');
+      if (window.UserProjects?.isAdminPreview) throw new Error('Administrator previews cannot create projects.');
+      if (!state.projectId && new URLSearchParams(window.location.search).has('project')) throw new Error('The saved project could not be loaded. Please refresh and try again.');
+      if (!await saveCloudProject({ closeAfterSave: false, throwOnError: true }) || !state.projectId) {
+        throw new Error('Project could not be saved. Please try again.');
+      }
+      return state.projectId;
+    },
     async ensureSavedProjectForShare() {
       await cloudProjectLoadPromise;
       if (state.projectId) return state.projectId;

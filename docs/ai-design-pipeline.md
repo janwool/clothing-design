@@ -8,7 +8,7 @@ The existing detail-page conversation calls `POST /api/ai-render-export` with `m
 2. On the selected garment's actual model-viewer, the browser captures white front/back views and colored front/back/left/right views. Texture slots, base color factors, camera and controls are restored in `finally`.
 3. The backend generates a front/back design concept from the white garment, current design screenshot, user's brief and up to four reference images.
 4. A second generation receives that concept, the colored atlas, the four actual colored model views and the dynamic color legend. Its prompt requests garment-part identification and artwork orientation from those references. No clothing slug, theme, semantic panel ID or fixed print rotation is used.
-5. The final atlas is stored through the existing image library/storage flow. The response includes `image.textureUrl` (the uploaded CDN URL), `image.textureDataUrl` (legacy client compatibility), `image.conceptDataUrl` and `image.workflow: "concept-to-uv"`. The browser retrieves the CDN atlas through the authenticated project-texture proxy, applies it through the editor's existing UV transform and history, and records the CDN source URL so project artwork can be saved and reopened. Application errors restore the previous artwork and base color texture.
+5. The final atlas is stored through the existing image library/storage flow. The response includes `image.textureUrl` (the uploaded CDN URL), `image.textureDataUrl` (legacy client compatibility), `image.conceptDataUrl` and `image.workflow: "concept-to-uv"`. The browser retrieves the CDN atlas through the authenticated project-texture proxy, applies it through the editor's existing UV transform and history, and records the CDN source URL so project artwork can be saved and reopened. Application errors restore the previous artwork and base color texture. After successful application, the conversation automatically creates a project or updates the currently loaded project, including its 3D preview cover. A failed save retains the applied design and offers a save-only retry without another generation charge.
 
 ## Request context
 
@@ -46,3 +46,18 @@ Browser evidence is saved under `output/ai-design-backend-validation/`.
 ## Guide fill regression
 
 Arrow patterns use `preserveAspectRatio="none"` so their backing paint covers the entire rectangular tile. SVG's default `meet` created transparent horizontal gaps, which appeared as white stripes in the model references and could be copied into the generated design. The backend prompt also explicitly excludes guide artifacts from the design. Browser validation on the 12-panel T-shirt sampled 570 interior pixels with zero white pixels; see `output/ai-design-backend-validation/guide-no-bands.json` and the corresponding screenshot. Existing generated atlases are raster images and retain the old stripes until regenerated.
+
+
+## Detail-page analytics (2026-10-14)
+
+The AI Design panel owns its events (`data-analytics-managed="true"`); generic click, file and form instrumentation skips it. Uses `window.trackEvent`, with tracking exceptions isolated from business logic.
+
+- Attachment: `ai_design_reference_add_click`, `ai_design_reference_select`, `ai_design_reference_ready`, `ai_design_reference_error`, `ai_design_reference_remove`. Ready means files decoded and added, not uploaded to the server.
+- Entry: `ai_design_generate_click`, `ai_design_submit`, `ai_design_login_required`. Submit means a valid form was submitted; it does not mean generation started.
+- Preparation: `ai_design_prepare_error`.
+- Generation: `ai_design_generation_start` immediately before the request; `ai_design_generation_success` after a successful API response; `ai_design_generation_error` for rejection, timeout or transport failure. `ai_design_access_blocked` distinguishes credit/plan gates. Rejected API responses emit only one generation error.
+- Application: `ai_design_apply_start`, `ai_design_apply_success`, `ai_design_apply_error`; `ai_design_preview_error` for the chat image failing to load. Generation success is separate from application success.
+- Save: `ai_design_project_save_start`, `ai_design_project_save_success`, `ai_design_project_save_error`, `ai_design_project_save_retry`. Existing designer project events remain for the shared save workflow; these AI-specific events identify this funnel. A save retry never implies another generation.
+- Result: `ai_design_generation_retry`, `ai_design_download_click`, `ai_design_plans_click`. Download click is intent, not confirmed file delivery.
+
+Parameters: model slug, attempt ID on processing events, reference/file counts, elapsed milliseconds, enumerated error/rejection category, HTTP status when known. Never include prompts, images, asset URLs, filenames or raw server error text. No change to credit charging, export access or GA4 key-event settings. Unit verification uses mocked responses and does not spend credits or validate live GA4 ingestion.

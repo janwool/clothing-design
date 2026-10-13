@@ -1,22 +1,9 @@
-# 3D Pants Generator — full-page design
+# 3D Pants Mockup Generator — full-page redesign
 
 Route: `/tools/3d-pants-generator`.
 
-Design reference: `design-mockups/3d-pants-generator-v2.png`, generated with the built-in image tool. Prompt: `docs/3d-pants-generator-v2-prompt.md`.
+Current reference: `design-mockups/3d-pants-mockup-generator-v3.png`, generated with built-in imagegen; complete prompt in adjacent `.prompt.txt`. SEO strategy and intentional implementation differences: `docs/3d-pants-generator-seo-v3.md`.
 
-## Implementation
+Four sections replace the previous six: preview workbench, catalog selection, illustrated workflow, FAQ with related destinations. Desktop modules occupy the available viewport; mobile sections grow naturally. Product cover appears immediately and 3D initializes automatically. Retry appears on failure. Model selection updates preview and both editor links; active colors and angles carry across loading. Dormant GLB material variants are skipped when recoloring.
 
-Dedicated template, scoped styles and controller replace the generic tool landing. Six sections: preview studio, model selection, workflow, use cases, FAQ, final editor entry. Each section occupies at least one available viewport on desktop. Mobile sections grow to fit content. The existing navigation and footer are retained.
-
-3D starts automatically with a real product cover while loading. Retry appears only on failure. Color and camera choices made during loading are applied when ready. Selecting another model updates the preview, selection state, and all editor links. Artwork and account-specific exports remain in the existing editor.
-
-## Intentional differences from the reference
-
-- Per user request, sections have substantially more space and each occupies a screen.
-- Models and garment images come from the active catalog, so their shapes differ from the illustrative mockup.
-- Copy describes actual editor capabilities. No claims about garment geometry generation, hardware editing, or production readiness.
-- Existing site navigation, promotion and footer are preserved.
-
-## Validation
-
-Browser checks: automatic loading, model switching with synchronized editor links, side view, olive color, desktop section heights, and mobile layout without horizontal overflow. Related landing and SEO tests: 12 passed.
+Validation: 1440 × 1000 desktop and 390 × 844 mobile have no horizontal overflow. Desktop section heights: 854, 854, 945, 854 pixels. Browser checks passed for automatic readiness, olive color, back angle and model/editor-link synchronization. Existing tools/SEO/performance checks: 9 passed. Actual desktop screenshot: `design-mockups/3d-pants-mockup-generator-v3-desktop-actual.png`.

@@ -1016,13 +1016,13 @@ const MOCKUP_GLB_BASE_URL = 'https://cdn.cloz-design.com/uploads/glb';
 
 const TOOL_PAGE_CONTENT = {
   '3d-pants-generator': {
-    title: '3D Pants Generator',
-    eyebrow: 'Your next pair starts here',
+    title: 'Pants Mockup Generator – Design Online in 3D',
+    eyebrow: 'Pants mockup maker online',
     image: siteImage('categories/pants.webp'),
-    subtitle: 'Create pants mockups in 3D. Choose a fit, try colors, upload artwork, and inspect front, side, and back views in your browser.',
+    subtitle: 'Create pants mockups online in 3D. Choose a fit, customize colors, add your logo or artwork, and export your design.',
     intent: 'Start with an existing pants model to explore garment colors and artwork placement. Check graphics against the waistband, pockets, and leg proportions before sharing a collection concept or preparing product imagery.',
-    primaryKeyword: '3D pants generator',
-    keywords: ['3D pants mockup', 'pants design online', 'trousers mockup', 'cargo pants mockup', 'joggers mockup'],
+    primaryKeyword: '3D pants mockup generator',
+    keywords: ['pants mockup maker', 'pants mockup generator online', 'cargo pants mockup', 'jogger mockup', 'trousers mockup online', 'pants design online'],
     outputHighlights: ['Interactive 3D preview', 'Color and artwork controls', 'No Photoshop required'],
     competitorInsights: [
       { title: 'Find the right fit', body: 'Compare available relaxed, tailored, cargo, and jogger silhouettes before starting your design.' },
@@ -1033,15 +1033,14 @@ const TOOL_PAGE_CONTENT = {
       { title: 'Choose your pants', body: 'Pick an available pants model with the silhouette closest to your product.' },
       { title: 'Add color and artwork', body: 'Open the editor, set garment colors, and upload your logo or pattern.' },
       { title: 'Review the details', body: 'Inspect front, side, and back views to check scale and placement.' },
-      { title: 'Export your mockup', body: 'Use the export options available to your account to save your product preview.' }
+      { title: 'Export your mockup', body: 'Export your finished pants mockup from the editor.' }
     ],
     useCases: ['Streetwear collection previews', 'Product listing drafts', 'Design approvals'],
     useCaseDetails: ['Explore leg graphics and colorways for a coordinated clothing drop.', 'Prepare consistent pants visuals before a product photoshoot.', 'Share garment color and artwork placement ideas with your team.'],
     faq: [
-      { question: 'What does the 3D Pants Generator create?', answer: 'It helps you customize mockups using existing 3D pants models. It does not generate new garment geometry or sewing patterns from text.' },
-      { question: 'Can I upload a logo or pattern?', answer: 'Yes. Open a pants model in the editor to upload artwork and adjust its placement on the garment.' },
-      { question: 'Can I see the back of the pants?', answer: 'Yes. The preview opens automatically. Use the front, side, and back controls, or drag to rotate the model.' },
-      { question: 'Can I export a transparent PNG?', answer: 'Transparent and higher-resolution exports depend on your account plan. The editor shows the available export options before you download.' }
+      { question: 'Can I add my own artwork?', answer: 'Yes. Upload your logo or graphic in the pants editor and adjust its size and placement.' },
+      { question: 'Can I view the back?', answer: 'Use Front, Side or Back, or drag the pants to rotate.' },
+      { question: 'Do I need Photoshop?', answer: 'No. Design your pants directly in your browser.' }
     ],
     starterEyebrow: 'Choose your silhouette',
     starterTitle: 'Start with a pair that fits your idea',
@@ -1833,6 +1832,7 @@ function buildToolStructuredData(req, toolPage) {
         applicationCategory: 'DesignApplication',
         operatingSystem: 'Web browser',
         isAccessibleForFree: true,
+        ...(toolPage.slug === '3d-pants-generator' ? { description: 'Customize pants colors and artwork on existing 3D models in your browser.' } : {}),
         ...(toolPage.tshirtStudio ? { description: 'Free garment preview. Finished design exports require Pro or above.' } : {}),
         featureList: [
           'Interactive 3D garment preview',
@@ -1841,11 +1841,9 @@ function buildToolStructuredData(req, toolPage) {
           'Artwork upload and UV placement',
           'Transparent PNG export'
         ],
-        offers: {
-          '@type': 'Offer',
-          price: '0',
-          priceCurrency: 'USD'
-        },
+        ...(toolPage.slug === '3d-pants-generator' ? {} : { offers: {
+          '@type': 'Offer', price: '0', priceCurrency: 'USD'
+        } }),
         image: firstImage(req, [toolPage.image]),
         screenshot: firstImage(req, [toolPage.image])
       }
@@ -3454,7 +3452,7 @@ router.get('/tools/:slug', async (req, res) => {
       structuredData: buildToolStructuredData(req, renderedToolPage),
       metaRobots: isIndexableTool ? undefined : 'noindex,follow',
       page: 'tools',
-      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20261010-production-alignment-v30'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=4-card-image-fill'] : undefined,
+      pageStyles: isDressDesigner ? ['/css/dress-designer-landing.css?v=20261010-production-alignment-v30'] : req.params.slug === '3d-pants-generator' ? ['/css/pants-generator.css?v=20261014-hero-spacing-v4'] : undefined,
       bodyClass: isDressDesigner ? 'dress-designer-page' : req.params.slug === '3d-pants-generator' ? 'pants-generator-page' : '',
       toolPage: renderedToolPage
     });

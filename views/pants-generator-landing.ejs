@@ -1,4 +1,4 @@
-<%- include('partials/header', { pageStyles: ['/css/pants-generator.css?v=4-card-image-fill'] }) %>
+<%- include('partials/header', { pageStyles: ['/css/pants-generator.css?v=20261014-hero-spacing-v4'] }) %>
 <%
 const pgModels = toolPage.modelStarters || [];
 const first = pgModels[0];
@@ -8,11 +8,11 @@ const colors = [['#e8e7e2','Bone'],['#747968','Olive'],['#54565a','Slate'],['#27
 <div class="pg">
   <section class="pg-hero pg-shell" aria-labelledby="pg-title">
     <div class="pg-hero-copy">
-      <nav class="pg-breadcrumb" aria-label="Breadcrumb"><a href="/tools">Tools</a><span>/</span><span>3D Pants Generator</span></nav>
-      <p class="pg-label">3D pants generator</p>
-      <h1 id="pg-title">Design your pants.<br><span>See every angle.</span></h1>
-      <p class="pg-lede">Choose a silhouette, explore colors, and place your artwork on a 3D pants model. Preview your design before the first sample.</p>
-      <div class="pg-actions"><a href="<%= editor %>" class="pg-button pg-button-dark" data-pg-editor>Open pants editor <span aria-hidden="true">↗</span></a><a href="/mockups/pants" class="pg-button pg-button-outline">Explore fits <span aria-hidden="true">↗</span></a></div>
+      <nav class="pg-breadcrumb" aria-label="Breadcrumb"><a href="/tools">Tools</a><span>/</span><span>Pants mockups</span></nav>
+      <p class="pg-label">Pants mockups</p>
+      <h1 id="pg-title">3D pants mockup<br>generator</h1>
+      <p class="pg-lede">Choose a fit, add your artwork, and see your pants in 3D.</p>
+      <div class="pg-actions"><a href="<%= editor %>" class="pg-button pg-button-dark" data-pg-editor>Design pants <span aria-hidden="true">↗</span></a><a href="#pants-fits" class="pg-button pg-button-outline">Choose a silhouette <span aria-hidden="true">↗</span></a></div>
       <div class="pg-hero-notes"><span>360° garment views</span><span>Custom artwork</span><span>Browser-based editor</span></div>
     </div>
     <div class="pg-studio" id="pants-studio" aria-label="Pants preview">
@@ -27,22 +27,22 @@ const colors = [['#e8e7e2','Bone'],['#747968','Olive'],['#54565a','Slate'],['#27
         <div class="pg-studio-controls"><div class="pg-colors" aria-label="Garment colors"><span>Color</span><% colors.forEach((color,i)=>{ %><button type="button" style="--swatch:<%= color[0] %>" data-pg-color="<%= color[0] %>" aria-label="<%= color[1] %>" aria-pressed="<%= i === 0 %>"></button><% }); %></div><a class="pg-button pg-button-dark pg-customize" href="<%= editor %>" data-pg-editor>Customize <span aria-hidden="true">↗</span></a></div>
         <div class="pg-studio-foot"><span data-pg-status role="status">Preparing preview…</span><span>Drag to rotate · Scroll to zoom</span></div>
       <% } else { %>
-        <div class="pg-empty"><img src="<%= toolPage.image %>" alt="Pants collection" width="400" height="400"><p>Explore the pants collection to find your starting point.</p><a href="/mockups/pants" class="pg-button pg-button-dark">Browse pants</a></div>
+        <div class="pg-empty"><img src="<%= toolPage.image %>" alt="Pants collection" width="400" height="400"><p>Find your fit in the pants collection.</p><a href="/mockups/pants" class="pg-button pg-button-dark">Browse pants</a></div>
       <% } %>
     </div>
   </section>
   <section class="pg-shell pg-section" id="pants-fits" aria-labelledby="pg-fit-title">
-    <div class="pg-section-heading"><div><p class="pg-label">Explore fits</p><h2 id="pg-fit-title">Start with the<br>right silhouette.</h2></div><a href="/mockups/pants" class="pg-text-link">View all pants models <span aria-hidden="true">↗</span></a></div>
+    <div class="pg-section-heading"><div><p class="pg-label">02 / Select a model</p><h2 id="pg-fit-title">Choose your fit.</h2></div><a href="/mockups/pants" class="pg-text-link">View all pants models <span aria-hidden="true">↗</span></a></div>
     <div class="pg-model-grid"><% pgModels.forEach((model,i)=>{ %><article class="pg-model-card<%= i === 0 ? ' is-selected' : '' %>"><button type="button" class="pg-model-select" data-pg-model data-src="<%= model.modelSrc %>" data-image="<%= model.image %>" data-title="<%= model.title %>" data-href="<%= model.href %>#design" aria-label="Preview <%= model.title %>" aria-pressed="<%= i === 0 %>"><span class="pg-selected-tag"><%= i === 0 ? 'Selected' : 'Preview in 3D' %></span><img src="<%= model.image %>" alt="<%= model.title %>" width="768" height="1024" loading="lazy"><span class="pg-model-name"><%= model.title.replace(/ Pants$/i,'') %><span aria-hidden="true">↗</span></span></button><a class="pg-model-edit" href="<%= model.href %>#design">Customize this fit <span aria-hidden="true">→</span></a></article><% }); %></div>
-    <% if (!pgModels.length) { %><p class="pg-muted">Browse the full collection for available pants models.</p><% } %>
+    <% if (!pgModels.length) { %><p class="pg-muted">View available styles in the pants collection.</p><% } %>
   </section>
   <section class="pg-workflow pg-section" aria-labelledby="pg-workflow-title"><div class="pg-shell">
-    <div class="pg-section-heading"><div><p class="pg-label">How it works</p><h2 id="pg-workflow-title">From a blank model<br>to your design.</h2></div><p class="pg-aside">Choose your fit here.<br>Finish the details in the editor.</p></div>
+    <div class="pg-section-heading"><div><p class="pg-label">03 / Make your mockup</p><h2 id="pg-workflow-title">Create your pants mockup.</h2></div></div>
     <ol class="pg-step-grid pg-workflow-stages">
       <% [
-        ['Choose your base', 'Select a pants silhouette as the starting point for your design.', 'Blank cargo pants before customization', 'Base model'],
-        ['Add your artwork', 'Set the garment color, then position and scale your logo or graphic.', 'The same cargo pants in olive with a STUDIO 01 graphic selected for placement', 'Artwork placement'],
-        ['Export your view', 'Review the finished design and choose your export options in the editor.', 'The finished olive cargo pants with the same STUDIO 01 graphic, without editing controls', 'Finished preview']
+        ['Choose a fit', 'Start with a pants model.', 'Blank cargo pants before customization', 'Base model'],
+        ['Add your artwork', 'Place your logo or graphic in the editor.', 'The same cargo pants in olive with a STUDIO 01 graphic selected for placement', 'Artwork placement'],
+        ['Save your mockup', 'Export your finished design from the editor.', 'The finished olive cargo pants with the same STUDIO 01 graphic, without editing controls', 'Finished preview']
       ].forEach((step,i)=>{ %>
         <li>
           <div class="pg-step-copy"><span class="pg-number">0<%= i+1 %></span><h3><%= step[0] %></h3><p><%= step[1] %></p></div>
@@ -52,16 +52,12 @@ const colors = [['#e8e7e2','Bone'],['#747968','Olive'],['#54565a','Slate'],['#27
       <% }); %>
     </ol>
   </div></section>
-  <section class="pg-shell pg-section pg-usecases" aria-labelledby="pg-use-title">
-    <div class="pg-detail-image"><% if (first) { %><img src="<%= first.image %>" alt="<%= first.title %> garment details" width="640" height="640" loading="lazy"><% } %><div class="pg-palette"><span>Color studies</span><div><% colors.forEach(color=>{ %><i style="background:<%= color[0] %>"></i><% }); %></div></div><span class="pg-image-caption">PANTS / DESIGN STUDY</span></div>
-    <div class="pg-use-copy"><p class="pg-label">Made for your workflow</p><h2 id="pg-use-title">Preview the product.<br>Refine the details.</h2><% [['Collection planning','Compare colors and graphics before committing to samples.'],['Product imagery','Create consistent garment views for catalog and listing drafts.'],['Team reviews','Share a clear reference for artwork scale and placement.']].forEach((item,i)=>{ %><div class="pg-use-row"><span class="pg-number">0<%= i+1 %></span><div><h3><%= item[0] %></h3><p><%= item[1] %></p></div></div><% }); %></div>
-  </section>
-  <section class="pg-faq pg-section"><div class="pg-shell pg-faq-grid"><div><p class="pg-label">Questions &amp; answers</p><h2>Before you start.</h2><p class="pg-aside">A few details about models,<br>artwork, and exports.</p></div><div><% toolPage.faq.forEach(item=>{ %><details><summary><%= item.question %><span aria-hidden="true">+</span></summary><p><%= item.answer %></p></details><% }); %></div></div></section>
-  <section class="pg-shell pg-closing"><div class="pg-cta"><div><p class="pg-label">Ready to design?</p><h2>Create your pants mockup.</h2><p>Start with a model. Make it your own.</p></div><a class="pg-button pg-button-lime" href="/mockups/pants">View more pants models <span aria-hidden="true">↗</span></a></div><nav class="pg-related" aria-label="Related tools"><span>Keep designing</span><a href="/tools/t-shirt-mockup-generator">T-shirt mockups ↗</a><a href="/tools/hoodie-mockup-generator">Hoodie mockups ↗</a><a href="/blog/3d-pants-design-and-mockup-guide">Pants design guide ↗</a></nav></section>
+  <section class="pg-faq pg-section"><div class="pg-shell pg-faq-grid"><div><p class="pg-label">04 / Before you start</p><h2>Questions?</h2></div><div><% toolPage.faq.forEach(item=>{ %><details><summary><%= item.question %><span aria-hidden="true">+</span></summary><p><%= item.answer %></p></details><% }); %></div></div><nav class="pg-shell pg-related" aria-label="Related tools"><a href="/mockups/pants">Explore all pants mockups ↗</a><a href="/blog/3d-pants-design-and-mockup-guide">Pants design guide ↗</a><a href="/tools/t-shirt-mockup-generator">T-shirt mockups ↗</a><a href="/tools/hoodie-mockup-generator">Hoodie mockups ↗</a></nav></section>
+
 </div>
 <% if (first) { %>
 <script>window.ModelViewerElement = window.ModelViewerElement || {}; window.ModelViewerElement.meshoptDecoderLocation = '/vendor/model-viewer/meshopt_decoder.js?v=three-0.183.0';</script>
-<script src="/js/pants-generator.js?v=3-brighter-preview" defer></script>
+<script src="/js/pants-generator.js?v=20261013-editorial-v3-materials" defer></script>
 <script type="module" src="/vendor/model-viewer/model-viewer.min.js?v=4.3.1"></script>
 <% } %>
 <%- include('partials/footer') %>

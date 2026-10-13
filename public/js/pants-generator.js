@@ -33,6 +33,8 @@
     const n = parseInt(color.slice(1), 16);
     const rgba = [(n >> 16 & 255) / 255, (n >> 8 & 255) / 255, (n & 255) / 255, 1];
     for (const material of viewer.model?.materials || []) {
+      // GLBs can contain dormant material variants that are not loaded.
+      if (material.isActive === false) continue;
       const pbr = material.pbrMetallicRoughness;
       if (!pbr?.setBaseColorFactor) continue;
       if (!originalBaseColors.has(material)) originalBaseColors.set(material, [...(pbr.baseColorFactor || [1, 1, 1, 1])]);

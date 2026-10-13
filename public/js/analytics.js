@@ -305,6 +305,7 @@
     document.addEventListener('submit', function (event) {
       var form = event.target;
       if (!(form instanceof HTMLFormElement)) return;
+      if (form.closest('[data-analytics-managed="true"]')) return;
       var name = formName(form);
       track(namedEvent(type, name, 'form', 'submit'), {
         form_name: name,
